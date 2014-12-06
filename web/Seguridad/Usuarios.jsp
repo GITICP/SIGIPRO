@@ -106,9 +106,10 @@
                             <div class="btn-group widget-header-toolbar">
                                 <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Eliminar</button>
                                 <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Editar</button>
-                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Agregar</button>
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUsuarios" style="margin-left:5px;margin-right:5px;">Agregar</button>
                             </div>
                         </div>
+                        ${mensaje}
                         <div class="widget-content">
                             <table id="datatable-column-filter" class="table table-sorting table-striped table-hover datatable">
                                 <!-- Columnas -->
@@ -142,16 +143,16 @@
         <!-- /main -->
 
         <div class="widget-content">
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal fade" id="modalUsuarios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Recuperar Contraseña</h4>
+                            <h4 class="modal-title" id="myModalLabel">Agregar Usuario</h4>
                         </div>
                         <div class="modal-body">
 
-                        <form class="form-horizontal" role="form" action="IniciarSesion" method="post">
+                        <form class="form-horizontal" role="form" action="InsertarUsuario" method="post">
                             <p class="title">Agregar Usuario</p>
                             ${mensajeError}
                             <label for="nombreUsuario" class="control-label">Nombre de Usuario</label>
@@ -170,12 +171,48 @@
                                     </div>
                                 </div>
                             </div>
+                            <label for="correoElectronico" class="control-label">Correo Electrónico</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                                        <input type="text" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico">
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="cedula" class="control-label">Cédula</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                                        <input type="text" placeholder="1-0001-4628" class="form-control" name="cedula">
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="departamento" class="control-label">Departamento</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                                        <input type="text" placeholder="Producción" class="form-control" name="departamento">
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="puesto" class="control-label">Puesto</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                                        <input type="text" placeholder="Jefe" class="form-control" name="puesto">
+                                    </div>
+                                </div>
+                            </div>
                             <label for="fechaActivacion" class="control-label">Fecha de Activación</label>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        <input type="text" id="datepicker" class="form-control" name="fechaActivacion">
+                                        <input type="text" id="datepicker" class="form-control" name="fechaActivacion" data-date-format="dd/mm/yyyy">
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +221,7 @@
                                 <div class="col-sm-12">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        <input type="text" id="datepicker" class="form-control" name="fechaDesactivacion">
+                                        <input type="text" id="datepicker2" class="form-control" name="fechaDesactivacion" data-date-format="dd/mm/yyyy">
                                     </div>
                                 </div>
                             </div>

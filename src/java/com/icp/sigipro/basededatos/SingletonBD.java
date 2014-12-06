@@ -10,10 +10,13 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +120,61 @@ public class SingletonBD
                 resultado = null;
             }
         }
+        return resultado;
+    }
+    
+    public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
+                                    String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
+                        + " (nombreusuario, contrasena, correo, nombrecompleto, cedula, departamento, puesto, fechaactivacion, fechadesactivacion, estado) "
+                        + " VALUES "
+                        + " (?,?,?,?,?,?,?,?,?,TRUE )");
+                consulta.setString(1, nombreUsuario);
+                consulta.setString(2, md5("hola"));
+                consulta.setString(3, nombreCompleto);
+                consulta.setString(4, correoElectronico);
+                consulta.setString(5, cedula);
+                consulta.setString(6, departamento);
+                consulta.setString(7, puesto);
+                
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
+                java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
+                java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+                java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+                
+                consulta.setDate(8, fActivacionSQL);
+                consulta.setDate(9, fDesactivacionSQL);
+                
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex)
+        {
+            String hola = "hola";
+            hola.toCharArray();
+        }
+        catch(ParseException ex)
+        {
+            String hola = "hola";
+            hola.toCharArray();
+        }
+        
         return resultado;
     }
     

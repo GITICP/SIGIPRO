@@ -111,6 +111,18 @@
 	<script src="${direccion_contexto}/recursos/js/king-table.js"></script>
 	<script src="${direccion_contexto}/recursos/js/king-components.js"></script>
         <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
+        <script>
+                $('#datepicker').datepicker()
+                .on('changeDate', function(e) {
+                dtp.datepicker('hide');
+                });
+        </script>
+        <script>
+                $('#datepicker2').datepicker()
+                .on('changeDate', function(e) {
+                dtp.datepicker('hide');
+                });
+        </script>
         
     </body>
 </html>
