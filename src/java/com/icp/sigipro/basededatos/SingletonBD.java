@@ -6,6 +6,7 @@
 package com.icp.sigipro.basededatos;
 
 import com.icp.sigipro.clases.BarraFuncionalidad;
+import com.icp.sigipro.clases.Usuario;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -123,6 +124,27 @@ public class SingletonBD
         return resultado;
     }
     
+    @SuppressWarnings("Convert2Diamond")
+    private List<BarraFuncionalidad> llenarBarraFuncionalidad(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<BarraFuncionalidad> resultado = new ArrayList<BarraFuncionalidad>();
+        BarraFuncionalidad temp = new BarraFuncionalidad();
+        String modulo = null;
+        
+        while(resultadoConsulta.next())
+        {
+            if (!resultadoConsulta.getString("modulo").equals(modulo))
+            {
+                modulo = resultadoConsulta.getString("modulo");
+                temp = new BarraFuncionalidad(resultadoConsulta.getString("modulo"));
+                resultado.add(temp);
+            }
+            temp.agregarFuncionalidad(resultadoConsulta.getString("funcionalidad"));
+        }
+        return resultado;
+    }
+    
+    
     public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
                                     String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion)
     {
@@ -178,22 +200,52 @@ public class SingletonBD
         return resultado;
     }
     
-    @SuppressWarnings("Convert2Diamond")
-    private List<BarraFuncionalidad> llenarBarraFuncionalidad(ResultSet resultadoConsulta) throws SQLException
+    public List<Usuario> obtenerUsuarios()
     {
-        List<BarraFuncionalidad> resultado = new ArrayList<BarraFuncionalidad>();
-        BarraFuncionalidad temp = new BarraFuncionalidad();
-        String modulo = null;
+        Connection conexion = conectar();
+        List<Usuario> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT us.idusuario, us.nombreusuario, us.correo, us.nombrecompleto, us.cedula, "
+                                                          + "us.departamento, us.puesto, us.fechaactivacion, us.fechadesactivacion, us.estado "
+                                                   + "FROM seguridad.usuarios us");
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarUsuarios(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+    
+    @SuppressWarnings("Convert2Diamond")
+    private List<Usuario> llenarUsuarios(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<Usuario> resultado = new ArrayList<Usuario>();
         
         while(resultadoConsulta.next())
         {
-            if (!resultadoConsulta.getString("modulo").equals(modulo))
-            {
-                modulo = resultadoConsulta.getString("modulo");
-                temp = new BarraFuncionalidad(resultadoConsulta.getString("modulo"));
-                resultado.add(temp);
-            }
-            temp.agregarFuncionalidad(resultadoConsulta.getString("funcionalidad"));
+            int idUsuario = resultadoConsulta.getInt("idusuario");
+            String nombreUsuario = resultadoConsulta.getString("nombreusuario");
+            String correo = resultadoConsulta.getString("correo");
+            String nombreCompleto = resultadoConsulta.getString("nombrecompleto");
+            String cedula = resultadoConsulta.getString("cedula");
+            String departamento = resultadoConsulta.getString("departamento");
+            String puesto = resultadoConsulta.getString("puesto");
+            Date fechaActivacion = resultadoConsulta.getDate("fechaactivacion");
+            Date fechaDesactivacion = resultadoConsulta.getDate("fechadesactivacion");
+            boolean activo = resultadoConsulta.getBoolean("estado");
+            
+            resultado.add(new Usuario(idUsuario, nombreUsuario, correo, nombreCompleto, 
+                                        cedula, departamento, puesto, fechaActivacion, fechaDesactivacion, activo));
         }
         return resultado;
     }
