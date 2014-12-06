@@ -31,10 +31,11 @@
 	<link href="${direccion_contexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
 	<link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
 	<link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
+        <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
 
 	<!--[if lte IE 9]>
-			<link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
-			<link href="${direccion_contexto}/recursos/css/main-ie-part2.css" rel="stylesheet" type="text/css" media="screen" />
+            <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
+            <link href="${direccion_contexto}/recursos/css/main-ie-part2.css" rel="stylesheet" type="text/css" media="screen" />
 	<![endif]-->
 
 	<!-- Fav and touch icons -->
@@ -45,7 +46,7 @@
 	<link rel="shortcut icon" href="${direccion_contexto}/recursos/ico/favicon.png">
 </head>
     
-    <body class="dashboard">
+    <body>
         
         <div class="wrapper">
                 
@@ -92,6 +93,7 @@
 	<script src="${direccion_contexto}/recursos/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>
 	<script src="${direccion_contexto}/recursos/js/king-common.js"></script>
 	<script src="${direccion_contexto}/recursos/js/deliswitch.js"></script>
+        <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 
 	<script src="${direccion_contexto}/recursos/js/plugins/stat/jquery.easypiechart.min.js"></script>
 	<script src="${direccion_contexto}/recursos/js/plugins/raphael/raphael-2.1.0.min.js"></script>
@@ -108,6 +110,7 @@
 	<script src="${direccion_contexto}/recursos/js/king-chart-stat.js"></script>
 	<script src="${direccion_contexto}/recursos/js/king-table.js"></script>
 	<script src="${direccion_contexto}/recursos/js/king-components.js"></script>
+        <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
         
     </body>
 </html>

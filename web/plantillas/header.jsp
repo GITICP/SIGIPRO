@@ -134,21 +134,25 @@
                                                     <span class="text">Actualizar Correo</span>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-power-off"></i>
-                                                    <span class="text">Cerrar Sesión</span>
-                                                </a>
-                                            </li>
                                         </ul>
+                                        
+                                        
                                     </div>
+                                </div>
+                                <div class="logged-user">
+                                    <form action="<%= request.getContextPath() %>/Cuenta/CerrarSesion" method="post">
+                                        <button class="botonCerrarSesion" type="submit">
+                                            <i class="fa fa-power-off"></i>
+                                            <span class="text">Cerrar Sesión</span>
+                                        </button>
+                                    </form>
                                 </div>
                                 <!-- end logged user and the menu -->
                             </div>
                             <!-- /top-bar-right -->
                         </div>
                     </div>
-                                    <!-- /row -->
+                    <!-- /row -->
                 </div>
             </div>
             <!-- /row -->
@@ -156,18 +160,6 @@
         <!-- /container -->
     </div>
     <!-- /top -->
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,13 @@
+.botonCerrarSesion{
+    border: none; 
+    background-color: transparent;
+    color: #fff;
+    position:relative;
+    display: block;
+    outline: none;
+}
+
+.botonCerrarSesion:hover{
+    color:#fff;
+    cursor: pointer;
+}

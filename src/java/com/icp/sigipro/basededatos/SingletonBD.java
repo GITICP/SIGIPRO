@@ -6,6 +6,9 @@
 package com.icp.sigipro.basededatos;
 
 import com.icp.sigipro.clases.BarraFuncionalidad;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -67,10 +70,14 @@ public class SingletonBD
             try
             {
                 PreparedStatement consulta = conexion.prepareStatement("SELECT 1 "
-                                                                     + "FROM usuarios.usuario "
-                                                                     + "WHERE id_usuario = ? and contrasenna = ?");
+                                                                     + "FROM seguridad.usuarios us "
+                                                                     + "WHERE us.nombreusuario = ? and us.contrasena = ? "
+                                                                     + "AND us.fechaactivacion <= current_date "
+                                                                     + "AND (us.fechadesactivacion > current_date or us.fechaactivacion = us.fechadesactivacion) "
+                                                                     + "AND us.estado = true ");
                 consulta.setString(1, usuario);
-                consulta.setString(2, contrasenna);
+                String hash = md5(contrasenna);
+                consulta.setString(2, hash);
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = resultadoConsulta.next(); //Se verifica si hay resultado de la consulta.
                 resultadoConsulta.close();
@@ -130,6 +137,30 @@ public class SingletonBD
             }
             temp.agregarFuncionalidad(resultadoConsulta.getString("funcionalidad"));
         }
+        return resultado;
+    }
+    
+    private String md5(String texto)
+    {
+        String resultado = null;
+        try
+        {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.reset();
+            md.update(texto.getBytes());
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1,digest);
+            resultado = bigInt.toString(16);
+            
+            while(resultado.length() < 32 ){
+              resultado = "0"+resultado;
+            }
+        }
+        catch(NoSuchAlgorithmException ex)
+        {
+            //Imprimir error
+        }
+        
         return resultado;
     }
 }

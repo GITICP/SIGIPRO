@@ -29,21 +29,23 @@
 
     <!-- main-nav -->
     <nav class="main-nav">
-
         <ul class="main-menu">
             <li class="active">
-                <a href="index.html"><i class="fa fa-dashboard fa-fw"></i>
+                <a href="index.html">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Inicio</span>
                 </a>
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Bodegas</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Bioterio</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
@@ -62,6 +64,7 @@
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Serpentario</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
@@ -80,6 +83,7 @@
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Caballeriza</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
@@ -98,6 +102,7 @@
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Control de Calidad</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
@@ -116,6 +121,7 @@
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Producción</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
@@ -134,6 +140,7 @@
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-credit-card fa-fw"></i>
                     <span class="text">Ventas</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
@@ -152,13 +159,19 @@
             </li>
             <li>
                 <a href="#" class="js-sub-menu-toggle">
+                    <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Seguridad</span>
                     <i class="toggle-icon fa fa-angle-left"></i>
                 </a>
                 <ul class="sub-menu " style="display: none; overflow: hidden;">
                     <li>
-                        <a href="#">
+                        <a href="<%= request.getContextPath() %>/Seguridad/Usuarios.jsp">
                             <span class="text">Usuarios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<%= request.getContextPath() %>/Seguridad/Roles.jsp">
+                            <span class="text">Roles</span>
                         </a>
                     </li>
                 </ul>
@@ -167,7 +180,10 @@
         </ul>
     </nav>
     <!-- /main-nav -->
-
+    
+    <div class="sidebar-minified js-toggle-minified">
+        <i class="fa fa-angle-left"></i>
+    </div>
 <!-- end sidebar content -->
 </div>
 <!-- end left sidebar -->
@@ -176,34 +192,25 @@
 <div class="col-md-2 left-sidebar">
     <!-- Left column -->
     <nav class="main-nav">
-        
         <ul class="main-menu">
-            
             <c:forEach items="${modulos}" var="modulo">
-                
                 <li>
                     <a href="#" class="js-sub-menu-toggle">
                         <span class="text">${modulo.getModulo()}</span>
                     </a>
                     <ul class="sub-menu" style="display:block;">
-                        
                         <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
                             <li>
                                 <a href="#">
                                     <span class="text">${funcionalidad}</span>
                                 </a>
                             </li>
-                        </c:forEach>
-                            
+                        </c:forEach>       
                     </ul>
                 </li>
-                
             </c:forEach>
-            
         </ul>
-        
     </nav>
-        
 </div>
         
 
