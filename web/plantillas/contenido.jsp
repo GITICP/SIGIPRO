@@ -6,14 +6,18 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<div class="container-fluid">
-    
-    <div class="row">
-        
-        <jsp:include page="barraFuncionalidad.jsp" />
-        
-        <jsp:include page="campoTrabajo.jsp" />
-        
+<!-- BOTTOM: LEFT NAV AND RIGHT MAIN CONTENT -->
+<div class="bottom">
+    <div class="container">
+        <div class="row">
+
+            <jsp:include page="barraFuncionalidad.jsp" />
+
+            <jsp:include page="campoTrabajo.jsp" />
+            
+        </div>
+        <!-- /content-wrapper -->
     </div>
-        
+    <!-- /row -->
 </div>
+<!-- /container -->

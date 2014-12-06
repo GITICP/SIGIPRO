@@ -4,5 +4,9 @@
     Author     : Boga
 --%>
 
+<%@page import="java.util.Calendar"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<footer class="text-center">Sitio creado para ICP por <strong>Nosotros =)</strong></a></footer>
+
+<footer class="text-center">
+    Instituto Clodomiro Picado. Universidad de Costa Rica. Derechos reservados © <%= Calendar.getInstance().get(Calendar.YEAR) %> 
+</footer>

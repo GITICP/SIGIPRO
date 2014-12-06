@@ -92,9 +92,9 @@ public class IniciarSesion extends HttpServlet {
             if(loginExitoso)
             {
                 try { 
-                    HttpSession session = request.getSession(); //crea la session 
-                    session.setAttribute("usuario", usuario); // asignarle atributos a la carajada
-                    session.setMaxInactiveInterval(30*60); // 30 min max sesion
+                    HttpSession session = request.getSession(); // Creación de la sesión.
+                    session.setAttribute("usuario", usuario);   // Asignar atributo "usuario" a la sesión.
+                    session.setMaxInactiveInterval(30*60);      // Asignación de máximo 30 minutos de inactividad de la sesión.
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                     }
                 catch (Exception e) 
@@ -104,17 +104,11 @@ public class IniciarSesion extends HttpServlet {
             }
             else
             {
-                request.setAttribute("errorMessage", /*"<div class=\"alert alert-danger alert-dismissible\">\n" +
-                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-                                                     "<span class=\"sr-only\">Error:</span>\n" +
-                                                     "Usuario o contraseña incorrecto.\n" +
-                                                     "</div>");*/
-                
-                "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
-                    "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                        "Usuario o conraseña incorrecto." +
-                "</div>");
+                request.setAttribute("mensajeError","<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                                                        "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+                                                        "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
+                                                            "Usuario o contraseña incorrecto." +
+                                                    "</div>");
 
                 request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
             }

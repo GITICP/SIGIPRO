@@ -5,46 +5,157 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<div class="col-xs-10">
-      	
-      <!-- column 2 -->	
-      <ul class="list-inline pull-right">
-         <li><a href="#"><i class="glyphicon glyphicon-cog"></i></a></li>
-         <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-comment"></i><span class="count">3</span></a><ul class="dropdown-menu" role="menu"><li><a href="#">1. Is there a way..</a></li><li><a href="#">2. Hello, admin. I would..</a></li><li><a href="#"><strong>All messages</strong></a></li></ul></li>
-         <li><a href="#"><i class="glyphicon glyphicon-user"></i></a></li>
-         <li><a title="Add Widget" data-toggle="modal" href="#addWidgetModal"><span class="glyphicon glyphicon-plus-sign"></span> Add Widget</a></li>
-      </ul>
-      <a href="#"><strong><i class="glyphicon glyphicon-dashboard"></i>Campo de Trabjo</strong></a>  
-      
-      	<hr>
-      
-        <div class="row">
-            
-            
-            <form action="response.jsp">
-                <p>Seleccione un tema:</p>
-                <select class="form-control" name="dropPrueba">
-                    <option>Venenos</option>
-                    <option>Serpientes</option>
-                </select>
-                <button type="submit" name="botonEnviar" class="btn btn-primary">Enviar</button>
-            </form>
+
+<!-- content-wrapper -->
+<div class="col-md-10 content-wrapper">
+    <div class="row">
+        <div class="col-md-4 ">
+            <ul class="breadcrumb">
+                <li>Seguridad</li>
+                <li class="active">Usuarios</li>
+            </ul>
         </div>
-      
-      <hr>
-        <a href="#"><strong><i class="glyphicon glyphicon-comment"></i> Discussions</strong></a>  
-      <hr>
-      
-      <div class="row">
-        <div class="col-md-12">
-          <ul class="list-group">
-            <li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>(3 mins ago)</small> The 3rd page reports don't contain any links. Does anyone know why..</a></li>
-            <li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>(1 hour ago)</small> Hi all, I've just post a report that show the relationship betwe..</a></li>
-            <li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-heart"></i> <small>(2 hrs ago)</small> Paul. That document you posted yesterday doesn't seem to contain the over..</a></li>
-            <li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-heart-empty"></i> <small>(4 hrs ago)</small> The map service on c243 is down today. I will be fixing the..</a></li>
-            <li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-heart"></i> <small>(yesterday)</small> I posted a new document that shows how to install the services layer..</a></li>
-            <li class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>(yesterday)</small> ..</a></li>
-          </ul>
+        <div class="col-md-8 ">
+            <div class="top-content">
+
+            </div>
         </div>
-      </div>
-</div><!--/col-span-9-->
+    </div>
+
+    <!-- main -->
+    <div class="content">
+        <div class="main-content">
+            <!-- WIDGET TICKET TABLE -->
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <h3><i class="fa fa-group"></i> Usuarios</h3>
+                    <div class="btn-group widget-header-toolbar">
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Editar</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Agregar</button>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div id="ticket-table_wrapper" class="dataTables_wrapper form-inline no-footer">
+                        Buscar: <input type="text" class="form-control"></input>
+                    </div>
+                    <table id="ticket-table" class="table table-sorting dataTable no-footer" role="grid">
+                        <thead>
+                                <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="ticket-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Number: activate to sort column ascending" style="width: 89px;">Nombre de Usuario</th>
+                                    <th class="sorting" tabindex="0" aria-controls="ticket-table" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 168px;">Nombre Completo</th>
+                                    <th class="sorting" tabindex="0" aria-controls="ticket-table" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 156px;">Correo</th>
+                                    <th class="sorting" tabindex="0" aria-controls="ticket-table" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 82px;">Estado</th>
+                                    <th class="sorting" tabindex="0" aria-controls="ticket-table" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 82px;">Opciones</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row" class="odd">
+                                <td class="sorting_1">
+                                    <a href="#">jmorales</a>
+                                </td>
+                                <td>Juan Morales</td>
+                                <td>jmorales@icp.ucr.ac.cr</td>
+                                <td>Inactivo</td>
+                                <td>
+                                    <div class="btn btn-primary" style="margin:5px;"> Editar </div>
+                                    <div class="btn btn-success" style="margin:5px;min-width:96px"> Activar </div>
+                                </td>
+                            </tr>
+                            <tr role="row" class="odd">
+                                <td class="sorting_1">
+                                    <a href="#">idelgado</a>
+                                </td>
+                                <td>Íngrid Delgado</td>
+                                <td>idelgado@icp.ucr.ac.cr</td>
+                                <td>Activo</td>
+                                <td>
+                                    <div class="btn btn-primary" style="margin:5px;"> Editar </div>
+                                    <div class="btn btn-danger" style="margin:5px;min-width:96px"> Desactivar </div>
+                                </td>
+                            </tr>
+                            <tr role="row" class="odd">
+                                <td class="sorting_1">
+                                    <a href="#">djimenez</a>
+                                </td>
+                                <td>David Jiménez</td>
+                                <td>djimenez@icp.ucr.ac.cr</td>
+                                <td>Activo</td>
+                                <td>
+                                    <div class="btn btn-primary" style="margin:5px;"> Editar </div>
+                                    <div class="btn btn-danger" style="margin:5px;min-width:96px"> Desactivar </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+
+                    </div>    
+                </div>
+            </div>
+        </div>
+        <!-- END WIDGET TICKET TABLE -->
+    </div>
+    <!-- /main-content -->
+</div>
+<!-- /main -->
+
+<div class="widget-content">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Recuperar Contraseña</h4>
+                </div>
+                <div class="modal-body">
+
+                <form class="form-horizontal" role="form" action="IniciarSesion" method="post">
+                    <p class="title">Agregar Usuario</p>
+                    ${mensajeError}
+                    <label for="nombreUsuario" class="control-label">Nombre de Usuario</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario">
+                            </div>
+                        </div>
+                    </div>
+                    <label for="nombreCompleto" class="control-label">Nombre Completo</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Nombre Completo" class="form-control" name="nombreCompleto">
+                            </div>
+                        </div>
+                    </div>
+                    <label for="fechaActivacion" class="control-label">Fecha de Activación</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" id="datepicker" class="form-control" name="fechaActivacion">
+                            </div>
+                        </div>
+                    </div>
+                    <label for="fechaDesactivacion" class="control-label">Fecha de Desactivación</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" id="datepicker" class="form-control" name="fechaDesactivacion">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Usuario</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

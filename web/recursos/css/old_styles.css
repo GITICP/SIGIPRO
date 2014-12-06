@@ -58,4 +58,5 @@ footer {
 .inicioSesion{
     //position: relative;
     margin: 2%;
+    max-width: 350px;
 }

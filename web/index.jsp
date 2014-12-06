@@ -6,28 +6,41 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%
-    String usuarioConectado;
-    
-    if(session.getAttribute("usuario") != null)
-    {
-        usuarioConectado = (String) session.getAttribute("usuario");
-        request.setAttribute("usuario",usuarioConectado);
-    }
-    else
-    {
-        response.sendRedirect(request.getContextPath() + "/Cuenta/IniciarSesion.jsp");
-    }
-%>
-
 <t:plantilla_general title="Inicio" direccion_contexto="/SIGIPRO">
-
+    
     <jsp:attribute name="contenido">
-        
-        <!-- Main -->
-        <jsp:include page="plantillas/contenido.jsp" />
-        <!-- /Main -->
-        
+
+        <jsp:include page="plantillas/barraFuncionalidad.jsp" />
+
+        <!-- content-wrapper -->
+        <div class="col-md-10 content-wrapper">
+                <div class="row">
+                        <div class="col-md-4 ">
+                                <ul class="breadcrumb">
+                                        <li class="active">Inicio</li>
+                                </ul>
+                        </div>
+                        <div class="col-md-8 ">
+                                <div class="top-content">
+
+                                </div>
+                        </div>
+                </div>
+
+                <!-- main -->
+                <div class="content">
+                    <h2>Inicio</h2>
+
+                        <div class="main-content">
+
+
+                        </div>
+                        <!-- /main-content -->
+                </div>
+                <!-- /main -->
+        </div>
+        <!-- /content-wrapper -->
+
     </jsp:attribute>
 
 </t:plantilla_general>

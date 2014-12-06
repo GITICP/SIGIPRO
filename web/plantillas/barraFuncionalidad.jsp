@@ -4,28 +4,227 @@
     Author     : Boga
 --%>
 
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.List"%>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
 <%@page import="com.icp.sigipro.clases.BarraFuncionalidad"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<div class="col-sm-2">
+
+<% 
+            
+    SingletonBD baseDatos = SingletonBD.getSingletonBD();
+
+    List<BarraFuncionalidad> modulos = baseDatos.obtenerModulos((String)request.getAttribute("usuario"));
+
+    if(modulos!=null)
+    {
+        request.setAttribute("modulos", modulos);
+    }
+
+%>
+
+<!-- left sidebar -->
+<div class="col-md-2 left-sidebar">
+
+    <!-- main-nav -->
+    <nav class="main-nav">
+
+        <ul class="main-menu">
+            <li class="active">
+                <a href="index.html"><i class="fa fa-dashboard fa-fw"></i>
+                    <span class="text">Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Bodegas</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Bioterio</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text">Conejos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="text">Ratones</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Serpentario</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="text">Invoice</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Caballeriza</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="page-invoice.html">
+                            <span class="text">Invoice</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Control de Calidad</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="page-invoice.html">
+                            <span class="text">Invoice</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Producción</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="page-invoice.html">
+                            <span class="text">Invoice</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Ventas</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="page-invoice.html">
+                            <span class="text">Invoice</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="js-sub-menu-toggle">
+                    <span class="text">Seguridad</span>
+                    <i class="toggle-icon fa fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    <li>
+                        <a href="#">
+                            <span class="text">Usuarios</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </nav>
+    <!-- /main-nav -->
+
+<!-- end sidebar content -->
+</div>
+<!-- end left sidebar -->
+
+<%--
+<div class="col-md-2 left-sidebar">
     <!-- Left column -->
-    <strong><i class="glyphicon glyphicon-wrench"></i> Módulos</strong>
-    
-    <hr> <!-- Línea Divisora -->
-
-    <ul class="list-unstyled">
+    <nav class="main-nav">
         
-        <% 
+        <ul class="main-menu">
             
-            SingletonBD baseDatos = SingletonBD.getSingletonBD();
+            <c:forEach items="${modulos}" var="modulo">
+                
+                <li>
+                    <a href="#" class="js-sub-menu-toggle">
+                        <span class="text">${modulo.getModulo()}</span>
+                    </a>
+                    <ul class="sub-menu" style="display:block;">
+                        
+                        <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
+                            <li>
+                                <a href="#">
+                                    <span class="text">${funcionalidad}</span>
+                                </a>
+                            </li>
+                        </c:forEach>
+                            
+                    </ul>
+                </li>
+                
+            </c:forEach>
+            
+        </ul>
+        
+    </nav>
+        
+</div>
+        
 
-            List<BarraFuncionalidad> resultado = baseDatos.obtenerModulos((String)request.getAttribute("usuario"));
+--%>
             
-            if(resultado!=null)
-            {
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <%--
+            
+            
+            
                 for(BarraFuncionalidad b : resultado)
                 {
                     %>
@@ -47,13 +246,8 @@
                     }
                     %>
 
-                        </ul> <%-- Final de sublista de funcionalidades --%>
+                        </ul> <%-- Final de sublista de funcionalidades 
                     </li> <%-- Final de lista de módulo --%>
 
-                    <%
-                }
-            }
-        %>
 
-    </ul>
-</div>
+
