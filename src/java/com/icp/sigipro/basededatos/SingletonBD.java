@@ -328,6 +328,17 @@ public class SingletonBD
         return resultado;
     }
     
+    private boolean compararFechas(Date fechaActivacion, Date fechaDesactivacion)
+    {
+        java.util.Calendar calendario = java.util.Calendar.getInstance();
+        java.util.Date hoy = calendario.getTime();
+        Date hoySQL = new Date(hoy.getTime());
+        
+        
+        boolean resultado = fechaActivacion.before(hoySQL) && fechaDesactivacion.after(hoySQL);
+        return resultado;
+    }
+    
     @SuppressWarnings("Convert2Diamond")
     private List<Usuario> llenarUsuarios(ResultSet resultadoConsulta) throws SQLException
     {
