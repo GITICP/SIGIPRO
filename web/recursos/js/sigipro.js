@@ -18,7 +18,7 @@
     return rdValue;
 }
 */
-
+//Control es el ID del Radio Button que se usa para seleccionar los items en las tablas de seguridad
 window.valorRB = null;
 $("input[name='control']").click(function() {
     valorRB = this.value;
@@ -39,4 +39,17 @@ function prueba(){
     document.getElementById("editarPuesto").value=x.children[6].innerHTML;
     document.getElementById("editarFechaActivacion").value=x.children[7].innerHTML;
     document.getElementById("editarFechaDesactivacion").value=x.children[8].innerHTML;
+}
+window.valorRBRol = null;
+$("input[name='controlRol']").click(function() {
+    valorRBRol = this.value;
+    document.getElementById("controlIDRol").value=valorRBRol;
+});
+
+function EditarRolJS(){
+    var x = document.getElementById(valorRBRol);
+    document.getElementById("editarIdRol").value=valorRBRol;
+    document.getElementById("editarNombre").value=x.children[1].innerHTML;
+    document.getElementById("editarDescripcion").value=x.children[2].innerHTML;
+
 }

@@ -517,5 +517,93 @@ public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario)
         
         return resultado;
     }
+    public boolean insertarRol(String nombre, String descripcion)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.roles "
+                        + " ( nombrerol, descripcionrol) "
+                        + " VALUES "
+                        + " (?,? )");
+                consulta.setString(1, nombre);
+                consulta.setString(2, descripcion);
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+        
+        return resultado;
+    }
     
+    public boolean editarRol(int idrol, String nombre, String descripcion)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.roles "
+                        + " SET nombrerol = ?, descripcionrol = ? "
+                        + " WHERE idrol = ? ");
+                
+                consulta.setString(1, nombre);
+                consulta.setString(2, descripcion);
+                consulta.setInt(3, idrol);
+
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex) {System.out.println(ex); }
+
+        return resultado;
+    }
+    public boolean EliminarRol(String p_idrol)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM SEGURIDAD.roles s " +
+                                                                        "WHERE  s.idrol = ? "
+                        );
+                consulta.setInt(1, Integer.parseInt(p_idrol) );
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+
+        
+        return resultado;
+    }
 }

@@ -64,6 +64,25 @@ $(document).ready(function(){
 				.draw();
 		});
 	}
+        if( $('#datatable-column-filter-roles').length > 0 ) {
+		var dtTable = $('#datatable-column-filter').DataTable({ // use DataTable, not dataTable
+			sDom: // redefine sDom without lengthChange and default search box
+				"t"+
+				"<'row'<'col-sm-6'i><'col-sm-6'p>>"
+		}); 
+
+		$('#datatable-column-filter thead').append('<tr class="row-filter"><th></th><th></th><th></th></tr>');
+		$('#datatable-column-filter thead .row-filter th').each( function() {
+			$(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+		});
+
+		$('#datatable-column-filter .row-filter input').on('keyup change', function() {
+			dtTable
+				.column($(this).parent().index()+':visible')
+				.search(this.value)
+				.draw();
+		});
+	}
 
 	// data export
 	if( $('#datatable-data-export').length > 0 ) {
