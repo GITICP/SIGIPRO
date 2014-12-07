@@ -161,7 +161,7 @@ public class SingletonBD
                 PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
                         + " (nombreusuario, contrasena,  nombrecompleto, correo, cedula, departamento, puesto, fechaactivacion, fechadesactivacion, estado) "
                         + " VALUES "
-                        + " (?,?,?,?,?,?,?,?,?,TRUE )");
+                        + " (?,?,?,?,?,?,?,?,?,? )");
                 consulta.setString(1, nombreUsuario);
                 consulta.setString(2, md5("hola"));
                 consulta.setString(3, nombreCompleto);
@@ -178,6 +178,8 @@ public class SingletonBD
                 
                 consulta.setDate(8, fActivacionSQL);
                 consulta.setDate(9, fDesactivacionSQL);
+                
+                consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL));
                 
                 int resultadoConsulta = consulta.executeUpdate();
                 if (resultadoConsulta == 1)
@@ -214,7 +216,7 @@ public class SingletonBD
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                        + " SET correo = ?, nombrecompleto = ?, cedula = ?, departamento = ?, puesto = ?, fechaactivacion = ?, fechadesactivacion= ? "
+                        + " SET correo = ?, nombrecompleto = ?, cedula = ?, departamento = ?, puesto = ?, fechaactivacion = ?, fechadesactivacion= ?, estado = ?"
                         + " WHERE idusuario = ? ");
                 
                 consulta.setString(1, correoElectronico);
@@ -232,7 +234,9 @@ public class SingletonBD
                 consulta.setDate(6, fActivacionSQL);
                 consulta.setDate(7, fDesactivacionSQL);
                 
-                consulta.setInt(8, idUsuario);
+                consulta.setBoolean(8, compararFechas(fActivacionSQL, fDesactivacionSQL));
+                
+                consulta.setInt(9, idUsuario);
                 
                 int resultadoConsulta = consulta.executeUpdate();
                 if (resultadoConsulta == 1)
@@ -310,6 +314,17 @@ public class SingletonBD
                 resultado = null;
             }
         }
+        return resultado;
+    }
+    
+    private boolean compararFechas(Date fechaActivacion, Date fechaDesactivacion)
+    {
+        java.util.Calendar calendario = java.util.Calendar.getInstance();
+        java.util.Date hoy = calendario.getTime();
+        Date hoySQL = new Date(hoy.getTime());
+        
+        
+        boolean resultado = fechaActivacion.before(hoySQL) && fechaDesactivacion.after(hoySQL);
         return resultado;
     }
     

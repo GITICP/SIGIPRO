@@ -55,7 +55,8 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-group"></i> Usuarios</h3>
                             <div class="btn-group widget-header-toolbar">
-                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalDesactivarUsuario" style="margin-left:5px;margin-right:5px;" type="submit">Desactivar</button>                                    
+                                <button class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;" onclick="asignarCookieUsuario()">Asignar Roles</button>                                    
+                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalDesactivarUsuario" style="margin-left:5px;margin-right:5px;">Desactivar</button>                                    
                                 <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditarUsuarios" style="margin-left:5px;margin-right:5px;" onclick="prueba()">Editar</button>
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUsuarios" style="margin-left:5px;margin-right:5px;">Agregar</button>
                             </div>
