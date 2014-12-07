@@ -16,22 +16,25 @@ public class RolUsuario
     int idUsuario;
     Date fechaActivacion;
     Date fechaDesactivacion;
+    String nombreRol;
 
 
     public RolUsuario (int p_idrol,
     int p_idusuario,
-    Date p_fechaActivacion, Date p_fechaDesactivacion)
+    Date p_fechaActivacion, Date p_fechaDesactivacion, String p_nombreRol)
     {
         idRol = p_idrol;
         idUsuario = p_idusuario;
         fechaActivacion = p_fechaActivacion;
         fechaDesactivacion = p_fechaDesactivacion;
+        nombreRol = p_nombreRol;
     }
     
     public int getIDRol()                 {return idRol;}
     public int getIDUsuario()                 {return idUsuario;}
     public Date getFechaActivacion()    {return fechaActivacion;}
     public Date getFechaDesactivacion() {return fechaDesactivacion;}
+    public String getNombreRol() {return nombreRol;}
 
     
     

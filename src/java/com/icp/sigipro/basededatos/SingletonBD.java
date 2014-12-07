@@ -7,6 +7,7 @@ package com.icp.sigipro.basededatos;
 
 import com.icp.sigipro.clases.BarraFuncionalidad;
 import com.icp.sigipro.clases.Usuario;
+import com.icp.sigipro.clases.RolUsuario;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +50,7 @@ public class SingletonBD
             Class.forName("org.postgresql.Driver");
             conexion = 
             DriverManager.getConnection(
-                "jdbc:postgresql://localhost/sigipro","postgres","Akr^&Oma92"
+                "jdbc:postgresql://localhost/sigipro","postgres","Solaris2014"
             );
         }
         catch(ClassNotFoundException ex)
@@ -271,6 +272,50 @@ public class SingletonBD
             //Imprimir error
         }
         
+        return resultado;
+    }
+
+public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario)
+    {
+        Connection conexion = conectar();
+        List<RolUsuario> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT r.nombrerol, ru.idrol, ru.idusuario, ru.fechaactivacion, ru.fechadesactivacion "
+                                                     + "FROM seguridad.roles r, seguridad.rolesusuario ru  Where r.idrol = ru.idrol AND ru.idusuario = ?");
+                consulta.setString(1, p_IdUsuario);
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarRolesUsuario(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+
+ @SuppressWarnings("Convert2Diamond")
+    private List<RolUsuario> llenarRolesUsuario(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<RolUsuario> resultado = new ArrayList<RolUsuario>();
+        
+        while(resultadoConsulta.next())
+        {
+            int idUsuario = resultadoConsulta.getInt("idusuario");
+            String nombreRol = resultadoConsulta.getString("nombreusuario");
+            int idRol = resultadoConsulta.getInt("idrol");
+            Date fechaActivacion = resultadoConsulta.getDate("fechaactivacion");
+            Date fechaDesactivacion = resultadoConsulta.getDate("fechadesactivacion");
+            
+            resultado.add(new RolUsuario(idRol, idUsuario, fechaActivacion, fechaDesactivacion, nombreRol));
+        }
         return resultado;
     }
 }
