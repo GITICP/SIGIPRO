@@ -13,14 +13,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Boga
  */
-@WebServlet(name = "InsertarUsuario", urlPatterns = {"/Seguridad/InsertarUsuario"})
-public class InsertarUsuario extends HttpServlet {
+@WebServlet(name = "EliminarUsuario", urlPatterns = {"/Seguridad/EliminarUsuario"})
+public class EliminarUsuario extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +38,10 @@ public class InsertarUsuario extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet de Login</title>");            
+            out.println("<title>Servlet EliminarUsuario</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet de login en esta dirección" + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EliminarUsuario at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -82,46 +81,31 @@ public class InsertarUsuario extends HttpServlet {
         
         try
         {
-            String nombreUsuario;
-            nombreUsuario = request.getParameter("nombreUsuario");
-            String nombreCompleto;
-            nombreCompleto = request.getParameter("nombreCompleto");
-            String correoElectronico;
-            correoElectronico = request.getParameter("correoElectronico");
-            String cedula;
-            cedula = request.getParameter("cedula");
-            String departamento;
-            departamento = request.getParameter("departamento");
-            String puesto;
-            puesto = request.getParameter("puesto");
-            String fechaActivacion;
-            fechaActivacion = request.getParameter("fechaActivacion");
-            String fechaDesactivacion;
-            fechaDesactivacion = request.getParameter("fechaDesactivacion");
-            
-            SingletonBD s = SingletonBD.getSingletonBD();
-            
-            boolean insercionExitosa = s.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-                    departamento, puesto, fechaActivacion, fechaDesactivacion);
-            
-            if(insercionExitosa)
-            {
-                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+        
+        int idUsuario;
+        idUsuario = Integer.parseInt(request.getParameter("controlID"));
+        
+        SingletonBD s = SingletonBD.getSingletonBD();
+        
+        boolean desactivacionExitosa = s.desactivarUsuario(idUsuario);
+        
+        if (desactivacionExitosa)
+        {
+            request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario ingresado correctamente." +
+                                                        "Usuario desactivado correctamente." +
                                                 "</div>");
             }
-            else
-            {
-                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
-                                                    "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-                                                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario no pudo ser ingresado." +
-                                                "</div>");
-            }
-            request.getRequestDispatcher("/Seguridad/Usuarios.jsp").forward(request, response);
-            
+        else
+        {
+            request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                                                "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+                                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
+                                                    "Usuario no pudo ser desactivado." +
+                                            "</div>");
+        }
+        request.getRequestDispatcher("/Seguridad/Usuarios.jsp").forward(request, response);
         }
         finally
         {

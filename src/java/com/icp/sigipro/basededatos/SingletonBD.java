@@ -157,7 +157,7 @@ public class SingletonBD
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
-                        + " (nombreusuario, contrasena, correo, nombrecompleto, cedula, departamento, puesto, fechaactivacion, fechadesactivacion, estado) "
+                        + " (nombreusuario, contrasena,  nombrecompleto, correo, cedula, departamento, puesto, fechaactivacion, fechadesactivacion, estado) "
                         + " VALUES "
                         + " (?,?,?,?,?,?,?,?,?,TRUE )");
                 consulta.setString(1, nombreUsuario);
@@ -197,6 +197,91 @@ public class SingletonBD
             hola.toCharArray();
         }
         
+        return resultado;
+    }
+    
+    public boolean editarUsuario(int idUsuario, String nombreCompleto, String correoElectronico,
+                                    String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
+                        + " SET correo = ?, nombrecompleto = ?, cedula = ?, departamento = ?, puesto = ?, fechaactivacion = ?, fechadesactivacion= ? "
+                        + " WHERE idusuario = ? ");
+                
+                consulta.setString(1, correoElectronico);
+                consulta.setString(2, nombreCompleto);
+                consulta.setString(3, cedula);
+                consulta.setString(4, departamento);
+                consulta.setString(5, puesto);
+                
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
+                java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
+                java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+                java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+                
+                consulta.setDate(6, fActivacionSQL);
+                consulta.setDate(7, fDesactivacionSQL);
+                
+                consulta.setInt(8, idUsuario);
+                
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex)
+        {
+            String hola = "hola";
+            hola.toCharArray();
+        }
+        catch(ParseException ex)
+        {
+            String hola = "hola";
+            hola.toCharArray();
+        }
+        
+        return resultado;
+    }
+    
+    public boolean desactivarUsuario(int idUsuario)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
+                        + " SET estado = false "
+                        + " WHERE idusuario = ? ");
+            
+            consulta.setInt(1, idUsuario);
+            
+            int resultadoConsulta = consulta.executeUpdate();
+            if (resultadoConsulta == 1)
+            {
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(SQLException ex)
+        {
+            String hola = "hola";
+            hola.toCharArray();
+        }
         return resultado;
     }
     

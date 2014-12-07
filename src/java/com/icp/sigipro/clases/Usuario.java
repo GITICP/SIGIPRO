@@ -6,6 +6,8 @@
 package com.icp.sigipro.clases;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -48,9 +50,15 @@ public class Usuario
     public String getCedula()          {return cedula;}
     public String getDepartamento()    {return departamento;}
     public String getPuesto()          {return puesto;}
-    public Date getFechaActivacion()   {return fechaActivacion;}
-    public Date getFechaDesactivacion(){return fechaDesactivacion;}
+    public String getFechaActivacion()   {return formatearFecha(fechaActivacion);}
+    public String getFechaDesactivacion(){return formatearFecha(fechaDesactivacion);}
     public boolean getActivo()         {return activo;}
+    
+    private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }
     
     
 }

@@ -111,6 +111,8 @@
 	<script src="${direccion_contexto}/recursos/js/king-table.js"></script>
 	<script src="${direccion_contexto}/recursos/js/king-components.js"></script>
         <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
+        
+        <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
         <script>
                 $('#datepicker').datepicker()
                 .on('changeDate', function(e) {

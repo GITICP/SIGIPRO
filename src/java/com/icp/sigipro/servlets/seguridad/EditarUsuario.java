@@ -13,14 +13,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Boga
  */
-@WebServlet(name = "InsertarUsuario", urlPatterns = {"/Seguridad/InsertarUsuario"})
-public class InsertarUsuario extends HttpServlet {
+@WebServlet(name = "EditarUsuario", urlPatterns = {"/Seguridad/EditarUsuario"})
+public class EditarUsuario extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +38,10 @@ public class InsertarUsuario extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet de Login</title>");            
+            out.println("<title>Servlet EditarUsuario</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet de login en esta dirección" + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditarUsuario at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -75,41 +74,35 @@ public class InsertarUsuario extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        response.setContentType("text/html;charset=UTF-8");
-        
-        PrintWriter out;
-        out = response.getWriter();
-        
         try
         {
-            String nombreUsuario;
-            nombreUsuario = request.getParameter("nombreUsuario");
-            String nombreCompleto;
-            nombreCompleto = request.getParameter("nombreCompleto");
-            String correoElectronico;
-            correoElectronico = request.getParameter("correoElectronico");
+            int idUsuario;
+            idUsuario = Integer.parseInt(request.getParameter("editarIDUsuario"));
+            String nomCompleto;
+            nomCompleto = request.getParameter("editarNombreCompleto");
+            String correo;
+            correo = request.getParameter("editarCorreoElectronico");
             String cedula;
-            cedula = request.getParameter("cedula");
+            cedula = request.getParameter("editarCedula");
             String departamento;
-            departamento = request.getParameter("departamento");
+            departamento = request.getParameter("editarDepartamento");
             String puesto;
-            puesto = request.getParameter("puesto");
+            puesto = request.getParameter("editarPuesto");
             String fechaActivacion;
-            fechaActivacion = request.getParameter("fechaActivacion");
+            fechaActivacion = request.getParameter("editarFechaActivacion");
             String fechaDesactivacion;
-            fechaDesactivacion = request.getParameter("fechaDesactivacion");
+            fechaDesactivacion = request.getParameter("editarFechaDesactivacion");
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean insercionExitosa = s.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-                    departamento, puesto, fechaActivacion, fechaDesactivacion);
+            boolean resultado = s.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion);
             
-            if(insercionExitosa)
+            if(resultado)
             {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario ingresado correctamente." +
+                                                        "Usuario editado correctamente." +
                                                 "</div>");
             }
             else
@@ -117,16 +110,19 @@ public class InsertarUsuario extends HttpServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario no pudo ser ingresado." +
+                                                        "Usuario no pudo ser editado." +
                                                 "</div>");
             }
             request.getRequestDispatcher("/Seguridad/Usuarios.jsp").forward(request, response);
             
+            
+            
         }
-        finally
+        catch (Exception ex)
         {
-            out.close();
-        }
+            String hola = "hola";
+            hola.toUpperCase();
+        } 
     }
 
     /**
