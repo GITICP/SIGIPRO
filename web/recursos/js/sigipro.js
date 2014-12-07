@@ -51,7 +51,6 @@ function asignarCookieUsuario(){
         var x = document.getElementById(valorRB);
         var nombre = x.children[2].innerHTML;
         
-        alert(nombre);
         
         setCookie('idUsuario', valorRB.toString() + ';' + nombre, 1, '/');
         
@@ -60,7 +59,23 @@ function asignarCookieUsuario(){
     }
     else
     {
-        alert("Null");
+    }
+}
+
+function asignarCookieRol(){
+    if(valorRBRol)
+    {
+        var x = document.getElementById(valorRBRol);
+        var nombre = x.children[1].innerHTML;
+        
+        
+        setCookie('idRol', valorRBRol.toString() + ';' + nombre, 1, '/');
+        
+        self.location="PermisosRol.jsp";
+
+    }
+    else
+    {
     }
 }
 window.valorRBRol = null;
