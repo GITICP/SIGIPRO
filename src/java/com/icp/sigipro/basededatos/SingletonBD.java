@@ -7,6 +7,8 @@ package com.icp.sigipro.basededatos;
 
 import com.icp.sigipro.clases.BarraFuncionalidad;
 import com.icp.sigipro.clases.Usuario;
+import com.icp.sigipro.clases.RolUsuario;
+import com.icp.sigipro.clases.Rol;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +51,7 @@ public class SingletonBD
             Class.forName("org.postgresql.Driver");
             conexion = 
             DriverManager.getConnection(
-                "jdbc:postgresql://localhost/sigipro","postgres","Akr^&Oma92"
+                "jdbc:postgresql://localhost/sigipro","postgres","Solaris2014"
             );
         }
         catch(ClassNotFoundException ex)
@@ -358,4 +360,162 @@ public class SingletonBD
         
         return resultado;
     }
+
+public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario)
+    {
+        Connection conexion = conectar();
+        List<RolUsuario> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT r.nombrerol, ru.idrol, ru.idusuario, ru.fechaactivacion, ru.fechadesactivacion "
+                                                     + "FROM seguridad.roles r, seguridad.rolesusuario ru  Where r.idrol = ru.idrol AND ru.idusuario = ?");
+                consulta.setInt(1, Integer.parseInt(p_IdUsuario));
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarRolesUsuario(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+
+ @SuppressWarnings("Convert2Diamond")
+    private List<RolUsuario> llenarRolesUsuario(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<RolUsuario> resultado = new ArrayList<RolUsuario>();
+        
+        while(resultadoConsulta.next())
+        {
+            int idUsuario = resultadoConsulta.getInt("idusuario");
+            String nombreRol = resultadoConsulta.getString("nombrerol");
+            int idRol = resultadoConsulta.getInt("idrol");
+            Date fechaActivacion = resultadoConsulta.getDate("fechaactivacion");
+            Date fechaDesactivacion = resultadoConsulta.getDate("fechadesactivacion");
+            
+            resultado.add(new RolUsuario(idRol, idUsuario, fechaActivacion, fechaDesactivacion, nombreRol));
+        }
+        return resultado;
+    }
+    
+ public List<Rol> obtenerRoles()
+    {
+        Connection conexion = conectar();
+        List<Rol> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT r.idrol, r.nombrerol, r.descripcionrol "
+                                                     + "FROM seguridad.roles r");
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarRoles(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+
+ @SuppressWarnings("Convert2Diamond")
+    private List<Rol> llenarRoles(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<Rol> resultado = new ArrayList<Rol>();
+        
+        while(resultadoConsulta.next())
+        {
+            String nombreRol = resultadoConsulta.getString("nombrerol");
+            int idRol = resultadoConsulta.getInt("idrol");
+            String descripcionrol = resultadoConsulta.getString("descripcionrol");
+            
+            resultado.add(new Rol(idRol, nombreRol, descripcionrol));
+        }
+        return resultado;
+    }
+    
+    public boolean insertarRolUsuario(String idusuario, String idrol, String fechaActivacion, String fechaDesactivacion)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.rolesusuario "
+                        + " (idusuario, idrol, fechaactivacion, fechadesactivacion) "
+                        + " VALUES "
+                        + " (?,?,?,? )");
+                consulta.setInt(1, Integer.parseInt(idusuario));
+                consulta.setInt(2, Integer.parseInt(idrol));
+
+                
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
+                java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
+                java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+                java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+                
+                consulta.setDate(3, fActivacionSQL);
+                consulta.setDate(4, fDesactivacionSQL);
+                
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+        catch(ParseException ex){System.out.println(ex); }
+
+        
+        return resultado;
+    }
+    public boolean EliminarRolUsuario(String p_idusuario, String p_idrol)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.rolesusuario s" +
+                                                                        "WHERE  s.idrol = ? AND s.idusuario = ? "
+                        );
+                consulta.setInt(1, Integer.parseInt(p_idrol) );
+                consulta.setInt(2, Integer.parseInt(p_idusuario));
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+
+        
+        return resultado;
+    }
+    
 }
