@@ -16,26 +16,56 @@
             
     SingletonBD baseDatos = SingletonBD.getSingletonBD();
     
-    String p_idusuario = "1";
-    List<RolUsuario> rolesusuario = baseDatos.obtenerRolesUsuario(p_idusuario);
-    request.setAttribute("usuario", p_idusuario);
+    Cookie[] cookies = request.getCookies();
+    String p_idusuario = null;
 
-    if(rolesusuario!=null)
+    if (cookies != null) 
     {
-        request.setAttribute("listaRolesUsuario", rolesusuario);
+        for (Cookie cookie : cookies) 
+        {
+            if (cookie.getName().equals("idUsuario")) 
+            {
+                p_idusuario = cookie.getValue();
+                break;
+            }
+        }
     }
     
-    List<Rol> roles = baseDatos.obtenerRoles();
-    
-    if(roles!=null)
+    if(p_idusuario != null)
     {
-        request.setAttribute("listaRoles", roles);
+        String decodificado = java.net.URLDecoder.decode(p_idusuario, "UTF-8");
+        
+        String[] partes = decodificado.split(";");
+        p_idusuario = partes[0];
+        String nombreUsuario = partes[1];
+        
+        List<RolUsuario> rolesusuario = baseDatos.obtenerRolesUsuario(p_idusuario);
+        request.setAttribute("usuario", p_idusuario);
+        request.setAttribute("nombreUsuario", nombreUsuario);
+
+        if(rolesusuario!=null)
+        {
+            request.setAttribute("listaRolesUsuario", rolesusuario);
+        }
+
+        List<Rol> roles = baseDatos.obtenerRoles();
+
+        if(roles!=null)
+        {
+            request.setAttribute("listaRoles", roles);
+        }
     }
+    else
+    {
+        response.sendRedirect(request.getContextPath() + "/Seguridad/Usuarios.jsp");
+    }
+    
+    
     
 
 %>
 
-<t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="RolesUsuario" direccion_contexto="/SIGIPRO">
     
     <jsp:attribute name="contenido">
 
@@ -64,7 +94,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-group"></i> Roles de Usuario</h3>
+                            <h3><i class="fa fa-group"></i> Roles de ${nombreUsuario}</h3>
                             <div class="btn-group widget-header-toolbar">
                                     <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminarRolUsuario" style="margin-left:5px;margin-right:5px;">Eliminar</button>
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;">Agregar</button>
