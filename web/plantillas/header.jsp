@@ -118,7 +118,7 @@
                                 <div class="logged-user">
                                     <div class="btn-group">
                                         <a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                                            <span class="name">Bienvenido, Daniel</span>
+                                            <span class="name">Bienvenido, ${sessionScope.usuario}</span>
                                             <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu" role="menu">
