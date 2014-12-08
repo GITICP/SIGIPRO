@@ -16,7 +16,7 @@ public class BarraFuncionalidad
 {
     
     String Modulo = null;
-    List<String> Funcionalidades = new ArrayList<String>();
+    List<String[]> Funcionalidades = new ArrayList<String[]>();
     
     @SuppressWarnings("Convert2Diamond")
     public BarraFuncionalidad(String modulo)
@@ -33,12 +33,12 @@ public class BarraFuncionalidad
         Modulo = modulo;
     }
     
-    public void agregarFuncionalidad(String funcionalidad)
+    public void agregarFuncionalidad(String[] funcionalidad)
     {
         Funcionalidades.add(funcionalidad);
     }
     
-    public List<String> getFuncionalidades()
+    public List<String[]> getFuncionalidades()
     {
         return Funcionalidades;
     }

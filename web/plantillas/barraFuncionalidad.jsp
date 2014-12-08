@@ -12,16 +12,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <% 
-            
+    
     SingletonBD baseDatos = SingletonBD.getSingletonBD();
 
-    List<BarraFuncionalidad> modulos = baseDatos.obtenerModulos((String)request.getAttribute("usuario"));
+    List<BarraFuncionalidad> modulos;
+    int idusuario = (int)session.getAttribute("idusuario");
+    modulos = baseDatos.obtenerModulos(idusuario);
 
     if(modulos!=null)
     {
         request.setAttribute("modulos", modulos);
     }
-
+    
 %>
 
 <!-- left sidebar -->
@@ -36,151 +38,27 @@
                     <span class="text">Inicio</span>
                 </a>
             </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Bodegas</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Bioterio</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="#">
-                            <span class="text">Conejos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="text">Ratones</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Serpentario</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="#">
-                            <span class="text"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="text">Invoice</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Caballeriza</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="#">
-                            <span class="text"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="page-invoice.html">
-                            <span class="text">Invoice</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Control de Calidad</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="#">
-                            <span class="text"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="page-invoice.html">
-                            <span class="text">Invoice</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Producción</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="#">
-                            <span class="text"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="page-invoice.html">
-                            <span class="text">Invoice</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-credit-card fa-fw"></i>
-                    <span class="text">Ventas</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="#">
-                            <span class="text"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="page-invoice.html">
-                            <span class="text">Invoice</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="js-sub-menu-toggle">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    <span class="text">Seguridad</span>
-                    <i class="toggle-icon fa fa-angle-left"></i>
-                </a>
-                <ul class="sub-menu " style="display: none; overflow: hidden;">
-                    <li>
-                        <a href="<%= request.getContextPath() %>/Seguridad/Usuarios.jsp">
-                            <span class="text">Usuarios</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<%= request.getContextPath() %>/Seguridad/Roles.jsp">
-                            <span class="text">Roles</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
+            <c:forEach items="${modulos}" var="modulo">
+                <li>
+                    <a href="#" class="js-sub-menu-toggle">
+                        <i class="fa fa-dashboard fa-fw"></i>
+                        <span class="text">${modulo.getModulo()}</span>
+                        <i class="toggle-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    
+                        <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
+                            <li>
+                                <a href="<%= request.getContextPath() %>${funcionalidad[1]}">
+                                    <span class="text">${funcionalidad[0]}</span>
+                                </a>
+                            </li>
+                        </c:forEach> 
+                    </ul>
+                </li>
+            </c:forEach>
         </ul>
     </nav>
-    <!-- /main-nav -->
-    
     <div class="sidebar-minified js-toggle-minified">
         <i class="fa fa-angle-left"></i>
     </div>

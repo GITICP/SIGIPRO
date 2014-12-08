@@ -87,13 +87,14 @@ public class IniciarSesion extends HttpServlet {
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean loginExitoso = s.validarInicioSesion(usuario, contrasenna);
+            int idUsuario = s.validarInicioSesion(usuario, contrasenna);
             
-            if(loginExitoso)
+            if(idUsuario != -1)
             {
                 try { 
                     HttpSession session = request.getSession(); // Creación de la sesión.
                     session.setAttribute("usuario", usuario);   // Asignar atributo "usuario" a la sesión.
+                    session.setAttribute("idusuario", idUsuario);
                     session.setMaxInactiveInterval(30*60);      // Asignación de máximo 30 minutos de inactividad de la sesión.
                     response.sendRedirect(request.getContextPath() + "/index.jsp");
                     }

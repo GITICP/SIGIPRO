@@ -68,16 +68,16 @@ public class SingletonBD
         
     }
     
-    public boolean validarInicioSesion(String usuario, String contrasenna)
+    public int validarInicioSesion(String usuario, String contrasenna)
     {
         Connection conexion = conectar();
-        boolean resultado = false;
+        int resultado = -1;
         
         if (conexion!=null)
         {
             try
             {
-                PreparedStatement consulta = conexion.prepareStatement("SELECT 1 "
+                PreparedStatement consulta = conexion.prepareStatement("SELECT idusuario "
                                                                      + "FROM seguridad.usuarios us "
                                                                      + "WHERE us.nombreusuario = ? and us.contrasena = ? "
                                                                      + "AND us.fechaactivacion <= current_date "
@@ -87,20 +87,21 @@ public class SingletonBD
                 String hash = md5(contrasenna);
                 consulta.setString(2, hash);
                 ResultSet resultadoConsulta = consulta.executeQuery();
-                resultado = resultadoConsulta.next(); //Se verifica si hay resultado de la consulta.
+                resultadoConsulta.next();
+                resultado = resultadoConsulta.getInt("idusuario"); //Se verifica si hay resultado de la consulta.
                 resultadoConsulta.close();
                 consulta.close();
                 conexion.close();
             }
             catch(SQLException ex)
             {
-                resultado = false;
+                ex.printStackTrace(System.out);
             }
         }
         return resultado;
     }
     
-    public List<BarraFuncionalidad> obtenerModulos(String usuario)
+    public List<BarraFuncionalidad> obtenerModulos(int usuario)
     {
         Connection conexion = conectar();
         List<BarraFuncionalidad> resultado = null;
@@ -110,11 +111,26 @@ public class SingletonBD
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement("SELECT modulo,funcionalidad "
-                                                   + "FROM usuarios.funcionalidad_usuario "
-                                                   + "WHERE id_usuario = ? "
-                                                   + "order by modulo asc");
-                consulta.setString(1, usuario);
+                consulta = conexion.prepareStatement("Select idmenu_principal, idpadre, tag, redirect " +
+                                                    "From seguridad.entrada_menu_principal " +
+                                                    "Where permiso in " +
+                                                    "( " +
+                                                    "	Select idpermiso " +
+                                                    "	From seguridad.permisosrol " +
+                                                    "	Where idrol in " +
+                                                    "		( " +
+                                                    "			Select idrol " +
+                                                    "			From seguridad.rolesusuario " +
+                                                    "			Where idusuario = ? " +
+                                                    "			And ( " +
+                                                    "				fechaactivacion = fechadesactivacion " +
+                                                    "			      or " +
+                                                    "				(fechaactivacion < current_date and fechadesactivacion > current_date) " +
+                                                    "			    ) " +
+                                                    "		) " +
+                                                    ") " +
+                                                    "order  by idpadre, redirect desc ");
+                consulta.setInt(1, usuario);
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarBarraFuncionalidad(resultadoConsulta);
                 resultadoConsulta.close();
@@ -137,13 +153,19 @@ public class SingletonBD
         
         while(resultadoConsulta.next())
         {
-            if (!resultadoConsulta.getString("modulo").equals(modulo))
+            if (resultadoConsulta.getInt("idmenu_principal") == resultadoConsulta.getInt("idpadre"))
             {
-                modulo = resultadoConsulta.getString("modulo");
-                temp = new BarraFuncionalidad(resultadoConsulta.getString("modulo"));
+                modulo = resultadoConsulta.getString("tag");
+                temp = new BarraFuncionalidad(resultadoConsulta.getString("tag"));
                 resultado.add(temp);
             }
-            temp.agregarFuncionalidad(resultadoConsulta.getString("funcionalidad"));
+            else
+            {
+                String[] funcionalidad = new String[2];
+                funcionalidad[0] = resultadoConsulta.getString("tag");
+                funcionalidad[1] = resultadoConsulta.getString("redirect");
+                temp.agregarFuncionalidad(funcionalidad);
+            }
         }
         return resultado;
     }
