@@ -196,3 +196,13 @@ function eliminarRolPermiso(){
         $('#modalError').modal('show');
     }
 }
+function eliminarRolUsuario(){
+    if(valorRBRol)
+    {
+        $('#modalEliminarRolUsuario').modal('show');
+    }
+    else
+    {
+        $('#modalError').modal('show');
+    }
+}
