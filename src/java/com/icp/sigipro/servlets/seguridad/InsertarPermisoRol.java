@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Amed
  */
-@WebServlet(name = "EliminarRol", urlPatterns = {"/Seguridad/EliminarRol"})
-public class EliminarRol extends HttpServlet {
+@WebServlet(name = "InsertarPermisoRol", urlPatterns = {"/Seguridad/InsertarPermisoRol"})
+public class InsertarPermisoRol extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class EliminarRol extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EliminarRol</title>");            
+            out.println("<title>Servlet InsertarPermisoRol</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EliminarRol at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet InsertarPermisoRol at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -79,19 +79,21 @@ public class EliminarRol extends HttpServlet {
         out = response.getWriter();
         
         try
-        {
-            String idrol = request.getParameter("controlIDRol");
+        {   String idpermiso;
+            idpermiso      = request.getParameter("idpermiso");
+            String idrol;
+            idrol     = request.getParameter("rol");
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean Exito = s.EliminarRol( idrol);
+            boolean Exito = s.insertarPermisoRol(idrol, idpermiso);
             
             if(Exito)
             {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "El Rol se ha eliminado correctamente" +
+                                                        "Permiso asignado correctamente" +
                                                 "</div>");
             }
             else
@@ -99,10 +101,10 @@ public class EliminarRol extends HttpServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "El Rol no pudo ser eliminado porque está asignado a uno o más usuarios" +
+                                                        "El permiso no pudo ser asignado al rol" +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/Roles.jsp").forward(request, response);
+            request.getRequestDispatcher("/Seguridad/PermisosRol.jsp").forward(request, response);
             
         }
         finally

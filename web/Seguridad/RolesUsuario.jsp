@@ -120,7 +120,7 @@
                                     
                                         <tr>
                                             <td>
-                                                <input type="radio" name="control" value="${rol.getIDRol()}">
+                                                <input type="radio" name="controlRol" value="${rol.getIDRol()}">
                                             </td>
                                             <td>${rol.getNombreRol()}</td>
                                             <td>${rol.getFechaActivacion()}</td>
@@ -176,7 +176,7 @@
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
+                                               onchange="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +187,7 @@
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker2" class="form-control" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
+                                               onchange="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -218,6 +218,8 @@
                        <form class="form-horizontal" role="form" action="EliminarRolUsuario" method="post">
                             ${mensajeError}
                             <h5>¿Está seguro que desea desasignar el rol a este usuario? </h5>
+                            <input hidden="false" id="controlIDRol" name="controlIDRol">
+                            <input type="text" value="${usuario}"  name="usuario"  hidden="true">
                             <div class="form-group">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>

@@ -138,10 +138,15 @@ $("input[name='controlRol']").click(function() {
     document.getElementById("controlIDRol").value=valorRBRol;
 });
 
+window.valorRBPermiso = null;
+$("input[name='controlPermiso']").click(function() {
+    valorRBPermiso = this.value;
+    document.getElementById("controlIDPermiso").value=valorRBPermiso;
+});
+
 function EditarRolJS(){
     var x = document.getElementById(valorRBRol);
-    
-    alert(x);
+   
     document.getElementById("editarIdRol").value=valorRBRol;
     document.getElementById("editarNombre").value=x.children[1].innerHTML;
     document.getElementById("editarDescripcion").value=x.children[2].innerHTML;
@@ -175,6 +180,16 @@ function eliminarRol(){
     if(valorRBRol)
     {
         $('#ModalEliminarRol').modal('show');
+    }
+    else
+    {
+        $('#modalError').modal('show');
+    }
+}
+function eliminarRolPermiso(){
+    if(valorRBPermiso)
+    {
+        $('#modalEliminarPermisoRol').modal('show');
     }
     else
     {

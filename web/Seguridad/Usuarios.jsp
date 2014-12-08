@@ -196,7 +196,7 @@
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
+                                               onchange="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker2" class="form-control" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
+                                               onchange="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -310,7 +310,7 @@
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         <input id="editarFechaActivacion" type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
+                                               onchange="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +321,7 @@
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         <input id="editarFechaDesactivacion" type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker2" class="form-control" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
+                                               onchange="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
