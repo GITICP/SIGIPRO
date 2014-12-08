@@ -187,3 +187,13 @@ function eliminarRol(){
         $('#modalError').modal('show');
     }
 }
+function eliminarRolPermiso(){
+    if(valorRBPermiso)
+    {
+        $('#modalEliminarPermisoRol').modal('show');
+    }
+    else
+    {
+        $('#modalError').modal('show');
+    }
+}

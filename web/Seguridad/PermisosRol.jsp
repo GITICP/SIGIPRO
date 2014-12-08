@@ -96,7 +96,7 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-group"></i> Permisos del Rol: ${nombreRol}</h3>
                             <div class="btn-group widget-header-toolbar">
-                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminarPermisoRol" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                                    <button class="btn btn-danger btn-sm" onclick="eliminarRolPermiso()" style="margin-left:5px;margin-right:5px;">Eliminar</button>
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarPermisoRol" style="margin-left:5px;margin-right:5px;">Agregar</button>
 
                                
@@ -205,7 +205,25 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>    
+         <div class="widget-content">
+            <div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">Error</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Debe seleccionar un permiso.</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
     </jsp:attribute>
 
