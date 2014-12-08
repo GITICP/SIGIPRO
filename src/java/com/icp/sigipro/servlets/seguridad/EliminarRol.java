@@ -99,7 +99,7 @@ public class EliminarRol extends HttpServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "El Rol no pudo ser eliminado" +
+                                                        "El Rol no pudo ser eliminado porque está asignado a uno o más usuarios" +
                                                 "</div>");
             }
             request.getRequestDispatcher("/Seguridad/Roles.jsp").forward(request, response);

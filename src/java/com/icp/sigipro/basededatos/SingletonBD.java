@@ -6,6 +6,8 @@
 package com.icp.sigipro.basededatos;
 
 import com.icp.sigipro.clases.BarraFuncionalidad;
+import com.icp.sigipro.clases.Permiso;
+import com.icp.sigipro.clases.PermisoRol;
 import com.icp.sigipro.clases.Usuario;
 import com.icp.sigipro.clases.RolUsuario;
 import com.icp.sigipro.clases.Rol;
@@ -634,6 +636,152 @@ public List<Rol> obtenerRolesRestantes(String p_IdUsuario)
                                                                         "WHERE  s.idrol = ? "
                         );
                 consulta.setInt(1, Integer.parseInt(p_idrol) );
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+
+        
+        return resultado;
+    }
+    //---------------------------------------------------------------------------------------------------------
+    public List<PermisoRol> obtenerPermisosRol(String p_IdRol)
+    {
+        Connection conexion = conectar();
+        List<PermisoRol> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT p.nombrepermiso, pr.idrol, pr.idpermiso "
+                                                     + "FROM seguridad.permisosrol pr, seguridad.permisos p  Where  pr.idpermiso = p.idpermiso AND pr.idrol = ? ");
+                consulta.setInt(1, Integer.parseInt(p_IdRol));
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarPermisosRol(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+
+ @SuppressWarnings("Convert2Diamond")
+    private List<PermisoRol> llenarPermisosRol(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<PermisoRol> resultado = new ArrayList<PermisoRol>();
+        
+        while(resultadoConsulta.next())
+        {
+            int idPermiso= resultadoConsulta.getInt("idpermiso");
+            String nombrePermiso = resultadoConsulta.getString("nombrepermiso");
+            int idRol = resultadoConsulta.getInt("idrol");
+            
+            resultado.add(new PermisoRol(idRol, idPermiso, nombrePermiso));
+        }
+        return resultado;
+    }
+    
+ 
+public List<Permiso> obtenerPermisosRestantes(String p_idrol)
+    {
+        Connection conexion = conectar();
+        List<Permiso> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement(  "SELECT p.idpermiso, p.nombrepermiso, p.descripcionpermiso "
+                                                     + "FROM seguridad.permisos p "
+                                                     + "WHERE p.idpermiso NOT IN (SELECT ru.idpermiso FROM seguridad.permisosrol ru WHERE ru.idrol = ?)");
+                consulta.setInt(1, Integer.parseInt(p_idrol));
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarPermisos(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+
+ @SuppressWarnings("Convert2Diamond")
+    private List<Permiso> llenarPermisos(ResultSet resultadoConsulta) throws SQLException
+    {
+        List<Permiso> resultado = new ArrayList<Permiso>();
+        
+        while(resultadoConsulta.next())
+        {
+            String nombreRol = resultadoConsulta.getString("nombrepermiso");
+            int idRol = resultadoConsulta.getInt("idpermiso");
+            String descripcionrol = resultadoConsulta.getString("descripcionpermiso");
+            
+            resultado.add(new Permiso(idRol, nombreRol, descripcionrol));
+        }
+        return resultado;
+    }
+    
+    public boolean insertarPermisoRol(String idrol, String idpermiso)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.permisosrol "
+                        + " (idrol, idpermiso) "
+                        + " VALUES "
+                        + " (?,? )");
+                consulta.setInt(1, Integer.parseInt(idrol));
+                consulta.setInt(2, Integer.parseInt(idpermiso));
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+
+        
+        return resultado;
+    }
+    public boolean EliminarPermisoRol(String p_idrol, String p_idpermiso)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisosrol s" +
+                                                                        "WHERE  s.idrol = ? AND s.idpermiso = ? "
+                        );
+                consulta.setInt(1, Integer.parseInt(p_idrol) );
+                consulta.setInt(2, Integer.parseInt(p_idpermiso));
                 int resultadoConsulta = consulta.executeUpdate();
                 if (resultadoConsulta == 1)
                 {

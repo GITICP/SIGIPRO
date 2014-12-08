@@ -218,6 +218,7 @@
                        <form class="form-horizontal" role="form" action="EliminarRolUsuario" method="post">
                             ${mensajeError}
                             <h5>¿Está seguro que desea desasignar el rol a este usuario? </h5>
+                            <input type="text" value="${usuario}"  name="usuario"  hidden="true">
                             <div class="form-group">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
