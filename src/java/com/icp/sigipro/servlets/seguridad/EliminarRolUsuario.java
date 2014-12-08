@@ -83,7 +83,7 @@ public class EliminarRolUsuario extends HttpServlet {
         try
         {
             String idusuario      = request.getParameter("usuario");
-            String idrol = request.getParameter("idrol");
+            String idrol = request.getParameter("controlIDRol");
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
@@ -105,7 +105,7 @@ public class EliminarRolUsuario extends HttpServlet {
                                                         "Rol no pudo ser desasignado" +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/RolUsuario.jsp").forward(request, response);
+            request.getRequestDispatcher("/Seguridad/RolesUsuario.jsp").forward(request, response);
             
         }
         finally

@@ -542,7 +542,7 @@ public List<Rol> obtenerRolesRestantes(String p_IdUsuario)
             
             if(conexion != null)
             {
-                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.rolesusuario s" +
+                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.rolesusuario s " +
                                                                         "WHERE  s.idrol = ? AND s.idusuario = ? "
                         );
                 consulta.setInt(1, Integer.parseInt(p_idrol) );

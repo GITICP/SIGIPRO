@@ -120,7 +120,7 @@
                                     
                                         <tr>
                                             <td>
-                                                <input type="radio" name="control" value="${rol.getIDRol()}">
+                                                <input type="radio" name="controlRol" value="${rol.getIDRol()}">
                                             </td>
                                             <td>${rol.getNombreRol()}</td>
                                             <td>${rol.getFechaActivacion()}</td>
@@ -218,6 +218,7 @@
                        <form class="form-horizontal" role="form" action="EliminarRolUsuario" method="post">
                             ${mensajeError}
                             <h5>¿Está seguro que desea desasignar el rol a este usuario? </h5>
+                            <input hidden="false" id="controlIDRol" name="controlIDRol">
                             <input type="text" value="${usuario}"  name="usuario"  hidden="true">
                             <div class="form-group">
                                 <div class="modal-footer">

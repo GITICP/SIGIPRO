@@ -118,7 +118,7 @@
                                     
                                         <tr>
                                             <td>
-                                                <input type="radio" name="control" value="${permiso.getIDPermiso()}">
+                                                <input type="radio" name="controlPermisos" value="${permiso.getIDPermiso()}">
                                             </td>
                                             <td>${permiso.getNombrePermiso()}</td>
                                         </tr>
@@ -192,6 +192,8 @@
                        <form class="form-horizontal" role="form" action="EliminarPermisoRol" method="post">
                             ${mensajeError}
                             <h5>¿Está seguro que desea desasignar el permiso a este rol? </h5>
+                            <input hidden="false" id="controlIDPermiso" name="controlIDPermiso">
+                            <input type="text" value="${idRol}"  name="rol"  hidden="true">
                             <div class="form-group">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
