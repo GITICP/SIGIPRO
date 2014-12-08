@@ -146,8 +146,7 @@ $("input[name='controlPermiso']").click(function() {
 
 function EditarRolJS(){
     var x = document.getElementById(valorRBRol);
-    
-    alert(x);
+   
     document.getElementById("editarIdRol").value=valorRBRol;
     document.getElementById("editarNombre").value=x.children[1].innerHTML;
     document.getElementById("editarDescripcion").value=x.children[2].innerHTML;
