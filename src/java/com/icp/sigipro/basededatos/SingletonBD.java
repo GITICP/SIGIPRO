@@ -387,7 +387,7 @@ public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario)
             {
                 PreparedStatement consulta;
                 consulta = conexion.prepareStatement("SELECT r.nombrerol, ru.idrol, ru.idusuario, ru.fechaactivacion, ru.fechadesactivacion "
-                                                     + "FROM seguridad.roles r, seguridad.rolesusuario ru  Where r.idrol = ru.idrol AND ru.idusuario = ?");
+                                                     + "FROM seguridad.roles r, seguridad.rolesusuario ru  Where r.idrol = ru.idrol AND ru.idusuario = ? ");
                 consulta.setInt(1, Integer.parseInt(p_IdUsuario));
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarRolesUsuario(resultadoConsulta);
@@ -432,6 +432,33 @@ public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario)
                 PreparedStatement consulta;
                 consulta = conexion.prepareStatement("SELECT r.idrol, r.nombrerol, r.descripcionrol "
                                                      + "FROM seguridad.roles r");
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarRoles(resultadoConsulta);
+                resultadoConsulta.close();
+                conexion.close();
+            }
+            catch(SQLException ex)
+            {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+ 
+public List<Rol> obtenerRolesRestantes(String p_IdUsuario)
+    {
+        Connection conexion = conectar();
+        List<Rol> resultado = null;
+        
+        if (conexion!=null)
+        {
+            try
+            {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement(  "SELECT r.idrol, r.nombrerol, r.descripcionrol "
+                                                     + "FROM seguridad.roles r "
+                                                     + "WHERE r.idrol NOT IN (SELECT ru.idrol FROM seguridad.rolesusuario ru WHERE ru.idusuario = ?)");
+                consulta.setInt(1, Integer.parseInt(p_IdUsuario));
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarRoles(resultadoConsulta);
                 resultadoConsulta.close();

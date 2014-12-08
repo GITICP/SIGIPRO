@@ -48,7 +48,7 @@
             request.setAttribute("listaRolesUsuario", rolesusuario);
         }
 
-        List<Rol> roles = baseDatos.obtenerRoles();
+        List<Rol> roles = baseDatos.obtenerRolesRestantes(p_idusuario);
 
         if(roles!=null)
         {
