@@ -52,13 +52,14 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-legal"></i> Roles</h3>
                             <div class="btn-group widget-header-toolbar">
-                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ModalEliminarRol" style="margin-left:5px;margin-right:5px;">Eliminar</button>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#ModalEditarRol" style="margin-left:5px;margin-right:5px;" onclick="EditarRolJS()">Editar</button>
+                                <button class="btn btn-primary btn-sm" onclick="agregarPermisos()" style="margin-left:5px;margin-right:5px;">Agregar Permisos</button>
+                                <%--<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Agregar Permisos</button>--%>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarRol()" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                                <button class="btn btn-warning btn-sm" onclick="editarRol()" style="margin-left:5px;margin-right:5px;" onclick="EditarRolJS()">Editar</button>
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ModalAgregarRol" style="margin-left:5px;margin-right:5px;">Agregar Rol</button>
-                                <button class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;" onclick="asignarCookieRol()">Asignar Permisos</button> 
                             </div>
                         </div>
-                         ${mensaje}
+                        ${mensaje}
                         <div class="widget-content">
                             <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
                                 <!-- Columnas -->
@@ -200,6 +201,25 @@
                                 </div>
                             </div>
                         </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                            
+        <div class="widget-content">
+            <div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">Error</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Debe seleccionar un rol.</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
                         </div>
                     </div>
                 </div>
