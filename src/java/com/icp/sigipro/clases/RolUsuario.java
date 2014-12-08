@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.clases;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 /**
  *
  * @author Amed
@@ -32,10 +34,14 @@ public class RolUsuario
     
     public int getIDRol()                 {return idRol;}
     public int getIDUsuario()                 {return idUsuario;}
-    public Date getFechaActivacion()    {return fechaActivacion;}
-    public Date getFechaDesactivacion() {return fechaDesactivacion;}
+    public String getFechaActivacion()    {return formatearFecha(fechaActivacion);}
+    public String getFechaDesactivacion() {return formatearFecha(fechaDesactivacion);}
     public String getNombreRol() {return nombreRol;}
 
-    
+    private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }
     
 }
