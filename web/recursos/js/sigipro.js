@@ -138,6 +138,12 @@ $("input[name='controlRol']").click(function() {
     document.getElementById("controlIDRol").value=valorRBRol;
 });
 
+window.valorRBPermiso = null;
+$("input[name='controlPermiso']").click(function() {
+    valorRBPermiso = this.value;
+    document.getElementById("controlIDPermiso").value=valorRBPermiso;
+});
+
 function EditarRolJS(){
     var x = document.getElementById(valorRBRol);
     

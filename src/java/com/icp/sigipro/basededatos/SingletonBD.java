@@ -777,7 +777,7 @@ public List<Permiso> obtenerPermisosRestantes(String p_idrol)
             
             if(conexion != null)
             {
-                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisosrol s" +
+                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisosrol s " +
                                                                         "WHERE  s.idrol = ? AND s.idpermiso = ? "
                         );
                 consulta.setInt(1, Integer.parseInt(p_idrol) );

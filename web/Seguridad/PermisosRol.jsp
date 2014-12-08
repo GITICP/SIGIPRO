@@ -118,7 +118,7 @@
                                     
                                         <tr>
                                             <td>
-                                                <input type="radio" name="controlPermisos" value="${permiso.getIDPermiso()}">
+                                                <input type="radio" name="controlPermiso" value="${permiso.getIDPermiso()}">
                                             </td>
                                             <td>${permiso.getNombrePermiso()}</td>
                                         </tr>
