@@ -33,7 +33,7 @@
     <nav class="main-nav">
         <ul class="main-menu">
             <li class="active">
-                <a href="index.html">
+                <a href="index.jsp">
                     <i class="fa fa-dashboard fa-fw"></i>
                     <span class="text">Inicio</span>
                 </a>
