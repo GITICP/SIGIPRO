@@ -187,7 +187,7 @@ public class SingletonBD
                         + " VALUES "
                         + " (?,?,?,?,?,?,?,?,?,? )");
                 consulta.setString(1, nombreUsuario);
-                consulta.setString(2, md5("hola"));
+                consulta.setString(2, md5("sigipro"));
                 consulta.setString(3, nombreCompleto);
                 consulta.setString(4, correoElectronico);
                 consulta.setString(5, cedula);
@@ -346,9 +346,10 @@ public class SingletonBD
         java.util.Calendar calendario = java.util.Calendar.getInstance();
         java.util.Date hoy = calendario.getTime();
         Date hoySQL = new Date(hoy.getTime());
-        
-        
-        boolean resultado = fechaActivacion.before(hoySQL) && fechaDesactivacion.after(hoySQL);
+        boolean resultado = 
+                ((fechaActivacion.before(hoySQL) 
+                && fechaDesactivacion.after(hoySQL) )
+                || fechaActivacion.equals(fechaDesactivacion));
         return resultado;
     }
     

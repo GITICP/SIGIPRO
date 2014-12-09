@@ -52,7 +52,14 @@ public class Usuario
     public String getPuesto()          {return puesto;}
     public String getFechaActivacion()   {return formatearFecha(fechaActivacion);}
     public String getFechaDesactivacion(){return formatearFecha(fechaDesactivacion);}
-    public boolean getActivo()         {return activo;}
+    public String getActivo()         {
+        if(activo){
+            return "Activo" ;
+                    }
+        else {
+            return "Inactivo";
+        }
+    }
     
     private String formatearFecha(Date fecha)
     {
