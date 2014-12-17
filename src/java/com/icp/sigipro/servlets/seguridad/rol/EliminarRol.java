@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.servlets.seguridad;
+package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import java.io.IOException;
@@ -13,14 +13,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Boga
+ * @author Amed
  */
-@WebServlet(name = "InsertarUsuario", urlPatterns = {"/Seguridad/InsertarUsuario"})
-public class InsertarUsuario extends HttpServlet {
+@WebServlet(name = "EliminarRol", urlPatterns = {"/Seguridad/EliminarRol"})
+public class EliminarRol extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +38,10 @@ public class InsertarUsuario extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet de Login</title>");            
+            out.println("<title>Servlet EliminarRol</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet de login en esta dirección" + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EliminarRol at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -74,7 +73,6 @@ public class InsertarUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         response.setContentType("text/html;charset=UTF-8");
         
         PrintWriter out;
@@ -82,34 +80,18 @@ public class InsertarUsuario extends HttpServlet {
         
         try
         {
-            String nombreUsuario;
-            nombreUsuario = request.getParameter("nombreUsuario");
-            String nombreCompleto;
-            nombreCompleto = request.getParameter("nombreCompleto");
-            String correoElectronico;
-            correoElectronico = request.getParameter("correoElectronico");
-            String cedula;
-            cedula = request.getParameter("cedula");
-            String departamento;
-            departamento = request.getParameter("departamento");
-            String puesto;
-            puesto = request.getParameter("puesto");
-            String fechaActivacion;
-            fechaActivacion = request.getParameter("fechaActivacion");
-            String fechaDesactivacion;
-            fechaDesactivacion = request.getParameter("fechaDesactivacion");
+            String idrol = request.getParameter("controlIDRol");
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean insercionExitosa = s.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-                    departamento, puesto, fechaActivacion, fechaDesactivacion);
+            boolean Exito = s.EliminarRol( idrol);
             
-            if(insercionExitosa)
+            if(Exito)
             {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario ingresado correctamente." +
+                                                        "El Rol se ha eliminado correctamente" +
                                                 "</div>");
             }
             else
@@ -117,10 +99,10 @@ public class InsertarUsuario extends HttpServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario no pudo ser ingresado." +
+                                                        "El Rol no pudo ser eliminado porque está asignado a uno o más usuarios" +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/Usuarios.jsp").forward(request, response);
+            request.getRequestDispatcher("/Seguridad/Roles/").forward(request, response);
             
         }
         finally

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Amed
  */
-@WebServlet(name = "InsertarRolUsuario", urlPatterns = {"/Seguridad/InsertarRolUsuario"})
+@WebServlet(name = "InsertarRolUsuario", urlPatterns = {"/Seguridad/Usuarios/InsertarRolUsuario"})
 public class InsertarRolUsuario extends HttpServlet {
 
     /**
@@ -94,7 +94,7 @@ public class InsertarRolUsuario extends HttpServlet {
             
             if(Exito)
             {
-                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Rol asignado correctamente" +
@@ -102,13 +102,13 @@ public class InsertarRolUsuario extends HttpServlet {
             }
             else
             {
-                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Rol no pudo ser asignado" +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/RolesUsuario.jsp").forward(request, response);
+            request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id="+idusuario).forward(request, response);
             
         }
         finally

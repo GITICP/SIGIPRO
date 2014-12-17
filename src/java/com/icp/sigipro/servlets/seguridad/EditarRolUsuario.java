@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Amed
+ * @author Boga
  */
-@WebServlet(name = "EliminarRolUsuario", urlPatterns = {"/Seguridad/Usuarios/EliminarRolUsuario"})
-public class EliminarRolUsuario extends HttpServlet {
+@WebServlet(name = "EditarRolUsuario", urlPatterns = {"/Seguridad/Usuarios/EditarRolUsuario"})
+public class EditarRolUsuario extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class EliminarRolUsuario extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EliminarRolUsuario</title>");            
+            out.println("<title>Servlet EditarRolUsuario</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EliminarRolUsuario at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditarRolUsuario at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,8 +73,6 @@ public class EliminarRolUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        {
-        
         response.setContentType("text/html;charset=UTF-8");
         
         PrintWriter out;
@@ -82,19 +80,21 @@ public class EliminarRolUsuario extends HttpServlet {
         
         try
         {
-            String idusuario      = request.getParameter("usuario");
-            String idrol = request.getParameter("controlIDRol");
+            String idusuario      = request.getParameter("idUsuarioEditar");
+            String idrol = request.getParameter("idRolEditar");
+            String fechaActivacion = request.getParameter("editarFechaActivacion");
+            String fechaDesactivacion = request.getParameter("editarFechaDesactivacion");
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean Exito = s.EliminarRolUsuario(idusuario, idrol);
+            boolean Exito = s.EditarRolUsuario(idusuario, idrol, fechaActivacion, fechaDesactivacion);
             
             if(Exito)
             {
                 request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "El Rol seleccionado fue desasignado al usuario correspondiente" +
+                                                        "El Rol seleccionado fue editado correctamente." +
                                                 "</div>");
             }
             else
@@ -102,7 +102,7 @@ public class EliminarRolUsuario extends HttpServlet {
                 request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Rol no pudo ser desasignado" +
+                                                        "Rol no pudo ser editar." +
                                                 "</div>");
             }
             request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id="+idusuario).forward(request, response);
@@ -112,7 +112,6 @@ public class EliminarRolUsuario extends HttpServlet {
         {
             out.close();
         }
-    }
     }
 
     /**

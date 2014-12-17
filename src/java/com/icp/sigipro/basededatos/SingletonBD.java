@@ -171,6 +171,57 @@ public class SingletonBD
     }
     
     
+    public Usuario obtenerUsuario(int idUsuario)
+    {
+        Usuario resultado = null;
+        try{
+            Connection conexion = conectar();
+
+            PreparedStatement consulta = conexion.prepareStatement(" Select nombreusuario, correo, nombrecompleto, cedula, departamento, " + 
+                                                                   " puesto, fechaactivacion, fechadesactivacion, estado " +
+                                                                   " From seguridad.usuarios" + 
+                                                                   " Where idusuario = ? ");
+
+            consulta.setInt(1, idUsuario);
+             
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            
+            if(resultadoConsulta.next())
+            {
+                resultado = new Usuario();
+                
+                String nombreUsuario = resultadoConsulta.getString("nombreusuario");
+                String correo = resultadoConsulta.getString("correo");
+                String nombreCompleto = resultadoConsulta.getString("nombrecompleto");
+                String cedula = resultadoConsulta.getString("cedula");
+                String departamento = resultadoConsulta.getString("departamento");
+                String puesto = resultadoConsulta.getString("puesto");
+                Date fechaActivacion = resultadoConsulta.getDate("fechaactivacion");
+                Date fechaDesactivacion;
+                fechaDesactivacion = resultadoConsulta.getDate("fechadesactivacion");
+                boolean activo = resultadoConsulta.getBoolean("estado");
+
+                resultado.setIdUsuario(idUsuario);
+                resultado.setNombreUsuario(nombreUsuario);
+                resultado.setCorreo(correo);
+                resultado.setNombreCompleto(nombreCompleto);
+                resultado.setCedula(cedula);
+                resultado.setDepartamento(departamento);
+                resultado.setPuesto(puesto);
+                resultado.setFechaActivacion(fechaActivacion);
+                resultado.setFechaDesactivacion(fechaDesactivacion);
+                resultado.setActivo(activo);
+            }
+        }
+        catch(SQLException ex)
+        {
+            
+        }
+        
+        
+        return resultado;
+    }
+    
     public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
                                     String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion)
     {
@@ -580,6 +631,45 @@ public List<Rol> obtenerRolesRestantes(String p_IdUsuario)
             }
         }
         catch(SQLException ex){System.out.println(ex); }
+
+        
+        return resultado;
+    }
+    public boolean EditarRolUsuario(String p_idusuario, String p_idrol, String fechaActivacion, String fechaDesactivacion)
+    {
+        boolean resultado = false;
+        
+        try
+        {
+            Connection conexion = conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("Update seguridad.rolesusuario Set fechaactivacion = ?, fechadesactivacion = ? " +
+                                                                        "WHERE  idrol = ? AND idusuario = ? "
+                        );
+                
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
+                java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
+                java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+                java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+                
+                consulta.setDate(1, fActivacionSQL);
+                consulta.setDate(2, fDesactivacionSQL);
+                consulta.setInt(3, Integer.parseInt(p_idrol) );
+                consulta.setInt(4, Integer.parseInt(p_idusuario));
+                int resultadoConsulta = consulta.executeUpdate();
+                if (resultadoConsulta == 1)
+                {
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+        }
+        catch(SQLException ex){System.out.println(ex); }
+        catch(ParseException ex){System.out.println(ex); }
 
         
         return resultado;

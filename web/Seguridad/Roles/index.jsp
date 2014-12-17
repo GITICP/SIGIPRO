@@ -20,13 +20,13 @@
         request.setAttribute("listaRoles", roles);
     }
     
-
 %>
+
 <t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
     
     <jsp:attribute name="contenido">
 
-        <jsp:include page="../plantillas/barraFuncionalidad.jsp" />
+        <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
         
         <!-- content-wrapper -->
         <div class="col-md-10 content-wrapper">
@@ -53,7 +53,6 @@
                             <h3><i class="fa fa-legal"></i> Roles</h3>
                             <div class="btn-group widget-header-toolbar">
                                 <button class="btn btn-primary btn-sm" onclick="agregarPermisos()" style="margin-left:5px;margin-right:5px;">Agregar Permisos</button>
-                                <%--<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Agregar Permisos</button>--%>
                                 <button class="btn btn-danger btn-sm" onclick="eliminarRol()" style="margin-left:5px;margin-right:5px;">Eliminar</button>
                                 <button class="btn btn-warning btn-sm" onclick="editarRol()" style="margin-left:5px;margin-right:5px;" onclick="EditarRolJS()">Editar</button>
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ModalAgregarRol" style="margin-left:5px;margin-right:5px;">Agregar Rol</button>

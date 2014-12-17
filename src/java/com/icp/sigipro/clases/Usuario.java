@@ -27,6 +27,8 @@ public class Usuario
     Date fechaDesactivacion;
     boolean activo;
     
+    public Usuario(){}
+    
     public Usuario (int p_idUsuario, String p_nombreUsuario, String p_correo, String p_nombreCompleto,
             String p_cedula, String p_departamento, String p_puesto, Date p_fechaActivacion, Date p_fechaDesactivacion,
             boolean p_activo)
@@ -41,6 +43,46 @@ public class Usuario
         fechaActivacion = p_fechaActivacion;
         fechaDesactivacion = p_fechaDesactivacion;
         activo = p_activo;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
+    }
+
+    public void setPuesto(String puesto) {
+        this.puesto = puesto;
+    }
+
+    public void setFechaActivacion(Date fechaActivacion) {
+        this.fechaActivacion = fechaActivacion;
+    }
+
+    public void setFechaDesactivacion(Date fechaDesactivacion) {
+        this.fechaDesactivacion = fechaDesactivacion;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
     
     public int getID()                 {return idUsuario;}
@@ -60,6 +102,8 @@ public class Usuario
             return "Inactivo";
         }
     }
+    
+
     
     private String formatearFecha(Date fecha)
     {

@@ -57,11 +57,8 @@
     }
     else
     {
-        response.sendRedirect(request.getContextPath() + "/Seguridad/Roles.jsp");
+        response.sendRedirect(request.getContextPath() + "/Seguridad/Roles/");
     }
-    
-    
-    
 
 %>
 

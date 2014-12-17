@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.servlets.seguridad;
+package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import java.io.IOException;
@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Boga
+ * @author Amed
  */
-@WebServlet(name = "EliminarUsuario", urlPatterns = {"/Seguridad/EliminarUsuario"})
-public class EliminarUsuario extends HttpServlet {
+@WebServlet(name = "EditarRol", urlPatterns = {"/Seguridad/Rol/Editar"})
+public class EditarRol extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,14 +34,17 @@ public class EliminarUsuario extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            
+            String idRol = request.getParameter("id");
+            
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EliminarUsuario</title>");            
+            out.println("<title>Servlet EditarRol</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EliminarUsuario at " + request.getContextPath() + "</h1>");
+            out.println("<h1>IdRol =  " + idRol + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,44 +76,45 @@ public class EliminarUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        response.setContentType("text/html;charset=UTF-8");
-        
-        PrintWriter out;
-        out = response.getWriter();
-        
-        try
+       try
         {
-        
-        int idUsuario;
-        idUsuario = Integer.parseInt(request.getParameter("controlID"));
-        
-        SingletonBD s = SingletonBD.getSingletonBD();
-        
-        boolean desactivacionExitosa = s.desactivarUsuario(idUsuario);
-        
-        if (desactivacionExitosa)
-        {
-            request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+            int idRol;
+            idRol = Integer.parseInt(request.getParameter("editarIdRol"));
+            String nombre;
+            nombre = request.getParameter("editarNombre");
+            String descripcion;
+            descripcion = request.getParameter("editarDescripcion");
+     
+            
+            SingletonBD s = SingletonBD.getSingletonBD();
+            
+            boolean resultado = s.editarRol(idRol, nombre, descripcion);
+            
+            if(resultado)
+            {
+                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario dehabilitado correctamente." +
+                                                        "Rol editado correctamente." +
                                                 "</div>");
             }
-        else
+            else
+            {
+                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                                                    "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+                                                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
+                                                        "Rol no pudo ser editado." +
+                                                "</div>");
+            }
+            request.getRequestDispatcher("/Seguridad/Roles/").forward(request, response);
+            
+            
+            
+        }
+        catch (Exception ex)
         {
-            request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
-                                                "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-                                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                    "Usuario no pudo ser deshabilitado." +
-                                            "</div>");
-        }
-        request.getRequestDispatcher("/Seguridad/Usuarios.jsp").forward(request, response);
-        }
-        finally
-        {
-            out.close();
-        }
+            System.out.println(ex);
+        } 
     }
 
     /**

@@ -4,7 +4,6 @@
  * 
  */
 
-
 function setCookie(name, value, expires, path, domain, secure){
 	cookieStr = name + "=" + escape(value) + "; ";
 	
@@ -43,7 +42,6 @@ $("input[name='control']").click(function() {
     document.getElementById("controlID").value=valorRB;
 });
 
-
 function modificarCampos(){
     var x = document.getElementById(valorRB);
     
@@ -58,19 +56,15 @@ function modificarCampos(){
     document.getElementById("editarFechaDesactivacion").value=x.children[8].innerHTML;
 }
 
-
-
 function asignarCookieUsuario(){
     if(valorRB)
     {
         var x = document.getElementById(valorRB);
         var nombre = x.children[2].innerHTML;
         
-        
         setCookie('idUsuario', valorRB.toString() + ';' + nombre, 1, '/');
         
         self.location="RolesUsuario.jsp";
-
     }
     else
     {
@@ -196,13 +190,16 @@ function eliminarRolPermiso(){
         $('#modalError').modal('show');
     }
 }
-function eliminarRolUsuario(){
-    if(valorRBRol)
-    {
-        $('#modalEliminarRolUsuario').modal('show');
-    }
-    else
-    {
-        $('#modalError').modal('show');
-    }
+function eliminarRolUsuario(idRol){
+    document.getElementById("idRolUsuarioEliminar").value=idRol;
+    $('#modalEliminarRolUsuario').modal('show');
+}
+
+function editarRolUsuario(idRol){
+    var x = document.getElementById(idRol);
+    
+    document.getElementById("idRolUsuarioEditar").value=idRol;
+    document.getElementById("datepicker3").value=x.children[1].innerHTML;;
+    document.getElementById("datepicker4").value=x.children[2].innerHTML;;
+    $('#modalEditarRolUsuario').modal('show');
 }

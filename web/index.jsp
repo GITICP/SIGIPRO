@@ -32,8 +32,9 @@
                     <h2>Inicio</h2>
 
                         <div class="main-content">
-
-
+                            
+                            <!-- Acá va contenido importante, notificaciones, etc. -->
+                            
                         </div>
                         <!-- /main-content -->
                 </div>

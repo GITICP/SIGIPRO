@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.servlets.seguridad;
+package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import java.io.IOException;
@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Amed
  */
-@WebServlet(name = "EliminarRolUsuario", urlPatterns = {"/Seguridad/Usuarios/EliminarRolUsuario"})
-public class EliminarRolUsuario extends HttpServlet {
+@WebServlet(name = "InsertarRol", urlPatterns = {"/Seguridad/InsertarRol"})
+public class InsertarRol extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class EliminarRolUsuario extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EliminarRolUsuario</title>");            
+            out.println("<title>Servlet InsertarRol</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EliminarRolUsuario at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet InsertarRol at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,46 +73,46 @@ public class EliminarRolUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        {
         
-        response.setContentType("text/html;charset=UTF-8");
+          response.setContentType("text/html;charset=UTF-8");
         
         PrintWriter out;
         out = response.getWriter();
         
         try
-        {
-            String idusuario      = request.getParameter("usuario");
-            String idrol = request.getParameter("controlIDRol");
+        {   String nombreRol;
+            nombreRol      = request.getParameter("nombreRol");
+            String descripcionRol;
+            descripcionRol   = request.getParameter("descripcionRol");
+
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean Exito = s.EliminarRolUsuario(idusuario, idrol);
+            boolean Exito = s.insertarRol(nombreRol, descripcionRol);
             
             if(Exito)
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "El Rol seleccionado fue desasignado al usuario correspondiente" +
+                                                        "El rol fue insertado correctamente" +
                                                 "</div>");
             }
             else
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Rol no pudo ser desasignado" +
+                                                        "El rol no pudo ser agregado" +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id="+idusuario).forward(request, response);
+            request.getRequestDispatcher("/Seguridad/Roles/").forward(request, response);
             
         }
         finally
         {
             out.close();
         }
-    }
     }
 
     /**

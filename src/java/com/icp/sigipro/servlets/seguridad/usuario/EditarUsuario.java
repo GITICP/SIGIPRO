@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.servlets.seguridad;
+package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.clases.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Boga
  */
-@WebServlet(name = "EditarUsuario", urlPatterns = {"/Seguridad/EditarUsuario"})
+@WebServlet(name = "EditarUsuario", urlPatterns = {"/Seguridad/Usuarios/Editar"})
 public class EditarUsuario extends HttpServlet {
 
     /**
@@ -32,18 +34,23 @@ public class EditarUsuario extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet EditarUsuario</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet EditarUsuario at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            
+            String id;
+            id = request.getParameter("id");
+            int idUsuario;
+            idUsuario = Integer.parseInt(id);
+
+            SingletonBD s = SingletonBD.getSingletonBD();
+
+            Usuario usuario = s.obtenerUsuario(idUsuario);
+
+            request.setAttribute("usuario", usuario);
+
+            ServletContext context = this.getServletContext();
+            context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
         }
     }
 
@@ -79,19 +86,19 @@ public class EditarUsuario extends HttpServlet {
             int idUsuario;
             idUsuario = Integer.parseInt(request.getParameter("editarIDUsuario"));
             String nomCompleto;
-            nomCompleto = request.getParameter("editarNombreCompleto");
+            nomCompleto = request.getParameter("nombreCompleto");
             String correo;
-            correo = request.getParameter("editarCorreoElectronico");
+            correo = request.getParameter("correoElectronico");
             String cedula;
-            cedula = request.getParameter("editarCedula");
+            cedula = request.getParameter("cedula");
             String departamento;
-            departamento = request.getParameter("editarDepartamento");
+            departamento = request.getParameter("departamento");
             String puesto;
-            puesto = request.getParameter("editarPuesto");
+            puesto = request.getParameter("puesto");
             String fechaActivacion;
-            fechaActivacion = request.getParameter("editarFechaActivacion");
+            fechaActivacion = request.getParameter("fechaActivacion");
             String fechaDesactivacion;
-            fechaDesactivacion = request.getParameter("editarFechaDesactivacion");
+            fechaDesactivacion = request.getParameter("fechaDesactivacion");
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
@@ -113,7 +120,7 @@ public class EditarUsuario extends HttpServlet {
                                                         "Usuario no pudo ser editado." +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/Usuarios.jsp").forward(request, response);
+            request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id="+String.valueOf(idUsuario)).forward(request, response);
             
             
             
