@@ -5,12 +5,12 @@
  */
 package com.icp.sigipro.basededatos;
 
-import com.icp.sigipro.clases.BarraFuncionalidad;
-import com.icp.sigipro.clases.Permiso;
-import com.icp.sigipro.clases.PermisoRol;
-import com.icp.sigipro.clases.Usuario;
-import com.icp.sigipro.clases.RolUsuario;
-import com.icp.sigipro.clases.Rol;
+import com.icp.sigipro.seguridad.modelos.BarraFuncionalidad;
+import com.icp.sigipro.seguridad.modelos.Permiso;
+import com.icp.sigipro.seguridad.modelos.PermisoRol;
+import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Rol;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
