@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.clases;
+package com.icp.sigipro.seguridad.modelos;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad.usuario;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -85,9 +85,9 @@ public class EliminarUsuario extends HttpServlet {
         int idUsuario;
         idUsuario = Integer.parseInt(request.getParameter("usuario"));
         
-        SingletonBD s = SingletonBD.getSingletonBD();
+        UsuarioDAO u = new UsuarioDAO();
         
-        boolean desactivacionExitosa = s.desactivarUsuario(idUsuario);
+        boolean desactivacionExitosa = u.desactivarUsuario(idUsuario);
         
         if (desactivacionExitosa)
         {

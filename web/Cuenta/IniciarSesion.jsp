@@ -55,7 +55,7 @@
             <div class="login-box center-block">
                 <form class="form-horizontal" role="form" action="IniciarSesion" method="post">
                     <p class="title">Iniciar Sesión</p>
-                    ${mensajeError}
+                    ${mensaje}
                     <div class="form-group">
                         <label for="username" class="control-label sr-only">Usuario</label>
                         <div class="col-sm-12">

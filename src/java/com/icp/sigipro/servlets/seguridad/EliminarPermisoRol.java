@@ -6,6 +6,7 @@
 package com.icp.sigipro.servlets.seguridad;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -83,9 +84,9 @@ public class EliminarPermisoRol extends HttpServlet {
             String idrol      = request.getParameter("rol");
             String idpermiso = request.getParameter("controlIDPermiso");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            PermisoRolDAO pr = new PermisoRolDAO();
             
-            boolean Exito = s.EliminarPermisoRol(idrol, idpermiso);
+            boolean Exito = pr.EliminarPermisoRol(idrol, idpermiso);
             
             if(Exito)
             {

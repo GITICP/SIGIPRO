@@ -8,7 +8,6 @@
 <!DOCTYPE html>
 <form class="form-horizontal" autocomplete="off" role="form" action="InsertarUsuario" method="post">
     <p class="title">Agregar Usuario</p>
-    ${mensajeError}
     <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
     <div class="form-group">
         <div class="col-sm-12">

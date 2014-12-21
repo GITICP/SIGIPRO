@@ -6,7 +6,8 @@
 package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.clases.Usuario;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletContext;
@@ -44,8 +45,9 @@ public class EditarUsuario extends HttpServlet {
             idUsuario = Integer.parseInt(id);
 
             SingletonBD s = SingletonBD.getSingletonBD();
-
-            Usuario usuario = s.obtenerUsuario(idUsuario);
+            
+            UsuarioDAO u = new UsuarioDAO();
+            Usuario usuario = u.obtenerUsuario(idUsuario);
 
             request.setAttribute("usuario", usuario);
 
@@ -102,7 +104,8 @@ public class EditarUsuario extends HttpServlet {
             
             SingletonBD s = SingletonBD.getSingletonBD();
             
-            boolean resultado = s.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion);
+            UsuarioDAO u = new UsuarioDAO();
+            boolean resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion);
             
             if(resultado)
             {

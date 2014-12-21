@@ -6,6 +6,7 @@
 package com.icp.sigipro.servlets.seguridad;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -85,13 +86,13 @@ public class EditarRolUsuario extends HttpServlet {
             String fechaActivacion = request.getParameter("editarFechaActivacion");
             String fechaDesactivacion = request.getParameter("editarFechaDesactivacion");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            RolUsuarioDAO pr = new RolUsuarioDAO();
             
-            boolean Exito = s.EditarRolUsuario(idusuario, idrol, fechaActivacion, fechaDesactivacion);
+            boolean Exito = pr.EditarRolUsuario(idusuario, idrol, fechaActivacion, fechaDesactivacion);
             
             if(Exito)
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "El Rol seleccionado fue editado correctamente." +
@@ -99,7 +100,7 @@ public class EditarRolUsuario extends HttpServlet {
             }
             else
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Rol no pudo ser editar." +

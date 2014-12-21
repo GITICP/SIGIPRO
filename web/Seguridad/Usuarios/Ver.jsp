@@ -5,7 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page import="com.icp.sigipro.clases.Usuario"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
@@ -47,7 +47,7 @@
                                 <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar</a>
                             </div>
                         </div>
-                        ${mensajeRolUsuario}
+                        ${mensaje}
                         <div class="widget-content">
                             <p>Nombre de Usuario: ${usuario.getNombreUsuario()}</p>
                             <p>Nombre Completo: ${usuario.getNombreCompleto()}</p>
@@ -106,7 +106,6 @@
             <jsp:attribute name="form">
 
                 <form class="form-horizontal" role="form" action="InsertarRolUsuario" method="post">
-                    ${mensajeError}
                     <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
                     <label for="nombreUsuario" class="control-label">*Rol</label>
                     <div class="form-group">
@@ -161,7 +160,6 @@
             <jsp:attribute name="form">
 
                 <form class="form-horizontal" role="form" action="EditarRolUsuario" method="post">
-                    ${mensajeError}
                     <input type="text" value="${usuario.getID()}"  name="idUsuarioEditar"  hidden="true">
                     <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
                     <input type="text" name="rol"  hidden="true">
@@ -219,7 +217,6 @@
 
             <jsp:attribute name="form">
                 <form class="form-horizontal" role="form" action="EliminarRolUsuario" method="post">
-                    ${mensajeError}
                     <h5>¿Está seguro que desea desasignar el rol a este usuario? </h5>
                     <input hidden="false" id="idRolUsuarioEliminar" name="controlIDRol">
                     <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
@@ -238,7 +235,6 @@
 
             <jsp:attribute name="form">
                 <form class="form-horizontal" role="form" action="Desactivar" method="post">
-                    ${mensajeError}
                     <h5>¿Está seguro que desea desactivar este usuario? </h5>
                     <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
                     <div class="form-group">

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.clases;
+package com.icp.sigipro.seguridad.modelos;
 
+import com.icp.sigipro.core.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Boga
  */
-public class BarraFuncionalidad 
+public class BarraFuncionalidad implements IModelo
 {
     
     String Modulo = null;
@@ -24,9 +25,7 @@ public class BarraFuncionalidad
         Modulo = modulo;
     }
     public BarraFuncionalidad() 
-    {  
-        
-    }
+    {      }
     
     public void agregarModulo(String modulo)
     {
@@ -47,4 +46,5 @@ public class BarraFuncionalidad
     {
         return Modulo;
     }
+
 }

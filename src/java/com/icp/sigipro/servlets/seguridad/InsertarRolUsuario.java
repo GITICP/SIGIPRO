@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -88,13 +88,13 @@ public class InsertarRolUsuario extends HttpServlet {
             String fechaDesactivacion;
             fechaDesactivacion = request.getParameter("fechaDesactivacion");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            RolUsuarioDAO ru = new RolUsuarioDAO();
             
-            boolean Exito = s.insertarRolUsuario(idusuario, idrol, fechaActivacion, fechaDesactivacion);
+            boolean Exito = ru.insertarRolUsuario(idusuario, idrol, fechaActivacion, fechaDesactivacion);
             
             if(Exito)
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Rol asignado correctamente" +
@@ -102,7 +102,7 @@ public class InsertarRolUsuario extends HttpServlet {
             }
             else
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Rol no pudo ser asignado" +

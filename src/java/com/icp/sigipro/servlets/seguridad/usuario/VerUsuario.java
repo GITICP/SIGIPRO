@@ -5,10 +5,10 @@
  */
 package com.icp.sigipro.servlets.seguridad.usuario;
 
-import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.clases.Rol;
-import com.icp.sigipro.clases.RolUsuario;
-import com.icp.sigipro.clases.Usuario;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Rol;
+import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -45,11 +45,11 @@ public class VerUsuario extends HttpServlet {
             int idUsuario;
             idUsuario = Integer.parseInt(id);
 
-            SingletonBD baseDatos = SingletonBD.getSingletonBD();
+            UsuarioDAO u = new UsuarioDAO();
 
-            Usuario usuario = baseDatos.obtenerUsuario(idUsuario);
-            List<RolUsuario> rolesUsuario = baseDatos.obtenerRolesUsuario(id);
-            List<Rol> rolesRestantes = baseDatos.obtenerRolesRestantes(id);
+            Usuario usuario = u.obtenerUsuario(idUsuario);
+            List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
+            List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
 
             request.setAttribute("usuario", usuario);
             request.setAttribute("rolesUsuario", rolesUsuario);

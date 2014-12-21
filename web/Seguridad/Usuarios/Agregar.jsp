@@ -4,7 +4,7 @@
     Author     : Boga
 --%>
 
-<%@page import="com.icp.sigipro.clases.Usuario"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
@@ -47,7 +47,6 @@
                         <div class="widget-content">
                             <form class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
                                 <p class="title">Agregar Usuario</p>
-                                ${mensajeError}
                                 <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
                                 <div class="form-group">
                                     <div class="col-sm-12">

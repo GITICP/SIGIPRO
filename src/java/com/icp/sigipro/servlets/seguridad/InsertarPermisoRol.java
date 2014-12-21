@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -84,9 +84,9 @@ public class InsertarPermisoRol extends HttpServlet {
             String idrol;
             idrol     = request.getParameter("rol");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            PermisoRolDAO pr = new PermisoRolDAO();
             
-            boolean Exito = s.insertarPermisoRol(idrol, idpermiso);
+            boolean Exito = pr.insertarPermisoRol(idrol, idpermiso);
             
             if(Exito)
             {
