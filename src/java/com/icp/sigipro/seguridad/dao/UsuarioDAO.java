@@ -197,7 +197,8 @@ public class UsuarioDAO
     }
     
     public boolean editarUsuario(int idUsuario, String nombreCompleto, String correoElectronico,
-                                    String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion)
+                                    String cedula, String departamento, String puesto, String fechaActivacion, 
+                                    String fechaDesactivacion, List<RolUsuario> p_roles)
     {
         boolean resultado = false;
         
@@ -208,6 +209,8 @@ public class UsuarioDAO
             
             if(conexion != null)
             {
+              conexion.setAutoCommit(false);
+              
                 PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
                         + " SET correo = ?, nombrecompleto = ?, cedula = ?, departamento = ?, puesto = ?, fechaactivacion = ?, fechadesactivacion= ?, estado = ?"
                         + " WHERE idusuario = ? ");
@@ -231,13 +234,33 @@ public class UsuarioDAO
                 
                 consulta.setInt(9, idUsuario);
                 
-                int resultadoConsulta = consulta.executeUpdate();
-                if (resultadoConsulta == 1)
+                List<PreparedStatement> operaciones = new ArrayList<PreparedStatement>();
+                PreparedStatement eliminarRolesUsuario = conexion.prepareStatement("Delete from seguridad.rolesusuario where idusuario = ?");
+                eliminarRolesUsuario.setInt(1, idUsuario);
+                
+                operaciones.add(consulta);
+                operaciones.add(eliminarRolesUsuario);
+                
+                String insert = " INSERT INTO seguridad.rolesusuario (idusuario, idrol, fechaactivacion, fechadesactivacion) VALUES (?,?,?,?)";
+                
+                for (RolUsuario i : p_roles)
                 {
-                    resultado = true;
+                  PreparedStatement upsertTemp = conexion.prepareStatement(insert);
+                  upsertTemp.setInt(1, i.getIDUsuario());
+                  upsertTemp.setInt(2, i.getIDRol());
+                  upsertTemp.setDate(3, i.getFechaActivacionSQL());
+                  upsertTemp.setDate(4, i.getFechaDesactivacionSQL());
+                  operaciones.add(upsertTemp);
                 }
-                consulta.close();
+                
+                for (PreparedStatement operacion : operaciones)
+                {
+                  int resultadoOperacion = operacion.executeUpdate();
+                  operacion.close();
+                }
+                conexion.commit();
                 conexion.close();
+                resultado = true;
             }
         }
         catch(SQLException ex)

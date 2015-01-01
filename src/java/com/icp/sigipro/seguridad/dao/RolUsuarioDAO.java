@@ -7,12 +7,14 @@ package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.*;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 /**
  *
  * @author Amed
@@ -37,7 +39,6 @@ public class RolUsuarioDAO
                 consulta.setInt(1, Integer.parseInt(idusuario));
                 consulta.setInt(2, Integer.parseInt(idrol));
 
-                
                 SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
                 java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
                 java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
@@ -131,5 +132,30 @@ public class RolUsuarioDAO
 
         
         return resultado;
+    }
+    public List<RolUsuario> parsearRoles(String roles, int idUsuario)
+    {
+      List<RolUsuario> resultado = null;
+      try
+      {
+        resultado = new ArrayList<RolUsuario>();
+        List<String> rolesParcial = new LinkedList<String>(Arrays.asList(roles.split("#r#")));
+        rolesParcial.remove("");
+        for (String i : rolesParcial) 
+        {
+          String[] rol = i.split("#c#");
+          SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+          java.util.Date fActivacion = formatoFecha.parse(rol[1]);
+          java.util.Date fDesactivacion = formatoFecha.parse(rol[2]);
+          java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+          java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+          resultado.add(new RolUsuario(Integer.parseInt(rol[0]), idUsuario, fActivacionSQL, fDesactivacionSQL));
+        }
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
+      return resultado;
     }
 }

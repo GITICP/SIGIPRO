@@ -6,10 +6,14 @@
 package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Rol;
+import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,9 +51,14 @@ public class EditarUsuario extends HttpServlet {
             SingletonBD s = SingletonBD.getSingletonBD();
             
             UsuarioDAO u = new UsuarioDAO();
+            
             Usuario usuario = u.obtenerUsuario(idUsuario);
-
+            List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
+            List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
+            
             request.setAttribute("usuario", usuario);
+            request.setAttribute("rolesUsuario", rolesUsuario);
+            request.setAttribute("rolesRestantes", rolesRestantes); 
 
             ServletContext context = this.getServletContext();
             context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
@@ -82,7 +91,6 @@ public class EditarUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         try
         {
             int idUsuario;
@@ -102,10 +110,13 @@ public class EditarUsuario extends HttpServlet {
             String fechaDesactivacion;
             fechaDesactivacion = request.getParameter("fechaDesactivacion");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            String rolesUsuario = request.getParameter("listaRolesUsuario");
+            RolUsuarioDAO ru = new RolUsuarioDAO();
+            List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, idUsuario);
+            
             
             UsuarioDAO u = new UsuarioDAO();
-            boolean resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion);
+            boolean resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion, roles);
             
             if(resultado)
             {

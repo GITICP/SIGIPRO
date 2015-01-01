@@ -5,25 +5,9 @@
  */
 package com.icp.sigipro.basededatos;
 
-import com.icp.sigipro.seguridad.modelos.BarraFuncionalidad;
-import com.icp.sigipro.seguridad.modelos.Permiso;
-import com.icp.sigipro.seguridad.modelos.PermisoRol;
-import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.seguridad.modelos.RolUsuario;
-import com.icp.sigipro.seguridad.modelos.Rol;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
