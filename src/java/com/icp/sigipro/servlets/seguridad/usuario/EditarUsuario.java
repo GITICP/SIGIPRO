@@ -94,6 +94,8 @@ public class EditarUsuario extends HttpServlet {
         try
         {
             int idUsuario;
+            request.setCharacterEncoding("UTF-8");
+            
             idUsuario = Integer.parseInt(request.getParameter("editarIDUsuario"));
             String nomCompleto;
             nomCompleto = request.getParameter("nombreCompleto");
