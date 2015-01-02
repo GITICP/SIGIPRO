@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.cuenta;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -85,9 +85,9 @@ public class IniciarSesion extends HttpServlet {
             String usuario     = request.getParameter("usuario");
             String contrasenna = request.getParameter("contrasenna");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            UsuarioDAO u = new UsuarioDAO();
             
-            int idUsuario = s.validarInicioSesion(usuario, contrasenna);
+            int idUsuario = u.validarInicioSesion(usuario, contrasenna);
             
             if(idUsuario != -1)
             {
@@ -105,7 +105,7 @@ public class IniciarSesion extends HttpServlet {
             }
             else
             {
-                request.setAttribute("mensajeError","<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje","<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                         "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                         "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                             "Usuario o contraseña incorrecto." +

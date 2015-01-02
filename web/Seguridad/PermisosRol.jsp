@@ -4,17 +4,18 @@
     Author     : Amed
 --%>
 
+<%@page import="com.icp.sigipro.seguridad.dao.PermisoDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.clases.PermisoRol"%>
-<%@page import="com.icp.sigipro.clases.Permiso"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.PermisoRol"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Permiso"%>
 <%@page import="java.util.List"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <% 
             
-    SingletonBD baseDatos = SingletonBD.getSingletonBD();
+    PermisoDAO pr = new PermisoDAO();
     
     Cookie[] cookies = request.getCookies();
     String p_idrol = null;
@@ -39,7 +40,7 @@
         p_idrol = partes[0];
         String nombreRol = partes[1];
         
-        List<PermisoRol> permisosrol = baseDatos.obtenerPermisosRol(p_idrol);
+        List<PermisoRol> permisosrol = pr.obtenerPermisosRol(p_idrol);
         request.setAttribute("idRol", p_idrol);
         request.setAttribute("nombreRol", nombreRol);
 
@@ -48,7 +49,7 @@
             request.setAttribute("listaPermisosRol", permisosrol);
         }
 
-        List<Permiso> permisos = baseDatos.obtenerPermisosRestantes(p_idrol);
+        List<Permiso> permisos = pr.obtenerPermisosRestantes(p_idrol);
 
         if(permisos!=null)
         {
@@ -145,7 +146,6 @@
                         <div class="modal-body">
 
                        <form class="form-horizontal" role="form" action="InsertarPermisoRol" method="post">
-                            ${mensajeError}
                             <input type="text" value="${idRol}"  name="rol"  hidden="true">
                             <label for="nombreUsuario" class="control-label">*Rol</label>
                             <div class="form-group">
@@ -187,7 +187,6 @@
                         <div class="modal-body">
 
                        <form class="form-horizontal" role="form" action="EliminarPermisoRol" method="post">
-                            ${mensajeError}
                             <h5>¿Está seguro que desea desasignar el permiso a este rol? </h5>
                             <input hidden="false" id="controlIDPermiso" name="controlIDPermiso">
                             <input type="text" value="${idRol}"  name="rol"  hidden="true">

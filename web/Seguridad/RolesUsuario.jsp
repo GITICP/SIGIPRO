@@ -6,8 +6,8 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.clases.RolUsuario"%>
-<%@page import="com.icp.sigipro.clases.Rol"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.RolUsuario"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Rol"%>
 <%@page import="java.util.List"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
@@ -152,7 +152,6 @@
                         <div class="modal-body">
 
                        <form class="form-horizontal" role="form" action="InsertarRolUsuario" method="post">
-                            ${mensajeError}
                             <input type="text" value="${usuario}"  name="usuario"  hidden="true">
                             <label for="nombreUsuario" class="control-label">*Rol</label>
                             <div class="form-group">
@@ -216,7 +215,6 @@
                         <div class="modal-body">
 
                        <form class="form-horizontal" role="form" action="EliminarRolUsuario" method="post">
-                            ${mensajeError}
                             <h5>¿Está seguro que desea desasignar el rol a este usuario? </h5>
                             <input hidden="false" id="controlIDRol" name="controlIDRol">
                             <input type="text" value="${usuario}"  name="usuario"  hidden="true">

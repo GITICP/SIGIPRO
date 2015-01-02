@@ -93,10 +93,10 @@
         <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
 
         <script>
-                $('.sigiproDatePicker').datepicker()
-                .on('changeDate', function(e) {
-                dtp.datepicker('hide');
-                });
+          $('.sigiproDatePicker').datepicker()
+            .on('changeDate', function() {
+            $(this).datepicker('hide');
+            });
         </script>
         
     </body>

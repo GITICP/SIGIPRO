@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -85,13 +85,13 @@ public class EliminarRolUsuario extends HttpServlet {
             String idusuario      = request.getParameter("usuario");
             String idrol = request.getParameter("controlIDRol");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            RolUsuarioDAO pr = new RolUsuarioDAO();
             
-            boolean Exito = s.EliminarRolUsuario(idusuario, idrol);
+            boolean Exito = pr.EliminarRolUsuario(idusuario, idrol);
             
             if(Exito)
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "El Rol seleccionado fue desasignado al usuario correspondiente" +
@@ -99,7 +99,7 @@ public class EliminarRolUsuario extends HttpServlet {
             }
             else
             {
-                request.setAttribute("mensajeRolUsuario", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Rol no pudo ser desasignado" +

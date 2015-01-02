@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.RolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -82,9 +82,9 @@ public class EliminarRol extends HttpServlet {
         {
             String idrol = request.getParameter("controlIDRol");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            RolDAO r = new RolDAO();
             
-            boolean Exito = s.EliminarRol( idrol);
+            boolean Exito = r.EliminarRol( idrol);
             
             if(Exito)
             {

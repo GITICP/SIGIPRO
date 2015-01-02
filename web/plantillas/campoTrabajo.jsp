@@ -111,7 +111,7 @@
 
                 <form class="form-horizontal" role="form" action="IniciarSesion" method="post">
                     <p class="title">Agregar Usuario</p>
-                    ${mensajeError}
+                    ${mensaje}
                     <label for="nombreUsuario" class="control-label">Nombre de Usuario</label>
                     <div class="form-group">
                         <div class="col-sm-12">

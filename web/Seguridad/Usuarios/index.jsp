@@ -4,17 +4,18 @@
     Author     : Boga
 --%>
 
+<%@page import="com.icp.sigipro.seguridad.dao.UsuarioDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.clases.Usuario"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
 <%@page import="java.util.List"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <%        
-    SingletonBD baseDatos = SingletonBD.getSingletonBD();
+    UsuarioDAO u = new UsuarioDAO();
 
-    List<Usuario> usuarios = baseDatos.obtenerUsuarios();
+    List<Usuario> usuarios = u.obtenerUsuarios();
 
     if(usuarios!=null)
     {

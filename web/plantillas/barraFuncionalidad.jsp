@@ -7,7 +7,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.List"%>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.clases.BarraFuncionalidad"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.BarraFuncionalidad"%>
+<%@page import="com.icp.sigipro.seguridad.dao.BarraFuncionalidadDAO"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
@@ -17,7 +18,9 @@
 
     List<BarraFuncionalidad> modulos;
     int idusuario = (int)session.getAttribute("idusuario");
-    modulos = baseDatos.obtenerModulos(idusuario);
+    
+    BarraFuncionalidadDAO bf = new BarraFuncionalidadDAO();
+    modulos = bf.obtenerModulos(idusuario);
 
     if(modulos!=null)
     {

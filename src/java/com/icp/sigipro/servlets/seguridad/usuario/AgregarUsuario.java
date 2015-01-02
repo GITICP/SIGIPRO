@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad.usuario;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletContext;
@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -94,9 +93,9 @@ public class AgregarUsuario extends HttpServlet {
             String fechaDesactivacion;
             fechaDesactivacion = request.getParameter("fechaDesactivacion");
             
-            SingletonBD s = SingletonBD.getSingletonBD();
+            UsuarioDAO u = new UsuarioDAO();
             
-            boolean insercionExitosa = s.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
+            boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
                     departamento, puesto, fechaActivacion, fechaDesactivacion);
             
             if(insercionExitosa)

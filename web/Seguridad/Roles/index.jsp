@@ -3,17 +3,18 @@
     Created on : Nov 26, 2014, 10:16:57 PM
     Author     : Boga
 --%>
+<%@page import="com.icp.sigipro.seguridad.dao.RolDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.clases.Rol"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Rol"%>
 <%@page import="java.util.List"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <% 
             
-    SingletonBD baseDatos = SingletonBD.getSingletonBD();
-    List<Rol> roles = baseDatos.obtenerRoles();
+    RolDAO r = new RolDAO();
+    List<Rol> roles = r.obtenerRoles();
     
     if(roles!=null)
     {
@@ -58,7 +59,6 @@
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ModalAgregarRol" style="margin-left:5px;margin-right:5px;">Agregar Rol</button>
                             </div>
                         </div>
-                        ${mensaje}
                         <div class="widget-content">
                             <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
                                 <!-- Columnas -->
@@ -102,7 +102,6 @@
                         <div class="modal-body">
 
                         <form class="form-horizontal" role="form" action="InsertarRol" method="post">
-                            ${mensajeError}
                             <label for="nombreRol" class="control-label">Nombre del Rol</label>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -146,7 +145,6 @@
                         <div class="modal-body">
 
                         <form class="form-horizontal" role="form" action="EditarRol" method="post">
-                            ${mensajeErrorEditar}
                             <input id="editarIdRol" hidden="true" name="editarIdRol">
                             <label for="editarNombre" class="control-label">Nombre del Rol</label>
                             <div class="form-group">
