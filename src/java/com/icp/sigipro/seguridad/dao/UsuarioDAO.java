@@ -213,13 +213,13 @@ public class UsuarioDAO {
         consulta.setInt(9, idUsuario);
 
         List<PreparedStatement> operaciones = new ArrayList<PreparedStatement>();
-        PreparedStatement eliminarRolesUsuario = conexion.prepareStatement("Delete from seguridad.roles_usuario where id_usuario = ?");
+        PreparedStatement eliminarRolesUsuario = conexion.prepareStatement("Delete from seguridad.roles_usuarios where id_usuario = ?");
         eliminarRolesUsuario.setInt(1, idUsuario);
 
         operaciones.add(consulta);
         operaciones.add(eliminarRolesUsuario);
 
-        String insert = " INSERT INTO seguridad.roles_usuario (id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (?,?,?,?)";
+        String insert = " INSERT INTO seguridad.roles_usuarios (id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (?,?,?,?)";
 
         for (RolUsuario i : p_roles) 
         {
@@ -376,7 +376,7 @@ public class UsuarioDAO {
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("SELECT r.id_rol, r.nombre, r.descripcion "
                 + "FROM seguridad.roles r "
-                + "WHERE r.id_rol NOT IN (SELECT ru.id_rol FROM seguridad.roles_usuario ru WHERE ru.id_usuario = ?)");
+                + "WHERE r.id_rol NOT IN (SELECT ru.id_rol FROM seguridad.roles_usuarios ru WHERE ru.id_usuario = ?)");
         consulta.setInt(1, Integer.parseInt(p_IdUsuario));
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarRoles(resultadoConsulta);
