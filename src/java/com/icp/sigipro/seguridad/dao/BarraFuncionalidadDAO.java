@@ -32,25 +32,25 @@ public class BarraFuncionalidadDAO
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement("Select idmenu_principal, idpadre, tag, redirect " +
-                                                    "From seguridad.entrada_menu_principal " +
+                consulta = conexion.prepareStatement("Select id_menu_principal, id_padre, tag, redirect " +
+                                                    "From seguridad.entradas_menu_principal " +
                                                     "Where permiso in " +
                                                     "( " +
-                                                    "	Select idpermiso " +
-                                                    "	From seguridad.permisosrol " +
-                                                    "	Where idrol in " +
+                                                    "	Select id_permiso " +
+                                                    "	From seguridad.permisos_roles " +
+                                                    "	Where id_rol in " +
                                                     "		( " +
-                                                    "			Select idrol " +
-                                                    "			From seguridad.rolesusuario " +
-                                                    "			Where idusuario = ? " +
+                                                    "			Select id_rol " +
+                                                    "			From seguridad.roles_usuarios " +
+                                                    "			Where id_usuario = ? " +
                                                     "			And ( " +
-                                                    "				fechaactivacion = fechadesactivacion " +
+                                                    "				fecha_activacion = fecha_desactivacion " +
                                                     "			      or " +
-                                                    "				(fechaactivacion < current_date and fechadesactivacion > current_date) " +
+                                                    "				(fecha_activacion < current_date and fecha_desactivacion > current_date) " +
                                                     "			    ) " +
                                                     "		) " +
                                                     ") " +
-                                                    "order  by idpadre, redirect desc ");
+                                                    "order  by id_padre, redirect desc ");
                 consulta.setInt(1, usuario);
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarBarraFuncionalidad(resultadoConsulta);
@@ -74,7 +74,7 @@ public class BarraFuncionalidadDAO
         
         while(resultadoConsulta.next())
         {
-            if (resultadoConsulta.getInt("idmenu_principal") == resultadoConsulta.getInt("idpadre"))
+            if (resultadoConsulta.getInt("id_menu_principal") == resultadoConsulta.getInt("id_padre"))
             {
                 modulo = resultadoConsulta.getString("tag");
                 temp = new BarraFuncionalidad(resultadoConsulta.getString("tag"));
