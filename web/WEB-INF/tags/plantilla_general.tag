@@ -8,7 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:if test="${sessionScope.usuario == null}">
-    <c:redirect url="/Cuenta/IniciarSesion.jsp" />
+  <c:redirect url="/Cuenta/IniciarSesion.jsp" />
 </c:if>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>
@@ -18,86 +18,86 @@
 
 <!DOCTYPE html>
 <html lang="es">
-    
-<head>
-        <title>SIGIPRO - ${title}</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta name="description" content="Instituto Clodomiro Picado - SIGIPRO">
-	<meta name="author" content="ICP">
 
-	<!-- CSS -->
-	<link href="${direccion_contexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
-	<link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
-	<link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
-        <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
+  <head>
+    <title>SIGIPRO - ${title}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Instituto Clodomiro Picado - SIGIPRO">
+    <meta name="author" content="ICP">
 
-	<!--[if lte IE 9]>
-            <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
-            <link href="${direccion_contexto}/recursos/css/main-ie-part2.css" rel="stylesheet" type="text/css" media="screen" />
-	<![endif]-->
+    <!-- CSS -->
+    <link href="${direccion_contexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
 
-	<!-- Fav and touch icons -->
-	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="${direccion_contexto}/recursos/ico/kingadmin-favicon144x144.png">
-	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="${direccion_contexto}/recursos/ico/kingadmin-favicon114x114.png">
-	<link rel="apple-touch-icon-precomposed" sizes="72x72"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon72x72.png">
-	<link rel="apple-touch-icon-precomposed" sizes="57x57"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon57x57.png">
-	<link rel="shortcut icon" href="${direccion_contexto}/recursos/ico/favicon.png">
-</head>
-    
-    <body>
-        
-        <div class="wrapper">
-                
-            <!-- Header -->
-            <jsp:include page="/plantillas/header.jsp" />
-            <!-- /Header -->
+    <!--[if lte IE 9]>
+        <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
+        <link href="${direccion_contexto}/recursos/css/main-ie-part2.css" rel="stylesheet" type="text/css" media="screen" />
+    <![endif]-->
 
-            <!-- Main -->
-            <jsp:invoke fragment="contenido" />
-            <!-- /Main -->
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${direccion_contexto}/recursos/ico/kingadmin-favicon144x144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${direccion_contexto}/recursos/ico/kingadmin-favicon114x114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon72x72.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon57x57.png">
+    <link rel="shortcut icon" href="${direccion_contexto}/recursos/ico/favicon.png">
+  </head>
 
-        </div>
-            
-            <!-- Footer -->
-            <jsp:include page="/plantillas/footer.jsp" />
-            <!-- /Footer -->
+  <body>
 
-	<!-- script references -->
-        <script src="${direccion_contexto}/recursos/js/jquery/jquery-2.1.0.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/bootstrap/bootstrap.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/modernizr/modernizr.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>
-	<script src="${direccion_contexto}/recursos/js/king-common.js"></script>
-	<script src="${direccion_contexto}/recursos/js/deliswitch.js"></script>
-        <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <div class="wrapper">
 
-	<script src="${direccion_contexto}/recursos/js/plugins/stat/jquery.easypiechart.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/raphael/raphael-2.1.0.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.resize.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.time.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.pie.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.tooltip.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/jquery-mapael/jquery.mapael.js"></script>
-	<script src="${direccion_contexto}/recursos/js/plugins/raphael/maps/usa_states.js"></script>
-	<script src="${direccion_contexto}/recursos/js/king-chart-stat.js"></script>
-	<script src="${direccion_contexto}/recursos/js/king-table.js"></script>
-	<script src="${direccion_contexto}/recursos/js/king-components.js"></script>
-        <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
-        
-        <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
+      <!-- Header -->
+      <jsp:include page="/plantillas/header.jsp" />
+      <!-- /Header -->
 
-        <script>
-          $('.sigiproDatePicker').datepicker()
-            .on('changeDate', function() {
-            $(this).datepicker('hide');
-            });
-        </script>
-        
-    </body>
+      <!-- Main -->
+      <jsp:invoke fragment="contenido" />
+      <!-- /Main -->
+
+    </div>
+
+    <!-- Footer -->
+    <jsp:include page="/plantillas/footer.jsp" />
+    <!-- /Footer -->
+
+    <!-- script references -->
+    <script src="${direccion_contexto}/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/bootstrap/bootstrap.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/modernizr/modernizr.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>
+    <script src="${direccion_contexto}/recursos/js/king-common.js"></script>
+    <script src="${direccion_contexto}/recursos/js/deliswitch.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+
+    <script src="${direccion_contexto}/recursos/js/plugins/stat/jquery.easypiechart.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/raphael/raphael-2.1.0.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.resize.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.time.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.pie.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/jquery-mapael/jquery.mapael.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/raphael/maps/usa_states.js"></script>
+    <script src="${direccion_contexto}/recursos/js/king-chart-stat.js"></script>
+    <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
+    <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
+    <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
+
+    <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
+
+    <script>
+      $('.sigiproDatePicker').datepicker()
+              .on('changeDate', function () {
+                $(this).datepicker('hide');
+              });
+    </script>
+
+  </body>
 </html>
