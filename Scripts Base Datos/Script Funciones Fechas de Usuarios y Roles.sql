@@ -2,12 +2,12 @@
 CREATE FUNCTION seguridad.f_FechasUsuario() RETURNS VOID 
 AS
 $func$
-UPDATE 	seguridad.usuarios 
+UPDATE seguridad.usuarios 
 	set estado = TRUE
 	where fecha_activacion = current_date;
-UPDATE 	seguridad.usuarios 
-	set estado = FALSE
-	where fecha_desactivacion = current_date;
+UPDATE seguridad.usuarios 
+       set estado = FALSE
+       where fecha_desactivacion = current_date;
 $func$
 LANGUAGE SQL;
 
