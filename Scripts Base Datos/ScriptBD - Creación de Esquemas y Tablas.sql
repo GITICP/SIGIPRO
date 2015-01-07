@@ -34,6 +34,12 @@ CREATE TABLE seguridad.roles_usuarios (
     fecha_desactivacion date
 );
 
+CREATE TABLE seguridad.secciones (
+    id_seccion serial NOT NULL,
+    nombre_seccion character varying(45),
+    descripcion character varying(200)
+);
+
 CREATE TABLE seguridad.usuarios (
     id_usuario serial NOT NULL,
     nombre_usuario character varying(45),
@@ -41,7 +47,7 @@ CREATE TABLE seguridad.usuarios (
     correo character varying(45),
     nombre_completo character varying(200),
     cedula character varying(45),
-    departamento character varying(200),
+    id_seccion integer NOT NULL,
     puesto character varying(200),
     fecha_activacion date,
     fecha_desactivacion date,
@@ -53,7 +59,8 @@ ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT pk_entradas_me
 ALTER TABLE ONLY seguridad.permisos ADD CONSTRAINT pk_permisos PRIMARY KEY (id_permiso);
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT pk_permisos_roles PRIMARY KEY (id_rol, id_permiso);
 ALTER TABLE ONLY seguridad.roles ADD CONSTRAINT pk_roles PRIMARY KEY (id_rol);
-ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT pk_roles_usuaios PRIMARY KEY (id_usuario, id_rol);
+ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT pk_roles_usuarios PRIMARY KEY (id_usuario, id_rol);
+ALTER TABLE ONLY seguridad.secciones ADD CONSTRAINT pk_secciones PRIMARY KEY (id_seccion);
 ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT pk_usuarios PRIMARY KEY (id_usuario);
 
 --Indices unicos esquema seguridad
@@ -70,7 +77,7 @@ ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol);
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (permiso) REFERENCES seguridad.permisos(id_permiso);
-
+ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;
@@ -231,25 +238,32 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1, 10);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1, 11);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2, 10);
 
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (4, 'isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 'Produccion', 'Jefe', '2014-12-01', '2014-12-01', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (6, 'jchaconbogarin', md5('sigipro'), 'jdcb92@gmail.com', 'Jose Daniel Chacón Bogarín', '1-1519-0808', 'Control de Calidad', 'Jefe', '2014-12-01', '2014-12-01', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (9, 'hmartinez', md5('sigipro'), 'hmartinez@icp.ucr.ac.cr', 'Hugo Martínez Vásquez', '1-0025-9908', 'Ventas', 'Vendedor', '2014-12-02', '2014-12-31', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (10, 'jrodriguez', md5('sigipro'), 'jrodriguez@icp.ucr.ac.cr', 'Juan Rodríguez Jara', '5-0098-6678', 'Bioterio', 'Administrador', '2014-12-04', '2014-01-10', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (19, 'cscabbia', md5('sigipro'), 'cscabbia@icp.ucr.ac.cr', 'Cristina Scabbia', '9-0089-2679', 'Bioterio', 'Jefe', '2014-12-10', '2014-12-19', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (2, 'dnjj14', md5('sigipro'), 'dnjj14@gmail.com', 'Daniel Thiel Jimenez', '2-2345-6789', 'Produccion', 'Jefe', '2014-12-01', '2014-12-01', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (3, 'ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 'Produccion', 'Jefe', '2014-12-01', '2014-12-01', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (8, 'mjimenez', md5('sigipro'), 'mjimenez@icp.ucr.ac.cr', 'Maria Jiménez', '3-0987-8899', 'Ventas', 'Vendedora', '2014-12-03', '2014-12-04', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (11, 'ggalvez', md5('sigipro'), 'ggalvez@icp.ucr.ac.cr', 'Gabriela Gálvez', '7-8890-6672', 'Serpentario', 'Administrador', '2014-12-16', '2015-01-09', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (14, 'afraijanes', md5('sigipro'), 'afraijanes@icp.ucr.ac.cr', 'Alberto Fraijanes', '5-9980-6678', 'Ventas', 'Vendedor', '2014-12-02', '2014-12-05', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (15, 'mfernandez', md5('sigipro'), 'mfernandez@icp.ucr.ac.cr', 'Mariela Fernández', '1-0248-1111', 'Ventas', 'Vendedora', '2014-12-01', '2014-12-03', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (16, 'Prueba', md5('sigipro'), 'prueba@prueba.com', 'Prueba', '1-0808-1241', 'ProducciÃ³n', 'Productor', '2014-12-30', '2015-01-22', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (18, 'segprueba', md5('sigipro'), 'segprueba@icp.ucr.ac.cr', 'Segunda Prueba', '1-9980-1234', 'ProducciÃ³n', 'Administrador', '2014-12-24', '2015-01-10', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (12, 'ubarahona', md5('sigipro'), 'ubarahona@icp.ucr.ac.cr', 'Ulises Barahona', '6-0998-8876', 'Ventas', 'Jefe', '2014-12-01', '2014-12-19', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (13, 'Raquel UmaÃ±a', md5('sigipro'), 'rugalde@icp.ucr.ac.cr', 'rugalde', '7-0025-7890', 'Caballeriza', 'Cuidadora', '2014-12-08', '2014-12-27', false);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (7, 'bgreene', md5('sigipro'), 'mgreene@icp.ucr.ac.cr', 'Maggie Greene', '9-0456-6789', 'Serpentario', 'Administrador', '2014-12-01', '2015-01-10', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (20, 'hjimenez', md5('sigipro'), 'hjimenez@icp.ucr.ac.cr', 'Hugo Jiménez', '6-0900-1241', 'Producción', 'Jefe', '2015-01-17', '2015-01-17', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (5, 'estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 'Produccion', 'Jefe', '2014-12-01', '2014-12-01', true);
-INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (1, 'waltercoru', md5('sigipro'), 'waltercori21@gmail.com', 'Walter Cordero Urena', '1-2345-6710', 'Produccion', 'Jefe', '2014-12-01', '2014-12-01', true);
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (1,'Produccion','Dedicados a la produccion');
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (2,'Control de Calidad','Dedicados al control de calidad');
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (3,'Ventas','Dedicados a la venta de productos');
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (4,'Bioterio','Dedicados al bioterio');
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (5,'Serpentario','Dedicados a los serpentarios');
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (6,'Caballeriza','Dedicados a la caballeriza');
+
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (4, 'isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 1 , 'Jefe', '2014-12-01', '2014-12-01', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (6, 'jchaconbogarin', md5('sigipro'), 'jdcb92@gmail.com', 'Jose Daniel Chacón Bogarín', '1-1519-0808', 2, 'Jefe', '2014-12-01', '2014-12-01', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (9, 'hmartinez', md5('sigipro'), 'hmartinez@icp.ucr.ac.cr', 'Hugo Martínez Vásquez', '1-0025-9908', 3, 'Vendedor', '2014-12-02', '2014-12-31', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (10, 'jrodriguez', md5('sigipro'), 'jrodriguez@icp.ucr.ac.cr', 'Juan Rodríguez Jara', '5-0098-6678', 4, 'Administrador', '2014-12-04', '2014-01-10', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (19, 'cscabbia', md5('sigipro'), 'cscabbia@icp.ucr.ac.cr', 'Cristina Scabbia', '9-0089-2679', 4, 'Jefe', '2014-12-10', '2014-12-19', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (2, 'dnjj14', md5('sigipro'), 'dnjj14@gmail.com', 'Daniel Thiel Jimenez', '2-2345-6789', 1, 'Jefe', '2014-12-01', '2014-12-01', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (3, 'ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 1, 'Jefe', '2014-12-01', '2014-12-01', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (8, 'mjimenez', md5('sigipro'), 'mjimenez@icp.ucr.ac.cr', 'Maria Jiménez', '3-0987-8899', 3, 'Vendedora', '2014-12-03', '2014-12-04', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (11, 'ggalvez', md5('sigipro'), 'ggalvez@icp.ucr.ac.cr', 'Gabriela Gálvez', '7-8890-6672', 5, 'Administrador', '2014-12-16', '2015-01-09', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (14, 'afraijanes', md5('sigipro'), 'afraijanes@icp.ucr.ac.cr', 'Alberto Fraijanes', '5-9980-6678', 3, 'Vendedor', '2014-12-02', '2014-12-05', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (15, 'mfernandez', md5('sigipro'), 'mfernandez@icp.ucr.ac.cr', 'Mariela Fernández', '1-0248-1111', 3, 'Vendedora', '2014-12-01', '2014-12-03', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (16, 'Prueba', md5('sigipro'), 'prueba@prueba.com', 'Prueba', '1-0808-1241', 1, 'Productor', '2014-12-30', '2015-01-22', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (18, 'segprueba', md5('sigipro'), 'segprueba@icp.ucr.ac.cr', 'Segunda Prueba', '1-9980-1234', 1, 'Administrador', '2014-12-24', '2015-01-10', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (12, 'ubarahona', md5('sigipro'), 'ubarahona@icp.ucr.ac.cr', 'Ulises Barahona', '6-0998-8876', 3, 'Jefe', '2014-12-01', '2014-12-19', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (13, 'Raquel UmaÃ±a', md5('sigipro'), 'rugalde@icp.ucr.ac.cr', 'rugalde', '7-0025-7890', 6, 'Cuidadora', '2014-12-08', '2014-12-27', false);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (7, 'bgreene', md5('sigipro'), 'mgreene@icp.ucr.ac.cr', 'Maggie Greene', '9-0456-6789', 5, 'Administrador', '2014-12-01', '2015-01-10', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (20, 'hjimenez', md5('sigipro'), 'hjimenez@icp.ucr.ac.cr', 'Hugo Jiménez', '6-0900-1241', 1, 'Jefe', '2015-01-17', '2015-01-17', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (5, 'estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 1, 'Jefe', '2014-12-01', '2014-12-01', true);
+INSERT INTO seguridad.usuarios(id_usuario, nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) VALUES (1, 'waltercoru', md5('sigipro'), 'waltercori21@gmail.com', 'Walter Cordero Urena', '1-2345-6710', 1, 'Jefe', '2014-12-01', '2014-12-01', true);
 
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
