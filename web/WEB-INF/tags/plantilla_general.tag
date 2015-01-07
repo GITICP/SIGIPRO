@@ -93,7 +93,7 @@
     <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
 
     <script>
-      $('.sigiproDatePicker').datepicker()
+      $('.sigiproDatePicker').datepicker( { minDate:0,})
               .on('changeDate', function () {
                 $(this).datepicker('hide');
               });

@@ -267,3 +267,17 @@ function confirmacion() {
 function confirmarCambios() {
   $('#editarUsuario').submit();
 }
+
+//Funcion para que, por defecto, la fecha de desactivación de un usuario en Crear Usuario sea la misma a la de activación
+$( "input[name='datepicker']" ).change(function () {
+    document.getElementById("datepicker2").value = document.getElementById("datepicker").value;});
+
+//Funcion para que revisa si la fecha de desactivación seleccionada es posterior o igual
+$( "input[name='datepicker2']" ).change(function () {
+    if ( document.getElementById("datepicker2").value < document.getElementById("datepicker").value)
+      { alert("Por favor seleccione una fecha igual o posterior a la de activación")}
+});
+
+//Funcion para que, por defecto, la fecha de desactivación de un usuario en Editar Usuario sea la misma a la de activación
+$( "input[name='editarFechaActivacion']" ).change(function () {
+    document.getElementById("agregarFechaDesactivacion").value = document.getElementById("agregarFechaActivacion").value;});

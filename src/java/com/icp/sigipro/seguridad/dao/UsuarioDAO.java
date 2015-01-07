@@ -59,8 +59,6 @@ public class UsuarioDAO {
         PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario "
                 + "FROM seguridad.usuarios us "
                 + "WHERE us.nombre_usuario = ? and us.contrasena = ? "
-                + "AND us.fecha_activacion <= current_date "
-                + "AND (us.fecha_desactivacion > current_date or us.fecha_activacion = us.fecha_desactivacion) "
                 + "AND us.estado = true ");
         consulta.setString(1, usuario);
         String hash = md5(contrasenna);
@@ -72,7 +70,7 @@ public class UsuarioDAO {
         consulta.close();
         conexion.close();
       } catch (SQLException ex) {
-        ex.printStackTrace(System.out);
+        System.out.println(ex);
       }
     }
     return resultado;

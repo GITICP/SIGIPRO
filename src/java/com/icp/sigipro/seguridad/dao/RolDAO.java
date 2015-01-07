@@ -32,7 +32,7 @@ public class RolDAO
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.roles "
-                        + " ( nombrerol, descripcionrol) "
+                        + " ( nombre, descripcion) "
                         + " VALUES "
                         + " (?,? )");
                 consulta.setString(1, nombre);
@@ -63,8 +63,8 @@ public class RolDAO
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.roles "
-                        + " SET nombrerol = ?, descripcionrol = ? "
-                        + " WHERE idrol = ? ");
+                        + " SET nombre = ?, descripcion = ? "
+                        + " WHERE id_rol = ? ");
                 
                 consulta.setString(1, nombre);
                 consulta.setString(2, descripcion);
@@ -95,7 +95,7 @@ public class RolDAO
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("DELETE FROM SEGURIDAD.roles s " +
-                                                                        "WHERE  s.idrol = ? "
+                                                                        "WHERE  s.id_rol = ? "
                         );
                 consulta.setInt(1, Integer.parseInt(p_idrol) );
                 int resultadoConsulta = consulta.executeUpdate();
@@ -127,7 +127,7 @@ public class RolDAO
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement("SELECT r.idrol, r.nombrerol, r.descripcionrol "
+                consulta = conexion.prepareStatement("SELECT r.id_rol, r.nombre, r.descripcion "
                                                      + "FROM seguridad.roles r");
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarRoles(resultadoConsulta);
@@ -148,9 +148,9 @@ public class RolDAO
         
         while(resultadoConsulta.next())
         {
-            String nombreRol = resultadoConsulta.getString("nombrerol");
-            int idRol = resultadoConsulta.getInt("idrol");
-            String descripcionrol = resultadoConsulta.getString("descripcionrol");
+            String nombreRol = resultadoConsulta.getString("nombre");
+            int idRol = resultadoConsulta.getInt("id_rol");
+            String descripcionrol = resultadoConsulta.getString("descripcion");
             
             resultado.add(new Rol(idRol, nombreRol, descripcionrol));
         }

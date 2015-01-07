@@ -224,14 +224,16 @@
               </div>
             </div>
           </div>
-          <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
+          <div title="Fecha de Desactivación: Si desea un usuario permanente, introduzca la misma fecha de activación">
+            <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')">
+                </div>
               </div>
             </div>
           </div>
