@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Amed
+ * @author Walter
  */
 public class SeccionDAO
 {

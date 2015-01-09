@@ -267,3 +267,35 @@ function confirmacion() {
 function confirmarCambios() {
   $('#editarUsuario').submit();
 }
+
+function asignarCookieSeccion() {
+  if (valorRBSeccion)
+  {
+    var x = document.getElementById(valorRBSeccion);
+    var nombre = x.children[1].innerHTML;
+
+
+    setCookie('id_seccion', valorRBSeccion.toString() + ';' + nombre, 1, '/');
+
+  }
+  else
+  {
+  }
+}
+window.valorRBSeccion = null;
+$("input[name='controlSeccion']").click(function () {
+  valorRBSeccion = this.value;
+  document.getElementById("controlIDSeccion").value = valorRBSeccion;
+});
+
+
+function eliminarSeccion() {
+  if (valorRBSeccion)
+  {
+    $('#modalEliminarSeccion').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}

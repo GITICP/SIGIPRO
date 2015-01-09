@@ -52,17 +52,20 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-group"></i> Secciones</h3>
+                            <h3><i class="fa fa-legal"></i> Secciones</h3>
                             <div class="btn-group widget-header-toolbar">                                 
                                 <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Seccion</a>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
+                                <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table id="datatable-column-filter" class="table table-sorting table-striped table-hover datatable">
+                            <table id="datatable-column-filter-secciones" class="table table-sorting table-striped table-hover datatable">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
+                                        <th>Selección</th>
                                         <th>Nombre Seccion</th>
                                         <th>Descripcion</th>
                                     </tr>
@@ -71,14 +74,11 @@
                                     
                                     <c:forEach items="${listaSecciones}" var="seccion">
                                     
-                                        <tr id="${seccion.getID()}" >
+                                        <tr id ="${seccion.getID()}">
                                             <td>
-                                            <a href="/SIGIPRO/Seguridad/Secciones/Ver?id=${seccion.getID()}">
-                                                <div style="height:100%;width:100%">
-                                                  ${seccion.getNombre_seccion()}
-                                                </div>
-                                              </a>
+                                                <input type="radio" name="controlSeccion" value="${seccion.getID()}">
                                             </td>
+                                            <td>${seccion.getNombre_seccion()}</td>
                                             <td>${seccion.getDescripcion()}</td>
                                         </tr>
                                         
@@ -106,9 +106,9 @@
                         </div>
                         <div class="modal-body">
                        <form class="form-horizontal" role="form" action="EliminarSeccion" method="post">
-                            <h5 class="title">¿Está seguro que desea eliminar la<?/h5>
+                            <h5 class="title">¿Está seguro que desea eliminar la seccion?</h5>
                             <br><br>
-                            <input hidden="false" id="controlID" name="controlID">
+                            <input hidden="false" id="controlIDSeccion" name="controlIDSeccion">
                             <div class="form-group">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
