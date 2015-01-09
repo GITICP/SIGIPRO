@@ -58,7 +58,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
+                          <input id="nombreUsuario" type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')" > 
                         </div>
@@ -68,7 +68,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input type="text" value="${usuario.getNombreCompleto()}" maxlength="200" placeholder="Nombre Completo" class="form-control" name="nombreCompleto" required
+                          <input type="text" value="${usuario.getNombreCompleto()}" maxlength="200" placeholder="Nombre Completo" class="form-control" name="nombreCompleto" id="nombreCompleto"required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -79,7 +79,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="email" maxlength="45" value="${usuario.getCorreo()}" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico" required
+                          <input type="email" maxlength="45" value="${usuario.getCorreo()}" placeholder="usuario@icp.ucr.ac.cr" class="form-control"  name="correoElectronico" id="correoElectronico" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca un correo electrónico válido')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -90,7 +90,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control" name="cedula" required
+                          <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control"  name="cedula" id="cedula" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -103,7 +103,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getDepartamento()}" maxlength="200" placeholder="Producción" class="form-control" name="departamento" required
+                          <input type="text" value="${usuario.getDepartamento()}" maxlength="200" placeholder="Producción" class="form-control" name="departamento" id="departamento" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -114,7 +114,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getPuesto()}" maxlength="200" placeholder="Jefe" class="form-control" name="puesto" required
+                          <input type="text" value="${usuario.getPuesto()}" maxlength="200" placeholder="Jefe" class="form-control"  name="puesto" id="puesto" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -307,20 +307,6 @@
 
     </t:modal>
           
-    <t:modal idModal="modalConfirmacion" titulo="Confirmar Cambios">
-
-      <jsp:attribute name="form">
-        
-        <h5>¿Está seguro que desea confirmar todos los cambios realizados? </h5>
-        
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <button type="button" class="btn btn-primary" onclick="confirmarCambios()"><i class="fa fa-check-circle"></i> Confirmar</button>
-        </div>
-
-      </jsp:attribute>
-      
-    </t:modal>
     <t:modal idModal="modalErrorFechaDesactivacion" titulo="Error">
 
       <jsp:attribute name="form">

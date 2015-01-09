@@ -191,7 +191,7 @@ function eliminarRolPermiso() {
   }
 }
 function eliminarRolUsuario(idRol) {
-  fila = $('#' + idRol)
+  fila = $('#' + idRol);
   $('#seleccionRol')
     .append($("<option></option>")
     .attr("value", fila.attr('id'))
@@ -219,15 +219,10 @@ function confirmarEdicion(){
   var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
   var nuevoValorCampoOculto = "";
   a.splice(0,1);
-//  alert("El length de a es "+a.length);
   for (var i=0; i<a.length; i++)
     { var cadarol = a[i].split("#c#");
-     // alert("a[i] es:" +a[i]);
-     // alert(cadarol[0]);
-     // alert(id);
       if (cadarol[0] === id )
-        {//alert("entró");
-        }
+        {}
       else 
         {
           nuevoValorCampoOculto =  nuevoValorCampoOculto + "#r#" + a[i] ;
@@ -235,7 +230,6 @@ function confirmarEdicion(){
       
     }
   campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarFechaActivacion').val() + "#c#" + $('#editarFechaDesactivacion').val());
-  alert(campoOcultoRoles.val());
 }
 
 function agregarRol() {
@@ -272,23 +266,39 @@ function agregarRol() {
 }
 
 function confirmacion() {
-  rolesCodificados = "";
-  $('#datatable-column-filter-roles > tbody > tr').each(function ()
-  {
-    fila = $(this);
-    rolesCodificados += fila.attr('id');
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(1).text();
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(2).text();
-    rolesCodificados += "#r#";
-  });
-  $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
-  $('#modalConfirmacion').modal('show');
-}
+  if ($('#nombreUsuario')[0].checkValidity() && $('#nombreCompleto')[0].checkValidity() && $('#correoElectronico')[0].checkValidity() &&
+          $('#cedula')[0].checkValidity() && $('#departamento')[0].checkValidity() && $('#puesto')[0].checkValidity()
+          && $('#fechaActivacion')[0].checkValidity() && $('#fechaDesactivacion')[0].checkValidity() ) {
+    rolesCodificados = "";
+    $('#datatable-column-filter-roles > tbody > tr').each(function ()
+    {
+      fila = $(this);
+      rolesCodificados += fila.attr('id');
+      rolesCodificados += "#c#";
+      rolesCodificados += fila.children('td').eq(1).text();
+      rolesCodificados += "#c#";
+      rolesCodificados += fila.children('td').eq(2).text();
+      rolesCodificados += "#r#";
+    });
+    $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
+    $('#editarUsuario').submit();
 
-function confirmarCambios() {
-  $('#editarUsuario').submit();
+  }
+  else 
+  {
+    bootbox.dialog({
+      message: "Por favor llene los campos requeridos (*) con contenido válido",
+      title: "Error!",
+      buttons: {
+        success: {
+          label: "Aceptar",
+          className: "btn-success",
+          callback: true 
+          
+        }
+      }
+    });
+  }
 }
 
 //Funcion para que, por defecto, la fecha de desactivación de un usuario sea la misma a la de activación
@@ -303,11 +313,6 @@ $( "input[name='fechaActivacion']" ).change(function () {
     document.getElementById("fechaDesactivacion").value ="";}
 
 });
-
-//- INACTIVA//Funcion para que revisa si la fecha de desactivación seleccionada es posterior o igual
-function confirmarAgregar(){
-   $('#modalConfirmacionAgregar').modal('show');   
-}
 
 //Cuando se cambia la fecha de desactivacion, se verifica su validez.
 $("input[name='fechaDesactivacion']").change(function () {

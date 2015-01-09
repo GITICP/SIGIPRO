@@ -89,8 +89,14 @@
     <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
-
-    <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
+    
+    <!-- Esta se modificó -->
+    <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
+    
+    <!-- Nuevas Adiciones -->
+    <script src="${direccion_contexto}/recursos/js/bootboxjs/bootbox.js"></script>
+    <script src="${direccion_contexto}/recursos/js/bootboxjs/bootbox.min.js"></script>
+    
 
     <script>
       $('.sigiproDatePicker').datepicker()

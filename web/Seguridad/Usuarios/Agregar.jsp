@@ -305,21 +305,6 @@
     </t:modal>
     
     <!-- Los modales de Editar Roles terminan acá -->
-    
-    <t:modal idModal="modalConfirmacionAgregar" titulo="Confirmar Agregar">
-
-      <jsp:attribute name="form">
-
-        <h5>¿Está seguro que desea confirmar todos los cambios realizados? </h5>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="confirmarAgregarUsuario()"><i class="fa fa-check-circle"></i> Confirmar</button>
-        </div>
-
-      </jsp:attribute>
-
-    </t:modal>
         
     <t:modal idModal="modalErrorFechaDesactivacion" titulo="Error">
 
