@@ -45,7 +45,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <form class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
+              <form id="formAgregarUsuario" onsubmit="return confirm('¿Está seguro que desea agregar el usuario?')" class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
                 <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
                 <div class="form-group">
                   <div class="col-sm-12">
@@ -72,7 +72,7 @@
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-at"></i></span>
                       <input type="email" maxlength="45" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico" required
-                             oninvalid="setCustomValidity('Este campo es requerido ')"
+                             oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca un correo electrónico válido')"
                              oninput="setCustomValidity('')">
                     </div>
                   </div>
@@ -83,7 +83,7 @@
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-at"></i></span>
                       <input type="text" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control" name="cedula" required
-                             oninvalid="setCustomValidity('Este campo es requerido ')"
+                             oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida ')"
                              oninput="setCustomValidity('')">
                     </div>
                   </div>
@@ -115,7 +115,7 @@
                   <div class="col-sm-12">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                      <input name= "datepicker" type="text" placeholder="Seleccione la fecha de activación deseada" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
+                      <input  type="text" placeholder="Seleccione la fecha de activación deseada" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaActivacion" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              onchange="setCustomValidity('')">      
                     </div>
@@ -127,7 +127,7 @@
                     <div  class="col-sm-12">
                       <div  class="input-group">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name= "datepicker2" type="text"  placeholder="Seleccione la fecha deseada o la misma de activación para un usuario permanente" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker2" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                        <input  type="text"  placeholder="Seleccione la fecha deseada o la misma de activación para un usuario permanente" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')"
                                >
@@ -154,7 +154,34 @@
       </div>
       <!-- /main -->
     </div>
+    <t:modal idModal="modalConfirmacionAgregar" titulo="Confirmar Agregar">
 
+      <jsp:attribute name="form">
+
+        <h5>¿Está seguro que desea confirmar todos los cambios realizados? </h5>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="confirmarAgregarUsuario()"><i class="fa fa-check-circle"></i> Confirmar</button>
+        </div>
+
+      </jsp:attribute>
+
+    </t:modal>
+        
+    <t:modal idModal="modalErrorFechaDesactivacion" titulo="Error">
+
+      <jsp:attribute name="form">
+
+        <h5>Las fechas de activación y desactivación deben ser iguales o posteriores a la de hoy. Además, la fecha de desactivación debe ser posterior o igual a la fecha de activación. </h5>
+
+        <div class="modal-footer">
+          <button id="exitErrorFechaDesactivacion" type="button" data-dismiss="modal" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Confirmar</button>
+        </div>
+
+      </jsp:attribute>
+
+    </t:modal>
   </jsp:attribute>
 
 </t:plantilla_general>

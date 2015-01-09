@@ -53,8 +53,7 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-group"></i> Usuarios</h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="../Roles/Agregar">Agregar Roles</a>                                    
+                            <div class="btn-group widget-header-toolbar">                                 
                                 <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Usuario</a>
                             </div>
                         </div>

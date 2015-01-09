@@ -44,7 +44,6 @@
               <div class="btn-group widget-header-toolbar">
                 <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>                                    
                 <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Editar?id=${usuario.getID()}">Editar</a>
-                <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar</a>
               </div>
             </div>
             ${mensaje}

@@ -118,7 +118,7 @@ public class AgregarUsuario extends HttpServlet {
             
         }
         finally
-        {
+        { 
             out.close();
         }
     }

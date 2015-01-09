@@ -268,16 +268,43 @@ function confirmarCambios() {
   $('#editarUsuario').submit();
 }
 
-//Funcion para que, por defecto, la fecha de desactivación de un usuario en Crear Usuario sea la misma a la de activación
-$( "input[name='datepicker']" ).change(function () {
-    document.getElementById("datepicker2").value = document.getElementById("datepicker").value;});
+//Funcion para que, por defecto, la fecha de desactivación de un usuario sea la misma a la de activación
+$( "input[name='fechaActivacion']" ).change(function () {
+//  $("#fechaDesactivacion").value( $("#fechaActivacion").value() ) ; 
+  document.getElementById("fechaDesactivacion").value = document.getElementById("fechaActivacion").value;
+  var fechaact = document.getElementById("fechaActivacion").value.split("/");
+  var DateAct = new Date(fechaact[2],parseInt(fechaact[1])-1,fechaact[0]);
+  var fechahoy =new Date();
+  if ( DateAct < fechahoy )
+  { $('#modalErrorFechaDesactivacion').modal('show'); 
+    document.getElementById("fechaDesactivacion").value ="";}
 
-//Funcion para que revisa si la fecha de desactivación seleccionada es posterior o igual
-$( "input[name='datepicker2']" ).change(function () {
-    if ( document.getElementById("datepicker2").value < document.getElementById("datepicker").value)
-      { alert("Por favor seleccione una fecha igual o posterior a la de activación")}
 });
+
+//- INACTIVA//Funcion para que revisa si la fecha de desactivación seleccionada es posterior o igual
+function confirmarAgregar(){
+   $('#modalConfirmacionAgregar').modal('show');   
+}
+
+//Cuando se cambia la fecha de desactivacion, se verifica su validez.
+$("input[name='fechaDesactivacion']").change(function () {
+  var fechaact = document.getElementById("fechaActivacion").value.split("/");
+  var fechadesact = document.getElementById("fechaDesactivacion").value.split("/");
+  var DateDesact = new Date(fechadesact[2],fechadesact[1],fechadesact[0]);
+ // var fechahoy =new Date();
+ // if (DateDesact < fechahoy){ }
+  if ( (parseInt(fechadesact[0])+parseInt(fechadesact[1])*100+parseInt(fechadesact[2])*10000) <  (parseInt(fechaact[0])+parseInt(fechaact[1])*100+parseInt(fechaact[2])*10000) )
+  { $('#modalErrorFechaDesactivacion').modal('show'); 
+    document.getElementById("fechaDesactivacion").value ="";}
+});
+
+
+//-INACTIVA//Funcion que que hace submit del form de agregar usuario después de la confirmación
+function confirmarAgregarUsuario() {
+  $('#formAgregarUsuario').submit();
+}
 
 //Funcion para que, por defecto, la fecha de desactivación de un usuario en Editar Usuario sea la misma a la de activación
 $( "input[name='editarFechaActivacion']" ).change(function () {
-    document.getElementById("agregarFechaDesactivacion").value = document.getElementById("agregarFechaActivacion").value;});
+  $("#agregarFechaDesactivacion").value = $("#agregarFechaActivacion").value;});
+
