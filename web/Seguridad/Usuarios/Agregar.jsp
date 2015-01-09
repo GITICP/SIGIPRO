@@ -46,6 +46,7 @@
             ${mensaje}
             <div class="widget-content">
               <form id="formAgregarUsuario" onsubmit="return confirm('¿Está seguro que desea agregar el usuario?')" class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
+                <input id="rolesUsuario" hidden="true" name="listaRolesUsuario" value="">
                 <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
                 <div class="form-group">
                   <div class="col-sm-12">
@@ -135,6 +136,41 @@
                     </div>
                   </div>
                 </div>
+                <!-- Esta arte es la de los roles de un usuario -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-group"></i> Roles</h3>
+                    <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre Rol</th>
+                          <th>Fecha Activación</th>
+                          <th>Fecha Desactivación</th>
+                          <th>Editar/Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${rolesUsuario}" var="rolUsuario">
+                          <tr id="${rolUsuario.getIDRol()}">
+                            <td>${rolUsuario.getNombreRol()}</td>
+                            <td>${rolUsuario.getFechaActivacion()}</td>
+                            <td>${rolUsuario.getFechaDesactivacion()}</td>
+                            <td>
+                              <button type="button" class="btn btn-primary btn-sm" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   style="margin-left:5px;margin-right:5px;">Editar</button>
+                              <button type="button" class="btn btn-primary btn-sm" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los roles de un usuario -->
                 <p>
                   Los campos marcados con * son requeridos.
                 </p>  
@@ -154,6 +190,122 @@
       </div>
       <!-- /main -->
     </div>
+            
+      <!-- Los modales de Editar Roles empiezan acá -->      
+      <t:modal idModal="modalAgregarRolUsuario" titulo="Agregar Rol">
+
+      <jsp:attribute name="form">
+
+        <form class="form-horizontal">
+          <input type="text" name="rol"  hidden="true">
+          <label for="idrol" class="control-label">*Rol</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <select id="seleccionRol" name="idrol" required
+                        oninvalid="setCustomValidity('Este campo es requerido')"
+                        oninput="setCustomValidity('')">
+                  <c:forEach items="${rolesRestantes}" var="rol">
+                    <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+                  </c:forEach>
+                </select>
+              </div>
+            </div>
+          </div>
+          <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       onchange="setCustomValidity('')">
+              </div>
+            </div>
+          </div>
+          <div title="Fecha de Desactivación: Si desea un rol permanente, introduzca la misma fecha de activación">
+            <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarRol()"><i class="fa fa-check-circle"></i> Agregar Rol</button>
+            </div>
+          </div>
+        </form>
+
+      </jsp:attribute>
+
+    </t:modal>
+
+    <t:modal idModal="modalEditarRolUsuario" titulo="Editar Rol">
+
+      <jsp:attribute name="form">
+        <form class="form-horizontal">
+          <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
+          <input type="text" name="rol"  hidden="true">
+          <label for="nombreUsuario" class="control-label">*Rol</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <select id="seleccionRol" name="idrol" required
+                        oninvalid="setCustomValidity('Este campo es requerido')"
+                        oninput="setCustomValidity('')">
+                  <c:forEach items="${rolesRestantes}" var="rol">
+                    <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+                  </c:forEach>
+                </select>
+
+              </div>
+            </div>
+          </div>
+          <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       onchange="setCustomValidity('')">
+              </div>
+            </div>
+          </div>
+          <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       onchange="setCustomValidity('')">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+              <button id="btn-editarRol" type="button" class="btn btn-primary" onclick="confirmarEdicion()"><i class="fa fa-check-circle"></i> Editar Rol</button>
+            </div>
+          </div>
+        </form>
+
+      </jsp:attribute>
+
+    </t:modal>
+    
+    <!-- Los modales de Editar Roles terminan acá -->
+    
     <t:modal idModal="modalConfirmacionAgregar" titulo="Confirmar Agregar">
 
       <jsp:attribute name="form">

@@ -213,6 +213,29 @@ function confirmarEdicion(){
   fila.children('td').eq(1).text($('#editarFechaActivacion').val());
   fila.children('td').eq(2).text($('#editarFechaDesactivacion').val());
   $('#modalEditarRolUsuario').modal('hide');
+  
+  //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
+  campoOcultoRoles = $('#rolesUsuario');
+  var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
+  var nuevoValorCampoOculto = "";
+  a.splice(0,1);
+//  alert("El length de a es "+a.length);
+  for (var i=0; i<a.length; i++)
+    { var cadarol = a[i].split("#c#");
+     // alert("a[i] es:" +a[i]);
+     // alert(cadarol[0]);
+     // alert(id);
+      if (cadarol[0] === id )
+        {//alert("entró");
+        }
+      else 
+        {
+          nuevoValorCampoOculto =  nuevoValorCampoOculto + "#r#" + a[i] ;
+        }
+      
+    }
+  campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarFechaActivacion').val() + "#c#" + $('#editarFechaDesactivacion').val());
+  alert(campoOcultoRoles.val());
 }
 
 function agregarRol() {

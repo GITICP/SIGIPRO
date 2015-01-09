@@ -6,8 +6,13 @@
 package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Rol;
+import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,11 +38,23 @@ public class AgregarUsuario extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            
-            ServletContext context = this.getServletContext();
-            context.getRequestDispatcher("/Seguridad/Usuarios/Agregar.jsp").forward(request, response);
+      
+      response.setContentType("text/html;charset=UTF-8");
+      try (PrintWriter out = response.getWriter()) {
+      
+      int idUsuario = 0;
+      String id = "0";
+      UsuarioDAO u = new UsuarioDAO();
+
+      Usuario usuario = u.obtenerUsuario(idUsuario);
+      List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
+      List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
+
+      request.setAttribute("usuario", usuario);
+      request.setAttribute("rolesUsuario", rolesUsuario);
+      request.setAttribute("rolesRestantes", rolesRestantes);
+      ServletContext context = this.getServletContext();
+      context.getRequestDispatcher("/Seguridad/Usuarios/Agregar.jsp").forward(request, response);
             
         }
     }
@@ -100,11 +117,25 @@ public class AgregarUsuario extends HttpServlet {
             
             if(insercionExitosa)
             {
-                request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
+              
+               int id_usuario = u.obtenerIDUsuario(nombreUsuario);
+               String rolesUsuario = request.getParameter("listaRolesUsuario");
+               RolUsuarioDAO ru = new RolUsuarioDAO();
+               List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
+               if(roles != null)
+                {
+                  request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
                                                         "Usuario ingresado correctamente." +
                                                 "</div>");
+                }
+               else
+               {request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
+                                                    "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
+                                                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
+                                                        "El Usuario fue ingresado, pero sin roles." +
+                                                "</div>");}
             }
             else
             {

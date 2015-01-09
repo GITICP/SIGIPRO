@@ -122,6 +122,31 @@ public class UsuarioDAO {
 
     return resultado;
   }
+  
+   public int obtenerIDUsuario(String nombre) {
+    int resultado = 0;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario "
+              + " From seguridad.usuarios"
+              + " Where nombre_usuario = ? ");
+
+      consulta.setString(1, nombre);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+        
+        resultado = resultadoConsulta.getInt("id_usuario");
+      }
+    } catch (SQLException ex) {
+
+    }
+
+    return resultado;
+  }
 
   public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
           String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion) {
