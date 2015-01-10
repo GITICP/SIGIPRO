@@ -299,3 +299,24 @@ function eliminarSeccion() {
     $('#modalError').modal('show');
   }
 }
+
+function EditarSeccionJS() {
+  var x = document.getElementById(valorRBSeccion);
+
+  document.getElementById("editarIdSeccion").value = valorRBSeccion;
+  document.getElementById("editarNombre").value = x.children[1].innerHTML;
+  document.getElementById("editarDescripcion").value = x.children[2].innerHTML;
+
+}
+
+function editarSeccion() {
+  if (valorRBSeccion)
+  {
+    EditarSeccionJS();
+    $('#ModalEditarSeccion').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
