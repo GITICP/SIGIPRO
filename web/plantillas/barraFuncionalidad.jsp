@@ -13,20 +13,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <% 
-    
-    SingletonBD baseDatos = SingletonBD.getSingletonBD();
-
     List<BarraFuncionalidad> modulos;
+    List<Integer> permisos = (List<Integer>)session.getAttribute("listaPermisos");
+    request.setAttribute("permisos", permisos);
     int idusuario = (int)session.getAttribute("idusuario");
     
     BarraFuncionalidadDAO bf = new BarraFuncionalidadDAO();
-    modulos = bf.obtenerModulos(idusuario);
+    modulos = bf.obtenerModulos(idusuario);    
 
     if(modulos!=null)
     {
         request.setAttribute("modulos", modulos);
-    }
-    
+    }  
 %>
 
 <!-- left sidebar -->
@@ -41,6 +39,9 @@
                     <span class="text">Inicio</span>
                 </a>
             </li>
+            <c:forEach items="${permisos}" var="permiso">
+              <p>${permiso}</p>
+            </c:forEach>
             <c:forEach items="${modulos}" var="modulo">
                 <li>
                     <a href="#" class="js-sub-menu-toggle">

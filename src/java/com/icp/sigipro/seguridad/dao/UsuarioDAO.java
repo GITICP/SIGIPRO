@@ -25,13 +25,16 @@ import java.util.List;
  *
  * @author Boga
  */
-public class UsuarioDAO {
+public class UsuarioDAO
+{
 
   @SuppressWarnings("Convert2Diamond")
-  private List<Usuario> llenarUsuarios(ResultSet resultadoConsulta) throws SQLException {
+  private List<Usuario> llenarUsuarios(ResultSet resultadoConsulta) throws SQLException
+  {
     List<Usuario> resultado = new ArrayList<Usuario>();
 
-    while (resultadoConsulta.next()) {
+    while (resultadoConsulta.next())
+    {
       int idUsuario = resultadoConsulta.getInt("id_usuario");
       String nombreUsuario = resultadoConsulta.getString("nombre_usuario");
       String correo = resultadoConsulta.getString("correo");
@@ -44,24 +47,27 @@ public class UsuarioDAO {
       boolean activo = resultadoConsulta.getBoolean("estado");
 
       resultado.add(new Usuario(idUsuario, nombreUsuario, correo, nombreCompleto,
-              cedula, departamento, puesto, fechaActivacion, fechaDesactivacion, activo));
+                                cedula, departamento, puesto, fechaActivacion, fechaDesactivacion, activo));
     }
     return resultado;
   }
 
-  public int validarInicioSesion(String usuario, String contrasenna) {
+  public int validarInicioSesion(String usuario, String contrasenna)
+  {
     SingletonBD s = SingletonBD.getSingletonBD();
     Connection conexion = s.conectar();
     int resultado = -1;
 
-    if (conexion != null) {
-      try {
+    if (conexion != null)
+    {
+      try
+      {
         PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario "
-                + "FROM seguridad.usuarios us "
-                + "WHERE us.nombre_usuario = ? and us.contrasena = ? "
-                + "AND us.fecha_activacion <= current_date "
-                + "AND (us.fecha_desactivacion > current_date or us.fecha_activacion = us.fecha_desactivacion) "
-                + "AND us.estado = true ");
+                                                               + "FROM seguridad.usuarios us "
+                                                               + "WHERE us.nombre_usuario = ? and us.contrasena = ? "
+                                                               + "AND us.fecha_activacion <= current_date "
+                                                               + "AND (us.fecha_desactivacion > current_date or us.fecha_activacion = us.fecha_desactivacion) "
+                                                               + "AND us.estado = true ");
         consulta.setString(1, usuario);
         String hash = md5(contrasenna);
         consulta.setString(2, hash);
@@ -71,29 +77,34 @@ public class UsuarioDAO {
         resultadoConsulta.close();
         consulta.close();
         conexion.close();
-      } catch (SQLException ex) {
+      }
+      catch (SQLException ex)
+      {
         ex.printStackTrace(System.out);
       }
     }
     return resultado;
   }
 
-  public Usuario obtenerUsuario(int idUsuario) {
+  public Usuario obtenerUsuario(int idUsuario)
+  {
     Usuario resultado = null;
-    try {
+    try
+    {
       SingletonBD s = SingletonBD.getSingletonBD();
       Connection conexion = s.conectar();
 
       PreparedStatement consulta = conexion.prepareStatement(" Select nombre_usuario, correo, nombre_completo, cedula, departamento, "
-              + " puesto, fecha_activacion, fecha_desactivacion, estado "
-              + " From seguridad.usuarios"
-              + " Where id_usuario = ? ");
+                                                             + " puesto, fecha_activacion, fecha_desactivacion, estado "
+                                                             + " From seguridad.usuarios"
+                                                             + " Where id_usuario = ? ");
 
       consulta.setInt(1, idUsuario);
 
       ResultSet resultadoConsulta = consulta.executeQuery();
 
-      if (resultadoConsulta.next()) {
+      if (resultadoConsulta.next())
+      {
         resultado = new Usuario();
 
         String nombreUsuario = resultadoConsulta.getString("nombre_usuario");
@@ -118,7 +129,9 @@ public class UsuarioDAO {
         resultado.setFechaDesactivacion(fechaDesactivacion);
         resultado.setActivo(activo);
       }
-    } catch (SQLException ex) {
+    }
+    catch (SQLException ex)
+    {
 
     }
 
@@ -126,18 +139,21 @@ public class UsuarioDAO {
   }
 
   public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
-          String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion) {
+                                 String cedula, String departamento, String puesto, String fechaActivacion, String fechaDesactivacion)
+  {
     boolean resultado = false;
 
-    try {
+    try
+    {
       SingletonBD s = SingletonBD.getSingletonBD();
       Connection conexion = s.conectar();
 
-      if (conexion != null) {
+      if (conexion != null)
+      {
         PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
-                + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) "
-                + " VALUES "
-                + " (?,?,?,?,?,?,?,?,?,? )");
+                                                               + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) "
+                                                               + " VALUES "
+                                                               + " (?,?,?,?,?,?,?,?,?,? )");
         consulta.setString(1, nombreUsuario);
         consulta.setString(2, md5("sigipro"));
         consulta.setString(3, nombreCompleto);
@@ -158,16 +174,21 @@ public class UsuarioDAO {
         consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL));
 
         int resultadoConsulta = consulta.executeUpdate();
-        if (resultadoConsulta == 1) {
+        if (resultadoConsulta == 1)
+        {
           resultado = true;
         }
         consulta.close();
         conexion.close();
       }
-    } catch (SQLException ex) {
+    }
+    catch (SQLException ex)
+    {
       String hola = "hola";
       hola.toCharArray();
-    } catch (ParseException ex) {
+    }
+    catch (ParseException ex)
+    {
       String hola = "hola";
       hola.toCharArray();
     }
@@ -176,22 +197,23 @@ public class UsuarioDAO {
   }
 
   public boolean editarUsuario(int idUsuario, String nombreCompleto, String correoElectronico,
-          String cedula, String departamento, String puesto, String fechaActivacion,
-          String fechaDesactivacion, List<RolUsuario> p_roles) 
-  {  
+                               String cedula, String departamento, String puesto, String fechaActivacion,
+                               String fechaDesactivacion, List<RolUsuario> p_roles)
+  {
     boolean resultado = false;
-    
+
     SingletonBD s = SingletonBD.getSingletonBD();
     Connection conexion = s.conectar();
-    
-    try 
+
+    try
     {
-      if (conexion != null) {
+      if (conexion != null)
+      {
         conexion.setAutoCommit(false);
 
         PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                + " SET correo = ?, nombre_completo = ?, cedula = ?, departamento = ?, puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
-                + " WHERE id_usuario = ? ");
+                                                               + " SET correo = ?, nombre_completo = ?, cedula = ?, departamento = ?, puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
+                                                               + " WHERE id_usuario = ? ");
 
         consulta.setString(1, correoElectronico);
         consulta.setString(2, nombreCompleto);
@@ -221,7 +243,7 @@ public class UsuarioDAO {
 
         String insert = " INSERT INTO seguridad.roles_usuarios (id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (?,?,?,?)";
 
-        for (RolUsuario i : p_roles) 
+        for (RolUsuario i : p_roles)
         {
           PreparedStatement upsertTemp = conexion.prepareStatement(insert);
           upsertTemp.setInt(1, i.getIDUsuario());
@@ -231,7 +253,7 @@ public class UsuarioDAO {
           operaciones.add(upsertTemp);
         }
 
-        for (PreparedStatement operacion : operaciones) 
+        for (PreparedStatement operacion : operaciones)
         {
           int resultadoOperacion = operacion.executeUpdate();
           operacion.close();
@@ -241,7 +263,7 @@ public class UsuarioDAO {
         resultado = true;
       }
     }
-    catch (SQLException ex) 
+    catch (SQLException ex)
     {
       ex.printStackTrace();
       try
@@ -249,12 +271,12 @@ public class UsuarioDAO {
         resultado = false;
         conexion.rollback();
       }
-      catch(SQLException sqlEx)
+      catch (SQLException sqlEx)
       {
         sqlEx.printStackTrace();
-      }      
-    } 
-    catch (ParseException ex) 
+      }
+    }
+    catch (ParseException ex)
     {
       resultado = false;
       ex.printStackTrace();
@@ -262,71 +284,81 @@ public class UsuarioDAO {
     return resultado;
   }
 
-  public boolean desactivarUsuario(int idUsuario) {
+  public boolean desactivarUsuario(int idUsuario)
+  {
     boolean resultado = false;
 
-    try {
+    try
+    {
       SingletonBD s = SingletonBD.getSingletonBD();
       Connection conexion = s.conectar();
 
       PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-              + " SET estado = false "
-              + " WHERE id_usuario = ? ");
+                                                             + " SET estado = false "
+                                                             + " WHERE id_usuario = ? ");
 
       consulta.setInt(1, idUsuario);
 
       int resultadoConsulta = consulta.executeUpdate();
-      if (resultadoConsulta == 1) 
+      if (resultadoConsulta == 1)
       {
         resultado = true;
       }
       consulta.close();
       conexion.close();
-    } 
-    catch (SQLException ex) 
+    }
+    catch (SQLException ex)
     {
       ex.printStackTrace();
     }
     return resultado;
   }
 
-  public List<Usuario> obtenerUsuarios() {
+  public List<Usuario> obtenerUsuarios()
+  {
     SingletonBD s = SingletonBD.getSingletonBD();
     Connection conexion = s.conectar();
 
     List<Usuario> resultado = null;
 
-    if (conexion != null) {
-      try {
+    if (conexion != null)
+    {
+      try
+      {
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
-                + "us.departamento, us.puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
-                + "FROM seguridad.usuarios us");
+                                             + "us.departamento, us.puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                                             + "FROM seguridad.usuarios us");
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarUsuarios(resultadoConsulta);
         resultadoConsulta.close();
         conexion.close();
-      } catch (SQLException ex) {
+      }
+      catch (SQLException ex)
+      {
         resultado = null;
       }
     }
     return resultado;
   }
 
-  private boolean compararFechas(Date fechaActivacion, Date fechaDesactivacion) {
+  private boolean compararFechas(Date fechaActivacion, Date fechaDesactivacion)
+  {
     java.util.Calendar calendario = java.util.Calendar.getInstance();
     java.util.Date hoy = calendario.getTime();
     Date hoySQL = new Date(hoy.getTime());
     boolean resultado
             = ((fechaActivacion.before(hoySQL)
-            && fechaDesactivacion.after(hoySQL))
-            || fechaActivacion.equals(fechaDesactivacion));
+                && fechaDesactivacion.after(hoySQL))
+               || fechaActivacion.equals(fechaDesactivacion));
     return resultado;
   }
 
-  private String md5(String texto) {
+  private String md5(String texto)
+  {
     String resultado = null;
-    try {
+    try
+    {
       MessageDigest md = MessageDigest.getInstance("MD5");
       md.reset();
       md.update(texto.getBytes());
@@ -334,55 +366,68 @@ public class UsuarioDAO {
       BigInteger bigInt = new BigInteger(1, digest);
       resultado = bigInt.toString(16);
 
-      while (resultado.length() < 32) {
+      while (resultado.length() < 32)
+      {
         resultado = "0" + resultado;
       }
-    } catch (NoSuchAlgorithmException ex) {
+    }
+    catch (NoSuchAlgorithmException ex)
+    {
       //Imprimir error
     }
 
     return resultado;
   }
 
-  public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario) {
+  public List<RolUsuario> obtenerRolesUsuario(String p_IdUsuario)
+  {
     SingletonBD s = SingletonBD.getSingletonBD();
     Connection conexion = s.conectar();
     List<RolUsuario> resultado = null;
 
-    if (conexion != null) {
-      try {
+    if (conexion != null)
+    {
+      try
+      {
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("SELECT r.nombre, ru.id_rol, ru.id_usuario, ru.fecha_activacion, ru.fecha_desactivacion "
-                + "FROM seguridad.roles r inner join seguridad.roles_usuarios ru  on r.id_rol = ru.id_rol AND ru.id_usuario = ? ");
+                                             + "FROM seguridad.roles r inner join seguridad.roles_usuarios ru  on r.id_rol = ru.id_rol AND ru.id_usuario = ? ");
         consulta.setInt(1, Integer.parseInt(p_IdUsuario));
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarRolesUsuario(resultadoConsulta);
         resultadoConsulta.close();
         conexion.close();
-      } catch (SQLException ex) {
+      }
+      catch (SQLException ex)
+      {
         resultado = null;
       }
     }
     return resultado;
   }
 
-  public List<Rol> obtenerRolesRestantes(String p_IdUsuario) {
+  public List<Rol> obtenerRolesRestantes(String p_IdUsuario)
+  {
     SingletonBD s = SingletonBD.getSingletonBD();
     Connection conexion = s.conectar();
     List<Rol> resultado = null;
 
-    if (conexion != null) {
-      try {
+    if (conexion != null)
+    {
+      try
+      {
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("SELECT r.id_rol, r.nombre, r.descripcion "
-                + "FROM seguridad.roles r "
-                + "WHERE r.id_rol NOT IN (SELECT ru.id_rol FROM seguridad.roles_usuarios ru WHERE ru.id_usuario = ?)");
+                                             + "FROM seguridad.roles r "
+                                             + "WHERE r.id_rol NOT IN (SELECT ru.id_rol FROM seguridad.roles_usuarios ru WHERE ru.id_usuario = ?)");
         consulta.setInt(1, Integer.parseInt(p_IdUsuario));
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarRoles(resultadoConsulta);
         resultadoConsulta.close();
         conexion.close();
-      } catch (SQLException ex) {
+      }
+      catch (SQLException ex)
+      {
         resultado = null;
       }
     }
@@ -390,10 +435,12 @@ public class UsuarioDAO {
   }
 
   @SuppressWarnings("Convert2Diamond")
-  private List<RolUsuario> llenarRolesUsuario(ResultSet resultadoConsulta) throws SQLException {
+  private List<RolUsuario> llenarRolesUsuario(ResultSet resultadoConsulta) throws SQLException
+  {
     List<RolUsuario> resultado = new ArrayList<RolUsuario>();
 
-    while (resultadoConsulta.next()) {
+    while (resultadoConsulta.next())
+    {
       int idUsuario = resultadoConsulta.getInt("id_usuario");
       String nombreRol = resultadoConsulta.getString("nombre");
       int idRol = resultadoConsulta.getInt("id_rol");
@@ -406,10 +453,12 @@ public class UsuarioDAO {
   }
 
   @SuppressWarnings("Convert2Diamond")
-  private List<Rol> llenarRoles(ResultSet resultadoConsulta) throws SQLException {
+  private List<Rol> llenarRoles(ResultSet resultadoConsulta) throws SQLException
+  {
     List<Rol> resultado = new ArrayList<Rol>();
 
-    while (resultadoConsulta.next()) {
+    while (resultadoConsulta.next())
+    {
       String nombreRol = resultadoConsulta.getString("nombre");
       int idRol = resultadoConsulta.getInt("id_rol");
       String descripcionrol = resultadoConsulta.getString("descripcion");
@@ -418,4 +467,55 @@ public class UsuarioDAO {
     }
     return resultado;
   }
+
+  @SuppressWarnings("ConvertToTryWithResources")
+  public List<Integer> obtenerPermisos(int p_id_usuario)
+  {
+    List<Integer> resultado = null;
+
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    if (conexion != null)
+    {
+      try
+      {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement(" Select id_permiso "
+                                             + " From seguridad.permisos_roles "
+                                             + " Where id_rol in "
+                                             + " ("
+                                             + "   Select id_rol "
+                                             + "   From seguridad.roles_usuarios "
+                                             + "   Where id_usuario = ? "
+                                             + "   And ( "
+                                             + "     fecha_activacion = fecha_desactivacion "
+                                             + "     or "
+                                             + "     (fecha_activacion < current_date and fecha_desactivacion > current_date) "
+                                             + "       ) "
+                                             + ")");
+        consulta.setInt(1, p_id_usuario);
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        resultado = llenarPermisos(resultadoConsulta);
+        resultadoConsulta.close();
+        conexion.close();
+      }
+      catch (SQLException ex)
+      {
+        resultado = null;
+      }
+    }
+    return resultado;
+  }
+  
+  private List<Integer> llenarPermisos(ResultSet resultadoConsulta) throws SQLException
+  {
+    @SuppressWarnings("Convert2Diamond")
+    List<Integer> resultado = new ArrayList<Integer>();
+    while (resultadoConsulta.next())
+    {
+      resultado.add( resultadoConsulta.getInt("id_permiso") );
+    }
+    return resultado;
+  }
+
 }
