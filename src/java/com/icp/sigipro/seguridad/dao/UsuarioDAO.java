@@ -441,4 +441,28 @@ public class UsuarioDAO {
     }
     return resultado;
   }
+  
+  public List<Usuario> obtenerUsuariosRestantes(String p_IdRol) {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    List<Usuario> resultado = null;
+
+    if (conexion != null) {
+      try {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
+                + "us.departamento, us.puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                + "FROM seguridad.usuarios us "
+                + "WHERE us.id_usuario NOT IN (SELECT ru.id_usuario FROM seguridad.roles_usuarios ru WHERE ru.id_rol = ?)");
+        consulta.setInt(1, Integer.parseInt(p_IdRol));
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        resultado = llenarUsuarios(resultadoConsulta);
+        resultadoConsulta.close();
+        conexion.close();
+      } catch (SQLException ex) {
+        resultado = null;
+      }
+    }
+    return resultado;
+  }
 }

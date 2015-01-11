@@ -45,7 +45,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <form id="formAgregarUsuario" onsubmit="return confirm('¿Está seguro que desea agregar el usuario?')" class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
+              <form id="formAgregarUsuario" class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
                 <input id="rolesUsuario" hidden="true" name="listaRolesUsuario" value="">
                 <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
                 <div class="form-group">

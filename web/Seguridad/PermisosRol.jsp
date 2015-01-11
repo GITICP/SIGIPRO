@@ -5,6 +5,7 @@
 --%>
 
 <%@page import="com.icp.sigipro.seguridad.dao.PermisoDAO"%>
+<%@page import="com.icp.sigipro.seguridad.dao.RolDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
 <%@page import="com.icp.sigipro.seguridad.modelos.PermisoRol"%>
@@ -16,29 +17,11 @@
 <% 
             
     PermisoDAO pr = new PermisoDAO();
-    
-    Cookie[] cookies = request.getCookies();
-    String p_idrol = null;
-
-    if (cookies != null) 
-    {
-        for (Cookie cookie : cookies) 
-        {
-            if (cookie.getName().equals("idRol")) 
-            {
-                p_idrol = cookie.getValue();
-                break;
-            }
-        }
-    }
-    
+    RolDAO ro = new RolDAO();
+    String p_idrol = request.getParameter("id");
+    String nombreRol =  ro.getNombreRol(p_idrol);
     if(p_idrol != null)
     {
-        String decodificado = java.net.URLDecoder.decode(p_idrol, "UTF-8");
-        
-        String[] partes = decodificado.split(";");
-        p_idrol = partes[0];
-        String nombreRol = partes[1];
         
         List<PermisoRol> permisosrol = pr.obtenerPermisosRol(p_idrol);
         request.setAttribute("idRol", p_idrol);
@@ -63,7 +46,7 @@
 
 %>
 
-<t:plantilla_general title="PermisosRol" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="PermisosRol" direccion_contexto="/SIGIPRO/Roles">
     
     <jsp:attribute name="contenido">
 

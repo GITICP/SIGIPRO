@@ -156,6 +156,144 @@ public class RolDAO
         }
         return resultado;
     }
+    public String getNombreRol(String p_idrol) throws SQLException
+    {
+    String resultado = "Error";
+    try
+        {
+            SingletonBD s = SingletonBD.getSingletonBD();
+            Connection conexion = s.conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("SELECT s.nombre FROM SEGURIDAD.roles s WHERE s.id_rol = ?"
+                        );
+                consulta.setInt(1, Integer.parseInt(p_idrol) );
+                ResultSet resultadoConsulta =  consulta.executeQuery();
+                if(resultadoConsulta.next()){
+                  resultado = resultadoConsulta.getString("nombre");
+                }
+                else {resultado = "Error";}
+                consulta.close();
+                conexion.close();
+                
+            }
+            
+        }
+        catch(SQLException ex){System.out.println(ex); }
+    return resultado;
+    }
+    public Rol obtenerRol(int p_id) throws SQLException {
+    Rol resultado = null;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement(" Select nombre, descripcion"
+              + " From seguridad.roles"
+              + " Where id_rol = ? ");
+
+      consulta.setInt(1, p_id);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+
+        String nombre = resultadoConsulta.getString("nombre");
+        String descripcion = resultadoConsulta.getString("descripcion");
+       
+
+        resultado = new Rol(p_id, nombre, descripcion);
+      }
+    } catch (SQLException ex) {
+
+    }
+
+    return resultado;
+    }
     
+    public List<RolUsuario> obtenerUsuariosRol(String p_idrol) {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    List<RolUsuario> resultado = null;
+
+    if (conexion != null) {
+      try {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT r.nombre, ru.id_rol, ru.id_usuario, ru.fecha_activacion, ru.fecha_desactivacion "
+                + "FROM seguridad.roles r inner join seguridad.roles_usuarios ru  on r.id_rol = ru.id_rol AND ru.id_rol = ? ");
+        consulta.setInt(1, Integer.parseInt(p_idrol));
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        resultado = llenarUsuariosRol(resultadoConsulta);
+        resultadoConsulta.close();
+        conexion.close();
+      } catch (SQLException ex) {
+        resultado = null;
+      }
+    }
+    return resultado;
+  }
+     private List<RolUsuario> llenarUsuariosRol(ResultSet resultadoConsulta) throws SQLException {
+    List<RolUsuario> resultado = new ArrayList<RolUsuario>();
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+
+    while (resultadoConsulta.next()) {
+      int idUsuario = resultadoConsulta.getInt("id_usuario");
+      String nombreRol = resultadoConsulta.getString("nombre");
+      int idRol = resultadoConsulta.getInt("id_rol");
+      Date fechaActivacion = resultadoConsulta.getDate("fecha_activacion");
+      Date fechaDesactivacion = resultadoConsulta.getDate("fecha_desactivacion");
+
+      RolUsuario ru = new RolUsuario(idRol, idUsuario, fechaActivacion, fechaDesactivacion, nombreRol);
+      
+      try {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT u.nombre_usuario "
+                + "FROM seguridad.usuarios u inner join seguridad.roles_usuarios ru  on u.id_usuario = ru.id_usuario AND ru.id_rol = ? AND ru.id_usuario =? ");
+        consulta.setInt(1, idRol);
+        consulta.setInt(2, idUsuario);
+        ResultSet ResConsulta;
+        ResConsulta = consulta.executeQuery();
+        if (ResConsulta.next())
+        {
+          String nombreu = ResConsulta.getString("nombre_usuario");
+          ru.setNombreUsuario(nombreu);
+        }
+        ResConsulta.close();
+      } catch (SQLException ex) {
+        System.out.println(ex);
+        resultado = null;
+      }
+
+      resultado.add(ru);
+    }
+    conexion.close();
+    return resultado;
+  }
+     
+  public int obtenerIDRol(String nombre) throws SQLException {
+    int resultado =0;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement(" Select id_rol"
+              + " From seguridad.roles"
+              + " Where nombre = ? ");
+
+      consulta.setString(1, nombre);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+        resultado = resultadoConsulta.getInt("id_rol");
+      }
+    } catch (SQLException ex) {
+
+    }
+
+    return resultado;
+    }
 
 }

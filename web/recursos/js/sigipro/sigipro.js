@@ -42,68 +42,47 @@ $("input[name='control']").click(function () {
   document.getElementById("controlID").value = valorRB;
 });
 
-function modificarCampos() {
-  var x = document.getElementById(valorRB);
-
-  document.getElementById("editarIDUsuario").value = valorRB;
-  document.getElementById("editarNombreUsuario").value = x.children[1].innerHTML;
-  document.getElementById("editarNombreCompleto").value = x.children[2].innerHTML;
-  document.getElementById("editarCorreoElectronico").value = x.children[3].innerHTML;
-  document.getElementById("editarCedula").value = x.children[4].innerHTML;
-  document.getElementById("editarDepartamento").value = x.children[5].innerHTML;
-  document.getElementById("editarPuesto").value = x.children[6].innerHTML;
-  document.getElementById("editarFechaActivacion").value = x.children[7].innerHTML;
-  document.getElementById("editarFechaDesactivacion").value = x.children[8].innerHTML;
-}
-
-function asignarCookieUsuario() {
-  if (valorRB)
-  {
-    var x = document.getElementById(valorRB);
-    var nombre = x.children[2].innerHTML;
-
-    setCookie('idUsuario', valorRB.toString() + ';' + nombre, 1, '/');
-
-    self.location = "RolesUsuario.jsp";
-  }
-  else
-  {
-  }
-}
-
-function asignarRoles() {
-  if (valorRB)
-  {
-    asignarCookieUsuario();
-  }
-  else
-  {
-    $('#modalError').modal('show');
-  }
-}
-
 function desactivarUsuario() {
   if (valorRB)
-  {
-    $('#modalDesactivarUsuario').modal('show');
-  }
+  {$('#modalDesactivarUsuario').modal('show'); }
   else
-  {
-    $('#modalError').modal('show');
-  }
+  {$('#modalError').modal('show');}
 }
 
-function editarUsuario() {
-  if (valorRB)
-  {
-    modificarCampos()
-    $('#modalEditarUsuarios').modal('show');
-  }
-  else
-  {
-    $('#modalError').modal('show');
-  }
+//Funcion para que, por defecto, la fecha de desactivación de un usuario sea la misma a la de activación
+$( "input[name='fechaActivacion']" ).change(function () {
+//  $("#fechaDesactivacion").value( $("#fechaActivacion").value() ) ; 
+  document.getElementById("fechaDesactivacion").value = document.getElementById("fechaActivacion").value;
+  var fechaact = document.getElementById("fechaActivacion").value.split("/");
+  var DateAct = new Date(fechaact[2],parseInt(fechaact[1])-1,fechaact[0]);
+  var fechahoy =new Date();
+  if ( DateAct < fechahoy )
+  { $('#modalErrorFechaDesactivacion').modal('show'); 
+    document.getElementById("fechaDesactivacion").value ="";}
+
+});
+
+//Cuando se cambia la fecha de desactivacion, se verifica su validez.
+$("input[name='fechaDesactivacion']").change(function () {
+  var fechaact = document.getElementById("fechaActivacion").value.split("/");
+  var fechadesact = document.getElementById("fechaDesactivacion").value.split("/");
+  var DateDesact = new Date(fechadesact[2],fechadesact[1],fechadesact[0]);
+ // var fechahoy =new Date();
+ // if (DateDesact < fechahoy){ }
+  if ( (parseInt(fechadesact[0])+parseInt(fechadesact[1])*100+parseInt(fechadesact[2])*10000) <  (parseInt(fechaact[0])+parseInt(fechaact[1])*100+parseInt(fechaact[2])*10000) )
+  { $('#modalErrorFechaDesactivacion').modal('show'); 
+    document.getElementById("fechaDesactivacion").value ="";}
+});
+
+
+//-INACTIVA//Funcion que que hace submit del form de agregar usuario después de la confirmación
+function confirmarAgregarUsuario() {
+  $('#formAgregarUsuario').submit();
 }
+
+//Funcion para que, por defecto, la fecha de desactivación de un usuario en Editar Usuario sea la misma a la de activación
+$( "input[name='editarFechaActivacion']" ).change(function () {
+  $("#agregarFechaDesactivacion").value = $("#agregarFechaActivacion").value;});
 
 /*
  * 
@@ -111,21 +90,6 @@ function editarUsuario() {
  * 
  */
 
-function asignarCookieRol() {
-  if (valorRBRol)
-  {
-    var x = document.getElementById(valorRBRol);
-    var nombre = x.children[1].innerHTML;
-
-
-    setCookie('idRol', valorRBRol.toString() + ';' + nombre, 1, '/');
-
-    self.location = "PermisosRol.jsp";
-  }
-  else
-  {
-  }
-}
 window.valorRBRol = null;
 $("input[name='controlRol']").click(function () {
   valorRBRol = this.value;
@@ -138,19 +102,10 @@ $("input[name='controlPermiso']").click(function () {
   document.getElementById("controlIDPermiso").value = valorRBPermiso;
 });
 
-function EditarRolJS() {
-  var x = document.getElementById(valorRBRol);
-
-  document.getElementById("editarIdRol").value = valorRBRol;
-  document.getElementById("editarNombre").value = x.children[1].innerHTML;
-  document.getElementById("editarDescripcion").value = x.children[2].innerHTML;
-
-}
-
 function agregarPermisos() {
   if (valorRBRol)
   {
-    asignarCookieRol();
+    self.location = "PermisosRol?id="+valorRBRol;
   }
   else
   {
@@ -158,28 +113,7 @@ function agregarPermisos() {
   }
 }
 
-function editarRol() {
-  if (valorRBRol)
-  {
-    EditarRolJS();
-    $('#ModalEditarRol').modal('show');
-  }
-  else
-  {
-    $('#modalError').modal('show');
-  }
-}
 
-function eliminarRol() {
-  if (valorRBRol)
-  {
-    $('#ModalEliminarRol').modal('show');
-  }
-  else
-  {
-    $('#modalError').modal('show');
-  }
-}
 function eliminarRolPermiso() {
   if (valorRBPermiso)
   {
@@ -206,6 +140,11 @@ function editarRolUsuario(idRol) {
   document.getElementById("editarFechaActivacion").value = x.children[1].innerHTML;
   document.getElementById("editarFechaDesactivacion").value = x.children[2].innerHTML;
 }
+/*
+ * 
+ * Funciones de RolUsuario
+ * 
+ */
 
 function confirmarEdicion(){
   var id = $('#idRolUsuarioEditar').val();
@@ -261,14 +200,15 @@ function agregarRol() {
 
   campoOcultoRoles = $('#rolesUsuario');
   campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + idRol + "#c#" + fechaAct + "#c#" + fechaDesact);
+  //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
 
   $('#datatable-column-filter-roles > tbody:last').append(fila);
 }
 
 function confirmacion() {
-  if ($('#nombreUsuario')[0].checkValidity() && $('#nombreCompleto')[0].checkValidity() && $('#correoElectronico')[0].checkValidity() &&
-          $('#cedula')[0].checkValidity() && $('#departamento')[0].checkValidity() && $('#puesto')[0].checkValidity()
-          && $('#fechaActivacion')[0].checkValidity() && $('#fechaDesactivacion')[0].checkValidity() ) {
+//  if ($('#nombreUsuario')[0].checkValidity() && $('#nombreCompleto')[0].checkValidity() && $('#correoElectronico')[0].checkValidity() &&
+//          $('#cedula')[0].checkValidity() && $('#departamento')[0].checkValidity() && $('#puesto')[0].checkValidity()
+//          && $('#fechaActivacion')[0].checkValidity() && $('#fechaDesactivacion')[0].checkValidity() ) {
     rolesCodificados = "";
     $('#datatable-column-filter-roles > tbody > tr').each(function ()
     {
@@ -281,58 +221,28 @@ function confirmacion() {
       rolesCodificados += "#r#";
     });
     $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
-    $('#editarUsuario').submit();
-
-  }
-  else 
-  {
-    bootbox.dialog({
-      message: "Por favor llene los campos requeridos (*) con contenido válido",
-      title: "Error!",
-      buttons: {
-        success: {
-          label: "Aceptar",
-          className: "btn-success",
-          callback: true 
-          
-        }
-      }
-    });
-  }
+    
+    
+    if (!$('#editarUsuario')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#editarUsuario')).click().remove();
+    $('#editarUsuario').find(':submit').click();
+    }
+    else{$('#editarUsuario').submit();}
+//  }
+//  else 
+//  {
+//    bootbox.dialog({
+//      message: "Por favor llene los campos requeridos (*) utilizando el formato indicado.",
+//      title: "Error!",
+//      buttons: {
+//        success: {
+//          label: "Aceptar",
+//          className: "btn-success",
+//          callback: true 
+//          
+//        }
+//      }
+//    });
+//  }
 }
-
-//Funcion para que, por defecto, la fecha de desactivación de un usuario sea la misma a la de activación
-$( "input[name='fechaActivacion']" ).change(function () {
-//  $("#fechaDesactivacion").value( $("#fechaActivacion").value() ) ; 
-  document.getElementById("fechaDesactivacion").value = document.getElementById("fechaActivacion").value;
-  var fechaact = document.getElementById("fechaActivacion").value.split("/");
-  var DateAct = new Date(fechaact[2],parseInt(fechaact[1])-1,fechaact[0]);
-  var fechahoy =new Date();
-  if ( DateAct < fechahoy )
-  { $('#modalErrorFechaDesactivacion').modal('show'); 
-    document.getElementById("fechaDesactivacion").value ="";}
-
-});
-
-//Cuando se cambia la fecha de desactivacion, se verifica su validez.
-$("input[name='fechaDesactivacion']").change(function () {
-  var fechaact = document.getElementById("fechaActivacion").value.split("/");
-  var fechadesact = document.getElementById("fechaDesactivacion").value.split("/");
-  var DateDesact = new Date(fechadesact[2],fechadesact[1],fechadesact[0]);
- // var fechahoy =new Date();
- // if (DateDesact < fechahoy){ }
-  if ( (parseInt(fechadesact[0])+parseInt(fechadesact[1])*100+parseInt(fechadesact[2])*10000) <  (parseInt(fechaact[0])+parseInt(fechaact[1])*100+parseInt(fechaact[2])*10000) )
-  { $('#modalErrorFechaDesactivacion').modal('show'); 
-    document.getElementById("fechaDesactivacion").value ="";}
-});
-
-
-//-INACTIVA//Funcion que que hace submit del form de agregar usuario después de la confirmación
-function confirmarAgregarUsuario() {
-  $('#formAgregarUsuario').submit();
-}
-
-//Funcion para que, por defecto, la fecha de desactivación de un usuario en Editar Usuario sea la misma a la de activación
-$( "input[name='editarFechaActivacion']" ).change(function () {
-  $("#agregarFechaDesactivacion").value = $("#agregarFechaActivacion").value;});
 
