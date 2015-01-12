@@ -211,6 +211,7 @@ function confirmacion() {
 //          && $('#fechaActivacion')[0].checkValidity() && $('#fechaDesactivacion')[0].checkValidity() ) {
     rolesCodificados = "";
     $('#datatable-column-filter-roles > tbody > tr').each(function ()
+    
     {
       fila = $(this);
       rolesCodificados += fila.attr('id');
@@ -221,7 +222,7 @@ function confirmacion() {
       rolesCodificados += "#r#";
     });
     $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
-    
+    //alert("el valor de roles Usuario es: "+$('#rolesUsuario').val() );
     
     if (!$('#editarUsuario')[0].checkValidity()) {
     $('<input type="submit">').hide().appendTo($('#editarUsuario')).click().remove();

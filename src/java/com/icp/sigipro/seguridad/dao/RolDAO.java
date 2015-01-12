@@ -74,8 +74,12 @@ public class RolDAO
                 if (resultadoConsulta == 1)
                 {
                     resultado = true;
-                }
+                }                
                 consulta.close();
+                PreparedStatement eliminarRolesUsuario = conexion.prepareStatement("Delete from seguridad.roles_usuarios where id_rol = ?");
+                eliminarRolesUsuario.setInt(1, idrol);
+                int result = eliminarRolesUsuario.executeUpdate();
+                eliminarRolesUsuario.close();
                 conexion.close();
             }
         }
