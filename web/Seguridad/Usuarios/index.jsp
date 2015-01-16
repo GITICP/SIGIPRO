@@ -66,7 +66,7 @@
                     <th>Nombre Completo</th>
                     <th>Correo</th>
                     <th>Cédula</th>
-                    <th>Departamento</th>
+                    <th>Sección</th>
                     <th>Puesto</th>
                     <th>Fecha Activacion</th>
                     <th>Fecha Desactivacion</th>
@@ -88,7 +88,7 @@
                       <td>${usuario.getNombreCompleto()}</td>
                       <td>${usuario.getCorreo()}</td>
                       <td>${usuario.getCedula()}</td>
-                      <td>${usuario.getDepartamento()}</td>
+                      <td>${usuario.getNombreSeccion()}</td>
                       <td>${usuario.getPuesto()}</td>
                       <td>${usuario.getFechaActivacion()}</td>
                       <td>${usuario.getFechaDesactivacion()}</td>

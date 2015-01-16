@@ -98,14 +98,17 @@
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="departamento" class="control-label">*Departamento</label>
+                    <label for="seccion" class="control-label">*Sección</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getDepartamento()}" maxlength="200" placeholder="Producción" class="form-control" name="departamento" id="departamento" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')">
+                          <select id="seleccionSeccion" name="seccion" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" >
+                            <c:forEach items="${secciones}" var="seccion">
+                              <option value=${seccion.getID()}>${seccion.getNombreSeccion()}</option>
+                            </c:forEach>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -199,7 +202,7 @@
 
       <jsp:attribute name="form">
 
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="formAgregarRolUsuario">
           <input type="text" name="rol"  hidden="true">
           <label for="idrol" class="control-label">*Rol</label>
           <div class="form-group">
@@ -255,7 +258,7 @@
     <t:modal idModal="modalEditarRolUsuario" titulo="Editar Rol">
 
       <jsp:attribute name="form">
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
           <label for="nombreUsuario" class="control-label">*Rol</label>

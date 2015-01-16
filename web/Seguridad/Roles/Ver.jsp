@@ -49,10 +49,11 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Nombre de Rol:</strong></td> <td>${rol.getNombreRol()} </td></tr>
+                <tr><td> <strong>Nombre de Rol:   </strong></td> <td>${rol.getNombreRol()} </td></tr>
                 <tr><td> <strong>Descripcion:</strong> <td>${rol.getDescripcion()} </td></tr>
               </table>
               <br>
+              <!-- Ver usuarios -->
               <div class="widget widget-table">
                 <div class="widget-header">
                   <h3><i class="fa fa-group"></i> Usuarios con el rol ${rol.getNombreRol()} </h3>
@@ -72,6 +73,28 @@
                           <td>${usuarioRol.getNombreUsuario()}</td>
                           <td>${usuarioRol.getFechaActivacion()}</td>
                           <td>${usuarioRol.getFechaDesactivacion()}</td>
+                        </tr>
+                      </c:forEach>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- Ver permisos -->
+              <div class="widget widget-table">
+                <div class="widget-header">
+                  <h3><i class="fa fa-group"></i> Permisos del Rol ${rol.getNombreRol()} </h3>
+                </div>
+                <div class="widget-content">
+                  <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
+                    <thead>
+                      <tr>
+                        <th>Nombre Permiso</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <c:forEach items="${permisosRol}" var="permisoRol">
+                        <tr id="${permisoRol.getIDPermiso()}">
+                          <td>${permisoRol.getNombrePermiso()}</td>
                         </tr>
                       </c:forEach>
                     </tbody>

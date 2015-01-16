@@ -6,9 +6,13 @@
 package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.dao.PermisoDAO;
+import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import com.icp.sigipro.seguridad.dao.RolDAO;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Permiso;
+import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -55,12 +59,17 @@ public class EditarRol extends HttpServlet {
       UsuarioDAO u = new UsuarioDAO();
 
       Rol rol = r.obtenerRol(idRol);
+      PermisoDAO p = new PermisoDAO();
       List<RolUsuario> UsuariosdelRol = r.obtenerUsuariosRol(id);
       List<Usuario> usuariosRestantes = u.obtenerUsuariosRestantes(id);
+      List<PermisoRol> permisosRol = p.obtenerPermisosRol(id);
+      List<Permiso> permisosRestantes = p.obtenerPermisosRestantes(id);
 
       request.setAttribute("rol", rol);
       request.setAttribute("rolesUsuario", UsuariosdelRol);
       request.setAttribute("rolesRestantes", usuariosRestantes);
+      request.setAttribute("permisosRol", permisosRol);
+      request.setAttribute("permisosRestantes", permisosRestantes);
 
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Roles/Editar.jsp").forward(request, response);
@@ -105,8 +114,13 @@ public class EditarRol extends HttpServlet {
       String descripcion;
       descripcion = request.getParameter("descripcion");
       String rolesUsuario = request.getParameter("listaRolesUsuario");
+      String permisosRol = request.getParameter("listaPermisosRol");
+      
       RolUsuarioDAO ru = new RolUsuarioDAO();
+      PermisoRolDAO pr = new PermisoRolDAO();
+      
       List<RolUsuario> roles = ru.parsearUsuarios(rolesUsuario, idRol);
+      List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, idRol);
 
       RolDAO r = new RolDAO();
 
@@ -117,6 +131,13 @@ public class EditarRol extends HttpServlet {
           for (RolUsuario i : roles) {
             boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
             if (!e) {
+              f = false;
+              break;
+            }
+          }
+          for (PermisoRol i : permisos) {
+            boolean g = pr.insertarPermisoRol(i.getIDRol(), i.getIDPermiso());
+            if (!g) {
               f = false;
               break;
             }

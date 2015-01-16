@@ -5,9 +5,13 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
+import com.icp.sigipro.seguridad.dao.PermisoDAO;
+import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import com.icp.sigipro.seguridad.dao.RolDAO;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Permiso;
+import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -47,11 +51,17 @@ public class AgregarRol extends HttpServlet {
     try (PrintWriter out = response.getWriter()) {
 
       UsuarioDAO u = new UsuarioDAO();
+      PermisoDAO p = new PermisoDAO();
       List<RolUsuario> rolesUsuario = null;
+      List<PermisoRol> permisosRol = null;
       List<Usuario> usuariosRestantes = u.obtenerUsuariosRestantes("0");
+      List<Permiso> permisosRestantes = p.obtenerPermisosRestantes("0");
 
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("usuariosRestantes", usuariosRestantes);
+      request.setAttribute("permisosRol", permisosRol);
+      request.setAttribute("permisosRestantes", permisosRestantes);
+      
 
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Roles/Agregar.jsp").forward(request, response);
@@ -109,8 +119,13 @@ public class AgregarRol extends HttpServlet {
         int id_rol;
         id_rol = r.obtenerIDRol(nombreRol);
         String rolesUsuario = request.getParameter("listarolesUsuario");
+        String permisosRol = request.getParameter("listaPermisosRol");
+        
         RolUsuarioDAO ru = new RolUsuarioDAO();
+        PermisoRolDAO pr = new PermisoRolDAO();
+        
         List<RolUsuario> roles = ru.parsearUsuarios(rolesUsuario, id_rol);
+        List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, id_rol);
         
          if (roles != null) {
           boolean f = true;
@@ -121,6 +136,14 @@ public class AgregarRol extends HttpServlet {
               break;
             }
           }
+          for (PermisoRol i : permisos) {
+            boolean g = pr.insertarPermisoRol(i.getIDRol(), i.getIDPermiso());
+            if (!g) {
+              f = false;
+              break;
+            }
+          }
+          
           if (f) {
             request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
                     + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
@@ -131,7 +154,7 @@ public class AgregarRol extends HttpServlet {
             request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
                     + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
                     + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                    + "El Rol fue ingresado, pero sin usuarios asociados."
+                    + "El Rol fue ingresado, pero hubo errores al asociar usuarios o permisos."
                     + "</div>");
           }
         } else {

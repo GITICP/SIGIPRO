@@ -55,6 +55,7 @@
                   <div class="col-md-6">
                     <input id="editarIdRol" hidden="true" name="editarIdRol" value="${rol.getID()}">
                     <input id="rolesUsuario" hidden="true" name="listaRolesUsuario" value="">
+                    <input id="permisosRol" hidden="true" name="listaPermisosRol" value="">
                     <label for="nombreRol" class="control-label">*Nombre del Rol</label>
                     <div class="form-group">
                       <div class="col-sm-12">
@@ -110,13 +111,43 @@
                     </table>
                   </div>
                 </div>
+                <!-- Esta parte es la de los permisos de un rol -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-group"></i> Permisos</h3>
+                    <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarPermisoRol" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre Permiso</th>
+                          <th>Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${permisosRol}" var="permisoRol">
+                          <tr id="${permisoRol.getIDPermiso()}">
+                            <td>${permisoRol.getNombrePermiso()}</td>
+                            <td>
+                              <button type="button" class="btn btn-primary btn-sm" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los permisos de un rol -->
                 <p>
                   Los campos marcados con * son requeridos.
                 </p> 
                 <div class="form-group">
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmacion()"><i class="fa fa-check-circle"></i> Confirmar Cambios </button>
+                    <button type="button" class="btn btn-primary" onclick="confirmacionEditarRol()"><i class="fa fa-check-circle"></i> Confirmar Cambios </button>
                   </div>
                 </div>
               </form>
@@ -133,7 +164,7 @@
 
       <jsp:attribute name="form">
 
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="formAgregarRolUsuario">
           <input type="text" name="rol"  hidden="true">
           <label for="idrol" class="control-label">*Usuario</label>
           <div class="form-group">
@@ -189,7 +220,7 @@
     <t:modal idModal="modalEditarRolUsuario" titulo="Editar Usuario">
 
       <jsp:attribute name="form">
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
           <label for="nombreUsuario" class="control-label">*Usuario</label>
@@ -266,6 +297,53 @@
         </div>
       </div>
     </div>
+                
+       <!-- Los modales de Permisos -->      
+      <t:modal idModal="modalAgregarPermisoRol" titulo="Agregar Permiso">
+
+      <jsp:attribute name="form">
+
+        <form class="form-horizontal">
+          <input type="text" name="rol"  hidden="true">
+          <label for="idpermiso" class="control-label">Seleccione un permiso:</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <select id="seleccionPermiso" name="idpermiso" required
+                        oninvalid="setCustomValidity('Este campo es requerido')"
+                        oninput="setCustomValidity('')">
+                  <c:forEach items="${permisosRestantes}" var="rol">
+                    <option value=${rol.getID()}>${rol.getNombrePermiso()}</option>
+                  </c:forEach>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarPermiso()"><i class="fa fa-check-circle"></i> Agregar Permiso</button>
+            </div>
+          </div>
+        </form>
+
+      </jsp:attribute>
+
+    </t:modal>
+    <t:modal idModal="modalErrorFechaDesactivacion" titulo="Error">
+
+      <jsp:attribute name="form">
+
+        <h5>Las fechas de activación y desactivación deben ser iguales o posteriores a la de hoy. Además, la fecha de desactivación debe ser posterior o igual a la fecha de activación. </h5>
+
+        <div class="modal-footer">
+          <button id="exitErrorFechaDesactivacion" type="button" data-dismiss="modal" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Confirmar</button>
+        </div>
+
+      </jsp:attribute>
+
+    </t:modal>
+
   </jsp:attribute>
 
 </t:plantilla_general>

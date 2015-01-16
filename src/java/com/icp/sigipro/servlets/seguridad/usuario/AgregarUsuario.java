@@ -7,8 +7,10 @@ package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
+import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,14 +47,17 @@ public class AgregarUsuario extends HttpServlet {
       int idUsuario = 0;
       String id = "0";
       UsuarioDAO u = new UsuarioDAO();
+      SeccionDAO sec = new SeccionDAO();
 
       Usuario usuario = u.obtenerUsuario(idUsuario);
       List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
       List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
-
+      List<Seccion> secciones = sec.obtenerSecciones();
+      
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("rolesRestantes", rolesRestantes);
+      request.setAttribute("secciones",secciones);
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Usuarios/Agregar.jsp").forward(request, response);
 
@@ -100,8 +105,8 @@ public class AgregarUsuario extends HttpServlet {
       correoElectronico = request.getParameter("correoElectronico");
       String cedula;
       cedula = request.getParameter("cedula");
-      String departamento;
-      departamento = request.getParameter("departamento");
+      String seccion;
+      seccion = request.getParameter("seccion");
       String puesto;
       puesto = request.getParameter("puesto");
       String fechaActivacion;
@@ -112,7 +117,7 @@ public class AgregarUsuario extends HttpServlet {
       UsuarioDAO u = new UsuarioDAO();
 
       boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-              departamento, puesto, fechaActivacion, fechaDesactivacion);
+              Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion);
 
       if (insercionExitosa) {
 

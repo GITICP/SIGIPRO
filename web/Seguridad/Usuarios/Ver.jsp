@@ -52,8 +52,8 @@
                 <tr><td> <strong>Nombre de Usuario:</strong></td> <td>${usuario.getNombreUsuario()} </td></tr>
                 <tr><td> <strong>Nombre Completo:</strong> <td>${usuario.getNombreCompleto()} </td></tr>
                 <tr><td> <strong>Correo Electrónico:</strong> <td>${usuario.getCorreo()} </td></tr>
-                <tr><td> <strong>Cedula:</strong> <td>${usuario.getCedula()}</td></tr>
-                <tr><td> <strong>Departamento:</strong> <td>${usuario.getDepartamento()}</td></tr>
+                <tr><td> <strong>Cédula:</strong> <td>${usuario.getCedula()}</td></tr>
+                <tr><td> <strong>Sección:</strong> <td>${usuario.getNombreSeccion()}</td></tr>
                 <tr><td> <strong>Puesto:</strong> <td>${usuario.getPuesto()}</td></tr>
                 <tr><td> <strong>Fecha de Activación:</strong> <td>${usuario.getFechaActivacion()}</td></tr>
                 <tr><td> <strong>Fecha de Desactivacion:</strong>  <td>${usuario.getFechaDesactivacion()}</td></tr>

@@ -5,7 +5,10 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
+import com.icp.sigipro.seguridad.dao.PermisoDAO;
+import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import com.icp.sigipro.seguridad.dao.RolDAO;
+import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -49,12 +52,15 @@ public class VerRol extends HttpServlet {
       idRol = Integer.parseInt(id);
       
       RolDAO r = new RolDAO();
+      PermisoDAO pr =new PermisoDAO();
       
       Rol rol = r.obtenerRol(idRol);
       List<RolUsuario> usuariosRol = r.obtenerUsuariosRol(id);
+      List<PermisoRol> permisosRol = pr.obtenerPermisosRol(id);
 
       request.setAttribute("rol", rol);
       request.setAttribute("usuariosRol", usuariosRol);
+      request.setAttribute("permisosRol", permisosRol);
 
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Roles/Ver.jsp").forward(request, response);

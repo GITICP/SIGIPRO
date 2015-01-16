@@ -76,10 +76,18 @@ public class RolDAO
                     resultado = true;
                 }                
                 consulta.close();
+                
+                //Se eliminan los RolesUsuario y PermisosRoles asociados al Rol
                 PreparedStatement eliminarRolesUsuario = conexion.prepareStatement("Delete from seguridad.roles_usuarios where id_rol = ?");
                 eliminarRolesUsuario.setInt(1, idrol);
                 int result = eliminarRolesUsuario.executeUpdate();
                 eliminarRolesUsuario.close();
+                
+                PreparedStatement eliminarPermisosRoles = conexion.prepareStatement("Delete from seguridad.permisos_roles where id_rol = ?");
+                eliminarPermisosRoles.setInt(1, idrol);
+                int result2 = eliminarPermisosRoles.executeUpdate();
+                eliminarPermisosRoles.close();
+                
                 conexion.close();
             }
         }

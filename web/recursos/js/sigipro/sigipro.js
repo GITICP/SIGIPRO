@@ -44,45 +44,44 @@ $("input[name='control']").click(function () {
 
 function desactivarUsuario() {
   if (valorRB)
-  {$('#modalDesactivarUsuario').modal('show'); }
+  {
+    $('#modalDesactivarUsuario').modal('show');
+  }
   else
-  {$('#modalError').modal('show');}
+  {
+    $('#modalError').modal('show');
+  }
 }
 
-//Funcion para que, por defecto, la fecha de desactivación de un usuario sea la misma a la de activación
-$( "input[name='fechaActivacion']" ).change(function () {
-//  $("#fechaDesactivacion").value( $("#fechaActivacion").value() ) ; 
+//Funciones para que, por defecto, la fecha de desactivación de un usuario sea la misma a la de activación
+$("input[name='fechaActivacion']").change(function () {
   document.getElementById("fechaDesactivacion").value = document.getElementById("fechaActivacion").value;
   var fechaact = document.getElementById("fechaActivacion").value.split("/");
-  var DateAct = new Date(fechaact[2],parseInt(fechaact[1])-1,fechaact[0]);
-  var fechahoy =new Date();
-  if ( DateAct < fechahoy )
-  { $('#modalErrorFechaDesactivacion').modal('show'); 
-    document.getElementById("fechaDesactivacion").value ="";}
+  var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
+  var fechahoy = new Date();
+  if (DateAct < fechahoy)
+  {
+    $('#modalErrorFechaDesactivacion').modal('show');
+    document.getElementById("fechaActivacion").value = "";
+  }
 
 });
-
 //Cuando se cambia la fecha de desactivacion, se verifica su validez.
 $("input[name='fechaDesactivacion']").change(function () {
   var fechaact = document.getElementById("fechaActivacion").value.split("/");
   var fechadesact = document.getElementById("fechaDesactivacion").value.split("/");
-  var DateDesact = new Date(fechadesact[2],fechadesact[1],fechadesact[0]);
- // var fechahoy =new Date();
- // if (DateDesact < fechahoy){ }
-  if ( (parseInt(fechadesact[0])+parseInt(fechadesact[1])*100+parseInt(fechadesact[2])*10000) <  (parseInt(fechaact[0])+parseInt(fechaact[1])*100+parseInt(fechaact[2])*10000) )
-  { $('#modalErrorFechaDesactivacion').modal('show'); 
-    document.getElementById("fechaDesactivacion").value ="";}
+  var DateDesact = new Date(fechadesact[2], fechadesact[1], fechadesact[0]);
+  if ((parseInt(fechadesact[0]) + parseInt(fechadesact[1]) * 100 + parseInt(fechadesact[2]) * 10000) < (parseInt(fechaact[0]) + parseInt(fechaact[1]) * 100 + parseInt(fechaact[2]) * 10000))
+  {
+    $('#modalErrorFechaDesactivacion').modal('show');
+    document.getElementById("fechaDesactivacion").value = "";
+  }
 });
 
-
-//-INACTIVA//Funcion que que hace submit del form de agregar usuario después de la confirmación
-function confirmarAgregarUsuario() {
-  $('#formAgregarUsuario').submit();
-}
-
 //Funcion para que, por defecto, la fecha de desactivación de un usuario en Editar Usuario sea la misma a la de activación
-$( "input[name='editarFechaActivacion']" ).change(function () {
-  $("#agregarFechaDesactivacion").value = $("#agregarFechaActivacion").value;});
+$("input[name='editarFechaActivacion']").change(function () {
+  $("#agregarFechaDesactivacion").value = $("#agregarFechaActivacion").value;
+});
 
 /*
  * 
@@ -90,46 +89,13 @@ $( "input[name='editarFechaActivacion']" ).change(function () {
  * 
  */
 
-window.valorRBRol = null;
-$("input[name='controlRol']").click(function () {
-  valorRBRol = this.value;
-  document.getElementById("controlIDRol").value = valorRBRol;
-});
 
-window.valorRBPermiso = null;
-$("input[name='controlPermiso']").click(function () {
-  valorRBPermiso = this.value;
-  document.getElementById("controlIDPermiso").value = valorRBPermiso;
-});
-
-function agregarPermisos() {
-  if (valorRBRol)
-  {
-    self.location = "PermisosRol?id="+valorRBRol;
-  }
-  else
-  {
-    $('#modalError').modal('show');
-  }
-}
-
-
-function eliminarRolPermiso() {
-  if (valorRBPermiso)
-  {
-    $('#modalEliminarPermisoRol').modal('show');
-  }
-  else
-  {
-    $('#modalError').modal('show');
-  }
-}
 function eliminarRolUsuario(idRol) {
   fila = $('#' + idRol);
   $('#seleccionRol')
-    .append($("<option></option>")
-    .attr("value", fila.attr('id'))
-    .text(fila.children('td').eq(0).text()));
+          .append($("<option></option>")
+                  .attr("value", fila.attr('id'))
+                  .text(fila.children('td').eq(0).text()));
   fila.remove();
 }
 
@@ -146,32 +112,46 @@ function editarRolUsuario(idRol) {
  * 
  */
 
-function confirmarEdicion(){
-  var id = $('#idRolUsuarioEditar').val();
-  fila = $('#'+id);
-  fila.children('td').eq(1).text($('#editarFechaActivacion').val());
-  fila.children('td').eq(2).text($('#editarFechaDesactivacion').val());
-  $('#modalEditarRolUsuario').modal('hide');
-  
-  //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
-  campoOcultoRoles = $('#rolesUsuario');
-  var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
-  var nuevoValorCampoOculto = "";
-  a.splice(0,1);
-  for (var i=0; i<a.length; i++)
-    { var cadarol = a[i].split("#c#");
-      if (cadarol[0] === id )
-        {}
-      else 
-        {
-          nuevoValorCampoOculto =  nuevoValorCampoOculto + "#r#" + a[i] ;
-        }
-      
+function confirmarEdicion() {
+  if (!$('#formEditarRolUsuario')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formEditarRolUsuario')).click().remove();
+    $('#formEditarRolUsuario').find(':submit').click();
+  }
+  else {
+    var id = $('#idRolUsuarioEditar').val();
+    fila = $('#' + id);
+    fila.children('td').eq(1).text($('#editarFechaActivacion').val());
+    fila.children('td').eq(2).text($('#editarFechaDesactivacion').val());
+    $('#modalEditarRolUsuario').modal('hide');
+
+    //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
+    campoOcultoRoles = $('#rolesUsuario');
+    var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
+    var nuevoValorCampoOculto = "";
+    a.splice(0, 1);
+    for (var i = 0; i < a.length; i++)
+    {
+      var cadarol = a[i].split("#c#");
+      if (cadarol[0] === id)
+      {
+      }
+      else
+      {
+        nuevoValorCampoOculto = nuevoValorCampoOculto + "#r#" + a[i];
+      }
+
     }
-  campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarFechaActivacion').val() + "#c#" + $('#editarFechaDesactivacion').val());
+    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarFechaActivacion').val() + "#c#" + $('#editarFechaDesactivacion').val());
+  }
 }
 
+// Funcion que agrega el rol seleccionado al input escondido de roles
 function agregarRol() {
+   if (!$('#formAgregarRolUsuario')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formAgregarRolUsuario')).click().remove();
+    $('#formAgregarRolUsuario').find(':submit').click();
+  }
+  else {
   $('#modalAgregarRolUsuario').modal('hide');
 
   rolSeleccionado = $('#seleccionRol :selected');
@@ -203,47 +183,100 @@ function agregarRol() {
   //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
 
   $('#datatable-column-filter-roles > tbody:last').append(fila);
+  }
 }
 
 function confirmacion() {
-//  if ($('#nombreUsuario')[0].checkValidity() && $('#nombreCompleto')[0].checkValidity() && $('#correoElectronico')[0].checkValidity() &&
-//          $('#cedula')[0].checkValidity() && $('#departamento')[0].checkValidity() && $('#puesto')[0].checkValidity()
-//          && $('#fechaActivacion')[0].checkValidity() && $('#fechaDesactivacion')[0].checkValidity() ) {
-    rolesCodificados = "";
-    $('#datatable-column-filter-roles > tbody > tr').each(function ()
-    
-    {
-      fila = $(this);
-      rolesCodificados += fila.attr('id');
-      rolesCodificados += "#c#";
-      rolesCodificados += fila.children('td').eq(1).text();
-      rolesCodificados += "#c#";
-      rolesCodificados += fila.children('td').eq(2).text();
-      rolesCodificados += "#r#";
-    });
-    $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
-    //alert("el valor de roles Usuario es: "+$('#rolesUsuario').val() );
-    
-    if (!$('#editarUsuario')[0].checkValidity()) {
+  rolesCodificados = "";
+  $('#datatable-column-filter-roles > tbody > tr').each(function ()
+
+  {
+    fila = $(this);
+    rolesCodificados += fila.attr('id');
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(1).text();
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(2).text();
+    rolesCodificados += "#r#";
+  });
+  $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
+
+  if (!$('#editarUsuario')[0].checkValidity()) {
     $('<input type="submit">').hide().appendTo($('#editarUsuario')).click().remove();
     $('#editarUsuario').find(':submit').click();
-    }
-    else{$('#editarUsuario').submit();}
-//  }
-//  else 
-//  {
-//    bootbox.dialog({
-//      message: "Por favor llene los campos requeridos (*) utilizando el formato indicado.",
-//      title: "Error!",
-//      buttons: {
-//        success: {
-//          label: "Aceptar",
-//          className: "btn-success",
-//          callback: true 
-//          
-//        }
-//      }
-//    });
-//  }
+  }
+  else {
+    $('#editarUsuario').submit();
+  }
 }
 
+function confirmacionAgregar() {
+  rolesCodificados = "";
+  $('#datatable-column-filter-roles > tbody > tr').each(function ()
+
+  {
+    fila = $(this);
+    rolesCodificados += fila.attr('id');
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(1).text();
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(2).text();
+    rolesCodificados += "#r#";
+  });
+  $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
+  //alert("el valor de roles Usuario es: "+$('#rolesUsuario').val() );
+
+  if (!$('#formAgregarUsuario')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formAgregarUsuario')).click().remove();
+    $('#formAgregarUsuario').find(':submit').click();
+  }
+  else {
+    $('#formAgregarUsuario').submit();
+  }
+}
+
+//Funciones para validar las fechas de activación y desactivación en los modals -------------------------------------------------//
+$("input[name='editarFechaActivacion']").change(function () {
+  document.getElementById("agregarFechaDesactivacion").value = document.getElementById("agregarFechaActivacion").value;
+  var fechaact = document.getElementById("agregarFechaActivacion").value.split("/");
+  var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
+  var fechahoy = new Date();
+  if (DateAct < fechahoy)
+  {
+    $('#modalErrorFechaDesactivacion').modal('show');
+    document.getElementById("agregarFechaActivacion").value = "";
+  }
+
+});
+
+$("input[name='editarFechaActivacion']").change(function () {
+  document.getElementById("editarFechaDesactivacion").value = document.getElementById("editarFechaActivacion").value;
+  var fechaact = document.getElementById("editarFechaActivacion").value.split("/");
+  var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
+  var fechahoy = new Date();
+  if (DateAct < fechahoy)
+  {
+    $('#modalErrorFechaDesactivacion').modal('show');
+    document.getElementById("editarFechaActivacion").value = "";
+  }
+
+});
+
+$("input[name='editarFechaDesactivacion']").change(function () {
+  var fechaact = document.getElementById("agregarFechaActivacion").value.split("/");
+  var fechadesact = document.getElementById("agregarFechaDesactivacion").value.split("/");
+  if ((parseInt(fechadesact[0]) + parseInt(fechadesact[1]) * 100 + parseInt(fechadesact[2]) * 10000) < (parseInt(fechaact[0]) + parseInt(fechaact[1]) * 100 + parseInt(fechaact[2]) * 10000))
+  {
+    $('#modalErrorFechaDesactivacion').modal('show');
+    document.getElementById("agregarFechaDesactivacion").value = "";
+  }
+});
+$("input[name='editarFechaDesactivacion']").change(function () {
+  var fechaact = document.getElementById("editarFechaActivacion").value.split("/");
+  var fechadesact = document.getElementById("editarFechaDesactivacion").value.split("/");
+  if ((parseInt(fechadesact[0]) + parseInt(fechadesact[1]) * 100 + parseInt(fechadesact[2]) * 10000) < (parseInt(fechaact[0]) + parseInt(fechaact[1]) * 100 + parseInt(fechaact[2]) * 10000))
+  {
+    $('#modalErrorFechaDesactivacion').modal('show');
+    document.getElementById("editarFechaDesactivacion").value = "";
+  }
+});
