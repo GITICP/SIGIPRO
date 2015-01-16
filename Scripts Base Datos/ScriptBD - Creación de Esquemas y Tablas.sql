@@ -47,7 +47,7 @@ CREATE TABLE seguridad.usuarios (
     correo character varying(45),
     nombre_completo character varying(200),
     cedula character varying(45),
-    id_seccion integer NOT NULL,
+    id_seccion integer,
     puesto character varying(200),
     fecha_activacion date,
     fecha_desactivacion date,
