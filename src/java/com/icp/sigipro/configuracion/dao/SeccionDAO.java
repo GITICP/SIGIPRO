@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.seguridad.dao;
+package com.icp.sigipro.configuracion.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.seguridad.modelos.*;
+import com.icp.sigipro.configuracion.modelos.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

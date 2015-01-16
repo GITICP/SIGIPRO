@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.servlets.seguridad.seccion;
+package com.icp.sigipro.servlets.configuracion.seccion;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.seguridad.dao.SeccionDAO;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Walter
  */
-@WebServlet(name = "EditarSeccion", urlPatterns = {"/Seguridad/Secciones/EditarSeccion"})
+@WebServlet(name = "EditarSeccion", urlPatterns = {"/Configuracion/Secciones/EditarSeccion"})
 public class EditarSeccion extends HttpServlet {
 
     /**
@@ -106,7 +106,7 @@ public class EditarSeccion extends HttpServlet {
                                                         "Sección no pudo ser editada." +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/Secciones/").forward(request, response);
+            request.getRequestDispatcher("/Configuracion/Secciones/").forward(request, response);
             
             
             

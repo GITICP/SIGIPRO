@@ -3,24 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.servlets.seguridad.seccion;
+package com.icp.sigipro.servlets.configuracion.seccion;
 
-import com.icp.sigipro.seguridad.dao.SeccionDAO;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
  *
  * @author Walter
  */
-@WebServlet(name = "AgregarSeccion", urlPatterns = {"/Seguridad/Secciones/Agregar"})
-public class AgregarSeccion extends HttpServlet {
+@WebServlet(name = "EliminarSeccion", urlPatterns = {"/Configuracion/Secciones/EliminarSeccion"})
+public class EliminarSeccion extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,14 +29,21 @@ public class AgregarSeccion extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
-            ServletContext context = this.getServletContext();
-            context.getRequestDispatcher("/Seguridad/Secciones/Agregar.jsp").forward(request, response);
-            
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet EliminarSeccion</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet EliminarSeccion at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 
@@ -68,7 +73,6 @@ public class AgregarSeccion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         response.setContentType("text/html;charset=UTF-8");
         
         PrintWriter out;
@@ -76,21 +80,18 @@ public class AgregarSeccion extends HttpServlet {
         
         try
         {
-            String nombre_seccion;
-            nombre_seccion = request.getParameter("nombre_seccion");
-            String descripcion;
-            descripcion = request.getParameter("descripcion");
+            String idseccion = request.getParameter("controlIDSeccion");
             
             SeccionDAO s = new SeccionDAO();
             
-            boolean insercionExitosa = s.insertarSeccion(nombre_seccion, descripcion);
+            boolean Exito = s.EliminarSeccion( idseccion);
             
-            if(insercionExitosa)
+            if(Exito)
             {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Seccion ingresada correctamente." +
+                                                        "La seccion se ha eliminado correctamente" +
                                                 "</div>");
             }
             else
@@ -98,10 +99,10 @@ public class AgregarSeccion extends HttpServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Seccion no pudo ser ingresada." +
+                                                        "La seccion no pudo ser eliminada porque está asignado a uno o más usuarios" +
                                                 "</div>");
             }
-            request.getRequestDispatcher("/Seguridad/Secciones/").forward(request, response);
+            request.getRequestDispatcher("/Configuracion/Secciones/").forward(request, response);
             
         }
         finally

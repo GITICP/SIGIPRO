@@ -4,10 +4,10 @@
     Author     : Walter
 --%>
 
-<%@page import="com.icp.sigipro.seguridad.dao.SeccionDAO"%>
+<%@page import="com.icp.sigipro.configuracion.dao.SeccionDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.seguridad.modelos.Seccion"%>
+<%@page import="com.icp.sigipro.configuracion.modelos.Seccion"%>
 <%@page import="java.util.List"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
@@ -23,7 +23,7 @@
     }
 %>
 
-<t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Configuracion" direccion_contexto="/SIGIPRO">
     
     <jsp:attribute name="contenido">
 
@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
-                        <li>Seguridad</li>
+                        <li>configuracion</li>
                         <li class="active">Secciones</li>
                     </ul>
                 </div>
