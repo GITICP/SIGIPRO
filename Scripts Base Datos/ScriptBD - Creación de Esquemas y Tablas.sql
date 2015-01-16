@@ -47,7 +47,7 @@ CREATE TABLE seguridad.usuarios (
     correo character varying(45),
     nombre_completo character varying(200),
     cedula character varying(45),
-    id_seccion integer,
+    id_seccion integer  DEFAULT NULL,
     puesto character varying(200),
     fecha_activacion date,
     fecha_desactivacion date,
@@ -77,7 +77,7 @@ ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol);
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (permiso) REFERENCES seguridad.permisos(id_permiso);
-ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
+ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion) on delete set null;;
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;
