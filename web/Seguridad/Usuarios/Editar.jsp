@@ -23,7 +23,9 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Seguridad</li>
-            <li>Usuarios</li>
+            <li> 
+                <a href="/SIGIPRO/Seguridad/Usuarios/">Usuarios</a>
+            </li>
             <li class="active"> Editar ${usuario.getNombreUsuario()} </li>
 
           </ul>
