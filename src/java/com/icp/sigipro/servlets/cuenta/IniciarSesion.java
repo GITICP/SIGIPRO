@@ -88,7 +88,6 @@ public class IniciarSesion extends HttpServlet {
             UsuarioDAO u = new UsuarioDAO();
             
             int idUsuario = u.validarInicioSesion(usuario, contrasenna);
-            
             if(idUsuario != -1)
             {
                 try { 
@@ -105,6 +104,7 @@ public class IniciarSesion extends HttpServlet {
             }
             else
             {
+                //Este mensaje de error se puede copiar y pegar y solo cambiar el texto final
                 request.setAttribute("mensaje","<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                         "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                         "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
@@ -113,6 +113,7 @@ public class IniciarSesion extends HttpServlet {
 
                 request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
             }
+           
         }
         finally
         {
