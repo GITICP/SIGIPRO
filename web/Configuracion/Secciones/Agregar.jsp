@@ -23,8 +23,10 @@
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
                         <li>Configuración</li>
-                        <li>Secciones</li>
-                        <li class="active"> Agregar Seccion </li>
+                        <li>
+                            <a href="/SIGIPRO/Configuracion/Secciones/">Secciones</a>
+                        </li>
+                        <li class="active"> Agregar Sección </li>
 
                     </ul>
                 </div>
@@ -41,13 +43,13 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-group"></i> Agregar Nueva Seccion </h3>
+                            <h3><i class="fa fa-group"></i> Agregar Nueva Sección </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <form class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
-                                <p class="title">Agregar Seccion</p>
-                                <label for="nombreUsuario" class="control-label">*Nombre de Seccion</label>
+                                <p class="title">Agregar Sección</p>
+                                <label for="nombreUsuario" class="control-label">*Nombre de Sección</label>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div class="input-group">
@@ -57,7 +59,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <label for="nombreCompleto" class="control-label">*Desccripción</label>
+                                <label for="nombreCompleto" class="control-label">*Descripción</label>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div class="input-group">
@@ -71,7 +73,7 @@
                                 <div class="form-group">
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Seccion</button>
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Sección</button>
                                     </div>
                                 </div>
                             </form>

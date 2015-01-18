@@ -24,7 +24,9 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Seguridad</li>
-            <li>Roles</li>
+            <li>
+                <a href="/SIGIPRO/Seguridad/Roles/">Roles</a>
+            </li>
             <li class="active"> Editar ${rol.getNombreRol()} </li>
 
           </ul>
