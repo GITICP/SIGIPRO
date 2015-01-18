@@ -21,16 +21,17 @@ public class Usuario
     String correo;
     String nombreCompleto;
     String cedula;
-    String departamento;
+    int id_seccion;
     String puesto;
     Date fechaActivacion;
     Date fechaDesactivacion;
     boolean activo;
+    String nombreSeccion;
     
     public Usuario(){}
     
     public Usuario (int p_idUsuario, String p_nombreUsuario, String p_correo, String p_nombreCompleto,
-            String p_cedula, String p_departamento, String p_puesto, Date p_fechaActivacion, Date p_fechaDesactivacion,
+            String p_cedula, int p_departamento, String p_puesto, Date p_fechaActivacion, Date p_fechaDesactivacion,
             boolean p_activo)
     {
         idUsuario = p_idUsuario;
@@ -38,7 +39,7 @@ public class Usuario
         correo = p_correo;
         nombreCompleto = p_nombreCompleto;
         cedula = p_cedula;
-        departamento = p_departamento;
+        id_seccion = p_departamento;
         puesto = p_puesto;
         fechaActivacion = p_fechaActivacion;
         fechaDesactivacion = p_fechaDesactivacion;
@@ -65,8 +66,8 @@ public class Usuario
         this.cedula = cedula;
     }
 
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
+    public void setIdSeccion(int seccion) {
+        this.id_seccion = seccion;
     }
 
     public void setPuesto(String puesto) {
@@ -84,13 +85,15 @@ public class Usuario
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
-    
+    public void setNombreSeccion(String activo) {
+        this.nombreSeccion = activo;
+    }
     public int getID()                 {return idUsuario;}
     public String getNombreUsuario()   {return nombreUsuario;}
     public String getCorreo()          {return correo;}
     public String getNombreCompleto()  {return nombreCompleto;}
     public String getCedula()          {return cedula;}
-    public String getDepartamento()    {return departamento;}
+    public Integer getIdSeccion()    {return id_seccion;}
     public String getPuesto()          {return puesto;}
     public String getFechaActivacion()   {return formatearFecha(fechaActivacion);}
     public String getFechaDesactivacion(){return formatearFecha(fechaDesactivacion);}
@@ -102,6 +105,7 @@ public class Usuario
             return "Inactivo";
         }
     }
+    public String getNombreSeccion() {return nombreSeccion;}
     
 
     

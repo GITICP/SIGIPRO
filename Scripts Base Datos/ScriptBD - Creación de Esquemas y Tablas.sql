@@ -1,4 +1,4 @@
---########ESQUEMA DE SEGURIDAD########
+﻿--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -47,12 +47,11 @@ CREATE TABLE seguridad.usuarios (
     correo character varying(45),
     nombre_completo character varying(200),
     cedula character varying(45),
-    id_seccion integer NOT NULL,
+    id_seccion integer,
     puesto character varying(200),
     fecha_activacion date,
     fecha_desactivacion date,
-    estado boolean,
-    contrasena_caducada boolean
+    estado boolean
 );
 
 --Llaves primarias esquema seguridad
@@ -74,11 +73,11 @@ CREATE UNIQUE INDEX i_tag_emp ON seguridad.entradas_menu_principal USING btree (
 
 --Llaves foraneas esquema seguridad
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_permiso FOREIGN KEY (id_permiso) REFERENCES seguridad.permisos(id_permiso);
-ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol);
-ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol);
+ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
+ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (permiso) REFERENCES seguridad.permisos(id_permiso);
-ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
+ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion) on delete set null;
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;
@@ -201,19 +200,7 @@ ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_solicitud FORE
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 
---######ESQUEMA configuración ######
-CREATE SCHEMA configuracion;
-CREATE TABLE configuracion.correo (
-    id_correo serial NOT NULL,
-    host character varying(80),
-    puerto character varying(80),
-    starttls character varying(80),
-    nombreEmisor character varying(80),
-    correo character varying(80),
-    contrasena character varying(80)
-);
 
-ALTER TABLE ONLY configuracion.correo ADD CONSTRAINT pk_correo PRIMARY KEY (id_correo);
 
 /* INSERTS */
 INSERT INTO seguridad.permisos(nombre, descripcion) VALUES ('Administrar Usuarios', 'Puede acceder a las funcionalidades sobre usuarios dentro del Módulo de Seguridad. Además le permite realizar todas las operaciones sobre los mismos');
@@ -290,6 +277,5 @@ INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2015-01-13');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (19, 1, '2014-12-16', '2014-12-26');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (20, 2, '2015-01-08', '2015-01-22');
-
 
 

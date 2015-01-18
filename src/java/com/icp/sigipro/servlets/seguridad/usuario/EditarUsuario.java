@@ -8,9 +8,11 @@ package com.icp.sigipro.servlets.seguridad.usuario;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
+import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,15 +53,18 @@ public class EditarUsuario extends SIGIPROServlet {
         int idUsuario;
         idUsuario = Integer.parseInt(id);
 
-        UsuarioDAO u = new UsuarioDAO();
+      UsuarioDAO u = new UsuarioDAO();
+      SeccionDAO sec = new SeccionDAO();
+       
+      Usuario usuario = u.obtenerUsuario(idUsuario);
+      List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
+      List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
+      List<Seccion> secciones = sec.obtenerSecciones();
 
-        Usuario usuario = u.obtenerUsuario(idUsuario);
-        List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
-        List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
-
-        request.setAttribute("usuario", usuario);
-        request.setAttribute("rolesUsuario", rolesUsuario);
-        request.setAttribute("rolesRestantes", rolesRestantes);
+      request.setAttribute("usuario", usuario);
+      request.setAttribute("rolesUsuario", rolesUsuario);
+      request.setAttribute("rolesRestantes", rolesRestantes);
+      request.setAttribute("secciones",secciones);
 
         ServletContext context = this.getServletContext();
         context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
@@ -101,8 +106,8 @@ public class EditarUsuario extends SIGIPROServlet {
       correo = request.getParameter("correoElectronico");
       String cedula;
       cedula = request.getParameter("cedula");
-      String departamento;
-      departamento = request.getParameter("departamento");
+      String seccion;
+      seccion = request.getParameter("seccion");
       String puesto;
       puesto = request.getParameter("puesto");
       String fechaActivacion;
@@ -118,7 +123,7 @@ public class EditarUsuario extends SIGIPROServlet {
       if(roles != null)
       {
         UsuarioDAO u = new UsuarioDAO();
-         resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion, roles);
+         resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion, roles);
       }
       else
       {

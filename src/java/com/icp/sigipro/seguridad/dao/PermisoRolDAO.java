@@ -10,6 +10,11 @@ import com.icp.sigipro.seguridad.modelos.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -17,7 +22,7 @@ import java.sql.SQLException;
  */
 public class PermisoRolDAO 
 {
-         public boolean insertarPermisoRol(String idrol, String idpermiso)
+         public boolean insertarPermisoRol(int idrol, int idpermiso)
     {
         boolean resultado = false;
         
@@ -28,12 +33,12 @@ public class PermisoRolDAO
             
             if(conexion != null)
             {
-                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.permisosrol "
-                        + " (idrol, idpermiso) "
+                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.permisos_roles "
+                        + " (id_rol, id_permiso) "
                         + " VALUES "
                         + " (?,? )");
-                consulta.setInt(1, Integer.parseInt(idrol));
-                consulta.setInt(2, Integer.parseInt(idpermiso));
+                consulta.setInt(1, idrol);
+                consulta.setInt(2, idpermiso);
                 int resultadoConsulta = consulta.executeUpdate();
                 if (resultadoConsulta == 1)
                 {
@@ -48,7 +53,7 @@ public class PermisoRolDAO
         
         return resultado;
     }
-    public boolean EliminarPermisoRol(String p_idrol, String p_idpermiso)
+    public boolean EliminarPermisoRol(int p_idrol, int p_idpermiso)
     {
         boolean resultado = false;
         
@@ -59,11 +64,11 @@ public class PermisoRolDAO
             
             if(conexion != null)
             {
-                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisosrol s " +
-                                                                        "WHERE  s.idrol = ? AND s.idpermiso = ? "
+                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisos_roles s " +
+                                                                        "WHERE  s.id_rol = ? AND s.id_permiso = ? "
                         );
-                consulta.setInt(1, Integer.parseInt(p_idrol) );
-                consulta.setInt(2, Integer.parseInt(p_idpermiso));
+                consulta.setInt(1, p_idrol );
+                consulta.setInt(2, p_idpermiso);
                 int resultadoConsulta = consulta.executeUpdate();
                 if (resultadoConsulta == 1)
                 {
@@ -78,4 +83,20 @@ public class PermisoRolDAO
         
         return resultado;
     }
+    public List<PermisoRol> parsearUsuarios(String permisos, int idRol) {
+    List<PermisoRol> resultado = null;
+    try {
+      resultado = new ArrayList<PermisoRol>();
+      List<String> permisosParcial = new LinkedList<String>(Arrays.asList(permisos.split("#r#")));
+      permisosParcial.remove("");
+      for (String i : permisosParcial) {
+        String[] rol = i.split("#c#");
+        resultado.add(new PermisoRol(idRol, Integer.parseInt(rol[0])));
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      resultado = null;
+    }
+    return resultado;
+  }
 }

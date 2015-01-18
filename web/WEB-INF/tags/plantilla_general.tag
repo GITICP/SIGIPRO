@@ -89,6 +89,11 @@
     <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
+    
+    <!-- Esta se modificó -->
+    <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
+    
 
     <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
@@ -98,6 +103,7 @@
               .on('changeDate', function () {
                 $(this).datepicker('hide');
               });
+      $("#fechaActivacion").datepicker({ startDate: 0});
     </script>
 
   </body>
