@@ -7,6 +7,7 @@ package com.icp.sigipro.seguridad.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.*;
+import com.icp.sigipro.utilidades.UtilidadEmail;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,11 +16,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -62,7 +63,7 @@ public class UsuarioDAO
     {
       try
       {
-        PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario "
+        PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
                                                                + "FROM seguridad.usuarios us "
                                                                + "WHERE us.nombre_usuario = ? and us.contrasena = ? "
                                                                + "AND us.fecha_activacion <= current_date "
@@ -74,6 +75,10 @@ public class UsuarioDAO
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultadoConsulta.next();
         resultado = resultadoConsulta.getInt("id_usuario");
+        if(resultadoConsulta.getBoolean("contrasena_caducada"))
+        {
+          resultado = 0;
+        }
         resultadoConsulta.close();
         consulta.close();
         conexion.close();
@@ -151,11 +156,12 @@ public class UsuarioDAO
       if (conexion != null)
       {
         PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
-                                                               + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado) "
+                                                               + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, departamento, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) "
                                                                + " VALUES "
-                                                               + " (?,?,?,?,?,?,?,?,?,? )");
+                                                               + " (?,?,?,?,?,?,?,?,?,?,true)");
+        String contrasena = generarContrasena();
         consulta.setString(1, nombreUsuario);
-        consulta.setString(2, md5("sigipro"));
+        consulta.setString(2, md5(contrasena));
         consulta.setString(3, nombreCompleto);
         consulta.setString(4, correoElectronico);
         consulta.setString(5, cedula);
@@ -178,6 +184,8 @@ public class UsuarioDAO
         {
           resultado = true;
         }
+        UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
+        u.enviarUsuarioCreado(correoElectronico, contrasena);
         consulta.close();
         conexion.close();
       }
@@ -212,8 +220,8 @@ public class UsuarioDAO
         conexion.setAutoCommit(false);
 
         PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                                                               + " SET correo = ?, nombre_completo = ?, cedula = ?, departamento = ?, puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
-                                                               + " WHERE id_usuario = ? ");
+                                                             + " SET correo = ?, nombre_completo = ?, cedula = ?, departamento = ?, puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
+                                                             + " WHERE id_usuario = ? ");
 
         consulta.setString(1, correoElectronico);
         consulta.setString(2, nombreCompleto);
@@ -507,6 +515,43 @@ public class UsuarioDAO
     return resultado;
   }
   
+  public int recuperarContrasena(String correoElectronico)
+  {
+    int resultado = -1;
+    
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    
+    if (conexion != null)
+    {
+      try
+      {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena=?,contrasena_caducada = true where correo = ?");
+        String contrasena = generarContrasena();
+        consulta.setString(1, md5(contrasena));
+        consulta.setString(2, correoElectronico);
+        resultado = consulta.executeUpdate();
+        consulta.close();
+        conexion.close();
+        UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
+        u.enviarRecuperacionContrasena(correoElectronico, contrasena); 
+      }
+      catch(SQLException ex)
+      {
+        ex.printStackTrace();
+        resultado = -1;
+      }
+    }
+    return resultado;
+  }
+  
+  public String generarContrasena()
+  {
+    String uuid = UUID.randomUUID().toString();
+    return uuid.substring(0, 6);
+  }
+  
   private List<Integer> llenarPermisos(ResultSet resultadoConsulta) throws SQLException
   {
     @SuppressWarnings("Convert2Diamond")
@@ -514,6 +559,32 @@ public class UsuarioDAO
     while (resultadoConsulta.next())
     {
       resultado.add( resultadoConsulta.getInt("id_permiso") );
+    }
+    return resultado;
+  }
+  
+  public boolean cambiarContrasena(String usuario, String contrasena)
+  {
+    boolean resultado = false;
+    
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    
+    try
+    {
+      PreparedStatement consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena = ? where nombre_usuario = ?");
+      
+      consulta.setString(1, md5(contrasena));
+      consulta.setString(2, usuario);
+     
+      if (consulta.executeUpdate() == 1)
+      {
+        resultado = true;
+      }
+    }
+    catch(SQLException ex)
+    {
+      ex.printStackTrace();
     }
     return resultado;
   }

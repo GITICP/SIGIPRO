@@ -13,44 +13,40 @@ import java.sql.SQLException;
  *
  * @author Boga
  */
-public class SingletonBD 
-{    
-    private static SingletonBD theSingleton = null;
-    
-    protected SingletonBD(){  }
-    
-    public static SingletonBD getSingletonBD()
-    {
-        if (theSingleton == null)
-        {
-            theSingleton = new SingletonBD();
-        }
-        return theSingleton;
-    }
-    
-    public Connection conectar()
-    {
-        Connection conexion = null;
-        
-        try
-        {
-            Class.forName("org.postgresql.Driver");
-            conexion = 
-            DriverManager.getConnection(
-                "jdbc:postgresql://localhost/sigipro","postgres","Solaris2014"
-            );
-        }
-        catch(ClassNotFoundException ex)
-        {
-            System.out.println("Clase no encontrada");
-        }
-        catch(SQLException ex)
-        {
-            ex.printStackTrace();
-        }
-        return conexion;
-        
-    }
-    
+public class SingletonBD
+{
 
+  private static SingletonBD theSingleton = null;
+
+  protected SingletonBD()
+  {
+  }
+
+  public static SingletonBD getSingletonBD()
+  {
+    if (theSingleton == null) {
+      theSingleton = new SingletonBD();
+    }
+    return theSingleton;
+  }
+
+  public Connection conectar()
+  {
+    Connection conexion = null;
+
+    try {
+      Class.forName("org.postgresql.Driver");
+      conexion
+      = DriverManager.getConnection(
+                      "jdbc:postgresql://localhost/sigipro", "postgres", "Solaris2014"
+              );
+    }
+    catch (ClassNotFoundException ex) {
+      System.out.println("Clase no encontrada");
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    return conexion;
+  }
 }

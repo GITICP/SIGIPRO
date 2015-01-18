@@ -12,7 +12,14 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%        
+<%
+    List<Integer> permisos = (List<Integer>) request.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!permisos.contains(5))
+    {
+      request.getRequestDispatcher("/").forward(request, response);
+    }
+    
     UsuarioDAO u = new UsuarioDAO();
 
     List<Usuario> usuarios = u.obtenerUsuarios();

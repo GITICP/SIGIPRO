@@ -8,7 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:if test="${sessionScope.usuario == null}">
-  <c:redirect url="/Cuenta/IniciarSesion.jsp" />
+  <c:redirect url="/Cuenta/IniciarSesion" />
 </c:if>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>
@@ -91,6 +91,7 @@
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
 
     <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
 
     <script>
       $('.sigiproDatePicker').datepicker()
