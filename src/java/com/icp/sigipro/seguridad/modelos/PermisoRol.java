@@ -22,6 +22,11 @@ public class PermisoRol {
         idPermiso = p_idpermiso;
         nombrePermiso = p_nombrepermiso;
     }
+    public PermisoRol (int p_idrol, int p_idpermiso)
+    {
+        idRol = p_idrol;
+        idPermiso = p_idpermiso;
+    }
     
     public int getIDRol()                 {return idRol;}
     public int getIDPermiso()             {return idPermiso;}

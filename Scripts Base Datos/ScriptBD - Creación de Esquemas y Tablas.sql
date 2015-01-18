@@ -1,4 +1,4 @@
---########ESQUEMA DE SEGURIDAD########
+﻿--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -73,8 +73,8 @@ CREATE UNIQUE INDEX i_tag_emp ON seguridad.entradas_menu_principal USING btree (
 
 --Llaves foraneas esquema seguridad
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_permiso FOREIGN KEY (id_permiso) REFERENCES seguridad.permisos(id_permiso);
-ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol);
-ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol);
+ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
+ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (permiso) REFERENCES seguridad.permisos(id_permiso);
 ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
@@ -277,6 +277,5 @@ INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2015-01-13');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (19, 1, '2014-12-16', '2014-12-26');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (20, 2, '2015-01-08', '2015-01-22');
-
 
 

@@ -9,27 +9,31 @@ package com.icp.sigipro.seguridad.modelos;
  *
  * @author Amed
  */
-public class Rol
-{
-    
-    int idRol;
-    String nombreRol;
-    String descripcionRol;
+public class Rol {
 
-    
-    public Rol (int p_idrol,
-    String p_nombrerol,
-    String p_descripcionrol)
-    {
-        idRol = p_idrol;
-        nombreRol = p_nombrerol;
-        descripcionRol = p_descripcionrol; 
-    }
-    
-    public int getID()                 {return idRol;}
-    public String getNombreRol()   {return nombreRol;}
-    public String getDescripcion()          {return descripcionRol;}
+  int idRol;
+  String nombreRol;
+  String descripcionRol;
 
-    
-    
+  public Rol(int p_idrol,
+          String p_nombrerol,
+          String p_descripcionrol) {
+    idRol = p_idrol;
+    nombreRol = p_nombrerol;
+    descripcionRol = p_descripcionrol;
+  }
+
+  public int getID() {
+    return idRol;
+  }
+
+  public String getNombreRol() {
+    return nombreRol;
+  }
+
+  public String getDescripcion() {
+    return descripcionRol;
+  }
+  
+
 }
