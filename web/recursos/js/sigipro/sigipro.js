@@ -280,3 +280,58 @@ $("input[name='editarFechaDesactivacion']").change(function () {
     document.getElementById("editarFechaDesactivacion").value = "";
   }
 });
+
+
+//Esta es la parte que Walter tiene que ver
+function asignarCookieSeccion() {
+  if (valorRBSeccion)
+  {
+    var x = document.getElementById(valorRBSeccion);
+    var nombre = x.children[1].innerHTML;
+
+
+    setCookie('id_seccion', valorRBSeccion.toString() + ';' + nombre, 1, '/');
+
+  }
+  else
+  {
+  }
+}
+window.valorRBSeccion = null;
+$("input[name='controlSeccion']").click(function () {
+  valorRBSeccion = this.value;
+  document.getElementById("controlIDSeccion").value = valorRBSeccion;
+});
+
+
+function eliminarSeccion() {
+  if (valorRBSeccion)
+  {
+    $('#modalEliminarSeccion').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
+
+function EditarSeccionJS() {
+  var x = document.getElementById(valorRBSeccion);
+
+  document.getElementById("editarIdSeccion").value = valorRBSeccion;
+  document.getElementById("editarNombre").value = x.children[1].innerHTML;
+  document.getElementById("editarDescripcion").value = x.children[2].innerHTML;
+
+}
+
+function editarSeccion() {
+  if (valorRBSeccion)
+  {
+    EditarSeccionJS();
+    $('#ModalEditarSeccion').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
