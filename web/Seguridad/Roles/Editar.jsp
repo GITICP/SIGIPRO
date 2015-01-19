@@ -98,7 +98,7 @@
                       <tbody>
                         <c:forEach items="${rolesUsuario}" var="rolUsuario">
                           <tr id="${rolUsuario.getIDUsuario()}">
-                            <td>${rolUsuario.getNombreUsuario()}</td>
+                            <td><a href="/Usuarios/Ver?id=${rolUsuario.getIDUsuario()}">${rolUsuario.getNombreUsuario()}</a></td>
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>

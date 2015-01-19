@@ -18,8 +18,7 @@
     request.setAttribute("permisos", permisos);
     int idusuario = (int)session.getAttribute("idusuario");
     
-    BarraFuncionalidadDAO bf = new BarraFuncionalidadDAO();
-    modulos = bf.obtenerModulos(idusuario);    
+    modulos = (List<BarraFuncionalidad>)session.getAttribute("barraFuncionalidad");
 
     if(modulos!=null)
     {

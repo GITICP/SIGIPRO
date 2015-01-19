@@ -70,7 +70,7 @@
                     <tbody>
                       <c:forEach items="${usuariosRol}" var="usuarioRol">
                         <tr id="${usuarioRol.getIDUsuario()}">
-                          <td>${usuarioRol.getNombreUsuario()}</td>
+                          <td><a href="/SIGIPRO/Seguridad/Usuarios/Ver?id=${usuarioRol.getIDUsuario()}">${usuarioRol.getNombreUsuario()}</a></td>
                           <td>${usuarioRol.getFechaActivacion()}</td>
                           <td>${usuarioRol.getFechaDesactivacion()}</td>
                         </tr>
