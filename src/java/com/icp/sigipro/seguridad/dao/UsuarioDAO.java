@@ -72,7 +72,7 @@ public class UsuarioDAO
 
     if (conexion != null) {
       try {
-        PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario "
+        PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
                 + "FROM seguridad.usuarios us "
                 + "WHERE us.nombre_usuario = ? and us.contrasena = ? "
                 + "AND us.estado = true ");
@@ -630,7 +630,7 @@ public class UsuarioDAO
     
     try
     {
-      PreparedStatement consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena = ? where nombre_usuario = ?");
+      PreparedStatement consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena = ?, contrasena_caducada=false where nombre_usuario = ?");
       
       consulta.setString(1, md5(contrasena));
       consulta.setString(2, usuario);
