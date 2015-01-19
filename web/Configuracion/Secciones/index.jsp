@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
-                        <li>configuracion</li>
+                        <li>Configuración</li>
                         <li class="active">Secciones</li>
                     </ul>
                 </div>
@@ -54,7 +54,7 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-legal"></i> Secciones</h3>
                             <div class="btn-group widget-header-toolbar">                                 
-                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Seccion</a>
+                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Sección</a>
                                 <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
                                 <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
                             </div>
@@ -66,8 +66,8 @@
                                 <thead> 
                                     <tr>
                                         <th>Selección</th>
-                                        <th>Nombre Seccion</th>
-                                        <th>Descripcion</th>
+                                        <th>Nombre Sección</th>
+                                        <th>Descripción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -101,7 +101,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Editar Seccion</h4>
+                            <h4 class="modal-title" id="myModalLabel">Editar Sección</h4>
                         </div>
                         <div class="modal-body">
 
@@ -149,7 +149,7 @@
                         </div>
                         <div class="modal-body">
                        <form class="form-horizontal" role="form" action="EliminarSeccion" method="post">
-                            <h5 class="title">¿Está seguro que desea eliminar la seccion?</h5>
+                            <h5 class="title">¿Está seguro que desea eliminar la sección?</h5>
                             <br><br>
                             <input hidden="false" id="controlIDSeccion" name="controlIDSeccion">
                             <div class="form-group">
@@ -173,7 +173,7 @@
                             <h4 class="modal-title" id="myModalLabel">Error</h4>
                         </div>
                         <div class="modal-body">
-                            <h5>Debe seleccionar una seccion.</h5>
+                            <h5>Debe seleccionar una sección.</h5>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>

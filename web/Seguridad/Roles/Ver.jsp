@@ -24,7 +24,9 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Seguridad</li>
-            <li>Roles</li>
+            <li>
+                <a href="/SIGIPRO/Seguridad/Roles/">Roles</a>
+            </li>
             <li class="active"> ${rol.getNombreRol()} </li>
           </ul>
         </div>
@@ -70,7 +72,7 @@
                     <tbody>
                       <c:forEach items="${usuariosRol}" var="usuarioRol">
                         <tr id="${usuarioRol.getIDUsuario()}">
-                          <td><a href="/SIGIPRO/Seguridad/Usuarios/Ver?id=${usuarioRol.getIDUsuario()}">${usuarioRol.getNombreUsuario()}</a></td>
+                          <td>${usuarioRol.getNombreUsuario()}</td>
                           <td>${usuarioRol.getFechaActivacion()}</td>
                           <td>${usuarioRol.getFechaDesactivacion()}</td>
                         </tr>

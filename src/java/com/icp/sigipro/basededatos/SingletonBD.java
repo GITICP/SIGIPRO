@@ -39,6 +39,7 @@ public class SingletonBD
       conexion
       = DriverManager.getConnection(
                       "jdbc:postgresql://localhost/sigipro", "postgres", "Solaris2014"
+              
               );
     }
     catch (ClassNotFoundException ex) {
