@@ -43,7 +43,7 @@ public class CorreoDAO {
           starttls = resultadoConsulta.getString("starttls");
           resultado.add(starttls);
           String nombreemisor;
-          nombreemisor = resultadoConsulta.getString("nombreEmisor");
+          nombreemisor = resultadoConsulta.getString("nombre_emisor");
           resultado.add(nombreemisor);
           String correo;
           correo = resultadoConsulta.getString("correo");
@@ -83,7 +83,7 @@ public class CorreoDAO {
           String starttls;
           starttls = resultadoConsulta.getString("starttls");
           String nombreemisor;
-          nombreemisor = resultadoConsulta.getString("nombreEmisor");
+          nombreemisor = resultadoConsulta.getString("nombre_emisor");
           String correo;
           correo = resultadoConsulta.getString("correo");
           String contrasena;
@@ -126,7 +126,7 @@ public class CorreoDAO {
         }
         
         PreparedStatement consulta = conexion.prepareStatement("UPDATE configuracion.correo "
-                + " SET puerto = ?, NombreEmisor = ?, correo = ?, contrasena = ?"
+                + " SET puerto = ?, nombre_emisor = ?, correo = ?, contrasena = ?"
                 + " WHERE id_correo = ? ");
 
         consulta.setString(1, puerto);

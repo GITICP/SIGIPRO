@@ -20,7 +20,9 @@ public class UtilidadEmail
   
   public static UtilidadEmail getSingletonUtilidadEmail(){
     if (theSingleton == null)
+    {
       theSingleton = new UtilidadEmail();
+    }
     return theSingleton;
   }
   

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
  * @author Boga
  */
 @WebServlet(name = "ReestablecerContrasena", urlPatterns = {"/Cuenta/ReestablecerContrasena"})
-public class ReestablecerContrasena extends HttpServlet
+public class RestablecerContrasena extends HttpServlet
 {
 
   /**

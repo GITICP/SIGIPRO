@@ -195,9 +195,10 @@ public class UsuarioDAO
       if (conexion != null)
       {
         PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
-                + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado) "
+                + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) "
                 + " VALUES "
-                + " (?,?,?,?,?,?,?,?,?,? )");
+                + " (?,?,?,?,?,?,?,?,?,?,true)");
+        String contrasena = generarContrasena();
         consulta.setString(1, nombreUsuario);
         consulta.setString(2, md5(contrasena));
         consulta.setString(3, nombreCompleto);
@@ -228,9 +229,10 @@ public class UsuarioDAO
         conexion.close();
       }
     } catch (SQLException ex) {
+      ex.printStackTrace();
 
     } catch (ParseException ex) {
-
+      ex.printStackTrace();
     }
 
     return resultado;

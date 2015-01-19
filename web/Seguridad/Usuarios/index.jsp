@@ -13,9 +13,9 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <%
-    List<Integer> permisos = (List<Integer>) request.getAttribute("listaPermisos");
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
     System.out.println(permisos);
-    if (!permisos.contains(5))
+    if (!(permisos.contains(5) || permisos.contains(1)))
     {
       request.getRequestDispatcher("/").forward(request, response);
     }
