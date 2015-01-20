@@ -221,6 +221,19 @@ CREATE TABLE configuracion.correo (
 
 ALTER TABLE ONLY configuracion.correo ADD CONSTRAINT pk_correo PRIMARY KEY (id_correo);
 
+--#########Esquema Compras ####################
+DROP SCHEMA IF EXISTS compras CASCADE;
+CREATE SCHEMA compras;
+CREATE TABLE compras.proveedores (
+    id_proveedor serial NOT NULL,
+    nombre_proveedor character varying(80),
+    telefono1  character varying(80),
+    telefono2  character varying(80),
+    telefono3  character varying(80),
+    correo character varying(80)
+);
+
+
 /* INSERTS */
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, 'Administración', 'Permite realizar cualquier operación');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (2, 'Agregar Usuario', 'Permite agregar a un usuario');
@@ -270,3 +283,5 @@ INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
 
 INSERT INTO configuracion.correo(id_correo, host, puerto, starttls, nombre_emisor, correo, contrasena) VALUES (1, 'smtp.gmail.com', '587', 'true', 'SIGIPRO', 'sigiproicp@gmail.com', 'Sigipro2015');
+
+--INSERT INTO compras.proveedores(nombre_proveedor, telefono1, telefono2, telefono3, correo) VALUES ('Jua', '587', 'true', 'SIGIPRO', 'sigiproicp@gmail.com', 'Sigipro2015');
