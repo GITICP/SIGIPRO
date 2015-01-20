@@ -48,6 +48,12 @@ public class ControladorProveedor extends SIGIPROServlet {
         String accion = request.getParameter("accion");
 
         if (accion.equalsIgnoreCase("ver")) {
+            redireccion= "Proveedores/Ver.jsp";
+            int id_proveedor = Integer.parseInt(request.getParameter("id_proveedor"));
+            ProveedorDAO p = new ProveedorDAO();
+            Proveedor proveedor = p.obtenerProveedor(id_proveedor);
+            request.setAttribute("proveedor", proveedor);
+            //request.setAttribute("accion", "Editar");
             /*int userId = Integer.parseInt(request.getParameter("userId"));
             dao.deleteUser(userId);
             forward = LIST_USER;
@@ -58,11 +64,34 @@ public class ControladorProveedor extends SIGIPROServlet {
             request.setAttribute("proveedor", proveedor);
             request.setAttribute("accion", "Agregar");
         } else if (accion.equalsIgnoreCase("eliminar")) {
-            /*forward = LIST_USER;
+            int id_proveedor = Integer.parseInt(request.getParameter("id_proveedor"));
+            ProveedorDAO p = new ProveedorDAO();
+            p.eliminarProveedor(id_proveedor);
+            redireccion= "Proveedores/Index.jsp";
+            request.setAttribute("proveedores", p.obtenerProveedores());
+            //request.setAttribute("accion", "Editar");            
+            /*
+                        int userId = Integer.parseInt(request.getParameter("userId"));
+            dao.deleteUser(userId);
+            forward = LIST_USER;
+            request.setAttribute("users", dao.getAllUsers());
+            forward = LIST_USER;
             request.setAttribute("users", dao.getAllUsers());*/
         } else {
+            redireccion= "Proveedores/Editar.jsp";
+            int id_proveedor = Integer.parseInt(request.getParameter("id_proveedor"));
+            ProveedorDAO p = new ProveedorDAO();
+            Proveedor proveedor = p.obtenerProveedor(id_proveedor);
+            request.setAttribute("proveedor", proveedor);
+            request.setAttribute("accion", "Editar");
+
+
             /*editar
-            /*forward = INSERT_OR_EDIT; */
+            /*forward = INSERT_OR_EDIT; 
+            forward = INSERT_OR_EDIT;
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            User user = dao.getUserById(userId);
+            request.setAttribute("user", user);*/
         }
 
         RequestDispatcher vista = request.getRequestDispatcher(redireccion);
@@ -92,11 +121,12 @@ public class ControladorProveedor extends SIGIPROServlet {
         }
         else
         {
-            //Actualizar
+            proveedor.setId_proveedor(Integer.parseInt(id));
+            resultado = p.editarProveedor(proveedor);
         }
         if(resultado)
         {
-            RequestDispatcher vista = request.getRequestDispatcher("/Exito");
+            RequestDispatcher vista = request.getRequestDispatcher("/Compras/Proveedores/index.jsp");
             vista.forward(request, response);
         }
         else

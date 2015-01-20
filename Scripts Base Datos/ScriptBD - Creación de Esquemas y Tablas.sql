@@ -232,6 +232,10 @@ CREATE TABLE compras.proveedores (
     telefono3  character varying(80),
     correo character varying(80)
 );
+ --Llaves primarias esquema Compras
+ALTER TABLE ONLY compras.proveedores ADD CONSTRAINT pk_proveedores PRIMARY KEY (id_proveedor);
+-- Indices esquema compras
+CREATE UNIQUE INDEX i_correo ON compras.proveedores USING btree (correo);
 
 
 /* INSERTS */

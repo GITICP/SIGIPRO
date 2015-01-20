@@ -1,7 +1,7 @@
 <%-- 
     Document   : Agregar
     Created on : Dec 14, 2014, 1:43:27 PM
-    Author     : Boga
+    Author     : Walter
 --%>
 
 <%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
@@ -26,7 +26,7 @@
                         <li> 
                             <a href="/SIGIPRO/Compras/Proveedores/">Proveedores</a>
                         </li>
-                        <li class="active"> Agregar Proveedor </li>
+                        <li class="active"> Editar Proveedor </li>
 
           </ul>
         </div>
@@ -43,7 +43,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-group"></i> Agregar Nuevo Proveedor </h3>
+              <h3><i class="fa fa-group"></i> Editar Proveedor </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
