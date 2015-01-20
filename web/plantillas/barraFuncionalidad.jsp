@@ -26,6 +26,33 @@
         request.setAttribute("modulos", modulos);
     }  
 %>
+<%--
+<div class="container"> 
+    <nav class="nav-sigipro" id="menu-sigipro" role="navigation">
+        <a href="#menu-sigipro" title="Show navigation">Show navigation</a>
+        <a href="#" title="Hide navigation">Hide navigation</a>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>
+                <a href="/" aria-haspopup="true">Blog</a>
+                <ul>
+                    <li><a href="/">Design</a></li>
+                    <li><a href="/">HTML</a></li>
+                    <li><a href="/">CSS</a></li>
+                    <li><a href="/">JavaScript</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/" aria-haspopup="true">Work</a>
+                <ul>
+                    <li><a href="/">Web Design</a></li>
+                    <li><a href="/">Typography</a></li>
+                    <li><a href="/">Front-End</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 <!-- left sidebar -->
 <div class="col-md-2 left-sidebar">

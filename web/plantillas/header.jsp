@@ -30,10 +30,14 @@
                         <div class="col-md-12">
                             <div class="top-bar-right">
                                 <!-- responsive menu bar icon -->
-                                <a href="#" class="hidden-md hidden-lg main-nav-toggle"><i class="fa fa-bars"></i></a>
+                                <%--
+                                <a href="#" class="hidden-md hidden-lg main-nav-toggle">
+                                    <i class="fa fa-bars"></i>
+                                </a>
+                                --%>
                                 <!-- end responsive menu bar icon -->
 
-
+                                <%-- 
                                 <div class="notifications">
                                     <ul>
                                         <!-- notification: general -->
@@ -112,7 +116,8 @@
                                         </li>
                                         <!-- end notification: general -->
                                     </ul>
-                                </div>
+                                </div> 
+                                --%>
 
                                                             <!-- logged user and the menu -->
                                 <div class="logged-user">
@@ -121,7 +126,7 @@
                                             <span class="name">Bienvenido, ${sessionScope.usuario}</span>
                                             <span class="caret"></span>
                                         </a>
-                                        <ul class="dropdown-menu" role="menu">
+                                        <ul class="dropdown-menu" role="menu" style="z-index:1055">
                                             <li>
                                                 <a href="#">
                                                     <i class="fa fa-user"></i>
@@ -163,64 +168,39 @@
 
 
 
-<%-- 
-<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">SIGIPRO</a>
-        </div>
-        
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <% 
-            
-                    if (request.getAttribute("usuario")!=null)
-                    {
-                %>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                        <i class="glyphicon glyphicon-user"></i> Bienvenido, ${usuario} 
-                        <span class="caret"></span>
-                    </a>
-                    <ul id="g-account-menu" class="dropdown-menu" role="menu">
-                        <li><a href="#">Modificar Contraseña</a></li>
-                        <li><a href="#">Actualizar Correo Electrónico</a></li>
-                    </ul>
-                </li>
 
-                <li>
-                    <form action="<%= request.getContextPath() + "/Cuenta/CerrarSesion" %>" method="post">
-                        <button class="botonCerrarSesion" type="submit" >
-                            <i class="glyphicon glyphicon-lock"></i> Cerrar Sesión 
-                        </button>
-                    </form>
-                </li>
-                
-                <%
-                    }
-                    else
-                    {
-                %>
-                
-                <li>
-                    <a href="#">
-                        <i class="glyphicon glyphicon-user"></i> Iniciar sesión
-                    </a>
-                </li>
-                
-                <%
-                    }
-                %>
-            </ul>
-        </div>
-                        
-                        
-    </div><!-- /container -->
+<div id="top-nav" class="navbar navbar-inverse navbar-static-top" style="background-color: #3C730D; border-color: #fff;"> 
+    <nav class="nav-sigipro" id="menu-sigipro" role="navigation">
+        <a href="#menu-sigipro" title="Show navigation">Show navigation</a>
+        <a href="#" title="Hide navigation">Hide navigation</a>
+        <ul>
+            <li><a href="#">Inicio</a></li> 
+            <li>
+                <a href="#" aria-haspopup="true">Seguridad</a>
+                <ul>
+                    <li><a href="#">Usuarios</a></li>
+                    <li><a href="#">Roles</a></li>
+                    <li><a href="#">Secciones</a></li>
+                    <li><a href="#">Sub Bodega</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" aria-haspopup="true">Bodegas</a>
+                <ul>
+                    <li><a href="#">Activos Fijos</a></li>
+                    <li><a href="#">Solicitudes</a></li>
+                    <li><a href="#">Inventario</a></li>
+                </ul>
+            </li>
+                <a href="#" aria-haspopup="true">Serpentario</a>
+            </li> <%--
+            <li><a href="#">Bioterio</a></li> 
+            <li><a href="#">Control de Calidad</a></li> 
+            --%>
+            
+            
+            
+        </ul>
+    </nav>
 </div>
 
---%>

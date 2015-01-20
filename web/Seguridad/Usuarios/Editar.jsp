@@ -80,7 +80,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                           <input type="email" maxlength="45" value="${usuario.getCorreo()}" placeholder="usuario@icp.ucr.ac.cr" class="form-control"  name="correoElectronico" id="correoElectronico" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca un correo electrónico válido')"
                                  oninput="setCustomValidity('')">
@@ -91,7 +91,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                           <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control"  name="cedula" id="cedula" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida')"
                                  oninput="setCustomValidity('')">
@@ -104,7 +104,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                           <select id="seleccionSeccion" name="seccion" required
                                   oninvalid="setCustomValidity('Este campo es requerido')" >
                             <c:forEach items="${secciones}" var="seccion">
@@ -118,7 +118,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                           <input type="text" value="${usuario.getPuesto()}" maxlength="200" placeholder="Jefe" class="form-control"  name="puesto" id="puesto" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
@@ -129,26 +129,26 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                          <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>           SE ELIMINA EL ICONO --%>
                           <input type="text" value="${usuario.getFechaActivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaActivacion" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  onchange="setCustomValidity('')">
                         </div>
                       </div>
                     </div>
-                    <div title="Fecha de Desactivación: Si desea un usuario permanente, introduzca la misma fecha de activación">             
+                    <%--title="Fecha de Desactivación: Si desea un usuario permanente, introduzca la misma fecha de activación" --%>             
                     <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                          <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>           SE ELIMINA EL ICONO --%>
                           <input type="text" value="${usuario.getFechaDesactivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  onchange="setCustomValidity('')">
                         </div>
                       </div>
                     </div>
-                    </div>
+                    
                   </div>
                 </div>
                 <div class="widget widget-table">

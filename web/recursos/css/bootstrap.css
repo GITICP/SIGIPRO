@@ -3129,7 +3129,7 @@ tbody.collapse.in {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: 1055;
   display: none;
   float: left;
   min-width: 160px;
@@ -4188,8 +4188,8 @@ fieldset[disabled] .navbar-default .btn-link:focus {
   color: #ccc;
 }
 .navbar-inverse {
-  background-color: #222;
-  border-color: #080808;
+  background-color: #3C730D;
+  border-color: #ffffff;
 }
 .navbar-inverse .navbar-brand {
   color: #777;
