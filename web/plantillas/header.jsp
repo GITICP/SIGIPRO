@@ -4,7 +4,9 @@
     Author     : Boga
 --%>
 
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.icp.sigipro.seguridad.modelos.BarraFuncionalidad"%>
+<%@page import="java.util.List"%>
 <%-- 
     
     ¡¡QUITAR BOTÓN DE INICIAR SESIÓN!!
@@ -15,7 +17,19 @@
 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<% 
+    List<BarraFuncionalidad> modulos;
+    List<Integer> permisos = (List<Integer>)session.getAttribute("listaPermisos");
+    request.setAttribute("permisos", permisos);
+    int idusuario = (int)session.getAttribute("idusuario");
+    
+    modulos = (List<BarraFuncionalidad>)session.getAttribute("barraFuncionalidad");
 
+    if(modulos!=null)
+    {
+        request.setAttribute("modulos", modulos);
+    }  
+%>
 <!-- TOP BAR -->
     <div class="top-bar">
         <div class="container">
@@ -171,9 +185,30 @@
 
 <div id="top-nav" class="navbar navbar-inverse navbar-static-top" style="background-color: #3C730D; border-color: #fff;"> 
     <nav class="nav-sigipro" id="menu-sigipro" role="navigation">
-        <a href="#menu-sigipro" title="Show navigation">Show navigation</a>
-        <a href="#" title="Hide navigation">Hide navigation</a>
+        <a href="#menu-sigipro" title="Show navigation">Mostrar Menú</a>
+        <a href="#" title="Hide navigation">Ocultar Menú</a>
         <ul>
+            <li><a href='<%= request.getContextPath() %>'> Inicio </a></li>
+            <c:forEach items="${modulos}" var="modulo">
+                <li>
+                    <a href="#">
+                        ${modulo.getModulo()}
+                    </a>
+                    <ul>
+                        <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
+                            <li>
+                                <a href="<%= request.getContextPath() %>${funcionalidad[1]}">
+                                    ${funcionalidad[0]}
+                                </a>
+                            </li>
+                        </c:forEach> 
+                    </ul>
+                </li>
+            </c:forEach>
+        </ul>
+    </nav>
+</div>
+                <%--
             <li><a href="#">Inicio</a></li> 
             <li>
                 <a href="#" aria-haspopup="true">Seguridad</a>
@@ -193,14 +228,32 @@
                 </ul>
             </li>
                 <a href="#" aria-haspopup="true">Serpentario</a>
-            </li> <%--
+            </li> 
             <li><a href="#">Bioterio</a></li> 
             <li><a href="#">Control de Calidad</a></li> 
             --%>
             
             
             
-        </ul>
-    </nav>
-</div>
 
+<%--
+<c:forEach items="${modulos}" var="modulo">
+                <li>
+                    <a href="#" class="js-sub-menu-toggle">
+                        <i class="fa fa-dashboard fa-fw"></i>
+                        <span class="text">${modulo.getModulo()}</span>
+                        <i class="toggle-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="sub-menu " style="display: none; overflow: hidden;">
+                    
+                        <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
+                            <li>
+                                <a href="<%= request.getContextPath() %>${funcionalidad[1]}">
+                                    <span class="text">${funcionalidad[0]}</span>
+                                </a>
+                            </li>
+                        </c:forEach> 
+                    </ul>
+                </li>
+            </c:forEach>
+--%>
