@@ -5,7 +5,9 @@
  */
 package com.icp.sigipro.servlets.cuenta;
 
+import com.icp.sigipro.seguridad.dao.BarraFuncionalidadDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.BarraFuncionalidad;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -103,6 +105,12 @@ public class IniciarSesion extends HttpServlet
 
             List<Integer> l = u.obtenerPermisos(idUsuario);
             session.setAttribute("listaPermisos", l);
+            
+            // ¡¡Terminar la barra de funcionalidad!!
+            BarraFuncionalidadDAO b = new BarraFuncionalidadDAO();
+            List<BarraFuncionalidad> barra = b.obtenerModulos(idUsuario, l);
+            session.setAttribute("barraFuncionalidad", barra);
+            
             session.setMaxInactiveInterval(30 * 60);      // Asignación de máximo 30 minutos de inactividad de la sesión.
             response.sendRedirect(request.getContextPath());
           }
