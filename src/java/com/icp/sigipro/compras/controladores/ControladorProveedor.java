@@ -67,7 +67,7 @@ public class ControladorProveedor extends SIGIPROServlet {
             int id_proveedor = Integer.parseInt(request.getParameter("id_proveedor"));
             ProveedorDAO p = new ProveedorDAO();
             p.eliminarProveedor(id_proveedor);
-            redireccion= "Proveedores/Index.jsp";
+            redireccion= "Proveedores/index.jsp";
             request.setAttribute("proveedores", p.obtenerProveedores());
             //request.setAttribute("accion", "Editar");            
             /*
@@ -115,7 +115,7 @@ public class ControladorProveedor extends SIGIPROServlet {
         ProveedorDAO p = new ProveedorDAO();
         String id = request.getParameter("id_proveedor");
         
-        if ( id == null || id.isEmpty() )
+        if ( id == null || id.isEmpty() || "0".equals(id) )
         {
             resultado = p.insertarProveedor(proveedor);
         }

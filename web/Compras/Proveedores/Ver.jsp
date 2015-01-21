@@ -44,7 +44,7 @@
             <div class="widget-header">
               <h3><i class="fa fa-group"></i> ${proveedor.getNombre_proveedor()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#ModalEliminarProveedor" href="/SIGIPRO/Compras/Proveedores?accion=eliminar&id_proveedor=${proveedor.getId_proveedor()}">Eliminar</a>                                    
+                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;"  href="/SIGIPRO/Compras/Proveedores?accion=eliminar&id_proveedor=${proveedor.getId_proveedor()}">Eliminar</a>                                    
                 <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Compras/Proveedores?accion=editar&id_proveedor=${proveedor.getId_proveedor()}">Editar</a>
               </div>
             </div>
@@ -75,7 +75,7 @@
               <h4 class="modal-title" id="myModalLabel">Confirmación</h4>
             </div>
             <div class="modal-body">
-              <form class="form-horizontal" role="form"  method="post">
+              <form>
                 <h5 class="title">¿Está seguro que desea eliminar el Proveedor?</h5>
                 <br><br>
                 <input hidden="false" id="controlIDProveedor" name="id_proveedor" value="${proveedor.getId_proveedor()}">

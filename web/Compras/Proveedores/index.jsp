@@ -51,8 +51,10 @@
             <div class="widget-header">
               <h3><i class="fa fa-legal"></i> Proveedores</h3>
               <div class="btn-group widget-header-toolbar">
-                <button class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;" onclick="window.location.href='../Proveedores?accion=agregar'">Agregar Proveedor</button>
-              </div>
+                 <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color: white" href="/SIGIPRO/Compras/Proveedores?accion=agregar">Agregar Proveedor</a>
+                <!--<button class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;" onclick="window.location.href='../Proveedores?accion=agregar'">Agregar Proveedor</button>
+              -->
+                </div>
             </div>
             ${mensaje}
             <div class="widget-content">
