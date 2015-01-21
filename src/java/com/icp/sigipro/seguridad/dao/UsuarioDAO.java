@@ -182,6 +182,35 @@ public class UsuarioDAO
 
     return resultado;
   }
+   
+    public boolean validarCorreo(String correo)
+  {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    boolean resultado1 = false;
+
+    if (conexion != null)
+    {
+      try
+      {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT correo FROM seguridad.usuarios WHERE correo =? ");
+        consulta.setString(1, correo);
+        
+        boolean resultadoConsulta = consulta.execute();
+        if (resultadoConsulta == true)
+      {
+        resultado1 = true;
+      }
+      }
+      catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    
+    }
+    return resultado1;
+    
+  }
 
   public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
           String cedula, Integer id_seccion, String puesto, String fechaActivacion, String fechaDesactivacion) {
@@ -217,6 +246,8 @@ public class UsuarioDAO
         consulta.setDate(9, fDesactivacionSQL);
 
         consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL));
+        
+        
 
         int resultadoConsulta = consulta.executeUpdate();
         if (resultadoConsulta == 1)
@@ -587,7 +618,7 @@ public class UsuarioDAO
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena=?,contrasena_caducada = true where correo = ?");
         String contrasena = generarContrasena();
-        consulta.setString(1, md5(contrasena));
+        consulta.setString(1, md5(contrasena)); 
         consulta.setString(2, correoElectronico);
         resultado = consulta.executeUpdate();
         consulta.close();
@@ -603,6 +634,12 @@ public class UsuarioDAO
     }
     return resultado;
   }
+  
+ 
+  
+        
+      
+    
   
   public String generarContrasena()
   {

@@ -71,6 +71,7 @@ CREATE UNIQUE INDEX i_correo ON seguridad.usuarios USING btree (correo);
 CREATE UNIQUE INDEX i_nombre_permiso ON seguridad.permisos USING btree (nombre);
 CREATE UNIQUE INDEX i_nombre_rol ON seguridad.roles USING btree (nombre);
 CREATE UNIQUE INDEX i_tag_emp ON seguridad.entradas_menu_principal USING btree (tag);
+CREATE UNIQUE INDEX i_nombre_seccion ON seguridad.secciones USING btree (nombre_seccion);
 
 --Llaves foraneas esquema seguridad
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_permiso FOREIGN KEY (id_permiso) REFERENCES seguridad.permisos(id_permiso);

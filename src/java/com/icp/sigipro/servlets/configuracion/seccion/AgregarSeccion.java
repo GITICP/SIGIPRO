@@ -90,15 +90,23 @@ public class AgregarSeccion extends HttpServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Seccion ingresada correctamente." +
+                                                        "Sección ingresada correctamente." +
                                                 "</div>");
             }
+      boolean nombre_valido = s.validarNombreSeccion(nombre_seccion);
+      if (nombre_valido){
+          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
+                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                + "Ya existe una sección con el nombre ingresado."
+                + "</div>");
+      }
             else
             {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Seccion no pudo ser ingresada." +
+                                                        "Sección no pudo ser ingresada." +
                                                 "</div>");
             }
             request.getRequestDispatcher("/Configuracion/Secciones/").forward(request, response);

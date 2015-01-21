@@ -111,6 +111,33 @@ public class SeccionDAO
         
         return resultado;
     }
+    public boolean validarNombreSeccion(String nombre)
+    {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    boolean resultado1 = false;
+
+    if (conexion != null)
+    {
+      try
+      {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT nombre_seccion FROM seguridad.secciones WHERE nombre_seccion =? ");
+        consulta.setString(1, nombre);
+        
+        boolean resultadoConsulta = consulta.execute();
+        if (resultadoConsulta == true)
+      {
+        resultado1 = true;
+      }
+      }
+      catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    
+    }
+    return resultado1;
+    }
     
 
 
@@ -156,5 +183,5 @@ public class SeccionDAO
         return resultado;
     }
     
-
+    
 }
