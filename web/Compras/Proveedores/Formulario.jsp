@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
-<form method="post" action="Proveedores">
+<form class="form-horizontal" autocomplete="off" method="post" action="Proveedores">
     
     <input hidden="true" name="id_proveedor" value="${proveedor.getId_proveedor()}">
     <label for="nombreProveedor" class="control-label">*Nombre de Proveedor</label>
@@ -63,5 +63,5 @@
             </div>
         </div>
     </div>
-    <button type="submit">${accion} Proveedor</button>
+                <button type="submit" class="btn btn-primary bt">${accion} Proveedor</button>
 </form>
