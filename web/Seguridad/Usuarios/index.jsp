@@ -15,7 +15,7 @@
 <%
     List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
     System.out.println(permisos);
-    if (!(permisos.contains(5) || permisos.contains(1)))
+    if (!(permisos.contains(1) || permisos.contains(2) || permisos.contains(3) || permisos.contains(4)))
     {
       request.getRequestDispatcher("/").forward(request, response);
     }
@@ -36,7 +36,7 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-10 content-wrapper">
+    <div class="col-md-12 content-wrapper">
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">

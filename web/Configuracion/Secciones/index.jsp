@@ -4,6 +4,8 @@
     Author     : Walter
 --%>
 
+<%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
+<%@page import="com.icp.sigipro.seguridad.dao.UsuarioDAO"%>
 <%@page import="com.icp.sigipro.configuracion.dao.SeccionDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
@@ -22,6 +24,26 @@
         request.setAttribute("listaSecciones", secciones);
     }
 %>
+
+<%
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!(permisos.contains(1) || permisos.contains(2) || permisos.contains(3) || permisos.contains(4)))
+    {
+      request.getRequestDispatcher("/").forward(request, response);
+    }
+    
+    UsuarioDAO u = new UsuarioDAO();
+
+  List<Usuario> usuarios = u.obtenerUsuarios();
+
+  if (usuarios != null) {
+    request.setAttribute("listaUsuarios", usuarios);
+  }
+%>
+
+
+
 
 <t:plantilla_general title="Configuracion" direccion_contexto="/SIGIPRO">
     

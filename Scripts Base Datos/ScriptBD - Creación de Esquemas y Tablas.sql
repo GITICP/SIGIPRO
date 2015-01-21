@@ -6,8 +6,12 @@ CREATE TABLE seguridad.entradas_menu_principal (
     id_menu_principal serial NOT NULL,
     id_padre integer,
     tag character varying(45),
-    permiso integer,
     redirect character varying(200)
+);
+
+CREATE TABLE seguridad.permisos_menu_principal(
+    id_permiso integer NOT NULL,
+    id_menu_principal integer NOT NULL
 );
 
 CREATE TABLE seguridad.permisos (
@@ -57,6 +61,7 @@ CREATE TABLE seguridad.usuarios (
 
 --Llaves primarias esquema seguridad
 ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT pk_entradas_menu_principal PRIMARY KEY (id_menu_principal);
+ALTER TABLE ONLY seguridad.permisos_menu_principal ADD CONSTRAINT pk_permisos_menu_principal PRIMARY KEY (id_permiso, id_menu_principal);
 ALTER TABLE ONLY seguridad.permisos ADD CONSTRAINT pk_permisos PRIMARY KEY (id_permiso);
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT pk_permisos_roles PRIMARY KEY (id_rol, id_permiso);
 ALTER TABLE ONLY seguridad.roles ADD CONSTRAINT pk_roles PRIMARY KEY (id_rol);
@@ -78,7 +83,7 @@ ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_permiso FOREIGN K
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
-ALTER TABLE ONLY seguridad.entradas_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (permiso) REFERENCES seguridad.permisos(id_permiso);
+ALTER TABLE ONLY seguridad.permisos_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (id_permiso) REFERENCES seguridad.permisos(id_permiso);
 ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion) on delete set null;
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
@@ -222,18 +227,28 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, 'Admi
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (2, 'Agregar Usuario', 'Permite agregar a un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (3, 'Editar Usuario', 'Permite modificar a un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (4, 'Desactivar Usuario', 'Permite desactivar a un usuario');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (5, 'Ver Usuario', 'Permite visualizar la información de un usuario');
 
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Bodega', 3, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Bioterio', 4, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Serpentario', 5, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Caballeriza', 6, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Control de Calidad', 7, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Producción', 8, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (0, 'Ventas', 9, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (8, 'Seguridad', 10, null);
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (8, 'Usuarios', 10, '/Seguridad/Usuarios.jsp');
---INSERT INTO seguridad.entradas_menu_principal(id_padre, tag, permiso, redirect) VALUES (8, 'Roles', 11, '/Seguridad/Roles.jsp');
+-- Observación importante:
+-- Los tags de los módulos como tales deben estar de 
+-- primero (para que obtengan los primeros id's y además deben llevar como id_padre el 0 y tener un redirect.
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodega', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (500, 0,'Control de Calidad', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0,'Producción', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (700, 0,'Ventas', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (800, 0,'Seguridad', '/Seguridad/Usuarios');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (801, 800,'Usuarios', '/Seguridad/Usuarios');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (900, 0,'Configuración', '/Configuracion/Secciones');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (901, 900,'Secciones', '/Configuracion/Secciones');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 801);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 901);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
@@ -242,7 +257,6 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1,1);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,2);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,3);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,4);
-INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,5);
 
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Produccion','Dedicados a la produccion');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Control de Calidad','Dedicados al control de calidad');

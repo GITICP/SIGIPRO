@@ -32,6 +32,7 @@
     <link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/barra-navegacion.css" rel="stylesheet" type="text/css" media="screen">
 
     <!--[if lte IE 9]>
         <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
@@ -97,6 +98,8 @@
 
     <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
+    
+    <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
 
     <script>
       $('.sigiproDatePicker').datepicker()
