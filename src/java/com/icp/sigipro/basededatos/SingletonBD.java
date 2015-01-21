@@ -38,7 +38,7 @@ public class SingletonBD
       Class.forName("org.postgresql.Driver");
       conexion
       = DriverManager.getConnection(
-                      "jdbc:postgresql://localhost:5433/sigipro", "postgres", "Solaris2014"
+                      "jdbc:postgresql://localhost/sigipro", "postgres", "Solaris2014"
               
               );
     }
