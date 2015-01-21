@@ -114,7 +114,7 @@ CREATE TABLE bodega.catalogos_externos(
 	producto character varying(45) NOT NULL,
 	codigo_externo character varying(45),
 	marca character varying(45),
-	inf_proveedor character varying(500)
+	id_proveedor integer
  );
 
 
@@ -221,6 +221,24 @@ CREATE TABLE configuracion.correo (
 );
 
 ALTER TABLE ONLY configuracion.correo ADD CONSTRAINT pk_correo PRIMARY KEY (id_correo);
+
+--#########Esquema Compras ####################
+DROP SCHEMA IF EXISTS compras CASCADE;
+CREATE SCHEMA compras;
+CREATE TABLE compras.proveedores (
+    id_proveedor serial NOT NULL,
+    nombre_proveedor character varying(80),
+    telefono1  character varying(80),
+    telefono2  character varying(80),
+    telefono3  character varying(80),
+    correo character varying(80)
+);
+ --Llaves primarias esquema Compras
+ALTER TABLE ONLY compras.proveedores ADD CONSTRAINT pk_proveedores PRIMARY KEY (id_proveedor);
+-- Indices esquema compras
+CREATE UNIQUE INDEX i_correo ON compras.proveedores USING btree (correo);
+ALTER TABLE ONLY bodega.catalogos_externos ADD CONSTRAINT fk_id_proveedor FOREIGN KEY (id_proveedor) REFERENCES compras.proveedores(id_proveedor) on delete set null;;
+
 
 /* INSERTS */
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, 'Administración', 'Permite realizar cualquier operación');
