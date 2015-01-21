@@ -127,10 +127,13 @@ public class AgregarUsuario extends SIGIPROServlet {
 
       boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
               Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion);
+      
+      
 
       if (insercionExitosa) {
 
         int id_usuario = u.obtenerIDUsuario(nombreUsuario);
+        
         String rolesUsuario = request.getParameter("listaRolesUsuario");
         RolUsuarioDAO ru = new RolUsuarioDAO();
         List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
@@ -163,7 +166,19 @@ public class AgregarUsuario extends SIGIPROServlet {
                   + "El Usuario fue ingresado, pero sin roles."
                   + "</div>");
         }
-      } else {
+      }
+      boolean correo_activo = u.validarCorreo(correoElectronico);
+      if (correo_activo){
+          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
+                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                + "El correo ingresado ya esta ligado a un Usuario."
+                + "</div>");
+      }
+      
+      
+      
+      else {
         request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
                 + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
                 + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
@@ -172,19 +187,23 @@ public class AgregarUsuario extends SIGIPROServlet {
       }
       request.getRequestDispatcher("/Seguridad/Usuarios/").forward(request, response);
 
-    } finally {
+    }
+      finally {
       out.close();
     }
   }
+  }
+
 
   /**
    * Returns a short description of the servlet.
    *
    * @return a String containing servlet description
    */
-  @Override
+  /*@Override
   public String getServletInfo() {
     return "Short description";
   }// </editor-fold>
 
 }
+*/

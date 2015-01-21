@@ -164,7 +164,18 @@ public class AgregarRol extends HttpServlet {
                   + "El Rol fue ingresado, pero sin usuarios asociados."
                   + "</div>");
         }
-      } else {
+      } 
+      boolean nombre_valido = r.validarNombreRol(nombreRol);
+      if (nombre_valido){
+          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
+                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                + "Ya existe un rol con el nombre ingresado."
+                + "</div>");
+      }
+      
+      
+      else {
         request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
                 + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
                 + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
