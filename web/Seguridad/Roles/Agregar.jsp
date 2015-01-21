@@ -19,7 +19,7 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-12 content-wrapper">
+    <div class="col-md-10 content-wrapper">
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
@@ -143,7 +143,7 @@
 
                 <div class="form-group">
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="confirmacionAgregarRol()"><i class="fa fa-check-circle"></i> Agregar Rol</button>
                   </div>
                 </div>
@@ -206,7 +206,7 @@
           <div class="form-group">
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-              <button id="btn-agregarRol" type="button" class="btn btn-primary"  onclick="agregarRol()"><i class="fa fa-check-circle"></i> Agregar Usuario</button>
+              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarRol()"><i class="fa fa-check-circle"></i> Agregar Usuario</button>
             </div>
           </div>
         </form>
@@ -295,7 +295,7 @@
           </div>
           <div class="form-group">
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger"  data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
               <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarPermiso()"><i class="fa fa-check-circle"></i> Agregar Permiso</button>
             </div>
           </div>

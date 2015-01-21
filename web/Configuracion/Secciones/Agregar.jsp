@@ -53,7 +53,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div class="input-group">
-                                            <input type="text" maxlength="45" placeholder="Nombre de Sección" class="form-control" name="nombre_seccion" required
+                                            <input type="text" maxlength="45" placeholder="Nombre de Seccion" class="form-control" name="nombre_seccion" required
                                                    oninvalid="setCustomValidity('Este campo es requerido ')"
                                                    oninput="setCustomValidity('')" > 
                                         </div>
@@ -72,7 +72,7 @@
 
                                 <div class="form-group">
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
                                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Sección</button>
                                     </div>
                                 </div>
