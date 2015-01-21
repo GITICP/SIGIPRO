@@ -239,11 +239,15 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (700, 0,'Ventas', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (800, 0,'Seguridad', '/Seguridad/Usuarios');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (801, 800,'Usuarios', '/Seguridad/Usuarios');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (802, 800,'Roles', '/Seguridad/Roles');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (900, 0,'Configuración', '/Configuracion/Secciones');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (901, 900,'Secciones', '/Configuracion/Secciones');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 801);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 901);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
