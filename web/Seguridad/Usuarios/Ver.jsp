@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Usuario
+    Document   : Ver Usuario
     Created on : Dec 14, 2014, 11:44:52 AM
     Author     : Boga
 --%>

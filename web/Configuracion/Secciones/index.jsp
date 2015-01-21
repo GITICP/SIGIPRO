@@ -1,4 +1,5 @@
 <%-- 
+Secciones
     Document   : ver
     Created on : 08-ene-2015, 20:01:18
     Author     : Walter
@@ -28,7 +29,7 @@
 <%
     List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
     System.out.println(permisos);
-    if (!(permisos.contains(1) || permisos.contains(2) || permisos.contains(3) || permisos.contains(4)))
+    if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10)))
     {
       request.getRequestDispatcher("/").forward(request, response);
     }
