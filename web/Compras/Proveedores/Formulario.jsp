@@ -9,7 +9,7 @@
 
 <form method="post" action="Proveedores">
     
-    <input hidden="true" name="id_proveedor" value="${provedor.getId_proveedor()}">
+    <input hidden="true" name="id_proveedor" value="${proveedor.getId_proveedor()}">
     <label for="nombreProveedor" class="control-label">*Nombre de Proveedor</label>
     <div class="form-group">
         <div class="col-sm-12">

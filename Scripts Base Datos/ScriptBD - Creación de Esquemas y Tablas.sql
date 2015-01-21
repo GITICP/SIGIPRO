@@ -113,7 +113,7 @@ CREATE TABLE bodega.catalogos_externos(
 	producto character varying(45) NOT NULL,
 	codigo_externo character varying(45),
 	marca character varying(45),
-	inf_proveedor character varying(500)
+	id_proveedor integer
  );
 
 
@@ -236,6 +236,7 @@ CREATE TABLE compras.proveedores (
 ALTER TABLE ONLY compras.proveedores ADD CONSTRAINT pk_proveedores PRIMARY KEY (id_proveedor);
 -- Indices esquema compras
 CREATE UNIQUE INDEX i_correo ON compras.proveedores USING btree (correo);
+ALTER TABLE ONLY bodega.catalogos_externos ADD CONSTRAINT fk_id_proveedor FOREIGN KEY (id_proveedor) REFERENCES compras.proveedores(id_proveedor) on delete set null;;
 
 
 /* INSERTS */

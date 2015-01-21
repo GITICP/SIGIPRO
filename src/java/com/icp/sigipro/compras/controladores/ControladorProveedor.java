@@ -113,7 +113,7 @@ public class ControladorProveedor extends SIGIPROServlet {
         proveedor.setTelefono3(request.getParameter("telefono3"));
         
         ProveedorDAO p = new ProveedorDAO();
-        String id = request.getParameter("id");
+        String id = request.getParameter("id_proveedor");
         
         if ( id == null || id.isEmpty() )
         {
