@@ -52,9 +52,9 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre del Proveedor:   </strong></td> <td>${proveedor.getNombre_proveedor()} </td></tr>
-                <tr><td> <strong>Telefono 1:</strong> <td>${proveedor.getTelefono1()} </td></tr>
-                <tr><td> <strong>Telefono 2:</strong> <td>${proveedor.getTelefono2()} </td></tr>
-                <tr><td> <strong>Telefono 3:</strong> <td>${proveedor.getTelefono3()} </td></tr>
+                <tr><td> <strong>Teléfono 1:</strong> <td>${proveedor.getTelefono1()} </td></tr>
+                <tr><td> <strong>Teléfono 2:</strong> <td>${proveedor.getTelefono2()} </td></tr>
+                <tr><td> <strong>Teléfono 3:</strong> <td>${proveedor.getTelefono3()} </td></tr>
                 <tr><td> <strong>Correo:</strong> <td>${proveedor.getCorreo()} </td></tr>
               </table>
               <br>

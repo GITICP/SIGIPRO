@@ -61,9 +61,9 @@
                 <thead> 
                     <tr>
                         <th>Nombre Proveedor</th>
-                        <th>Telfono 1</th>
-                        <th>Telfono 2</th>
-                        <th>Telfono 3</th>
+                        <th>Teléfono 1</th>
+                        <th>Teléfono 2</th>
+                        <th>Teléfono 3</th>
                         <th>Correo</th>
                     </tr>
                 </thead>
