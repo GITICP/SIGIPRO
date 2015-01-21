@@ -281,6 +281,9 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
+INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Usuarios', 'Administración de la sección de usuarios del módulo de seguridad');
+INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Roles', 'Administración de la sección de roles del módulo de seguridad');
+
 
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1,1);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,2);
@@ -292,6 +295,13 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,7);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,8);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,9);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,10);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,2);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,3);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,4);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,5);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,6);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,7);
+
 
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Produccion','Dedicados a la produccion');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Control de Calidad','Dedicados al control de calidad');
@@ -308,5 +318,9 @@ INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_comple
 
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 3, '2014-12-01', '2014-12-01');
+
+
 
 INSERT INTO configuracion.correo(id_correo, host, puerto, starttls, nombre_emisor, correo, contrasena) VALUES (1, 'smtp.gmail.com', '587', 'true', 'SIGIPRO', 'sigiproicp@gmail.com', 'Sigipro2015');
