@@ -86,7 +86,18 @@
             </div>
         </div>
     </div>
-  </div>               
+  </div>
+  <!-- Esta parte es la de los permisos de un rol -->
+  <p>
+    Los campos marcados con * son requeridos.
+  </p>  
+
+  <div class="form-group">
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
+      <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+    </div>
+  </div>
                        
-  <button type="submit" class="btn btn-primary bt">${accion} Producto</button>
+  
 </form>

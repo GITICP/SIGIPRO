@@ -10,6 +10,7 @@ import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -137,5 +138,11 @@ public class ControladorCatalogoInterno extends HttpServlet
   public String getServletInfo()
   {
     return "Short description";
+  }
+  
+  private void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException{ 
+    if ( !( permisosUsuario.contains(permiso) || permisosUsuario.contains(1) ) ){
+      throw new AuthenticationException ("Usuario no tiene permisos para acceder a la acción.");
+    }
   }
 }
