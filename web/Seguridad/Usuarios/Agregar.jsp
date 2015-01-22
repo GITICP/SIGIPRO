@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Agregar
+    Document   : Agregar Usuarios
     Created on : Dec 14, 2014, 1:43:27 PM
     Author     : Boga
 --%>
@@ -95,8 +95,8 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <select id="seleccionSeccion" name="seccion" required
-                              oninvalid="setCustomValidity('Este campo es requerido')" >
+                      <select id="seleccionSeccion" class="form-control" name="seccion" required
+                              oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
                         <c:forEach items="${secciones}" var="seccion">
                           <option value=${seccion.getID()}>${seccion.getNombreSeccion()}</option>
                         </c:forEach>
@@ -207,7 +207,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${rolesRestantes}" var="rol">

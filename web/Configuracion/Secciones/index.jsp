@@ -53,9 +53,9 @@ Secciones
         <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
         
         <!-- content-wrapper -->
-        <div class="col-md-10 content-wrapper">
+        <div class="col-md-12 content-wrapper">
             <div class="row">
-                <div class="col-md-4 ">
+                <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Configuración</li>
                         <li class="active">Secciones</li>
@@ -77,7 +77,7 @@ Secciones
                         <div class="widget-header">
                             <h3><i class="fa fa-legal"></i> Secciones</h3>
                             <div class="btn-group widget-header-toolbar">                                 
-                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Sección</a>
+                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;padding-top: 3px;" href="Agregar">Agregar Sección</a>
                                 <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
                                 <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
                             </div>

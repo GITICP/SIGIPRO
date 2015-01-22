@@ -21,7 +21,7 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-12 ">
           <ul class="breadcrumb">
             <li>Seguridad</li>
             <li>
@@ -148,7 +148,7 @@
                 </p> 
                 <div class="form-group">
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="confirmacionEditarRol()"><i class="fa fa-check-circle"></i> Confirmar Cambios </button>
                   </div>
                 </div>
@@ -172,7 +172,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${rolesRestantes}" var="rol">
@@ -229,7 +229,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${rolesRestantes}" var="rol">
@@ -311,7 +311,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionPermiso" name="idpermiso" required
+                <select id="seleccionPermiso" class="form-control" style='background-color: #fff;' name="idpermiso" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${permisosRestantes}" var="rol">
