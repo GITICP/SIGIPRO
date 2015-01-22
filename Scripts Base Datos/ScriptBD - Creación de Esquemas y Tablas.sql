@@ -283,6 +283,7 @@ INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Admini
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Usuarios', 'Administración de la sección de usuarios del módulo de seguridad');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Roles', 'Administración de la sección de roles del módulo de seguridad');
+INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Secciones', 'Administración de las secciones del módulo de configuración');
 
 
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1,1);
@@ -301,6 +302,9 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,4);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,5);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,6);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,7);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,8);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,9);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,10);
 
 
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Produccion','Dedicados a la produccion');
@@ -319,7 +323,8 @@ INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_comple
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
-INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 3, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 4, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (5, 5, '2014-12-01', '2014-12-01');
 
 
 
