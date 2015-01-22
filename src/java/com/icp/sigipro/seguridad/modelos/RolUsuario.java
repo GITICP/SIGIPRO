@@ -19,6 +19,7 @@ public class RolUsuario
   Date fechaActivacion;
   Date fechaDesactivacion;
   String nombreRol;
+  String nombreUsuario;
 
 
   public RolUsuario (int p_idrol,
@@ -47,6 +48,8 @@ public class RolUsuario
   public Date getFechaActivacionSQL() {return fechaActivacion;}
   public Date getFechaDesactivacionSQL() {return fechaDesactivacion;}
   public String getNombreRol() {return nombreRol;}
+  public String getNombreUsuario() {return nombreUsuario;}
+  public void setNombreUsuario(String nombre){this.nombreUsuario = nombre;}
 
   private String formatearFecha(Date fecha)
   {

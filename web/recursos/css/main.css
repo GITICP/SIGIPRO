@@ -10106,12 +10106,14 @@ textarea.note-editor .input-group-sm > .input-group-btn > .btn {
 @media (max-width: 767px) {
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #777777;
+ 
   }
 
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
     color: #333333;
     background-color: transparent;
+
   }
 
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
@@ -10119,6 +10121,7 @@ textarea.note-editor .input-group-sm > .input-group-btn > .btn {
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #555555;
     background-color: #e7e7e7;
+    
   }
 
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,
@@ -10126,6 +10129,7 @@ textarea.note-editor .input-group-sm > .input-group-btn > .btn {
   .note-editor .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {
     color: #cccccc;
     background-color: transparent;
+   
   }
 }
 .note-editor .navbar-default .navbar-link {
@@ -13641,7 +13645,7 @@ code {
 
 .top-bar {
   padding: 5px 0;
-  background-color: #555555;
+  background-color: #000000;
 }
 .top-bar .logo {
   position: relative;

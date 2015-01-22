@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!-- content-wrapper -->
-<div class="col-md-10 content-wrapper">
+<div class="col-md-12 content-wrapper">
     <div class="row">
         <div class="col-md-4 ">
             <ul class="breadcrumb">

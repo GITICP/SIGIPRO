@@ -75,37 +75,7 @@
           </form>
           <br>
           <div class="links">
-            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">Recuperar contraseña</button>
-          </div>
-          <div class="widget-content">
-
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">Recuperar Contraseña</h4>
-                  </div>
-                  <div class="modal-body">
-                    <p>Ingrese el correo electrónico registrado.</p>
-                    <div class="form-group">
-                      <div class="col-sm-12">
-                        <div class="input-group">
-                          <input type="text" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                        </div>
-
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button type="button" class="btn btn-primary"><i class="fa fa-check-circle"></i> Enviar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <button class="btn btn-default btn-sm" onclick="confirmacion()">Recuperar contraseña</button>
           </div>
         </div>
       </div>
@@ -128,14 +98,18 @@
     <script src="${direccionContexto}/recursos/js/plugins/stat/flot/jquery.flot.time.min.js"></script>
     <script src="${direccionContexto}/recursos/js/plugins/stat/flot/jquery.flot.pie.min.js"></script>
     <script src="${direccionContexto}/recursos/js/plugins/stat/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="${direccionContexto}/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="${direccionContexto}/js/plugins/datatable/jquery.dataTables.min.js"></script>
-    <script src="${direccionContexto}/js/plugins/datatable/dataTables.bootstrap.js"></script>
-    <script src="${direccionContexto}/js/plugins/jquery-mapael/jquery.mapael.js"></script>
-    <script src="${direccionContexto}/js/plugins/raphael/maps/usa_states.js"></script>
-    <script src="${direccionContexto}/js/king-chart-stat.js"></script>
-    <script src="${direccionContexto}/js/king-table.js"></script>
-    <script src="${direccionContexto}/js/king-components.js"></script>
-
+    <script src="${direccionContexto}/recursos/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/jquery-mapael/jquery.mapael.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/raphael/maps/usa_states.js"></script>
+    <script src="${direccionContexto}/recursos/js/king-chart-stat.js"></script>
+    <script src="${direccionContexto}/recursos/js/king-table.js"></script>
+    <script src="${direccionContexto}/recursos/js/king-components.js"></script>
+    
+    <script src="${direccionContexto}/recursos/js/plugins/bootbox.js"></script>
+    <script src="${direccionContexto}/recursos/js/iniciar-sesion.js"></script>
+    
+    ${caducada}
   </body>
 </html>

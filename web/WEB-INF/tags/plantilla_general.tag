@@ -8,7 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:if test="${sessionScope.usuario == null}">
-  <c:redirect url="/Cuenta/IniciarSesion.jsp" />
+  <c:redirect url="/Cuenta/IniciarSesion" />
 </c:if>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>
@@ -32,6 +32,7 @@
     <link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/barra-navegacion.css" rel="stylesheet" type="text/css" media="screen">
 
     <!--[if lte IE 9]>
         <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
@@ -89,14 +90,23 @@
     <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
+    
+    <!-- Esta se modificó -->
+    <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
+    
 
     <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
+    
+    <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
 
     <script>
       $('.sigiproDatePicker').datepicker()
               .on('changeDate', function () {
                 $(this).datepicker('hide');
               });
+      $("#fechaActivacion").datepicker({ startDate: 0});
     </script>
 
   </body>
