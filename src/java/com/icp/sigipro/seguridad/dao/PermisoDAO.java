@@ -35,8 +35,8 @@ public class PermisoDAO
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement("SELECT p.nombrepermiso, pr.idrol, pr.idpermiso "
-                                                     + "FROM seguridad.permisosrol pr, seguridad.permisos p  Where  pr.idpermiso = p.idpermiso AND pr.idrol = ? ");
+                consulta = conexion.prepareStatement("SELECT p.nombre, pr.id_rol, pr.id_permiso "
+                                                     + "FROM seguridad.permisos_roles pr, seguridad.permisos p  Where  pr.id_permiso = p.id_permiso AND pr.id_rol = ? ");
                 consulta.setInt(1, Integer.parseInt(p_IdRol));
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarPermisosRol(resultadoConsulta);
@@ -58,9 +58,9 @@ public class PermisoDAO
         
         while(resultadoConsulta.next())
         {
-            int idPermiso= resultadoConsulta.getInt("idpermiso");
-            String nombrePermiso = resultadoConsulta.getString("nombrepermiso");
-            int idRol = resultadoConsulta.getInt("idrol");
+            int idPermiso= resultadoConsulta.getInt("id_permiso");
+            String nombrePermiso = resultadoConsulta.getString("nombre");
+            int idRol = resultadoConsulta.getInt("id_rol");
             
             resultado.add(new PermisoRol(idRol, idPermiso, nombrePermiso));
         }
@@ -79,9 +79,9 @@ public List<Permiso> obtenerPermisosRestantes(String p_idrol)
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement(  "SELECT p.idpermiso, p.nombrepermiso, p.descripcionpermiso "
+                consulta = conexion.prepareStatement(  "SELECT p.id_permiso, p.nombre, p.descripcion "
                                                      + "FROM seguridad.permisos p "
-                                                     + "WHERE p.idpermiso NOT IN (SELECT ru.idpermiso FROM seguridad.permisosrol ru WHERE ru.idrol = ?)");
+                                                     + "WHERE p.id_permiso NOT IN (SELECT ru.id_permiso FROM seguridad.permisos_roles ru WHERE ru.id_rol = ?)");
                 consulta.setInt(1, Integer.parseInt(p_idrol));
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarPermisos(resultadoConsulta);
@@ -103,11 +103,11 @@ public List<Permiso> obtenerPermisosRestantes(String p_idrol)
         
         while(resultadoConsulta.next())
         {
-            String nombreRol = resultadoConsulta.getString("nombrepermiso");
-            int idRol = resultadoConsulta.getInt("idpermiso");
-            String descripcionrol = resultadoConsulta.getString("descripcionpermiso");
+            String nombreRol = resultadoConsulta.getString("nombre");
+            int idRol = resultadoConsulta.getInt("id_permiso");
+            String descripcion = resultadoConsulta.getString("descripcion");
             
-            resultado.add(new Permiso(idRol, nombreRol, descripcionrol));
+            resultado.add(new Permiso(idRol, nombreRol, descripcion));
         }
         return resultado;
     }

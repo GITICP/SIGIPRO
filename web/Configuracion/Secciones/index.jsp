@@ -1,81 +1,63 @@
 <%-- 
-    Document   : index
-    Created on : Dec 6, 2014, 10:16:57 PM
-    Author     : Amed
+    Document   : ver
+    Created on : 08-ene-2015, 20:01:18
+    Author     : Walter
 --%>
 
-<%@page import="com.icp.sigipro.seguridad.dao.PermisoDAO"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
+<%@page import="com.icp.sigipro.seguridad.dao.UsuarioDAO"%>
+<%@page import="com.icp.sigipro.configuracion.dao.SeccionDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
-<%@page import="com.icp.sigipro.seguridad.modelos.PermisoRol"%>
-<%@page import="com.icp.sigipro.seguridad.modelos.Permiso"%>
+<%@page import="com.icp.sigipro.configuracion.modelos.Seccion"%>
 <%@page import="java.util.List"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<% 
-            
-    PermisoDAO pr = new PermisoDAO();
-    
-    Cookie[] cookies = request.getCookies();
-    String p_idrol = null;
+<%        
+    SeccionDAO s = new SeccionDAO();
 
-    if (cookies != null) 
+    List<Seccion> secciones = s.obtenerSecciones();
+
+    if(secciones!=null)
     {
-        for (Cookie cookie : cookies) 
-        {
-            if (cookie.getName().equals("idRol")) 
-            {
-                p_idrol = cookie.getValue();
-                break;
-            }
-        }
+        request.setAttribute("listaSecciones", secciones);
     }
-    
-    if(p_idrol != null)
-    {
-        String decodificado = java.net.URLDecoder.decode(p_idrol, "UTF-8");
-        
-        String[] partes = decodificado.split(";");
-        p_idrol = partes[0];
-        String nombreRol = partes[1];
-        
-        List<PermisoRol> permisosrol = pr.obtenerPermisosRol(p_idrol);
-        request.setAttribute("idRol", p_idrol);
-        request.setAttribute("nombreRol", nombreRol);
-
-        if(permisosrol!=null)
-        {
-            request.setAttribute("listaPermisosRol", permisosrol);
-        }
-
-        List<Permiso> permisos = pr.obtenerPermisosRestantes(p_idrol);
-
-        if(permisos!=null)
-        {
-            request.setAttribute("listaPermisos", permisos);
-        }
-    }
-    else
-    {
-        response.sendRedirect(request.getContextPath() + "/Seguridad/Roles/");
-    }
-
 %>
 
-<t:plantilla_general title="PermisosRol" direccion_contexto="/SIGIPRO">
+<%
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!(permisos.contains(1) || permisos.contains(2) || permisos.contains(3) || permisos.contains(4)))
+    {
+      request.getRequestDispatcher("/").forward(request, response);
+    }
+    
+    UsuarioDAO u = new UsuarioDAO();
+
+  List<Usuario> usuarios = u.obtenerUsuarios();
+
+  if (usuarios != null) {
+    request.setAttribute("listaUsuarios", usuarios);
+  }
+%>
+
+
+
+
+<t:plantilla_general title="Configuracion" direccion_contexto="/SIGIPRO">
     
     <jsp:attribute name="contenido">
 
-        <jsp:include page="../plantillas/barraFuncionalidad.jsp" />
+        <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
         
         <!-- content-wrapper -->
         <div class="col-md-10 content-wrapper">
             <div class="row">
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
-                        <li>Seguridad</li>
-                        <li class="active">PermisosRol</li>
+                        <li>Configuración</li>
+                        <li class="active">Secciones</li>
                     </ul>
                 </div>
                 <div class="col-md-8 ">
@@ -92,33 +74,34 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-group"></i> Permisos del Rol: ${nombreRol}</h3>
-                            <div class="btn-group widget-header-toolbar">
-                                    <button class="btn btn-danger btn-sm" onclick="eliminarRolPermiso()" style="margin-left:5px;margin-right:5px;">Eliminar</button>
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarPermisoRol" style="margin-left:5px;margin-right:5px;">Agregar</button>
-
-                               
+                            <h3><i class="fa fa-legal"></i> Secciones</h3>
+                            <div class="btn-group widget-header-toolbar">                                 
+                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Sección</a>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
+                                <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table id="datatable-column-filter-permisosrol" class="table table-sorting table-striped table-hover datatable">
+                            <table id="datatable-column-filter-secciones" class="table table-sorting table-striped table-hover datatable">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
                                         <th>Selección</th>
-                                        <th>Nombre del Permiso</th>
+                                        <th>Nombre Sección</th>
+                                        <th>Descripción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     
-                                    <c:forEach items="${listaPermisosRol}" var="permiso">
+                                    <c:forEach items="${listaSecciones}" var="seccion">
                                     
-                                        <tr>
+                                        <tr id ="${seccion.getID()}">
                                             <td>
-                                                <input type="radio" name="controlPermiso" value="${permiso.getIDPermiso()}">
+                                                <input type="radio" name="controlSeccion" value="${seccion.getID()}">
                                             </td>
-                                            <td>${permiso.getNombrePermiso()}</td>
+                                            <td>${seccion.getNombre_seccion()}</td>
+                                            <td>${seccion.getDescripcion()}</td>
                                         </tr>
                                         
                                     </c:forEach>
@@ -134,39 +117,42 @@
             <!-- /main-content -->
         </div>
         <!-- /main -->
-
         <div class="widget-content">
-            <div class="modal fade" id="modalAgregarPermisoRol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal fade" id="ModalEditarSeccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Agregar Permiso</h4>
+                            <h4 class="modal-title" id="myModalLabel">Editar Sección</h4>
                         </div>
                         <div class="modal-body">
 
-                       <form class="form-horizontal" role="form" action="InsertarPermisoRol" method="post">
-                            <input type="text" value="${idRol}"  name="rol"  hidden="true">
-                            <label for="nombreUsuario" class="control-label">*Rol</label>
+                        <form class="form-horizontal" role="form" action="EditarSeccion" method="post">
+                            <input id="editarIdSeccion" hidden="true" name="editarIdSeccion">
+                            <label for="editarNombre" class="control-label">Nombre de la Sección</label>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <div class="input-group">
-                                        <select name="idpermiso" required
+                                        <input id="editarNombre" type="text" maxlength="45" placeholder="Nombre de la Sección" class="form-control" name="editarNombre" required
                                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')">
-                                            <c:forEach items="${listaPermisos}" var="permiso">
-                                                <option value=${permiso.getID()}>${permiso.getNombrePermiso()}</option>
-                                            </c:forEach>
-                                        </select>
-
+                                               oninput="setCustomValidity('')" > 
                                     </div>
                                 </div>
                             </div>
-
+                            <label for="editarDescripcion" class="control-label">Descripción</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <input id="editarDescripcion" type="text" maxlength="500" placeholder="Drescripción de la Sección" class="form-control" name="editarDescripcion" required
+                                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                                               oninput="setCustomValidity('')" > 
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Rol</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Editar Sección</button>
                                 </div>
                             </div>
                         </form>
@@ -174,10 +160,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-                            
+        </div>                            
         <div class="widget-content">
-            <div class="modal fade" id="modalEliminarPermisoRol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal fade" id="modalEliminarSeccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -185,11 +170,10 @@
                             <h4 class="modal-title" id="myModalLabel">Confirmación</h4>
                         </div>
                         <div class="modal-body">
-
-                       <form class="form-horizontal" role="form" action="EliminarPermisoRol" method="post">
-                            <h5>¿Está seguro que desea desasignar el permiso a este rol? </h5>
-                            <input hidden="false" id="controlIDPermiso" name="controlIDPermiso">
-                            <input type="text" value="${idRol}"  name="rol"  hidden="true">
+                       <form class="form-horizontal" role="form" action="EliminarSeccion" method="post">
+                            <h5 class="title">¿Está seguro que desea eliminar la sección?</h5>
+                            <br><br>
+                            <input hidden="false" id="controlIDSeccion" name="controlIDSeccion">
                             <div class="form-group">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
@@ -201,8 +185,8 @@
                     </div>
                 </div>
             </div>
-        </div>    
-         <div class="widget-content">
+        </div>
+        <div class="widget-content">
             <div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -211,7 +195,7 @@
                             <h4 class="modal-title" id="myModalLabel">Error</h4>
                         </div>
                         <div class="modal-body">
-                            <h5>Debe seleccionar un permiso.</h5>
+                            <h5>Debe seleccionar una sección.</h5>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
@@ -219,7 +203,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
         
     </jsp:attribute>
 

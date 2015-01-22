@@ -8,7 +8,9 @@ package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.*;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 public class RolUsuarioDAO {
 
-  public boolean insertarRolUsuario(String idusuario, String idrol, String fechaActivacion, String fechaDesactivacion) {
+  public boolean insertarRolUsuario(int idusuario, int idrol, String fechaActivacion, String fechaDesactivacion) {
     boolean resultado = false;
 
     try {
@@ -31,12 +33,12 @@ public class RolUsuarioDAO {
       Connection conexion = s.conectar();
 
       if (conexion != null) {
-        PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.rolesusuario "
-                + " (idusuario, idrol, fechaactivacion, fechadesactivacion) "
+        PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.roles_usuarios "
+                + " (id_usuario, id_rol, fecha_activacion, fecha_desactivacion) "
                 + " VALUES "
                 + " (?,?,?,? )");
-        consulta.setInt(1, Integer.parseInt(idusuario));
-        consulta.setInt(2, Integer.parseInt(idrol));
+        consulta.setInt(1, idusuario);
+        consulta.setInt(2, idrol);
 
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
@@ -148,4 +150,26 @@ public class RolUsuarioDAO {
     }
     return resultado;
   }
+  public List<RolUsuario> parsearUsuarios(String roles, int idRol) {
+    List<RolUsuario> resultado = null;
+    try {
+      resultado = new ArrayList<RolUsuario>();
+      List<String> rolesParcial = new LinkedList<String>(Arrays.asList(roles.split("#r#")));
+      rolesParcial.remove("");
+      for (String i : rolesParcial) {
+        String[] rol = i.split("#c#");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date fActivacion = formatoFecha.parse(rol[1]);
+        java.util.Date fDesactivacion = formatoFecha.parse(rol[2]);
+        java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+        java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+        resultado.add(new RolUsuario(idRol, Integer.parseInt(rol[0]), fActivacionSQL, fDesactivacionSQL));
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      resultado = null;
+    }
+    return resultado;
+  }
+
 }

@@ -6,10 +6,13 @@
 package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
+import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,43 +23,72 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Boga
  */
 @WebServlet(name = "EditarUsuario", urlPatterns = {"/Seguridad/Usuarios/Editar"})
-public class EditarUsuario extends HttpServlet {
+public class EditarUsuario extends SIGIPROServlet {
+  
+  private final int permiso = 3;
+  
+  @Override
+  protected int getPermiso()
+  {
+    return permiso;
+  }
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
 
     response.setContentType("text/html;charset=UTF-8");
-    try (PrintWriter out = response.getWriter()) {
-      String id;
-      id = request.getParameter("id");
-      int idUsuario;
-      idUsuario = Integer.parseInt(id);
+    HttpSession sesion = request.getSession();
+    if(validarPermiso((List<Integer>)sesion.getAttribute("listaPermisos")))
+      {
+        try (PrintWriter out = response.getWriter()) {
+        String id;
+        id = request.getParameter("id");
+        int idUsuario;
+        idUsuario = Integer.parseInt(id);
 
       UsuarioDAO u = new UsuarioDAO();
-
+      SeccionDAO sec = new SeccionDAO();
+       
       Usuario usuario = u.obtenerUsuario(idUsuario);
       List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
       List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
+      List<Seccion> secciones = sec.obtenerSecciones();
 
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("rolesRestantes", rolesRestantes);
+      request.setAttribute("secciones",secciones);
 
-      ServletContext context = this.getServletContext();
-      context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
+        ServletContext context = this.getServletContext();
+        context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
+     }
     }
+    else
+    {
+      request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+    
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    processRequest(request, response);
+    HttpSession sesion = request.getSession();
+    if(validarPermiso((List<Integer>)sesion.getAttribute("listaPermisos")))
+    {
+      processRequest(request, response);
+    }
+    else
+    {
+      request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
   }
 
   @Override
@@ -74,8 +106,8 @@ public class EditarUsuario extends HttpServlet {
       correo = request.getParameter("correoElectronico");
       String cedula;
       cedula = request.getParameter("cedula");
-      String departamento;
-      departamento = request.getParameter("departamento");
+      String seccion;
+      seccion = request.getParameter("seccion");
       String puesto;
       puesto = request.getParameter("puesto");
       String fechaActivacion;
@@ -91,7 +123,7 @@ public class EditarUsuario extends HttpServlet {
       if(roles != null)
       {
         UsuarioDAO u = new UsuarioDAO();
-         resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, departamento, puesto, fechaActivacion, fechaDesactivacion, roles);
+         resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion, roles);
       }
       else
       {
