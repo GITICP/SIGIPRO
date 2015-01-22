@@ -34,9 +34,18 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> Catálogo Interno </h3>
-              <div class="btn-group widget-header-toolbar">
-                 <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color: white;" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=agregar">Agregar Producto</a>
+              
+              <c:set var="contienePermiso" value="false" />
+              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                <c:if test="${permiso == 1 || permiso == 11}">
+                  <c:set var="contienePermiso" value="true" />
+                </c:if>
+              </c:forEach>
+              <c:if test="${contienePermiso}">
+                <div class="btn-group widget-header-toolbar">
+                  <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color: white;" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=agregar">Agregar Producto</a>
                 </div>
+              </c:if>
             </div>
             ${mensaje}
             <div class="widget-content">

@@ -34,10 +34,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author Amed
  */
 @WebServlet(name = "AgregarRol", urlPatterns = {"/Seguridad/Roles/Agregar"})
-public class AgregarRol extends SIGIPROServlet {
-  
+public class AgregarRol extends SIGIPROServlet
+{
+
   private final int permiso = 5;
-  
+
   @Override
   protected int getPermiso()
   {
@@ -55,7 +56,8 @@ public class AgregarRol extends SIGIPROServlet {
    * @throws java.sql.SQLException
    */
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException, SQLException {
+          throws ServletException, IOException, SQLException
+  {
     response.setContentType("text/html;charset=UTF-8");
     try (PrintWriter out = response.getWriter()) {
 
@@ -70,7 +72,6 @@ public class AgregarRol extends SIGIPROServlet {
       request.setAttribute("usuariosRestantes", usuariosRestantes);
       request.setAttribute("permisosRol", permisosRol);
       request.setAttribute("permisosRestantes", permisosRestantes);
-      
 
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Roles/Agregar.jsp").forward(request, response);
@@ -88,10 +89,12 @@ public class AgregarRol extends SIGIPROServlet {
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException
+  {
     try {
       processRequest(request, response);
-    } catch (SQLException ex) {
+    }
+    catch (SQLException ex) {
       Logger.getLogger(AgregarRol.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
@@ -106,8 +109,9 @@ public class AgregarRol extends SIGIPROServlet {
    */
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");  
+          throws ServletException, IOException
+  {
+    request.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
 
     PrintWriter out;
@@ -129,73 +133,77 @@ public class AgregarRol extends SIGIPROServlet {
         id_rol = r.obtenerIDRol(nombreRol);
         String rolesUsuario = request.getParameter("listarolesUsuario");
         String permisosRol = request.getParameter("listaPermisosRol");
-        
+
         RolUsuarioDAO ru = new RolUsuarioDAO();
         PermisoRolDAO pr = new PermisoRolDAO();
-        
+
         List<RolUsuario> roles = ru.parsearUsuarios(rolesUsuario, id_rol);
         List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, id_rol);
-        
-         if (roles != null) {
-          boolean f = true;
-          for (RolUsuario i : roles) {
-            boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
-            if (!e) {
-              f = false;
-              break;
+
+        boolean nombre_valido = r.validarNombreRol(nombreRol);
+        if (nombre_valido) {
+
+          if (roles != null) {
+            boolean f = true;
+            for (RolUsuario i : roles) {
+              boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
+              if (!e) {
+                f = false;
+                break;
+              }
+            }
+            for (PermisoRol i : permisos) {
+              boolean g = pr.insertarPermisoRol(i.getIDRol(), i.getIDPermiso());
+              if (!g) {
+                f = false;
+                break;
+              }
+            }
+
+            if (f) {
+              request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
+                                              + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                              + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                              + "Rol ingresado correctamente."
+                                              + "</div>");
+            }
+            else {
+              request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
+                                              + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                              + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                              + "El Rol fue ingresado, pero hubo errores al asociar usuarios o permisos."
+                                              + "</div>");
             }
           }
-          for (PermisoRol i : permisos) {
-            boolean g = pr.insertarPermisoRol(i.getIDRol(), i.getIDPermiso());
-            if (!g) {
-              f = false;
-              break;
-            }
-          }
-          
-          if (f) {
-            request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
-                    + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                    + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                    + "Rol ingresado correctamente."
-                    + "</div>");
-          } else {
+          else {
             request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                    + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                    + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                    + "El Rol fue ingresado, pero hubo errores al asociar usuarios o permisos."
-                    + "</div>");
+                                            + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                            + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                            + "El Rol fue ingresado, pero sin usuarios asociados."
+                                            + "</div>");
           }
-        } else {
-          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                  + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                  + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                  + "El Rol fue ingresado, pero sin usuarios asociados."
-                  + "</div>");
         }
-      } 
-      boolean nombre_valido = r.validarNombreRol(nombreRol);
-      if (nombre_valido){
-          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                + "Ya existe un rol con el nombre ingresado."
-                + "</div>");
       }
-      
-      
       else {
         request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                + "Rol no pudo ser ingresado."
-                + "</div>");
+                                        + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                        + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                        + "Ya existe un rol con el nombre ingresado."
+                                        + "</div>");
       }
       request.getRequestDispatcher("/Seguridad/Roles/").forward(request, response);
 
-    } catch (SQLException ex) {
+    }
+    catch (SQLException ex) {
       Logger.getLogger(AgregarRol.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {
+      request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
+                                          + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                          + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                          + "Ya existe un rol con el nombre ingresado."
+                                          + "</div>");
+      request.getRequestDispatcher("/Seguridad/Roles/").forward(request, response);
+    }
+    finally {
       out.close();
     }
   }
@@ -206,7 +214,8 @@ public class AgregarRol extends SIGIPROServlet {
    * @return a String containing servlet description
    */
   @Override
-  public String getServletInfo() {
+  public String getServletInfo()
+  {
     return "Short description";
   }// </editor-fold>
 

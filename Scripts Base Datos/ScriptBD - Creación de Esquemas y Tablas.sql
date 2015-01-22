@@ -251,11 +251,15 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, 'Elim
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, 'Agregar Sección', 'Permite activar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, 'Modificar Sección', 'Permite modificar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, 'Eliminar Sección', 'Permite eliminar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, 'Agregar Producto', 'Permite agregar un proudcto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, 'Modificar Producto', 'Permite modificar un producto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, 'Eliminar Producto', 'Permite eliminar un producto');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
 -- primero (para que obtengan los primeros id's y además deben llevar como id_padre el 0 y tener un redirect.
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodega', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodegas', '/Bodegas/CatalogoInterno');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (101, 100, 'Catálogo Interno', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);
@@ -278,6 +282,9 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (8, 901);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (9, 901);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (10, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (11, 101);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (12, 101);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (13, 101);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');

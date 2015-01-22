@@ -71,7 +71,15 @@ Roles
             <div class="widget-header">
               <h3><i class="fa fa-legal"></i> Roles</h3>
               <div class="btn-group widget-header-toolbar">
-                <button class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;" onclick="window.location.href='Agregar'">Agregar Rol</button>
+                <c:set var="contienePermisoAgregar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 5}">
+                    <c:set var="contienePermisoAgregar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoAgregar}">
+                  <button class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;" onclick="window.location.href='Agregar'">Agregar Rol</button>
+                </c:if>
               </div>
             </div>
             ${mensaje}

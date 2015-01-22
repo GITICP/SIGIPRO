@@ -100,6 +100,7 @@
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
     
     <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
 
     <script>
       $('.sigiproDatePicker').datepicker()

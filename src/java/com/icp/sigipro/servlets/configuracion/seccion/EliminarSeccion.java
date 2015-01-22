@@ -100,7 +100,7 @@ public class EliminarSeccion extends SIGIPROServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "La seccion se ha eliminado correctamente" +
+                                                        "La sección se ha eliminado correctamente" +
                                                 "</div>");
             }
             else
@@ -108,7 +108,7 @@ public class EliminarSeccion extends SIGIPROServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "La seccion no pudo ser eliminada porque está asignado a uno o más usuarios" +
+                                                        "La sección no pudo ser eliminada porque está asignado a uno o más usuarios" +
                                                 "</div>");
             }
             request.getRequestDispatcher("/Configuracion/Secciones/").forward(request, response);
