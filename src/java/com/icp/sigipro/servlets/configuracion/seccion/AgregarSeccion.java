@@ -82,7 +82,7 @@ public class AgregarSeccion extends SIGIPROServlet {
         
         PrintWriter out;
         out = response.getWriter();
-        
+        request.setCharacterEncoding("UTF-8");
         try
         {
             String nombre_seccion;

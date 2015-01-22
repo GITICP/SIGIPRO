@@ -81,7 +81,7 @@ public class RecuperarContrasena extends HttpServlet
     
     PrintWriter out;
     out = response.getWriter();
-    
+    request.setCharacterEncoding("UTF-8");
     try 
     {
       String correoElectronico = request.getParameter("correoElectronico");

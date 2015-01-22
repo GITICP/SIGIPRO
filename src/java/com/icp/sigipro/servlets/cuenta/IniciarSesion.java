@@ -85,6 +85,7 @@ public class IniciarSesion extends HttpServlet
 
     PrintWriter out;
     out = response.getWriter();
+    request.setCharacterEncoding("UTF-8");
 
     try {
       String usuario = request.getParameter("usuario");

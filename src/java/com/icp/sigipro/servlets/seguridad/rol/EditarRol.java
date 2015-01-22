@@ -115,6 +115,7 @@ public class EditarRol extends SIGIPROServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
+    request.setCharacterEncoding("UTF-8"); 
     try {
       int idRol;
       idRol = Integer.parseInt(request.getParameter("editarIdRol"));
