@@ -86,7 +86,7 @@ public class EliminarSeccion extends SIGIPROServlet {
         
         PrintWriter out;
         out = response.getWriter();
-        
+        request.setCharacterEncoding("UTF-8");
         try
         {
             String idseccion = request.getParameter("controlIDSeccion");

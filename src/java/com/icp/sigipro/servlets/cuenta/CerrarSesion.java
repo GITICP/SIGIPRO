@@ -75,7 +75,8 @@ public class CerrarSesion extends HttpServlet {
             throws ServletException, IOException {
         
         response.setContentType("text/html");
-        
+        request.setCharacterEncoding("UTF-8");
+
         try
         {
             HttpSession sesion = request.getSession(false);
