@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Editar
+    Document   : Editar Usuario
     Created on : Dec 14, 2014, 11:44:07 AM
     Author     : Boga
 --%>
@@ -60,7 +60,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input id="nombreUsuario" type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
+                          <input id="nombreUsuario"   type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')" > 
                         </div>
@@ -105,8 +105,8 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <select id="seleccionSeccion" name="seccion" required
-                                  oninvalid="setCustomValidity('Este campo es requerido')" >
+                          <select id="seleccionSeccion" class="form-control" name="seccion" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
                             <c:forEach items="${secciones}" var="seccion">
                               <option value=${seccion.getID()}>${seccion.getNombreSeccion()}</option>
                             </c:forEach>
@@ -186,7 +186,7 @@
                 </div>
                 <div class="form-group">
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="confirmacion()"><i class="fa fa-check-circle"></i> Confirmar Cambios </button>
                   </div>
                 </div>
@@ -210,9 +210,9 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
+                        oninput="setCustomValidity('')" style='background-color: #fff;'>
                   <c:forEach items="${rolesRestantes}" var="rol">
                     <option value=${rol.getID()}>${rol.getNombreRol()}</option>
                   </c:forEach>
@@ -267,7 +267,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${rolesRestantes}" var="rol">

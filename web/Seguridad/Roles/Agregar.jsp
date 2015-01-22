@@ -19,9 +19,9 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-10 content-wrapper">
+    <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-12 ">
           <ul class="breadcrumb">
             <li>Seguridad</li>
             <li>
@@ -168,7 +168,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${usuariosRestantes}" var="rol">
@@ -225,7 +225,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${usuariosRestantes}" var="rol">
