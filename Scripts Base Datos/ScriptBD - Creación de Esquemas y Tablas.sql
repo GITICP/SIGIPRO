@@ -278,7 +278,7 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,2);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,3);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,4);
 
-INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Produccion','Dedicados a la produccion');
+INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Producción','Dedicados a la producción');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Control de Calidad','Dedicados al control de calidad');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Ventas','Dedicados a la venta de productos');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Bioterio','Dedicados al bioterio');
