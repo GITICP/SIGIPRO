@@ -1,16 +1,35 @@
 <%-- 
-    Document   : Ver
+    Document   : Ver Rol
     Created on : Jan 11, 2015, 11:57:19 AM
     Author     : Amed
 --%>
 
 
+<%@page import="com.icp.sigipro.seguridad.dao.UsuarioDAO"%>
+<%@page import="java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+
+<%
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!(permisos.contains(1) || permisos.contains(5) || permisos.contains(6) || permisos.contains(7)))
+    {
+      request.getRequestDispatcher("/").forward(request, response);
+    }
+    
+    UsuarioDAO u = new UsuarioDAO();
+
+  List<Usuario> usuarios = u.obtenerUsuarios();
+
+  if (usuarios != null) {
+    request.setAttribute("listaUsuarios", usuarios);
+  }
+%>
 
 <t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
 
@@ -21,7 +40,7 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-12 ">
           <ul class="breadcrumb">
             <li>Seguridad</li>
             <li>

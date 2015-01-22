@@ -83,7 +83,7 @@ public class RestablecerContrasena extends HttpServlet
 
     PrintWriter out;
     out = response.getWriter();
-
+    request.setCharacterEncoding("UTF-8");
     try {
       String nombreUsuario = request.getParameter("usuarioCaducado");
       String contrasenna = request.getParameter("contrasenna");

@@ -6,6 +6,7 @@
 package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PermisoDAO;
 import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import com.icp.sigipro.seguridad.dao.RolDAO;
@@ -34,7 +35,15 @@ import javax.servlet.http.HttpServletResponse;
  * @author Amed
  */
 @WebServlet(name = "EditarRol", urlPatterns = {"/Seguridad/Roles/Editar"})
-public class EditarRol extends HttpServlet {
+public class EditarRol extends SIGIPROServlet {
+  
+  private final int permiso = 6;
+  
+  @Override
+  protected int getPermiso()
+  {
+    return permiso;
+  }
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -106,6 +115,7 @@ public class EditarRol extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
+    request.setCharacterEncoding("UTF-8"); 
     try {
       int idRol;
       idRol = Integer.parseInt(request.getParameter("editarIdRol"));

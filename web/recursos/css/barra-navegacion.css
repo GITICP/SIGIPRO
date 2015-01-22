@@ -3,8 +3,8 @@
 	list-style-type:none;
 	margin:0;
 	padding:0;
-	/* position: absolute; */
-        display: flex;
+	position: absolute;
+        display: table;
 }
 
 /*Style for menu links*/
@@ -76,7 +76,7 @@
     }
 .nav-sigipro > ul > li
         {
-            width: 25%;
+           
             height: 100%;
             float: left;            
         }
@@ -98,7 +98,7 @@
 	        color: #fff;
         }
 
-@media only screen and ( max-width: 860px ) /* 640 */
+@media only screen and ( max-width: 640px ) /* 640 */
 {
 .nav-sigipro
     {

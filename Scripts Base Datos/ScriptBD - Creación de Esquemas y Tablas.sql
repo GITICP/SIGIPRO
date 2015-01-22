@@ -245,6 +245,12 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, 'Admi
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (2, 'Agregar Usuario', 'Permite agregar a un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (3, 'Editar Usuario', 'Permite modificar a un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (4, 'Desactivar Usuario', 'Permite desactivar a un usuario');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (5, 'Agregar Rol', 'Permite activar un rol');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (6, 'Editar Rol', 'Permite modificar un rol');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, 'Eliminar Rol', 'Permite eliminar un rol');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, 'Agregar Sección', 'Permite activar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, 'Modificar Sección', 'Permite modificar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, 'Eliminar Sección', 'Permite eliminar una sección');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
@@ -266,19 +272,42 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 801);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 901);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 901);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (5, 802);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (6, 802);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (7, 802);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (8, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (9, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (10, 901);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
+INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Usuarios', 'Administración de la sección de usuarios del módulo de seguridad');
+INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Roles', 'Administración de la sección de roles del módulo de seguridad');
+INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Secciones', 'Administración de las secciones del módulo de configuración');
+
 
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1,1);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,2);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,3);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,4);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,5);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,6);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,7);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,8);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,9);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,10);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,2);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,3);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (3,4);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,5);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,6);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (4,7);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,8);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,9);
+INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,10);
 
-INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Produccion','Dedicados a la produccion');
+
+INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Producción','Dedicados a la producción');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Control de Calidad','Dedicados al control de calidad');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Ventas','Dedicados a la venta de productos');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Bioterio','Dedicados al bioterio');
@@ -293,5 +322,10 @@ INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_comple
 
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 4, '2014-12-01', '2014-12-01');
+INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (5, 5, '2014-12-01', '2014-12-01');
+
+
 
 INSERT INTO configuracion.correo(id_correo, host, puerto, starttls, nombre_emisor, correo, contrasena) VALUES (1, 'smtp.gmail.com', '587', 'true', 'SIGIPRO', 'sigiproicp@gmail.com', 'Sigipro2015');

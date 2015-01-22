@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
+import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PermisoDAO;
 import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
 import com.icp.sigipro.seguridad.dao.RolDAO;
@@ -33,7 +34,15 @@ import javax.servlet.http.HttpServletResponse;
  * @author Amed
  */
 @WebServlet(name = "AgregarRol", urlPatterns = {"/Seguridad/Roles/Agregar"})
-public class AgregarRol extends HttpServlet {
+public class AgregarRol extends SIGIPROServlet {
+  
+  private final int permiso = 5;
+  
+  @Override
+  protected int getPermiso()
+  {
+    return permiso;
+  }
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -98,7 +107,7 @@ public class AgregarRol extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-        
+    request.setCharacterEncoding("UTF-8");  
     response.setContentType("text/html;charset=UTF-8");
 
     PrintWriter out;
