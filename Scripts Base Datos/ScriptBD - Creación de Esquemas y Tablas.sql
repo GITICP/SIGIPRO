@@ -98,15 +98,15 @@ CREATE TABLE bodega.activos_fijos (
 	ubicacion character varying(45) NOT NULL
  );
 
-CREATE TABLE bodega.catalogos_internos(
-	id_producto_int serial NOT NULL,
+CREATE TABLE bodega.catalogo_interno(
+	id_producto serial NOT NULL,
+        nombre character varying(45) NOT NULL,
 	codigo_icp character varying(45) NOT NULL,
-	id_tipo integer NOT NULL,
 	stock_minimo integer NOT NULL,
 	stock_maximo integer NOT NULL,
-	seccion character varying(45) NOT NULL,
 	ubicacion character varying(45),
-	presentacion character varying(45) NOT NULL
+	presentacion character varying(45) NOT NULL,
+        descripcion character varying(500)
  );
 
 CREATE TABLE bodega.catalogos_externos(
@@ -118,15 +118,15 @@ CREATE TABLE bodega.catalogos_externos(
  );
 
 
-CREATE TABLE bodega.catalogos_externos_por_catalogos_internos ( 
+CREATE TABLE bodega.catalogos_externos_por_catalogo_interno ( 
 	id_producto_ext integer,
-	id_producto_int integer
+	id_producto integer
  );
 
 
 CREATE TABLE bodega.ingresos ( 
 	id_ingreso serial NOT NULL,
-	id_producto_int integer,
+	id_producto integer,
      	fecha_ingreso date NOT NULL,
 	cantidad integer NOT NULL,
 	fecha_vencimiento date NOT NULL,
@@ -136,13 +136,13 @@ CREATE TABLE bodega.ingresos (
 
 CREATE TABLE bodega.inventarios ( 
 	id_inventario serial NOT NULL,
-	id_producto_int integer,
+	id_producto integer,
      	stock_actual integer NOT NULL
  ); 
 
 CREATE TABLE bodega.reactivos ( 
 	id_reactivo serial NOT NULL,
-	id_producto_int integer,
+	id_producto integer,
      	numero_cas character varying(45),
 	formula_quimica character varying(45),
 	familia character varying(45),
@@ -161,7 +161,7 @@ CREATE TABLE bodega.solicitudes (
 CREATE TABLE bodega.detalles_solicitudes ( 
 	id_detalle_solicitud serial NOT NULL,
 	id_solicitud integer,
-	id_producto_int integer,
+	id_producto integer,
 	estado character varying(45) NOT NULL,
      	cantidad integer NOT NULL,
 	fecha_entrega date NOT NULL
@@ -176,15 +176,15 @@ CREATE TABLE bodega.sub_bodegas (
 CREATE TABLE bodega.inventarios_bodegas ( 
 	id_inventario_bodega serial NOT NULL,
 	id_sub_bodega integer,
-	id_producto_int integer,
+	id_producto integer,
      	cantidad integer NOT NULL
  ); 
 
  --Llaves primarias esquema bodega
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT pk_activos_fijos PRIMARY KEY (id_activo_fijo);
-ALTER TABLE ONLY bodega.catalogos_internos ADD CONSTRAINT pk_catalogos_internos PRIMARY KEY (id_producto_int);
+ALTER TABLE ONLY bodega.catalogo_interno ADD CONSTRAINT pk_catalogo_interno PRIMARY KEY (id_producto);
 ALTER TABLE ONLY bodega.catalogos_externos ADD CONSTRAINT pk_catalogos_externos PRIMARY KEY (id_producto_ext);
-ALTER TABLE ONLY bodega.catalogos_externos_por_catalogos_internos ADD CONSTRAINT pk_catalogos_externos_por_catalogos_internos PRIMARY KEY ( id_producto_ext,id_producto_int);
+ALTER TABLE ONLY bodega.catalogos_externos_por_catalogo_interno ADD CONSTRAINT pk_catalogos_externos_por_catalogo_interno PRIMARY KEY ( id_producto_ext,id_producto);
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT pk_ingresos PRIMARY KEY (id_ingreso);
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT pk_inventarios PRIMARY KEY (id_inventario);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_reactivo);
@@ -194,17 +194,17 @@ ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (i
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
 	
 --Indices unicos esquema bodega
-CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogos_internos USING btree (codigo_icp);
+CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogo_interno USING btree (codigo_icp);
 
 --Llaves foraneas esquema seguridad
-ALTER TABLE ONLY bodega.catalogos_externos_por_catalogos_internos ADD CONSTRAINT fk_id_producto_ext FOREIGN KEY (id_producto_ext) REFERENCES bodega.catalogos_externos(id_producto_ext);
-ALTER TABLE ONLY bodega.catalogos_externos_por_catalogos_internos ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
+ALTER TABLE ONLY bodega.catalogos_externos_por_catalogo_interno ADD CONSTRAINT fk_id_producto_ext FOREIGN KEY (id_producto_ext) REFERENCES bodega.catalogos_externos(id_producto_ext);
+ALTER TABLE ONLY bodega.catalogos_externos_por_catalogo_interno ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
-ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
+ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 
 --######ESQUEMA configuración ######
