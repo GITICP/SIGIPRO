@@ -7,6 +7,7 @@ package com.icp.sigipro.servlets.configuracion.seccion;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -19,7 +20,15 @@ import javax.servlet.http.HttpServletResponse;
  * @author Walter
  */
 @WebServlet(name = "EditarSeccion", urlPatterns = {"/Configuracion/Secciones/EditarSeccion"})
-public class EditarSeccion extends HttpServlet {
+public class EditarSeccion extends SIGIPROServlet {
+  
+  private final int permiso = 9;
+  
+  @Override
+  protected int getPermiso()
+  {
+    return permiso;
+  }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
