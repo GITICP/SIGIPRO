@@ -14,3 +14,6 @@
     font-size: 13px;
 }
 
+.input-group{
+  display: block !important;
+}

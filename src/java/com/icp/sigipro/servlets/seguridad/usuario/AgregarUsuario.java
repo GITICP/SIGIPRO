@@ -28,10 +28,11 @@ import javax.servlet.http.HttpSession;
  * @author Boga
  */
 @WebServlet(name = "AgregarUsuario", urlPatterns = {"/Seguridad/Usuarios/Agregar"})
-public class AgregarUsuario extends SIGIPROServlet {
-  
+public class AgregarUsuario extends SIGIPROServlet
+{
+
   private final int permiso = 2;
-  
+
   @Override
   protected int getPermiso()
   {
@@ -48,7 +49,8 @@ public class AgregarUsuario extends SIGIPROServlet {
    * @throws IOException if an I/O error occurs
    */
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException
+  {
 
     response.setContentType("text/html;charset=UTF-8");
     try (PrintWriter out = response.getWriter()) {
@@ -62,11 +64,11 @@ public class AgregarUsuario extends SIGIPROServlet {
       List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
       List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
       List<Seccion> secciones = sec.obtenerSecciones();
-      
+
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("rolesRestantes", rolesRestantes);
-      request.setAttribute("secciones",secciones);
+      request.setAttribute("secciones", secciones);
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Usuarios/Agregar.jsp").forward(request, response);
 
@@ -84,7 +86,8 @@ public class AgregarUsuario extends SIGIPROServlet {
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException
+  {
     processRequest(request, response);
   }
 
@@ -98,7 +101,8 @@ public class AgregarUsuario extends SIGIPROServlet {
    */
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException
+  {
 
     response.setContentType("text/html;charset=UTF-8");
 
@@ -125,85 +129,73 @@ public class AgregarUsuario extends SIGIPROServlet {
 
       UsuarioDAO u = new UsuarioDAO();
 
-      boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-              Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion);
-      
-      
+      boolean correo_activo = u.validarCorreo(correoElectronico);
+      if (correo_activo) {
+        boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
+                                                     Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion);
+        if (insercionExitosa) {
+          int id_usuario = u.obtenerIDUsuario(nombreUsuario);
 
-      if (insercionExitosa) {
-
-        int id_usuario = u.obtenerIDUsuario(nombreUsuario);
-        
-        String rolesUsuario = request.getParameter("listaRolesUsuario");
-        RolUsuarioDAO ru = new RolUsuarioDAO();
-        List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
-        if (roles != null) {
-          boolean f = true;
-          for (RolUsuario i : roles) {
-            boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
-            if (!e) {
-              f = false;
-              break;
+          String rolesUsuario = request.getParameter("listaRolesUsuario");
+          RolUsuarioDAO ru = new RolUsuarioDAO();
+          List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
+          if (roles != null) {
+            boolean f = true;
+            for (RolUsuario i : roles) {
+              boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
+              if (!e) {
+                f = false;
+                break;
+              }
+            }
+            if (f) {
+              request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
+                                              + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                              + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                              + "Usuario ingresado correctamente."
+                                              + "</div>");
+            }
+            else {
+              request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
+                                              + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                              + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                              + "El Usuario fue ingresado, pero sin roles."
+                                              + "</div>");
             }
           }
-          if (f) {
-            request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
-                    + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                    + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                    + "Usuario ingresado correctamente."
-                    + "</div>");
-          } else {
+          else {
             request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                    + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                    + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                    + "El Usuario fue ingresado, pero sin roles."
-                    + "</div>");
+                                            + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                            + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                            + "El Usuario fue ingresado, pero sin roles."
+                                            + "</div>");
           }
-        } else {
-          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                  + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                  + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                  + "El Usuario fue ingresado, pero sin roles."
-                  + "</div>");
         }
       }
-      boolean correo_activo = u.validarCorreo(correoElectronico);
-      if (correo_activo){
-          request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                + "El correo ingresado ya esta ligado a un Usuario."
-                + "</div>");
-      }
-      
-      
-      
       else {
         request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                + "Usuario no pudo ser ingresado."
-                + "</div>");
+                                        + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                                        + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                                        + "El correo ingresado ya está ligado a un Usuario."
+                                        + "</div>");
       }
       request.getRequestDispatcher("/Seguridad/Usuarios/").forward(request, response);
-
     }
-      finally {
+    finally {
       out.close();
     }
   }
-  }
-
-
-  /**
-   * Returns a short description of the servlet.
-   *
-   * @return a String containing servlet description
-   */
-  /*@Override
-  public String getServletInfo() {
-    return "Short description";
-  }// </editor-fold>
-
 }
-*/
+
+/**
+ * Returns a short description of the servlet.
+ *
+ * @return a String containing servlet description
+ */
+/*@Override
+ public String getServletInfo() {
+ return "Short description";
+ }// </editor-fold>
+
+ }
+ */

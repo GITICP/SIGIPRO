@@ -17,19 +17,20 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Boga
  */
-public class AccesoJSP implements Filter
+public class AutenticacionUsuario implements Filter
 {
   
   private static final boolean debug = true;
 
   private FilterConfig filterConfig = null;
   
-  public AccesoJSP()
+  public AutenticacionUsuario()
   {
   }  
   
@@ -37,16 +38,15 @@ public class AccesoJSP implements Filter
           throws IOException, ServletException
   {
     if (debug) {
-      log("AccesoJSP:DoBeforeProcessing");
+      log("AutenticacionUsuario:DoBeforeProcessing");
     }
-    
   }  
   
   private void doAfterProcessing(ServletRequest request, ServletResponse response)
           throws IOException, ServletException
   {
     if (debug) {
-      log("AccesoJSP:DoAfterProcessing");
+      log("AutenticacionUsuario:DoAfterProcessing");
     }
   }
   
@@ -56,15 +56,15 @@ public class AccesoJSP implements Filter
   {
     
     if (debug) {
-      log("AccesoJSP:doFilter()");
+      log("AutenticacionUsuario:doFilter()");
     }
-    HttpServletRequest servletRequest = (HttpServletRequest)request;
     
-    String url = ((HttpServletRequest)request).getRequestURL().toString();
+    HttpSession sesion = ((HttpServletRequest)request).getSession();
     
-    if (url.endsWith(".jsp")){
-      HttpServletResponse httpResponse = (HttpServletResponse) response;
-      request.getRequestDispatcher("/").forward(request, response);
+    String usuario = (String)sesion.getAttribute("usuario");
+    
+    if (usuario == null || usuario.isEmpty()){
+      request.getRequestDispatcher("/Cuenta/IniciarSesion").forward(request, response);
     }
     
     Throwable problem = null;
@@ -72,17 +72,12 @@ public class AccesoJSP implements Filter
       chain.doFilter(request, response);
     }
     catch (Throwable t) {
-	    // If an exception is thrown somewhere down the filter chain,
-      // we still want to execute our after processing, and then
-      // rethrow the problem after that.
       problem = t;
       t.printStackTrace();
     }
     
     doAfterProcessing(request, response);
 
-	// If there was a problem, we want to rethrow it if it is
-    // a known type, otherwise log it.
     if (problem != null) {
       if (problem instanceof ServletException) {
         throw (ServletException) problem;
@@ -94,54 +89,37 @@ public class AccesoJSP implements Filter
     }
   }
 
-  /**
-   * Return the filter configuration object for this filter.
-   */
   public FilterConfig getFilterConfig()
   {
     return (this.filterConfig);
   }
 
-  /**
-   * Set the filter configuration object for this filter.
-   *
-   * @param filterConfig The filter configuration object
-   */
   public void setFilterConfig(FilterConfig filterConfig)
   {
     this.filterConfig = filterConfig;
   }
 
-  /**
-   * Destroy method for this filter
-   */
   public void destroy()
   {    
   }
 
-  /**
-   * Init method for this filter
-   */
   public void init(FilterConfig filterConfig)
   {    
     this.filterConfig = filterConfig;
     if (filterConfig != null) {
       if (debug) {        
-        log("AccesoJSP:Initializing filter");
+        log("AutenticacionUsuario:Initializing filter");
       }
     }
   }
 
-  /**
-   * Return a String representation of this object.
-   */
   @Override
   public String toString()
   {
     if (filterConfig == null) {
-      return ("AccesoJSP()");
+      return ("AutenticacionUsuario()");
     }
-    StringBuffer sb = new StringBuffer("AccesoJSP(");
+    StringBuffer sb = new StringBuffer("AutenticacionUsuario(");
     sb.append(filterConfig);
     sb.append(")");
     return (sb.toString());

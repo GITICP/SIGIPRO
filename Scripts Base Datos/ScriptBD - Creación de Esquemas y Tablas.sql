@@ -98,15 +98,15 @@ CREATE TABLE bodega.activos_fijos (
 	ubicacion character varying(45) NOT NULL
  );
 
-CREATE TABLE bodega.catalogos_internos(
-	id_producto_int serial NOT NULL,
+CREATE TABLE bodega.catalogo_interno(
+	id_producto serial NOT NULL,
+        nombre character varying(45) NOT NULL,
 	codigo_icp character varying(45) NOT NULL,
-	id_tipo integer NOT NULL,
 	stock_minimo integer NOT NULL,
 	stock_maximo integer NOT NULL,
-	seccion character varying(45) NOT NULL,
 	ubicacion character varying(45),
-	presentacion character varying(45) NOT NULL
+	presentacion character varying(45) NOT NULL,
+        descripcion character varying(500)
  );
 
 CREATE TABLE bodega.catalogos_externos(
@@ -118,15 +118,15 @@ CREATE TABLE bodega.catalogos_externos(
  );
 
 
-CREATE TABLE bodega.catalogos_externos_por_catalogos_internos ( 
+CREATE TABLE bodega.catalogos_externos_por_catalogo_interno ( 
 	id_producto_ext integer,
-	id_producto_int integer
+	id_producto integer
  );
 
 
 CREATE TABLE bodega.ingresos ( 
 	id_ingreso serial NOT NULL,
-	id_producto_int integer,
+	id_producto integer,
      	fecha_ingreso date NOT NULL,
 	cantidad integer NOT NULL,
 	fecha_vencimiento date NOT NULL,
@@ -136,13 +136,13 @@ CREATE TABLE bodega.ingresos (
 
 CREATE TABLE bodega.inventarios ( 
 	id_inventario serial NOT NULL,
-	id_producto_int integer,
+	id_producto integer,
      	stock_actual integer NOT NULL
  ); 
 
 CREATE TABLE bodega.reactivos ( 
 	id_reactivo serial NOT NULL,
-	id_producto_int integer,
+	id_producto integer,
      	numero_cas character varying(45),
 	formula_quimica character varying(45),
 	familia character varying(45),
@@ -161,7 +161,7 @@ CREATE TABLE bodega.solicitudes (
 CREATE TABLE bodega.detalles_solicitudes ( 
 	id_detalle_solicitud serial NOT NULL,
 	id_solicitud integer,
-	id_producto_int integer,
+	id_producto integer,
 	estado character varying(45) NOT NULL,
      	cantidad integer NOT NULL,
 	fecha_entrega date NOT NULL
@@ -176,15 +176,15 @@ CREATE TABLE bodega.sub_bodegas (
 CREATE TABLE bodega.inventarios_bodegas ( 
 	id_inventario_bodega serial NOT NULL,
 	id_sub_bodega integer,
-	id_producto_int integer,
+	id_producto integer,
      	cantidad integer NOT NULL
  ); 
 
  --Llaves primarias esquema bodega
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT pk_activos_fijos PRIMARY KEY (id_activo_fijo);
-ALTER TABLE ONLY bodega.catalogos_internos ADD CONSTRAINT pk_catalogos_internos PRIMARY KEY (id_producto_int);
+ALTER TABLE ONLY bodega.catalogo_interno ADD CONSTRAINT pk_catalogo_interno PRIMARY KEY (id_producto);
 ALTER TABLE ONLY bodega.catalogos_externos ADD CONSTRAINT pk_catalogos_externos PRIMARY KEY (id_producto_ext);
-ALTER TABLE ONLY bodega.catalogos_externos_por_catalogos_internos ADD CONSTRAINT pk_catalogos_externos_por_catalogos_internos PRIMARY KEY ( id_producto_ext,id_producto_int);
+ALTER TABLE ONLY bodega.catalogos_externos_por_catalogo_interno ADD CONSTRAINT pk_catalogos_externos_por_catalogo_interno PRIMARY KEY ( id_producto_ext,id_producto);
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT pk_ingresos PRIMARY KEY (id_ingreso);
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT pk_inventarios PRIMARY KEY (id_inventario);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_reactivo);
@@ -194,17 +194,17 @@ ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (i
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
 	
 --Indices unicos esquema bodega
-CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogos_internos USING btree (codigo_icp);
+CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogo_interno USING btree (codigo_icp);
 
 --Llaves foraneas esquema seguridad
-ALTER TABLE ONLY bodega.catalogos_externos_por_catalogos_internos ADD CONSTRAINT fk_id_producto_ext FOREIGN KEY (id_producto_ext) REFERENCES bodega.catalogos_externos(id_producto_ext);
-ALTER TABLE ONLY bodega.catalogos_externos_por_catalogos_internos ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
+ALTER TABLE ONLY bodega.catalogos_externos_por_catalogo_interno ADD CONSTRAINT fk_id_producto_ext FOREIGN KEY (id_producto_ext) REFERENCES bodega.catalogos_externos(id_producto_ext);
+ALTER TABLE ONLY bodega.catalogos_externos_por_catalogo_interno ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
-ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto_int FOREIGN KEY (id_producto_int) REFERENCES bodega.catalogos_internos(id_producto_int);
+ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 
 --######ESQUEMA configuración ######
@@ -251,11 +251,15 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, 'Elim
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, 'Agregar Sección', 'Permite activar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, 'Modificar Sección', 'Permite modificar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, 'Eliminar Sección', 'Permite eliminar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, 'Agregar Producto', 'Permite agregar un proudcto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, 'Modificar Producto', 'Permite modificar un producto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, 'Eliminar Producto', 'Permite eliminar un producto');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
 -- primero (para que obtengan los primeros id's y además deben llevar como id_padre el 0 y tener un redirect.
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodega', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodegas', '/Bodegas/CatalogoInterno');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (101, 100, 'Catálogo Interno', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);
@@ -278,6 +282,9 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (8, 901);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (9, 901);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (10, 901);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (11, 101);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (12, 101);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (13, 101);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');

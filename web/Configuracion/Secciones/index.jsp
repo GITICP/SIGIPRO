@@ -15,26 +15,24 @@ Secciones
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%        
-    SeccionDAO s = new SeccionDAO();
+<%
+  SeccionDAO s = new SeccionDAO();
 
-    List<Seccion> secciones = s.obtenerSecciones();
+  List<Seccion> secciones = s.obtenerSecciones();
 
-    if(secciones!=null)
-    {
-        request.setAttribute("listaSecciones", secciones);
-    }
+  if (secciones != null) {
+    request.setAttribute("listaSecciones", secciones);
+  }
 %>
 
 <%
-    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
-    System.out.println(permisos);
-    if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10)))
-    {
-      request.getRequestDispatcher("/").forward(request, response);
-    }
-    
-    UsuarioDAO u = new UsuarioDAO();
+  List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+  System.out.println(permisos);
+  if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10))) {
+    request.getRequestDispatcher("/").forward(request, response);
+  }
+
+  UsuarioDAO u = new UsuarioDAO();
 
   List<Usuario> usuarios = u.obtenerUsuarios();
 
@@ -47,165 +45,191 @@ Secciones
 
 
 <t:plantilla_general title="Configuracion" direccion_contexto="/SIGIPRO">
-    
-    <jsp:attribute name="contenido">
 
-        <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
-        
-        <!-- content-wrapper -->
-        <div class="col-md-12 content-wrapper">
-            <div class="row">
-                <div class="col-md-12 ">
-                    <ul class="breadcrumb">
-                        <li>Configuración</li>
-                        <li class="active">Secciones</li>
-                    </ul>
-                </div>
-                <div class="col-md-8 ">
-                    <div class="top-content">
+  <jsp:attribute name="contenido">
 
-                    </div>
-                </div>
-            </div>
+    <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
-            <!-- main -->
-            <div class="content">
-                <div class="main-content">
-                    
-                    <!-- COLUMN FILTER DATA TABLE -->
-                    <div class="widget widget-table">
-                        <div class="widget-header">
-                            <h3><i class="fa fa-legal"></i> Secciones</h3>
-                            <div class="btn-group widget-header-toolbar">                                 
-                                <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;padding-top: 3px;" href="Agregar">Agregar Sección</a>
-                                <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
-                                <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
-                            </div>
-                        </div>
-                        ${mensaje}
-                        <div class="widget-content">
-                            <table id="datatable-column-filter-secciones" class="table table-sorting table-striped table-hover datatable">
-                                <!-- Columnas -->
-                                <thead> 
-                                    <tr>
-                                        <th>Selección</th>
-                                        <th>Nombre Sección</th>
-                                        <th>Descripción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                    <c:forEach items="${listaSecciones}" var="seccion">
-                                    
-                                        <tr id ="${seccion.getID()}">
-                                            <td>
-                                                <input type="radio" name="controlSeccion" value="${seccion.getID()}">
-                                            </td>
-                                            <td>${seccion.getNombre_seccion()}</td>
-                                            <td>${seccion.getDescripcion()}</td>
-                                        </tr>
-                                        
-                                    </c:forEach>
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- END COLUMN FILTER DATA TABLE -->
-                </div>
-                <!-- END WIDGET TICKET TABLE -->
-            </div>
-            <!-- /main-content -->
+    <!-- content-wrapper -->
+    <div class="col-md-12 content-wrapper">
+      <div class="row">
+        <div class="col-md-12 ">
+          <ul class="breadcrumb">
+            <li>Configuración</li>
+            <li class="active">Secciones</li>
+          </ul>
         </div>
-        <!-- /main -->
-        <div class="widget-content">
-            <div class="modal fade" id="ModalEditarSeccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Editar Sección</h4>
-                        </div>
-                        <div class="modal-body">
+        <div class="col-md-8 ">
+          <div class="top-content">
 
-                        <form class="form-horizontal" role="form" action="EditarSeccion" method="post">
-                            <input id="editarIdSeccion" hidden="true" name="editarIdSeccion">
-                            <label for="editarNombre" class="control-label">Nombre de la Sección</label>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <input id="editarNombre" type="text" maxlength="45" placeholder="Nombre de la Sección" class="form-control" name="editarNombre" required
-                                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')" > 
-                                    </div>
-                                </div>
-                            </div>
-                            <label for="editarDescripcion" class="control-label">Descripción</label>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <input id="editarDescripcion" type="text" maxlength="500" placeholder="Drescripción de la Sección" class="form-control" name="editarDescripcion" required
-                                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                                               oninput="setCustomValidity('')" > 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Editar Sección</button>
-                                </div>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>                            
-        <div class="widget-content">
-            <div class="modal fade" id="modalEliminarSeccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Confirmación</h4>
-                        </div>
-                        <div class="modal-body">
-                       <form class="form-horizontal" role="form" action="EliminarSeccion" method="post">
-                            <h5 class="title">¿Está seguro que desea eliminar la sección?</h5>
-                            <br><br>
-                            <input hidden="false" id="controlIDSeccion" name="controlIDSeccion">
-                            <div class="form-group">
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar</button>
-                                </div>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-        <div class="widget-content">
-            <div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Error</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h5>Debe seleccionar una sección.</h5>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
-                        </div>
-                    </div>
+      </div>
+
+      <!-- main -->
+      <div class="content">
+        <div class="main-content">
+
+          <!-- COLUMN FILTER DATA TABLE -->
+          <div class="widget widget-table">
+            <div class="widget-header">
+              <h3><i class="fa fa-legal"></i> Secciones</h3>
+              <div class="btn-group widget-header-toolbar">      
+                <c:set var="contienePermisoAgregar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 8}">
+                    <c:set var="contienePermisoAgregar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoAgregar}">
+                  <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;padding-top: 3px;" href="Agregar">Agregar Sección</a>
+                </c:if>
+                
+                <c:set var="contienePermisoEliminar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 10}">
+                    <c:set var="contienePermisoEliminar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoEliminar}">
+                  <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
+                </c:if>
+                  
+                <c:set var="contienePermisoEditar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 9}">
+                    <c:set var="contienePermisoEditar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoEditar}">
+                  <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
+                </c:if>
                 </div>
+              </div>
+            ${mensaje}
+            <div class="widget-content">
+              <table id="datatable-column-filter-secciones" class="table table-sorting table-striped table-hover datatable">
+                <!-- Columnas -->
+                <thead> 
+                  <tr>
+                    <th>Selección</th>
+                    <th>Nombre Sección</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <c:forEach items="${listaSecciones}" var="seccion">
+
+                    <tr id ="${seccion.getID()}">
+                      <td>
+                        <input type="radio" name="controlSeccion" value="${seccion.getID()}">
+                      </td>
+                      <td>${seccion.getNombre_seccion()}</td>
+                      <td>${seccion.getDescripcion()}</td>
+                    </tr>
+
+                  </c:forEach>
+
+                </tbody>
+              </table>
             </div>
-        </div>        
-        
-    </jsp:attribute>
+          </div>
+          <!-- END COLUMN FILTER DATA TABLE -->
+        </div>
+        <!-- END WIDGET TICKET TABLE -->
+      </div>
+      <!-- /main-content -->
+    </div>
+    <!-- /main -->
+    <div class="widget-content">
+      <div class="modal fade" id="ModalEditarSeccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title" id="myModalLabel">Editar Sección</h4>
+            </div>
+            <div class="modal-body">
+
+              <form class="form-horizontal" role="form" action="EditarSeccion" method="post">
+                <input id="editarIdSeccion" hidden="true" name="editarIdSeccion">
+                <label for="editarNombre" class="control-label">Nombre de la Sección</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                      <input id="editarNombre" type="text" maxlength="45" placeholder="Nombre de la Sección" class="form-control" name="editarNombre" required
+                             oninvalid="setCustomValidity('Este campo es requerido ')"
+                             oninput="setCustomValidity('')" > 
+                    </div>
+                  </div>
+                </div>
+                <label for="editarDescripcion" class="control-label">Descripción</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                      <input id="editarDescripcion" type="text" maxlength="500" placeholder="Drescripción de la Sección" class="form-control" name="editarDescripcion" required
+                             oninvalid="setCustomValidity('Este campo es requerido ')"
+                             oninput="setCustomValidity('')" > 
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Editar Sección</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>                            
+    <div class="widget-content">
+      <div class="modal fade" id="modalEliminarSeccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title" id="myModalLabel">Confirmación</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal" role="form" action="EliminarSeccion" method="post">
+                <h5 class="title">¿Está seguro que desea eliminar la sección?</h5>
+                <br><br>
+                <input hidden="false" id="controlIDSeccion" name="controlIDSeccion">
+                <div class="form-group">
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="widget-content">
+      <div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title" id="myModalLabel">Error</h4>
+            </div>
+            <div class="modal-body">
+              <h5>Debe seleccionar una sección.</h5>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>        
+
+  </jsp:attribute>
 
 </t:plantilla_general>
