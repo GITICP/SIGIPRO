@@ -621,10 +621,12 @@ public class UsuarioDAO
         consulta.setString(1, md5(contrasena)); 
         consulta.setString(2, correoElectronico);
         resultado = consulta.executeUpdate();
+        if (resultado == 1){
+          UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
+          u.enviarRecuperacionContrasena(correoElectronico, contrasena); 
+        }
         consulta.close();
         conexion.close();
-        UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
-        u.enviarRecuperacionContrasena(correoElectronico, contrasena); 
       }
       catch(SQLException ex)
       {

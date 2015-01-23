@@ -6,6 +6,7 @@
 package com.icp.sigipro.servlets.cuenta;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -87,25 +88,17 @@ public class RecuperarContrasena extends HttpServlet
       String correoElectronico = request.getParameter("correoElectronico");
       
       UsuarioDAO u = new UsuarioDAO();
+      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
       
       int contrasena = u.recuperarContrasena(correoElectronico);
       
       if (contrasena == 1)
       {
-        
-        request.setAttribute("mensaje","<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
-                                          "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-                                          "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                              "Se ha enviado un correo a la dirección " + correoElectronico + " con su nueva contraseña." +
-                                        "</div>");
+        request.setAttribute("mensaje",helper.mensajeDeExito("Se ha enviado un correo a la dirección " + correoElectronico + " con su nueva contraseña."));
       }
       else
       {
-        request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                                        + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                        + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                        + "El correo " + correoElectronico + " no se encuentra registrado. Por favor inténtelo nuevamente."
-                                        + "</div>");
+        request.setAttribute("mensaje", helper.mensajeDeError("El correo " + correoElectronico + " no se encuentra registrado. Por favor inténtelo nuevamente."));
       }
       request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
     }

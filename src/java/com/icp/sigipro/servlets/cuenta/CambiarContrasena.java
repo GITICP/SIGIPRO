@@ -6,6 +6,7 @@
 package com.icp.sigipro.servlets.cuenta;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -82,6 +83,8 @@ public class CambiarContrasena extends HttpServlet
     PrintWriter out;
     out = response.getWriter();
     request.setCharacterEncoding("UTF-8");
+    
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     try {
       String nombreUsuario = request.getParameter("usuarioCaducado");
       String contrasenna = request.getParameter("contrasenna");
@@ -91,19 +94,11 @@ public class CambiarContrasena extends HttpServlet
 
       if (cambio) 
       {
-        request.setAttribute("mensaje","<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
-                                          "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
-                                          "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                              "Su contraseña ha sido restablecida. Inicie sesión con la nueva contraseña." +
-                                        "</div>");
+        request.setAttribute("mensaje",helper.mensajeDeExito("Su contraseña ha sido restablecida. Inicie sesión con la nueva contraseña."));
         request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
       }
       else {
-        request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                                        + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                        + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                        + "No se pudo restablecer la contraseña."
-                                        + "</div>");
+        request.setAttribute("mensaje", helper.mensajeDeError("No se pudo restablecer la contraseña."));
         request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
       }
       

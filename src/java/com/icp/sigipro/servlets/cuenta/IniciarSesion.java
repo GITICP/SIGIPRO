@@ -8,6 +8,7 @@ package com.icp.sigipro.servlets.cuenta;
 import com.icp.sigipro.seguridad.dao.BarraFuncionalidadDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.BarraFuncionalidad;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -92,6 +93,7 @@ public class IniciarSesion extends HttpServlet
       String contrasenna = request.getParameter("contrasenna");
 
       UsuarioDAO u = new UsuarioDAO();
+      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
       int idUsuario = u.validarInicioSesion(usuario, contrasenna);
 
@@ -127,11 +129,7 @@ public class IniciarSesion extends HttpServlet
         }
       }
       else {
-        request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                                        + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                        + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                        + "Usuario o contraseña incorrecto."
-                                        + "</div>");
+        request.setAttribute("mensaje", helper.mensajeDeError("Usuario o contraseña incorrecto."));
 
         request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
       }

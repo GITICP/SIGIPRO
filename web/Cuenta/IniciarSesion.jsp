@@ -71,11 +71,11 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block btn-"><i class="fa fa-arrow-circle-o-right"></i> Iniciar Sesión</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block btn-" style="background: #3c730d;"><i class="fa fa-arrow-circle-o-right"></i> Iniciar Sesión</button>
           </form>
           <br>
           <div class="links">
-            <button class="btn btn-default btn-sm" onclick="confirmacion()">Recuperar contraseña</button>
+            <button class="btn btn-primary btn-sm" onclick="confirmacion()">Recuperar contraseña</button>
           </div>
         </div>
       </div>

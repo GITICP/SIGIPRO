@@ -25,7 +25,7 @@
           <ul class="breadcrumb">
             <li>Seguridad</li>
             <li>
-                <a href="/SIGIPRO/Seguridad/Roles/">Roles</a>
+              <a href="/SIGIPRO/Seguridad/Roles/">Roles</a>
             </li>
             <li class="active"> Agregar Rol</li>
 
@@ -49,29 +49,35 @@
             ${mensaje}
             <div class="widget-content">
               <form id="formAgregarRol" class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
-                <input id="rolesUsuario" hidden="true" name="listarolesUsuario" value="">
-                <input id="permisosRol" hidden="true" name="listaPermisosRol" value="">
-                <label for="nombreRol" class="control-label">*Nombre del Rol</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                      <input type="text" maxlength="45" placeholder="Nombre del Rol" class="form-control" name="nombreRol" required
-                             oninvalid="setCustomValidity('Este campo es requerido ')"
-                             oninput="setCustomValidity('')" > 
+                <div class="row">
+                  <div class="col-md-6">
+                    <input id="rolesUsuario" hidden="true" name="listarolesUsuario" value="">
+                    <input id="permisosRol" hidden="true" name="listaPermisosRol" value="">
+                    <label for="nombreRol" class="control-label">*Nombre del Rol</label>
+                    <div class="form-group">
+                      <div class="col-sm-12">
+                        <div class="input-group">
+                          <input type="text" maxlength="45" placeholder="Nombre del Rol" class="form-control" name="nombreRol" required
+                                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                                 oninput="setCustomValidity('')" > 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="descripcion" class="control-label">*Descripcion</label>
+                    <div class="form-group">
+                      <div class="col-sm-12">
+                        <div class="input-group">
+                          <input type="text" maxlength="200" placeholder="Descripcion" class="form-control" name="descripcionRol" required
+                                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                                 oninput="setCustomValidity('')">
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <label for="descripcion" class="control-label">*Descripcion</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                      <input type="text" maxlength="200" placeholder="Descripcion" class="form-control" name="descripcionRol" required
-                             oninvalid="setCustomValidity('Este campo es requerido ')"
-                             oninput="setCustomValidity('')">
-                    </div>
-                  </div>
-                </div>
-                
+
                 <!-- Esta parte es la de los usuarios de un rol -->
                 <div class="widget widget-table">
                   <div class="widget-header">
@@ -156,9 +162,9 @@
       </div>
       <!-- /main -->
     </div>
-            
-      <!-- Los modales de Editar Usuarios empiezan acá -->      
-      <t:modal idModal="modalAgregarRolUsuario" titulo="Agregar Usuario">
+
+    <!-- Los modales de Editar Usuarios empiezan acá -->      
+    <t:modal idModal="modalAgregarRolUsuario" titulo="Agregar Usuario">
 
       <jsp:attribute name="form">
 
@@ -181,7 +187,7 @@
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
+              <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -193,7 +199,7 @@
             <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
             <div class="form-group">
               <div class="col-sm-12">
-                <div class="input-group">
+                <div class="input-group" style="display:table;">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                   <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
                          oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -239,7 +245,7 @@
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
+              <div class="input-group"  style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -250,7 +256,7 @@
           <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
+              <div class="input-group"  style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -269,11 +275,11 @@
       </jsp:attribute>
 
     </t:modal>
-    
+
     <!-- Los modales de Editar Usuarios terminan acá -->
-   
+
     <!-- Los modales de Permisos -->      
-      <t:modal idModal="modalAgregarPermisoRol" titulo="Agregar Permiso">
+    <t:modal idModal="modalAgregarPermisoRol" titulo="Agregar Permiso">
 
       <jsp:attribute name="form">
 
@@ -319,7 +325,7 @@
 
     </t:modal>
     <!-- Los modales de Editar Roles terminan acá -->
-        
+
   </jsp:attribute>
 
 </t:plantilla_general>
