@@ -76,7 +76,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>              SE ELIMINA EL ICONO    --%>
-                          <input type="email" maxlength="45" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico" required
+                          <input type="email" maxlength="45" placeholder="Ejemplo: usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca un correo electrónico válido')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -87,7 +87,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>              SE ELIMINA EL ICONO    --%>
-                          <input type="text" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control" name="cedula" required
+                          <input type="text" placeholder="Ejemplo: 1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control" name="cedula" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida ')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -113,7 +113,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>              SE ELIMINA EL ICONO    --%>
-                          <input type="text" maxlength="200" placeholder="Jefe" class="form-control" name="puesto" required
+                          <input type="text" maxlength="200" placeholder="Ejemplo: Jefe" class="form-control" name="puesto" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
                         </div>

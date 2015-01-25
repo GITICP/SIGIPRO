@@ -65,11 +65,11 @@
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="descripcion" class="control-label">*Descripcion</label>
+                    <label for="descripcion" class="control-label">*Descripción</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input type="text" maxlength="200" placeholder="Descripcion" class="form-control" name="descripcionRol" required
+                          <input type="text" maxlength="200" placeholder="Descripción" class="form-control" name="descripcionRol" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
                         </div>

@@ -25,7 +25,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="73b" class="form-control" name="codigoICP" value="${producto.getCodigo_icp()}"
+              <input type="text" maxlength="45" placeholder="Ejemplo: 73b" class="form-control" name="codigoICP" value="${producto.getCodigo_icp()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 
@@ -36,7 +36,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="50" class="form-control" name="stockMinimo" value="${producto.getStock_minimo()}"
+              <input type="text" maxlength="45" placeholder="0" class="form-control" name="stockMinimo" value="${producto.getStock_minimo()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 
@@ -47,7 +47,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="50" class="form-control" name="stockMaximo" value="${producto.getStock_maximo()}"
+              <input type="text" maxlength="45" placeholder="0" class="form-control" name="stockMaximo" value="${producto.getStock_maximo()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 
@@ -60,7 +60,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="F-21" class="form-control" name="ubicacion" value="${producto.getUbicacion()}"
+              <input type="text" maxlength="45" placeholder="Ejemplo: F-21" class="form-control" name="ubicacion" value="${producto.getUbicacion()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 
@@ -71,7 +71,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="Paquete 25 unidades" class="form-control" name="presentacion" value="${producto.getPresentacion()}"
+              <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control" name="presentacion" value="${producto.getPresentacion()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 

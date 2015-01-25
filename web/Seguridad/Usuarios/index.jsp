@@ -84,8 +84,8 @@ Usuarios
                     <th>Cédula</th>
                     <th>Sección</th>
                     <th>Puesto</th>
-                    <th>Fecha Activacion</th>
-                    <th>Fecha Desactivacion</th>
+                    <th>Fecha Activación</th>
+                    <th>Fecha Desactivación</th>
                     <th>Activo</th>
                   </tr>
                 </thead>
