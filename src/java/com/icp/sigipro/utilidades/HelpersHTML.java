@@ -17,8 +17,6 @@ public class HelpersHTML
   private HelpersHTML()
   {
   }
-
-  ;
   
   public static HelpersHTML getSingletonHelpersHTML()
   {
@@ -40,6 +38,15 @@ public class HelpersHTML
   public String mensajeDeExito(String mensaje)
   {
     return String.format("<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
+                         + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
+                         + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+                         + "%s"
+                         + "</div>", mensaje);
+  }
+  
+  public String mensajeDeAdvertencia(String mensaje)
+  {
+    return String.format("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\">"
                          + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
                          + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
                          + "%s"
