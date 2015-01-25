@@ -43,7 +43,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-group"></i> ${rol.getNombreRol()} </h3>
+              <h3><i class="fa fa-legal"></i> ${rol.getNombreRol()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#ModalEliminarRol">Eliminar</a>                                      
               </div>
@@ -68,7 +68,7 @@
                         </div>
                       </div>
                     </div>
-                    <label for="descripcion" class="control-label">*Descripcion</label>
+                    <label for="descripcion" class="control-label">*Descripción</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
@@ -91,7 +91,7 @@
                     <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
                       <thead>
                         <tr>
-                          <th>Nombre de Usuario</th>
+                          <th>Nombre Usuario</th>
                           <th>Fecha Activación</th>
                           <th>Fecha Desactivación</th>
                           <th>Editar/Eliminar</th>
@@ -116,7 +116,7 @@
                 <!-- Esta parte es la de los permisos de un rol -->
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-group"></i> Permisos</h3>
+                    <h3><i class="fa fa-check"></i> Permisos</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarPermisoRol" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
                     </div>

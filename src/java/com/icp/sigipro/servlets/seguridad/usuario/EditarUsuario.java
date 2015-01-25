@@ -14,6 +14,7 @@ import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -30,10 +31,11 @@ import javax.servlet.http.HttpSession;
  * @author Boga
  */
 @WebServlet(name = "EditarUsuario", urlPatterns = {"/Seguridad/Usuarios/Editar"})
-public class EditarUsuario extends SIGIPROServlet {
-  
+public class EditarUsuario extends SIGIPROServlet
+{
+
   private final int permiso = 3;
-  
+
   @Override
   protected int getPermiso()
   {
@@ -41,61 +43,59 @@ public class EditarUsuario extends SIGIPROServlet {
   }
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException
+  {
 
     response.setContentType("text/html;charset=UTF-8");
     HttpSession sesion = request.getSession();
-    if(validarPermiso((List<Integer>)sesion.getAttribute("listaPermisos")))
-      {
-        try (PrintWriter out = response.getWriter()) {
+    if (validarPermiso((List<Integer>) sesion.getAttribute("listaPermisos"))) {
+      try (PrintWriter out = response.getWriter()) {
         String id;
         id = request.getParameter("id");
         int idUsuario;
         idUsuario = Integer.parseInt(id);
 
-      UsuarioDAO u = new UsuarioDAO();
-      SeccionDAO sec = new SeccionDAO();
-       
-      Usuario usuario = u.obtenerUsuario(idUsuario);
-      List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
-      List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
-      List<Seccion> secciones = sec.obtenerSecciones();
+        UsuarioDAO u = new UsuarioDAO();
+        SeccionDAO sec = new SeccionDAO();
 
-      request.setAttribute("usuario", usuario);
-      request.setAttribute("rolesUsuario", rolesUsuario);
-      request.setAttribute("rolesRestantes", rolesRestantes);
-      request.setAttribute("secciones",secciones);
+        Usuario usuario = u.obtenerUsuario(idUsuario);
+        List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
+        List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
+        List<Seccion> secciones = sec.obtenerSecciones();
+
+        request.setAttribute("usuario", usuario);
+        request.setAttribute("rolesUsuario", rolesUsuario);
+        request.setAttribute("rolesRestantes", rolesRestantes);
+        request.setAttribute("secciones", secciones);
 
         ServletContext context = this.getServletContext();
         context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
-     }
+      }
     }
-    else
-    {
+    else {
       request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
-    
+
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException
+  {
     HttpSession sesion = request.getSession();
-    if(validarPermiso((List<Integer>)sesion.getAttribute("listaPermisos")))
-    {
+    if (validarPermiso((List<Integer>) sesion.getAttribute("listaPermisos"))) {
       processRequest(request, response);
     }
-    else
-    {
+    else {
       request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
   }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
-    try 
-    {
+          throws ServletException, IOException
+  {
+    try {
       request.setCharacterEncoding("UTF-8");
       int idUsuario;
 
@@ -118,45 +118,39 @@ public class EditarUsuario extends SIGIPROServlet {
       String rolesUsuario = request.getParameter("listaRolesUsuario");
       RolUsuarioDAO ru = new RolUsuarioDAO();
       List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, idUsuario);
-      
-      boolean resultado;
-      if(roles != null)
-      {
-        UsuarioDAO u = new UsuarioDAO();
-         resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion, roles);
-      }
-      else
-      {
-        resultado = false;
-      }
 
-      if (resultado) 
-      {
-        request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
-                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                + "Usuario editado correctamente."
-                + "</div>");
-      }
-      else 
-      {
-        request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                + "Usuario no pudo ser editado."
-                + "</div>");
-      }
+      UsuarioDAO u = new UsuarioDAO();
+      boolean correo_inactivo = u.validarCorreo(correo, idUsuario);
       
+      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+      
+      if (correo_inactivo) {
+        boolean resultado;
+        if (roles != null) {
+          resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion, roles);
+        }
+        else {
+          resultado = false;
+        }
+        if (resultado) {
+          request.setAttribute("mensaje", helper.mensajeDeExito("Usuario editado correctamente."));
+        }
+        else {
+          request.setAttribute("mensaje", helper.mensajeDeError("Usuario no pudo ser editado."));
+        }
+      }else{
+        request.setAttribute("mensaje", helper.mensajeDeError("El correo ingresado ya está ligado a un usuario."));
+      }
       request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id=" + String.valueOf(idUsuario)).forward(request, response);
+
     }
-    catch (Exception ex) 
-    {
+    catch (Exception ex) {
       ex.printStackTrace();
     }
   }
 
   @Override
-  public String getServletInfo() 
+  public String getServletInfo()
   {
     return "Servlet de edición";
   }

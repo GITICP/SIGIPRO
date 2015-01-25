@@ -62,7 +62,7 @@
                         <div class="input-group">
                           <input id="nombreUsuario"   type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')" > 
+                                 oninput="setCustomValidity('')" disabled> 
                         </div>
                       </div>
                     </div>
@@ -153,7 +153,7 @@
                 </div>
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-group"></i> Roles</h3>
+                    <h3><i class="fa fa-legal"></i> Roles</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
                     </div>

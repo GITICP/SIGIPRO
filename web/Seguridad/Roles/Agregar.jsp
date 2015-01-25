@@ -44,7 +44,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-group"></i> Agregar Nuevo Rol </h3>
+              <h3><i class="fa fa-legal"></i> Agregar Nuevo Rol </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -116,7 +116,7 @@
                 <!-- Esta parte es la de los permisos de un rol -->
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-group"></i> Permisos</h3>
+                    <h3><i class="fa fa-check"></i> Permisos</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarPermisoRol" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
                     </div>
