@@ -86,23 +86,20 @@ public class CambiarContrasena extends HttpServlet
     
     HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     try {
-      String nombreUsuario = request.getParameter("usuarioCaducado");
+      String nombreUsuario = request.getParameter("usuario");
       String contrasenna = request.getParameter("contrasenna");
 
       UsuarioDAO u = new UsuarioDAO();
       boolean cambio = u.cambiarContrasena(nombreUsuario, contrasenna);
 
-      if (cambio) 
-      {
-        request.setAttribute("mensaje",helper.mensajeDeExito("Su contraseña ha sido restablecida. Inicie sesión con la nueva contraseña."));
-        request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
+      if (cambio) {
+        request.setAttribute("mensaje",helper.mensajeDeExito("Su contraseña ha sido cambiada de manera satisfactoria."));
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
       }
       else {
-        request.setAttribute("mensaje", helper.mensajeDeError("No se pudo restablecer la contraseña."));
-        request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
+        request.setAttribute("mensaje", helper.mensajeDeError("No se pudo camboiar la contraseña."));
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
       }
-      
-      //request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
     }
     catch(Exception ex)
     {

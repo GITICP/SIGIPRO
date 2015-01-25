@@ -96,7 +96,6 @@
     <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
     
 
-    <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
     
     <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
@@ -109,6 +108,8 @@
               });
       $("#fechaActivacion").datepicker({ startDate: 0});
     </script>
+    
+    <script>${script}</script>
 
   </body>
 </html>

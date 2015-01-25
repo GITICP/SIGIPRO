@@ -32,7 +32,7 @@ function confirmacion(){
 
 function contrasenaCaducada(usuario){
   bootbox.dialog({
-    title: "Reestablecer contras&ntilde;a",
+    title: "Reestablecer contrase&ntilde;a",
     message: "<form id='reestablecerContrasena' action='ReestablecerContrasena' method='post'>\
                 <div class='form-group'>\
                   <div class='col-sm-1'></div>\
