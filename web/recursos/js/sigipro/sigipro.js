@@ -58,7 +58,8 @@ $("input[name='fechaActivacion']").change(function () {
   document.getElementById("fechaDesactivacion").value = document.getElementById("fechaActivacion").value;
   var fechaact = document.getElementById("fechaActivacion").value.split("/");
   var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
-  var fechahoy = new Date();
+  var hoy = new Date();
+  var fechahoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
   if (DateAct < fechahoy)
   {
     $('#modalErrorFechaDesactivacion').modal('show');
