@@ -1,4 +1,4 @@
-﻿--########ESQUEMA DE SEGURIDAD########
+--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -275,6 +275,8 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (900, 0,'Configuración', '/Configuracion/Secciones');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (901, 900,'Secciones', '/Configuracion/Secciones');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (902, 900,'Correo', '/Configuracion/Correo');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1000, 0,'Compras', '/Compras/Proveedores');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1001, 900,'Proveedores', '/Compras/Proveedores');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);

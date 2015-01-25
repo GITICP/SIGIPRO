@@ -19,7 +19,7 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-10 content-wrapper">
+    <div class="col-md-12 content-wrapper">
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-group"></i> ${proveedor.getNombre_proveedor()} </h3>
+              <h3><i class="fa fa-truck"></i> ${proveedor.getNombre_proveedor()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;"  href="/SIGIPRO/Compras/Proveedores?accion=eliminar&id_proveedor=${proveedor.getId_proveedor()}">Eliminar</a>                                    
                 <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Compras/Proveedores?accion=editar&id_proveedor=${proveedor.getId_proveedor()}">Editar</a>

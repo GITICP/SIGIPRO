@@ -25,7 +25,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" maxlength="45" placeholder="proveedor@ejemplo.com" class="form-control" name="correo" value="${proveedor.getCorreo()}"
+          <input type="email" maxlength="45" placeholder="proveedor@ejemplo.com" class="form-control" name="correo" value="${proveedor.getCorreo()}"
                  required
                  oninvalid="setCustomValidity('Este campo es requerido ')"
                  oninput="setCustomValidity('')" > 
@@ -34,7 +34,7 @@
     </div>
   </div>
   <div class='col-md-6'>
-    <label for="telefono1" class="control-label">Teléfono 1</label>
+    <label for="telefono1" class="control-label">*Teléfono 1</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
