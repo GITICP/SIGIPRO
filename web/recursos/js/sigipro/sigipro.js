@@ -58,7 +58,8 @@ $("input[name='fechaActivacion']").change(function () {
   document.getElementById("fechaDesactivacion").value = document.getElementById("fechaActivacion").value;
   var fechaact = document.getElementById("fechaActivacion").value.split("/");
   var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
-  var fechahoy = new Date();
+  var hoy = new Date();
+  var fechahoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
   if (DateAct < fechahoy)
   {
     $('#modalErrorFechaDesactivacion').modal('show');
@@ -240,20 +241,21 @@ $("input[name='editarFechaActivacion']").change(function () {
   document.getElementById("agregarFechaDesactivacion").value = document.getElementById("agregarFechaActivacion").value;
   var fechaact = document.getElementById("agregarFechaActivacion").value.split("/");
   var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
-  var fechahoy = new Date();
+  var hoy = new Date();
+  var fechahoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
   if (DateAct < fechahoy)
   {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("agregarFechaActivacion").value = "";
   }
-
 });
 
 $("input[name='editarFechaActivacion']").change(function () {
-  document.getElementById("editarFechaDesactivacion").value = document.getElementById("editarFechaActivacion").value;
-  var fechaact = document.getElementById("editarFechaActivacion").value.split("/");
-  var DateAct = new Date(fechaact[2], parseInt(fechaact[1]) - 1, fechaact[0]);
-  var fechahoy = new Date();
+  document.getElementById("agregarFechaDesactivacion").value = document.getElementById("agregarFechaActivacion").value;
+  var fechaact = document.getElementById("agregarFechaActivacion").value.split("/");
+  var DateAct = new Date(fechaact[2], parseInt(fechaact[1]), fechaact[0]);
+  var hoy = new Date();
+  var fechahoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
   if (DateAct < fechahoy)
   {
     $('#modalErrorFechaDesactivacion').modal('show');

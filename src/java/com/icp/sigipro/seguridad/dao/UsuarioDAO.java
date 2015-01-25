@@ -420,10 +420,7 @@ public class UsuarioDAO
     java.util.Calendar calendario = java.util.Calendar.getInstance();
     java.util.Date hoy = calendario.getTime();
     Date hoySQL = new Date(hoy.getTime());
-    boolean resultado
-            = ((fechaActivacion.before(hoySQL)
-                && fechaDesactivacion.after(hoySQL))
-               || fechaActivacion.equals(fechaDesactivacion));
+    boolean resultado = ((fechaActivacion.before(hoySQL) && fechaDesactivacion.after(hoySQL)) || (fechaActivacion.equals(fechaDesactivacion) && fechaActivacion.before(hoySQL)));
     return resultado;
   }
 
@@ -585,7 +582,7 @@ public class UsuarioDAO
                                              + "   From seguridad.roles_usuarios "
                                              + "   Where id_usuario = ? "
                                              + "   And ( "
-                                             + "     fecha_activacion = fecha_desactivacion "
+                                             + "     (fecha_activacion = fecha_desactivacion and fecha_activacion < current_date)"
                                              + "     or "
                                              + "     (fecha_activacion < current_date and fecha_desactivacion > current_date) "
                                              + "       ) "
