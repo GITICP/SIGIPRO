@@ -7,6 +7,7 @@ package com.icp.sigipro.bodegas.controladores;
 
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
+import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,7 +15,6 @@ import javax.security.sasl.AuthenticationException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * @author Boga
  */
 @WebServlet(name = "ControladorCatalogoInterno", urlPatterns = {"/Bodegas/CatalogoInterno"})
-public class ControladorCatalogoInterno extends HttpServlet
+public class ControladorCatalogoInterno extends SIGIPROServlet
 {
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -134,20 +134,20 @@ public class ControladorCatalogoInterno extends HttpServlet
 
     if (id.isEmpty() || id.equals("0")) {
       resultado = dao.insertarProductoInterno(productoInterno);
-      redireccion = "CatalogoInterno/index.jsp";
-
-      List<ProductoInterno> productos = dao.obtenerProductos();
-      request.setAttribute("listaProductos", productos);
+      redireccion = "CatalogoInterno/Agregar.jsp";
     }
     else {
       productoInterno.setId_producto(Integer.parseInt(id));
-
       resultado = dao.editarProductoInterno(productoInterno);
-
-      redireccion = String.format("CatalogoInterno/Ver.jsp", id);
-      request.setAttribute("producto", productoInterno);
+      redireccion = "CatalogoInterno/Editar.jsp";
     }
-
+    
+    
+    if (resultado) {
+      redireccion = String.format("CatalogoInterno/Ver.jsp", id);
+    }
+    
+    request.setAttribute("producto", productoInterno);
     RequestDispatcher vista = request.getRequestDispatcher(redireccion);
     vista.forward(request, response);
   }
@@ -158,17 +158,9 @@ public class ControladorCatalogoInterno extends HttpServlet
     return "Short description";
   }
 
-  private void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException
+  @Override
+  protected int getPermiso()
   {
-    if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
-      throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
-    }
-  }
-
-  private void validarPermisos(int[] permisos, List<Integer> permisosUsuario) throws AuthenticationException
-  {
-    if ( !(permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(permisos[1]) || permisosUsuario.contains(permisos[2]) || permisosUsuario.contains(1) ) ) {
-      throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
-    }
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 }

@@ -24,8 +24,8 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Compras</li>
-            <li>
-                <a href="/SIGIPRO/Compras/Proveedores/">Proveedores</a>
+            <li> 
+              <a href="/SIGIPRO/Compras/Proveedores?">Proveedores</a>
             </li>
             <li class="active"> ${proveedor.getNombre_proveedor()} </li>
           </ul>

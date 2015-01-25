@@ -26,12 +26,6 @@ public class AgregarSeccion extends SIGIPROServlet
 
   private final int permiso = 8;
 
-  @Override
-  protected int getPermiso()
-  {
-    return permiso;
-  }
-
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
    * methods.
@@ -141,5 +135,11 @@ public class AgregarSeccion extends SIGIPROServlet
   {
     return "Short description";
   }// </editor-fold>
+
+  @Override
+  protected int getPermiso()
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 
 }

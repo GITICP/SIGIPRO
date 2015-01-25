@@ -16,16 +16,16 @@
 
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
-        <!-- content-wrapper -->
-        <div class="col-md-12 content-wrapper">
-            <div class="row">
-                <div class="col-md-4 ">
-                    <ul class="breadcrumb">
-                        <li>Bodegas</li>
-                        <li> 
-                            <a href="/SIGIPRO/Bodegas/CatalogoInterno/">Catálogo Interno</a>
-                        </li>
-                        <li class="active"> ${producto.getCodigo_icp()} </li>
+    <!-- content-wrapper -->
+    <div class="col-md-12 content-wrapper">
+      <div class="row">
+        <div class="col-md-4 ">
+          <ul class="breadcrumb">
+            <li>Bodegas</li>
+            <li> 
+              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Catálogo Interno</a>
+            </li>
+            <li class="active"> ${producto.getCodigo_icp()} </li>
 
           </ul>
         </div>
@@ -46,18 +46,18 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              
-                <jsp:include page="Formulario.jsp"></jsp:include>
-                
+
+              <jsp:include page="Formulario.jsp"></jsp:include>
+
+              </div>
             </div>
+            <!-- END WIDGET TICKET TABLE -->
           </div>
-          <!-- END WIDGET TICKET TABLE -->
+          <!-- /main-content -->
         </div>
-        <!-- /main-content -->
+        <!-- /main -->
       </div>
-      <!-- /main -->
-    </div>
-            
+
   </jsp:attribute>
 
 </t:plantilla_general>

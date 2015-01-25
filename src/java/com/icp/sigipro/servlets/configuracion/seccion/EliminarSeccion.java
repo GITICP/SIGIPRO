@@ -20,14 +20,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "EliminarSeccion", urlPatterns = {"/Configuracion/Secciones/EliminarSeccion"})
 public class EliminarSeccion extends SIGIPROServlet {
-  
-  private final int permiso = 10;
-  
-  @Override
-  protected int getPermiso()
-  {
-    return permiso;
-  }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -129,5 +121,11 @@ public class EliminarSeccion extends SIGIPROServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+  @Override
+  protected int getPermiso()
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 
 }

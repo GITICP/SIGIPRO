@@ -21,8 +21,8 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
-            <li>
-              <a href="/SIGIPRO/Bodegas/CatalogoInterno/">Catálogo Interno</a>
+            <li> 
+              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Catálogo Interno</a>
             </li>
             <li class="active"> ${producto.getCodigo_icp()} </li>
           </ul>
@@ -50,7 +50,7 @@
                 <c:if test="${contienePermisoEliminar}">
                   <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;"  href="/SIGIPRO/Bodegas/CatalogoInterno?accion=eliminar&id_producto=${producto.getId_producto()}">Eliminar</a>
                 </c:if>
-                  
+
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 12}">
@@ -60,28 +60,28 @@
                 <c:if test="${contienePermisoEditar}">
                   <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=editar&id_producto=${producto.getId_producto()}">Editar</a>
                 </c:if>
-                </div>
-              </div>
-              ${mensaje}
-              <div class="widget-content">
-                <table>
-                  <tr><td> <strong>Nombre del Producto:</strong></td> <td>${producto.getNombre()} </td></tr>
-                  <tr><td> <strong>Código ICP:</strong> <td>${producto.getCodigo_icp()} </td></tr>
-                  <tr><td> <strong>Stock Mínimo:</strong> <td>${producto.getStock_minimo()} </td></tr>
-                  <tr><td> <strong>Stock Máximo:</strong> <td>${producto.getStock_maximo()} </td></tr>
-                  <tr><td> <strong>Ubicación:</strong> <td>${producto.getUbicacion()} </td></tr>
-                  <tr><td> <strong>Presentación:</strong> <td>${producto.getPresentacion()} </td></tr>
-                  <tr><td> <strong>Descripción:</strong> <td>${producto.getDescripcion()} </td></tr>
-                </table>
-                <br>
               </div>
             </div>
-            <!-- END WIDGET TICKET TABLE -->
+            ${mensaje}
+            <div class="widget-content">
+              <table>
+                <tr><td> <strong>Nombre del Producto:</strong></td> <td>${producto.getNombre()} </td></tr>
+                <tr><td> <strong>Código ICP:</strong> <td>${producto.getCodigo_icp()} </td></tr>
+                <tr><td> <strong>Stock Mínimo:</strong> <td>${producto.getStock_minimo()} </td></tr>
+                <tr><td> <strong>Stock Máximo:</strong> <td>${producto.getStock_maximo()} </td></tr>
+                <tr><td> <strong>Ubicación:</strong> <td>${producto.getUbicacion()} </td></tr>
+                <tr><td> <strong>Presentación:</strong> <td>${producto.getPresentacion()} </td></tr>
+                <tr><td> <strong>Descripción:</strong> <td>${producto.getDescripcion()} </td></tr>
+              </table>
+              <br>
+            </div>
           </div>
-          <!-- /main-content -->
+          <!-- END WIDGET TICKET TABLE -->
         </div>
-        <!-- /main -->
+        <!-- /main-content -->
       </div>
+      <!-- /main -->
+    </div>
 
   </jsp:attribute>
 

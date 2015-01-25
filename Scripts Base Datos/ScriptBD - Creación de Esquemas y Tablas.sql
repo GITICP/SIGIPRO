@@ -254,6 +254,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, 'Eli
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, 'Agregar Producto', 'Permite agregar un proudcto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, 'Modificar Producto', 'Permite modificar un producto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, 'Eliminar Producto', 'Permite eliminar un producto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, 'Agregar Proveedor', 'Permite agregar un proveedor');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, 'Modificar Proveedor', 'Permite modificar un proveedor');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, 'Eliminar Proveedor', 'Permite eliminar un proveedor');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 

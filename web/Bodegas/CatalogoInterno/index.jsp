@@ -18,7 +18,9 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
-            <li class="active">Catálogo Interno</li>
+            <li> 
+              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Catálogo Interno</a>
+            </li>
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -34,7 +36,7 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> Catálogo Interno </h3>
-              
+
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                 <c:if test="${permiso == 1 || permiso == 11}">
@@ -52,34 +54,34 @@
               <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
                 <!-- Columnas -->
                 <thead> 
-                    <tr>
-                        <th>Código ICP</th>
-                        <th>Nombre</th>
-                        <th>Stock Mínimo</th>
-                        <th>Stock Máximo</th>
-                        <th>Ubicación</th>
-                        <th>Presentación</th>
-                        <th>Descripción</th>
-                    </tr>
+                  <tr>
+                    <th>Código ICP</th>
+                    <th>Nombre</th>
+                    <th>Stock Mínimo</th>
+                    <th>Stock Máximo</th>
+                    <th>Ubicación</th>
+                    <th>Presentación</th>
+                    <th>Descripción</th>
+                  </tr>
                 </thead>
                 <tbody>
                   <c:forEach items="${listaProductos}" var="producto">
 
-                      <tr id ="${producto.getId_producto()}">
-                          <td>
-                              <a href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&id_producto=${producto.getId_producto()}">
-                                  <div style="height:100%;width:100%">
-                                      ${producto.getCodigo_icp()}
-                                  </div>
-                              </a>
-                          </td>
-                          <td>${producto.getNombre()}</td>
-                          <td>${producto.getStock_minimo()}</td>
-                          <td>${producto.getStock_maximo()}</td>
-                          <td>${producto.getUbicacion()}</td>
-                          <td>${producto.getPresentacion()}</td>
-                          <td>${producto.getDescripcion()}</td>
-                      </tr>
+                    <tr id ="${producto.getId_producto()}">
+                      <td>
+                        <a href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&id_producto=${producto.getId_producto()}">
+                          <div style="height:100%;width:100%">
+                            ${producto.getCodigo_icp()}
+                          </div>
+                        </a>
+                      </td>
+                      <td>${producto.getNombre()}</td>
+                      <td>${producto.getStock_minimo()}</td>
+                      <td>${producto.getStock_maximo()}</td>
+                      <td>${producto.getUbicacion()}</td>
+                      <td>${producto.getPresentacion()}</td>
+                      <td>${producto.getDescripcion()}</td>
+                    </tr>
 
                   </c:forEach>
                 </tbody>

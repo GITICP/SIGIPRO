@@ -29,7 +29,7 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-10 content-wrapper">
+    <div class="col-md-12 content-wrapper">
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
@@ -96,6 +96,7 @@
         <!-- /main-content -->
       </div>
       <!-- /main -->
+    </div>
 
     </jsp:attribute>
 

@@ -34,7 +34,7 @@ public class ProductoInternoDAO
     
     try{
       PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogo_interno (nombre, codigo_icp, stock_minimo, stock_maximo, ubicacion, presentacion, descripcion) " +
-                                                             " VALUES (?,?,?,?,?,?,?) ");
+                                                             " VALUES (?,?,?,?,?,?,?) RETURNING id_producto");
       
       consulta.setString(1, p.getNombre());
       consulta.setString(2, p.getCodigo_icp());
@@ -43,9 +43,10 @@ public class ProductoInternoDAO
       consulta.setString(5, p.getUbicacion());
       consulta.setString(6, p.getPresentacion());
       consulta.setString(7, p.getDescripcion());
-      
-      if ( consulta.executeUpdate() == 1){
+      ResultSet resultadoConsulta = consulta.executeQuery();
+      if ( resultadoConsulta.next() ){
         resultado = true;
+        p.setId_producto(resultadoConsulta.getInt("id_producto"));
       }
       consulta.close();
       conexion.close();
