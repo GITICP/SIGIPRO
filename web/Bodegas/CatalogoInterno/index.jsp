@@ -6,7 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Compras" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
