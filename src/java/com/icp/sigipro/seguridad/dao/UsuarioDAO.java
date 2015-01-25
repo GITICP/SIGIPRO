@@ -64,7 +64,6 @@ public class UsuarioDAO
     }
     return resultado;
   }
-
   public int validarInicioSesion(String usuario, String contrasenna)
   {
     SingletonBD s = SingletonBD.getSingletonBD();
@@ -168,7 +167,31 @@ public class UsuarioDAO
 
     return resultado;
   }
+  public boolean validarActividad(int p_id)
+  {boolean resultado = false;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
 
+      PreparedStatement consulta = conexion.prepareStatement(" Select estado "
+                                                             + " From seguridad.usuarios"
+                                                             + " Where id_usuario = ? ");
+
+      consulta.setInt(1, p_id);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+
+        resultado = resultadoConsulta.getBoolean("estado");
+      }
+    }
+    catch (SQLException ex) {
+
+    }
+
+    return resultado;
+  }
   public int obtenerIDUsuario(String nombre)
   {
     int resultado = 0;
