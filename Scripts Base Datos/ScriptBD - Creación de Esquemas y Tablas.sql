@@ -257,6 +257,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, 'Eli
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, 'Agregar Proveedor', 'Permite agregar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, 'Modificar Proveedor', 'Permite modificar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, 'Eliminar Proveedor', 'Permite eliminar un proveedor');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, 'Restablecer Contraseña', 'Permite restablecer la contraseña de un usuario');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
