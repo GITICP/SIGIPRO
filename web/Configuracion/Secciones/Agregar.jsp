@@ -49,6 +49,7 @@
                         <div class="widget-content">
                             <form class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
                                 <p class="title">Agregar Sección</p>
+                                <div class='col-md-6'>
                                 <label for="nombreUsuario" class="control-label">*Nombre de Sección</label>
                                 <div class="form-group">
                                     <div class="col-sm-12">
@@ -59,6 +60,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
+                                <div class='col-md-6'>
                                 <label for="nombreCompleto" class="control-label">*Descripción</label>
                                 <div class="form-group">
                                     <div class="col-sm-12">
@@ -69,7 +72,10 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                </div>
+                                <p>
+                                  Los campos marcados con * son requeridos.
+                                </p>
                                 <div class="form-group">
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
