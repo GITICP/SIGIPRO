@@ -582,7 +582,7 @@ public class UsuarioDAO
                                              + "   From seguridad.roles_usuarios "
                                              + "   Where id_usuario = ? "
                                              + "   And ( "
-                                             + "     (fecha_activacion = fecha_desactivacion and fecha_activacion > current_date)"
+                                             + "     (fecha_activacion = fecha_desactivacion and fecha_activacion < current_date)"
                                              + "     or "
                                              + "     (fecha_activacion < current_date and fecha_desactivacion > current_date) "
                                              + "       ) "
