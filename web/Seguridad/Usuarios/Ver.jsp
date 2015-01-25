@@ -101,7 +101,7 @@
               <br>
               <div class="widget widget-table">
                 <div class="widget-header">
-                  <h3><i class="fa fa-group"></i> Roles ${usuario.getNombreUsuario()} </h3>
+                  <h3><i class="fa fa-legal"></i> Roles ${usuario.getNombreUsuario()} </h3>
                 </div>
                 <div class="widget-content">
                   <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">

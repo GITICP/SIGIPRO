@@ -147,7 +147,7 @@
                     <!-- Esta arte es la de los roles de un usuario -->
                     <div class="widget widget-table">
                       <div class="widget-header">
-                        <h3><i class="fa fa-group"></i> Roles</h3>
+                        <h3><i class="fa fa-legal"></i> Roles</h3>
                         <div class="btn-group widget-header-toolbar">
                           <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
                         </div>

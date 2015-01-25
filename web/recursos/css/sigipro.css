@@ -17,3 +17,7 @@
 .input-group{
   display: block;
 }
+
+.alert-warning{
+  background-color: #F0E39E;
+}
