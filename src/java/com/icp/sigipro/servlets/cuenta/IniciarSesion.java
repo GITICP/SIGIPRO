@@ -129,8 +129,14 @@ public class IniciarSesion extends HttpServlet
         }
       }
       else {
-        request.setAttribute("mensaje", helper.mensajeDeError("Usuario o contraseña incorrecto."));
-
+        if (idUsuario == -1){
+          request.setAttribute("mensaje", helper.mensajeDeError("Usuario o contraseña incorrecto."));
+        }else if(idUsuario == -2){
+          request.setAttribute("mensaje", helper.mensajeDeError("El usuario que está intentando acceder se encuentra desactivado."));
+        }else{
+          request.setAttribute("mensaje", helper.mensajeDeError("Error de conexión. Contacte al administrador del sistema."));
+        }
+        
         request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
       }
     }
