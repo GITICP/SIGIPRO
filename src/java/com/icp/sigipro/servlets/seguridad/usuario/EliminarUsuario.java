@@ -94,7 +94,7 @@ public class EliminarUsuario extends HttpServlet {
             request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario inactivado correctamente." +
+                                                        "Usuario desactivado correctamente." +
                                                 "</div>");
             }
         else
@@ -102,7 +102,7 @@ public class EliminarUsuario extends HttpServlet {
             request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                 "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                    "Usuario no pudo ser inactivado." +
+                                                    "Usuario no pudo ser desactivado." +
                                             "</div>");
         }
         request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id="+String.valueOf(idUsuario)).forward(request, response);

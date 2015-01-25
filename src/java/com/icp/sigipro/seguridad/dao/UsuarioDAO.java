@@ -73,21 +73,34 @@ public class UsuarioDAO
 
     if (conexion != null) {
       try {
-        PreparedStatement consulta = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
-                                                               + "FROM seguridad.usuarios us "
-                                                               + "WHERE us.nombre_usuario = ? and us.contrasena = ? "
-                                                               + "AND us.estado = true ");
-        consulta.setString(1, usuario);
+        PreparedStatement consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
+                + "FROM seguridad.usuarios us "
+                + "WHERE us.nombre_usuario = ? and us.contrasena = ? ");
+                                     
+        consultaContrasena.setString(1, usuario);
         String hash = md5(contrasenna);
-        consulta.setString(2, hash);
-        ResultSet resultadoConsulta = consulta.executeQuery();
+        consultaContrasena.setString(2, hash);
+        ResultSet resultadoConsulta = consultaContrasena.executeQuery();
         resultadoConsulta.next();
         resultado = resultadoConsulta.getInt("id_usuario");
         if (resultadoConsulta.getBoolean("contrasena_caducada")) {
           resultado = 0;
         }
+        PreparedStatement consultaEstado = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
+                + "FROM seguridad.usuarios us "
+                + "WHERE us.nombre_usuario = ? AND us.estado = false ");
+        
+        consultaEstado.setString(1, usuario);
+        ResultSet resultadoConsultaEstado = consultaEstado.executeQuery();
+        
+        if(resultadoConsultaEstado.next()){
+          resultado = -2;
+        }
+        
         resultadoConsulta.close();
-        consulta.close();
+        resultadoConsultaEstado.close();
+        consultaContrasena.close();
+        consultaEstado.close();
         conexion.close();
       }
       catch (SQLException ex) {
