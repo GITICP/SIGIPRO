@@ -248,7 +248,6 @@ $("input[name='editarFechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("agregarFechaActivacion").value = "";
   }
-
 });
 
 $("input[name='editarFechaActivacion']").change(function () {
