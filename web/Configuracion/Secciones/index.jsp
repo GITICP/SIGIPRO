@@ -5,13 +5,12 @@ Secciones
     Author     : Walter
 --%>
 
-<%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
-<%@page import="com.icp.sigipro.seguridad.dao.UsuarioDAO"%>
 <%@page import="com.icp.sigipro.configuracion.dao.SeccionDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.basededatos.SingletonBD"%>
 <%@page import="com.icp.sigipro.configuracion.modelos.Seccion"%>
 <%@page import="java.util.List"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
@@ -31,14 +30,6 @@ Secciones
   if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10))) {
     request.getRequestDispatcher("/").forward(request, response);
   }
-
-  UsuarioDAO u = new UsuarioDAO();
-
-  List<Usuario> usuarios = u.obtenerUsuarios();
-
-  if (usuarios != null) {
-    request.setAttribute("listaUsuarios", usuarios);
-  }
 %>
 
 
@@ -55,7 +46,7 @@ Secciones
       <div class="row">
         <div class="col-md-12 ">
           <ul class="breadcrumb">
-            <li>Configuración</li>
+            <li>ConfiguraciÃ³n</li>
             <li class="active">Secciones</li>
           </ul>
         </div>
@@ -82,7 +73,7 @@ Secciones
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoAgregar}">
-                  <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;padding-top: 3px;" href="Agregar">Agregar Sección</a>
+                  <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;padding-top: 3px;" href="Agregar">Agregar SecciÃ³n</a>
                 </c:if>
                 
                 <c:set var="contienePermisoEliminar" value="false" />
@@ -112,9 +103,9 @@ Secciones
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Selección</th>
-                    <th>Nombre Sección</th>
-                    <th>Descripción</th>
+                    <th>SelecciÃ³n</th>
+                    <th>Nombre SecciÃ³n</th>
+                    <th>DescripciÃ³n</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -147,28 +138,28 @@ Secciones
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h4 class="modal-title" id="myModalLabel">Editar Sección</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
+              <h4 class="modal-title" id="myModalLabel">Editar SecciÃ³n</h4>
             </div>
             <div class="modal-body">
 
               <form class="form-horizontal" role="form" action="EditarSeccion" method="post">
                 <input id="editarIdSeccion" hidden="true" name="editarIdSeccion">
-                <label for="editarNombre" class="control-label">Nombre de la Sección</label>
+                <label for="editarNombre" class="control-label">Nombre de la SecciÃ³n</label>
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input id="editarNombre" type="text" maxlength="45" placeholder="Nombre de la Sección" class="form-control" name="editarNombre" required
+                      <input id="editarNombre" type="text" maxlength="45" placeholder="Nombre de la SecciÃ³n" class="form-control" name="editarNombre" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')" > 
                     </div>
                   </div>
                 </div>
-                <label for="editarDescripcion" class="control-label">Descripción</label>
+                <label for="editarDescripcion" class="control-label">DescripciÃ³n</label>
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input id="editarDescripcion" type="text" maxlength="500" placeholder="Drescripción de la Sección" class="form-control" name="editarDescripcion" required
+                      <input id="editarDescripcion" type="text" maxlength="500" placeholder="DrescripciÃ³n de la SecciÃ³n" class="form-control" name="editarDescripcion" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')" > 
                     </div>
@@ -177,7 +168,7 @@ Secciones
                 <div class="form-group">
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Editar Sección</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Editar SecciÃ³n</button>
                   </div>
                 </div>
               </form>
@@ -191,12 +182,12 @@ Secciones
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h4 class="modal-title" id="myModalLabel">Confirmación</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
+              <h4 class="modal-title" id="myModalLabel">ConfirmaciÃ³n</h4>
             </div>
             <div class="modal-body">
               <form class="form-horizontal" role="form" action="EliminarSeccion" method="post">
-                <h5 class="title">¿Está seguro que desea eliminar la sección?</h5>
+                <h5 class="title">Â¿EstÃ¡ seguro que desea eliminar la secciÃ³n?</h5>
                 <br><br>
                 <input hidden="false" id="controlIDSeccion" name="controlIDSeccion">
                 <div class="form-group">
@@ -216,11 +207,11 @@ Secciones
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
               <h4 class="modal-title" id="myModalLabel">Error</h4>
             </div>
             <div class="modal-body">
-              <h5>Debe seleccionar una sección.</h5>
+              <h5>Debe seleccionar una secciÃ³n.</h5>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
