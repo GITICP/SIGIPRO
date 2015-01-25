@@ -88,7 +88,7 @@ public class AgregarSeccion extends SIGIPROServlet
       descripcion = request.getParameter("descripcion");
 
       SeccionDAO s = new SeccionDAO();
-      boolean nombre_valido = s.validarNombreSeccion(nombre_seccion);
+      boolean nombre_valido = s.validarNombreSeccion(nombre_seccion, 0);
       if (nombre_valido) {
         
 

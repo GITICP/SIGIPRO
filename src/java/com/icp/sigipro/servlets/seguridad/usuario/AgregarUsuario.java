@@ -105,7 +105,7 @@ public class AgregarUsuario extends SIGIPROServlet
   {
 
     response.setContentType("text/html;charset=UTF-8");
-
+    request.setCharacterEncoding("UTF-8");
     PrintWriter out;
     out = response.getWriter();
 
