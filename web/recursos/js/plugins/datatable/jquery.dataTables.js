@@ -10878,7 +10878,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No hay información disponible",
+			"sEmptyTable": "No hay informaci&oacuten disponible",
 	
 	
 			/**

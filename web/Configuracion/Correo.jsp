@@ -52,7 +52,7 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input type="text" maxlength="10"  class="form-control" name="puerto" value="${correo.getPuerto()}" required
+                      <input type="text" maxlength="10" placeholder="Ejemplo: 587"  class="form-control" name="puerto" value="${correo.getPuerto()}" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')" > 
                     </div>
@@ -62,7 +62,7 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input type="text" maxlength="80"  class="form-control" name="host" value="${correo.getHost()}" required
+                        <input type="text" maxlength="80" placeholder="Ejemplo: smtp.gmail.com"  class="form-control" name="host" value="${correo.getHost()}" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')">
                     </div>
@@ -72,7 +72,7 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input type="text" maxlength="80"  class="form-control" name="emisor" value="${correo.getEmisor()}" required
+                      <input type="text" maxlength="80" placeholder="Ejemplo: SIGIPRO"  class="form-control"  name="emisor" value="${correo.getEmisor()}" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')">
                     </div>
@@ -82,7 +82,7 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input type="text" maxlength="80" class="form-control" name="correo" value="${correo.getCorreo()}" required
+                      <input type="text" maxlength="80" placeholder="sigiproicp@gmail.com" class="form-control" name="correo" value="${correo.getCorreo()}" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')">
                     </div>
