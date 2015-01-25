@@ -6,6 +6,7 @@
 
 <%@tag description="Plantilla general" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <c:if test="${sessionScope.usuario == null}">
   <c:redirect url="/Cuenta/IniciarSesion" />
@@ -90,14 +91,14 @@
     <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
-    
+
     <!-- Esta se modificó -->
     <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
-    
+
 
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
-    
+
     <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
 
@@ -106,10 +107,12 @@
               .on('changeDate', function () {
                 $(this).datepicker('hide');
               });
-      $("#fechaActivacion").datepicker({ startDate: 0});
+      $("#fechaActivacion").datepicker({startDate: 0});
     </script>
     
-    <script>${script}</script>
+    <jsp:include page="plantillas/formCambiarContrasena.jsp" />
 
-  </body>
+    
+
+</body>
 </html>

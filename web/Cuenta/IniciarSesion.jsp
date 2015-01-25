@@ -83,6 +83,8 @@
     </div>
 
     <jsp:include page="/plantillas/footer.jsp" />
+    
+    <jsp:include page="/plantillas/formCambiarContrasena.jsp" />
 
     <!-- Javascript -->
     <script src="${direccionContexto}/recursos/js/jquery/jquery-2.1.0.min.js"></script>
@@ -108,7 +110,8 @@
     <script src="${direccionContexto}/recursos/js/king-components.js"></script>
     
     <script src="${direccionContexto}/recursos/js/plugins/bootbox.js"></script>
-    <script src="${direccionContexto}/recursos/js/iniciar-sesion.js"></script>
+    <script src="${direccionContexto}/recursos/js/sigipro/iniciar-sesion.js"></script>
+    <script src="${direccionContexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
     
     ${caducada}
   </body>

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Boga
  */
-@WebServlet(name = "ReestablecerContrasena", urlPatterns = {"/Cuenta/ReestablecerContrasena"})
+@WebServlet(name = "ReestablecerContrasena", urlPatterns = {"/Cuenta/RestablecerContrasena"})
 public class RestablecerContrasena extends HttpServlet
 {
 
@@ -86,7 +86,7 @@ public class RestablecerContrasena extends HttpServlet
     out = response.getWriter();
     request.setCharacterEncoding("UTF-8");
     try {
-      String nombreUsuario = request.getParameter("usuarioCaducado");
+      String nombreUsuario = request.getParameter("usuario");
       String contrasenna = request.getParameter("contrasenna");
 
       UsuarioDAO u = new UsuarioDAO();

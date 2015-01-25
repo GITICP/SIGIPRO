@@ -54,7 +54,7 @@
                                             <li>
                                                 <a href="#">
                                                     <i class="fa fa-user"></i>
-                                                    <span class="text" onclick="cambiarContrasena('${sessionScope.usuario}')">Cambiar Contraseña</span>
+                                                    <span class="text" data-toggle="modal" data-target="#modalCambiarContrasena">Cambiar Contraseña</span>
                                                 </a>
                                             </li>
                                         </ul>
