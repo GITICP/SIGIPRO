@@ -14,7 +14,7 @@
 
   <jsp:attribute name="contenido">
 
-    <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
+    
 
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">

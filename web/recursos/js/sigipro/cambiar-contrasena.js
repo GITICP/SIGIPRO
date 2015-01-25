@@ -15,7 +15,6 @@ function verificarConfirmacion(){
     mensaje.html("La contrase&ntilde;a debe tener al menos 6 caracteres.");
     return false;
   }
-  
 }
 
 function confirmarContrasena(){

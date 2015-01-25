@@ -110,9 +110,8 @@
       $("#fechaActivacion").datepicker({startDate: 0});
     </script>
     
-    <jsp:include page="plantillas/formCambiarContrasena.jsp" />
+    <jsp:include page="/plantillas/formCambiarContrasena.jsp" />
 
-    
 
 </body>
 </html>
