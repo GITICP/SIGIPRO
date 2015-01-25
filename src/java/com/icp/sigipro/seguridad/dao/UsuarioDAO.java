@@ -286,7 +286,7 @@ public class UsuarioDAO
           resultado = true;
         }
         UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
-        u.enviarUsuarioCreado(correoElectronico, contrasena);
+        u.enviarUsuarioCreado(correoElectronico, nombreUsuario, contrasena);
         consulta.close();
         conexion.close();
       }
@@ -618,14 +618,15 @@ public class UsuarioDAO
     if (conexion != null) {
       try {
         PreparedStatement consulta;
-        consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena=?,contrasena_caducada = true where correo = ?");
+        consulta = conexion.prepareStatement("Update seguridad.usuarios set contrasena=?,contrasena_caducada = true where correo = ? RETURNING nombre_usuario");
         String contrasena = generarContrasena();
         consulta.setString(1, md5(contrasena));
         consulta.setString(2, correoElectronico);
-        resultado = consulta.executeUpdate();
-        if (resultado == 1) {
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        if (resultadoConsulta.next()) {
+          String nombre_usuario = resultadoConsulta.getString("nombre_usuario");
           UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
-          u.enviarRecuperacionContrasena(correoElectronico, contrasena);
+          u.enviarRecuperacionContrasena(correoElectronico, nombre_usuario, contrasena);
         }
         consulta.close();
         conexion.close();

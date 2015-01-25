@@ -71,19 +71,21 @@ public class UtilidadEmail
     return resultado;
   }
   
-  public boolean enviarRecuperacionContrasena(String para, String contrasenaNueva)
+  public boolean enviarRecuperacionContrasena(String para, String nombre_usuario, String contrasenaNueva)
   {
-    return enviarCorreo(para, "Recuperación de contraseña", contrasenaNueva, new InformacionCorreo());
+    String cuerpo = "Estimado %s:\n\nSu nueva contraseña para ingresar a SIGIPRO es %s .";
+    return enviarCorreo(para, "Recuperación de contraseña", String.format(cuerpo, nombre_usuario, contrasenaNueva), new InformacionCorreo());
   }
   
-  public boolean enviarUsuarioCreado(String para, String contrasenaNueva)
-  {  
-    return enviarCorreo(para, "Cuenta SIGIPRO creada", contrasenaNueva, new InformacionCorreo());
+  public boolean enviarUsuarioCreado(String para, String nombre_usuario, String contrasenaNueva)
+  {
+    String cuerpo = "Estimado colaborador:\n\nSe le comunica que se ha creado una cuenta para SIGIPRO a su nombre. Su contraseña para ingresar al sistema es %s .";
+    return enviarCorreo(para, "Cuenta SIGIPRO creada", String.format(cuerpo, nombre_usuario, contrasenaNueva), new InformacionCorreo());
   }
   
   public boolean probarNuevaConfiguracion(List<String> nuevaConfiguracion)
   {  
-    return enviarCorreo(nuevaConfiguracion.get(4), "Prueba Exitosa", "Este correo es una prueba de la nueva configuración.", new InformacionCorreo(nuevaConfiguracion));    
+    return enviarCorreo(nuevaConfiguracion.get(4), "Prueba Exitosa", "Este correo es una prueba de la nueva configuración de correo para el sistema SIGIPRO.", new InformacionCorreo(nuevaConfiguracion));    
   }
   
   
