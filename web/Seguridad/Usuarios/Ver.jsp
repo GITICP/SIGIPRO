@@ -20,14 +20,6 @@
     {
       request.getRequestDispatcher("/").forward(request, response);
     }
-    
-    UsuarioDAO u = new UsuarioDAO();
-
-  List<Usuario> usuarios = u.obtenerUsuarios();
-
-  if (usuarios != null) {
-    request.setAttribute("listaUsuarios", usuarios);
-  }
 %>
 
 <t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
@@ -72,6 +64,16 @@
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
                   <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>                                    
+                </c:if>
+                  
+                  <c:set var="contienePermisoRestablecer" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 17}">
+                    <c:set var="contienePermisoRestablecer" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoRestablecer}">
+                  <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Cuenta/RecuperarContrasena?idUsuario=${usuario.getID()}&correoElectronico=${usuario.getCorreo()}">Restablecer Contraseña</a>
                 </c:if>
                   
                 <c:set var="contienePermisoEditar" value="false" />

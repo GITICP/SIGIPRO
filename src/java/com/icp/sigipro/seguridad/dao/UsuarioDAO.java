@@ -627,6 +627,7 @@ public class UsuarioDAO
           String nombre_usuario = resultadoConsulta.getString("nombre_usuario");
           UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
           u.enviarRecuperacionContrasena(correoElectronico, nombre_usuario, contrasena);
+          resultado = 1;
         }
         consulta.close();
         conexion.close();
