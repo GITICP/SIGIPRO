@@ -13,6 +13,7 @@ import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -75,15 +76,6 @@ public class AgregarUsuario extends SIGIPROServlet
     }
   }
 
-  // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-  /**
-   * Handles the HTTP <code>GET</code> method.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
@@ -91,14 +83,6 @@ public class AgregarUsuario extends SIGIPROServlet
     processRequest(request, response);
   }
 
-  /**
-   * Handles the HTTP <code>POST</code> method.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
@@ -128,18 +112,21 @@ public class AgregarUsuario extends SIGIPROServlet
       fechaDesactivacion = request.getParameter("fechaDesactivacion");
 
       UsuarioDAO u = new UsuarioDAO();
-
-      boolean correo_activo = u.validarCorreo(correoElectronico);
-      if (correo_activo) {
+      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+      
+      boolean nombre_usuario_activo = u.validarNombreUsuario(nombreUsuario, 0);
+      boolean correo_activo = u.validarCorreo(correoElectronico, 0);
+      if (correo_activo && nombre_usuario_activo) {
         boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
                                                      Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion);
+
         if (insercionExitosa) {
           int id_usuario = u.obtenerIDUsuario(nombreUsuario);
 
           String rolesUsuario = request.getParameter("listaRolesUsuario");
           RolUsuarioDAO ru = new RolUsuarioDAO();
-          List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
-          if (roles != null) {
+          if (rolesUsuario != null && !(rolesUsuario.isEmpty()) ) {
+            List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
             boolean f = true;
             for (RolUsuario i : roles) {
               boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
@@ -149,35 +136,24 @@ public class AgregarUsuario extends SIGIPROServlet
               }
             }
             if (f) {
-              request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
-                                              + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                              + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                              + "Usuario ingresado correctamente."
-                                              + "</div>");
+              request.setAttribute("mensaje", helper.mensajeDeExito("Usuario ingresado correctamente."));
             }
             else {
-              request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                                              + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                              + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                              + "El Usuario fue ingresado, pero sin roles."
-                                              + "</div>");
+              request.setAttribute("mensaje", helper.mensajeDeAdvertencia("El Usuario fue ingresado, pero sin roles."));
             }
           }
           else {
-            request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                                            + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                            + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                            + "El Usuario fue ingresado, pero sin roles."
-                                            + "</div>");
+            request.setAttribute("mensaje", helper.mensajeDeAdvertencia("El Usuario fue ingresado, pero sin roles."));
           }
         }
       }
       else {
-        request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
-                                        + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"
-                                        + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-                                        + "El correo ingresado ya está ligado a un Usuario."
-                                        + "</div>");
+        if (!nombre_usuario_activo){
+          request.setAttribute("mensaje", helper.mensajeDeError("El nombre de usuario ya está ligado a un usuario."));
+        }else{
+          request.setAttribute("mensaje", helper.mensajeDeError("El correo ingresado ya está ligado a un usuario."));
+        }
+        
       }
       request.getRequestDispatcher("/Seguridad/Usuarios/").forward(request, response);
     }
@@ -186,16 +162,3 @@ public class AgregarUsuario extends SIGIPROServlet
     }
   }
 }
-
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-/*@Override
- public String getServletInfo() {
- return "Short description";
- }// </editor-fold>
-
- }
- */
