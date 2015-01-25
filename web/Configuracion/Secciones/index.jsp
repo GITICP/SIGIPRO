@@ -73,7 +73,7 @@ Secciones
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-legal"></i> Secciones</h3>
+              <h3><i class="fa fa-puzzle-piece"></i> Secciones</h3>
               <div class="btn-group widget-header-toolbar">      
                 <c:set var="contienePermisoAgregar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
