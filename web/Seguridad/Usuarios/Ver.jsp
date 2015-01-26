@@ -85,7 +85,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="Editar?id=${usuario.getID()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Seguridad/Usuarios/Editar?id=${usuario.getID()}">Editar</a>
                 </c:if>
               </div>
             </div>

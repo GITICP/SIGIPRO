@@ -68,6 +68,8 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-md-6">
                     <label for="descripcion" class="control-label">*Descripción</label>
                     <div class="form-group">
                       <div class="col-sm-12">
