@@ -50,10 +50,11 @@ public class VerUsuario extends HttpServlet {
       Usuario usuario = u.obtenerUsuario(idUsuario);
       List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
       List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
-
+      Boolean actividad = u.validarActividad(idUsuario);
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("rolesRestantes", rolesRestantes);
+      request.setAttribute("actividad",actividad);
 
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Usuarios/Ver.jsp").forward(request, response);

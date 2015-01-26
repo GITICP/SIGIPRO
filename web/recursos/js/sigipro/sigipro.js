@@ -283,6 +283,16 @@ $("input[name='editarFechaDesactivacion']").change(function () {
   }
 });
 
+//Funcion para que solo pueda meter numeros y letras
+$('#usrname').keypress(function(e) {
+    var regex = new RegExp("^[a-zA-Z0-9]+$");
+    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+    if (regex.test(str)) {
+        return true;
+    }
+    e.preventDefault();
+    return false;
+});
 
 //Esta es la parte que Walter tiene que ver
 function asignarCookieSeccion() {

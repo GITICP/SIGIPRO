@@ -92,7 +92,7 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                      <input type="text" maxlength="30" class="form-control" name="contrasena" value="${correo.getContrasena()}" required
+                      <input type="password" maxlength="30" class="form-control" name="contrasena" value="${correo.getContrasena()}" required
                              oninvalid="setCustomValidity('Este campo es requerido ')"
                              oninput="setCustomValidity('')">
                     </div>
