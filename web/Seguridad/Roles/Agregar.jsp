@@ -289,7 +289,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionPermiso" name="idpermiso" required
+                <select id="seleccionPermiso" class="form-control" name="idpermiso" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${permisosRestantes}" var="rol">

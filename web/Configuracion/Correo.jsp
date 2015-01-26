@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-group"></i> Configuración del Correo </h3>
+              <h3><i class="fa fa-envelope"></i> Configuración del Correo </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -92,19 +92,19 @@
                         </div>
                       </div>
                     </div>
-                  
-                  <label for="contraseña" class="control-label">Contraseña</label>
-                  <div class="form-group">
-                    <div class="col-sm-12">
-                      <div class="input-group">
-                        <input type="password" maxlength="30" class="form-control" name="contrasena" value="${correo.getContrasena()}" required
-                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                               oninput="setCustomValidity('')">
+
+                    <label for="contraseña" class="control-label">Contraseña</label>
+                    <div class="form-group">
+                      <div class="col-sm-12">
+                        <div class="input-group">
+                          <input type="password" maxlength="30" class="form-control" name="contrasena" value="${correo.getContrasena()}" required
+                                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                                 oninput="setCustomValidity('')">
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-</div>
                 <div class="form-group">
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>

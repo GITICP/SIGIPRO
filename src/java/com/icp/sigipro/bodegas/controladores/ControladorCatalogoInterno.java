@@ -77,7 +77,8 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           dao.eliminarProductoInterno(id_producto);
           redireccion = "CatalogoInterno/index.jsp";
-          request.setAttribute("listaProductos", dao.obtenerProductos());
+          List<ProductoInterno> productos = dao.obtenerProductos();
+          request.setAttribute("listaProductos", productos);
         }
         else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(12, listaPermisos);
