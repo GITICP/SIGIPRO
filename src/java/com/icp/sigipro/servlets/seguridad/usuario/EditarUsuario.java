@@ -62,11 +62,13 @@ public class EditarUsuario extends SIGIPROServlet
         List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
         List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
         List<Seccion> secciones = sec.obtenerSecciones();
+        Boolean actividad = u.validarActividad(idUsuario);
 
         request.setAttribute("usuario", usuario);
         request.setAttribute("rolesUsuario", rolesUsuario);
         request.setAttribute("rolesRestantes", rolesRestantes);
         request.setAttribute("secciones", secciones);
+        request.setAttribute("actividad",actividad);
 
         ServletContext context = this.getServletContext();
         context.getRequestDispatcher("/Seguridad/Usuarios/Editar.jsp").forward(request, response);
