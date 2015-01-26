@@ -45,7 +45,7 @@
               <h3><i class="fa fa-group"></i> ${usuario.getNombreUsuario()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:if test="${actividad}">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" >Desactivar</a>   
+                <a class="btn btn-danger btn-sm boton-accion">Desactivar</a>   
                 </c:if>
               </div>
             </div>

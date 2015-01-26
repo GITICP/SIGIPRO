@@ -79,7 +79,8 @@
                                  oninput="setCustomValidity('')">
                         </div>
                       </div>
-                    </div></div>
+                    </div>
+                  </div>
                   <div class="col-md-6">
                     <label for="correo" class="control-label">Correo</label>
                     <div class="form-group">
@@ -91,28 +92,19 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                 <label for="correo" class="control-label">Correo</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                      <input type="text" maxlength="80" placeholder="sigiproicp@gmail.com" class="form-control" name="correo" value="${correo.getCorreo()}" required
-                             oninvalid="setCustomValidity('Este campo es requerido ')"
-                             oninput="setCustomValidity('')">
-                    </div>
-                  </div>
-                </div>
+                  
                   <label for="contraseña" class="control-label">Contraseña</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                      <input type="password" maxlength="30" class="form-control" name="contrasena" value="${correo.getContrasena()}" required
-                             oninvalid="setCustomValidity('Este campo es requerido ')"
-                             oninput="setCustomValidity('')">
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <div class="input-group">
+                        <input type="password" maxlength="30" class="form-control" name="contrasena" value="${correo.getContrasena()}" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               oninput="setCustomValidity('')">
+                      </div>
                     </div>
                   </div>
                 </div>
+</div>
                 <div class="form-group">
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
