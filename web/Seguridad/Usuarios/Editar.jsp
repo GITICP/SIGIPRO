@@ -44,7 +44,9 @@
             <div class="widget-header">
               <h3><i class="fa fa-group"></i> ${usuario.getNombreUsuario()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm boton-accion" >Desactivar</a>                                    
+                <c:if test="${actividad}">
+                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" >Desactivar</a>   
+                </c:if>
               </div>
             </div>
             ${mensaje}
@@ -108,7 +110,14 @@
                           <select id="seleccionSeccion" class="form-control" name="seccion" required
                                   oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
                             <c:forEach items="${secciones}" var="seccion">
-                              <option value=${seccion.getID()}>${seccion.getNombreSeccion()}</option>
+                              <c:choose>
+                                <c:when test="${seccion.getID() == usuario.getIdSeccion()}" >
+                                  <option value=${seccion.getID()} selected> ${seccion.getNombreSeccion()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=${seccion.getID()}>${seccion.getNombreSeccion()}</option>
+                                </c:otherwise>
+                              </c:choose>
                             </c:forEach>
                           </select>
                         </div>

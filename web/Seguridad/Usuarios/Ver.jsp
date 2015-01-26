@@ -59,7 +59,9 @@
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 4}">
-                    <c:set var="contienePermisoEliminar" value="true" />
+                    <c:if test="${actividad}">
+                      <c:set var="contienePermisoEliminar" value="true" />
+                    </c:if>
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">

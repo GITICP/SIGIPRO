@@ -36,7 +36,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="0" class="form-control" name="stockMinimo" value="${producto.getStock_minimo()}"
+              <input type="number" maxlength="45" placeholder="0" class="form-control" name="stockMinimo" value="${producto.getStock_minimo()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 
@@ -47,7 +47,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-              <input type="text" maxlength="45" placeholder="0" class="form-control" name="stockMaximo" value="${producto.getStock_maximo()}"
+              <input type="number" maxlength="45" placeholder="0" class="form-control" name="stockMaximo" value="${producto.getStock_maximo()}"
                        required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        oninput="setCustomValidity('')" > 

@@ -55,10 +55,12 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input type="text" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                          <input id = "usrname" type="text" minlength="6" maxlength="45" placeholder="Nombre de Usuario de mínimo 6 caracteres, sin espacios y solo letras y números" class="form-control" name="nombreUsuario" required
+                                 oninvalid="setCustomValidity('Este campo es requerido. Debe ingresar un nombre de usuario entre 6 y 45 caracteres, sin espacion y solo letras y numeros ')"
                                  oninput="setCustomValidity('')" > 
+                          
                         </div>
+                        <p id='mensajeUsuario' style='color:red;'><p>
                       </div>
                     </div>
                     <label for="nombreCompleto" class="control-label">*Nombre Completo</label>
