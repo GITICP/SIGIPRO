@@ -68,7 +68,7 @@ Usuarios
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoAgregar}">
-                  <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar Usuario</a>
+                  <a class="btn btn-primary btn-sm boton-accion" href="Agregar">Agregar Usuario</a>
                 </c:if>
               </div>
             </div>

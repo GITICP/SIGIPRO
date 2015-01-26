@@ -65,7 +65,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>                                    
+                  <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>                                    
                 </c:if>
                   
                   <c:set var="contienePermisoRestablecer" value="false" />
@@ -75,7 +75,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoRestablecer}">
-                  <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Cuenta/RecuperarContrasena?idUsuario=${usuario.getID()}&correoElectronico=${usuario.getCorreo()}">Restablecer Contraseña</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Cuenta/RecuperarContrasena?idUsuario=${usuario.getID()}&correoElectronico=${usuario.getCorreo()}">Restablecer Contraseña</a>
                 </c:if>
                   
                 <c:set var="contienePermisoEditar" value="false" />
@@ -85,7 +85,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Editar?id=${usuario.getID()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Seguridad/Usuarios/Editar?id=${usuario.getID()}">Editar</a>
                 </c:if>
               </div>
             </div>

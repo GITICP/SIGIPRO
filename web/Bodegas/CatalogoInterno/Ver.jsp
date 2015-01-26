@@ -48,7 +48,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;"  href="/SIGIPRO/Bodegas/CatalogoInterno?accion=eliminar&id_producto=${producto.getId_producto()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=eliminar&id_producto=${producto.getId_producto()}">Eliminar</a>
                 </c:if>
 
                 <c:set var="contienePermisoEditar" value="false" />
@@ -58,7 +58,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=editar&id_producto=${producto.getId_producto()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=editar&id_producto=${producto.getId_producto()}">Editar</a>
                 </c:if>
               </div>
             </div>

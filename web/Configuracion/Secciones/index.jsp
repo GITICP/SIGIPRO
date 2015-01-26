@@ -73,7 +73,7 @@ Secciones
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoAgregar}">
-                  <a class="btn btn-primary btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;padding-top: 3px;" href="Agregar">Agregar Sección</a>
+                  <a class="btn btn-primary btn-sm boton-accion" href="Agregar">Agregar Sección</a>
                 </c:if>
                 
                 <c:set var="contienePermisoEliminar" value="false" />
@@ -83,7 +83,7 @@ Secciones
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <button class="btn btn-danger btn-sm" onclick="eliminarSeccion()" style="margin-left:5px;margin-right:5px;">Eliminar</button>                            
+                  <a class="btn btn-danger btn-sm boton-accion" onclick="eliminarSeccion()">Eliminar</a>                            
                 </c:if>
                   
                 <c:set var="contienePermisoEditar" value="false" />
@@ -93,7 +93,7 @@ Secciones
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <button class="btn btn-warning btn-sm" onclick="editarSeccion()" style="margin-left:5px;margin-right:5px;" onclick="EditarSeccionJS()">Editar</button>
+                  <a class="btn btn-warning btn-sm boton-accion" onclick="editarSeccion()" >Editar</a>
                 </c:if>
                 </div>
               </div>
