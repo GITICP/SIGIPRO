@@ -241,23 +241,24 @@ ALTER TABLE ONLY bodega.catalogos_externos ADD CONSTRAINT fk_id_proveedor FOREIG
 
 
 /* INSERTS */
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, 'Administración', 'Permite realizar cualquier operación');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (2, 'Agregar Usuario', 'Permite agregar a un usuario');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (3, 'Editar Usuario', 'Permite modificar a un usuario');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (4, 'Desactivar Usuario', 'Permite desactivar a un usuario');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (5, 'Agregar Rol', 'Permite activar un rol');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (6, 'Editar Rol', 'Permite modificar un rol');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, 'Eliminar Rol', 'Permite eliminar un rol');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, 'Agregar Sección', 'Permite activar una sección');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, 'Modificar Sección', 'Permite modificar una sección');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, 'Eliminar Sección', 'Permite eliminar una sección');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, 'Agregar Producto', 'Permite agregar un proudcto');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, 'Modificar Producto', 'Permite modificar un producto');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, 'Eliminar Producto', 'Permite eliminar un producto');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, 'Agregar Proveedor', 'Permite agregar un proveedor');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, 'Modificar Proveedor', 'Permite modificar un proveedor');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, 'Eliminar Proveedor', 'Permite eliminar un proveedor');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, 'Restablecer Contraseña', 'Permite restablecer la contraseña de un usuario');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, '[PermisoGlobal]Administración', 'Permite realizar cualquier operación');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (2, '[Seguridad]AgregarUsuario', 'Permite agregar a un usuario');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (3, '[Seguridad]EditarUsuario', 'Permite modificar a un usuario');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (4, '[Seguridad]DesactivarUsuario', 'Permite desactivar a un usuario');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (5, '[Seguridad]AgregarRol', 'Permite activar un rol');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (6, '[Seguridad]EditarRol', 'Permite modificar un rol');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, '[Seguridad]EliminarRol', 'Permite eliminar un rol');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, '[Seguridad]AgregarSección', 'Permite activar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, '[Seguridad]EditarSección', 'Permite modificar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, '[Seguridad]EliminarSección', 'Permite eliminar una sección');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, '[Bodegas]AgregarProducto', 'Permite agregar un proudcto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, '[Bodegas]EditarProducto', 'Permite modificar un producto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, '[Bodegas]EliminarProducto', 'Permite eliminar un producto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, '[Bodegas]AgregarProveedor', 'Permite agregar un proveedor');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, '[Bodegas]EditarProveedor', 'Permite modificar un proveedor');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, '[Bodegas]EliminarProveedor', 'Permite eliminar un proveedor');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
