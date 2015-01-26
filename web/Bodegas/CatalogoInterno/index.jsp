@@ -45,7 +45,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color: white;" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=agregar">Agregar Producto</a>
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=agregar">Agregar Producto</a>
                 </div>
               </c:if>
             </div>

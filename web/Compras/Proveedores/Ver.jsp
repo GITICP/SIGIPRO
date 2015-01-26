@@ -44,8 +44,8 @@
             <div class="widget-header">
               <h3><i class="fa fa-truck"></i> ${proveedor.getNombre_proveedor()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;"  href="/SIGIPRO/Compras/Proveedores?accion=eliminar&id_proveedor=${proveedor.getId_proveedor()}">Eliminar</a>                                    
-                <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="/SIGIPRO/Compras/Proveedores?accion=editar&id_proveedor=${proveedor.getId_proveedor()}">Editar</a>
+                <a class="btn btn-danger btn-sm boton-accion"  href="/SIGIPRO/Compras/Proveedores?accion=eliminar&id_proveedor=${proveedor.getId_proveedor()}">Eliminar</a>                                    
+                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Compras/Proveedores?accion=editar&id_proveedor=${proveedor.getId_proveedor()}">Editar</a>
               </div>
             </div>
             ${mensaje}

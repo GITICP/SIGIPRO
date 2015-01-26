@@ -78,7 +78,7 @@ Roles
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoAgregar}">
-                  <button class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;" onclick="window.location.href='Agregar'">Agregar Rol</button>
+                  <a class="btn btn-primary btn-sm boton-accion" href='Agregar'>Agregar Rol</a>
                 </c:if>
               </div>
             </div>

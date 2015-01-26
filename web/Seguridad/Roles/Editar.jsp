@@ -45,7 +45,7 @@
             <div class="widget-header">
               <h3><i class="fa fa-legal"></i> ${rol.getNombreRol()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#ModalEliminarRol">Eliminar</a>                                      
+                <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#ModalEliminarRol">Eliminar</a>                                      
               </div>
             </div>
             ${mensaje}
@@ -84,7 +84,7 @@
                   <div class="widget-header">
                     <h3><i class="fa fa-group"></i> Usuarios del Rol</h3>
                     <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
@@ -104,8 +104,8 @@
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="editarRolUsuario(${rolUsuario.getIDUsuario()})"   style="margin-left:5px;margin-right:5px;">Editar</button>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="eliminarRolUsuario(${rolUsuario.getIDUsuario()})" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDUsuario()})"   >Editar</button>
+                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDUsuario()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>
@@ -118,7 +118,7 @@
                   <div class="widget-header">
                     <h3><i class="fa fa-check"></i> Permisos</h3>
                     <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarPermisoRol" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarPermisoRol">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
@@ -134,7 +134,7 @@
                           <tr id="${permisoRol.getIDPermiso()}">
                             <td>${permisoRol.getNombrePermiso()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})">Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>

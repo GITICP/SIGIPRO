@@ -44,7 +44,7 @@
             <div class="widget-header">
               <h3><i class="fa fa-group"></i> ${usuario.getNombreUsuario()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" >Desactivar</a>                                    
+                <a class="btn btn-danger btn-sm boton-accion" >Desactivar</a>                                    
               </div>
             </div>
             ${mensaje}
@@ -155,7 +155,7 @@
                   <div class="widget-header">
                     <h3><i class="fa fa-legal"></i> Roles</h3>
                     <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
@@ -175,8 +175,8 @@
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   style="margin-left:5px;margin-right:5px;">Editar</button>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   >Editar</button>
+                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>

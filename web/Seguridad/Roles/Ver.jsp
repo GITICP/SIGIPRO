@@ -69,7 +69,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#ModalEliminarRol">Eliminar</a>                                    
+                  <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#ModalEliminarRol">Eliminar</a>                                    
                 </c:if>
 
                 <c:set var="contienePermisoEditar" value="false" />
@@ -79,7 +79,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Editar?id=${rol.getID()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="Editar?id=${rol.getID()}">Editar</a>
                 </c:if>
                 </div>
               </div>
