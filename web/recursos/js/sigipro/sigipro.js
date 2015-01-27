@@ -61,9 +61,14 @@ $("input[name='fechaActivacion']").change(function () {
   var hoy = new Date();
   var fechahoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
   if (DateAct < fechahoy)
-  {
+  {   
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("fechaActivacion").value = "";
+  }
+  if (DateAct > fechahoy)
+  { 
+    var mensaje = $('#mensajeFechas');
+    mensaje.html("Usuario permanente: si selecciona ambas fechas iguales el usuario ser&aacute; permanente desde la fecha indicada");
   }
 
 });
@@ -72,6 +77,8 @@ $("input[name='fechaDesactivacion']").change(function () {
   var fechaact = document.getElementById("fechaActivacion").value.split("/");
   var fechadesact = document.getElementById("fechaDesactivacion").value.split("/");
   var DateDesact = new Date(fechadesact[2], fechadesact[1], fechadesact[0]);
+  var mensaje = $('#mensajeFechas');
+  mensaje.html(" ");
   if ((parseInt(fechadesact[0]) + parseInt(fechadesact[1]) * 100 + parseInt(fechadesact[2]) * 10000) < (parseInt(fechaact[0]) + parseInt(fechaact[1]) * 100 + parseInt(fechaact[2]) * 10000))
   {
     $('#modalErrorFechaDesactivacion').modal('show');
@@ -248,12 +255,17 @@ $("input[name='editarFechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("agregarFechaActivacion").value = "";
   }
+  if (DateAct > fechahoy)
+  { 
+    var mensaje = $('#mensajeFechasModalAgregar');
+    mensaje.html("Rol permanente: si selecciona ambas fechas iguales el rol ser&aacute; permanente desde la fecha indicada");
+  }
 });
 
-$("input[name='editarFechaActivacion']").change(function () {
-  document.getElementById("agregarFechaDesactivacion").value = document.getElementById("agregarFechaActivacion").value;
-  var fechaact = document.getElementById("agregarFechaActivacion").value.split("/");
-  var DateAct = new Date(fechaact[2], parseInt(fechaact[1]), fechaact[0]);
+$('#editarFechaActivacion').change(function () {
+  document.getElementById("editarFechaDesactivacion").value = document.getElementById("editarFechaActivacion").value;
+  var fechaact = document.getElementById("editarFechaActivacion").value.split("/");
+  var DateAct = new Date(fechaact[2], parseInt(fechaact[1])-1, fechaact[0]);
   var hoy = new Date();
   var fechahoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
   if (DateAct < fechahoy)
@@ -261,21 +273,31 @@ $("input[name='editarFechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("editarFechaActivacion").value = "";
   }
+  if (DateAct > fechahoy)
+  { 
+    var mensaje = $('#mensajeFechasModalEditar');
+    mensaje.html("Rol permanente: si selecciona ambas fechas iguales el rol ser&aacute; permanente desde la fecha indicada");
+  }
+  
 
 });
 
 $("input[name='editarFechaDesactivacion']").change(function () {
   var fechaact = document.getElementById("agregarFechaActivacion").value.split("/");
   var fechadesact = document.getElementById("agregarFechaDesactivacion").value.split("/");
+  var mensaje = $('#mensajeFechasModalAgregar');
+  mensaje.html(" ");
   if ((parseInt(fechadesact[0]) + parseInt(fechadesact[1]) * 100 + parseInt(fechadesact[2]) * 10000) < (parseInt(fechaact[0]) + parseInt(fechaact[1]) * 100 + parseInt(fechaact[2]) * 10000))
   {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("agregarFechaDesactivacion").value = "";
   }
 });
-$("input[name='editarFechaDesactivacion']").change(function () {
+$('#editarFechaDesactivacion').change(function () {
   var fechaact = document.getElementById("editarFechaActivacion").value.split("/");
   var fechadesact = document.getElementById("editarFechaDesactivacion").value.split("/");
+   var mensaje = $('#mensajeFechasModalEditar');
+  mensaje.html(" ");
   if ((parseInt(fechadesact[0]) + parseInt(fechadesact[1]) * 100 + parseInt(fechadesact[2]) * 10000) < (parseInt(fechaact[0]) + parseInt(fechaact[1]) * 100 + parseInt(fechaact[2]) * 10000))
   {
     $('#modalErrorFechaDesactivacion').modal('show');

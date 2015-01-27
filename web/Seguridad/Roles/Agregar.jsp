@@ -205,6 +205,7 @@
                          oninvalid="setCustomValidity('Este campo es requerido ')"
                          onchange="setCustomValidity('')">
                 </div>
+                <p id='mensajeFechasModalAgregar' style='color:red;'><p>
               </div>
             </div>
           </div>
@@ -262,6 +263,7 @@
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
               </div>
+              <p id='mensajeFechasModalEditar' style='color:red;'><p>
             </div>
           </div>
           <div class="form-group">
