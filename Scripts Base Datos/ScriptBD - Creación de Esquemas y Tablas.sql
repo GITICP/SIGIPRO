@@ -251,7 +251,6 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, '[Seg
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, '[Seguridad]AgregarSección', 'Permite activar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, '[Seguridad]EditarSección', 'Permite modificar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, '[Seguridad]EliminarSección', 'Permite eliminar una sección');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, '[Bodegas]AgregarProducto', 'Permite agregar un proudcto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, '[Bodegas]EditarProducto', 'Permite modificar un producto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, '[Bodegas]EliminarProducto', 'Permite eliminar un producto');
