@@ -302,7 +302,7 @@ public class UsuarioDAO
         consulta.setDate(8, fActivacionSQL);
         consulta.setDate(9, fDesactivacionSQL);
 
-        consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL));
+        consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL, formatoFecha));
 
         int resultadoConsulta = consulta.executeUpdate();
         if (resultadoConsulta == 1) {
@@ -357,7 +357,8 @@ public class UsuarioDAO
         consulta.setDate(6, fActivacionSQL);
         consulta.setDate(7, fDesactivacionSQL);
 
-        consulta.setBoolean(8, compararFechas(fActivacionSQL, fDesactivacionSQL));
+        boolean fechas = compararFechas(fActivacionSQL, fDesactivacionSQL, formatoFecha);
+        consulta.setBoolean(8, fechas);
 
         consulta.setInt(9, idUsuario);
 
@@ -457,13 +458,13 @@ public class UsuarioDAO
     return resultado;
   }
 
-  private boolean compararFechas(Date fechaActivacion, Date fechaDesactivacion)
+  private boolean compararFechas(Date fechaActivacion, Date fechaDesactivacion, SimpleDateFormat formato) throws ParseException
   {
     java.util.Calendar calendario = java.util.Calendar.getInstance();
     java.util.Date hoy = calendario.getTime();
-    Date hoySQL = new Date(hoy.getTime());
-    boolean resultado = ((fechaActivacion.before(hoySQL) && fechaDesactivacion.after(hoySQL)) || (fechaActivacion.equals(fechaDesactivacion) && fechaActivacion.before(hoySQL)));
-    return resultado;
+    java.util.Date hoyFormateado = formato.parse(formato.format(hoy));
+    Date hoySQL = new Date(hoyFormateado.getTime());
+    return fechaActivacion.equals(hoySQL);
   }
 
   private String md5(String texto)
@@ -613,9 +614,9 @@ public class UsuarioDAO
                                              + "   From seguridad.roles_usuarios "
                                              + "   Where id_usuario = ? "
                                              + "   And ( "
-                                             + "     (fecha_activacion = fecha_desactivacion and fecha_activacion < current_date)"
+                                             + "     (fecha_activacion = fecha_desactivacion and fecha_activacion <= current_date)"
                                              + "     or "
-                                             + "     (fecha_activacion < current_date and fecha_desactivacion > current_date) "
+                                             + "     (fecha_activacion <= current_date and fecha_desactivacion >= current_date) "
                                              + "       ) "
                                              + ")");
         consulta.setInt(1, p_id_usuario);
