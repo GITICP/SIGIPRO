@@ -23,7 +23,7 @@
             <li> 
               <a href="/SIGIPRO/Bodegas/CatalogoExterno?">Catálogo Externo</a>
             </li>
-            <li class="active"> ${producto.getProducto()} (${producto.getCodigo_Externo})</li>
+            <li class="active"> ${producto.getProducto()} (${producto.getCodigo_Externo()})</li>
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> ${producto.getNombre()} </h3>
+              <h3><i class="fa fa-barcode"></i> ${producto.getProducto()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -72,10 +72,34 @@
               <br>
             </div>
           </div>
+          <!-- Esta parte es la de los interno del catalogo externo -->
+          <div class="widget widget-table">
+            <div class="widget-header">
+              <h3><i class="fa fa-check"></i> Productos del Catálogo Interno Asociados</h3>
+            </div>
+            <div class="widget-content">
+              <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                <thead>
+                  <tr>
+                    <th>Nombre y Codigo del Producto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <c:forEach items="${productos_internos}" var="interno">
+                    <tr id="${interno.getId_producto()}">
+                      <td>${interno.getNombre()}</td>
+                    </tr>
+                  </c:forEach>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- END WIDGET TICKET TABLE -->
         </div>
         <!-- /main-content -->
       </div>
+
       <!-- /main -->
     </div>
 

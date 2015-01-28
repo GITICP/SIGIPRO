@@ -6,7 +6,11 @@
 package com.icp.sigipro.bodegas.controladores;
 
 import com.icp.sigipro.bodegas.dao.ProductoExternoDAO;
+import com.icp.sigipro.bodegas.dao.ProductoExterno_InternoDAO;
+import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.modelos.ProductoExterno;
+import com.icp.sigipro.bodegas.modelos.ProductoExternoInterno;
+import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.compras.dao.ProveedorDAO;
 import com.icp.sigipro.compras.modelos.Proveedor;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -70,6 +74,9 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           redireccion = "CatalogoExterno/Ver.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoExterno producto = dao.obtenerProductoExterno(id_producto);
+          ProductoInternoDAO PrIn = new ProductoInternoDAO();
+          List<ProductoInterno> productos_internos = PrIn.obtenerProductosInternos_Externo(id_producto);
+           request.setAttribute("productos_internos", productos_internos);
           request.setAttribute("producto", producto);
         }
         else if (accion.equalsIgnoreCase("agregar")) {
@@ -77,7 +84,12 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           redireccion = "CatalogoExterno/Agregar.jsp";
           ProductoExterno producto = new ProductoExterno();
           ProveedorDAO pr = new ProveedorDAO();
-          List<Proveedor> proveedores = pr.obtenerProveedores();
+          List<Proveedor> proveedores = pr.obtenerProveedores();  
+          ProductoInternoDAO PrIn = new ProductoInternoDAO();
+          List<ProductoInterno> productos_internos = null;
+          List<ProductoInterno> productos_internos_restantes = PrIn.obtenerProductosInternosRestantes(0);
+          request.setAttribute("productos_internos", productos_internos);
+          request.setAttribute("productos_internos_restantes", productos_internos_restantes);
           request.setAttribute("producto", producto);
           request.setAttribute("proveedores", proveedores);
           request.setAttribute("accion", "Agregar");
@@ -97,6 +109,11 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           ProductoExterno producto = dao.obtenerProductoExterno(id_producto);
           ProveedorDAO pr = new ProveedorDAO();
           List<Proveedor> proveedores = pr.obtenerProveedores();
+          ProductoInternoDAO PrIn = new ProductoInternoDAO();
+          List<ProductoInterno> productos_internos = PrIn.obtenerProductosInternos_Externo(id_producto);
+          List<ProductoInterno> productos_internos_restantes = PrIn.obtenerProductosInternosRestantes(id_producto);
+          request.setAttribute("productos_internos", productos_internos);
+          request.setAttribute("productos_internos_restantes", productos_internos_restantes);
           request.setAttribute("producto", producto);
           request.setAttribute("accion", "Editar");
           request.setAttribute("proveedores", proveedores);
@@ -138,34 +155,39 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
     request.setCharacterEncoding("UTF-8");
     boolean resultado = false;
 
-    ProductoExterno produtcoExterno = new ProductoExterno();
+    ProductoExterno productoExterno = new ProductoExterno();
 
-    produtcoExterno.setProducto(request.getParameter("producto"));
-    produtcoExterno.setCodigo_Externo(request.getParameter("codigoExterno"));
-    produtcoExterno.setMarca(request.getParameter("marca"));
-    produtcoExterno.setId_Proveedor(Integer.parseInt(request.getParameter("proveedor")));
-
+    productoExterno.setProducto(request.getParameter("producto"));
+    productoExterno.setCodigo_Externo(request.getParameter("codigoExterno"));
+    productoExterno.setMarca(request.getParameter("marca"));
+    productoExterno.setId_Proveedor(Integer.parseInt(request.getParameter("proveedor")));
+    
 
     ProductoExternoDAO dao = new ProductoExternoDAO();
     String id = request.getParameter("id_producto");
+    String lista = request.getParameter("listaProductosInternos");
     String redireccion;
 
     if (id.isEmpty() || id.equals("0")) {
-      resultado = dao.insertarProductoExterno(produtcoExterno);
+      resultado = dao.insertarProductoExterno(productoExterno);
       redireccion = "CatalogoExterno/Agregar.jsp";
     }
     else {
-      produtcoExterno.setId_producto_ext(Integer.parseInt(id));
-      resultado = dao.editarProductoExterno(produtcoExterno);
+      productoExterno.setId_producto_ext(Integer.parseInt(id));
+      resultado = dao.editarProductoExterno(productoExterno);
       redireccion = "CatalogoExterno/Editar.jsp";
     }
-    
-    
+
     if (resultado) {
       redireccion = String.format("CatalogoExterno/Ver.jsp", id);
+      ProductoExterno_InternoDAO exin = new ProductoExterno_InternoDAO();
+      exin.eliminarProductoExterno_Interno_Existentes(productoExterno.getId_producto_ext());
+      List<ProductoExternoInterno> ExtInt = exin.parsearProductosExternos_Internos(lista, productoExterno.getId_producto_ext());
+      for (ProductoExternoInterno i : ExtInt) {
+            boolean e = exin.insertarProductoExterno_Interno(i);}
     }
     
-    request.setAttribute("producto", produtcoExterno);
+    request.setAttribute("producto", productoExterno);
     RequestDispatcher vista = request.getRequestDispatcher(redireccion);
     vista.forward(request, response);
   }

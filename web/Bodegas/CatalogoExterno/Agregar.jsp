@@ -57,6 +57,35 @@
         </div>
         <!-- /main -->
       </div>
+      <t:modal idModal="modalAgregarCatalogoInterno" titulo="Asociar Producto Interno">
+
+      <jsp:attribute name="form">
+
+        <form class="form-horizontal">
+          <input type="text" name="productoexterno"  hidden="true">
+          <label for="idinterno" class="control-label">Seleccione un producto del catálogo interno:</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <select id="seleccioninterno" class="form-control" style='background-color: #fff;' name="idinterno" >
+                  <c:forEach items="${productos_internos_restantes}" var="pr">
+                    <option value=${pr.getId_producto()}>${pr.getNombre()} (${pr.getCodigo_icp()})</option>
+                  </c:forEach>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarProductoInterno()"><i class="fa fa-check-circle"></i> Asociar Producto Interno</button>
+            </div>
+          </div>
+        </form>
+
+      </jsp:attribute>
+
+    </t:modal>
 
   </jsp:attribute>
 
