@@ -95,7 +95,11 @@ CREATE TABLE bodega.activos_fijos (
 	placa integer NOT NULL,
 	equipo character varying(45) NOT NULL,
 	marca character varying(45),
-	ubicacion character varying(45) NOT NULL
+        fecha_movimiento date NOT NULL,
+        id_seccion integer,
+	id_ubicacion integer,
+        fecha_registro date NOT NULL,
+        estado character varying(45) NOT NULL
  );
 
 CREATE TABLE bodega.catalogo_interno(
@@ -214,6 +218,8 @@ ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto FOREI
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
+ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion)on delete set null;
+ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_ubicacion FOREIGN KEY (id_ubicacion) REFERENCES bodega.ubicaciones(id_ubicacion)on delete set null;
 
 --######ESQUEMA configuración ######
 DROP SCHEMA IF EXISTS configuracion CASCADE;
@@ -245,7 +251,7 @@ CREATE TABLE compras.proveedores (
 ALTER TABLE ONLY compras.proveedores ADD CONSTRAINT pk_proveedores PRIMARY KEY (id_proveedor);
 -- Indices esquema compras
 CREATE UNIQUE INDEX i_correo ON compras.proveedores USING btree (correo);
-ALTER TABLE ONLY bodega.catalogo_externo ADD CONSTRAINT fk_id_proveedor FOREIGN KEY (id_proveedor) REFERENCES compras.proveedores(id_proveedor) on delete set null;;
+ALTER TABLE ONLY bodega.catalogo_externo ADD CONSTRAINT fk_id_proveedor FOREIGN KEY (id_proveedor) REFERENCES compras.proveedores(id_proveedor) on delete set null;
 
 
 /* INSERTS */
