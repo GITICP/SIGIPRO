@@ -178,7 +178,12 @@ CREATE TABLE bodega.inventarios_bodegas (
 	id_sub_bodega integer,
 	id_producto integer,
      	cantidad integer NOT NULL
- ); 
+ );
+
+ CREATE TABLE bodega.ubicaciones ( 
+	id_ubicacion serial NOT NULL,
+	nombre character varying(45) NOT NULL
+ );
 
  --Llaves primarias esquema bodega
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT pk_activos_fijos PRIMARY KEY (id_activo_fijo);
@@ -192,6 +197,7 @@ ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT pk_solicitudes PRIMARY KEY (i
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT pk_detalles_solicitudes PRIMARY KEY (id_detalle_solicitud);
 ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (id_sub_bodega);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
+ALTER TABLE ONLY bodega.ubicaciones ADD CONSTRAINT pk_ubicaciones PRIMARY KEY (id_ubicacion);
 	
 --Indices unicos esquema bodega
 CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogo_interno USING btree (codigo_icp);
