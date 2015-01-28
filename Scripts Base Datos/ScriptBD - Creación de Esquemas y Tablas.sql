@@ -182,7 +182,9 @@ CREATE TABLE bodega.inventarios_bodegas (
 
  CREATE TABLE bodega.ubicaciones ( 
 	id_ubicacion serial NOT NULL,
-	nombre character varying(45) NOT NULL
+	nombre character varying(45) NOT NULL,
+        descripcion character varying(500)
+
  );
 
  --Llaves primarias esquema bodega
