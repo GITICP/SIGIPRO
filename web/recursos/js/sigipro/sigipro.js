@@ -65,7 +65,7 @@ $("input[name='fechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("fechaActivacion").value = "";
   }
-  if (DateAct > fechahoy)
+  if (DateAct >= fechahoy)
   { 
     var mensaje = $('#mensajeFechas');
     mensaje.html("Usuario permanente: si selecciona ambas fechas iguales el usuario ser&aacute; permanente desde la fecha indicada");
@@ -255,7 +255,7 @@ $("input[name='editarFechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("agregarFechaActivacion").value = "";
   }
-  if (DateAct > fechahoy)
+  if (DateAct >= fechahoy)
   { 
     var mensaje = $('#mensajeFechasModalAgregar');
     mensaje.html("Rol permanente: si selecciona ambas fechas iguales el rol ser&aacute; permanente desde la fecha indicada");
@@ -273,7 +273,7 @@ $('#editarFechaActivacion').change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("editarFechaActivacion").value = "";
   }
-  if (DateAct > fechahoy)
+  if (DateAct >= fechahoy)
   { 
     var mensaje = $('#mensajeFechasModalEditar');
     mensaje.html("Rol permanente: si selecciona ambas fechas iguales el rol ser&aacute; permanente desde la fecha indicada");
