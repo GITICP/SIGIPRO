@@ -7,6 +7,7 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
+import com.icp.sigipro.bodegas.modelos.Reactivo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +34,7 @@ public class ProductoInternoDAO
     boolean resultado = false;
     
     try{
+      getConexion().setAutoCommit(false);
       PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogo_interno (nombre, codigo_icp, stock_minimo, stock_maximo, ubicacion, presentacion, descripcion) " +
                                                              " VALUES (?,?,?,?,?,?,?) RETURNING id_producto");
       
@@ -48,6 +50,28 @@ public class ProductoInternoDAO
         resultado = true;
         p.setId_producto(resultadoConsulta.getInt("id_producto"));
       }
+      
+      Reactivo reactivo = p.getReactivo();
+      
+      if(reactivo != null){
+        PreparedStatement consultaReactivo = getConexion().prepareStatement(
+                " INSERT INTO bodega.reactivos (id_producto, numero_cas, formula_quimica, familia, cantidad_botella_bodega, cantidad_botella_lab, volumen_bodega, volumen_lab) " +
+                " VALUES (?,?,?,?,?,?,?, ?) RETURNING id_producto");
+        
+        consultaReactivo.setInt(1, p.getId_producto());
+        consultaReactivo.setString(2, reactivo.getNumero_cas());
+        consultaReactivo.setString(3, reactivo.getFormula_quimica());
+        consultaReactivo.setString(4, reactivo.getFamilia());
+        consultaReactivo.setInt(5, reactivo.getCantidad_botella_bodega());
+        consultaReactivo.setInt(6, reactivo.getCantidad_botella_lab());
+        consultaReactivo.setInt(7, reactivo.getVolumen_bodega());
+        consultaReactivo.setInt(8, reactivo.getVolumen_lab());
+        
+        consulta.executeUpdate();
+        
+      }
+      
+      getConexion().commit();
       consulta.close();
       conexion.close();
     }

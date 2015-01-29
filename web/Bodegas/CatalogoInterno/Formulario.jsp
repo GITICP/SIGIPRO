@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <form class="form-horizontal" autocomplete="off" method="post" action="CatalogoInterno">
   <div class="row">
@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>  
-      <label for="stockMaximo" class="control-label">* Stock Mínimo</label>
+      <label for="stockMaximo" class="control-label">* Stock Máximo</label>
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
@@ -57,17 +57,6 @@
       </div>
     </div>
     <div class="col-md-6">
-      <label for="ubicacion" class="control-label">* Ubicación</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: F-21" class="form-control" name="ubicacion" value="${producto.getUbicacion()}"
-                   required
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
-          </div>
-        </div>
-      </div>
       <label for="presentacion" class="control-label">* Presentación</label>
       <div class="form-group">
         <div class="col-sm-12">
@@ -93,30 +82,160 @@
           <div class="input-group">
             <input type="checkbox" name="cuarentena" value="true" checked="checked"><span>  Entra por defecto en cuarentena.</span>
             <br>
-            <input type="checkbox" name="cuarentena" value="true"><span>  Es un reactivo.</span>
+            <input id="check-reactivo" type="checkbox" name="reactivo" value="true"><span>  Es un reactivo.</span>
           </div>
         </div>
       </div>      
     </div>
   </div>
 
-  <div id="form-reactivo" class="row" hidden="true">
-    <label for="numero_cas" class="control-label">* Presentación</label>
-    <div class="form-group">
-      <div class="col-sm-12">
-        <div class="input-group">
-          <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control" name="numero_cas" value="${producto.getReactivo().getPresentacion()}"
-                 required
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                 oninput="setCustomValidity('')" > 
+  <div id="form-reactivo" class="row" hidden="false">
+    <div class="col-md-6">
+      <label for="numero_cas" class="control-label">* Número Cas</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="numero_cas" value="${producto.getReactivo().getNumero_cas()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
+        </div>
+      </div>
+      <label for="formula_quimica" class="control-label">* Fórmula Química</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="formula_quimica" value="${producto.getReactivo().getFormula_quimica()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
+        </div>
+      </div>
+      <label for="familia" class="control-label">* Familia</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="familia" value="${producto.getReactivo().getFamilia()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
+        </div>
+      </div>
+      <label for="cantidad_botella_bodega" class="control-label">* Cantidad Botella Bodega</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="cantidad_botella_lab" class="control-label">* Cantidad Botella Laboratorio</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
+        </div>
+      </div>
+      <label for="volumen_bodega" class="control-label">* Volumen Bodega</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="volumen_bodega" value="${producto.getReactivo().getVolumen_bodega()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
+        </div>
+      </div>
+      <label for="volumen_lab" class="control-label">* Volumen Laboratorio</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="volumen_lab" value="${producto.getReactivo().getVolumen_lab()}"
+                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                   oninput="setCustomValidity('')" > 
+          </div>
         </div>
       </div>
     </div>
   </div>
   <!-- Esta parte es la de los permisos de un rol -->
-  <p>
+  <span>
     Los campos marcados con * son requeridos.
-  </p>  
+  </span>
+  <br>
+  <br>
+
+  <div class="widget widget-table">
+    <div class="widget-header">
+      <h3><i class="fa fa-map-marker"></i> Ubicaciones</h3>
+      <div class="btn-group widget-header-toolbar">
+        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUbicacion">Agregar</a>
+      </div>
+    </div>
+    <div class="widget-content">
+      <table id="datatable-column-filter-ubicaciones" class="table table-sorting table-striped table-hover datatable">
+        <thead>
+          <tr>
+            <th>Ubicación</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--
+        <c:forEach items="${ubicaciones}" var="ubicacion">
+          <tr id="${rolUsuario.getIDRol()}">
+            <td>${rolUsuario.getNombreRol()}</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
+            </td>
+          </tr>
+        </c:forEach>
+          -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="widget widget-table">
+    <div class="widget-header">
+      <h3><i class="fa fa-truck"></i> Producto Externo</h3>
+      <div class="btn-group widget-header-toolbar">
+        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProductoExterno">Agregar</a>
+      </div>
+    </div>
+    <div class="widget-content">
+      <table id="datatable-column-filter-productos-externos" class="table table-sorting table-striped table-hover datatable">
+        <thead>
+          <tr>
+            <th>Producto Externo</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--
+        <c:forEach items="${ubicaciones}" var="ubicacion">
+          <tr id="${rolUsuario.getIDRol()}">
+            <td>${rolUsuario.getNombreRol()}</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
+            </td>
+          </tr>
+        </c:forEach>
+          -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <input id="ubicacionesProductoInterno" hidden="true" name="listaUbicaciones" value="">
+  <input id="productosExternos" hidden="true" name="listaProductosExternos" value="">
 
   <div class="form-group">
     <div class="modal-footer">
@@ -124,6 +243,84 @@
       <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
     </div>
   </div>
-
-
 </form>
+
+<t:modal idModal="modalAgregarUbicacion" titulo="Asociar Ubicación">
+
+  <jsp:attribute name="form">
+
+    <form class="form-horizontal" id="formAgregarUbicacion">
+      <input type="text" name="ubicacion"  hidden="true">
+      <label for="idUbicacion" class="control-label">*Ubicación</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <select id="seleccionUbicacion" class="form-control" style='background-color: #fff;' name="idUbicacion" required
+                    oninvalid="setCustomValidity('Este campo es requerido')"
+                    oninput="setCustomValidity('')">
+              <option value="1">B12</option>
+              <option value="2">A4</option>
+              <option value="3">C8</option>
+              <option value="4">D11</option>
+              <!--
+              #### Opciones alambradas por demostración. Esto sería lo final. ####
+              <c:forEach items="${rolesRestantes}" var="rol">
+                <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+              </c:forEach> 
+              -->
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="form-group">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+        <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarUbicacion()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+      </div>
+    </div>
+
+
+  </jsp:attribute>
+
+</t:modal>
+    
+<t:modal idModal="modalAgregarProductoExterno" titulo="Asociar Producto Externo">
+
+  <jsp:attribute name="form">
+
+    <form class="form-horizontal" id="formAgregarProductoExterno">
+      <input type="text" name="productoExterno"  hidden="true">
+      <label for="idProductoExterno" class="control-label">*Producto Externo</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <select id="seleccionProductoExterno" class="form-control" style='background-color: #fff;' name="idProductoExterno" required
+                    oninvalid="setCustomValidity('Este campo es requerido')"
+                    oninput="setCustomValidity('')">
+              <option value="1">Dextromisol</option>
+              <option value="2">Cloruro de Sodio</option>
+              <option value="3">Uranio</option>
+              <option value="4">Hierro</option>
+              <!--
+              #### Opciones alambradas por demostración. Esto sería lo final. ####
+              <c:forEach items="${rolesRestantes}" var="rol">
+                <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+              </c:forEach> 
+              -->
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="form-group">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+        <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarProductoExterno()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+      </div>
+    </div>
+
+
+  </jsp:attribute>
+
+</t:modal>    

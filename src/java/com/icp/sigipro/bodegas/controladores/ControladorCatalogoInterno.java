@@ -7,6 +7,7 @@ package com.icp.sigipro.bodegas.controladores;
 
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
+import com.icp.sigipro.bodegas.modelos.Reactivo;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -105,7 +106,7 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       RequestDispatcher vista = request.getRequestDispatcher(redireccion);
       vista.forward(request, response);
     }
-    catch (AuthenticationException ex){
+    catch (AuthenticationException ex) {
       RequestDispatcher vista = request.getRequestDispatcher("/index.jsp");
       vista.forward(request, response);
     }
@@ -128,6 +129,24 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
     productoInterno.setUbicacion(request.getParameter("ubicacion"));
     productoInterno.setPresentacion(request.getParameter("presentacion"));
     productoInterno.setDescripcion(request.getParameter("descripcion"));
+    if (request.getParameter("cuarentena") != null) {
+      productoInterno.setCuarentena(true);
+    }
+    else {
+      productoInterno.setCuarentena(false);
+    }
+
+    if (request.getParameter("reactivo") != null) {
+      Reactivo r = new Reactivo();
+      r.setNumero_cas(request.getParameter("numero_cas"));
+      r.setFormula_quimica(request.getParameter("formula_quimica"));
+      r.setFamilia(request.getParameter("familia"));
+      r.setCantidad_botella_bodega(Integer.parseInt(request.getParameter("cantidad_botella_bodega")));
+      r.setCantidad_botella_lab(Integer.parseInt(request.getParameter("cantidad_botella_lab")));
+      r.setVolumen_bodega(Integer.parseInt(request.getParameter("volumen_bodega")));
+      r.setVolumen_lab(Integer.parseInt(request.getParameter("volumen_lab")));
+      productoInterno.setReactivo(r);
+    }
 
     ProductoInternoDAO dao = new ProductoInternoDAO();
     String id = request.getParameter("id_producto");
@@ -142,12 +161,11 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       resultado = dao.editarProductoInterno(productoInterno);
       redireccion = "CatalogoInterno/Editar.jsp";
     }
-    
-    
+
     if (resultado) {
       redireccion = String.format("CatalogoInterno/Ver.jsp", id);
     }
-    
+
     request.setAttribute("producto", productoInterno);
     RequestDispatcher vista = request.getRequestDispatcher(redireccion);
     vista.forward(request, response);
