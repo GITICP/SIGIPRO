@@ -228,21 +228,6 @@
         <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
-          <label for="nombreUsuario" class="control-label">*Usuario</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
-                  <c:forEach items="${rolesRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreUsuario()}</option>
-                  </c:forEach>
-                </select>
-
-              </div>
-            </div>
-          </div>
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
