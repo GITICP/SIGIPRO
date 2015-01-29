@@ -7,7 +7,6 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ProductoExternoInterno;
-import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
