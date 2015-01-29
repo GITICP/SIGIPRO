@@ -369,3 +369,26 @@ function editarSeccion() {
     $('#modalError').modal('show');
   }
 }
+
+$(document).ready(function(){
+  $('.btn-volver').click(function(){
+    bootbox.dialog({
+      title: "Confirmaci&oacute;n",
+      message: "&iquest;Desea Cancelar? Se perder&aacute; toda la informaci&oacute;n ingresada.",
+      buttons:{
+        danger: {
+          label: "Cancelar",
+          className: "btn-danger"
+        },
+        success:{
+        label: "Confirmar",
+        className: "btn-primary",
+        callback: function(){
+          history.back(); 
+          }
+        }
+      }
+    });
+  });
+});
+      
