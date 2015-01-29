@@ -94,7 +94,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control"  name="cedula" id="cedula" required
+                          <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628"  class="form-control"  name="cedula" id="cedula" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -163,7 +163,7 @@
                 </div>
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-legal"></i> Roles</h3>
+                    <h3><i class="fa fa-legal"></i> Roles asociados al usuario</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
                     </div>
