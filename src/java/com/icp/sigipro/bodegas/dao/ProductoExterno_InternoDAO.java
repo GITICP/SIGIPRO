@@ -33,7 +33,7 @@ public class ProductoExterno_InternoDAO {
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogos_internos_externos (id_producto_ext, id_producto) "
-              + " VALUES (?,?)");
+              + " VALUES (?,?) RETURNING id_producto");
 
       consulta.setInt(2, p.getId_producto());
       consulta.setInt(1, p.getId_producto_ext());

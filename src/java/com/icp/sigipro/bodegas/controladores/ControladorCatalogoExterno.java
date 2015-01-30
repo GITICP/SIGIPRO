@@ -161,7 +161,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
     productoExterno.setCodigo_Externo(request.getParameter("codigoExterno"));
     productoExterno.setMarca(request.getParameter("marca"));
     productoExterno.setId_Proveedor(Integer.parseInt(request.getParameter("proveedor")));
-    
+      
 
     ProductoExternoDAO dao = new ProductoExternoDAO();
     String id = request.getParameter("id_producto");

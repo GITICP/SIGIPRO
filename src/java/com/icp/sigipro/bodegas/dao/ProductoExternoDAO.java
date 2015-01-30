@@ -10,6 +10,7 @@ import com.icp.sigipro.bodegas.modelos.ProductoExterno;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,10 @@ public class ProductoExternoDAO {
 
       consulta.setString(1, p.getProducto());
       consulta.setString(2, p.getCodigo_Externo());
-      consulta.setInt(4, p.getId_Proveedor());
+      if (p.getId_Proveedor() == 0)
+      {consulta.setNull(4, Types.NULL);}
+      else{
+      consulta.setInt(4, p.getId_Proveedor());}
       consulta.setString(3, p.getMarca());
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -65,7 +69,10 @@ public class ProductoExternoDAO {
 
       consulta.setString(1, p.getProducto());
       consulta.setString(2, p.getCodigo_Externo());
-      consulta.setInt(4, p.getId_Proveedor());
+      if (p.getId_Proveedor() == 0)
+      {consulta.setNull(4, Types.NULL);}
+      else{
+      consulta.setInt(4, p.getId_Proveedor());}
       consulta.setString(3, p.getMarca());
       consulta.setInt(5,p.getId_producto_ext());
 

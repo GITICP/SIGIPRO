@@ -87,7 +87,7 @@
                 <tbody>
                   <c:forEach items="${productos_internos}" var="interno">
                     <tr id="${interno.getId_producto()}">
-                      <td>${interno.getNombre()}</td>
+                      <td>${interno.getNombre()} (${interno.getCodigo_icp()})</td>
                     </tr>
                   </c:forEach>
                 </tbody>
