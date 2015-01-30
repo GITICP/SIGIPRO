@@ -77,11 +77,40 @@
                     </div>
                   </div>
                 </div>
-
+                <!-- Esta parte es la de los permisos de un rol -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-check"></i> Permisos asociados al rol</h3>
+                    <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarPermisoRol">Agregar</a>
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre Permiso</th>
+                          <th>Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${permisosRol}" var="permisoRol">
+                          <tr id="${permisoRol.getIDPermiso()}">
+                            <td>${permisoRol.getNombrePermiso()}</td>
+                            <td>
+                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})">Eliminar</button>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los permisos de un rol -->
                 <!-- Esta parte es la de los usuarios de un rol -->
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-group"></i> Usuarios del Rol</h3>
+                    <h3><i class="fa fa-group"></i> Usuarios asociados al rol</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
                     </div>
@@ -113,43 +142,14 @@
                   </div>
                 </div>
                 <!-- Esta parte es la de los suarios del rol -->
-                <!-- Esta parte es la de los permisos de un rol -->
-                <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-check"></i> Permisos</h3>
-                    <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarPermisoRol">Agregar</a>
-                    </div>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>Nombre Permiso</th>
-                          <th>Eliminar</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${permisosRol}" var="permisoRol">
-                          <tr id="${permisoRol.getIDPermiso()}">
-                            <td>${permisoRol.getNombrePermiso()}</td>
-                            <td>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})">Eliminar</button>
-                            </td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- Esta parte es la de los permisos de un rol -->
+                
                 <p>
                   Los campos marcados con * son requeridos.
                 </p>  
 
                 <div class="form-group">
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-volver" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="confirmacionAgregarRol()"><i class="fa fa-check-circle"></i> Agregar Rol</button>
                   </div>
                 </div>
@@ -178,7 +178,7 @@
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${usuariosRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreUsuario()}</option>
+                    <option value=${rol.getID()}>${rol.getNombreCompleto()} (${rol.getNombreUsuario()}) </option>
                   </c:forEach>
                 </select>
               </div>
@@ -205,6 +205,7 @@
                          oninvalid="setCustomValidity('Este campo es requerido ')"
                          onchange="setCustomValidity('')">
                 </div>
+                <p id='mensajeFechasModalAgregar' style='color:red;'><p>
               </div>
             </div>
           </div>
@@ -227,21 +228,6 @@
         <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
-          <label for="idrol" class="control-label">*Usuario</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
-                  <c:forEach items="${usuariosRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreUsuario()}</option>
-                  </c:forEach>
-                </select>
-
-              </div>
-            </div>
-          </div>
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
@@ -262,6 +248,7 @@
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
               </div>
+              <p id='mensajeFechasModalEditar' style='color:red;'><p>
             </div>
           </div>
           <div class="form-group">
