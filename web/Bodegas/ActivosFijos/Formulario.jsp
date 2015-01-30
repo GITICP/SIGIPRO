@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <form class="form-horizontal" autocomplete="off" method="post" action="ActivosFijos">
     <div class="col-md-6">
@@ -46,7 +46,7 @@
         <div class="col-sm-12">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_movimiento" data-date-format="dd/mm/yyyy" required
+                <input type="text" value="${activofijo.getFecha_movimiento()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_movimiento" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
             </div>
@@ -58,34 +58,50 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
+                <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                 <select id="seleccionSeccion" class="form-control" name="seccion"
                         style='background-color: #fff;' >
                     <c:forEach items="${secciones}" var="seccion">
-                        <option value="${seccion.getID()}">${seccion.getNombreSeccion()}</option>
+                        <c:choose>
+                            <c:when test="${seccion.getID() == activofijo.getId_seccion()}" >
+                                <option value=${seccion.getID()} selected> ${seccion.getNombre_seccion()}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value=${seccion.getID()}>${seccion.getNombre_seccion()}</option>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
                 </select>
             </div>
         </div>
     </div>
-    <label for="ubicacion" class="control-label">Ubicación</label>
+    <label for="ubicacion" class="control-label">*Ubicación</label>
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-                <select id="seleccionUbicacion" class="form-control" name="ubicacion" 
+                <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
+                <select id="seleccionUbicacion" class="form-control" name="ubicacion"
                         style='background-color: #fff;' >
                     <c:forEach items="${ubicaciones}" var="ubicacion">
-                        <option value=${ubicacion.getId_ubicacion()}>${ubicacion.getNombre()}</option>
+                        <c:choose>
+                            <c:when test="${ubicacion.getId_ubicacion() == activofijo.getId_ubicacion()}" >
+                                <option value=${ubicacion.getId_ubicacion()} selected> ${ubicacion.getNombre()}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value=${ubicacion.getId_ubicacion()}>${ubicacion.getNombre()}</option>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
                 </select>
             </div>
         </div>
-    </div>
+    </div>                 
     <label for="fecha_registro" class="control-label">*Fecha de Registro</label>
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_registro" data-date-format="dd/mm/yyyy" required
+                <input type="text" value="${activofijo.getFecha_registro()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_registro" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
             </div>
@@ -102,13 +118,6 @@
             </div>
         </div>
     </div>
-    <select name="department">
-        <option value="${ubicaciones.get(1).getId_ubicacion()}">${ubicaciones.get(1).getNombre()}</option>
-        <c:forEach var="item" items="${ubicaciones}">
-            <option value="${item}">${item}</option>
-        </c:forEach>
-    </select>
-    <input for="xxx" class="control-label" value="${ubicaciones.get(1).getNombre()}"/>
 </div>
 </div>
 <!-- Esta parte es la de los permisos de un rol -->
@@ -119,7 +128,7 @@
 <div class="form-group">
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Activo Fijo</button>
     </div>
 </div>
 

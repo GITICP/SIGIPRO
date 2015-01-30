@@ -68,7 +68,61 @@ public class ActivoFijoDAO {
         }
         return resultado;
     }
+  public boolean editarActivoFijo(ActivoFijo a){
+    
+    boolean resultado = false;
+    
+    try{
+      PreparedStatement consulta = getConexion().prepareStatement(
+              " UPDATE bodega.activos_fijos SET placa=?, equipo=?, marca=?, fecha_movimiento=?, " + 
+              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=? " +
+              " WHERE id_activo_fijo=?; "
 
+      );
+            consulta.setInt(1, a.getPlaca());
+            consulta.setInt(2, a.getEquipo());
+            consulta.setString(3, a.getMarca());
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+            String strFecha = a.getFecha_movimiento();
+            Date fecha = null;
+            try {
+
+                fecha = formatoFecha.parse(strFecha);
+
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+
+            }
+            java.sql.Date fMovimientoSQL = new java.sql.Date(fecha.getTime());
+            consulta.setDate(4, fMovimientoSQL);
+            consulta.setInt(5, a.getId_seccion());
+            consulta.setInt(6, a.getId_ubicacion());
+            java.util.Date fRegistro = formatoFecha.parse(a.getFecha_registro());
+            java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
+            consulta.setDate(7, fRegistroSQL);
+            consulta.setString(8, a.getEstado()); 
+            consulta.setInt(9, a.getId_activo_fijo());
+//      consulta.setString(1, a.getNombre());
+//      consulta.setString(2, a.getCodigo_icp());
+//      consulta.setInt(3, a.getStock_minimo());
+//      consulta.setInt(4, a.getStock_maximo());
+//      consulta.setString(5, a.getUbicacion());
+//      consulta.setString(6, a.getPresentacion());
+//      consulta.setString(7, a.getDescripcion());
+//      consulta.setInt(8, a.getId_producto());
+      
+      if ( consulta.executeUpdate() == 1){
+        resultado = true;
+      }
+      consulta.close();
+      conexion.close();
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
     public boolean eliminarActivoFijo(int id_activo_fijo) {
 
         boolean resultado = false;

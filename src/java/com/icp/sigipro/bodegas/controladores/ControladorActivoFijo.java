@@ -10,8 +10,8 @@ import com.icp.sigipro.bodegas.dao.UbicacionDAO;
 import com.icp.sigipro.bodegas.modelos.ActivoFijo;
 import com.icp.sigipro.bodegas.modelos.Ubicacion;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.seguridad.dao.SeccionDAO;
-import com.icp.sigipro.seguridad.modelos.Seccion;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -92,9 +92,11 @@ public class ControladorActivoFijo extends SIGIPROServlet {
                 } else if (accion.equalsIgnoreCase("editar")) {
                     validarPermiso(12, listaPermisos);
                     redireccion = "ActivosFijos/Editar.jsp";
-                    int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
-                    //Ubicacion ubicacion = dao.obtenerUbicacion(id_ubicacion);
-                    //request.setAttribute("ubicacion", ubicacion);
+                    int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
+                    ActivoFijo activofijo = dao.obtenerActivoFijo(id_activo_fijo);
+                    request.setAttribute("secciones", secciones);
+                    request.setAttribute("ubicaciones", ubicaciones);
+                    request.setAttribute("activofijo", activofijo);
                     request.setAttribute("accion", "Editar");
                 } else {
                     validarPermisos(permisos, listaPermisos);
@@ -130,8 +132,8 @@ public class ControladorActivoFijo extends SIGIPROServlet {
         activofijo.setMarca(request.getParameter("marca"));
         String fechamovimiento = request.getParameter("fecha_movimiento");
         activofijo.setFecha_movimiento(fechamovimiento);
-        activofijo.setId_seccion(1);
-        activofijo.setId_ubicacion(2);
+        activofijo.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
+        activofijo.setId_ubicacion(Integer.parseInt(request.getParameter("ubicacion")));
         String fecharegistro = request.getParameter("fecha_registro");
         activofijo.setFecha_registro(fecharegistro);
         activofijo.setEstado(request.getParameter("estado"));
@@ -146,11 +148,12 @@ public class ControladorActivoFijo extends SIGIPROServlet {
         } else {
             activofijo.setId_activo_fijo(Integer.parseInt(id));
             resultado = dao.editarActivoFijo(activofijo);
-            redireccion = "Ubicaciones/Editar.jsp";
+            redireccion = "ActivosFijos/index.jsp";
         }
 
         if (resultado) {
-            redireccion = String.format("ActivosFijos/Ver.jsp", id);
+            request.setAttribute("activofijo", activofijo);
+            redireccion = String.format("ActivosFijos/index.jsp", id);
         }
 
         request.setAttribute("activofijo", activofijo);
