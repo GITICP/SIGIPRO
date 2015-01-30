@@ -44,6 +44,12 @@ CREATE TABLE seguridad.secciones (
     descripcion character varying(200)
 );
 
+CREATE TABLE seguridad.puestos (
+    id_puesto serial NOT NULL,
+    nombre_puesto character varying(45),
+    descripcion character varying(200)
+);
+
 CREATE TABLE seguridad.usuarios (
     id_usuario serial NOT NULL,
     nombre_usuario character varying(45),
@@ -52,7 +58,7 @@ CREATE TABLE seguridad.usuarios (
     nombre_completo character varying(200),
     cedula character varying(45),
     id_seccion integer,
-    puesto character varying(200),
+    id_puesto integer,
     fecha_activacion date,
     fecha_desactivacion date,
     estado boolean,
@@ -68,6 +74,8 @@ ALTER TABLE ONLY seguridad.roles ADD CONSTRAINT pk_roles PRIMARY KEY (id_rol);
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT pk_roles_usuarios PRIMARY KEY (id_usuario, id_rol);
 ALTER TABLE ONLY seguridad.secciones ADD CONSTRAINT pk_secciones PRIMARY KEY (id_seccion);
 ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT pk_usuarios PRIMARY KEY (id_usuario);
+ALTER TABLE ONLY seguridad.puestos ADD CONSTRAINT pk_puestos PRIMARY KEY (id_puesto);
+
 
 --Indices unicos esquema seguridad
 CREATE UNIQUE INDEX i_cedula ON seguridad.usuarios USING btree (cedula);
@@ -84,7 +92,8 @@ ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_rol FOREIGN KEY (
 ALTER TABLE ONLY seguridad.permisos_roles ADD CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES seguridad.roles(id_rol) ON DELETE CASCADE;
 ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY seguridad.permisos_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (id_permiso) REFERENCES seguridad.permisos(id_permiso);
-ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion); 
+ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion) on delete set null;; 
+ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_puesto FOREIGN KEY (id_puesto) REFERENCES seguridad.puestos(id_puesto)on delete set null;; 
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;
@@ -341,11 +350,14 @@ INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Bioterio',
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Serpentario','Dedicados a los serpentarios');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Caballeriza','Dedicados a la caballeriza');
 
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('waltercoru', md5('sigipro'), 'waltercori21@gmail.com', 'Walter Cordero Urena', '1-2345-6710', 1, 'Jefe', '2014-12-01', '2014-12-01', true, false);
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('dnjj14', md5('sigipro'), 'dnjj14@gmail.com', 'Daniel Thiel Jimenez', '2-2345-6789', 1, 'Jefe', '2014-12-01', '2014-12-01', false, true);
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 1, 'Jefe', '2014-12-01', '2014-12-01', true, true);
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 1 , 'Jefe', '2014-12-01', '2014-12-01', false, true);
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 1, 'Jefe', '2014-12-01', '2014-12-01', true, true);
+INSERT INTO seguridad.puestos(nombre_puesto, descripcion) VALUES ('Jefe','Puesto de jefatura');
+INSERT INTO seguridad.puestos(nombre_puesto, descripcion) VALUES ('Secretario','Secretarios de jefatura');
+
+INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('waltercoru', md5('sigipro'), 'waltercori21@gmail.com', 'Walter Cordero Urena', '1-2345-6710', 1, 1, '2014-12-01', '2014-12-01', true, false);
+INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('dnjj14', md5('sigipro'), 'dnjj14@gmail.com', 'Daniel Thiel Jimenez', '2-2345-6789', 1, 1, '2014-12-01', '2014-12-01', false, true);
+INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
+INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 1 , 1, '2014-12-01', '2014-12-01', false, true);
+INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
 
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
