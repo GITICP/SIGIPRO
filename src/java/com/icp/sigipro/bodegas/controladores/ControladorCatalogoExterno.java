@@ -14,6 +14,7 @@ import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.compras.dao.ProveedorDAO;
 import com.icp.sigipro.compras.modelos.Proveedor;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -154,6 +155,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           throws ServletException, IOException {
     request.setCharacterEncoding("UTF-8");
     boolean resultado = false;
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
     ProductoExterno productoExterno = new ProductoExterno();
 
@@ -171,20 +173,31 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
     if (id.isEmpty() || id.equals("0")) {
       resultado = dao.insertarProductoExterno(productoExterno);
       redireccion = "CatalogoExterno/Agregar.jsp";
+      request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo ingresado correctamente"));
     }
     else {
       productoExterno.setId_producto_ext(Integer.parseInt(id));
       resultado = dao.editarProductoExterno(productoExterno);
       redireccion = "CatalogoExterno/Editar.jsp";
+      request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo editado correctamente"));
     }
 
     if (resultado) {
-      redireccion = String.format("CatalogoExterno/Ver.jsp", id);
+      redireccion = "CatalogoExterno/index.jsp";
+      List<ProductoExterno> productos = dao.obtenerProductos();
+      request.setAttribute("listaProductos", productos);
       ProductoExterno_InternoDAO exin = new ProductoExterno_InternoDAO();
       exin.eliminarProductoExterno_Interno_Existentes(productoExterno.getId_producto_ext());
       List<ProductoExternoInterno> ExtInt = exin.parsearProductosExternos_Internos(lista, productoExterno.getId_producto_ext());
+      boolean e = true;
       for (ProductoExternoInterno i : ExtInt) {
-            boolean e = exin.insertarProductoExterno_Interno(i);}
+             e = exin.insertarProductoExterno_Interno(i);
+             if (!e){break;}
+        }
+      if (!e){request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Producto del Catálogo Externo ingresado correctamente, pero sin Productos Internos Asociados"));}
+    }
+    else{
+      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
     }
     
     request.setAttribute("producto", productoExterno);

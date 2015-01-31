@@ -5,10 +5,11 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 <form id="formCatalogoExterno" class="form-horizontal" autocomplete="off" method="post" action="CatalogoExterno">
-
+  
     <input hidden="true" name="id_producto" value="${producto.getId_producto_ext()}">
     <input id="productosinternos" hidden="true" name="listaProductosInternos" value="">
     <label for="producto" class="control-label">* Nombre del Producto</label>
@@ -44,11 +45,28 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <select id="proveedor" class="form-control" name="proveedor" style='background-color: #fff;' >  
-            <c:forEach items="${proveedores}" var="pr">
-              <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
-            </c:forEach>
-            <option value=${producto.getId_Proveedor()} selected>${producto.getNombreProveedor()}</option> 
+          <select id="proveedor" class="form-control" name="proveedor" style='background-color: #fff;' > 
+            <c:set var='varAccion' value="Agregar"/>
+            <c:choose>
+              <c:when test="${accion eq varAccion}">
+                <c:forEach items="${proveedores}" var="pr">
+                  <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
+                </c:forEach>
+                <option value=0 selected> -- Sin selección --</option> 
+              </c:when>
+              <c:otherwise>
+                <c:forEach items="${proveedores}" var="pr">
+                  <c:choose>
+                    <c:when test="${pr.getId_proveedor() == producto.getId_Proveedor()}">
+                      <option value=${pr.getId_proveedor()} selected>${pr.getNombre_proveedor()}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
+                    </c:otherwise>
+                  </c:choose>
+                </c:forEach>
+              </c:otherwise>
+            </c:choose>
           </select>
         </div>
       </div>
