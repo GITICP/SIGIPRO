@@ -90,32 +90,6 @@
                   <tr><td> <strong>Descripcion:</strong> <td>${rol.getDescripcion()} </td></tr>
                 </table>
                 <br>
-                <!-- Ver usuarios -->
-                <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-group"></i> Usuarios con el rol ${rol.getNombreRol()} </h3>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>Nombre Usuario</th>
-                          <th>Fecha Activación</th>
-                          <th>Fecha Desactivación</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${usuariosRol}" var="usuarioRol">
-                          <tr id="${usuarioRol.getIDUsuario()}">
-                            <td>${usuarioRol.getNombreUsuario()}</td>
-                            <td>${usuarioRol.getFechaActivacion()}</td>
-                            <td>${usuarioRol.getFechaDesactivacion()}</td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
                 <!-- Ver permisos -->
                 <div class="widget widget-table">
                   <div class="widget-header">
@@ -138,6 +112,33 @@
                     </table>
                   </div>
                 </div>
+                <!-- Ver usuarios -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-group"></i> Usuarios con el Rol ${rol.getNombreRol()} </h3>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre Usuario</th>
+                          <th>Fecha Activación</th>
+                          <th>Fecha Desactivación</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${usuariosRol}" var="usuarioRol">
+                          <tr id="${usuarioRol.getIDUsuario()}">
+                            <td>${usuarioRol.getNombreUsuario()}</td>
+                            <td>${usuarioRol.getFechaActivacion()}</td>
+                            <td>${usuarioRol.getFechaDesactivacion()}</td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
               </div>
             </div>
             <!-- END WIDGET TICKET TABLE -->
