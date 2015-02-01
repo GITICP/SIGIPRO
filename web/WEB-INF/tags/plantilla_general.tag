@@ -102,6 +102,7 @@
 
     <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/CatalogoExterno.js"></script>
 
     <script>
       $('.sigiproDatePicker').datepicker()

@@ -214,5 +214,71 @@ public class ProductoInternoDAO
 
     return conexion;
   }
-  
+
+  public List<ProductoInterno> obtenerProductosInternosRestantes(int p_IdExterno) {
+    List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();
+
+    try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement("SELECT * "
+              + "FROM bodega.catalogo_interno c "
+              + "WHERE c.id_producto NOT IN (SELECT ru.id_producto FROM bodega.catalogos_internos_externos ru WHERE ru.id_producto_ext = ?)");
+      consulta.setInt(1, p_IdExterno);
+      ResultSet rs = consulta.executeQuery();
+      while(rs.next()){
+        ProductoInterno producto = new ProductoInterno();
+        producto.setId_producto(rs.getInt("id_producto"));
+        producto.setNombre(rs.getString("nombre"));
+        producto.setCodigo_icp(rs.getString("codigo_icp"));
+        producto.setStock_minimo(rs.getInt("stock_minimo"));
+        producto.setStock_maximo(rs.getInt("stock_maximo"));
+        producto.setUbicacion(rs.getString("ubicacion"));
+        producto.setPresentacion(rs.getString("presentacion"));
+        producto.setDescripcion(rs.getString("descripcion"));
+        
+        resultado.add(producto);
+      }
+       
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      resultado = null;
+    }
+
+    return resultado;
+  }
+
+  public List<ProductoInterno> obtenerProductosInternos_Externo(int p_IdExterno) {
+    List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();
+
+   try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement("SELECT * "
+              + "FROM bodega.catalogo_interno c "
+              + "WHERE c.id_producto IN (SELECT ru.id_producto FROM bodega.catalogos_internos_externos ru WHERE ru.id_producto_ext = ?)");
+      consulta.setInt(1, p_IdExterno);
+      ResultSet rs = consulta.executeQuery();
+      while(rs.next()){
+        ProductoInterno producto = new ProductoInterno();
+        producto.setId_producto(rs.getInt("id_producto"));
+        producto.setNombre(rs.getString("nombre"));
+        producto.setCodigo_icp(rs.getString("codigo_icp"));
+        producto.setStock_minimo(rs.getInt("stock_minimo"));
+        producto.setStock_maximo(rs.getInt("stock_maximo"));
+        producto.setUbicacion(rs.getString("ubicacion"));
+        producto.setPresentacion(rs.getString("presentacion"));
+        producto.setDescripcion(rs.getString("descripcion"));
+        
+        resultado.add(producto);
+      }
+       
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      resultado = null;
+    }
+
+    return resultado;
+  }
+
 }

@@ -4,14 +4,14 @@
     Author     : Walter
 --%>
 
-<%@page import="com.icp.sigipro.configuracion.modelos.Seccion"%>
+<%@page import="com.icp.sigipro.seguridad.modelos.Puesto"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Configuracion" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
 
     <jsp:attribute name="contenido">
 
@@ -22,11 +22,11 @@
             <div class="row">
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
-                        <li>Configuración</li>
+                        <li>Seguridad</li>
                         <li>
-                            <a href="/SIGIPRO/Configuracion/Secciones/">Secciones</a>
+                            <a href="/SIGIPRO/Seguridad/Puestos/">Puestos</a>
                         </li>
-                        <li class="active"> Agregar Sección </li>
+                        <li class="active"> Agregar Puesto </li>
 
                     </ul>
                 </div>
@@ -43,18 +43,18 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-group"></i> Agregar Nueva Sección </h3>
+                            <h3><i class="fa fa-group"></i> Agregar Nuevo Puesto </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <form class="form-horizontal" autocomplete="off" role="form" action="Agregar" method="post">
-                                <p class="title">Agregar Sección</p>
+                                <p class="title">Agregar Puesto</p>
                                 <div class='col-md-6'>
-                                <label for="nombreUsuario" class="control-label">*Nombre de Sección</label>
+                                <label for="nombreUsuario" class="control-label">*Nombre del Puesto</label>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div class="input-group">
-                                            <input type="text" maxlength="45" placeholder="Nombre de Sección" class="form-control" name="nombre_seccion" required
+                                            <input type="text" maxlength="45" placeholder="Nombre del Puesto" class="form-control" name="nombre_puesto" required
                                                    oninvalid="setCustomValidity('Este campo es requerido ')"
                                                    oninput="setCustomValidity('')" > 
                                         </div>
@@ -78,8 +78,8 @@
                                 </p>
                                 <div class="form-group">
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger btn-volver" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Sección</button>
+                                        <button type="button" class="btn btn-danger" onclick="history.back()" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Puesto</button>
                                     </div>
                                 </div>
                             </form>
