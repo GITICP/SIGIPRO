@@ -5,16 +5,12 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
-
-
 
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">

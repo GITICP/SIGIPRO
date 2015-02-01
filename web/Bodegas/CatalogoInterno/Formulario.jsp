@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <form class="form-horizontal" autocomplete="off" method="post" action="CatalogoInterno">
   <div class="row">
@@ -188,16 +189,14 @@
           </tr>
         </thead>
         <tbody>
-          <!--
-        <c:forEach items="${ubicaciones}" var="ubicacion">
-          <tr id="${rolUsuario.getIDRol()}">
-            <td>${rolUsuario.getNombreRol()}</td>
+        <c:forEach items="${ubicacionesProducto}" var="ubicacion">
+          <tr id="${ubicacion.getId_ubicacion()}">
+            <td>${ubicacion.getNombre()}</td>
             <td>
-              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
+              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarUbicacion(${ubicacion.getId_ubicacion()})" >Eliminar</button>
             </td>
           </tr>
         </c:forEach>
-          -->
         </tbody>
       </table>
     </div>
@@ -234,8 +233,8 @@
     </div>
   </div>
 
-  <input id="ubicacionesProductoInterno" hidden="true" name="listaUbicaciones" value="">
-  <input id="productosExternos" hidden="true" name="listaProductosExternos" value="">
+  <input hidden="true" id="ubicaciones"  name="ubicaciones" value="">
+  <input hidden="true" id="productosExternos"  name="productosExternos" value="">
 
   <div class="form-group">
     <div class="modal-footer">
@@ -258,16 +257,9 @@
             <select id="seleccionUbicacion" class="form-control" style='background-color: #fff;' name="idUbicacion" required
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
-              <option value="1">B12</option>
-              <option value="2">A4</option>
-              <option value="3">C8</option>
-              <option value="4">D11</option>
-              <!--
-              #### Opciones alambradas por demostración. Esto sería lo final. ####
-              <c:forEach items="${rolesRestantes}" var="rol">
-                <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+              <c:forEach items="${ubicacionesRestantes}" var="ubicacion">
+                <option value=${ubicacion.getId_ubicacion()}>${ubicacion.getNombre()}</option>
               </c:forEach> 
-              -->
             </select>
           </div>
         </div>
@@ -284,7 +276,7 @@
   </jsp:attribute>
 
 </t:modal>
-    
+
 <t:modal idModal="modalAgregarProductoExterno" titulo="Asociar Producto Externo">
 
   <jsp:attribute name="form">
@@ -298,16 +290,9 @@
             <select id="seleccionProductoExterno" class="form-control" style='background-color: #fff;' name="idProductoExterno" required
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
-              <option value="1">Dextromisol</option>
-              <option value="2">Cloruro de Sodio</option>
-              <option value="3">Uranio</option>
-              <option value="4">Hierro</option>
-              <!--
-              #### Opciones alambradas por demostración. Esto sería lo final. ####
-              <c:forEach items="${rolesRestantes}" var="rol">
-                <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+              <c:forEach items="${productosExternosRestantes}" var="producto">
+                <option value=${producto.getId_producto_ext()}>${producto.getProducto()} (${producto.getCodigo_Externo()})</option>
               </c:forEach> 
-              -->
             </select>
           </div>
         </div>

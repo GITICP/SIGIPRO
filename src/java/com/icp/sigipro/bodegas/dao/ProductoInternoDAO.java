@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class ProductoInternoDAO
     conexion = s.conectar();
   }
   
-  public boolean insertarProductoInterno(ProductoInterno p){
+  public boolean insertarProductoInterno(ProductoInterno p, String ubicaciones, String productosExternos){
     
     boolean resultado = false;
     
@@ -68,6 +69,38 @@ public class ProductoInternoDAO
         consultaReactivo.setInt(8, reactivo.getVolumen_lab());
         
         consultaReactivo.executeUpdate(); 
+      }
+      
+      if (ubicaciones != null){
+        String[] idsTemp = ubicaciones.split("#u#");
+        String[] ids = Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+        
+        PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
+                " INSERT INTO bodega.ubicaciones_catalogo_interno(id_ubicacion, id_producto) " +
+                " VALUES (?, ?)");
+        
+        consultaUbicaciones.setInt(2, p.getId_producto());
+        
+        for (String id : ids){
+          consultaUbicaciones.setInt(1, Integer.parseInt(id));
+          consultaUbicaciones.executeUpdate();
+        }
+      }
+      
+      if (productosExternos != null){
+        String[] idsTemp = productosExternos.split("#p#");
+        String[] ids = Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+        
+        PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
+                " INSERT INTO bodega.catalogos_internos_externos(id_producto_ext, id_producto) " +
+                " VALUES (?, ?)");
+        
+        consultaUbicaciones.setInt(2, p.getId_producto());
+        
+        for (String id : ids){
+          consultaUbicaciones.setInt(1, Integer.parseInt(id));
+          consultaUbicaciones.executeUpdate();
+        }
       }
       
       getConexion().commit();

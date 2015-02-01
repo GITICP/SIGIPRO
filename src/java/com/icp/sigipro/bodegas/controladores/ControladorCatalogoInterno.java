@@ -5,9 +5,13 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
+import com.icp.sigipro.bodegas.dao.ProductoExternoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
+import com.icp.sigipro.bodegas.dao.UbicacionBodegaDAO;
+import com.icp.sigipro.bodegas.modelos.ProductoExterno;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Reactivo;
+import com.icp.sigipro.bodegas.modelos.UbicacionBodega;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,6 +58,8 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       String redireccion = "";
       String accion = request.getParameter("accion");
       ProductoInternoDAO dao = new ProductoInternoDAO();
+      ProductoExternoDAO daoProductosExternos = new ProductoExternoDAO();
+      UbicacionBodegaDAO daoUbicaciones = new UbicacionBodegaDAO();
       HttpSession sesion = request.getSession();
       List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
       int[] permisos = {11, 12, 13};
@@ -70,7 +76,11 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           validarPermiso(11, listaPermisos);
           redireccion = "CatalogoInterno/Agregar.jsp";
           ProductoInterno producto = new ProductoInterno();
+          List<UbicacionBodega> ubicaciones = daoUbicaciones.obtenerUbicacionesLimitado();
+          List<ProductoExterno> productos = daoProductosExternos.obtenerProductosLimitado();
           request.setAttribute("producto", producto);
+          request.setAttribute("ubicacionesRestantes", ubicaciones);
+          request.setAttribute("productosExternosRestantes", productos);
           request.setAttribute("accion", "Agregar");
         }
         else if (accion.equalsIgnoreCase("eliminar")) {
@@ -129,6 +139,9 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
     productoInterno.setUbicacion(request.getParameter("ubicacion"));
     productoInterno.setPresentacion(request.getParameter("presentacion"));
     productoInterno.setDescripcion(request.getParameter("descripcion"));
+    
+    String ubicaciones = request.getParameter("ubicaciones");
+    String productosExternos = request.getParameter("productosExternos");
     if (request.getParameter("cuarentena") != null) {
       productoInterno.setCuarentena(true);
     }
@@ -153,7 +166,7 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
     String redireccion;
 
     if (id.isEmpty() || id.equals("0")) {
-      resultado = dao.insertarProductoInterno(productoInterno);
+      resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
       redireccion = "CatalogoInterno/Agregar.jsp";
     }
     else {
