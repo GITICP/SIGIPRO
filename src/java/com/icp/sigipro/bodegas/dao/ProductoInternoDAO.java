@@ -56,7 +56,7 @@ public class ProductoInternoDAO
       if(reactivo != null){
         PreparedStatement consultaReactivo = getConexion().prepareStatement(
                 " INSERT INTO bodega.reactivos (id_producto, numero_cas, formula_quimica, familia, cantidad_botella_bodega, cantidad_botella_lab, volumen_bodega, volumen_lab) " +
-                " VALUES (?,?,?,?,?,?,?, ?) RETURNING id_producto");
+                " VALUES (?,?,?,?,?,?,?,?)");
         
         consultaReactivo.setInt(1, p.getId_producto());
         consultaReactivo.setString(2, reactivo.getNumero_cas());
@@ -67,8 +67,7 @@ public class ProductoInternoDAO
         consultaReactivo.setInt(7, reactivo.getVolumen_bodega());
         consultaReactivo.setInt(8, reactivo.getVolumen_lab());
         
-        consulta.executeUpdate();
-        
+        consultaReactivo.executeUpdate(); 
       }
       
       getConexion().commit();
