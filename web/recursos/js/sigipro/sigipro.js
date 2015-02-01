@@ -392,3 +392,55 @@ $(document).ready(function(){
   });
 });
       
+function asignarCookiePuesto() {
+  if (valorRBPuesto)
+  {
+    var x = document.getElementById(valorRBPuesto);
+    var nombre = x.children[1].innerHTML;
+
+
+    setCookie('id_puesto', valorRBPuesto.toString() + ';' + nombre, 1, '/');
+
+  }
+  else
+  {
+  }
+}
+window.valorRBPuesto = null;
+$("input[name='controlPuesto']").click(function () {
+  valorRBPuesto = this.value;
+  document.getElementById("controlIDPuesto").value = valorRBPuesto;
+});
+
+
+function eliminarPuesto() {
+  if (valorRBPuesto)
+  {
+    $('#modalEliminarPuesto').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
+
+function EditarPuestoJS() {
+  var x = document.getElementById(valorRBPuesto);
+
+  document.getElementById("editarIdPuesto").value = valorRBPuesto;
+  document.getElementById("editarNombre").value = x.children[1].innerHTML;
+  document.getElementById("editarDescripcion").value = x.children[2].innerHTML;
+
+}
+
+function editarPuesto() {
+  if (valorRBPuesto)
+  {
+    EditarPuestoJS();
+    $('#ModalEditarPuesto').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
