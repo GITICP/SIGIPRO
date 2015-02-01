@@ -49,14 +49,14 @@
 
               <jsp:include page="Formulario.jsp"></jsp:include>
 
-              </div>
             </div>
-            <!-- END WIDGET TICKET TABLE -->
           </div>
-          <!-- /main-content -->
+          <!-- END WIDGET TICKET TABLE -->
         </div>
-        <!-- /main -->
+        <!-- /main-content -->
       </div>
+      <!-- /main -->
+    </div>
 
   </jsp:attribute>
 

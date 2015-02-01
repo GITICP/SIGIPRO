@@ -1,11 +1,5 @@
 package com.icp.sigipro.bodegas.modelos;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-//import java.time.format.DateTimeFormatter;
-//import java.time.temporal.TemporalAccessor;
-
 /**
  *
  * @author Walter
@@ -128,5 +122,4 @@ public class ActivoFijo {
     public void setNombre_ubicacion(String nombre_ubicacion) {
         this.nombre_ubicacion = nombre_ubicacion;
     }
-
 }
