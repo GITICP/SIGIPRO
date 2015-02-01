@@ -9,7 +9,7 @@
 
 
 <form id="formCatalogoExterno" class="form-horizontal" autocomplete="off" method="post" action="CatalogoExterno">
-  
+  <div class="col-md-6">
     <input hidden="true" name="id_producto" value="${producto.getId_producto_ext()}">
     <input id="productosinternos" hidden="true" name="listaProductosInternos" value="">
     <label for="producto" class="control-label">* Nombre del Producto</label>
@@ -48,30 +48,31 @@
           <select id="proveedor" class="form-control" name="proveedor" style='background-color: #fff;' > 
             <c:set var='varAccion' value="Agregar"/>
             <c:choose>
-              <c:when test="${accion eq varAccion}">
+              <c:when test="${accion eq varAccion || producto.getId_Proveedor()==0}">
                 <c:forEach items="${proveedores}" var="pr">
                   <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
                 </c:forEach>
                 <option value=0 selected> -- Sin selección --</option> 
               </c:when>
-              <c:otherwise>
-                <c:forEach items="${proveedores}" var="pr">
-                  <c:choose>
-                    <c:when test="${pr.getId_proveedor() == producto.getId_Proveedor()}">
-                      <option value=${pr.getId_proveedor()} selected>${pr.getNombre_proveedor()}</option>
-                    </c:when>
-                    <c:otherwise>
-                      <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
-                    </c:otherwise>
-                  </c:choose>
-                </c:forEach>
+              <c:otherwise>               
+                    <c:forEach items="${proveedores}" var="pr">              
+                      <c:choose>
+                        <c:when test="${pr.getId_proveedor() == producto.getId_Proveedor()}">
+                          <option value=${pr.getId_proveedor()} selected>${pr.getNombre_proveedor()}</option>
+                        </c:when>
+                        <c:otherwise>
+                          <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
+                        </c:otherwise>       
+                      </c:choose>
+                    </c:forEach>
               </c:otherwise>
             </c:choose>
           </select>
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="col-md-12">
     <!-- Esta parte es la de los interno del catalogo externo -->
     <div class="widget widget-table">
       <div class="widget-header">
@@ -89,29 +90,30 @@
             </tr>
           </thead>
           <tbody>
-          <c:forEach items="${productos_internos}" var="interno">
-            <tr id="${interno.getId_producto()}">
-              <td>${interno.getNombre()}</td>
-              <td>
-                <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarProductoInterno(${interno.getId_producto()})">Eliminar</button>
-              </td>
-            </tr>
-          </c:forEach>
+            <c:forEach items="${productos_internos}" var="interno">
+              <tr id="${interno.getId_producto()}">
+                <td>${interno.getNombre()}</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarProductoInterno(${interno.getId_producto()})">Eliminar</button>
+                </td>
+              </tr>
+            </c:forEach>
           </tbody>
         </table>
       </div>
     </div>
-    <p>
-      Los campos marcados con * son requeridos.
-    </p>  
+  <p>
+    Los campos marcados con * son requeridos.
+  </p>  
 
-    <div class="form-group">
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
-      </div>
+  <div class="form-group">
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
+      <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
     </div>
- 
+  </div>
+  </div>
+
 
 
 </form>
