@@ -146,6 +146,31 @@ public class UbicacionBodegaDAO
       ex.printStackTrace();
     }
     return resultado;
+  }
+  
+  public List<UbicacionBodega> obtenerUbicacionesLimitado(){
+    
+    List<UbicacionBodega> resultado = new ArrayList<UbicacionBodega>();
+    
+    try{
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_ubicacion, nombre FROM bodega.ubicaciones_bodega ");
+      ResultSet rs = consulta.executeQuery();
+      
+      while(rs.next()){
+        UbicacionBodega ubicacion = new UbicacionBodega();
+        ubicacion.setId_ubicacion(rs.getInt("id_ubicacion"));
+        ubicacion.setNombre(rs.getString("nombre"));
+        
+        resultado.add(ubicacion);
+      }      
+      
+      consulta.close();
+      conexion.close();
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return resultado;
   } 
   
   private Connection getConexion(){

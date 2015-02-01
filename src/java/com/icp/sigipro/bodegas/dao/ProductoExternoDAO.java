@@ -179,6 +179,31 @@ public class ProductoExternoDAO {
     }
     return resultado;
   }
+  
+  public List<ProductoExterno> obtenerProductosLimitado() {
+
+    List<ProductoExterno> resultado = new ArrayList<ProductoExterno>();
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_producto_ext, producto, codigo_externo FROM bodega.catalogo_externo ");
+      ResultSet rs = consulta.executeQuery();
+
+      while (rs.next()) {
+        ProductoExterno producto = new ProductoExterno();
+        
+        producto.setId_producto_ext(rs.getInt("id_producto_ext"));
+        producto.setProducto(rs.getString("producto"));
+        producto.setCodigo_Externo(rs.getString("codigo_externo"));
+        
+        resultado.add(producto);
+      }
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
 
   private Connection getConexion() {
     try {
