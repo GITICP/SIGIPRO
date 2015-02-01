@@ -20,70 +20,64 @@ import java.util.List;
  *
  * @author Amed
  */
-public class PermisoRolDAO 
-{
-         public boolean insertarPermisoRol(int idrol, int idpermiso)
-    {
-        boolean resultado = false;
-        
-        try
-        {
-            SingletonBD s = SingletonBD.getSingletonBD();
-            Connection conexion = s.conectar();
-            
-            if(conexion != null)
-            {
-                PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.permisos_roles "
-                        + " (id_rol, id_permiso) "
-                        + " VALUES "
-                        + " (?,? )");
-                consulta.setInt(1, idrol);
-                consulta.setInt(2, idpermiso);
-                int resultadoConsulta = consulta.executeUpdate();
-                if (resultadoConsulta == 1)
-                {
-                    resultado = true;
-                }
-                consulta.close();
-                conexion.close();
-            }
-        }
-        catch(SQLException ex){System.out.println(ex); }
+public class PermisoRolDAO {
 
-        
-        return resultado;
-    }
-    public boolean EliminarPermisoRol(int p_idrol, int p_idpermiso)
-    {
-        boolean resultado = false;
-        
-        try
-        {
-            SingletonBD s = SingletonBD.getSingletonBD();
-            Connection conexion = s.conectar();
-            
-            if(conexion != null)
-            {
-                PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisos_roles s " +
-                                                                        "WHERE  s.id_rol = ? AND s.id_permiso = ? "
-                        );
-                consulta.setInt(1, p_idrol );
-                consulta.setInt(2, p_idpermiso);
-                int resultadoConsulta = consulta.executeUpdate();
-                if (resultadoConsulta == 1)
-                {
-                    resultado = true;
-                }
-                consulta.close();
-                conexion.close();
-            }
-        }
-        catch(SQLException ex){System.out.println(ex); }
+  public boolean insertarPermisoRol(int idrol, int idpermiso) {
+    boolean resultado = false;
 
-        
-        return resultado;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      if (conexion != null) {
+        PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.permisos_roles "
+                + " (id_rol, id_permiso) "
+                + " VALUES "
+                + " (?,? )");
+        consulta.setInt(1, idrol);
+        consulta.setInt(2, idpermiso);
+        int resultadoConsulta = consulta.executeUpdate();
+        if (resultadoConsulta == 1) {
+          resultado = true;
+        }
+        consulta.close();
+        conexion.close();
+      }
+    } catch (SQLException ex) {
+      System.out.println(ex);
     }
-    public List<PermisoRol> parsearUsuarios(String permisos, int idRol) {
+
+    return resultado;
+  }
+
+  public boolean EliminarPermisoRol(int p_idrol, int p_idpermiso) {
+    boolean resultado = false;
+
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      if (conexion != null) {
+        PreparedStatement consulta = conexion.prepareStatement("DELETE FROM seguridad.permisos_roles s "
+                + "WHERE  s.id_rol = ? AND s.id_permiso = ? "
+        );
+        consulta.setInt(1, p_idrol);
+        consulta.setInt(2, p_idpermiso);
+        int resultadoConsulta = consulta.executeUpdate();
+        if (resultadoConsulta == 1) {
+          resultado = true;
+        }
+        consulta.close();
+        conexion.close();
+      }
+    } catch (SQLException ex) {
+      System.out.println(ex);
+    }
+
+    return resultado;
+  }
+
+  public List<PermisoRol> parsearUsuarios(String permisos, int idRol) {
     List<PermisoRol> resultado = null;
     try {
       resultado = new ArrayList<PermisoRol>();

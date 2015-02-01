@@ -1,4 +1,4 @@
---########ESQUEMA DE SEGURIDAD########
+﻿--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -281,15 +281,22 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, '[Bodegas]EditarProveedor', 'Permite modificar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, '[Bodegas]EliminarProveedor', 'Permite eliminar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
+
+-- ######################################## --
+-- Estas dos líneas me tiraron conflicto. ¡Pónganse de acuerdo para arreglarlo! --
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Seguridad]AgregarPuesto', 'Permite activar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Seguridad]EditarPuesto', 'Permite modificar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Seguridad]EliminarPuesto', 'Permite eliminar un puesto');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
 -- primero (para que obtengan los primeros id's y además deben llevar como id_padre el 0 y tener un redirect.
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodegas', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (101, 100, 'Catálogo Interno', '/Bodegas/CatalogoInterno');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (102, 100, 'Catálogo Externo', '/Bodegas/CatalogoExterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);

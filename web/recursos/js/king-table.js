@@ -85,6 +85,25 @@ $(document).ready(function(){
 				.draw();
 		});
 	}
+        if( $('#datatable-column-filter-bodegas-ext').length > 0 ) {
+		var dtTable = $('#datatable-column-filter-bodegas-ext').DataTable({ // use DataTable, not dataTable
+			sDom: // redefine sDom without lengthChange and default search box
+				"t"+
+				"<'row'<'col-sm-6'i><'col-sm-6'p>>"
+		}); 
+
+		$('#datatable-column-filter-bodegas-ext thead').append('<tr class="row-filter"><th></th><th></th><th></th><th></th></tr>');
+		$('#datatable-column-filter-bodegas-ext thead .row-filter th').each( function() {
+			$(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+		});
+
+		$('#datatable-column-filter-bodegas-ext .row-filter input').on('keyup change', function() {
+			dtTable
+				.column($(this).parent().index()+':visible')
+				.search(this.value)
+				.draw();
+		});
+	}
         if( $('#datatable-column-filter-rolesusuario').length > 0 ) {
 		var dtTable = $('#datatable-column-filter').DataTable({ // use DataTable, not dataTable
 			sDom: // redefine sDom without lengthChange and default search box
