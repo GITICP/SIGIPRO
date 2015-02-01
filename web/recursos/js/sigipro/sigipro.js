@@ -65,7 +65,7 @@ $("input[name='fechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("fechaActivacion").value = "";
   }
-  if (DateAct > fechahoy)
+  if (DateAct >= fechahoy)
   { 
     var mensaje = $('#mensajeFechas');
     mensaje.html("Usuario permanente: si selecciona ambas fechas iguales el usuario ser&aacute; permanente desde la fecha indicada");
@@ -255,7 +255,7 @@ $("input[name='editarFechaActivacion']").change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("agregarFechaActivacion").value = "";
   }
-  if (DateAct > fechahoy)
+  if (DateAct >= fechahoy)
   { 
     var mensaje = $('#mensajeFechasModalAgregar');
     mensaje.html("Rol permanente: si selecciona ambas fechas iguales el rol ser&aacute; permanente desde la fecha indicada");
@@ -273,7 +273,7 @@ $('#editarFechaActivacion').change(function () {
     $('#modalErrorFechaDesactivacion').modal('show');
     document.getElementById("editarFechaActivacion").value = "";
   }
-  if (DateAct > fechahoy)
+  if (DateAct >= fechahoy)
   { 
     var mensaje = $('#mensajeFechasModalEditar');
     mensaje.html("Rol permanente: si selecciona ambas fechas iguales el rol ser&aacute; permanente desde la fecha indicada");
@@ -363,6 +363,81 @@ function editarSeccion() {
   {
     EditarSeccionJS();
     $('#ModalEditarSeccion').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
+
+$(document).ready(function(){
+  $('.btn-volver').click(function(){
+    bootbox.dialog({
+      title: "Confirmaci&oacute;n",
+      message: "&iquest;Desea Cancelar? Se perder&aacute; toda la informaci&oacute;n ingresada.",
+      buttons:{
+        danger: {
+          label: "Cancelar",
+          className: "btn-danger"
+        },
+        success:{
+        label: "Confirmar",
+        className: "btn-primary",
+        callback: function(){
+          history.back(); 
+          }
+        }
+      }
+    });
+  });
+});
+      
+function asignarCookiePuesto() {
+  if (valorRBPuesto)
+  {
+    var x = document.getElementById(valorRBPuesto);
+    var nombre = x.children[1].innerHTML;
+
+
+    setCookie('id_puesto', valorRBPuesto.toString() + ';' + nombre, 1, '/');
+
+  }
+  else
+  {
+  }
+}
+window.valorRBPuesto = null;
+$("input[name='controlPuesto']").click(function () {
+  valorRBPuesto = this.value;
+  document.getElementById("controlIDPuesto").value = valorRBPuesto;
+});
+
+
+function eliminarPuesto() {
+  if (valorRBPuesto)
+  {
+    $('#modalEliminarPuesto').modal('show');
+  }
+  else
+  {
+    $('#modalError').modal('show');
+  }
+}
+
+function EditarPuestoJS() {
+  var x = document.getElementById(valorRBPuesto);
+
+  document.getElementById("editarIdPuesto").value = valorRBPuesto;
+  document.getElementById("editarNombre").value = x.children[1].innerHTML;
+  document.getElementById("editarDescripcion").value = x.children[2].innerHTML;
+
+}
+
+function editarPuesto() {
+  if (valorRBPuesto)
+  {
+    EditarPuestoJS();
+    $('#ModalEditarPuesto').modal('show');
   }
   else
   {

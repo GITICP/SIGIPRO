@@ -89,7 +89,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>              SE ELIMINA EL ICONO    --%>
-                          <input type="text" placeholder="Ejemplo: 1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control" name="cedula" required
+                          <input type="text" placeholder="Ejemplo: 1-0001-4628" class="form-control" name="cedula" required
                                  oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida ')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -137,7 +137,7 @@
                       <div  class="col-sm-12">
                         <div  class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>               SE ELIMINA EL ICONO    --%>
-                          <input  type="text"  placeholder="Seleccione la fecha deseada o la misma de activación para un usuario permanente" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                          <input  type="text"  placeholder="Seleccione la fecha desactivacion deseada" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                   oninvalid="setCustomValidity('Este campo es requerido ')"
                                   onchange="setCustomValidity('')"
                                   >
@@ -150,7 +150,7 @@
                 <!-- Esta arte es la de los roles de un usuario -->
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-legal"></i> Roles</h3>
+                    <h3><i class="fa fa-legal"></i> Roles asociados al usuario</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
                     </div>
@@ -189,7 +189,7 @@
 
                 <div class="form-group">
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" onclick="history.back()"   data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-volver"   data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="confirmacionAgregar()"><i class="fa fa-check-circle"></i> Agregar Usuario</button>
                   </div>
                 </div>
@@ -268,21 +268,6 @@
         <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
-          <label for="nombreUsuario" class="control-label">*Rol</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <select id="seleccionRol" class="form-control" name="idrol" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
-                  <c:forEach items="${rolesRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreRol()}</option>
-                  </c:forEach>
-                </select>
-
-              </div>
-            </div>
-          </div>
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
