@@ -44,7 +44,7 @@
     <label for="fecha_movimiento" class="control-label">*Fecha de Movimiento</label>
     <div class="form-group">
         <div class="col-sm-12">
-            <div class="input-group">
+            <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" value="${activofijo.getFecha_movimiento()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_movimiento" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -99,7 +99,7 @@
     <label for="fecha_registro" class="control-label">*Fecha de Registro</label>
     <div class="form-group">
         <div class="col-sm-12">
-            <div class="input-group">
+            <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" value="${activofijo.getFecha_registro()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_registro" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
