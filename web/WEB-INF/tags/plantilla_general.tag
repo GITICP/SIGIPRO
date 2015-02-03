@@ -16,6 +16,7 @@
 <%@attribute name="title"%>
 <%@attribute name="direccion_contexto"%>
 <%@attribute name="contenido" fragment="true" required="true"%>
+<%@attribute name="scripts" fragment="true" required="false"%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -112,6 +113,8 @@
     </script>
     
     <jsp:include page="/plantillas/formCambiarContrasena.jsp" />
+    
+    <jsp:invoke fragment="scripts" />
 
 
 </body>

@@ -18,19 +18,14 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-12 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Catálogo Interno</a>
+              <a href="/SIGIPRO/Bodegas/UbicacionesBodega?">Ubicaciones de Bodega</a>
             </li>
-            <li class="active"> ${producto.getCodigo_icp()} </li>
+            <li class="active"> ${ubicacion.getNombre()} </li>
           </ul>
-        </div>
-        <div class="col-md-8 ">
-          <div class="top-content">
-
-          </div>
         </div>
       </div>
       <!-- main -->
@@ -39,8 +34,18 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> ${producto.getNombre()} </h3>
+              <h3><i class="fa fa-barcode"></i> ${ubicacion.getNombre()} </h3>
               <div class="btn-group widget-header-toolbar">
+                <c:set var="contienePermisoEliminar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 12}">
+                    <c:set var="contienePermisoEliminar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoEliminar}">
+                  <a class="btn btn-danger btn-sm boton-accion" href="/SIGIPRO/Bodegas/UbicacionesBodega?accion=eliminar&id_ubicacion=${ubicacion.getId_ubicacion()}">Eliminar</a>
+                </c:if>
+
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 12}">
@@ -48,20 +53,15 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=editar&id_producto=${producto.getId_producto()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/UbicacionesBodega?accion=editar&id_ubicacion=${ubicacion.getId_ubicacion()}">Editar</a>
                 </c:if>
               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Nombre del Producto:</strong></td> <td>${producto.getNombre()} </td></tr>
-                <tr><td> <strong>Código ICP:</strong> <td>${producto.getCodigo_icp()} </td></tr>
-                <tr><td> <strong>Stock Mínimo:</strong> <td>${producto.getStock_minimo()} </td></tr>
-                <tr><td> <strong>Stock Máximo:</strong> <td>${producto.getStock_maximo()} </td></tr>
-                <tr><td> <strong>Ubicación:</strong> <td>${producto.getUbicacion()} </td></tr>
-                <tr><td> <strong>Presentación:</strong> <td>${producto.getPresentacion()} </td></tr>
-                <tr><td> <strong>Descripción:</strong> <td>${producto.getDescripcion()} </td></tr>
+                <tr><td> <strong>Nombre de la ubicación:</strong></td> <td>${ubicacion.getNombre()} </td></tr>
+                <tr><td> <strong>Descripción:</strong> <td>${ubicacion.getDescripcion()} </td></tr>
               </table>
               <br>
             </div>

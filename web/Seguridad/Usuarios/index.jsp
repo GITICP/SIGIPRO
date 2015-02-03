@@ -105,7 +105,7 @@ Usuarios
                       <td>${usuario.getCorreo()}</td>
                       <td>${usuario.getCedula()}</td>
                       <td>${usuario.getNombreSeccion()}</td>
-                      <td>${usuario.getPuesto()}</td>
+                      <td>${usuario.getNombrePuesto()}</td>
                       <td>${usuario.getFechaActivacion()}</td>
                       <td>${usuario.getFechaDesactivacion()}</td>
                       <td>${usuario.getActivo()}</td>

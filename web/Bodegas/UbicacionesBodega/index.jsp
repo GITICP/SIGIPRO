@@ -15,18 +15,13 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-12 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones</a>
+              <a href="/SIGIPRO/Bodegas/UbicacionesBodega?">Ubicaciones de Bodega</a>
             </li>
           </ul>
-        </div>
-        <div class="col-md-8 ">
-          <div class="top-content">
-
-          </div>
         </div>
       </div>
       <!-- main -->
@@ -35,7 +30,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Ubicaciones </h3>
+              <h3><i class="fa fa-barcode"></i> Ubicaciones de Bodega </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -45,7 +40,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Bodegas/Ubicaciones?accion=agregar">Agregar Ubicación</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Bodegas/UbicacionesBodega?accion=agregar">Agregar Ubicación</a>
                 </div>
               </c:if>
             </div>
@@ -64,7 +59,7 @@
 
                     <tr id ="${ubicacion.getId_ubicacion()}">
                       <td>
-                        <a href="/SIGIPRO/Bodegas/Ubicaciones?accion=ver&id_ubicacion=${ubicacion.getId_ubicacion()}">
+                        <a href="/SIGIPRO/Bodegas/UbicacionesBodega?accion=ver&id_ubicacion=${ubicacion.getId_ubicacion()}">
                           <div style="height:100%;width:100%">
                             ${ubicacion.getNombre()}
                           </div>

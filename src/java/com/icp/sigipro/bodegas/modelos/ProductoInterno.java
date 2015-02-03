@@ -19,24 +19,19 @@ public class ProductoInterno
   private String ubicacion;
   private String presentacion;
   private String descripcion;
-  
+  private boolean cuarentena;
+  private Reactivo reactivo;
+ 
   public ProductoInterno(){}
-  
-  public ProductoInterno(int id_producto_interno, String p_nombre, String p_codigo_icp, int p_stock_minimo, int p_stock_maximo, String p_ubicacion, String p_presentacion, String p_descripcion)
-  {
-    this.nombre = p_nombre;
-    this.codigo_icp = p_codigo_icp;
-    this.stock_minimo = p_stock_minimo;
-    this.stock_maximo = p_stock_maximo;
-    this.ubicacion = p_ubicacion;
-    this.presentacion = p_presentacion;
-    this.descripcion = p_descripcion;
-    
-  }
 
   public int getId_producto()
   {
     return id_producto;
+  }
+
+  public void setId_producto(int id_producto)
+  {
+    this.id_producto = id_producto;
   }
 
   public String getNombre()
@@ -44,9 +39,19 @@ public class ProductoInterno
     return nombre;
   }
 
+  public void setNombre(String nombre)
+  {
+    this.nombre = nombre;
+  }
+
   public String getCodigo_icp()
   {
     return codigo_icp;
+  }
+
+  public void setCodigo_icp(String codigo_icp)
+  {
+    this.codigo_icp = codigo_icp;
   }
 
   public int getStock_minimo()
@@ -54,44 +59,14 @@ public class ProductoInterno
     return stock_minimo;
   }
 
-  public int getStock_maximo()
-  {
-    return stock_maximo;
-  }
-
-  public String getUbicacion()
-  {
-    return ubicacion;
-  }
-
-  public String getPresentacion()
-  {
-    return presentacion;
-  }
-
-  public String getDescripcion()
-  {
-    return descripcion;
-  }
-  
-  public void setId_producto(int id_producto)
-  {
-    this.id_producto = id_producto;
-  }
-
-  public void setNombre(String nombre)
-  {
-    this.nombre = nombre;
-  }
-  
-  public void setCodigo_icp(String codigo_icp)
-  {
-    this.codigo_icp = codigo_icp;
-  }
-
   public void setStock_minimo(int stock_minimo)
   {
     this.stock_minimo = stock_minimo;
+  }
+
+  public int getStock_maximo()
+  {
+    return stock_maximo;
   }
 
   public void setStock_maximo(int stock_maximo)
@@ -99,9 +74,19 @@ public class ProductoInterno
     this.stock_maximo = stock_maximo;
   }
 
+  public String getUbicacion()
+  {
+    return ubicacion;
+  }
+
   public void setUbicacion(String ubicacion)
   {
     this.ubicacion = ubicacion;
+  }
+
+  public String getPresentacion()
+  {
+    return presentacion;
   }
 
   public void setPresentacion(String presentacion)
@@ -109,8 +94,36 @@ public class ProductoInterno
     this.presentacion = presentacion;
   }
 
+  public String getDescripcion()
+  {
+    return descripcion;
+  }
+
   public void setDescripcion(String descripcion)
   {
     this.descripcion = descripcion;
   }
+
+  public boolean isCuarentena()
+  {
+    return cuarentena;
+  }
+
+  public void setCuarentena(boolean cuarentena)
+  {
+    this.cuarentena = cuarentena;
+  }
+  
+  public Reactivo getReactivo()
+  {
+    return reactivo;
+  }
+
+  public void setReactivo(Reactivo reactivo)
+  {
+    this.reactivo = reactivo;
+  }
+  
+  
+  
 }

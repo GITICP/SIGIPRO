@@ -56,7 +56,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <input id = "usrname" type="text" minlength="6" maxlength="45" placeholder="Nombre de Usuario de mínimo 6 caracteres, sin espacios y solo letras y números" class="form-control" name="nombreUsuario" required
-                                 oninvalid="setCustomValidity('Este campo es requerido. Debe ingresar un nombre de usuario entre 6 y 45 caracteres, sin espacion y solo letras y numeros ')"
+                                 oninvalid="setCustomValidity('Este campo es requerido. Debe ingresar un nombre de usuario entre 6 y 45 caracteres, sin espacios y solo letras y números ')"
                                  oninput="setCustomValidity('')" > 
 
                         </div>
@@ -115,9 +115,12 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>              SE ELIMINA EL ICONO    --%>
-                          <input type="text" maxlength="200" placeholder="Ejemplo: Jefe" class="form-control" name="puesto" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')">
+                          <select id="seleccionPuesto" class="form-control" name="puesto" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                            <c:forEach items="${puestos}" var="puesto">
+                              <option value=${puesto.getId_puesto()}>${puesto.getNombre_puesto()}</option>
+                            </c:forEach>
+                          </select>
                         </div>
                       </div>
                     </div>
