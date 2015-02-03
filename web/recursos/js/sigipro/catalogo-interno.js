@@ -22,7 +22,7 @@ function modificarInputsReactivos(valor){
 
 // Elimina la ubicación de la tbala.
 function eliminarUbicacion(idUbicacion) {
-  fila = $("#datatable-column-filter-ubicaciones").find('#' + idUbicacion);
+  fila = $("#ubicaciones").find('#' + idUbicacion);
   $('#seleccionUbicacion')
           .append($("<option></option>")
                   .attr("value", fila.attr('id'))
@@ -54,8 +54,7 @@ function agregarUbicacion() {
 
   campoOcultoUbicaciones = $('#ubicaciones');
   campoOcultoUbicaciones.val(campoOcultoUbicaciones.val() + "#u#" + idUbicacion);
-  alert("el valor del campo oculto es: " + campoOcultoUbicaciones.val());
-  $('#datatable-column-filter-ubicaciones > tbody:last').append(fila);
+  $('#ubicaciones > tbody:last').append(fila);
   }
 }
 
@@ -92,7 +91,6 @@ function agregarProductoExterno() {
 
     campoOcultoProductosExternos = $('#productosExternos');
     campoOcultoProductosExternos.val(campoOcultoProductosExternos.val() + "#p#" + idProductoExterno);
-    alert("el valor del campo oculto es: " + campoOcultoProductosExternos.val());
     $('#datatable-column-filter-productos-externos > tbody:last').append(fila);
   }
 }

@@ -13,6 +13,7 @@ import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Reactivo;
 import com.icp.sigipro.bodegas.modelos.UbicacionBodega;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -127,61 +128,84 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
   {
-    request.setCharacterEncoding("UTF-8");
-    boolean resultado = false;
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    try {
+      request.setCharacterEncoding("UTF-8");
+      boolean resultado = false;
 
-    ProductoInterno productoInterno = new ProductoInterno();
+      ProductoInterno productoInterno = new ProductoInterno();
 
-    productoInterno.setNombre(request.getParameter("nombre"));
-    productoInterno.setCodigo_icp(request.getParameter("codigoICP"));
-    productoInterno.setStock_minimo(Integer.parseInt(request.getParameter("stockMinimo")));
-    productoInterno.setStock_maximo(Integer.parseInt(request.getParameter("stockMaximo")));
-    productoInterno.setUbicacion(request.getParameter("ubicacion"));
-    productoInterno.setPresentacion(request.getParameter("presentacion"));
-    productoInterno.setDescripcion(request.getParameter("descripcion"));
-    
-    String ubicaciones = request.getParameter("ubicaciones");
-    String productosExternos = request.getParameter("productosExternos");
-    if (request.getParameter("cuarentena") != null) {
-      productoInterno.setCuarentena(true);
+      productoInterno.setNombre(request.getParameter("nombre"));
+      productoInterno.setCodigo_icp(request.getParameter("codigoICP"));
+      productoInterno.setStock_minimo(Integer.parseInt(request.getParameter("stockMinimo")));
+      productoInterno.setStock_maximo(Integer.parseInt(request.getParameter("stockMaximo")));
+      productoInterno.setUbicacion(request.getParameter("ubicacion"));
+      productoInterno.setPresentacion(request.getParameter("presentacion"));
+      productoInterno.setDescripcion(request.getParameter("descripcion"));
+
+      String ubicaciones = request.getParameter("ubicaciones");
+      String productosExternos = request.getParameter("productosExternos");
+      if (request.getParameter("cuarentena") != null) {
+        productoInterno.setCuarentena(true);
+      }
+      else {
+        productoInterno.setCuarentena(false);
+      }
+
+      if (request.getParameter("reactivo") != null) {
+        Reactivo r = new Reactivo();
+        r.setNumero_cas(request.getParameter("numero_cas"));
+        r.setFormula_quimica(request.getParameter("formula_quimica"));
+        r.setFamilia(request.getParameter("familia"));
+        r.setCantidad_botella_bodega(Integer.parseInt(request.getParameter("cantidad_botella_bodega")));
+        r.setCantidad_botella_lab(Integer.parseInt(request.getParameter("cantidad_botella_lab")));
+        r.setVolumen_bodega(request.getParameter("volumen_bodega"));
+        r.setVolumen_lab(request.getParameter("volumen_lab"));
+        productoInterno.setReactivo(r);
+      }
+
+      ProductoInternoDAO dao = new ProductoInternoDAO();
+      String id = request.getParameter("id_producto");
+      String redireccion;
+      String mensajeResultado;
+
+      if (id.isEmpty() || id.equals("0")) {
+        resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        mensajeResultado = "agregado";
+        redireccion = "CatalogoInterno/Agregar.jsp";
+      }
+      else {
+        productoInterno.setId_producto(Integer.parseInt(id));
+        resultado = dao.editarProductoInterno(productoInterno);
+        mensajeResultado = "editado";
+        redireccion = "CatalogoInterno/Editar.jsp";
+      }
+      String mensajeFinal;
+
+      if (resultado) {
+        mensajeResultado += " con éxito.";
+        mensajeFinal = String.format("Producto interno %s", mensajeResultado);
+        mensajeFinal = helper.mensajeDeExito(mensajeFinal);
+        redireccion = "CatalogoInterno/index.jsp";
+        List<ProductoInterno> productos = dao.obtenerProductos();
+        request.setAttribute("listaProductos", productos);
+      }
+      else {
+        mensajeResultado += " sin éxito.";
+        mensajeFinal = String.format("Producto interno %s", mensajeResultado);
+        mensajeFinal = helper.mensajeDeError(mensajeFinal);
+      }
+
+      request.setAttribute("producto", productoInterno);
+      request.setAttribute("mensaje", mensajeFinal);
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
     }
-    else {
-      productoInterno.setCuarentena(false);
+    catch (Exception ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Por favor verifique que los datos estén correctos."));
+      RequestDispatcher vista = request.getRequestDispatcher("CatalogoInterno/index.jsp");
+      vista.forward(request, response);
     }
-
-    if (request.getParameter("reactivo") != null) {
-      Reactivo r = new Reactivo();
-      r.setNumero_cas(request.getParameter("numero_cas"));
-      r.setFormula_quimica(request.getParameter("formula_quimica"));
-      r.setFamilia(request.getParameter("familia"));
-      r.setCantidad_botella_bodega(Integer.parseInt(request.getParameter("cantidad_botella_bodega")));
-      r.setCantidad_botella_lab(Integer.parseInt(request.getParameter("cantidad_botella_lab")));
-      r.setVolumen_bodega(Integer.parseInt(request.getParameter("volumen_bodega")));
-      r.setVolumen_lab(Integer.parseInt(request.getParameter("volumen_lab")));
-      productoInterno.setReactivo(r);
-    }
-
-    ProductoInternoDAO dao = new ProductoInternoDAO();
-    String id = request.getParameter("id_producto");
-    String redireccion;
-
-    if (id.isEmpty() || id.equals("0")) {
-      resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
-      redireccion = "CatalogoInterno/Agregar.jsp";
-    }
-    else {
-      productoInterno.setId_producto(Integer.parseInt(id));
-      resultado = dao.editarProductoInterno(productoInterno);
-      redireccion = "CatalogoInterno/Editar.jsp";
-    }
-
-    if (resultado) {
-      redireccion = String.format("CatalogoInterno/Ver.jsp", id);
-    }
-
-    request.setAttribute("producto", productoInterno);
-    RequestDispatcher vista = request.getRequestDispatcher(redireccion);
-    vista.forward(request, response);
   }
 
   @Override

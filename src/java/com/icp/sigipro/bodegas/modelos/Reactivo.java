@@ -18,8 +18,8 @@ public class Reactivo
   private String familia;
   private int cantidad_botella_bodega;
   private int cantidad_botella_lab;
-  private int volumen_bodega;
-  private int volumen_lab;
+  private String volumen_bodega;
+  private String volumen_lab;
   
   public Reactivo(){}
 
@@ -93,22 +93,22 @@ public class Reactivo
     this.cantidad_botella_lab = cantidad_botella_lab;
   }
 
-  public int getVolumen_bodega()
+  public String getVolumen_bodega()
   {
     return volumen_bodega;
   }
 
-  public void setVolumen_bodega(int volumen_bodega)
+  public void setVolumen_bodega(String volumen_bodega)
   {
     this.volumen_bodega = volumen_bodega;
   }
 
-  public int getVolumen_lab()
+  public String getVolumen_lab()
   {
     return volumen_lab;
   }
 
-  public void setVolumen_lab(int volumen_lab)
+  public void setVolumen_lab(String volumen_lab)
   {
     this.volumen_lab = volumen_lab;
   }

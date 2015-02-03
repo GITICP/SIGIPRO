@@ -51,7 +51,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-bodegas" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table id="datatable-column-filter-ubicaciones" class="table table-sorting table-striped table-hover datatable tablaSigipro">
                 <!-- Columnas -->
                 <thead> 
                   <tr>

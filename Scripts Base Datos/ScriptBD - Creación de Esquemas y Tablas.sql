@@ -161,8 +161,8 @@ CREATE TABLE bodega.reactivos (
 	familia character varying(45),
 	cantidad_botella_bodega integer,
 	cantidad_botella_lab integer,
-	volumen_bodega integer,
-	volumen_lab integer
+	volumen_bodega character varying(45),
+	volumen_lab character varying(45)
  ); 
 
 CREATE TABLE bodega.solicitudes ( 
@@ -296,9 +296,6 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, '[Bodegas]EditarProveedor', 'Permite modificar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, '[Bodegas]EliminarProveedor', 'Permite eliminar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
-
--- ######################################## --
--- Estas dos líneas me tiraron conflicto. ¡Pónganse de acuerdo para arreglarlo! --
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Seguridad]AgregarPuesto', 'Permite activar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Seguridad]EditarPuesto', 'Permite modificar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Seguridad]EliminarPuesto', 'Permite eliminar un puesto');

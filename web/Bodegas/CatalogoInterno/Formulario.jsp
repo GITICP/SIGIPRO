@@ -96,7 +96,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="numero_cas" value="${producto.getReactivo().getNumero_cas()}"
+            <input type="text" maxlength="45" placeholder="" class="form-control campo-reactivo" name="numero_cas" value="${producto.getReactivo().getNumero_cas()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -106,7 +106,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="formula_quimica" value="${producto.getReactivo().getFormula_quimica()}"
+            <input type="text" maxlength="45" placeholder="Ejemplo: 12H2O" class="form-control campo-reactivo" name="formula_quimica" value="${producto.getReactivo().getFormula_quimica()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -116,7 +116,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="familia" value="${producto.getReactivo().getFamilia()}"
+            <input type="text" maxlength="45" placeholder="Ejemplo: sulfato de amonio y aluminio " class="form-control campo-reactivo" name="familia" value="${producto.getReactivo().getFamilia()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -126,7 +126,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
+            <input type="number" maxlength="45" placeholder="Ejemplo: 25" class="form-control campo-reactivo" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -138,7 +138,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
+            <input type="number" maxlength="45" placeholder="Ejemplo: 40" class="form-control campo-reactivo" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -148,7 +148,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="volumen_bodega" value="${producto.getReactivo().getVolumen_bodega()}"
+            <input type="text" maxlength="45" placeholder="Ejemplo: 10cm3" class="form-control campo-reactivo" name="volumen_bodega" value="${producto.getReactivo().getVolumen_bodega()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -158,7 +158,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: Paquete 25 unidades" class="form-control campo-reactivo" name="volumen_lab" value="${producto.getReactivo().getVolumen_lab()}"
+            <input type="text" maxlength="45" placeholder="Ejemplo: 5cm3" class="form-control campo-reactivo" name="volumen_lab" value="${producto.getReactivo().getVolumen_lab()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    oninput="setCustomValidity('')" > 
           </div>
@@ -181,7 +181,7 @@
       </div>
     </div>
     <div class="widget-content">
-      <table id="datatable-column-filter-ubicaciones" class="table table-sorting table-striped table-hover datatable">
+      <table id="ubicaciones" class="table table-sorting table-striped table-hover datatable">
         <thead>
           <tr>
             <th>Ubicación</th>

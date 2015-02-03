@@ -65,8 +65,8 @@ public class ProductoInternoDAO
         consultaReactivo.setString(4, reactivo.getFamilia());
         consultaReactivo.setInt(5, reactivo.getCantidad_botella_bodega());
         consultaReactivo.setInt(6, reactivo.getCantidad_botella_lab());
-        consultaReactivo.setInt(7, reactivo.getVolumen_bodega());
-        consultaReactivo.setInt(8, reactivo.getVolumen_lab());
+        consultaReactivo.setString(7, reactivo.getVolumen_bodega());
+        consultaReactivo.setString(8, reactivo.getVolumen_lab());
         
         consultaReactivo.executeUpdate(); 
       }
