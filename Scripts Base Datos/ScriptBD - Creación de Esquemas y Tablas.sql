@@ -1,4 +1,4 @@
-﻿--########ESQUEMA DE SEGURIDAD########
+--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
