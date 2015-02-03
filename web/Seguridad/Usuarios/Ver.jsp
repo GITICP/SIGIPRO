@@ -97,7 +97,7 @@
                 <tr><td> <strong>Correo Electrónico:</strong> <td>${usuario.getCorreo()} </td></tr>
                 <tr><td> <strong>Cédula:</strong> <td>${usuario.getCedula()}</td></tr>
                 <tr><td> <strong>Sección:</strong> <td>${usuario.getNombreSeccion()}</td></tr>
-                <tr><td> <strong>Puesto:</strong> <td>${usuario.getPuesto()}</td></tr>
+                <tr><td> <strong>Puesto:</strong> <td>${usuario.getNombrePuesto()}</td></tr>
                 <tr><td> <strong>Fecha de Activación:</strong> <td>${usuario.getFechaActivacion()}</td></tr>
                 <tr><td> <strong>Fecha de Desactivación:</strong>  <td>${usuario.getFechaDesactivacion()}</td></tr>
                 <tr><td> <strong>Estado:</strong> <td>${usuario.getActivo()}</td></tr>

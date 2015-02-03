@@ -6,9 +6,11 @@
 package com.icp.sigipro.servlets.seguridad.usuario;
 
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
 import com.icp.sigipro.seguridad.dao.SeccionDAO;
+import com.icp.sigipro.seguridad.modelos.Puesto;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Seccion;
@@ -60,16 +62,19 @@ public class AgregarUsuario extends SIGIPROServlet
       String id = "0";
       UsuarioDAO u = new UsuarioDAO();
       SeccionDAO sec = new SeccionDAO();
+      PuestoDAO pu = new PuestoDAO();
 
       Usuario usuario = u.obtenerUsuario(idUsuario);
       List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
       List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
       List<Seccion> secciones = sec.obtenerSecciones();
+      List<Puesto> puestos =pu.obtenerPuestos();
 
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("rolesRestantes", rolesRestantes);
       request.setAttribute("secciones", secciones);
+      request.setAttribute("puestos", puestos);
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Usuarios/Agregar.jsp").forward(request, response);
 
@@ -118,7 +123,7 @@ public class AgregarUsuario extends SIGIPROServlet
       boolean correo_activo = u.validarCorreo(correoElectronico, 0);
       if (correo_activo && nombre_usuario_activo) {
         boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-                                                     Integer.parseInt(seccion), puesto, fechaActivacion, fechaDesactivacion);
+                                                     Integer.parseInt(seccion), Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion);
 
         if (insercionExitosa) {
           int id_usuario = u.obtenerIDUsuario(nombreUsuario);

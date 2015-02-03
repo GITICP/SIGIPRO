@@ -128,9 +128,19 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <input type="text" value="${usuario.getPuesto()}" maxlength="200" placeholder="Jefe" class="form-control"  name="puesto" id="puesto" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')">
+                          <select id="seleccionPuesto" class="form-control" name="puesto" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                            <c:forEach items="${puestos}" var="puesto">
+                              <c:choose>
+                                <c:when test="${puesto.getId_puesto() == usuario.getIdPuesto()}" >
+                                  <option value=${puesto.getId_puesto()} selected> ${puesto.getNombre_puesto()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=${puesto.getId_puesto()}>${puesto.getNombre_puesto()}</option>
+                                </c:otherwise>
+                              </c:choose>
+                            </c:forEach>
+                          </select>
                         </div>
                       </div>
                     </div>
