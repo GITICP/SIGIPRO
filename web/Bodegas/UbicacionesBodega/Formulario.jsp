@@ -1,7 +1,7 @@
 <%-- 
     Document   : Formulario
     Created on : 21-ene-2015, 20:28:28
-    Author     : Walter
+    Author     : Boga
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
