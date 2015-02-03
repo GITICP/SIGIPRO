@@ -43,7 +43,7 @@ public class UsuarioDAO
       String nombreCompleto = resultadoConsulta.getString("nombre_completo");
       String cedula = resultadoConsulta.getString("cedula");
       int id_seccion = resultadoConsulta.getInt("id_seccion");
-      String puesto = resultadoConsulta.getString("puesto");
+      int id_puesto = resultadoConsulta.getInt("id_puesto");
       Date fechaActivacion = resultadoConsulta.getDate("fecha_activacion");
       Date fechaDesactivacion = resultadoConsulta.getDate("fecha_desactivacion");
       boolean activo = resultadoConsulta.getBoolean("estado");
@@ -55,11 +55,19 @@ public class UsuarioDAO
       ResultSet resultadoConsultaSeccion = consultaSeccion.executeQuery();
       resultadoConsultaSeccion.next();
       String seccion = resultadoConsultaSeccion.getString("nombre_seccion");
+      
+      PreparedStatement consultaPuesto = conexion.prepareStatement(" Select nombre_puesto "
+                                                                    + " From seguridad.puestos"
+                                                                    + " Where id_puesto = ? ");
+      consultaPuesto.setInt(1, id_puesto);
+      ResultSet resultadoconsultaPuesto = consultaPuesto.executeQuery();
+      resultadoconsultaPuesto.next();
+      String puesto = resultadoconsultaPuesto.getString("nombre_puesto");
 
       Usuario us = new Usuario(idUsuario, nombreUsuario, correo, nombreCompleto,
-                               cedula, id_seccion, puesto, fechaActivacion, fechaDesactivacion, activo);
+                               cedula, id_seccion, id_puesto, fechaActivacion, fechaDesactivacion, activo);
       us.setNombreSeccion(seccion);
-
+      us.setNombrePuesto(puesto);
       resultado.add(us);
     }
     return resultado;
@@ -117,7 +125,7 @@ public class UsuarioDAO
       Connection conexion = s.conectar();
 
       PreparedStatement consulta = conexion.prepareStatement(" Select nombre_usuario, correo, nombre_completo, cedula, id_seccion, "
-                                                             + " puesto, fecha_activacion, fecha_desactivacion, estado "
+                                                             + " id_puesto, fecha_activacion, fecha_desactivacion, estado "
                                                              + " From seguridad.usuarios"
                                                              + " Where id_usuario = ? ");
 
@@ -133,7 +141,7 @@ public class UsuarioDAO
         String nombreCompleto = resultadoConsulta.getString("nombre_completo");
         String cedula = resultadoConsulta.getString("cedula");
         Integer id_seccion = resultadoConsulta.getInt("id_seccion");
-        String puesto = resultadoConsulta.getString("puesto");
+        Integer id_puesto = resultadoConsulta.getInt("id_puesto");
         Date fechaActivacion = resultadoConsulta.getDate("fecha_activacion");
         Date fechaDesactivacion;
         fechaDesactivacion = resultadoConsulta.getDate("fecha_desactivacion");
@@ -147,17 +155,26 @@ public class UsuarioDAO
         resultadoConsultaSeccion.next();
         String seccion = resultadoConsultaSeccion.getString("nombre_seccion");
 
+        PreparedStatement consultaPuesto = conexion.prepareStatement(" Select nombre_puesto "
+                + " From seguridad.puestos"
+                + " Where id_puesto = ? ");
+        consultaPuesto.setInt(1, id_puesto);
+        ResultSet resultadoconsultaPuesto = consultaPuesto.executeQuery();
+        resultadoconsultaPuesto.next();
+        String puesto = resultadoconsultaPuesto.getString("nombre_puesto");
+
         resultado.setIdUsuario(idUsuario);
         resultado.setNombreUsuario(nombreUsuario);
         resultado.setCorreo(correo);
         resultado.setNombreCompleto(nombreCompleto);
         resultado.setCedula(cedula);
         resultado.setIdSeccion(id_seccion);
-        resultado.setPuesto(puesto);
+        resultado.setIdPuesto(id_puesto);
         resultado.setFechaActivacion(fechaActivacion);
         resultado.setFechaDesactivacion(fechaDesactivacion);
         resultado.setActivo(activo);
         resultado.setNombreSeccion(seccion);
+        resultado.setNombrePuesto(puesto);
 
       }
     }
@@ -271,7 +288,7 @@ public class UsuarioDAO
   }
 
   public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
-                                 String cedula, Integer id_seccion, String puesto, String fechaActivacion, String fechaDesactivacion)
+                                 String cedula, Integer id_seccion, Integer id_puesto, String fechaActivacion, String fechaDesactivacion)
   {
     boolean resultado = false;
 
@@ -281,7 +298,7 @@ public class UsuarioDAO
 
       if (conexion != null) {
         PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
-                                                               + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, id_seccion, puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) "
+                                                               + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) "
                                                                + " VALUES "
                                                                + " (?,?,?,?,?,?,?,?,?,?,true)");
         String contrasena = generarContrasena();
@@ -291,7 +308,7 @@ public class UsuarioDAO
         consulta.setString(4, correoElectronico);
         consulta.setString(5, cedula);
         consulta.setInt(6, id_seccion);
-        consulta.setString(7, puesto);
+        consulta.setInt(7, id_puesto);
 
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
@@ -326,7 +343,7 @@ public class UsuarioDAO
   }
 
   public boolean editarUsuario(int idUsuario, String nombreCompleto, String correoElectronico,
-                               String cedula, Integer id_seccion, String puesto, String fechaActivacion,
+                               String cedula, Integer id_seccion, Integer id_puesto, String fechaActivacion,
                                String fechaDesactivacion, List<RolUsuario> p_roles)
   {
     boolean resultado = false;
@@ -339,14 +356,14 @@ public class UsuarioDAO
         conexion.setAutoCommit(false);
 
         PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                                                               + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
+                                                               + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
                                                                + " WHERE id_usuario = ? ");
 
         consulta.setString(1, correoElectronico);
         consulta.setString(2, nombreCompleto);
         consulta.setString(3, cedula);
         consulta.setInt(4, id_seccion);
-        consulta.setString(5, puesto);
+        consulta.setInt(5, id_puesto);
 
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
@@ -444,7 +461,7 @@ public class UsuarioDAO
       try {
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
-                                             + "us.id_seccion, us.puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                                             + "us.id_seccion, us.id_puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
                                              + "FROM seguridad.usuarios us");
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarUsuarios(resultadoConsulta);
@@ -580,7 +597,7 @@ public class UsuarioDAO
       try {
         PreparedStatement consulta;
         consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
-                                             + "us.id_seccion, us.puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                                             + "us.id_seccion, us.id_puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
                                              + "FROM seguridad.usuarios us "
                                              + "WHERE us.id_usuario NOT IN (SELECT ru.id_usuario FROM seguridad.roles_usuarios ru WHERE ru.id_rol = ?)");
         consulta.setInt(1, Integer.parseInt(p_IdRol));

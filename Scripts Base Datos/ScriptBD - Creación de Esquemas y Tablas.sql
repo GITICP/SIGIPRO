@@ -1,4 +1,4 @@
---########ESQUEMA DE SEGURIDAD########
+﻿--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -302,9 +302,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Se
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Seguridad]AgregarPuesto', 'Permite activar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Seguridad]EditarPuesto', 'Permite modificar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Seguridad]EliminarPuesto', 'Permite eliminar un puesto');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
