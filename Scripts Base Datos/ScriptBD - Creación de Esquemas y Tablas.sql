@@ -281,15 +281,12 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, '[Bodegas]EditarProveedor', 'Permite modificar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, '[Bodegas]EliminarProveedor', 'Permite eliminar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
-
--- ######################################## --
--- Estas dos líneas me tiraron conflicto. ¡Pónganse de acuerdo para arreglarlo! --
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Seguridad]AgregarPuesto', 'Permite activar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Seguridad]EditarPuesto', 'Permite modificar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Seguridad]EliminarPuesto', 'Permite eliminar un puesto');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
@@ -297,6 +294,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Bo
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodegas', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (101, 100, 'Catálogo Interno', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (102, 100, 'Catálogo Externo', '/Bodegas/CatalogoExterno');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (103, 100, 'Activos Fijos', '/Bodegas/ActivosFijos');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);
@@ -324,6 +322,9 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (11, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (12, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (13, 101);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 103);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 103);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 103);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
