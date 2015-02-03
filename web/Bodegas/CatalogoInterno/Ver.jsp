@@ -41,16 +41,6 @@
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> ${producto.getNombre()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <c:set var="contienePermisoEliminar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 12}">
-                    <c:set var="contienePermisoEliminar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=eliminar&id_producto=${producto.getId_producto()}">Eliminar</a>
-                </c:if>
-
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 12}">

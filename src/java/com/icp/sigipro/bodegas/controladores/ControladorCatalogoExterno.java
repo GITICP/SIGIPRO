@@ -67,7 +67,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
       ProductoExternoDAO dao = new ProductoExternoDAO();
       HttpSession sesion = request.getSession();
       List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-      int[] permisos = {18, 19, 20};
+      int[] permisos = {21, 22, 23};
 
       if (accion != null) {
         if (accion.equalsIgnoreCase("ver")) {
@@ -81,7 +81,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           request.setAttribute("producto", producto);
         }
         else if (accion.equalsIgnoreCase("agregar")) {
-          validarPermiso(18, listaPermisos);
+          validarPermiso(21, listaPermisos);
           redireccion = "CatalogoExterno/Agregar.jsp";
           ProductoExterno producto = new ProductoExterno();
           ProveedorDAO pr = new ProveedorDAO();
@@ -96,7 +96,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           request.setAttribute("accion", "Agregar");
         }
         else if (accion.equalsIgnoreCase("eliminar")) {
-          validarPermiso(20, listaPermisos);
+          validarPermiso(23, listaPermisos);
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           dao.eliminarProductoExterno(id_producto);
           redireccion = "CatalogoExterno/index.jsp";
@@ -104,7 +104,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           request.setAttribute("listaProductos", productos);
         }
         else if (accion.equalsIgnoreCase("editar")) {
-          validarPermiso(19, listaPermisos);
+          validarPermiso(21, listaPermisos);
           redireccion = "CatalogoExterno/Editar.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoExterno producto = dao.obtenerProductoExterno(id_producto);
