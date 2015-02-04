@@ -218,16 +218,14 @@
           </tr>
         </thead>
         <tbody>
-          <!--
-        <c:forEach items="${ubicaciones}" var="ubicacion">
-          <tr id="${rolUsuario.getIDRol()}">
-            <td>${rolUsuario.getNombreRol()}</td>
-            <td>
-              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
-            </td>
-          </tr>
-        </c:forEach>
-          -->
+          <c:forEach items="${productosExternos}" var="producto">
+            <tr id="${producto.getId_producto_ext()}">
+              <td>${producto.getProducto()} (${producto.getCodigo_Externo()})</td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProductoExterno(${producto.getId_producto_ext()})" >Eliminar</button>
+              </td>
+            </tr>
+          </c:forEach>
         </tbody>
       </table>
     </div>

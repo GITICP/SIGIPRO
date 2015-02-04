@@ -204,6 +204,62 @@ public class ProductoExternoDAO {
     }
     return resultado;
   }
+  
+  public List<ProductoExterno> obtenerProductosRestantes(int p_IdInterno){
+    List<ProductoExterno> resultado = new ArrayList<ProductoExterno>();
+
+    try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement("SELECT id_producto_ext, producto, codigo_externo "
+              + "FROM bodega.catalogo_externo ce "
+              + "WHERE ce.id_producto_ext NOT IN (SELECT cei.id_producto_ext FROM bodega.catalogos_internos_externos cei WHERE cei.id_producto = ?)");
+      consulta.setInt(1, p_IdInterno);
+      ResultSet rs = consulta.executeQuery();
+      while(rs.next()){
+        ProductoExterno producto = new ProductoExterno();
+        producto.setId_producto_ext(rs.getInt("id_producto_ext"));
+        producto.setProducto(rs.getString("producto"));
+        producto.setCodigo_Externo(rs.getString("codigo_externo"));
+        
+        resultado.add(producto);
+      }
+       
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      resultado = null;
+    }
+
+    return resultado;
+  }
+  
+    public List<ProductoExterno> obtenerProductos(int p_IdInterno){
+    List<ProductoExterno> resultado = new ArrayList<ProductoExterno>();
+
+    try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement("SELECT id_producto_ext, producto, codigo_externo "
+              + "FROM bodega.catalogo_externo ce "
+              + "WHERE ce.id_producto_ext IN (SELECT cei.id_producto_ext FROM bodega.catalogos_internos_externos cei WHERE cei.id_producto = ?)");
+      consulta.setInt(1, p_IdInterno);
+      ResultSet rs = consulta.executeQuery();
+      while(rs.next()){
+        ProductoExterno producto = new ProductoExterno();
+        producto.setId_producto_ext(rs.getInt("id_producto_ext"));
+        producto.setProducto(rs.getString("producto"));
+        producto.setCodigo_Externo(rs.getString("codigo_externo"));
+        
+        resultado.add(producto);
+      }
+       
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      resultado = null;
+    }
+
+    return resultado;
+  }
 
   private Connection getConexion() {
     try {

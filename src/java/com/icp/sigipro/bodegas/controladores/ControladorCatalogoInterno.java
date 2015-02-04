@@ -97,6 +97,14 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           redireccion = "CatalogoInterno/Editar.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoInterno producto = dao.obtenerProductoInterno(id_producto);
+          List<ProductoExterno> productosExternos = daoProductosExternos.obtenerProductos(id_producto);
+          List<ProductoExterno> productosExternosRestantes = daoProductosExternos.obtenerProductosRestantes(id_producto);
+          List<UbicacionBodega> ubicaciones = daoUbicaciones.obtenerUbicaciones(id_producto);
+          List<UbicacionBodega> ubicacionesRestantes = daoUbicaciones.obtenerUbicacionesRestantes(id_producto);
+          request.setAttribute("ubicacionesProducto", ubicaciones);
+          request.setAttribute("ubicacionesRestantes", ubicacionesRestantes);
+          request.setAttribute("productosExternos", productosExternos);
+          request.setAttribute("productosExternosRestantes", productosExternosRestantes);
           request.setAttribute("producto", producto);
           request.setAttribute("accion", "Editar");
         }
