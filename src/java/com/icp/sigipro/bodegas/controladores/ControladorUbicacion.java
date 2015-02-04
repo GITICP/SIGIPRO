@@ -50,7 +50,7 @@ public class ControladorUbicacion extends SIGIPROServlet {
             UbicacionDAO dao = new UbicacionDAO();
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-            int[] permisos = {11, 12, 13};
+            int[] permisos = {24, 25, 26};
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
@@ -60,20 +60,20 @@ public class ControladorUbicacion extends SIGIPROServlet {
                     Ubicacion ubicacion = dao.obtenerUbicacion(id_ubicacion);
                     request.setAttribute("ubicacion", ubicacion);
                 } else if (accion.equalsIgnoreCase("agregar")) {
-                    validarPermiso(11, listaPermisos);
+                    validarPermiso(24, listaPermisos);
                     redireccion = "Ubicaciones/Agregar.jsp";
                     Ubicacion ubicacion = new Ubicacion();
                     request.setAttribute("ubicacion", ubicacion);
                     request.setAttribute("accion", "Agregar");
                 } else if (accion.equalsIgnoreCase("eliminar")) {
-                    validarPermiso(13, listaPermisos);
+                    validarPermiso(26, listaPermisos);
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
                     dao.eliminarUbicacion(id_ubicacion);
                     redireccion = "Ubicaciones/index.jsp";
                     List<Ubicacion> ubicaciones = dao.obtenerUbicaciones();
                     request.setAttribute("listaUbicaciones", ubicaciones);
                 } else if (accion.equalsIgnoreCase("editar")) {
-                    validarPermiso(12, listaPermisos);
+                    validarPermiso(25, listaPermisos);
                     redireccion = "Ubicaciones/Editar.jsp";
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
                     Ubicacion ubicacion = dao.obtenerUbicacion(id_ubicacion);

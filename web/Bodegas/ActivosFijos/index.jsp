@@ -9,7 +9,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%        
+<%
+    
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!(permisos.contains(1) || permisos.contains(30) || permisos.contains(31) || permisos.contains(32))) {
+        request.getRequestDispatcher("/").forward(request, response);
+    }
+    
     ActivoFijoDAO p = new ActivoFijoDAO();
 
     List<ActivoFijo> activosfijos = p.obtenerActivosFijos();
@@ -53,7 +60,7 @@
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 11}">
+                <c:if test="${permiso == 1 || permiso == 30}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>

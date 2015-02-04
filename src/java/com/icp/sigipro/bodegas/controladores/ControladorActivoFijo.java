@@ -65,7 +65,7 @@ public class ControladorActivoFijo extends SIGIPROServlet {
             ActivoFijoDAO dao = new ActivoFijoDAO();
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-            int[] permisos = {11, 12, 13};
+            int[] permisos = {30, 31, 32};
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
@@ -75,7 +75,7 @@ public class ControladorActivoFijo extends SIGIPROServlet {
                     ActivoFijo activofijo = dao.obtenerActivoFijo(id_activo_fijo);
                     request.setAttribute("activofijo", activofijo);
                 } else if (accion.equalsIgnoreCase("agregar")) {
-                    validarPermiso(11, listaPermisos);
+                    validarPermiso(30, listaPermisos);
                     redireccion = "ActivosFijos/Agregar.jsp";
                     ActivoFijo activofijo = new ActivoFijo();
                     request.setAttribute("secciones", secciones);
@@ -83,14 +83,14 @@ public class ControladorActivoFijo extends SIGIPROServlet {
                     request.setAttribute("activofijo", activofijo);
                     request.setAttribute("accion", "Agregar");
                 } else if (accion.equalsIgnoreCase("eliminar")) {
-                    validarPermiso(13, listaPermisos);
+                    validarPermiso(32, listaPermisos);
                     int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
                     dao.eliminarActivoFijo(id_activo_fijo);
                     redireccion = "ActivosFijos/index.jsp";
                     List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
                     request.setAttribute("listaActivosFijos", activosfijos);
                 } else if (accion.equalsIgnoreCase("editar")) {
-                    validarPermiso(12, listaPermisos);
+                    validarPermiso(31, listaPermisos);
                     redireccion = "ActivosFijos/Editar.jsp";
                     int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
                     ActivoFijo activofijo = dao.obtenerActivoFijo(id_activo_fijo);
