@@ -279,41 +279,58 @@ ALTER TABLE ONLY bodega.catalogo_externo ADD CONSTRAINT fk_id_proveedor FOREIGN 
 
 
 /* INSERTS */
+
+--##PERMISOS
+--Permiso global
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1, '[PermisoGlobal]Administración', 'Permite realizar cualquier operación');
+--Permisos asociados a usuarios
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (2, '[Seguridad]AgregarUsuario', 'Permite agregar a un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (3, '[Seguridad]EditarUsuario', 'Permite modificar a un usuario');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (4, '[Seguridad]DesactivarUsuario', 'Permite desactivar a un usuario');
+--Permisos asociados a roles
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (5, '[Seguridad]AgregarRol', 'Permite activar un rol');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (6, '[Seguridad]EditarRol', 'Permite modificar un rol');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (7, '[Seguridad]EliminarRol', 'Permite eliminar un rol');
+--Permisos asociados a secciones
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (8, '[Seguridad]AgregarSección', 'Permite activar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (9, '[Seguridad]EditarSección', 'Permite modificar una sección');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (10, '[Seguridad]EliminarSección', 'Permite eliminar una sección');
+--Permisos asociados a producto
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (11, '[Bodegas]AgregarProducto', 'Permite agregar un proudcto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (12, '[Bodegas]EditarProducto', 'Permite modificar un producto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (13, '[Bodegas]EliminarProducto', 'Permite eliminar un producto');
+--Permisos asociados a proveedores
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (14, '[Bodegas]AgregarProveedor', 'Permite agregar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (15, '[Bodegas]EditarProveedor', 'Permite modificar un proveedor');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (16, '[Bodegas]EliminarProveedor', 'Permite eliminar un proveedor');
+--Permisos asociado a restablecer contraseña
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (17, '[Seguridad]RestablecerContraseña', 'Permite restablecer la contraseña de un usuario');
+--Permisos asociados a puestos
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (18, '[Seguridad]AgregarPuesto', 'Permite activar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (19, '[Seguridad]EditarPuesto', 'Permite modificar un puesto');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Seguridad]EliminarPuesto', 'Permite eliminar un puesto');
+--Permisos asociados a producto externo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
+--Permisos asociados a Ubicaciones de activos fijos
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]AgregarUbicaciónActivoFijo', 'Permite agregar una ubicación de un activo fijo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]EditarUbicaciónActivoFijo', 'Permite modificar una ubicación de un activo fijo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]EliminarUbicaciónActivoFijo', 'Permite eliminar una ubicación de un activo fijo');
+--Permisos asociados a ubicaciones de bodegas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]AgregarUbicaciónBodega', 'Permite agregar una ubicación de una bodega');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]EditarUbicaciónBodega', 'Permite modificar una ubicación de una bodega');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]EliminarUbicaciónBodega', 'Permite eliminar una ubicación de una bodega')
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]EliminarUbicaciónBodega', 'Permite eliminar una ubicación de una bodega');
+--Permisos asociados activos fijos
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (30, '[Bodegas]AgregarActivoFijo', 'Permite agregar un activo fijo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (31, '[Bodegas]EditarActivoFijo', 'Permite modificar un activo fijo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (32, '[Bodegas]EliminarActivoFijo', 'Permite eliminar un activo fijo')
--- Observación importante:
--- Los tags de los módulos como tales deben estar de 
--- primero (para que obtengan los primeros id's y además deben llevar como id_padre el 0 y tener un redirect.
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (32, '[Bodegas]EliminarActivoFijo', 'Permite eliminar un activo fijo');
+
+--##Entradas de menu principal
+/*Observación importante:
+Los tags de los módulos como tales deben estar de 
+primero (para que obtengan los primeros id's y además deben llevar como id_padre el 0 y tener un redirect.*/
+
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (100, 0, 'Bodegas', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (101, 100, 'Catálogo Interno', '/Bodegas/CatalogoInterno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (102, 100, 'Catálogo Externo', '/Bodegas/CatalogoExterno');
@@ -336,44 +353,58 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1000, 0,'Compras', '/Compras/Proveedores');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1001, 900,'Proveedores', '/Compras/Proveedores');
 
+--## Permisos con menu principal
+--Usuarios
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (4, 801);
+--Roles
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (5, 802);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (6, 802);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (7, 802);
+--Sección
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (8, 901);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (9, 901);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (10, 901);
+--Producto
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (11, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (12, 101);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (13, 101);
+--Proveedores
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (14, 1001);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (15, 1001);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (16, 1001);
+--Restablecer Contraseña
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (17, 801);
+--Puestos
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (18, 803);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (19, 803);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (20, 803);
+--Producto Externo
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 102);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 102);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 102);
+-- Ubicaciones Activos Fijos
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (24, 104);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (25, 104);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (26, 104);
+--Ubicaciones Bodegas
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (27, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (28, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (29, 105);
+--Activos fijos
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (30, 103);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (31, 103);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (32, 103);
 
+--##Roles
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Usuarios', 'Administración de la sección de usuarios del módulo de seguridad');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Roles', 'Administración de la sección de roles del módulo de seguridad');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador de Secciones', 'Administración de las secciones del módulo de configuración');
 
-
+--##Permisos en roles
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (1,1);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,2);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (2,3);
@@ -394,7 +425,7 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,8);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,9);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,10);
 
-
+--##Secciones
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Producción','Dedicados a la producción');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Control de Calidad','Dedicados al control de calidad');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Ventas','Dedicados a la venta de productos');
@@ -402,21 +433,23 @@ INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Bioterio',
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Serpentario','Dedicados a los serpentarios');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Caballeriza','Dedicados a la caballeriza');
 
+--##Puestos
 INSERT INTO seguridad.puestos(nombre_puesto, descripcion) VALUES ('Jefe','Puesto de jefatura');
 INSERT INTO seguridad.puestos(nombre_puesto, descripcion) VALUES ('Secretario','Secretarios de jefatura');
 
+--##Usuarios
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('waltercoru', md5('sigipro'), 'waltercori21@gmail.com', 'Walter Cordero Urena', '1-2345-6710', 1, 1, '2014-12-01', '2014-12-01', true, false);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('dnjj14', md5('sigipro'), 'dnjj14@gmail.com', 'Daniel Thiel Jimenez', '2-2345-6789', 1, 1, '2014-12-01', '2014-12-01', false, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 1 , 1, '2014-12-01', '2014-12-01', false, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
 
+--#Roles en Usuarios
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 4, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (5, 5, '2014-12-01', '2014-12-01');
 
-
-
+--##Correo
 INSERT INTO configuracion.correo(id_correo, host, puerto, starttls, nombre_emisor, correo, contrasena) VALUES (1, 'smtp.gmail.com', '587', 'true', 'SIGIPRO', 'sigiproicp@gmail.com', 'Sigipro2015');
