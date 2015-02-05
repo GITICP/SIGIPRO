@@ -318,7 +318,8 @@ public class UsuarioDAO
 
         consulta.setDate(8, fActivacionSQL);
         consulta.setDate(9, fDesactivacionSQL);
-
+        
+        boolean permanente = fechaActivacion.equals(fechaDesactivacion);
         consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL, formatoFecha));
 
         int resultadoConsulta = consulta.executeUpdate();
@@ -326,7 +327,7 @@ public class UsuarioDAO
           resultado = true;
         }
         UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
-        u.enviarUsuarioCreado(correoElectronico, nombreUsuario, contrasena);
+        u.enviarUsuarioCreado(correoElectronico, nombreUsuario, contrasena, fechaActivacion, fechaDesactivacion, permanente);
         consulta.close();
         conexion.close();
       }

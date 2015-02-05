@@ -75,7 +75,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoRestablecer}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Cuenta/RecuperarContrasena?idUsuario=${usuario.getID()}&correoElectronico=${usuario.getCorreo()}">Restablecer Contraseña</a>
+                  <a class="btn btn-warning btn-sm boton-accion " onclick="ConfirmacionRestablecerContrasena('/SIGIPRO/Cuenta/RecuperarContrasena?idUsuario=${usuario.getID()}&correoElectronico=${usuario.getCorreo()}')">Restablecer Contraseña</a>
                 </c:if>
                   
                 <c:set var="contienePermisoEditar" value="false" />
@@ -99,7 +99,15 @@
                 <tr><td> <strong>Sección:</strong> <td>${usuario.getNombreSeccion()}</td></tr>
                 <tr><td> <strong>Puesto:</strong> <td>${usuario.getNombrePuesto()}</td></tr>
                 <tr><td> <strong>Fecha de Activación:</strong> <td>${usuario.getFechaActivacion()}</td></tr>
-                <tr><td> <strong>Fecha de Desactivación:</strong>  <td>${usuario.getFechaDesactivacion()}</td></tr>
+                <c:choose>
+                  <c:when test="${usuario.getFechaActivacion() == usuario.getFechaDesactivacion()}">
+                    <tr><td> <strong>Fecha de Desactivación:</strong>  <td> Usuario Permanente</td></tr>
+                  </c:when>
+                  <c:otherwise>
+                    <tr><td> <strong>Fecha de Desactivación:</strong>  <td>${usuario.getFechaDesactivacion()}</td></tr>
+                  </c:otherwise>
+                </c:choose>
+
                 <tr><td> <strong>Estado:</strong> <td>${usuario.getActivo()}</td></tr>
               </table>
               <br>
@@ -136,7 +144,7 @@
       </div>
       <!-- /main -->
     </div>
-    <t:modal idModal="modalDesactivarUsuario" titulo="Confirmacion">
+    <t:modal idModal="modalDesactivarUsuario" titulo="Confirmación">
 
       <jsp:attribute name="form">
         <form class="form-horizontal" role="form" action="Desactivar" method="post">

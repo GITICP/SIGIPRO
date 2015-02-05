@@ -55,8 +55,8 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input id = "usrname" type="text" minlength="6" maxlength="45" placeholder="Nombre de Usuario de mínimo 6 caracteres, sin espacios y solo letras y números" class="form-control" name="nombreUsuario" required
-                                 oninvalid="setCustomValidity('Este campo es requerido. Debe ingresar un nombre de usuario entre 6 y 45 caracteres, sin espacios y solo letras y números ')"
+                          <input id = "usrname" type="text" minlength="4" maxlength="45" placeholder="Nombre de Usuario de mínimo 4 caracteres, sin espacios y solo letras y números" class="form-control" name="nombreUsuario" required
+                                 oninvalid="setCustomValidity('Este campo es requerido. Debe ingresar un nombre de usuario entre 4 y 45 caracteres, sin espacios y solo letras y números ')"
                                  oninput="setCustomValidity('')" > 
 
                         </div>

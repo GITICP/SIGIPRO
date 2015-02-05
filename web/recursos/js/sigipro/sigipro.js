@@ -391,6 +391,26 @@ $(document).ready(function(){
     });
   });
 });
+
+function ConfirmacionRestablecerContrasena(ref){
+    bootbox.dialog({
+      title: "Confirmaci&oacute;n",
+      message: "&iquest;Desea restablecer la contraseña de este usuario?",
+      buttons:{
+        danger: {
+          label: "Cancelar",
+          className: "btn-danger"
+        },
+        success:{
+        label: "Confirmar",
+        className: "btn-primary",
+        callback: function(){
+          window.location=ref; 
+          }
+        }
+      }
+    });
+  }
       
 function asignarCookiePuesto() {
   if (valorRBPuesto)

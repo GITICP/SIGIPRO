@@ -8,7 +8,7 @@ function confirmacion(){
                     <div class='col-sm-10'>\
                       <label>Escriba su correo electr&oacute;nico para recuperar su contrase&ntilde;a.</label>\
                       <div class='input-group'>\
-                        <input type='text' placeholder='usuario@icp.ucr.ac.cr' class='form-control' name='correoElectronico'>\
+                        <input type='text' placeholder='usuario@ucr.ac.cr' class='form-control' name='correoElectronico'>\
                         <span class='input-group-addon' ><i class='fa fa-at'></i></span>\
                       </div>\
                     <div class='col-sm-1'></div>\

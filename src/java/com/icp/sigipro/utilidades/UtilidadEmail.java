@@ -73,14 +73,21 @@ public class UtilidadEmail
   
   public boolean enviarRecuperacionContrasena(String para, String nombre_usuario, String contrasenaNueva)
   {
-    String cuerpo = "Estimado %s:\n\nSu nueva contraseña para ingresar a SIGIPRO es %s.";
+    String cuerpo = "Estimado %s:\n\nSu nueva contraseña para ingresar a SIGIPRO es %s ";
     return enviarCorreo(para, "Recuperación de contraseña", String.format(cuerpo, nombre_usuario, contrasenaNueva), new InformacionCorreo());
   }
   
-  public boolean enviarUsuarioCreado(String para, String nombre_usuario, String contrasenaNueva)
+  public boolean enviarUsuarioCreado(String para, String nombre_usuario, String contrasenaNueva, String fechaActivacion, String fechaDesactivacion, boolean permanente)
   {
-    String cuerpo = "Estimado colaborador:\n\nSe le comunica que se ha creado una cuenta para SIGIPRO a su nombre. Sus credenciales para ingresar al sistema son los siguientes:\nNombre de usuario: %s\nContraseña: %s";
-    return enviarCorreo(para, "Cuenta SIGIPRO creada", String.format(cuerpo, nombre_usuario, contrasenaNueva), new InformacionCorreo());
+    if (permanente)
+    {
+    String cuerpo = "Estimado colaborador:\n\nSe le comunica que se ha creado una cuenta para SIGIPRO a su nombre. Su cuenta será permanente empezando el %s. Sus credenciales para ingresar al sistema son los siguientes:\nNombre de usuario: %s\nContraseña: %s";
+    return enviarCorreo(para, "Cuenta SIGIPRO creada", String.format(cuerpo, fechaActivacion, nombre_usuario, contrasenaNueva), new InformacionCorreo());
+    }
+    else
+    {String cuerpo = "Estimado colaborador:\n\nSe le comunica que se ha creado una cuenta para SIGIPRO a su nombre. Su cuenta estará activa desde el %s hasta el %s. Sus credenciales para ingresar al sistema son los siguientes:\nNombre de usuario: %s\nContraseña: %s";
+    return enviarCorreo(para, "Cuenta SIGIPRO creada", String.format(cuerpo, fechaActivacion, fechaDesactivacion, nombre_usuario, contrasenaNueva), new InformacionCorreo());
+    }
   }
   
   public boolean probarNuevaConfiguracion(List<String> nuevaConfiguracion)
