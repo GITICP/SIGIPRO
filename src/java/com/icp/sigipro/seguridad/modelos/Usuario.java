@@ -101,6 +101,7 @@ public class Usuario
     public Integer getIdSeccion()    {return id_seccion;}
     public Integer getIdPuesto()          {return id_puesto;}
     public String getFechaActivacion()   {return formatearFecha(fechaActivacion);}
+    public Date getFechaDesactivacionAsDate()   {return fechaDesactivacion;}
     public String getFechaDesactivacion(){return formatearFecha(fechaDesactivacion);}
     public String getActivo()         {
         if(activo){

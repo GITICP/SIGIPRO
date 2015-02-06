@@ -450,6 +450,33 @@ public class UsuarioDAO
     }
     return resultado;
   }
+  
+  public boolean activarUsuario(int idUsuario)
+  {
+    boolean resultado = false;
+
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
+                                                             + " SET estado = true "
+                                                             + " WHERE id_usuario = ? ");
+
+      consulta.setInt(1, idUsuario);
+
+      int resultadoConsulta = consulta.executeUpdate();
+      if (resultadoConsulta == 1) {
+        resultado = true;
+      }
+      consulta.close();
+      conexion.close();
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
 
   public List<Usuario> obtenerUsuarios()
   {

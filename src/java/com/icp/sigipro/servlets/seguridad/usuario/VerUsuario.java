@@ -11,6 +11,9 @@ import com.icp.sigipro.seguridad.modelos.RolUsuario;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -51,10 +54,18 @@ public class VerUsuario extends HttpServlet {
       List<RolUsuario> rolesUsuario = u.obtenerRolesUsuario(id);
       List<Rol> rolesRestantes = u.obtenerRolesRestantes(id);
       Boolean actividad = u.validarActividad(idUsuario);
+      
+      
+      DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+      Date date = new Date();
+      Boolean boolfechadesactivacion = date.before(usuario.getFechaDesactivacionAsDate());
+      
+      
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("rolesRestantes", rolesRestantes);
       request.setAttribute("actividad",actividad);
+      request.setAttribute("boolfechadesactivacion",boolfechadesactivacion);
 
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Usuarios/Ver.jsp").forward(request, response);

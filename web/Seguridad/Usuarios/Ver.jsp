@@ -59,16 +59,24 @@
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 4}">
-                    <c:if test="${actividad}">
                       <c:set var="contienePermisoEliminar" value="true" />
-                    </c:if>
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>                                    
+                  <c:choose>
+                    <c:when test="${actividad}">
+                      <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>   
+                    </c:when>
+                    <c:otherwise>
+                      <c:if test="${boolfechadesactivacion}">
+                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalActivarUsuario">Activar</a>
+                      </c:if> 
+                    </c:otherwise>
+                  </c:choose> 
+                  -->
                 </c:if>
-                  
-                  <c:set var="contienePermisoRestablecer" value="false" />
+
+                <c:set var="contienePermisoRestablecer" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 17}">
                     <c:set var="contienePermisoRestablecer" value="true" />
@@ -149,6 +157,22 @@
       <jsp:attribute name="form">
         <form class="form-horizontal" role="form" action="Desactivar" method="post">
           <h5>¿Está seguro que desea desactivar este usuario? </h5>
+          <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar </button>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar </button>
+            </div>
+          </div>
+        </form>
+      </jsp:attribute>
+
+    </t:modal>
+    <t:modal idModal="modalActivarUsuario" titulo="Confirmación">
+
+      <jsp:attribute name="form">
+        <form class="form-horizontal" role="form" action="Activar" method="post">
+          <h5>¿Está seguro que desea activar este usuario? </h5>
           <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
           <div class="form-group">
             <div class="modal-footer">
