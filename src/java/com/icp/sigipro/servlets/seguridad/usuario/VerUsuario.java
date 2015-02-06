@@ -58,7 +58,7 @@ public class VerUsuario extends HttpServlet {
       
       DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
       Date date = new Date();
-      Boolean boolfechadesactivacion = date.before(usuario.getFechaDesactivacionAsDate());
+      Boolean boolfechadesactivacion = date.before(usuario.getFechaDesactivacionAsDate()) && date.after(usuario.getFechaActivacionAsDate());
       
       
       request.setAttribute("usuario", usuario);
