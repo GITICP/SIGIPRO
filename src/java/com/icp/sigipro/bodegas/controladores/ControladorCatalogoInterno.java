@@ -184,7 +184,7 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       }
       else {
         productoInterno.setId_producto(Integer.parseInt(id));
-        resultado = dao.editarProductoInterno(productoInterno);
+        resultado = dao.editarProductoInterno(productoInterno, ubicaciones, productosExternos);
         mensajeResultado = "editado";
         redireccion = "CatalogoInterno/Editar.jsp";
       }
@@ -196,15 +196,23 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
         mensajeFinal = helper.mensajeDeExito(mensajeFinal);
         redireccion = "CatalogoInterno/index.jsp";
         List<ProductoInterno> productos = dao.obtenerProductos();
+        
         request.setAttribute("listaProductos", productos);
       }
       else {
         mensajeResultado += " sin éxito.";
         mensajeFinal = String.format("Producto interno %s", mensajeResultado);
         mensajeFinal = helper.mensajeDeError(mensajeFinal);
-      }
-
-      request.setAttribute("producto", productoInterno);
+        
+        ProductoExternoDAO daoProductosExternos = new ProductoExternoDAO();
+        UbicacionBodegaDAO daoUbicaciones = new UbicacionBodegaDAO();
+        request.setAttribute("producto", productoInterno);
+        request.setAttribute("ubicacionesProducto", daoUbicaciones.obtenerUbicaciones(productoInterno.getId_producto()));
+        request.setAttribute("ubicacionesRestantes", daoUbicaciones.obtenerUbicacionesRestantes(productoInterno.getId_producto()));
+        request.setAttribute("productosExternos", daoProductosExternos.obtenerProductos(productoInterno.getId_producto()));
+        request.setAttribute("productosExternosRestantes", daoProductosExternos.obtenerProductosRestantes(productoInterno.getId_producto()));
+        request.setAttribute("accion", "Agregar");
+      }      
       request.setAttribute("mensaje", mensajeFinal);
       RequestDispatcher vista = request.getRequestDispatcher(redireccion);
       vista.forward(request, response);

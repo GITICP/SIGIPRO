@@ -8,7 +8,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<form class="form-horizontal" autocomplete="off" method="post" action="CatalogoInterno">
+<form id="catInternoForm" class="form-horizontal" autocomplete="off" method="post" action="CatalogoInterno">
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_producto" value="${producto.getId_producto()}">
@@ -38,10 +38,10 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="number" maxlength="45" placeholder="0" class="form-control" name="stockMinimo" value="${producto.getStock_minimo()}"
+            <input id="stockMinimo" maxlength="45" placeholder="0" class="form-control campo-numero" name="stockMinimo" value="${producto.getStock_minimo()}"
                    required
                    oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+                   oninput="setCustomValidity('')" ><p id="errorStockMinimo" class="error-form"></p>
           </div>
         </div>
       </div>  
@@ -49,10 +49,10 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="number" maxlength="45" placeholder="0" class="form-control" name="stockMaximo" value="${producto.getStock_maximo()}"
+            <input id="stockMaximo" maxlength="45" placeholder="0" class="form-control campo-numero" name="stockMaximo" value="${producto.getStock_maximo()}"
                    required
                    oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+                   oninput="setCustomValidity('')" ><p id="errorStockMaximo" class="error-form"></p>
           </div>
         </div>
       </div>
@@ -81,16 +81,26 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="checkbox" name="cuarentena" value="true" checked="checked"><span>  Entra por defecto en cuarentena.</span>
+            <c:set var="checkedCuarentena" value="" />
+            <c:set var="checkedReactivo" value="false" />
+            <c:set var="formReactivo" value="hidden" />
+            <c:if test="${producto.isCuarentena()}">
+              <c:set var="checkedCuarentena" value="checked" />
+            </c:if>
+            <c:if test="${producto.getReactivo() != null}">
+              <c:set var="checkedReactivo" value="checked" />
+              <c:set var="formReactivo" value="" />
+            </c:if>
+            <input type="checkbox" name="cuarentena" value="true" ${checkedCuarentena}><span>  Entra por defecto en cuarentena.</span>
             <br>
-            <input id="check-reactivo" type="checkbox" name="reactivo" value="true"><span>  Es un reactivo.</span>
+            <input id="check-reactivo" type="checkbox" name="reactivo" value="true" ${checkedReactivo}><span>  Es un reactivo.</span>
           </div>
         </div>
       </div>      
     </div>
   </div>
 
-  <div id="form-reactivo" class="row" hidden="false">
+  <div id="form-reactivo" class="row" ${formReactivo}>
     <div class="col-md-6">
       <label for="numero_cas" class="control-label">* Número Cas</label>
       <div class="form-group">
@@ -126,9 +136,9 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="number" maxlength="45" placeholder="Ejemplo: 25" class="form-control campo-reactivo" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
+            <input type="text" id=cantBodega maxlength="45" placeholder="Ejemplo: 25" class="form-control campo-reactivo campo-numero" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+                   oninput="setCustomValidity('')" ><p id="errorCantBodega" class="error-form"></p>
           </div>
         </div>
       </div>
@@ -138,9 +148,9 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="number" maxlength="45" placeholder="Ejemplo: 40" class="form-control campo-reactivo" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
+            <input type="text" id=cantLab maxlength="45" placeholder="Ejemplo: 40" class="form-control campo-reactivo campo-numero" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
                    oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+                   oninput="setCustomValidity('')" ><p id="errorCantLab" class="error-form"></p>
           </div>
         </div>
       </div>
@@ -181,7 +191,7 @@
       </div>
     </div>
     <div class="widget-content">
-      <table id="ubicaciones" class="table table-sorting table-striped table-hover datatable">
+      <table id="datatable-column-filter-ubicaciones-formulario" class="table table-sorting table-striped table-hover datatable">
         <thead>
           <tr>
             <th>Ubicación</th>

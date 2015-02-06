@@ -11,6 +11,7 @@ import com.icp.sigipro.bodegas.modelos.Reactivo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,16 +37,16 @@ public class ProductoInternoDAO
     
     try{
       getConexion().setAutoCommit(false);
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogo_interno (nombre, codigo_icp, stock_minimo, stock_maximo, ubicacion, presentacion, descripcion) " +
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogo_interno (nombre, codigo_icp, stock_minimo, stock_maximo, presentacion, descripcion, cuarentena) " +
                                                              " VALUES (?,?,?,?,?,?,?) RETURNING id_producto");
       
       consulta.setString(1, p.getNombre());
       consulta.setString(2, p.getCodigo_icp());
       consulta.setInt(3, p.getStock_minimo());
       consulta.setInt(4, p.getStock_maximo());
-      consulta.setString(5, p.getUbicacion());
-      consulta.setString(6, p.getPresentacion());
-      consulta.setString(7, p.getDescripcion());
+      consulta.setString(5, p.getPresentacion());
+      consulta.setString(6, p.getDescripcion());
+      consulta.setBoolean(7, p.isCuarentena());
       ResultSet resultadoConsulta = consulta.executeQuery();
       if ( resultadoConsulta.next() ){
         resultado = true;
@@ -72,8 +73,7 @@ public class ProductoInternoDAO
       }
       
       if (ubicaciones != null){
-        String[] idsTemp = ubicaciones.split("#u#");
-        String[] ids = Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+        String[] ids = parsearAsociacion("#u#", ubicaciones);
         
         PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
                 " INSERT INTO bodega.ubicaciones_catalogo_interno(id_ubicacion, id_producto) " +
@@ -88,8 +88,7 @@ public class ProductoInternoDAO
       }
       
       if (productosExternos != null){
-        String[] idsTemp = productosExternos.split("#p#");
-        String[] ids = Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+        String[] ids = parsearAsociacion("#p#", productosExternos);
         
         PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
                 " INSERT INTO bodega.catalogos_internos_externos(id_producto_ext, id_producto) " +
@@ -113,36 +112,141 @@ public class ProductoInternoDAO
     return resultado;
   }
   
-  public boolean editarProductoInterno(ProductoInterno p){
+  public boolean editarProductoInterno(ProductoInterno p, String ubicaciones, String productosExternos){
     
     boolean resultado = false;
-    
     try{
+      getConexion().setAutoCommit(false);
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.catalogo_interno " +
               " SET nombre=?, codigo_icp=?, stock_minimo=?, stock_maximo=?, " + 
-              " ubicacion=?, presentacion=?, descripcion=? " +
+              " presentacion=?, descripcion=?, cuarentena=? " +
               " WHERE id_producto=?; "
-
       );
       
       consulta.setString(1, p.getNombre());
       consulta.setString(2, p.getCodigo_icp());
       consulta.setInt(3, p.getStock_minimo());
       consulta.setInt(4, p.getStock_maximo());
-      consulta.setString(5, p.getUbicacion());
-      consulta.setString(6, p.getPresentacion());
-      consulta.setString(7, p.getDescripcion());
+      consulta.setString(5, p.getPresentacion());
+      consulta.setString(6, p.getDescripcion());
+      consulta.setBoolean(7, p.isCuarentena());
       consulta.setInt(8, p.getId_producto());
       
-      if ( consulta.executeUpdate() == 1){
-        resultado = true;
+      consulta.executeUpdate();
+      
+      if (p.getReactivo() == null){
+        PreparedStatement eliminarReactivo = getConexion().prepareStatement(
+                " DELETE FROM bodega.reactivos WHERE id_producto = ? " );
+        eliminarReactivo.setInt(1, p.getId_producto());
+        eliminarReactivo.execute();
+      } else {
+        PreparedStatement upsertReactivo = getConexion().prepareStatement(
+                  " WITH upsert AS "
+                + " (UPDATE bodega.reactivos SET id_producto = ?, "
+                + "                               numero_cas = ?, "
+                + "                               formula_quimica = ?, "
+                + "                               familia = ?, "
+                + "                               cantidad_botella_bodega = ?, "
+                + "                               cantidad_botella_lab = ?, "
+                + "                               volumen_bodega = ?, "
+                + "                               volumen_lab = ? "
+                + "                               WHERE id_producto = ? RETURNING *) "
+                + "   INSERT INTO bodega.reactivos(id_producto, "
+                + "                                numero_cas, "
+                + "                                formula_quimica, "
+                + "                                familia, "
+                + "                                cantidad_botella_bodega, "
+                + "                                cantidad_botella_lab, "
+                + "                                volumen_bodega, "
+                + "                                volumen_lab "
+                + "                                ) "
+                + "           SELECT ?, "
+                + "                  ?, "
+                + "                  ?, "
+                + "                  ?, "
+                + "                  ?, "
+                + "                  ?, "
+                + "                  ?, "
+                + "                  ?  "
+                + "                  WHERE NOT EXISTS (SELECT * FROM upsert); ");
+        
+        Reactivo r = p.getReactivo();
+        
+        upsertReactivo.setInt(1, p.getId_producto());
+        upsertReactivo.setInt(9, p.getId_producto());
+        upsertReactivo.setInt(10, p.getId_producto());
+        upsertReactivo.setString(2, r.getNumero_cas());
+        upsertReactivo.setString(11, r.getNumero_cas());
+        upsertReactivo.setString(3, r.getFormula_quimica());
+        upsertReactivo.setString(12, r.getFormula_quimica());
+        upsertReactivo.setString(4, r.getFamilia());
+        upsertReactivo.setString(13, r.getFamilia());
+        upsertReactivo.setInt(5, r.getCantidad_botella_bodega());
+        upsertReactivo.setInt(14, r.getCantidad_botella_bodega());
+        upsertReactivo.setInt(6, r.getCantidad_botella_lab());
+        upsertReactivo.setInt(15, r.getCantidad_botella_lab());
+        upsertReactivo.setString(7, r.getVolumen_bodega());
+        upsertReactivo.setString(16, r.getVolumen_bodega());
+        upsertReactivo.setString(8, r.getVolumen_lab());
+        upsertReactivo.setString(17, r.getVolumen_lab());
+        
+        upsertReactivo.executeUpdate();
       }
+      
+      PreparedStatement eliminarUbicaciones = getConexion().prepareStatement(
+              " DELETE FROM bodega.ubicaciones_catalogo_interno WHERE id_producto = ? " );
+      eliminarUbicaciones.setInt(1, p.getId_producto());
+      
+      PreparedStatement eliminarProductos = getConexion().prepareStatement(
+              " DELETE FROM bodega.catalogos_internos_externos WHERE id_producto = ? " );
+      eliminarProductos.setInt(1, p.getId_producto());
+      
+      eliminarUbicaciones.execute();
+      eliminarProductos.execute();
+      
+      if (ubicaciones != null){
+        String[] ids = parsearAsociacion("#u#", ubicaciones);
+        
+        PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
+                " INSERT INTO bodega.ubicaciones_catalogo_interno(id_ubicacion, id_producto) " +
+                " VALUES (?, ?)");
+        
+        consultaUbicaciones.setInt(2, p.getId_producto());
+        
+        for (String id : ids){
+          consultaUbicaciones.setInt(1, Integer.parseInt(id));
+          consultaUbicaciones.executeUpdate();
+        }
+      }
+      
+      if (productosExternos != null){
+        String[] ids = parsearAsociacion("#p#", productosExternos);
+        
+        PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
+                " INSERT INTO bodega.catalogos_internos_externos(id_producto_ext, id_producto) " +
+                " VALUES (?, ?)");
+        
+        consultaUbicaciones.setInt(2, p.getId_producto());
+        
+        for (String id : ids){
+          consultaUbicaciones.setInt(1, Integer.parseInt(id));
+          consultaUbicaciones.executeUpdate();
+        }
+      }
+      
       consulta.close();
-      conexion.close();
+      getConexion().commit();
+      getConexion().close();
+      resultado = true;
     }
     catch(Exception ex){
       ex.printStackTrace();
+      try{
+        getConexion().rollback();
+      } catch(Exception ex_bd){
+        ex.printStackTrace();
+      }
     }
     return resultado;
   }
@@ -177,9 +281,17 @@ public class ProductoInternoDAO
     ProductoInterno producto = new ProductoInterno();
     
     try{
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.catalogo_interno where id_producto = ?");
+      PreparedStatement consulta = getConexion().prepareStatement(
+                            " SELECT producto.*, reactivo.*" +
+                            " From (" +
+                            " 	(Select * FROM bodega.catalogo_interno where id_producto = ?) producto" +
+                            "		left join " +
+                            "	(Select * FROM bodega.reactivos where id_producto = ?) reactivo" +
+                            "	on producto.id_producto = reactivo.id_producto" +
+                            " ) ");
       
       consulta.setInt(1, id_producto);
+      consulta.setInt(2, id_producto);
       
       ResultSet rs = consulta.executeQuery();
       
@@ -189,9 +301,21 @@ public class ProductoInternoDAO
         producto.setCodigo_icp(rs.getString("codigo_icp"));
         producto.setStock_minimo(rs.getInt("stock_minimo"));
         producto.setStock_maximo(rs.getInt("stock_maximo"));
-        producto.setUbicacion(rs.getString("ubicacion"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
+        
+        if( rs.getInt("id_reactivo") != 0 ){
+          Reactivo r = new Reactivo();
+          r.setId_reactivo(rs.getInt("id_reactivo"));
+          r.setNumero_cas(rs.getString("numero_cas"));
+          r.setFormula_quimica(rs.getString("formula_quimica"));
+          r.setFamilia(rs.getString("familia"));
+          r.setCantidad_botella_bodega(rs.getInt("cantidad_botella_bodega"));
+          r.setCantidad_botella_lab(rs.getInt("cantidad_botella_lab"));
+          r.setVolumen_bodega(rs.getString("volumen_bodega"));
+          r.setVolumen_lab(rs.getString("volumen_lab"));
+          producto.setReactivo(r);
+        }
       }      
     }
     catch(Exception ex){
@@ -215,7 +339,6 @@ public class ProductoInternoDAO
         producto.setCodigo_icp(rs.getString("codigo_icp"));
         producto.setStock_minimo(rs.getInt("stock_minimo"));
         producto.setStock_maximo(rs.getInt("stock_maximo"));
-        producto.setUbicacion(rs.getString("ubicacion"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
         
@@ -264,7 +387,6 @@ public class ProductoInternoDAO
         producto.setCodigo_icp(rs.getString("codigo_icp"));
         producto.setStock_minimo(rs.getInt("stock_minimo"));
         producto.setStock_maximo(rs.getInt("stock_maximo"));
-        producto.setUbicacion(rs.getString("ubicacion"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
         
@@ -297,7 +419,6 @@ public class ProductoInternoDAO
         producto.setCodigo_icp(rs.getString("codigo_icp"));
         producto.setStock_minimo(rs.getInt("stock_minimo"));
         producto.setStock_maximo(rs.getInt("stock_maximo"));
-        producto.setUbicacion(rs.getString("ubicacion"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
         
@@ -312,5 +433,9 @@ public class ProductoInternoDAO
 
     return resultado;
   }
-
+  
+  private String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
+    String[] idsTemp = asociacionesCodificadas.split(pivote);
+    return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+  }
 }

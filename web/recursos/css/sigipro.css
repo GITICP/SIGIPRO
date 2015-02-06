@@ -32,3 +32,8 @@
 .campos-requeridos {
   padding-left: 1.5em;
 }
+
+.error-form {
+  margin-bottom: 0px;
+  color: red;
+}
