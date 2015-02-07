@@ -91,7 +91,7 @@
               <c:set var="checkedReactivo" value="checked" />
               <c:set var="formReactivo" value="" />
             </c:if>
-            <input type="checkbox" name="cuarentena" value="true" ${checkedCuarentena}><span>  Entra por defecto en cuarentena.</span>
+            <input type="checkbox" name="cuarentena" value="true" ${checkedCuarentena}><span>  Ingresa por defecto en cuarentena.</span>
             <br>
             <input id="check-reactivo" type="checkbox" name="reactivo" value="true" ${checkedReactivo}><span>  Es un reactivo.</span>
           </div>
@@ -183,61 +183,67 @@
   <br>
   <br>
 
-  <div class="widget widget-table">
-    <div class="widget-header">
-      <h3><i class="fa fa-map-marker"></i> Ubicaciones</h3>
-      <div class="btn-group widget-header-toolbar">
-        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUbicacion">Agregar</a>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="widget widget-table">
+        <div class="widget-header">
+          <h3><i class="fa fa-map-marker"></i> Ubicaciones</h3>
+          <div class="btn-group widget-header-toolbar">
+            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUbicacion">Agregar</a>
+          </div>
+        </div>
+        <div class="widget-content">
+          <table id="datatable-column-filter-ubicaciones-formulario" class="table table-sorting table-striped table-hover datatable">
+            <thead>
+              <tr>
+                <th>Ubicación</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach items="${ubicacionesProducto}" var="ubicacion">
+                <tr id="${ubicacion.getId_ubicacion()}">
+                  <td>${ubicacion.getNombre()}</td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarUbicacion(${ubicacion.getId_ubicacion()})" >Eliminar</button>
+                  </td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="widget-content">
-      <table id="datatable-column-filter-ubicaciones-formulario" class="table table-sorting table-striped table-hover datatable">
-        <thead>
-          <tr>
-            <th>Ubicación</th>
-            <th>Eliminar</th>
-          </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${ubicacionesProducto}" var="ubicacion">
-          <tr id="${ubicacion.getId_ubicacion()}">
-            <td>${ubicacion.getNombre()}</td>
-            <td>
-              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarUbicacion(${ubicacion.getId_ubicacion()})" >Eliminar</button>
-            </td>
-          </tr>
-        </c:forEach>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <div class="widget widget-table">
-    <div class="widget-header">
-      <h3><i class="fa fa-truck"></i> Producto Externo</h3>
-      <div class="btn-group widget-header-toolbar">
-        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProductoExterno">Agregar</a>
+    <div class="col-md-6">
+      <div class="widget widget-table">
+        <div class="widget-header">
+          <h3><i class="fa fa-truck"></i> Producto Externo</h3>
+          <div class="btn-group widget-header-toolbar">
+            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProductoExterno">Agregar</a>
+          </div>
+        </div>
+        <div class="widget-content">
+          <table id="datatable-column-filter-productos-externos" class="table table-sorting table-striped table-hover datatable">
+            <thead>
+              <tr>
+                <th>Producto Externo</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach items="${productosExternos}" var="producto">
+                <tr id="${producto.getId_producto_ext()}">
+                  <td>${producto.getProducto()} (${producto.getCodigo_Externo()})</td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProductoExterno(${producto.getId_producto_ext()})" >Eliminar</button>
+                  </td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div class="widget-content">
-      <table id="datatable-column-filter-productos-externos" class="table table-sorting table-striped table-hover datatable">
-        <thead>
-          <tr>
-            <th>Producto Externo</th>
-            <th>Eliminar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <c:forEach items="${productosExternos}" var="producto">
-            <tr id="${producto.getId_producto_ext()}">
-              <td>${producto.getProducto()} (${producto.getCodigo_Externo()})</td>
-              <td>
-                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProductoExterno(${producto.getId_producto_ext()})" >Eliminar</button>
-              </td>
-            </tr>
-          </c:forEach>
-        </tbody>
-      </table>
     </div>
   </div>
 

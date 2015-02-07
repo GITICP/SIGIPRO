@@ -74,7 +74,6 @@ $(document).ready(function () {
   });
   
   $("#catInternoForm").submit(function(){
-    alert("se llama");
     if( stockMinValido && stockMaxValido && cantBodegaValida && cantLabValida){
       return true;
     } else {

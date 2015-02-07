@@ -353,22 +353,6 @@ public class ProductoInternoDAO
     }
     return resultado;
   }
-  
-  private Connection getConexion(){
-    try{     
-
-      if ( conexion.isClosed() ){
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-      }
-    }
-    catch(Exception ex)
-    {
-      conexion = null;
-  }
-
-    return conexion;
-  }
 
   public List<ProductoInterno> obtenerProductosInternosRestantes(int p_IdExterno) {
     List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();
@@ -434,8 +418,48 @@ public class ProductoInternoDAO
     return resultado;
   }
   
+  public boolean validarCodigoICP(String codigo, int id_producto){
+    boolean resultado = false;
+
+    if (conexion != null) {
+      try {
+        PreparedStatement consulta;
+        consulta = getConexion().prepareStatement("SELECT codigo_icp FROM bodega.catalogo_interno WHERE codigo_icp = ? and id_producto <> ?");
+        consulta.setString(1, codigo);
+        consulta.setInt(2, id_producto);
+
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        if (!resultadoConsulta.next()) {
+          resultado = true;
+        }
+        getConexion().close();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+
+    }
+    return resultado;
+  }
+  
   private String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
     String[] idsTemp = asociacionesCodificadas.split(pivote);
     return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+  }
+  
+  private Connection getConexion(){
+    try{     
+
+      if ( conexion.isClosed() ){
+        SingletonBD s = SingletonBD.getSingletonBD();
+        conexion = s.conectar();
+      }
+    }
+    catch(Exception ex)
+    {
+      conexion = null;
+  }
+
+    return conexion;
   }
 }

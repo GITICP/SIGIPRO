@@ -71,6 +71,10 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           redireccion = "CatalogoInterno/Ver.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoInterno producto = dao.obtenerProductoInterno(id_producto);
+          List<ProductoExterno> productosExternos = daoProductosExternos.obtenerProductos(id_producto);
+          List<UbicacionBodega> ubicaciones = daoUbicaciones.obtenerUbicaciones(id_producto);
+          request.setAttribute("ubicacionesProducto", ubicaciones);
+          request.setAttribute("productosExternos", productosExternos);
           request.setAttribute("producto", producto);
         }
         else if (accion.equalsIgnoreCase("agregar")) {
@@ -172,19 +176,33 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
         productoInterno.setReactivo(r);
       }
 
-      ProductoInternoDAO dao = new ProductoInternoDAO();
+      ProductoInternoDAO dao = new ProductoInternoDAO();      
+      
       String id = request.getParameter("id_producto");
       String redireccion;
       String mensajeResultado;
+      
+      boolean codigoValido = true;
 
       if (id.isEmpty() || id.equals("0")) {
-        resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        if ( dao.validarCodigoICP(productoInterno.getCodigo_icp(), 0) ){
+          resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        } else {
+          resultado = false;
+          codigoValido = false;
+        }
+        
         mensajeResultado = "agregado";
         redireccion = "CatalogoInterno/Agregar.jsp";
-      }
-      else {
+      } else {
         productoInterno.setId_producto(Integer.parseInt(id));
-        resultado = dao.editarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        if ( dao.validarCodigoICP(productoInterno.getCodigo_icp(), productoInterno.getId_producto()) ){
+          resultado = dao.editarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        } else {
+          resultado = false;
+          codigoValido = false;
+        }
+        
         mensajeResultado = "editado";
         redireccion = "CatalogoInterno/Editar.jsp";
       }
@@ -202,6 +220,10 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       else {
         mensajeResultado += " sin éxito.";
         mensajeFinal = String.format("Producto interno %s", mensajeResultado);
+        
+        if(!codigoValido){
+          mensajeFinal += " El código ya se encuentra en uso.";
+        }
         mensajeFinal = helper.mensajeDeError(mensajeFinal);
         
         ProductoExternoDAO daoProductosExternos = new ProductoExternoDAO();
