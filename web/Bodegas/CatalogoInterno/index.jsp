@@ -51,7 +51,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-bodegas" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table id="datatable-column-filter-bodegas-catalogo-interno" class="table table-sorting table-striped table-hover datatable tablaSigipro">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -59,9 +59,10 @@
                     <th>Nombre</th>
                     <th>Stock Mínimo</th>
                     <th>Stock Máximo</th>
-                    <th>Ubicación</th>
                     <th>Presentación</th>
                     <th>Descripción</th>
+                    <th>Ingresa en Cuarentena</th>
+                    <th>Es reactivo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,9 +79,10 @@
                       <td>${producto.getNombre()}</td>
                       <td>${producto.getStock_minimo()}</td>
                       <td>${producto.getStock_maximo()}</td>
-                      <td>${producto.getUbicacion()}</td>
                       <td>${producto.getPresentacion()}</td>
                       <td>${producto.getDescripcion()}</td>
+                      <td>${producto.getCuarentena()}</td>
+                      <td>${producto.isReactivo()}</td>
                     </tr>
 
                   </c:forEach>

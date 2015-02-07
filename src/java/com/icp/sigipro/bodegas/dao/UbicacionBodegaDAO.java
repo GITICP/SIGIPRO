@@ -173,6 +173,66 @@ public class UbicacionBodegaDAO
     return resultado;
   } 
   
+  public List<UbicacionBodega> obtenerUbicaciones(int p_Id_Interno){
+    
+    List<UbicacionBodega> resultado = new ArrayList<UbicacionBodega>();
+    
+    try{
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_ubicacion, nombre FROM bodega.ubicaciones_bodega "+
+                                                                  " WHERE id_ubicacion in ( SELECT uci.id_ubicacion FROM bodega.ubicaciones_catalogo_interno uci "+
+                                                                  " WHERE uci.id_producto = ?) ");
+      
+      consulta.setInt(1, p_Id_Interno);
+      
+      ResultSet rs = consulta.executeQuery();
+      
+      while(rs.next()){
+        UbicacionBodega ubicacion = new UbicacionBodega();
+        ubicacion.setId_ubicacion(rs.getInt("id_ubicacion"));
+        ubicacion.setNombre(rs.getString("nombre"));
+        
+        resultado.add(ubicacion);
+      }      
+      
+      consulta.close();
+      conexion.close();
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return resultado;
+  } 
+  
+  public List<UbicacionBodega> obtenerUbicacionesRestantes(int p_Id_Interno){
+    
+    List<UbicacionBodega> resultado = new ArrayList<UbicacionBodega>();
+    
+    try{
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_ubicacion, nombre FROM bodega.ubicaciones_bodega "+
+                                                                  " WHERE id_ubicacion not in ( SELECT uci.id_ubicacion FROM bodega.ubicaciones_catalogo_interno uci "+
+                                                                  " WHERE uci.id_producto = ?) ");
+      
+      consulta.setInt(1, p_Id_Interno);
+      
+      ResultSet rs = consulta.executeQuery();
+      
+      while(rs.next()){
+        UbicacionBodega ubicacion = new UbicacionBodega();
+        ubicacion.setId_ubicacion(rs.getInt("id_ubicacion"));
+        ubicacion.setNombre(rs.getString("nombre"));
+        
+        resultado.add(ubicacion);
+      }      
+      
+      consulta.close();
+      conexion.close();
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return resultado;
+  } 
+  
   private Connection getConexion(){
     try{     
 

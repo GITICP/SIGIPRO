@@ -71,6 +71,10 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           redireccion = "CatalogoInterno/Ver.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoInterno producto = dao.obtenerProductoInterno(id_producto);
+          List<ProductoExterno> productosExternos = daoProductosExternos.obtenerProductos(id_producto);
+          List<UbicacionBodega> ubicaciones = daoUbicaciones.obtenerUbicaciones(id_producto);
+          request.setAttribute("ubicacionesProducto", ubicaciones);
+          request.setAttribute("productosExternos", productosExternos);
           request.setAttribute("producto", producto);
         }
         else if (accion.equalsIgnoreCase("agregar")) {
@@ -97,6 +101,14 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           redireccion = "CatalogoInterno/Editar.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoInterno producto = dao.obtenerProductoInterno(id_producto);
+          List<ProductoExterno> productosExternos = daoProductosExternos.obtenerProductos(id_producto);
+          List<ProductoExterno> productosExternosRestantes = daoProductosExternos.obtenerProductosRestantes(id_producto);
+          List<UbicacionBodega> ubicaciones = daoUbicaciones.obtenerUbicaciones(id_producto);
+          List<UbicacionBodega> ubicacionesRestantes = daoUbicaciones.obtenerUbicacionesRestantes(id_producto);
+          request.setAttribute("ubicacionesProducto", ubicaciones);
+          request.setAttribute("ubicacionesRestantes", ubicacionesRestantes);
+          request.setAttribute("productosExternos", productosExternos);
+          request.setAttribute("productosExternosRestantes", productosExternosRestantes);
           request.setAttribute("producto", producto);
           request.setAttribute("accion", "Editar");
         }
@@ -164,19 +176,33 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
         productoInterno.setReactivo(r);
       }
 
-      ProductoInternoDAO dao = new ProductoInternoDAO();
+      ProductoInternoDAO dao = new ProductoInternoDAO();      
+      
       String id = request.getParameter("id_producto");
       String redireccion;
       String mensajeResultado;
+      
+      boolean codigoValido = true;
 
       if (id.isEmpty() || id.equals("0")) {
-        resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        if ( dao.validarCodigoICP(productoInterno.getCodigo_icp(), 0) ){
+          resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        } else {
+          resultado = false;
+          codigoValido = false;
+        }
+        
         mensajeResultado = "agregado";
         redireccion = "CatalogoInterno/Agregar.jsp";
-      }
-      else {
+      } else {
         productoInterno.setId_producto(Integer.parseInt(id));
-        resultado = dao.editarProductoInterno(productoInterno);
+        if ( dao.validarCodigoICP(productoInterno.getCodigo_icp(), productoInterno.getId_producto()) ){
+          resultado = dao.editarProductoInterno(productoInterno, ubicaciones, productosExternos);
+        } else {
+          resultado = false;
+          codigoValido = false;
+        }
+        
         mensajeResultado = "editado";
         redireccion = "CatalogoInterno/Editar.jsp";
       }
@@ -188,15 +214,27 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
         mensajeFinal = helper.mensajeDeExito(mensajeFinal);
         redireccion = "CatalogoInterno/index.jsp";
         List<ProductoInterno> productos = dao.obtenerProductos();
+        
         request.setAttribute("listaProductos", productos);
       }
       else {
         mensajeResultado += " sin éxito.";
         mensajeFinal = String.format("Producto interno %s", mensajeResultado);
+        
+        if(!codigoValido){
+          mensajeFinal += " El código ya se encuentra en uso.";
+        }
         mensajeFinal = helper.mensajeDeError(mensajeFinal);
-      }
-
-      request.setAttribute("producto", productoInterno);
+        
+        ProductoExternoDAO daoProductosExternos = new ProductoExternoDAO();
+        UbicacionBodegaDAO daoUbicaciones = new UbicacionBodegaDAO();
+        request.setAttribute("producto", productoInterno);
+        request.setAttribute("ubicacionesProducto", daoUbicaciones.obtenerUbicaciones(productoInterno.getId_producto()));
+        request.setAttribute("ubicacionesRestantes", daoUbicaciones.obtenerUbicacionesRestantes(productoInterno.getId_producto()));
+        request.setAttribute("productosExternos", daoProductosExternos.obtenerProductos(productoInterno.getId_producto()));
+        request.setAttribute("productosExternosRestantes", daoProductosExternos.obtenerProductosRestantes(productoInterno.getId_producto()));
+        request.setAttribute("accion", "Agregar");
+      }      
       request.setAttribute("mensaje", mensajeFinal);
       RequestDispatcher vista = request.getRequestDispatcher(redireccion);
       vista.forward(request, response);

@@ -124,6 +124,19 @@ public class ProductoInterno
     this.reactivo = reactivo;
   }
   
+  public String getCuarentena(){
+    if (isCuarentena()){
+      return "Sí";
+    } else {
+      return "No";
+    }
+  }
   
-  
+  public String isReactivo(){
+    if (getReactivo() == null){
+      return "No";
+    } else {
+      return "Sí";
+    }
+  }
 }

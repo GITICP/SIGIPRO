@@ -117,10 +117,9 @@ CREATE TABLE bodega.catalogo_interno(
 	codigo_icp character varying(45) NOT NULL,
 	stock_minimo integer NOT NULL,
 	stock_maximo integer NOT NULL,
-	ubicacion character varying(45),
 	presentacion character varying(45) NOT NULL,
         descripcion character varying(500),
-        cuarentena integer
+        cuarentena boolean
  );
 
 CREATE TABLE bodega.catalogos_internos_externos(
