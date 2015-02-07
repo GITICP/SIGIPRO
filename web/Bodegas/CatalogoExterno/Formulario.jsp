@@ -32,6 +32,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="col-md-6">
     <label for="marca" class="control-label">Marca</label>
     <div class="form-group">
       <div class="col-sm-12">
@@ -55,16 +57,16 @@
                 <option value=0 selected> -- Sin selección --</option> 
               </c:when>
               <c:otherwise>               
-                    <c:forEach items="${proveedores}" var="pr">              
-                      <c:choose>
-                        <c:when test="${pr.getId_proveedor() == producto.getId_Proveedor()}">
-                          <option value=${pr.getId_proveedor()} selected>${pr.getNombre_proveedor()}</option>
-                        </c:when>
-                        <c:otherwise>
-                          <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
-                        </c:otherwise>       
-                      </c:choose>
-                    </c:forEach>
+                <c:forEach items="${proveedores}" var="pr">              
+                  <c:choose>
+                    <c:when test="${pr.getId_proveedor() == producto.getId_Proveedor()}">
+                      <option value=${pr.getId_proveedor()} selected>${pr.getNombre_proveedor()}</option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
+                    </c:otherwise>       
+                  </c:choose>
+                </c:forEach>
               </c:otherwise>
             </c:choose>
           </select>
@@ -94,7 +96,7 @@
               <tr id="${interno.getId_producto()}">
                 <td>${interno.getNombre()}</td>
                 <td>
-                  <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarProductoInterno(${interno.getId_producto()})">Eliminar</button>
+                  <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProductoInterno(${interno.getId_producto()})">Eliminar</button>
                 </td>
               </tr>
             </c:forEach>
@@ -102,16 +104,16 @@
         </table>
       </div>
     </div>
-  <p>
-    Los campos marcados con * son requeridos.
-  </p>  
+    <p>
+      Los campos marcados con * son requeridos.
+    </p>  
 
-  <div class="form-group">
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-      <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+    <div class="form-group">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+      </div>
     </div>
-  </div>
   </div>
 
 

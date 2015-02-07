@@ -161,7 +161,7 @@ function agregarRol() {
   }
   else {
   $('#modalAgregarRolUsuario').modal('hide');
-
+  $('#select2-chosen-1').text("");
   rolSeleccionado = $('#seleccionRol :selected');
   inputFechaAct = $('#agregarFechaActivacion');
   inputFechaDesact = $('#agregarFechaDesactivacion');
@@ -181,8 +181,8 @@ function agregarRol() {
   fila += '<td>' + fechaAct + '</td>';
   fila += '<td>' + fechaDesact + '</td>';
   fila += '<td>';
-  fila += '<button type="button" class="btn btn-primary btn-sm" onclick="editarRolUsuario(' + idRol + ')"   style="margin-left:5px;margin-right:7px;">Editar</button>';
-  fila += '<button type="button" class="btn btn-primary btn-sm" onclick="eliminarRolUsuario(' + idRol + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+  fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarRolUsuario(' + idRol + ')"   style="margin-left:5px;margin-right:7px;">Editar</button>';
+  fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarRolUsuario(' + idRol + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
   fila += '</td>';
   fila += '</tr>';
 
