@@ -195,8 +195,8 @@
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   >Editar</button>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
+                              <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   >Editar</button>
+                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>

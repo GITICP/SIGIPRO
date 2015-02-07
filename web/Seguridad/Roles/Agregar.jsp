@@ -98,7 +98,7 @@
                           <tr id="${permisoRol.getIDPermiso()}">
                             <td>${permisoRol.getNombrePermiso()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})">Eliminar</button>
+                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarPermisoRol(${permisoRol.getIDPermiso()})">Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>
@@ -132,8 +132,8 @@
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getID()})"   >Editar</button>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getID()})" >Eliminar</button>
+                              <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getID()})"   >Editar</button>
+                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getID()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>

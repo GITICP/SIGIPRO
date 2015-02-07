@@ -175,8 +175,8 @@
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   >Editar</button>
-                              <button type="button" class="btn btn-primary btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
+                              <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   >Editar</button>
+                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>
@@ -217,7 +217,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" class="form-control" style='background-color: #fff;' name="idrol" required
+                <select id="seleccionRol" class="select2" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
                   <c:forEach items="${rolesRestantes}" var="rol">

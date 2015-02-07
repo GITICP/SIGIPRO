@@ -73,7 +73,6 @@
                       </c:if> 
                     </c:otherwise>
                   </c:choose> 
-                  -->
                 </c:if>
 
                 <c:set var="contienePermisoRestablecer" value="false" />

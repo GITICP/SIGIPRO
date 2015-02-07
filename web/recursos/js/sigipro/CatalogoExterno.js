@@ -17,7 +17,7 @@ function agregarProductoInterno() {
   fila = '<tr ' + 'id=' + idPermiso + '>';
   fila += '<td>' + textoPermiso + '</td>';
   fila += '<td>';
-  fila += '<button type="button" class="btn btn-primary btn-sm" onclick="eliminarProductoInterno(' + idPermiso + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+  fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProductoInterno(' + idPermiso + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
   fila += '</td>';
   fila += '</tr>';
   

@@ -70,30 +70,30 @@
                 <tr><td> <strong>Proveedor:</strong> <td>${producto.getNombreProveedor()} </td></tr>
               </table>
               <br>
+              <div class="widget widget-table">
+                <div class="widget-header">
+                  <h3><i class="fa fa-check"></i> Productos del Catálogo Interno Asociados</h3>
+                </div>
+                <div class="widget-content">
+                  <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                    <thead>
+                      <tr>
+                        <th>Nombre y Codigo del Producto</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <c:forEach items="${productos_internos}" var="interno">
+                        <tr id="${interno.getId_producto()}">
+                          <td>${interno.getNombre()} (${interno.getCodigo_icp()})</td>
+                        </tr>
+                      </c:forEach>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
           <!-- Esta parte es la de los interno del catalogo externo -->
-          <div class="widget widget-table">
-            <div class="widget-header">
-              <h3><i class="fa fa-check"></i> Productos del Catálogo Interno Asociados</h3>
-            </div>
-            <div class="widget-content">
-              <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
-                <thead>
-                  <tr>
-                    <th>Nombre y Codigo del Producto</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <c:forEach items="${productos_internos}" var="interno">
-                    <tr id="${interno.getId_producto()}">
-                      <td>${interno.getNombre()} (${interno.getCodigo_icp()})</td>
-                    </tr>
-                  </c:forEach>
-                </tbody>
-              </table>
-            </div>
-          </div>
 
           <!-- END WIDGET TICKET TABLE -->
         </div>
