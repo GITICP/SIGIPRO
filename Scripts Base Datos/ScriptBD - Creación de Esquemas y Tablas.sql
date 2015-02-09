@@ -140,6 +140,7 @@ CREATE TABLE bodega.ingresos (
 	id_ingreso serial NOT NULL,
 	id_producto integer,
      	fecha_ingreso date NOT NULL,
+     	fecha_registro date NOT NULL,
 	cantidad integer NOT NULL,
 	fecha_vencimiento date NOT NULL,
 	estado character varying(45),
@@ -149,6 +150,7 @@ CREATE TABLE bodega.ingresos (
 CREATE TABLE bodega.inventarios ( 
 	id_inventario serial NOT NULL,
 	id_producto integer,
+	id_seccion integer NOT NUll,
      	stock_actual integer NOT NULL
  ); 
 
