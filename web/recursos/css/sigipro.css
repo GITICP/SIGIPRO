@@ -37,3 +37,28 @@
   margin-bottom: 0px;
   color: red;
 }
+
+.sigipro-nav-tabs li {
+  float: right;
+}
+
+.icono-decision {
+  font-size: 2em;
+}
+
+.icono-decision:hover{
+  color:green;
+  cursor: pointer;
+}
+
+.fila-decision {
+  text-align: center;
+}
+
+.decision-izq {
+  padding-right: 1em;
+}
+
+.sigipro-tab-content {
+  padding: 0px;
+}
