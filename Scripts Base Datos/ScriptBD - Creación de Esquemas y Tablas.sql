@@ -138,7 +138,8 @@ CREATE TABLE bodega.catalogo_externo(
 
 CREATE TABLE bodega.ingresos ( 
 	id_ingreso serial NOT NULL,
-	id_producto integer,
+	id_producto integer NOT NULL,
+        id_seccion integer NOT NULL,
      	fecha_ingreso date NOT NULL,
      	fecha_registro date NOT NULL,
 	cantidad integer NOT NULL,
@@ -182,11 +183,21 @@ CREATE TABLE bodega.detalles_solicitudes (
 	fecha_entrega date
  ); 
 
-CREATE TABLE bodega.sub_bodegas ( 
+CREATE TABLE bodega.usuarios_sub_bodegas_ingresos ( 
 	id_sub_bodega serial NOT NULL,
-	id_seccion integer NOT NULL 
+        id_usuario integer NOT NULL 
  ); 
 
+CREATE TABLE bodega.usuarios_sub_bodegas_egresos ( 
+	id_sub_bodega serial NOT NULL,
+        id_usuario integer NOT NULL 
+ ); 
+
+CREATE TABLE bodega.sub_bodegas ( 
+	id_sub_bodega serial NOT NULL,
+	id_seccion integer NOT NULL,
+        id_encargado integer NOT NULL
+ ); 
 
 CREATE TABLE bodega.inventarios_bodegas ( 
 	id_inventario_bodega serial NOT NULL,
@@ -238,7 +249,7 @@ ALTER TABLE ONLY bodega.catalogos_internos_externos ADD CONSTRAINT fk_id_product
 ALTER TABLE ONLY bodega.ubicaciones_catalogo_interno ADD CONSTRAINT fk_id_ubicacion FOREIGN KEY (id_ubicacion) REFERENCES bodega.ubicaciones_bodega(id_ubicacion);
 ALTER TABLE ONLY bodega.ubicaciones_catalogo_interno ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
-ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_secciones);
+ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
@@ -247,6 +258,10 @@ ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto FOREIG
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion)on delete set null;
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_ubicacion FOREIGN KEY (id_ubicacion) REFERENCES bodega.ubicaciones(id_ubicacion)on delete set null;
+ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
+ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT fk_id_encargado FOREIGN KEY (id_encargado) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.usuarios_sub_bodegas_ingresos ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.usuarios_sub_bodegas_egresos ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 
 --######ESQUEMA configuración ######
 DROP SCHEMA IF EXISTS configuracion CASCADE;
