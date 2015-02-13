@@ -17,6 +17,7 @@ $(document).ready(function () {
     });
 
     $(selectorTabla + ' .row-filter input').on('keyup change', function () {
+      alert("assigns function");
       dtTable
               .column($(this).parent().index() + ':visible')
               .search(this.value)

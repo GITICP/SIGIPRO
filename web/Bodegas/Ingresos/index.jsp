@@ -38,7 +38,7 @@
               <a href="#ingresos" data-toggle="tab">Ingresos</a>
             </li>
             <li class="">
-              <a href="#ingresosPendientes" data-toggle="tab">Pendientes
+              <a href="#ingresosPendientes" data-toggle="tab">Cuarentena
                 <span class="badge">5</span>
               </a>
             </li>
@@ -63,7 +63,7 @@
                 </div>
                 ${mensaje}
                 <div class="widget-content">
-                  <table id="datatable-column-filter-bodegas-catalogo-interno" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                  <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                     <!-- Columnas -->
                     <thead> 
                       <tr>
@@ -122,7 +122,7 @@
                 </div>
                 ${mensaje}
                 <div class="widget-content">
-                  <table id="datatable-column-filter-bodegas-catalogo-interno" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                  <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                     <!-- Columnas -->
                     <thead> 
                       <tr>

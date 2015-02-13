@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
  * @author Walter
  */
 @WebServlet(name = "ControladorIngresos", urlPatterns = {"/Bodegas/Ingresos"})
-public class ControladorInresos extends SIGIPROServlet {
+public class ControladorIngresos extends SIGIPROServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -47,7 +47,9 @@ public class ControladorInresos extends SIGIPROServlet {
         try {
             String redireccion = "";
             String accion = request.getParameter("accion");
-            // Cargar DAO
+            
+            //IngresosDAO dao = new IngresosDAO();
+            
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
             // INGRESAR PERMISOS
