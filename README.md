@@ -27,7 +27,7 @@ Sistema para el manejo de:
 
 -JDK instalado
 
-###NetBeans 8: 
+###NetBeans 8 
 
 https://netbeans.org/downloads/
 
