@@ -23,11 +23,11 @@ Sistema para el manejo de:
 
 #Instalación (para Desarrollo)
 
-*PREREQUISITOS
+##PREREQUISITOS
 
-JDK instalado
+-JDK instalado
 
--NetBeans 8.
+###NetBeans 8: 
 
 https://netbeans.org/downloads/
 
@@ -36,7 +36,7 @@ Descargar el Java EE o el ALL.
 A la hora de la instalación, asegurarse de descargar el server APACHE TOMCAT (el Glassfish es el default, así que hay que meterse a Customize en las pantallas de 
 instalación para seleccionar Apache).
 
--Apache Tomcat
+###Apache Tomcat
 
 Incluido en la descarga de NetBeans. 
 
@@ -44,7 +44,7 @@ En caso de error a la hora de intentar iniciar el servidor, ver el siguiente vid
 
 https://www.youtube.com/watch?v=guslgqUMe2A
 
--PostgreSQL
+###PostgreSQL
 
 http://www.postgresql.org/download/
 
@@ -53,6 +53,6 @@ Descargar el servidor de la BD. Poner de usuario "postgre" y contraseña "Solari
 Para abrir la UI del servicio, abrir pgAdmin III. Crear una nueva "Database" llamada "sigipro". Luego, en dicho esquema, correr el código que se encuentra en
 Scripts Base Datos/ScriptBD - Creacion de Esquemas y Tablas. 
 
------Despliegue
+##Despliegue
 
 Ir a NetBeans, abrir el proyecto SIGIPRO, y darle Run. Revisar la Consola para ver cual puerto está asignado (8084). Abrirlo con el localhost.
