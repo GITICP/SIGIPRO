@@ -7,7 +7,7 @@ package com.icp.sigipro.bodegas.modelos;
 public class ActivoFijo {
 
     int id_activo_fijo;
-    int placa;
+    String placa;
     int equipo;
     String marca;
     String fecha_movimiento;
@@ -21,7 +21,7 @@ public class ActivoFijo {
     public ActivoFijo() {
     }
 
-    public ActivoFijo(int id_activo_fijo, int placa, int equipo, String marca, String fecha_movimiento, int id_seccion, int id_ubicacion, String fecha_registro, String estado) {
+    public ActivoFijo(int id_activo_fijo, String placa, int equipo, String marca, String fecha_movimiento, int id_seccion, int id_ubicacion, String fecha_registro, String estado) {
         this.id_activo_fijo = id_activo_fijo;
         this.placa = placa;
         this.equipo = equipo;
@@ -43,11 +43,11 @@ public class ActivoFijo {
         this.id_activo_fijo = id_activo_fijo;
     }
 
-    public int getPlaca() {
+    public String getPlaca() {
         return placa;
     }
 
-    public void setPlaca(int placa) {
+    public void setPlaca(String placa) {
         this.placa = placa;
     }
 
