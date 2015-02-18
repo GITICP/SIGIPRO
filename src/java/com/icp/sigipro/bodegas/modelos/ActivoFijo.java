@@ -8,7 +8,7 @@ public class ActivoFijo {
 
     int id_activo_fijo;
     String placa;
-    int equipo;
+    String equipo;
     String marca;
     String fecha_movimiento;
     int id_seccion;
@@ -21,7 +21,7 @@ public class ActivoFijo {
     public ActivoFijo() {
     }
 
-    public ActivoFijo(int id_activo_fijo, String placa, int equipo, String marca, String fecha_movimiento, int id_seccion, int id_ubicacion, String fecha_registro, String estado) {
+    public ActivoFijo(int id_activo_fijo, String placa, String equipo, String marca, String fecha_movimiento, int id_seccion, int id_ubicacion, String fecha_registro, String estado) {
         this.id_activo_fijo = id_activo_fijo;
         this.placa = placa;
         this.equipo = equipo;
@@ -51,11 +51,11 @@ public class ActivoFijo {
         this.placa = placa;
     }
 
-    public int getEquipo() {
+    public String getEquipo() {
         return equipo;
     }
 
-    public void setEquipo(int equipo) {
+    public void setEquipo(String equipo) {
         this.equipo = equipo;
     }
 

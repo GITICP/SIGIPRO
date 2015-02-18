@@ -14,7 +14,7 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input type="number" maxlength="45" placeholder="Placa del activo fijo" class="form-control" name="placa" value="${activofijo.getPlaca()}"
+                    <input type="text" maxlength="45" placeholder="C234" class="form-control" name="placa" value="${activofijo.getPlaca()}"
                            required
                            oninvalid="setCustomValidity('Este campo es requerido ')"
                            oninput="setCustomValidity('')" > 
@@ -25,7 +25,7 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input type="number" maxlength="45" placeholder="Equipo" class="form-control" name="equipo" value="${activofijo.getEquipo()}"
+                    <input type="text" maxlength="45" placeholder="Equipo" class="form-control" name="equipo" value="${activofijo.getEquipo()}"
                            required
                            oninvalid="setCustomValidity('Este campo es requerido ')"
                            oninput="setCustomValidity('')" > 
