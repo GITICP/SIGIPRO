@@ -33,7 +33,7 @@ public class ActivoFijoDAO {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) "
                     + " VALUES (?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
 
-            consulta.setInt(1, a.getPlaca());
+            consulta.setString(1, a.getPlaca());
             consulta.setInt(2, a.getEquipo());
             consulta.setString(3, a.getMarca());
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -79,7 +79,7 @@ public class ActivoFijoDAO {
               " WHERE id_activo_fijo=?; "
 
       );
-            consulta.setInt(1, a.getPlaca());
+            consulta.setString(1, a.getPlaca());
             consulta.setInt(2, a.getEquipo());
             consulta.setString(3, a.getMarca());
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -103,14 +103,6 @@ public class ActivoFijoDAO {
             consulta.setDate(7, fRegistroSQL);
             consulta.setString(8, a.getEstado()); 
             consulta.setInt(9, a.getId_activo_fijo());
-//      consulta.setString(1, a.getNombre());
-//      consulta.setString(2, a.getCodigo_icp());
-//      consulta.setInt(3, a.getStock_minimo());
-//      consulta.setInt(4, a.getStock_maximo());
-//      consulta.setString(5, a.getUbicacion());
-//      consulta.setString(6, a.getPresentacion());
-//      consulta.setString(7, a.getDescripcion());
-//      consulta.setInt(8, a.getId_producto());
       
       if ( consulta.executeUpdate() == 1){
         resultado = true;
@@ -159,7 +151,7 @@ public class ActivoFijoDAO {
 
             if (rs.next()) {
                 activo.setId_activo_fijo(rs.getInt("id_activo_fijo"));
-                activo.setPlaca(rs.getInt("placa"));
+                activo.setPlaca(rs.getString("placa"));
                 activo.setEquipo(rs.getInt("equipo"));
                 activo.setMarca(rs.getString("marca"));
                 activo.setFecha_movimiento(rs.getString("fecha_movimiento"));
@@ -201,7 +193,7 @@ public class ActivoFijoDAO {
             while (rs.next()) {
                 ActivoFijo activo = new ActivoFijo();
                 activo.setId_activo_fijo(rs.getInt("id_activo_fijo"));
-                activo.setPlaca(rs.getInt("placa"));
+                activo.setPlaca(rs.getString("placa"));
                 activo.setEquipo(rs.getInt("equipo"));
                 activo.setMarca(rs.getString("marca"));
                 activo.setFecha_movimiento(rs.getString("fecha_movimiento"));
