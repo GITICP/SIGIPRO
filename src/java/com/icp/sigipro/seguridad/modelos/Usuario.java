@@ -104,6 +104,7 @@ public class Usuario
     public Date getFechaDesactivacionAsDate()   {return fechaDesactivacion;}
     public Date getFechaActivacionAsDate()   {return fechaActivacion;}
     public String getFechaDesactivacion(){return formatearFecha(fechaDesactivacion);}
+    public boolean getEstado() {return activo;}
     public String getActivo()         {
         if(activo){
             return "Activo" ;
