@@ -127,7 +127,7 @@ public class ControladorActivoFijo extends SIGIPROServlet {
 
         ActivoFijo activofijo = new ActivoFijo();
 
-        activofijo.setPlaca(Integer.parseInt(request.getParameter("placa")));
+        activofijo.setPlaca(request.getParameter("placa"));
         activofijo.setEquipo(Integer.parseInt(request.getParameter("equipo")));
         activofijo.setMarca(request.getParameter("marca"));
         String fechamovimiento = request.getParameter("fecha_movimiento");
