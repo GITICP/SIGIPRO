@@ -101,7 +101,7 @@ CREATE SCHEMA bodega;
 --Tablas esquema bodega
 CREATE TABLE bodega.activos_fijos ( 
 	id_activo_fijo serial NOT NULL,
-	placa integer NOT NULL,
+	placa character varying(45) NOT NULL,
 	equipo character varying(45) NOT NULL,
 	marca character varying(45),
         fecha_movimiento date,
