@@ -10,22 +10,20 @@
 <form class="form-horizontal" autocomplete="off" method="post" action="ActivosFijos">
     <div class="col-md-6">
         <input hidden="true" name="id_activo_fijo" value="${activofijo.getId_activo_fijo()}">
-        <label for="placa" class="control-label">* Placa del Activo Fijo</label>
+        <label for="placa" class="control-label">Placa del Activo Fijo</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input type="number" maxlength="45" placeholder="Placa del activo fijo" class="form-control" name="placa" value="${activofijo.getPlaca()}"
-                           required
-                           oninvalid="setCustomValidity('Este campo es requerido ')"
-                           oninput="setCustomValidity('')" > 
+                    <input type="text" maxlength="45" placeholder="C234" class="form-control" name="placa" value="${activofijo.getPlaca()}"
+                            > 
                 </div>
             </div>
         </div>
-        <label for="equipo" class="control-label">* Equipo</label>
+        <label for="equipo" class="control-label">*Equipo</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input type="number" maxlength="45" placeholder="Equipo" class="form-control" name="equipo" value="${activofijo.getEquipo()}"
+                    <input type="text" maxlength="45" placeholder="Equipo" class="form-control" name="equipo" value="${activofijo.getEquipo()}"
                            required
                            oninvalid="setCustomValidity('Este campo es requerido ')"
                            oninput="setCustomValidity('')" > 
@@ -54,7 +52,7 @@
     </div>
 </div>
 <div class="col-md-6">
-    <label for="seccion" class="control-label">Sección</label>
+    <label for="seccion" class="control-label">*Sección</label>
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
@@ -81,7 +79,8 @@
             <div class="input-group">
                 <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                 <select id="seleccionUbicacion" class="form-control" name="ubicacion"
-                        style='background-color: #fff;' >
+                        style='background-color: #fff;' required
+                        oninvalid="setCustomValidity('Por favor seleccione una ubicación')">
                     <c:forEach items="${ubicaciones}" var="ubicacion">
                         <c:choose>
                             <c:when test="${ubicacion.getId_ubicacion() == activofijo.getId_ubicacion()}" >
@@ -107,21 +106,32 @@
             </div>
         </div>
     </div>
-    <label for="estado" class="control-label"> Estado</label>
+    <label for="estado" class="control-label"> *Estado</label>
     <div class="form-group">
-        <div class="col-sm-12">
-            <div class="input-group">
-                <input type="text" maxlength="45" placeholder="Estado" class="form-control" name="estado" value="${activofijo.getEstado()}"
-                       required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       oninput="setCustomValidity('')" > 
-            </div>
+      <div class="col-sm-12">
+        <div class="input-group">
+          <select id="seleccionestado" class="form-control" name="estado"
+                  style='background-color: #fff;' required
+                  oninvalid="setCustomValidity('Por favor seleccione un estado')"
+                  onchange="setCustomValidity('')">
+            <c:forEach items="${estados}" var="estado">
+              <c:choose>
+                <c:when test="${estado.equals(activofijo.getEstado())}" >
+                  <option value="${estado}" selected> ${estado}</option>
+                </c:when>
+                <c:otherwise>
+                  <option value="${estado}">${estado}</option>
+                </c:otherwise>
+              </c:choose>
+            </c:forEach>
+          </select>
         </div>
+      </div>
     </div>
 </div>
 </div>
 <!-- Esta parte es la de los permisos de un rol -->
-<p>
+<p class="campos-requeridos">
     Los campos marcados con * son requeridos.
 </p>  
 
