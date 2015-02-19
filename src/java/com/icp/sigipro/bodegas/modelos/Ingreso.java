@@ -5,14 +5,15 @@
  */
 package com.icp.sigipro.bodegas.modelos;
 
-import com.icp.sigipro.seguridad.modelos.Seccion;
+import com.icp.sigipro.core.IModelo;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import java.sql.Date;
 
 /**
  *
  * @author Boga
  */
-public class Ingreso
+public class Ingreso extends IModelo
 {
   int id_ingreso;
   ProductoInterno producto;

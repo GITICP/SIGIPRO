@@ -146,7 +146,7 @@ CREATE TABLE bodega.ingresos (
 	fecha_vencimiento date NOT NULL,
 	estado character varying(45),
 	precio integer
- ); 
+ );
 
 CREATE TABLE bodega.inventarios ( 
 	id_inventario serial NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE bodega.usuarios_sub_bodegas_egresos (
 CREATE TABLE bodega.sub_bodegas ( 
 	id_sub_bodega serial NOT NULL,
 	id_seccion integer NOT NULL,
-        id_encargado integer NOT NULL
+        id_usuario integer NOT NULL
  ); 
 
 CREATE TABLE bodega.inventarios_bodegas ( 

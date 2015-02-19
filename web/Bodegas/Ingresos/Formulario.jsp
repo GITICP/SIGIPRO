@@ -13,7 +13,7 @@
   <div class="row">
 
     <div class="col-md-6">
-      <input hidden="true" name="id_producto" value="${ingreso.getProducto().producto.getId_producto()}">
+      <input hidden="true" name="id_ingreso" value="${ingreso.getId_ingreso()}">
       <label for="producto" class="control-label">* Producto</label>
       <div class="form-group">
         <div class="col-sm-12">
@@ -21,15 +21,9 @@
             <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="producto" required
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
-              <!--
-              <c:forEach items="${rolesRestantes}" var="rol">
-                <option value=${rol.getID()}>${rol.getNombreRol()}</option>
+              <c:forEach items="${productos}" var="producto">
+                <option value=${producto.getId_producto()} data-cuarentena=${producto.isCuarentena()}>${producto.getNombre()} (${producto.getCodigo_icp()})</option>
               </c:forEach>
-              -->
-              <option value=${rol.getID()}>Producto 1</option>
-              <option value=${rol.getID()}>Producto 2</option>
-              <option value=${rol.getID()}>Producto 3</option>
-              <option value=${rol.getID()}>Producto 4</option>
             </select>
           </div>
         </div>
@@ -38,10 +32,13 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <%-- Esto va en el valor de abajo ${ingreso.getSeccion().getNombreSeccion()} --%>
-            <input type="text" value="Bodegas" id="seccion" class="form-control" name="seccion" required
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   onchange="setCustomValidity('')" disabled>
+            <select id="seleccionSeccion" class="select2" style='background-color: #fff;' name="seccion" required
+                    oninvalid="setCustomValidity('Este campo es requerido')"
+                    oninput="setCustomValidity('')">
+              <c:forEach items="${secciones}" var="seccion">
+                <option value=${seccion.getID()}>${seccion.getNombre_seccion()}</option>
+              </c:forEach>
+            </select>
           </div>
         </div>
       </div>
@@ -95,16 +92,13 @@
         <div class="col-sm-12">
           <div class="input-group">
             <label class="fancy-radio">
-              <input type="radio" name="estado" value="estado1"><span><i></i>Estado 1</span> 
+              <input id="radio-disponible" type="radio" name="estado" value="Disponible"><span><i></i>Disponible</span> 
             </label>
             <label class="fancy-radio">
-              <input type="radio" name="estado" value="estado2"><span><i></i>Estado 2</span> 
+              <input id="radio-cuarentena" type="radio" name="estado" value="En Cuarentena"><span><i></i>En cuarentena</span> 
             </label>
             <label class="fancy-radio">
-              <input type="radio" name="estado" value="estado3"><span><i></i>Estado 3</span> 
-            </label>
-            <label class="fancy-radio">
-              <input type="radio" name="estado" value="estado4"><span><i></i>Estado 4</span> 
+              <input type="radio" name="estado" value="No Disponible"><span><i></i>No disponible</span> 
             </label>
           </div>
         </div>

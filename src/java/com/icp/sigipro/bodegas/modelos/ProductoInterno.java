@@ -5,18 +5,19 @@
  */
 package com.icp.sigipro.bodegas.modelos;
 
+import com.icp.sigipro.core.IModelo;
+
 /**
  *
  * @author Boga
  */
-public class ProductoInterno
+public class ProductoInterno extends IModelo
 {
   private int id_producto;
   private String nombre;
   private String codigo_icp;
   private int stock_minimo;
   private int stock_maximo;
-  private String ubicacion;
   private String presentacion;
   private String descripcion;
   private boolean cuarentena;
@@ -72,16 +73,6 @@ public class ProductoInterno
   public void setStock_maximo(int stock_maximo)
   {
     this.stock_maximo = stock_maximo;
-  }
-
-  public String getUbicacion()
-  {
-    return ubicacion;
-  }
-
-  public void setUbicacion(String ubicacion)
-  {
-    this.ubicacion = ubicacion;
   }
 
   public String getPresentacion()

@@ -19,6 +19,26 @@ public class Seccion {
   nombre_seccion = pnombre;
   descripcion = pdesc;
   }
+
+  public int getId_seccion()
+  {
+    return id_seccion;
+  }
+
+  public void setId_seccion(int id_seccion)
+  {
+    this.id_seccion = id_seccion;
+  }
+
+  public String getNombre_seccion()
+  {
+    return nombre_seccion;
+  }
+
+  public void setNombre_seccion(String nombre_seccion)
+  {
+    this.nombre_seccion = nombre_seccion;
+  }
   
   public int getID()                 {return id_seccion;}
   public String getNombreSeccion()   {return nombre_seccion;}

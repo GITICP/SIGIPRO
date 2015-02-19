@@ -39,7 +39,7 @@
             </li>
             <li class="">
               <a href="#ingresosPendientes" data-toggle="tab">Cuarentena
-                <span class="badge">5</span>
+                <span class="badge">${listaIngresosCuarentena.size()}</span>
               </a>
             </li>
           </ul>
@@ -88,7 +88,7 @@
                               </div>
                             </a>
                           </td>
-                          <td>${ingreso.getSeccion().getNombreSeccion()}</td>
+                          <td>${ingreso.getSeccion().getNombre_seccion()}</td>
                           <td>${ingreso.getFecha_ingreso()}</td>
                           <td>${ingreso.getFecha_registro()}</td>
                           <td>${ingreso.getFecha_vencimiento()}</td>
@@ -137,41 +137,24 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr id ="${ingreso.getId_ingreso()}">
-                        <td>
-                          <a href="/SIGIPRO/Bodegas/Ingresos?accion=ver&id_ingreso=${ingreso.getId_ingreso()}">
-                            <div style="height:100%;width:100%">
-                              Producto Prueba (127b)
-                            </div>
-                          </a>
-                        </td>
-                        <td>Bodegas</td>
-                        <td>06/02/2015</td>
-                        <td>08/02/2015</td>
-                        <td>16/05/2015</td>
-                        <td>50</td>
-                        <td>25000</td>
-                        <td class="fila-decision"><i class="fa fa-check-circle icono-decision decision-izq"></i><i class="fa fa-times-circle icono-decision"></i></td>
-                      </tr>
-                      <c:forEach items="${listaIngresos}" var="ingreso">
+                      <c:forEach items="${listaIngresosCuarentena}" var="ingresoCuarentena">
 
-                        <tr id ="${ingreso.getId_ingreso()}">
+                        <tr id ="${ingresoCuarentena.getId_ingreso()}">
                           <td>
-                            <a href="/SIGIPRO/Bodegas/Ingresos?accion=ver&id_ingreso=${ingreso.getId_ingreso()}">
+                            <a href="/SIGIPRO/Bodegas/Ingresos?accion=ver&id_ingreso=${ingresoCuarentena.getId_ingreso()}">
                               <div style="height:100%;width:100%">
-                                ${ingreso.getProducto().getNombre()}
+                                ${ingresoCuarentena.getProducto().getNombre()}
                               </div>
                             </a>
                           </td>
-                          <td>${ingreso.getSeccion().getNombreSeccion()}</td>
-                          <td>${ingreso.getFecha_ingreso()}</td>
-                          <td>${ingreso.getFecha_registro()}</td>
-                          <td>${ingreso.getFecha_vencimiento()}</td>
-                          <td>${ingreso.getCantidad()}</td>
-                          <td>${ingreso.getPrecio()}</td>
-                          <td><button class="btn btn-success boton-accion">Aprobar</button><button class="btn btn-danger boton-accion">Rechazar</button></td>
+                          <td>${ingresoCuarentena.getSeccion().getNombre_seccion()}</td>
+                          <td>${ingresoCuarentena.getFecha_ingreso()}</td>
+                          <td>${ingresoCuarentena.getFecha_registro()}</td>
+                          <td>${ingresoCuarentena.getFecha_vencimiento()}</td>
+                          <td>${ingresoCuarentena.getCantidad()}</td>
+                          <td>${ingresoCuarentena.getPrecio()}</td>
+                          <td class="fila-decision"><i class="fa fa-check-circle icono-decision decision-izq"></i><i class="fa fa-times-circle icono-decision"></i></td>
                         </tr>
-
                       </c:forEach>
                     </tbody>
                   </table>

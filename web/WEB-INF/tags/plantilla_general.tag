@@ -100,27 +100,30 @@
 
 
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/select2/select2.min.js"></script>
 
     <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/CatalogoExterno.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
 
-    <script>
-      $('.sigiproDatePicker').datepicker()
-              .on('changeDate', function () {
-                $(this).datepicker('hide');
-              });
-      $("#fechaActivacion").datepicker({startDate: 0});
-      
-      $('.select2').select2();
-    </script>
     
+
+    <script src="${direccion_contexto}/recursos/js/plugins/select2/select2.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        if ($('.sigiproDatePicker').length > 0) {
+          $('.sigiproDatePicker').datepicker()
+                  .on('changeDate', function () {
+                    $(this).datepicker('hide');
+                  });
+          $("#fechaActivacion").datepicker({startDate: 0});
+        }
+      });
+    </script>
+
     <jsp:include page="/plantillas/formCambiarContrasena.jsp" />
     
     <jsp:invoke fragment="scripts" />
 
-
-</body>
+  </body>
 </html>

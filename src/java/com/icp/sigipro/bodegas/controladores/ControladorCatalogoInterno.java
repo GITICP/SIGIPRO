@@ -151,7 +151,6 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       productoInterno.setCodigo_icp(request.getParameter("codigoICP"));
       productoInterno.setStock_minimo(Integer.parseInt(request.getParameter("stockMinimo")));
       productoInterno.setStock_maximo(Integer.parseInt(request.getParameter("stockMaximo")));
-      productoInterno.setUbicacion(request.getParameter("ubicacion"));
       productoInterno.setPresentacion(request.getParameter("presentacion"));
       productoInterno.setDescripcion(request.getParameter("descripcion"));
 

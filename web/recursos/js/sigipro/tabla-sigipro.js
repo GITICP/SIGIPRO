@@ -1,5 +1,6 @@
 $(document).ready(function () {
-  if ($('.sigipro-tabla-filter').length > 0) {
+  var cantidadTablas = $('.sigipro-tabla-filter').length;
+  if ( cantidadTablas > 0) {
     var selectorTabla = '.sigipro-tabla-filter';
     var dtTable = $(selectorTabla).DataTable({// use DataTable, not dataTable
       sDom: // redefine sDom without lengthChange and default search box
@@ -7,9 +8,11 @@ $(document).ready(function () {
               "<'row'<'col-sm-6'i><'col-sm-6'p>>"
     });
     var ths = '';
-    $(selectorTabla + ' thead th').each(function () {
+    var cantidadColumnas = $(selectorTabla + ' thead th').length / cantidadTablas; 
+    
+    for (i = 0; i < cantidadColumnas; i++){
       ths += '<th></th>';
-    });
+    }
 
     $(selectorTabla + ' thead').append('<tr class="row-filter">' + ths + '</tr>');
     $(selectorTabla + ' thead .row-filter th').each(function () {
@@ -17,7 +20,6 @@ $(document).ready(function () {
     });
 
     $(selectorTabla + ' .row-filter input').on('keyup change', function () {
-      alert("assigns function");
       dtTable
               .column($(this).parent().index() + ':visible')
               .search(this.value)

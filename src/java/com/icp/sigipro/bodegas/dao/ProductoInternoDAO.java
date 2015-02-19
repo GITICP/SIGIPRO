@@ -353,6 +353,32 @@ public class ProductoInternoDAO
     }
     return resultado;
   }
+  
+  public List<ProductoInterno> obtenerProductosYCuarentena(){
+    List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();
+    
+    try{
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_producto, nombre, codigo_icp, cuarentena FROM bodega.catalogo_interno ");
+      ResultSet rs = consulta.executeQuery();
+      
+      while(rs.next()){
+        ProductoInterno producto = new ProductoInterno();
+        producto.setId_producto(rs.getInt("id_producto"));
+        producto.setNombre(rs.getString("nombre"));
+        producto.setCodigo_icp(rs.getString("codigo_icp"));
+        producto.setCuarentena(rs.getBoolean("cuarentena"));
+        
+        resultado.add(producto);
+      }      
+      
+      consulta.close();
+      conexion.close();
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
 
   public List<ProductoInterno> obtenerProductosInternosRestantes(int p_IdExterno) {
     List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();

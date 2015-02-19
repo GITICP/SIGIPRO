@@ -22,7 +22,6 @@
               <a href="/SIGIPRO/Bodegas/Ingresos?">Ingresos</a>
             </li>
             <li class="active"> Agregar Producto </li>
-
           </ul>
         </div>
         <div class="col-md-8 ">

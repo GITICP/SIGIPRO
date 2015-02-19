@@ -6,8 +6,11 @@
 package com.icp.sigipro.basededatos;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -49,5 +52,18 @@ public class SingletonBD
       ex.printStackTrace();
     }
     return conexion;
+  }
+  
+  private Date parsearFecha(java.util.Date fecha){
+    return new Date(fecha.getTime());
+  }
+  
+  public Date parsearFecha(String fecha, String formato) throws ParseException{
+    SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
+    return parsearFecha(formatoFecha.parse(fecha));
+  }
+  
+  public Date parsearFecha(String fecha) throws ParseException{
+    return parsearFecha(fecha, "dd/MM/yyyy");
   }
 }

@@ -5,11 +5,17 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
-import com.icp.sigipro.bodegas.dao.UbicacionDAO;
-import com.icp.sigipro.bodegas.modelos.Ubicacion;
+import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bodegas.dao.IngresoDAO;
+import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
+import com.icp.sigipro.bodegas.modelos.Ingreso;
+import com.icp.sigipro.bodegas.modelos.ProductoInterno;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.List;
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.RequestDispatcher;
@@ -18,137 +24,185 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 /**
  *
  * @author Walter
  */
 @WebServlet(name = "ControladorIngresos", urlPatterns = {"/Bodegas/Ingresos"})
-public class ControladorIngresos extends SIGIPROServlet {
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ControladorUbicacion</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ControladorUbicacion at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+public class ControladorIngresos extends SIGIPROServlet
+{
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    response.setContentType("text/html;charset=UTF-8");
+    try (PrintWriter out = response.getWriter()) {
+      /* TODO output your page here. You may use following sample code. */
+      out.println("<!DOCTYPE html>");
+      out.println("<html>");
+      out.println("<head>");
+      out.println("<title>Servlet ControladorUbicacion</title>");
+      out.println("</head>");
+      out.println("<body>");
+      out.println("<h1>Servlet ControladorUbicacion at " + request.getContextPath() + "</h1>");
+      out.println("</body>");
+      out.println("</html>");
+    }
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    try {
+      String redireccion = "";
+      String accion = request.getParameter("accion");
+
+      IngresoDAO dao = new IngresoDAO();
+      HttpSession sesion = request.getSession();
+      List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
+      // INGRESAR PERMISOS
+      int[] permisos = {1, 1, 1};
+
+      if (accion != null) {
+        if (accion.equalsIgnoreCase("ver")) {
+          validarPermisos(permisos, listaPermisos);
+          redireccion = "Ingresos/Ver.jsp";
+
+          // CARGAR PRODUCTO Y SECCIÓN
+        }
+        else if (accion.equalsIgnoreCase("agregar")) {
+          validarPermiso(11, listaPermisos);
+          redireccion = "Ingresos/Agregar.jsp";
+          ProductoInternoDAO productosDAO = new ProductoInternoDAO();
+          SeccionDAO seccionesDAO = new SeccionDAO();
+          List<ProductoInterno> productos = productosDAO.obtenerProductosYCuarentena();
+          List<Seccion> secciones = seccionesDAO.obtenerSecciones();
+          request.setAttribute("productos", productos);
+          request.setAttribute("secciones", secciones);
+          request.setAttribute("accion", "Registrar");
+        }
+        else {
+          validarPermisos(permisos, listaPermisos);
+          redireccion = "Ingresos/index.jsp";
+          try {
+            List<Ingreso> ingresos = dao.obtenerTodo();
+            List<Ingreso> ingresosCuarentena = dao.obtenerCuarentena();
+            request.setAttribute("listaIngresos", ingresos);
+            request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+      else {
+        validarPermisos(permisos, listaPermisos);
+        redireccion = "Ingresos/index.jsp";
         try {
-            String redireccion = "";
-            String accion = request.getParameter("accion");
-            
-            //IngresosDAO dao = new IngresosDAO();
-            
-            HttpSession sesion = request.getSession();
-            List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-            // INGRESAR PERMISOS
-            int[] permisos = {1, 1, 1};
+          List<Ingreso> ingresos = dao.obtenerTodo();
+          List<Ingreso> ingresosCuarentena = dao.obtenerCuarentena();
+          request.setAttribute("listaIngresos", ingresos);
+          request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
 
-            if (accion != null) {
-                if (accion.equalsIgnoreCase("ver")) {
-                    validarPermisos(permisos, listaPermisos);
-                    redireccion = "Ingresos/Ver.jsp";
-                    
-                    // CARGAR PRODUCTO Y SECCIÓN
-                    
-                } else if (accion.equalsIgnoreCase("agregar")) {
-                    validarPermiso(11, listaPermisos);
-                    redireccion = "Ingresos/Agregar.jsp";
-                    Ubicacion ubicacion = new Ubicacion();
-                    request.setAttribute("ubicacion", ubicacion);
-                    request.setAttribute("accion", "Registrar");
-                } else if (accion.equalsIgnoreCase("eliminar")) {
-                    validarPermiso(13, listaPermisos);
-                    int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
-                    
-                    // AccionDAO de eliminar
-                    
-                    redireccion = "Ingresos/index.jsp";
-                    // Obtener los ingresos
-                    // request.setAttribute("listaIngresos", ingresos);
-                } else if (accion.equalsIgnoreCase("editar")) {
-                    validarPermiso(12, listaPermisos);
-                    redireccion = "Ingresos/Editar.jsp";
-                    int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
-                    
-                    // AccionDAO de obtener
-                    
-                    //request.setAttribute("ingreso", ingreso);
-                    request.setAttribute("accion", "Editar");
-                } else {
-                    validarPermisos(permisos, listaPermisos);
-                    redireccion = "Ingresos/index.jsp";
-                    
-                    // Obtener los ingresos
-                    // request.setAttribute("listaIngresos", ingresos);
-                }
-            } else {
-                validarPermisos(permisos, listaPermisos);
-                redireccion = "Ingresos/index.jsp";
-                // Obtener los ingresos
-                // request.setAttribute("listaIngresos", ingresos);
-            }
-
-            RequestDispatcher vista = request.getRequestDispatcher(redireccion);
-            vista.forward(request, response);
-        } catch (AuthenticationException ex) {
-            RequestDispatcher vista = request.getRequestDispatcher("/index.jsp");
-            vista.forward(request, response);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        boolean resultado = false;
-
-        Ubicacion ubicacion = new Ubicacion();
-
-        ubicacion.setNombre(request.getParameter("nombre"));
-        ubicacion.setDescripcion(request.getParameter("descripcion"));
-
-        UbicacionDAO dao = new UbicacionDAO();
-        String id = request.getParameter("id_ubicacion");
-        String redireccion;
-
-        if (id.isEmpty() || id.equals("0")) {
-            resultado = dao.insertarUbicacion(ubicacion);
-            redireccion = "Ingresos/Agregar.jsp";
-        } else {
-            ubicacion.setId_ubicacion(Integer.parseInt(id));
-            resultado = dao.editarUbicacion(ubicacion);
-            redireccion = "Ingresos/Editar.jsp";
+        catch (Exception ex) {
+          ex.printStackTrace();
         }
+      }
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
+    }
+    catch (AuthenticationException ex) {
+      RequestDispatcher vista = request.getRequestDispatcher("/index.jsp");
+      vista.forward(request, response);
+    }
+  }
 
-        if (resultado) {
-            redireccion = String.format("Ingresos/Ver.jsp", id);
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    request.setCharacterEncoding("UTF-8");
+    boolean resultado = false;
+
+    Ingreso ingreso = new Ingreso();
+
+    ProductoInterno producto = new ProductoInterno();
+    producto.setId_producto(Integer.parseInt(request.getParameter("producto")));
+    ingreso.setProducto(producto);
+
+    Seccion seccion = new Seccion();
+    seccion.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
+    ingreso.setSeccion(seccion);
+
+    ingreso.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+    ingreso.setPrecio(Integer.parseInt(request.getParameter("precio")));
+    ingreso.setEstado(request.getParameter("estado"));
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+
+      String fechaIngreso = request.getParameter("fechaIngreso");
+      String fechaVencimiento = request.getParameter("fechaVencimiento");
+      java.util.Date fechaActual = new java.util.Date();
+
+      ingreso.setFecha_ingreso(s.parsearFecha(fechaIngreso));
+      ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
+      ingreso.setFecha_registro(new java.sql.Date(fechaActual.getTime()));
+    }
+    catch (ParseException ex) {
+
+    }
+
+    IngresoDAO dao = new IngresoDAO();
+    String id = request.getParameter("id_ingreso");
+    String redireccion;
+
+    if (id.isEmpty() || id.equals("0")) {
+      try {
+        if (dao.insertar(ingreso) == 1) {
+          resultado = true;
         }
-
-        request.setAttribute("ubicacion", ubicacion);
-        RequestDispatcher vista = request.getRequestDispatcher(redireccion);
-        vista.forward(request, response);
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+        resultado = false;
+      }
+      redireccion = "Ingresos/Agregar.jsp";
+    }
+    else {
+      redireccion = "Ingresos/Agregar.jsp";
+      // Tareas de sacar de cuarentena
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
+    if (resultado) {
+      redireccion = String.format("Ingresos/index.jsp", id);
+      try {
+        List<Ingreso> ingresos = dao.obtenerTodo();
+        List<Ingreso> ingresosCuarentena = dao.obtenerCuarentena();
+        request.setAttribute("listaIngresos", ingresos);
+        request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
+      }catch(Exception ex){
+        ex.printStackTrace();
+      }
+
     }
 
-    @Override
-    protected int getPermiso() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+    vista.forward(request, response);
+  }
+
+  @Override
+  public String getServletInfo()
+  {
+    return "Short description";
+  }
+
+  @Override
+  protected int getPermiso()
+  {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 
 }
