@@ -35,6 +35,10 @@ public abstract class SIGIPROServlet extends HttpServlet
   {
     return permisosUsuario.contains(getPermiso()) || permisosUsuario.contains(1); 
   }
+  protected boolean verificarPermiso(Integer p, List<Integer> permisosUsuario)
+  {
+    return permisosUsuario.contains(p) || permisosUsuario.contains(1); 
+  }
   
   protected abstract int getPermiso();
 }

@@ -170,18 +170,20 @@ CREATE TABLE bodega.reactivos (
 CREATE TABLE bodega.solicitudes ( 
 	id_solicitud serial NOT NULL,
 	id_usuario integer NOT NULL ,
+	id_producto integer NOT NULL,
+	cantidad integer NOT NULL,
      	fecha_solicitud date NOT NULL,
-        estado character varying(45)
+        estado character varying(45) NOT NULL,
+        fecha_entrega date,
+        id_usuario_recibo integer
  ); 
+CREATE TABLE bodega.solicitudes_prestamos ( 
+	id_solicitud serial NOT NULL,
+	id_seccion_presta integer NOT NULL,
+	id_usuario_aprobo integer
+); 
 
-CREATE TABLE bodega.detalles_solicitudes ( 
-	id_detalle_solicitud serial NOT NULL,
-	id_solicitud integer,
-	id_producto integer,
-	estado character varying(45) NOT NULL,
-     	cantidad integer NOT NULL,
-	fecha_entrega date
- ); 
+
 
 CREATE TABLE bodega.usuarios_sub_bodegas_ingresos ( 
 	id_sub_bodega serial NOT NULL,
@@ -234,7 +236,7 @@ ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT pk_ingresos PRIMARY KEY (id_ingr
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT pk_inventarios PRIMARY KEY (id_inventario);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_reactivo);
 ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT pk_solicitudes PRIMARY KEY (id_solicitud);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT pk_detalles_solicitudes PRIMARY KEY (id_detalle_solicitud);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT pk_prestamos PRIMARY KEY (id_solicitud);
 ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (id_sub_bodega);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
 ALTER TABLE ONLY bodega.ubicaciones ADD CONSTRAINT pk_ubicaciones PRIMARY KEY (id_ubicacion);
@@ -243,7 +245,7 @@ ALTER TABLE ONLY bodega.ubicaciones_bodega ADD CONSTRAINT pk_ubicaciones_bodega 
 --Indices unicos esquema bodega
 CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogo_interno USING btree (codigo_icp);
 
---Llaves foraneas esquema seguridad
+--Llaves foraneas esquema bodega
 ALTER TABLE ONLY bodega.catalogos_internos_externos ADD CONSTRAINT fk_id_producto_ext FOREIGN KEY (id_producto_ext) REFERENCES bodega.catalogo_externo(id_producto_ext);
 ALTER TABLE ONLY bodega.catalogos_internos_externos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.ubicaciones_catalogo_interno ADD CONSTRAINT fk_id_ubicacion FOREIGN KEY (id_ubicacion) REFERENCES bodega.ubicaciones_bodega(id_ubicacion);
@@ -252,8 +254,12 @@ ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_p
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
+ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
+ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT fk_id_usuario_recibo FOREIGN KEY (id_usuario_recibo) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion_presta) REFERENCES seguridad.secciones(id_seccion);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT fk_id_usuario_aprobo FOREIGN KEY (id_usuario_aprobo) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion)on delete set null;
@@ -320,6 +326,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Se
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes (admin bodega)');
+
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
