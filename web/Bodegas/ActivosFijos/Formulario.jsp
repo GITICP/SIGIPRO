@@ -131,7 +131,7 @@
 </div>
 </div>
 <!-- Esta parte es la de los permisos de un rol -->
-<p>
+<p class="campos-requeridos">
     Los campos marcados con * son requeridos.
 </p>  
 

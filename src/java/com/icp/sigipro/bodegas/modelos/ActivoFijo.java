@@ -15,10 +15,10 @@ public class ActivoFijo {
   String placa;
   String equipo;
   String marca;
-  String fecha_movimiento;
+  Date   fecha_movimiento;
   int id_seccion;
   int id_ubicacion;
-  String fecha_registro;
+  Date    fecha_registro;
   String estado;
   String nombre_seccion;
   String nombre_ubicacion;
@@ -26,7 +26,7 @@ public class ActivoFijo {
   public ActivoFijo() {
   }
 
-  public ActivoFijo(int id_activo_fijo, String placa, String equipo, String marca, String fecha_movimiento, int id_seccion, int id_ubicacion, String fecha_registro, String estado) {
+  public ActivoFijo(int id_activo_fijo, String placa, String equipo, String marca, Date fecha_movimiento, int id_seccion, int id_ubicacion, Date fecha_registro, String estado) {
     this.id_activo_fijo = id_activo_fijo;
     this.placa = placa;
     this.equipo = equipo;
@@ -71,13 +71,19 @@ public class ActivoFijo {
   }
 
   public Date getFecha_movimientoAsDate() throws ParseException {
-    return formatearFecha(fecha_movimiento);
-  }
-  public String getFecha_movimiento()  {
     return fecha_movimiento;
   }
+  
+  public String getFecha_movimiento()  {
+    String resultado = "";
+    if(fecha_movimiento != null){
+      resultado = formatearFecha(fecha_movimiento);
+    }
+    return resultado;
+    
+  }
 
-  public void setFecha_movimiento(String fecha_movimiento) {
+  public void setFecha_movimiento(Date fecha_movimiento) {
     this.fecha_movimiento = fecha_movimiento;
   }
 
@@ -97,14 +103,19 @@ public class ActivoFijo {
     this.id_ubicacion = id_ubicacion;
   }
 
-  public Date getFecha_registroAsDate() throws ParseException {
-    return formatearFecha(fecha_registro);
-  }
-    public String getFecha_registro()  {
+  public Date getFecha_registroAsDate() {
     return fecha_registro;
   }
+  
+  public String getFecha_registro()  {
+    String resultado = "";
+    if(fecha_movimiento != null){
+      resultado = formatearFecha(fecha_registro);
+    }
+    return resultado;
+  }
 
-  public void setFecha_registro(String fecha_registro) {
+  public void setFecha_registro(Date fecha_registro) {
     this.fecha_registro = fecha_registro;
   }
 
@@ -132,12 +143,9 @@ public class ActivoFijo {
     this.nombre_ubicacion = nombre_ubicacion;
   }
   
-  private Date formatearFecha(String fecha) throws ParseException
-    {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fechautil;
-        fechautil = df.parse(fecha);
-        java.sql.Date fechaout = new java.sql.Date(fechautil.getTime());
-        return fechaout;
-    }
+  private String formatearFecha(Date fecha)
+  {
+      DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+      return df.format(fecha);
+  }
 }

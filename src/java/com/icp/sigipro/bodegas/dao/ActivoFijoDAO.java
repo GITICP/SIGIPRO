@@ -154,10 +154,10 @@ public class ActivoFijoDAO {
                 activo.setPlaca(rs.getString("placa"));
                 activo.setEquipo(rs.getString("equipo"));
                 activo.setMarca(rs.getString("marca"));
-                activo.setFecha_movimiento(rs.getString("fecha_movimiento"));
+                activo.setFecha_movimiento(rs.getDate("fecha_movimiento"));
                 activo.setId_seccion(rs.getInt("id_seccion"));
                 activo.setId_ubicacion(rs.getInt("id_ubicacion"));
-                activo.setFecha_registro(rs.getString("fecha_registro"));
+                activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
                 PreparedStatement consultaSeccion = conexion.prepareStatement(" Select nombre_seccion "
                         + " From seguridad.secciones"
@@ -196,26 +196,10 @@ public class ActivoFijoDAO {
                 activo.setPlaca(rs.getString("placa"));
                 activo.setEquipo(rs.getString("equipo"));
                 activo.setMarca(rs.getString("marca"));
-                activo.setFecha_movimiento(rs.getString("fecha_movimiento"));
+                activo.setFecha_movimiento(rs.getDate("fecha_movimiento"));
                 activo.setNombre_seccion(rs.getString("nombre_seccion"));
-//                PreparedStatement consultaSeccion = conexion.prepareStatement(" Select nombre_seccion "
-//                        + " From seguridad.secciones"
-//                        + " Where id_seccion = ? ");
-//                consultaSeccion.setInt(1, rs.getInt("id_seccion"));
-//                ResultSet resultadoConsultaSeccion = consultaSeccion.executeQuery();
-//                resultadoConsultaSeccion.next();
-//                String seccion = resultadoConsultaSeccion.getString("nombre_seccion");
-//                activo.setNombre_seccion(seccion);
                 activo.setNombre_ubicacion(rs.getString("nombre"));
-//                PreparedStatement consultaUbicacion = conexion.prepareStatement(" Select nombre "
-//                        + " From bodega.ubicaciones"
-//                        + " Where id_ubicacion = ? ");
-//                consultaUbicacion.setInt(1, rs.getInt("id_ubicacion"));
-//                ResultSet resultadoConsultaUbicacion = consultaUbicacion.executeQuery();
-//                resultadoConsultaUbicacion.next();
-//                String ubicacion = resultadoConsultaUbicacion.getString("nombre");
-//                activo.setNombre_ubicacion(ubicacion);
-                activo.setFecha_registro(rs.getString("fecha_registro"));
+                activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
 
                 resultado.add(activo);
