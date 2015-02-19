@@ -157,6 +157,32 @@ public class SeccionDAO
     }
     return resultado;
   }
+  public Seccion obtenerSeccion(int id)
+  {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    Seccion resultado = new Seccion();
+
+    if (conexion != null) {
+      try {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT s.nombre_seccion, s.descripcion "
+                + "FROM seguridad.secciones s WHERE s.id_seccion = ?");
+        consulta.setInt(1, id);
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        if (resultadoConsulta.next()) {
+          resultado.setNombre_seccion(resultadoConsulta.getString("nombre_seccion"));
+          resultado.setId_seccion(id);
+          resultado.setDescripcion(resultadoConsulta.getString("descripcion"));
+        }
+        resultadoConsulta.close();
+        conexion.close();
+      } catch (SQLException ex) {
+        resultado = null;
+      }
+    }
+    return resultado;
+  }
 
   @SuppressWarnings("Convert2Diamond")
   private List<Seccion> llenarSecciones(ResultSet resultadoConsulta) throws SQLException

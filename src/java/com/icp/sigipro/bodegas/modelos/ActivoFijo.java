@@ -51,7 +51,11 @@ public class ActivoFijo {
   }
 
   public void setPlaca(String placa) {
-    this.placa = placa;
+    if( placa.isEmpty() || placa.equals("") ){
+      this.placa = "Sin placa";
+    } else {
+      this.placa = placa;
+    }
   }
 
   public String getEquipo() {
@@ -67,7 +71,11 @@ public class ActivoFijo {
   }
 
   public void setMarca(String marca) {
-    this.marca = marca;
+    if( marca.isEmpty() || marca.equals("") ){
+      this.marca = "Sin marca";
+    } else {
+      this.marca = marca;
+    }
   }
 
   public Date getFecha_movimientoAsDate() throws ParseException {
@@ -147,5 +155,9 @@ public class ActivoFijo {
   {
       DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
       return df.format(fecha);
+  }
+  
+  public String getNombreFormato() {
+    return this.getEquipo() + " (" + this.getPlaca() + ")";
   }
 }
