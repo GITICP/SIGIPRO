@@ -24,8 +24,9 @@ public class Solicitud {
   private Date fecha_entrega;
   private int id_usuario_recibo;
   
-  public Usuario usuario;
-  public ProductoInterno producto;
+  private Usuario usuario;
+  private Usuario usuario_receptor;
+  private ProductoInterno producto;
   
   public Solicitud(){
     this.estado = "Pendiente";
@@ -44,6 +45,11 @@ public class Solicitud {
   
   public void setUsuario(Usuario u){this.usuario =u;}
   public void setProducto(ProductoInterno u){this.producto =u;}
+  public void setUsuarioReceptor(Usuario u){this.usuario_receptor =u;}
+  
+  public Usuario getUsuario(){return usuario ;}
+  public ProductoInterno getProducto(){return producto;}
+  public Usuario getUsuarioReceptor(){return usuario_receptor ;}
           
   
   public int getId_solicitud () {return id_solicitud; }

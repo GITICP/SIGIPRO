@@ -130,6 +130,7 @@ public class SolicitudDAO {
             ProductoInternoDAO pr = new ProductoInternoDAO();
             solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
             solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_usuario")));
+            solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
           
         } catch (Exception ex) {
           ex.printStackTrace();
@@ -171,6 +172,7 @@ public class SolicitudDAO {
           ProductoInternoDAO pr = new ProductoInternoDAO();
           solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
           solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_usuario")));
+          solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
         } catch (Exception ex) {
           ex.printStackTrace();
         }

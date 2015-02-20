@@ -327,7 +327,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes (admin bodega)');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
 
 
 -- Observación importante:
@@ -354,6 +354,8 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (902, 900,'Correo', '/Configuracion/Correo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1000, 0,'Compras', '/Compras/Proveedores');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1001, 900,'Proveedores', '/Compras/Proveedores');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (106, 100,'Solicitudes', '/Bodegas/Solicitudes');
+
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);
@@ -382,6 +384,8 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 105);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (24, 106);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (25, 106);
 
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (18, 803);
@@ -431,14 +435,12 @@ INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_comple
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 1 , 1, '2014-12-01', '2014-12-01', false, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('luisdiegocm', md5('sigipro'), 'ld.conejo@gmail.com', 'Luis Diego Conejo Mora', '1-1537-0976', 1, 1, '2014-12-01', '2014-12-01', true, true);
 
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 4, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (5, 5, '2014-12-01', '2014-12-01');
-INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (6, 1, '2014-12-01', '2014-12-01');
 
 
 

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Amed
  */
-@WebServlet(name = "ControladorSolicitudes", urlPatterns = {"/Bodega/Solicitudes"})
+@WebServlet(name = "ControladorSolicitudes", urlPatterns = {"/Bodegas/Solicitudes"})
 public class ControladorSolicitudes extends SIGIPROServlet {
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -54,7 +54,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       SolicitudDAO dao = new SolicitudDAO();
       HttpSession sesion = request.getSession();
       List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-      int[] permisos = {24, 25};
+      int[] permisos = {24, 25, 1};
       int usuario_solicitante;
       UsuarioDAO usrDAO = new UsuarioDAO();
       if (verificarPermiso(25, listaPermisos))
@@ -96,6 +96,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           request.setAttribute("accion", "Editar");
         }
         else {
+          validarPermisos(permisos, listaPermisos);
           redireccion = "Solicitudes/index.jsp";
           List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
           request.setAttribute("listaSolicitudes", solicitudes);
