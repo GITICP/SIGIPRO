@@ -23,7 +23,7 @@
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones</a>
+              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones de Activos Fijos</a>
             </li>
             <li class="active"> ${ubicacion.getNombre()} </li>
 
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar Nueva Ubicación</h3>
+              <h3><i class="fa fa-barcode"></i> Editar ${ubicacion.getNombre()}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">

@@ -19,17 +19,17 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-8 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Ubicaciones</a>
+              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Ubicaciones de Activos Fijos</a>
             </li>
-            <li class="active"> Agregar Ubicación </li>
+            <li class="active"> Agregar Ubicación de Activo Fijo</li>
 
           </ul>
         </div>
-        <div class="col-md-8 ">
+        <div class="col-md-4 ">
           <div class="top-content">
 
           </div>
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar Nueva Ubicación </h3>
+              <h3><i class="fa fa-barcode"></i> Agregar Nueva Ubicación de Activo Fijo</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
