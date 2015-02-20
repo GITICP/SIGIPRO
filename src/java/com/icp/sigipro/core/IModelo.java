@@ -17,19 +17,19 @@ import java.util.List;
  */
 public abstract class IModelo 
 {
-  public List<Tupla<Field, Method>> getMetodos(String tipo) throws NoSuchMethodException
+  public List<PropiedadModelo> getMetodos(String tipo) throws NoSuchMethodException
   {
-    List<Tupla<Field, Method>> resultado = new ArrayList<Tupla<Field, Method>>();
+    List<PropiedadModelo> resultado = new ArrayList<PropiedadModelo>();
 
     List<Field> campos = getCampos();
 
     for (Field campo : campos) {
       Class c = campo.getType().getSuperclass();
       if (c == null) {
-        resultado.add(getTupla(campo, tipo, this.getClass()));
+        resultado.add(getPropiedad(campo, tipo, this.getClass()));
       }
       else {
-        resultado.add(getTupla(campo, tipo, this.getClass()));
+        resultado.add(getPropiedad(campo, tipo, this.getClass()));
       }
     }
     return resultado;
@@ -45,23 +45,23 @@ public abstract class IModelo
     return Arrays.asList(this.getClass().getDeclaredFields());
   }
 
-  private Tupla<Field, Method> getTupla(Field campo, String tipo, Class clase) throws NoSuchMethodException
+  private PropiedadModelo getPropiedad(Field campo, String tipo, Class clase) throws NoSuchMethodException
   {
     String nombreCampo = campo.getName();
     String primeraLetra = nombreCampo.substring(0, 1);
     String nombreCampoFinal = nombreCampo.replaceFirst(primeraLetra, primeraLetra.toUpperCase());
-    Method m;
+    Method metodo;
     if (tipo.equals("get")) {
       if (campo.getType().equals(boolean.class)) {
-        m = clase.getMethod("is" + nombreCampoFinal, (Class<?>[]) null);
+        metodo = clase.getMethod("is" + nombreCampoFinal, (Class<?>[]) null);
       }
       else {
-        m = clase.getMethod(tipo + nombreCampoFinal, (Class<?>[]) null);
+        metodo = clase.getMethod(tipo + nombreCampoFinal, (Class<?>[]) null);
       }
     }
     else {
-      m = clase.getMethod(tipo + nombreCampoFinal, campo.getType());
+      metodo = clase.getMethod(tipo + nombreCampoFinal, campo.getType());
     }
-    return new Tupla<Field, Method>(campo, m);
+    return new PropiedadModelo(campo, metodo);
   }
 }

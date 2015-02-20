@@ -259,7 +259,7 @@ ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FORE
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion)on delete set null;
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_ubicacion FOREIGN KEY (id_ubicacion) REFERENCES bodega.ubicaciones(id_ubicacion)on delete set null;
 ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
-ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT fk_id_encargado FOREIGN KEY (id_encargado) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY bodega.usuarios_sub_bodegas_ingresos ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY bodega.usuarios_sub_bodegas_egresos ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 

@@ -6,9 +6,7 @@
 package com.icp.sigipro.core;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +20,6 @@ import java.util.List;
  */
 public abstract class DAO<T extends IModelo>
 {
-
   protected final Class<T> tipo;
   protected String nombreModulo;
   protected String nombreTabla;
@@ -93,23 +90,23 @@ public abstract class DAO<T extends IModelo>
 
     List<Object> lista = new ArrayList<Object>();
 
-    List<Tupla<Field, Method>> camposYGetters = param.getMetodos("get");
-    for (Tupla<Field, Method> tupla : camposYGetters) {
-      if (tupla.x.getType().getName().startsWith("com.icp.sigipro")) {
-        IModelo o = (IModelo) tupla.y.invoke(param);
-        List<Tupla<Field, Method>> metodosAsociacion = o.getMetodos("get");
-        for (Tupla<Field, Method> tuplaAsociacion : metodosAsociacion) {
-          if (tuplaAsociacion.x.getName().startsWith("id")) {
-            Object resultadoGet = tuplaAsociacion.y.invoke(o);
-            columnas += tuplaAsociacion.x.getName() + ",";
+    List<PropiedadModelo> camposYGetters = param.getMetodos("get");
+    for (PropiedadModelo tupla : camposYGetters) {
+      if (tupla.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
+        IModelo o = (IModelo) tupla.getMetodo().invoke(param);
+        List<PropiedadModelo> metodosAsociacion = o.getMetodos("get");
+        for (PropiedadModelo tuplaAsociacion : metodosAsociacion) {
+          if (tuplaAsociacion.getCampo().getName().startsWith("id")) {
+            Object resultadoGet = tuplaAsociacion.getMetodo().invoke(o);
+            columnas += tuplaAsociacion.getCampo().getName() + ",";
             valores += "?,";
             lista.add(resultadoGet);
           }
         }
       } else {
-        if (!tupla.x.getName().toLowerCase().startsWith("id")) {
-          Object resultadoGet = tupla.y.invoke(param);
-          columnas += tupla.x.getName() + ",";
+        if (!tupla.getCampo().getName().toLowerCase().startsWith("id")) {
+          Object resultadoGet = tupla.getMetodo().invoke(param);
+          columnas += tupla.getCampo().getName() + ",";
           valores += "?,";
           lista.add(resultadoGet);
         }
@@ -135,23 +132,23 @@ public abstract class DAO<T extends IModelo>
     T pivote = tipo.newInstance();
 
     try {
-      List<Tupla<Field, Method>> camposYSetters = pivote.getMetodos("set");
+      List<PropiedadModelo> camposYSetters = pivote.getMetodos("set");
       while (resultadoConsulta.next()) {
         T t = tipo.newInstance();
-        for (Tupla<Field, Method> tupla : camposYSetters) {
-          if (tupla.x.getType().getName().startsWith("com.icp.sigipro")) {
-            IModelo o = (IModelo) tupla.x.getType().newInstance();
-            List<Tupla<Field, Method>> metodosAsociacion = o.getMetodos("set");
-            for (Tupla<Field, Method> tuplaAsociacion : metodosAsociacion) {
-              if (!tuplaAsociacion.x.getType().getName().startsWith("com.icp.sigipro")) {
-                tuplaAsociacion.y.invoke(o, resultadoConsulta.getObject(tuplaAsociacion.x.getName()));
+        for (PropiedadModelo tupla : camposYSetters) {
+          if (tupla.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
+            IModelo o = (IModelo) tupla.getCampo().getType().newInstance();
+            List<PropiedadModelo> metodosAsociacion = o.getMetodos("set");
+            for (PropiedadModelo tuplaAsociacion : metodosAsociacion) {
+              if (!tuplaAsociacion.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
+                tuplaAsociacion.getMetodo().invoke(o, resultadoConsulta.getObject(tuplaAsociacion.getCampo().getName()));
               }
             }
-            tupla.y.invoke(t, o);
+            tupla.getMetodo().invoke(t, o);
           }
           else {
-            Object objeto = resultadoConsulta.getObject(tupla.x.getName());
-            tupla.y.invoke(t, objeto);
+            Object objeto = resultadoConsulta.getObject(tupla.getCampo().getName());
+            tupla.getMetodo().invoke(t, objeto);
           }
         }
         resultado.add(t);
