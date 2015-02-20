@@ -102,6 +102,9 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           redireccion = "CatalogoExterno/index.jsp";
           List<ProductoExterno> productos = dao.obtenerProductos();
           request.setAttribute("listaProductos", productos);
+          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo eliminado correctamente"));
+   
         }
         else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(21, listaPermisos);

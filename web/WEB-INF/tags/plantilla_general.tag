@@ -46,7 +46,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${direccion_contexto}/recursos/ico/kingadmin-favicon114x114.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon72x72.png">
     <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon57x57.png">
-    <link rel="shortcut icon" href="${direccion_contexto}/recursos/ico/favicon.png">
+    <link rel="shortcut icon" href="${direccion_contexto}/favicon.ico">
   </head>
 
   <body>

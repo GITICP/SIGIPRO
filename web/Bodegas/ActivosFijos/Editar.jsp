@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Bodegas/ActivosFijos?">Activos Fijos</a>
             </li>
-            <li class="active"> ${activofijo.getPlaca()} </li>
+            <li class="active"> ${activofijo.getNombreFormato()} </li>
 
           </ul>
         </div>
