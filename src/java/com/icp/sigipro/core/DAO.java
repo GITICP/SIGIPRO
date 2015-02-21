@@ -84,6 +84,12 @@ public abstract class DAO<T extends IModelo>
 
   public int insertar(T param) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, SQLException
   {
+    PreparedStatement objetoConsulta = construirInsertar(param);
+    return ejecutarConsultaSinResultado(objetoConsulta);
+  }
+  
+  public PreparedStatement construirInsertar(T param) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, SQLException
+  {
     String accionTabla = "INSERT INTO " + this.nombreModulo + "." + this.nombreTabla;
     String columnas = "(";
     String valores = "VALUES (";
@@ -117,9 +123,7 @@ public abstract class DAO<T extends IModelo>
     String valoresFinal = valores.substring(0, valores.length() - 1);
     String consulta = accionTabla + columnasFinal + ")" + valoresFinal + ");";
 
-    PreparedStatement objetoConsulta = construirConsulta(consulta, lista);
-
-    return ejecutarConsultaSinResultado(objetoConsulta);
+    return construirConsulta(consulta, lista);
   }
 
   public abstract boolean actualizar(T param);
@@ -177,7 +181,7 @@ public abstract class DAO<T extends IModelo>
       throw new UnsupportedOperationException();
     }
   }
-
+  
   protected PreparedStatement construirConsulta(String consulta, List<Object> parametros) throws SQLException
   {
     if (parametros.size() == consulta.length() - consulta.replace("?", "").length()) {

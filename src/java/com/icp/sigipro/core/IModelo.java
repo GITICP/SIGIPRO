@@ -7,6 +7,7 @@ package com.icp.sigipro.core;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,11 +26,14 @@ public abstract class IModelo
 
     for (Field campo : campos) {
       Class c = campo.getType().getSuperclass();
-      if (c == null) {
-        resultado.add(getPropiedad(campo, tipo, this.getClass()));
-      }
-      else {
-        resultado.add(getPropiedad(campo, tipo, this.getClass()));
+      boolean a = Modifier.isStatic(campo.getModifiers());
+      if (!Modifier.isStatic(campo.getModifiers())){
+        if (c == null) {
+          resultado.add(getPropiedad(campo, tipo, this.getClass()));
+        }
+        else {
+          resultado.add(getPropiedad(campo, tipo, this.getClass()));
+        }
       }
     }
     return resultado;
