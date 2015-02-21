@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.servlets.seguridad.usuario;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
@@ -120,6 +120,7 @@ public class EditarUsuario extends SIGIPROServlet
       fechaActivacion = request.getParameter("fechaActivacion");
       String fechaDesactivacion;
       fechaDesactivacion = request.getParameter("fechaDesactivacion");
+      String estado = request.getParameter("boolEstado");
 
       String rolesUsuario = request.getParameter("listaRolesUsuario");
       RolUsuarioDAO ru = new RolUsuarioDAO();
@@ -133,7 +134,7 @@ public class EditarUsuario extends SIGIPROServlet
       if (correo_inactivo) {
         boolean resultado;
         if (roles != null) {
-          resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion, roles);
+          resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion, roles, estado);
         }
         else {
           resultado = false;

@@ -58,6 +58,7 @@
                   <div class="col-md-6">
                     <input id="editarIDUsuario" hidden="true" name="editarIDUsuario" value="${usuario.getID()}">
                     <input id="rolesUsuario" hidden="true" name="listaRolesUsuario" value="">
+                    <input id="boolEstado" hidden="true" name="boolEstado" value="${usuario.getEstado()}">
                     <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
                     <div class="form-group">
                       <div class="col-sm-12">

@@ -12,9 +12,12 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,7 +42,7 @@ public class VerUsuario extends HttpServlet {
    * @throws IOException if an I/O error occurs
    */
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+          throws ServletException, IOException, ParseException {
     response.setContentType("text/html;charset=UTF-8");
     try (PrintWriter out = response.getWriter()) {
 
@@ -57,9 +60,23 @@ public class VerUsuario extends HttpServlet {
       
       
       DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-      Date date = new Date();
-      Boolean boolfechadesactivacion = date.before(usuario.getFechaDesactivacionAsDate()) && date.after(usuario.getFechaActivacionAsDate());
+      java.util.Calendar calendario = java.util.Calendar.getInstance();
+      java.util.Date hoy = calendario.getTime();
+      java.util.Date hoyFormateado = df.parse(df.format(hoy));
+      java.sql.Date date = new java.sql.Date(hoyFormateado.getTime());
+      Boolean boolfechadesactivacion;
+      Boolean permanente = usuario.getFechaActivacionAsDate().equals(usuario.getFechaDesactivacionAsDate());
+      Boolean nopermanenteantesdesactivacion = date.before(usuario.getFechaDesactivacionAsDate());
+      Boolean nopermanentedespuesactivacion = date.after(usuario.getFechaActivacionAsDate());
       
+      if (usuario.getFechaActivacionAsDate().equals(usuario.getFechaDesactivacionAsDate()))
+        { boolfechadesactivacion = usuario.getFechaActivacionAsDate().equals(date);
+        }
+      else
+      {
+      boolfechadesactivacion = date.before(usuario.getFechaDesactivacionAsDate())  
+                                                      && date.after(usuario.getFechaActivacionAsDate()) ;
+      }
       
       request.setAttribute("usuario", usuario);
       request.setAttribute("rolesUsuario", rolesUsuario);
@@ -86,7 +103,11 @@ public class VerUsuario extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
 
-    processRequest(request, response);
+    try {
+      processRequest(request, response);
+    } catch (ParseException ex) {
+      Logger.getLogger(VerUsuario.class.getName()).log(Level.SEVERE, null, ex);
+    }
 
   }
 
@@ -101,7 +122,11 @@ public class VerUsuario extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    processRequest(request, response);
+    try {
+      processRequest(request, response);
+    } catch (ParseException ex) {
+      Logger.getLogger(VerUsuario.class.getName()).log(Level.SEVERE, null, ex);
+    }
   }
 
   /**
