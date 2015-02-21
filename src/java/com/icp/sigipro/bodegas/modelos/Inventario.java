@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.modelos;
 
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.IModelo;
 
 
 
@@ -13,7 +14,7 @@ import com.icp.sigipro.configuracion.modelos.Seccion;
  *
  * @author Amed
  */
-public class Inventario {
+public class Inventario extends IModelo{
   private int id_inventario;
   private int id_producto;
   private int id_seccion;

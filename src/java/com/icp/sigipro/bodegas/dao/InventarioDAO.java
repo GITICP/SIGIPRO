@@ -5,10 +5,9 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
-import java.sql.Connection;
+import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,13 +18,10 @@ import java.util.List;
  *
  * @author Amed
  */
-public class InventarioDAO {
-
-  private Connection conexion;
+public class InventarioDAO extends DAO<Inventario>{
 
   public InventarioDAO() {
-    SingletonBD s = SingletonBD.getSingletonBD();
-    conexion = s.conectar();
+    super(Inventario.class, "bodega", "inventarios");
   }
 
   public boolean restarInventario(int id, int cant) {
@@ -123,43 +119,7 @@ public class InventarioDAO {
     }
     return resultado;
   }
-  
-  private Connection getConexion() {
-    try {
 
-      if (conexion.isClosed()) {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-      }
-    } catch (Exception ex) {
-      conexion = null;
-    }
-
-    return conexion;
-  }
-}
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.icp.sigipro.bodegas.dao;
-
-import com.icp.sigipro.bodegas.modelos.Inventario;
-import com.icp.sigipro.core.DAO;
-import java.util.List;
-
-/**
- *
- * @author Boga
- */
-public class InventarioDAO extends DAO<Inventario>
-{
-  
-  InventarioDAO(){
-    super(Inventario.class, "bodega", "inventaios");
-  }
-  
   @Override
   public Inventario buscar(Long id)
   {
@@ -168,12 +128,6 @@ public class InventarioDAO extends DAO<Inventario>
 
   @Override
   public List<Inventario> buscarPor(String[] campos, Object valor)
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public int insertar(Inventario param)
   {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }

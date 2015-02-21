@@ -5,11 +5,13 @@
  */
 package com.icp.sigipro.seguridad.modelos;
 
+import com.icp.sigipro.core.IModelo;
+
 /**
  *
  * @author Amed
  */
-public class Seccion {
+public class Seccion extends IModelo{
   int id_seccion;
   String nombre_seccion;
   String descripcion;

@@ -15,8 +15,13 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.configuracion.modelos.Seccion;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,7 +32,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Walter
+ * @author Boga
  */
 @WebServlet(name = "ControladorIngresos", urlPatterns = {"/Bodegas/Ingresos"})
 public class ControladorIngresos extends SIGIPROServlet
@@ -58,8 +63,8 @@ public class ControladorIngresos extends SIGIPROServlet
     try {
       String redireccion = "";
       String accion = request.getParameter("accion");
-
       IngresoDAO dao = new IngresoDAO();
+
       HttpSession sesion = request.getSession();
       List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
       // INGRESAR PERMISOS
@@ -88,9 +93,13 @@ public class ControladorIngresos extends SIGIPROServlet
           redireccion = "Ingresos/index.jsp";
           try {
             List<Ingreso> ingresos = dao.obtenerTodo();
-            List<Ingreso> ingresosCuarentena = dao.obtenerCuarentena();
+            List<Ingreso> ingresosCuarentena = dao.obtenerPorEstado(Ingreso.CUARENTENA);
+            List<Ingreso> ingresosRechazados = dao.obtenerPorEstado(Ingreso.RECHAZADO);
+            List<Ingreso> ingresosNoDisponibles = dao.obtenerPorEstado(Ingreso.NO_DISPONIBLE);
             request.setAttribute("listaIngresos", ingresos);
             request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
+            request.setAttribute("listaIngresosRechazados", ingresosRechazados);
+            request.setAttribute("listaIngresosNoDisponibles", ingresosNoDisponibles);
           }
           catch (Exception ex) {
             ex.printStackTrace();
@@ -102,9 +111,13 @@ public class ControladorIngresos extends SIGIPROServlet
         redireccion = "Ingresos/index.jsp";
         try {
           List<Ingreso> ingresos = dao.obtenerTodo();
-          List<Ingreso> ingresosCuarentena = dao.obtenerCuarentena();
+          List<Ingreso> ingresosCuarentena = dao.obtenerPorEstado(Ingreso.CUARENTENA);
+          List<Ingreso> ingresosRechazados = dao.obtenerPorEstado(Ingreso.RECHAZADO);
+          List<Ingreso> ingresosNoDisponibles = dao.obtenerPorEstado(Ingreso.NO_DISPONIBLE);
           request.setAttribute("listaIngresos", ingresos);
           request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
+          request.setAttribute("listaIngresosRechazados", ingresosRechazados);
+          request.setAttribute("listaIngresosNoDisponibles", ingresosNoDisponibles);
 
         }
         catch (Exception ex) {
@@ -126,69 +139,122 @@ public class ControladorIngresos extends SIGIPROServlet
   {
     request.setCharacterEncoding("UTF-8");
     boolean resultado = false;
-
-    Ingreso ingreso = new Ingreso();
-
-    ProductoInterno producto = new ProductoInterno();
-    producto.setId_producto(Integer.parseInt(request.getParameter("producto")));
-    ingreso.setProducto(producto);
-
-    Seccion seccion = new Seccion();
-    seccion.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
-    ingreso.setSeccion(seccion);
-
-    ingreso.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
-    ingreso.setPrecio(Integer.parseInt(request.getParameter("precio")));
-    ingreso.setEstado(request.getParameter("estado"));
-    try {
-      SingletonBD s = SingletonBD.getSingletonBD();
-
-      String fechaIngreso = request.getParameter("fechaIngreso");
-      String fechaVencimiento = request.getParameter("fechaVencimiento");
-      java.util.Date fechaActual = new java.util.Date();
-
-      ingreso.setFecha_ingreso(s.parsearFecha(fechaIngreso));
-      ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
-      ingreso.setFecha_registro(new java.sql.Date(fechaActual.getTime()));
-    }
-    catch (ParseException ex) {
-
-    }
-
+    boolean aprobaciones = false;
+    String redireccion = "Ingresos/Agregar.jsp";
     IngresoDAO dao = new IngresoDAO();
-    String id = request.getParameter("id_ingreso");
-    String redireccion;
 
-    if (id.isEmpty() || id.equals("0")) {
-      try {
-        if (dao.insertar(ingreso) == 1) {
-          resultado = true;
+    Map<String, String[]> mapa = request.getParameterMap();
+
+    List<Ingreso> porAprobar = new ArrayList<Ingreso>();
+    List<Ingreso> porRechazar = new ArrayList<Ingreso>();
+
+    Iterator entries = mapa.entrySet().iterator();
+    while (entries.hasNext()) {
+      Entry thisEntry = (Entry) entries.next();
+      String llave = (String) thisEntry.getKey();
+      String valor = request.getParameter(llave);
+      if (llave.startsWith("decision-")) {
+        aprobaciones = true;
+        int id = Integer.parseInt(llave.split("-")[1]);
+        if (valor.equalsIgnoreCase("true")) {
+          Ingreso i = new Ingreso();
+          
+          i.setId_ingreso(id);
+          i.setCantidad(Integer.parseInt(request.getParameter("decision-"+id+"-cantidad")));
+          ProductoInterno p = new ProductoInterno();
+          Seccion s = new Seccion();
+          p.setId_producto(Integer.parseInt(request.getParameter("decision-"+id+"-id_producto")));
+          s.setId_seccion(Integer.parseInt(request.getParameter("decision-"+id+"-id_seccion")));
+          
+          i.setProducto(p);
+          i.setSeccion(s);
+          porAprobar.add(i);
+        } else if (valor.equalsIgnoreCase("false")){
+          Ingreso i = new Ingreso();
+          i.setId_ingreso(id);
+          
+          porRechazar.add(i);
         }
       }
-      catch (Exception ex) {
+      else {
+        aprobaciones = false;
+        break;
+      }
+    }
+
+    if (aprobaciones) {
+      try {
+        dao.decisionesCuarentena(porAprobar, porRechazar);
+        resultado = true;
+      }
+      catch (SQLException ex) {
         ex.printStackTrace();
         resultado = false;
       }
-      redireccion = "Ingresos/Agregar.jsp";
     }
     else {
-      redireccion = "Ingresos/Agregar.jsp";
-      // Tareas de sacar de cuarentena
+      Ingreso ingreso = new Ingreso();
+
+      ProductoInterno producto = new ProductoInterno();
+      producto.setId_producto(Integer.parseInt(request.getParameter("producto")));
+      ingreso.setProducto(producto);
+
+      Seccion seccion = new Seccion();
+      seccion.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
+      ingreso.setSeccion(seccion);
+
+      ingreso.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+      ingreso.setPrecio(Integer.parseInt(request.getParameter("precio")));
+      ingreso.setEstado(request.getParameter("estado"));
+      try {
+        SingletonBD s = SingletonBD.getSingletonBD();
+
+        String fechaIngreso = request.getParameter("fechaIngreso");
+        String fechaVencimiento = request.getParameter("fechaVencimiento");
+        java.util.Date fechaActual = new java.util.Date();
+
+        ingreso.setFecha_ingreso(s.parsearFecha(fechaIngreso));
+        ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
+        ingreso.setFecha_registro(new java.sql.Date(fechaActual.getTime()));
+      }
+      catch (ParseException ex) {
+
+      }
+
+      String id = request.getParameter("id_ingreso");
+
+      if (id.isEmpty() || id.equals("0")) {
+        try {
+          if (dao.registrarIngreso(ingreso)) {
+            resultado = true;
+          }
+        }
+        catch (Exception ex) {
+          ex.printStackTrace();
+          resultado = false;
+        }
+      }
+      else {
+        // Tareas de sacar de cuarentena
+      }
     }
 
     if (resultado) {
-      redireccion = String.format("Ingresos/index.jsp", id);
+      redireccion = "Ingresos/index.jsp";
       try {
         List<Ingreso> ingresos = dao.obtenerTodo();
-        List<Ingreso> ingresosCuarentena = dao.obtenerCuarentena();
+        List<Ingreso> ingresosCuarentena = dao.obtenerPorEstado(Ingreso.CUARENTENA);
+        List<Ingreso> ingresosRechazados = dao.obtenerPorEstado(Ingreso.RECHAZADO);
+        List<Ingreso> ingresosNoDisponibles = dao.obtenerPorEstado(Ingreso.NO_DISPONIBLE);
         request.setAttribute("listaIngresos", ingresos);
         request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
-      }catch(Exception ex){
+        request.setAttribute("listaIngresosRechazados", ingresosRechazados);
+        request.setAttribute("listaIngresosNoDisponibles", ingresosNoDisponibles);
+      }
+      catch (Exception ex) {
         ex.printStackTrace();
       }
-
     }
-
     RequestDispatcher vista = request.getRequestDispatcher(redireccion);
     vista.forward(request, response);
   }
@@ -204,5 +270,4 @@ public class ControladorIngresos extends SIGIPROServlet
   {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-
 }

@@ -15,6 +15,11 @@ import java.sql.Date;
  */
 public class Ingreso extends IModelo
 {
+  public static final String CUARENTENA = "En Cuarentena";
+  public static final String DISPONIBLE = "Disponible";
+  public static final String NO_DISPONIBLE = "No Disponible";
+  public static final String RECHAZADO = "Rechazado";
+  
   int id_ingreso;
   ProductoInterno producto;
   Seccion seccion;
