@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
   //Definición de funciones
   function agregarValidacionNumero(elemento, elementoError) {
     elemento.keyup(function () {
@@ -19,16 +19,16 @@ $(document).ready(function () {
     }
     return resultado;
   }
-  
-  $("#seleccionProducto").change(function(){
+
+  $("#seleccionProducto").change(function () {
     var opcion = $(this).find(":selected");
-    if (opcion.data("cuarentena")){
+    if (opcion.data("cuarentena")) {
       $("#radio-cuarentena").prop("checked", true);
     } else {
       $("#radio-disponible").prop("checked", true);
     }
   });
-  
+
   agregarValidacionNumero($("#cantidad"), $("#errorCantidad"));
   agregarValidacionNumero($("#precio"), $("#errorPrecio"));
 
@@ -37,5 +37,21 @@ $(document).ready(function () {
     var validacionPrecio = validar($("#precio"), $("#errorPrecio"));
     var validez = validacionCantidad && validacionPrecio;
     return validez;
+  });
+
+  $('#formAprobaciones').find(':radio').each(function () {
+    $(this).click(function () {
+      /*
+      $(this).toggleClass('checked');
+      $(this).siblings().each(function () {
+        $(this).toggleClass('checked');
+      });*/
+      if ($(this).prop('previousValue')) {
+        $(this).prop('checked', false);
+      } else {
+        $('input[name=' + $(this).attr('name') + ']').prop('previousValue', false);
+      }
+      $(this).prop('previousValue', $(this).prop('checked'));
+    });
   });
 });

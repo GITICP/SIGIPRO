@@ -17,6 +17,7 @@
 <%@attribute name="direccion_contexto"%>
 <%@attribute name="contenido" fragment="true" required="true"%>
 <%@attribute name="scripts" fragment="true" required="false"%>
+<%@attribute name="css" fragment="true" required="false"%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -33,8 +34,10 @@
     <link href="${direccion_contexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
-    <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
-    <link href="${direccion_contexto}/recursos/css/barra-navegacion.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/sigipro/sigipro.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/sigipro/barra-navegacion.css" rel="stylesheet" type="text/css" media="screen">
+    
+    <jsp:invoke fragment="css" />
 
     <!--[if lte IE 9]>
         <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
