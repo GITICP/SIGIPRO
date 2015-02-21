@@ -18,16 +18,16 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-8 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones</a>
+              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones de Activos Fijos</a>
             </li>
             <li class="active"> ${ubicacion.getNombre()} </li>
           </ul>
         </div>
-        <div class="col-md-8 ">
+        <div class="col-md-4 ">
           <div class="top-content">
 
           </div>
