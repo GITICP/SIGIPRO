@@ -79,8 +79,8 @@ public class InventarioDAO {
         try {
           ProductoInternoDAO pr = new ProductoInternoDAO();
           SeccionDAO sc = new SeccionDAO();
-          inventario.producto = pr.obtenerProductoInterno(rs.getInt("id_producto"));
-          inventario.seccion = sc.obtenerSeccion(rs.getInt("id_seccion"));
+           inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+          inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
         } catch (Exception ex) {
           ex.printStackTrace();
         }
@@ -91,12 +91,17 @@ public class InventarioDAO {
     return inventario;
   }
 
-  public List<Inventario> obtenerInventarios() {
+  public List<Inventario> obtenerInventarios(int id_seccion) {
 
     List<Inventario> resultado = new ArrayList<Inventario>();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios ");
+      PreparedStatement consulta;
+      if (id_seccion ==0)
+      {consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios");}
+      else
+      {consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios WHERE id_seccion = ? or id_seccion = 30"); //OJO QUE LA SECCION UNIFICADA TIENE ID DE 30
+       consulta.setInt(1, id_seccion);}
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
@@ -108,8 +113,8 @@ public class InventarioDAO {
         try {
           ProductoInternoDAO pr = new ProductoInternoDAO();
           SeccionDAO sc = new SeccionDAO();
-          inventario.producto = pr.obtenerProductoInterno(rs.getInt("id_producto"));
-          inventario.seccion = sc.obtenerSeccion(rs.getInt("id_seccion"));
+           inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+          inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
         } catch (Exception ex) {
           ex.printStackTrace();
         }

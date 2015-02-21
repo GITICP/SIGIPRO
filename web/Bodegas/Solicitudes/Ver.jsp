@@ -41,6 +41,7 @@
               <h3><i class="fa fa-barcode"></i> Solicitud  ${solicitud.getId_solicitud()} </h3>
               <div class="btn-group widget-header-toolbar">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="la Solicitud" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=eliminar&id_solicitud=${solicitud.getId_solicitud()}">Eliminar</a>
               </div>
             </div>
             ${mensaje}

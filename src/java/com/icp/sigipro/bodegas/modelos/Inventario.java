@@ -7,8 +7,6 @@ package com.icp.sigipro.bodegas.modelos;
 
 import com.icp.sigipro.configuracion.modelos.Seccion;
 
-
-
 /**
  *
  * @author Amed
@@ -19,8 +17,8 @@ public class Inventario {
   private int id_seccion;
   private int stock_actual;
   
-  public ProductoInterno producto;
-  public Seccion seccion;
+  private ProductoInterno producto;
+  private Seccion seccion;
   
   public Inventario(){};
   public void setId_inventario(int p){this.id_inventario = p;}
@@ -31,5 +29,11 @@ public class Inventario {
   public int getId_producto(){return id_producto;}
   public int getId_seccion(){return id_seccion;}
   public int getStock_actual(){return stock_actual;}
+  
+  public void setProducto(ProductoInterno p){this.producto = p;}
+  public void setSeccion(Seccion p){this.seccion = p;}
+  
+  public ProductoInterno getProducto(){return producto;}
+  public Seccion getSeccion(){return seccion;}
   
 }

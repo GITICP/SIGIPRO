@@ -39,7 +39,7 @@
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> Solicitudes de Bodega </h3>
                 <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Crear Nueva Solicitud</a>
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Agregar Nueva Solicitud</a>
                 </div>
             </div>
             ${mensaje}

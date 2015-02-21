@@ -6,10 +6,13 @@
 package com.icp.sigipro.bodegas.controladores;
 
 
+import com.icp.sigipro.bodegas.dao.InventarioDAO;
 import com.icp.sigipro.bodegas.dao.SolicitudDAO;
+import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -75,6 +78,10 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         else if (accion.equalsIgnoreCase("agregar")) {
           redireccion = "Solicitudes/Agregar.jsp";
           Solicitud solicitud = new Solicitud();
+          InventarioDAO inventarioDAO = new InventarioDAO();
+          Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion() );
+          request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Agregar");
         }
@@ -92,6 +99,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           redireccion = "Solicitudes/Editar.jsp";
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
+          InventarioDAO inventarioDAO = new InventarioDAO();
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usrDAO.obtenerUsuario(usuario_solicitante).getIdSeccion() );
+          request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Editar");
         }
