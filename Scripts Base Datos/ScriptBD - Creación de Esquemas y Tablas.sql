@@ -1,4 +1,4 @@
-﻿--########ESQUEMA DE SEGURIDAD########
+--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -102,15 +102,12 @@ CREATE SCHEMA bodega;
 CREATE TABLE bodega.activos_fijos ( 
 	id_activo_fijo serial NOT NULL,
 	placa character varying(45),
-        numero_serie character varying(45),
 	equipo character varying(45) NOT NULL,
 	marca character varying(45),
         fecha_movimiento date,
         id_seccion integer,
 	id_ubicacion integer,
         fecha_registro date NOT NULL,
-        modelo character varying(45),
-        responsable character varying(45),
         estado character varying(45)
  );
 
