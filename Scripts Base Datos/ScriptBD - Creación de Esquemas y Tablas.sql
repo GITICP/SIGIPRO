@@ -1,4 +1,4 @@
-﻿--########ESQUEMA DE SEGURIDAD########
+--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -149,7 +149,6 @@ CREATE TABLE bodega.ingresos (
  ); 
 
 CREATE TABLE bodega.inventarios ( 
-	id_inventario serial NOT NULL,
 	id_producto integer,
 	id_seccion integer NOT NUll,
      	stock_actual integer NOT NULL
@@ -231,7 +230,7 @@ ALTER TABLE ONLY bodega.catalogo_externo ADD CONSTRAINT pk_catalogo_externo PRIM
 ALTER TABLE ONLY bodega.catalogos_internos_externos ADD CONSTRAINT pk_catalogos_internos_externos PRIMARY KEY ( id_producto_ext,id_producto);
 ALTER TABLE ONLY bodega.ubicaciones_catalogo_interno ADD CONSTRAINT pk_ubicaciones_catalogo_interno PRIMARY KEY ( id_ubicacion,id_producto);
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT pk_ingresos PRIMARY KEY (id_ingreso);
-ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT pk_inventarios PRIMARY KEY (id_inventario);
+ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT pk_inventarios PRIMARY KEY (id_seccion, id_producto);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_reactivo);
 ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT pk_solicitudes PRIMARY KEY (id_solicitud);
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT pk_detalles_solicitudes PRIMARY KEY (id_detalle_solicitud);
