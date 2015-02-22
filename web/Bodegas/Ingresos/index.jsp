@@ -100,9 +100,9 @@
                             </a>
                           </td>
                           <td>${ingreso.getSeccion().getNombre_seccion()}</td>
-                          <td>${ingreso.getFecha_ingreso()}</td>
-                          <td>${ingreso.getFecha_registro()}</td>
-                          <td>${ingreso.getFecha_vencimiento()}</td>
+                          <td>${ingreso.getFecha_ingresoAsString()}</td>
+                          <td>${ingreso.getFecha_registroAsString()}</td>
+                          <td>${ingreso.getFecha_vencimientoAsString()}</td>
                           <td>${ingreso.getCantidad()}</td>
                           <td>${ingreso.getPrecio()}</td>
                           <td>${ingreso.getEstado()}</td>
@@ -162,9 +162,9 @@
                               </a>
                             </td>
                             <td>${ingresoCuarentena.getSeccion().getNombre_seccion()}</td>
-                            <td>${ingresoCuarentena.getFecha_ingreso()}</td>
-                            <td>${ingresoCuarentena.getFecha_registro()}</td>
-                            <td>${ingresoCuarentena.getFecha_vencimiento()}</td>
+                            <td>${ingresoCuarentena.getFecha_ingresoAsString()}</td>
+                            <td>${ingresoCuarentena.getFecha_registroAsString()}</td>
+                            <td>${ingresoCuarentena.getFecha_vencimientoAsString()}</td>
                             <td>${ingresoCuarentena.getCantidad()}</td>
                             <td>${ingresoCuarentena.getPrecio()}</td>
                             <td class="fila-decision">
@@ -216,9 +216,9 @@
                             </a>
                           </td>
                           <td>${ingresoRechazado.getSeccion().getNombre_seccion()}</td>
-                          <td>${ingresoRechazado.getFecha_ingreso()}</td>
-                          <td>${ingresoRechazado.getFecha_registro()}</td>
-                          <td>${ingresoRechazado.getFecha_vencimiento()}</td>
+                          <td>${ingresoRechazado.getFecha_ingresoAsString()}</td>
+                          <td>${ingresoRechazado.getFecha_registroAsString()}</td>
+                          <td>${ingresoRechazado.getFecha_vencimientoAsString()}</td>
                           <td>${ingresoRechazado.getCantidad()}</td>
                           <td>${ingresoRechazado.getPrecio()}</td>
                         </tr>
@@ -260,9 +260,9 @@
                             </a>
                           </td>
                           <td>${ingresoNoDisponible.getSeccion().getNombre_seccion()}</td>
-                          <td>${ingresoNoDisponible.getFecha_ingreso()}</td>
-                          <td>${ingresoNoDisponible.getFecha_registro()}</td>
-                          <td>${ingresoNoDisponible.getFecha_vencimiento()}</td>
+                          <td>${ingresoNoDisponible.getFecha_ingresoAsString()}</td>
+                          <td>${ingresoNoDisponible.getFecha_registroAsString()}</td>
+                          <td>${ingresoNoDisponible.getFecha_vencimientoAsString()}</td>
                           <td>${ingresoNoDisponible.getCantidad()}</td>
                           <td>${ingresoNoDisponible.getPrecio()}</td>
                         </tr>

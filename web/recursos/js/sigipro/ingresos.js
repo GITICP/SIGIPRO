@@ -22,10 +22,20 @@ $(document).ready(function () {
 
   $("#seleccionProducto").change(function () {
     var opcion = $(this).find(":selected");
+    var campoVencimiento = $("#campo-fecha-vencimiento");
     if (opcion.data("cuarentena")) {
       $("#radio-cuarentena").prop("checked", true);
     } else {
       $("#radio-disponible").prop("checked", true);
+    }
+    if (opcion.data("perecedero")){
+      campoVencimiento.hide();
+      campoVencimiento.find('#fechaVencimiento').prop('required', false);
+      $("#label-fecha-vencimiento").hide();
+    } else {
+      campoVencimiento.show();
+      campoVencimiento.find('#fechaVencimiento').prop('required', true);
+      $("#label-fecha-vencimiento").show();
     }
   });
 
@@ -41,11 +51,6 @@ $(document).ready(function () {
 
   $('#formAprobaciones').find(':radio').each(function () {
     $(this).click(function () {
-      /*
-      $(this).toggleClass('checked');
-      $(this).siblings().each(function () {
-        $(this).toggleClass('checked');
-      });*/
       if ($(this).prop('previousValue')) {
         $(this).prop('checked', false);
       } else {
@@ -54,4 +59,6 @@ $(document).ready(function () {
       $(this).prop('previousValue', $(this).prop('checked'));
     });
   });
+  
+  $("#seleccionProducto").change();
 });

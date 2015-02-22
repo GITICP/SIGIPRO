@@ -22,7 +22,7 @@
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
               <c:forEach items="${productos}" var="producto">
-                <option value=${producto.getId_producto()} data-cuarentena=${producto.isCuarentena()}>${producto.getNombre()} (${producto.getCodigo_icp()})</option>
+                <option value=${producto.getId_producto()} data-cuarentena=${producto.isCuarentena()} data-perecedero="${producto.isPerecedero()}">${producto.getNombre()} (${producto.getCodigo_icp()})</option>
               </c:forEach>
             </select>
           </div>
@@ -52,8 +52,8 @@
           </div>
         </div>
       </div>
-      <label for="fechaVencimiento" class="control-label">* Fecha de Vencimiento</label>
-      <div class="form-group">
+      <label id="label-fecha-vencimiento" for="fechaVencimiento" class="control-label">* Fecha de Vencimiento</label>
+      <div id="campo-fecha-vencimiento" class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
             <input type="text" value="${ingreso.getFecha_vencimiento()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaVencimiento" class="form-control sigiproDatePicker" name="fechaVencimiento" data-date-format="dd/mm/yyyy" required

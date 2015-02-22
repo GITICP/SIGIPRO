@@ -7,6 +7,7 @@ package com.icp.sigipro.bodegas.modelos;
 
 import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 
 /**
@@ -118,5 +119,26 @@ public class Ingreso extends IModelo
   public void setPrecio(int precio)
   {
     this.precio = precio;
+  }
+  
+  public String getFecha_vencimientoAsString(){
+    if(fecha_vencimiento != null){
+      return formatearFecha(fecha_vencimiento);
+    } else {
+      return "Producto no perecedero.";
+    }
+  }
+  
+  public String getFecha_ingresoAsString(){
+    return formatearFecha(fecha_ingreso);
+  }
+  
+  public String getFecha_registroAsString(){
+    return formatearFecha(fecha_registro);
+  }
+  
+  private String formatearFecha(Date fecha){
+    HelperFechas h = HelperFechas.getSingletonHelperFechas();
+    return h.formatearFecha(fecha);
   }
 }

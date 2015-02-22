@@ -214,8 +214,11 @@ public class ControladorIngresos extends SIGIPROServlet
         java.util.Date fechaActual = new java.util.Date();
 
         ingreso.setFecha_ingreso(s.parsearFecha(fechaIngreso));
-        ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
         ingreso.setFecha_registro(new java.sql.Date(fechaActual.getTime()));
+        
+        if (fechaVencimiento.equals("") || fechaVencimiento.isEmpty()){
+          ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
+        }
       }
       catch (ParseException ex) {
 
