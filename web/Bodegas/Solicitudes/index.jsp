@@ -54,8 +54,9 @@
                     <th>Cantidad</th>
                     <th>Fecha de Solicitud</th>
                     <th>Estado</th>
-                    <th>Fecha de Entrega</th>
-                    <th>Usuario que Recibe</th>
+                    <c:if test="${booladmin}">
+                      <th> Cambio Estado</th>
+                    </c:if>
                   </tr>
                 </thead>
                 <tbody>
@@ -74,8 +75,30 @@
                       <td>${solicitud.getCantidad()}</td>
                       <td>${solicitud.getFecha_solicitud()}</td>
                       <td>${solicitud.getEstado()}</td>
-                      <td>${solicitud.getFecha_entrega()}</td>
-                      <td>${solicitud.getUsuarioReceptor().getNombreCompleto() }</td>
+                      <c:if test="${booladmin}">
+                        <c:choose>
+                          <c:when test="${solicitud.getEstado().equals('Pendiente')}">
+                            <td>
+                              <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=aprobar&id_solicitud=" onclick="AprobarSolicitud(${solicitud.getId_solicitud()})">Aprobar</a>
+                              <a class="btn btn-danger btn-sm boton-accion confirmableRechazar" data-texto-confirmacion="rechazar esta solicitud " data-href="/SIGIPRO/Bodegas/Solicitudes?accion=rechazar&id_solicitud=" onclick="RechazarSolicitud(${solicitud.getId_solicitud()})">Rechazar</a>
+                            </td>
+                          </c:when>
+                          <c:otherwise>
+                            <c:choose>
+                              <c:when test="${solicitud.getEstado().equals('Aprobada')}">
+                                <td>
+                                 <a class="btn btn-primary btn-sm boton-accion confirmableEntregar" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}" onclick="confirmarAuth(${solicitud.getId_solicitud()})">Entregar</a>
+                                </td>
+                              </c:when>
+                              <c:otherwise>
+                                <td>
+                                 <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Completada</a>
+                                </td>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:otherwise>
+                        </c:choose>
+                      </c:if>
                     </tr>
 
                   </c:forEach>
@@ -88,7 +111,53 @@
         <!-- /main-content -->
       </div>
       <!-- /main -->
+      
+      <t:modal idModal="ModalAutorizar" titulo="Autenticación">
 
+      <jsp:attribute name="form">
+        <h5> Para validar la entrega, el usuario recipiente debe iniciar sesión. </h5>
+        <form class="form-horizontal" id="ModalAutorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
+          <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
+          <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
+          <input hidden="true" name="accionindex" id="accionindex" value="accionindex">
+          ${mensaje_auth}
+          <label for="usr" class="control-label">Usuario</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group" style="display:table;">
+                <input type="text" id="usr"  name="usr" required
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       onchange="setCustomValidity('')">
+              </div>
+            </div>
+          </div>
+          <label for="passw" class="control-label">Contraseña</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group" style="display:table;">
+                <input type="password" id="passw" name="passw" required
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       onchange="setCustomValidity('')">
+              </div>
+              <p id='mensajeValidación' style='color:red;'><p>
+            </div>
+          </div>
+        <div class="form-group">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
+          </div>
+        </div>
+        </form>
+
+
+      </jsp:attribute>
+
+    </t:modal>
+
+    </jsp:attribute>
+    <jsp:attribute name="scripts">
+      <script src="/SIGIPRO/recursos/js/sigipro/solicitudes.js"></script>
     </jsp:attribute>
 
   </t:plantilla_general>

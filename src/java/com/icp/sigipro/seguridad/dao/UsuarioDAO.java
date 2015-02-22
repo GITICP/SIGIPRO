@@ -731,5 +731,35 @@ public class UsuarioDAO {
     }
     return resultado;
   }
+  
+   public boolean AutorizarRecibo(String usuario, String contrasenna, int id_seccion) {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    boolean resultado = false;
+
+    if (conexion != null) {
+      try {
+        PreparedStatement consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena "
+                + "FROM seguridad.usuarios us "
+                + "WHERE us.nombre_usuario = ? and us.contrasena = ? and us.id_seccion = ?");
+
+        consultaContrasena.setString(1, usuario);
+        String hash = md5(contrasenna);
+        consultaContrasena.setString(2, hash);
+        consultaContrasena.setInt(3, id_seccion);
+        ResultSet resultadoConsulta = consultaContrasena.executeQuery();
+        if(resultadoConsulta.next())
+        {
+          resultado = true;
+        }
+        
+        consultaContrasena.close();
+        conexion.close();
+      } catch (SQLException ex) {
+        System.out.println(ex);
+      }
+    }
+    return resultado;
+  }
 
 }

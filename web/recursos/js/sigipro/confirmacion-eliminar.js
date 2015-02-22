@@ -11,7 +11,7 @@ $(document).ready(function () {
                 <h4 class='modal-title' id='myModalLabel'>Confirmaci&oacute;n</h4>\
               </div>\
               <div class='modal-body'>\
-                  <h5 class='title'>&iquest;Est&aacute; seguro que desea eliminar " + textoConfirmacion + "?</h5>\
+                  <h5 class='title'>&iquest;Est&aacute; seguro que desea " + textoConfirmacion + "?</h5>\
                   <br>\
                   <input hidden='false' id='controlIDRol' name='controlIDRol' value='${rol.getID()}'>\
                   <div class='form-group'>\

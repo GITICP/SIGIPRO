@@ -28,24 +28,19 @@ public class InventarioDAO {
     conexion = s.conectar();
   }
 
-  public boolean restarInventario(int id, int cant) {
+  public boolean restarInventario(int id_producto, int id_seccion, int cant) {
     boolean resultado = false;
     try {
-      PreparedStatement consultaActual = getConexion().prepareStatement("SELECT sotck_actual FROM bodega.inventarios where id_inventario = ?");
-      consultaActual.setInt(1, id);
-      ResultSet rs = consultaActual.executeQuery();
-      int StockActual = 0;
-      if (rs.next()) {
-        StockActual = rs.getInt("stock_actual");
-      }
+
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.inventarios "
-              + " SET stock_actual= ?"
-              + " WHERE id_inventario=?; "
+              + " SET stock_actual= stock_actual + ?"
+              + " WHERE id_producto  = ? and id_seccion = ?; "
       );
       
-      consulta.setInt(1, (StockActual - cant));
-      consulta.setInt(2, id);
+      consulta.setInt(1, cant);
+      consulta.setInt(2, id_producto);
+      consulta.setInt(3, id_seccion);
       int resultadoConsulta = consulta.executeUpdate();
       if (resultadoConsulta == 1) {
         resultado = true;
@@ -60,60 +55,28 @@ public class InventarioDAO {
     return resultado;
   }
 
-  public Inventario obtenerInventario(int id_inventario) {
-
-    Inventario inventario = new Inventario();
-
-    try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.inventarios where id_inventario = ?");
-
-      consulta.setInt(1, id_inventario);
-
-      ResultSet rs = consulta.executeQuery();
-
-      if (rs.next()) {
-        inventario.setId_inventario(rs.getInt("id_inventario"));
-        inventario.setId_producto(rs.getInt("id_producto"));
-        inventario.setId_seccion(rs.getInt("id_seccion"));
-        inventario.setStock_actual(rs.getInt("stock_actual"));
-        try {
-          ProductoInternoDAO pr = new ProductoInternoDAO();
-          SeccionDAO sc = new SeccionDAO();
-           inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
-          inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
-        } catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-    return inventario;
-  }
-
   public List<Inventario> obtenerInventarios(int id_seccion) {
 
     List<Inventario> resultado = new ArrayList<Inventario>();
 
     try {
       PreparedStatement consulta;
-      if (id_seccion ==0)
-      {consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios");}
+      if (id_seccion==0)
+        { consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios ");}
       else
-      {consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios WHERE id_seccion = ? or id_seccion = 30"); //OJO QUE LA SECCION UNIFICADA TIENE ID DE 30
-       consulta.setInt(1, id_seccion);}
+        {consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios Where id_seccion = ? or id_seccion = 0 ");
+         consulta.setInt(1, id_seccion);}
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
         Inventario inventario = new Inventario();
-        inventario.setId_inventario(rs.getInt("id_inventario"));
         inventario.setId_producto(rs.getInt("id_producto"));
         inventario.setId_seccion(rs.getInt("id_seccion"));
         inventario.setStock_actual(rs.getInt("stock_actual"));
         try {
           ProductoInternoDAO pr = new ProductoInternoDAO();
           SeccionDAO sc = new SeccionDAO();
-           inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+          inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
           inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
         } catch (Exception ex) {
           ex.printStackTrace();

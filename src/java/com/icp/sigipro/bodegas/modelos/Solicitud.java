@@ -29,10 +29,6 @@ public class Solicitud {
   private ProductoInterno producto;
   
   public Solicitud(){
-    this.estado = "Pendiente";
-    java.util.Date hoy = new java.util.Date();
-    Date hoysql = new Date(hoy.getTime());
-    this.fecha_solicitud = hoysql;
     };
   public void setId_solicitud(int id){ this.id_solicitud = id;}
   public void setId_usuario(int id){ this.id_usuario = id;}
@@ -57,10 +53,19 @@ public class Solicitud {
   public int getId_producto () {return id_producto; }
   public int getCantidad () {return cantidad; }
   public String getEstado () {return estado;}
-  public String getFecha_solicitud()   {return formatearFecha(fecha_solicitud);}
+  public String getFecha_solicitud()   {
+    if (this.fecha_solicitud != null)
+    {return formatearFecha(fecha_solicitud);}
+    else
+    {return "Sin fecha";}
+  }
   public Date getFecha_solicitudAsDate()   {return fecha_solicitud;}
   public Date getFecha_entregaAsDate()   {return fecha_entrega;}
-  public String getFecha_entrega(){return formatearFecha(fecha_entrega);}
+  public String getFecha_entrega(){
+    if (this.fecha_entrega != null)
+    {return formatearFecha(fecha_entrega);}
+    else
+    {return "Sin fecha";}}
   public int getId_usuario_recibo() {return id_usuario_recibo; }
   
   

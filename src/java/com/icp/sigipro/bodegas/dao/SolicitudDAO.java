@@ -32,16 +32,15 @@ public class SolicitudDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes (id_solicitud, id_usuario, id_producto, cantidad, fecha_solicitud, estado) "
-              + " VALUES (?,?,?,?,?,?) RETURNING id_solicitud");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes ( id_usuario, id_producto, cantidad, fecha_solicitud, estado) "
+              + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
       
 
-      consulta.setInt(1, p.getId_solicitud());
-      consulta.setInt(2, p.getId_usuario());
-      consulta.setInt(3, p.getId_producto());
-      consulta.setInt(4, p.getCantidad());
-      consulta.setDate(5, p.getFecha_solicitudAsDate());
-      consulta.setString(6, p.getEstado());
+      consulta.setInt(1, p.getId_usuario());
+      consulta.setInt(2, p.getId_producto());
+      consulta.setInt(3, p.getCantidad());
+      consulta.setDate(4, p.getFecha_solicitudAsDate());
+      consulta.setString(5, p.getEstado());
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
         resultado = true;
@@ -68,7 +67,10 @@ public class SolicitudDAO {
       consulta.setInt(1, p.getCantidad());
       consulta.setString(2, p.getEstado());
       consulta.setDate(3, p.getFecha_entregaAsDate());
-      consulta.setInt(4, p.getId_usuario_recibo());
+      if (p.getId_usuario_recibo() == 0)
+      {consulta.setNull(4, java.sql.Types.INTEGER );}
+      else
+      {consulta.setInt(4, p.getId_usuario_recibo());}
       consulta.setInt(5, p.getId_solicitud());
 
       if (consulta.executeUpdate() == 1) {
@@ -129,7 +131,7 @@ public class SolicitudDAO {
             UsuarioDAO usr = new UsuarioDAO();
             ProductoInternoDAO pr = new ProductoInternoDAO();
             solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-            solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_usuario")));
+            solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
             solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
           
         } catch (Exception ex) {
@@ -171,7 +173,7 @@ public class SolicitudDAO {
           UsuarioDAO usr = new UsuarioDAO();
           ProductoInternoDAO pr = new ProductoInternoDAO();
           solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-          solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_usuario")));
+          solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
           solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
         } catch (Exception ex) {
           ex.printStackTrace();

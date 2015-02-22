@@ -48,7 +48,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="la ubicación" data-href="/SIGIPRO/Bodegas/Ubicaciones?accion=eliminar&id_ubicacion=${ubicacion.getId_ubicacion()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la ubicación" data-href="/SIGIPRO/Bodegas/Ubicaciones?accion=eliminar&id_ubicacion=${ubicacion.getId_ubicacion()}">Eliminar</a>
                 </c:if>
 
                 <c:set var="contienePermisoEditar" value="false" />
