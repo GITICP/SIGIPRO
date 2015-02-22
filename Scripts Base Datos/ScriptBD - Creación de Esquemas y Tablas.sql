@@ -1,4 +1,4 @@
-﻿--########ESQUEMA DE SEGURIDAD########
+--########ESQUEMA DE SEGURIDAD########
 DROP SCHEMA IF EXISTS seguridad CASCADE;
 CREATE SCHEMA seguridad;
 --Tablas de esquema de seguridad
@@ -119,7 +119,8 @@ CREATE TABLE bodega.catalogo_interno(
 	stock_maximo integer NOT NULL,
 	presentacion character varying(45) NOT NULL,
         descripcion character varying(500),
-        cuarentena boolean
+        cuarentena boolean,
+        perecedero boolean
  );
 
 CREATE TABLE bodega.catalogos_internos_externos(
@@ -143,7 +144,7 @@ CREATE TABLE bodega.ingresos (
      	fecha_ingreso date NOT NULL,
      	fecha_registro date NOT NULL,
 	cantidad integer NOT NULL,
-	fecha_vencimiento date NOT NULL,
+	fecha_vencimiento date,
 	estado character varying(45),
 	precio integer
  );

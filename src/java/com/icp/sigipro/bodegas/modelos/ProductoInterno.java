@@ -21,6 +21,7 @@ public class ProductoInterno extends IModelo
   private String presentacion;
   private String descripcion;
   private boolean cuarentena;
+  private boolean perecedero;
   private Reactivo reactivo;
  
   public ProductoInterno(){}
@@ -104,6 +105,16 @@ public class ProductoInterno extends IModelo
   {
     this.cuarentena = cuarentena;
   }
+
+  public boolean isPerecedero()
+  {
+    return perecedero;
+  }
+
+  public void setPerecedero(boolean perecedero)
+  {
+    this.perecedero = perecedero;
+  }
   
   public Reactivo getReactivo()
   {
@@ -117,6 +128,14 @@ public class ProductoInterno extends IModelo
   
   public String getCuarentena(){
     if (isCuarentena()){
+      return "Sí";
+    } else {
+      return "No";
+    }
+  }
+  
+  public String getPerecedero(){
+    if (isPerecedero()){
       return "Sí";
     } else {
       return "No";

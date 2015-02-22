@@ -81,9 +81,13 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
+            <c:set var="checkedPerecedero" value="" />
             <c:set var="checkedCuarentena" value="" />
             <c:set var="checkedReactivo" value="false" />
             <c:set var="formReactivo" value="hidden" />
+            <c:if test="${producto.isPerecedero()}">
+              <c:set var="checkedPerecedero" value="checked" />
+            </c:if>
             <c:if test="${producto.isCuarentena()}">
               <c:set var="checkedCuarentena" value="checked" />
             </c:if>
@@ -91,6 +95,8 @@
               <c:set var="checkedReactivo" value="checked" />
               <c:set var="formReactivo" value="" />
             </c:if>
+            <input type="checkbox" name="perecedero" value="true" ${checkedCuarentena}><span>  Es perecedero.</span>
+            <br>
             <input type="checkbox" name="cuarentena" value="true" ${checkedCuarentena}><span>  Ingresa por defecto en cuarentena.</span>
             <br>
             <input id="check-reactivo" type="checkbox" name="reactivo" value="true" ${checkedReactivo}><span>  Es un reactivo.</span>
