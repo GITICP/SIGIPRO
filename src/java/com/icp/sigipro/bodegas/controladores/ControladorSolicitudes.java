@@ -282,6 +282,11 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           if (auth) {
+            java.util.Date hoy = new java.util.Date();
+            Date hoysql = new Date(hoy.getTime());
+            int id_us_recibo = usrDAO.obtenerIDUsuario(usuario);
+            solicitud.setFecha_entrega(hoysql);
+            solicitud.setId_usuario_recibo(id_us_recibo);
             solicitud.setEstado("Entregada");
             boolean resultado;
             resultado = dao.editarSolicitud(solicitud);
@@ -293,7 +298,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             }
           }
           else
-          { request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrecos, o el usuario no pertenece a la sección solicitante."));
+          { request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos, o el usuario no pertenece a la sección solicitante."));
             request.setAttribute("id_solicitud_authent", id_solicitud);
             request.setAttribute("show_modal_auth", true);
 

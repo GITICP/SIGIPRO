@@ -116,7 +116,7 @@
 
       <jsp:attribute name="form">
         <h5> Para validar la entrega, el usuario recipiente debe iniciar sesión. </h5>
-        <form class="form-horizontal" id="ModalAutorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
+        <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
           <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
           <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
           <input hidden="true" name="accionindex" id="accionindex" value="accionindex">

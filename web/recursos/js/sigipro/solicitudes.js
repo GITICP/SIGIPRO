@@ -57,12 +57,15 @@ function RechazarSolicitud(id_solicitud){
 
 function confirmarAuth(id_solicitud){
   $('#id_solicitud_auth2').val(id_solicitud);
+  $('.alert-dismissible').remove();
   $('#ModalAutorizar').modal('show');
 }
 
 $(document).ready(function () {
-  if ($('#ModalAutorizar').data('show-auth'))
-  {   $('#id_solicitud_auth2').val($('id_solicitud_auth').val());
-   $('#ModalAutorizar').modal('show');  
+  if ($('#form_modalautorizar').data('show-auth'))
+  { 
+    var id_solicitud = $('#id_solicitud_auth').val();
+    $('#id_solicitud_auth2').val(id_solicitud);
+    $('#ModalAutorizar').modal('show');  
   }
 });
