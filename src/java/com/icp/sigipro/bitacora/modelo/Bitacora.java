@@ -22,29 +22,28 @@ public class Bitacora {
     
     //Variables de Tablas
     
-    public String TABLA_ACTIVOFIJO = "ACTIVO FIJO";
-    public String TABLA_CATALOGOEXTERNO = "CATALOGO EXTERNO";
-    public String TABLA_CATALOGOINTERNO = "CATALOGO INTERNO";
-    public String TABLA_UBICACION = "UBICACION";
-    public String TABLA_UBICACIONBODEGA = "UBICACION BODEGA";
-    public String TABLA_PROVEEDOR = "PROVEEDOR";
-    public String TABLA_CORREO = "CORREO";
-    public String TABLA_SECCION = "SECCION";
-    public String TABLA_PERMISO = "PERMISO";
-    public String TABLA_PERMISOROL = "PERMISO ROL";
-    public String TABLA_PUESTO = "PUESTO";
-    public String TABLA_ROL = "ROL";
-    public String TABLA_ROLUSUARIO = "ROL USUARIO";
-    public String TABLA_USUARIO = "USUARIO";
+    public static final String TABLA_ACTIVOFIJO = "ACTIVO FIJO";
+    public static final String TABLA_CATALOGOEXTERNO = "CATALOGO EXTERNO";
+    public static final String TABLA_CATALOGOINTERNO = "CATALOGO INTERNO";
+    public static final String TABLA_UBICACION = "UBICACION";
+    public static final String TABLA_UBICACIONBODEGA = "UBICACION BODEGA";
+    public static final String TABLA_PROVEEDOR = "PROVEEDOR";
+    public static final String TABLA_CORREO = "CORREO";
+    public static final String TABLA_SECCION = "SECCION";
+    public static final String TABLA_PERMISO = "PERMISO";
+    public static final String TABLA_PERMISOROL = "PERMISO ROL";
+    public static final String TABLA_PUESTO = "PUESTO";
+    public static final String TABLA_ROL = "ROL";
+    public static final String TABLA_ROLUSUARIO = "ROL USUARIO";
+    public static final String TABLA_USUARIO = "USUARIO";
     
     
     //Variables de Accion
-    public String ACCION_AGREGAR = "AGREGAR";
-    public String ACCION_EDITAR = "EDITAR";
-    public String ACCION_ELIMINAR = "ELIMINAR";
-    public String ACCION_VER = "VER"; //????
-    public String ACCION_LOGIN = "LOG IN";
-    public String ACCION_LOGOUT = "LOG OUT";
+    public static final String ACCION_AGREGAR = "AGREGAR";
+    public static final String ACCION_EDITAR = "EDITAR";
+    public static final String ACCION_ELIMINAR = "ELIMINAR";
+    public static final String ACCION_LOGIN = "LOG IN";
+    public static final String ACCION_LOGOUT = "LOG OUT";
     
     
     public Bitacora(){
