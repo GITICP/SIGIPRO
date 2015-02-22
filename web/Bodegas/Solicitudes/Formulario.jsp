@@ -26,13 +26,35 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <select id="seleccionproducto" class="select2" style='background-color: #fff;' name="seleccionproducto" required
-                  oninvalid="setCustomValidity('Este campo es requerido')"
-                  oninput="setCustomValidity('')">
-            <c:forEach items="${inventarios}" var="inventario">
-                <option value=${inventario.getId_producto()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
-              </c:forEach>
-          </select> </div>
+          <c:choose>
+            <c:when test="${boolEditar}">
+              <select id="seleccionproducto" class="select2" style='background-color: #fff;' name="seleccionproducto" required
+                      oninvalid="setCustomValidity('Este campo es requerido')"
+                      oninput="setCustomValidity('')" disabled>
+                <c:forEach items="${inventarios}" var="inventario">
+                  <c:choose>
+                    <c:when test="${inventario.getId_producto() == solicitud.getId_producto()}">
+                      <option value=${inventario.getId_producto()} selected> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                    </c:when>
+                    <c:otherwise>
+                      <option value=${inventario.getId_producto()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                    </c:otherwise>
+                  </c:choose>
+                </c:forEach>
+              </select> 
+            </c:when>
+            <c:otherwise>
+              <select id="seleccionproducto" class="select2" style='background-color: #fff;' name="seleccionproducto" required
+                      oninvalid="setCustomValidity('Este campo es requerido')"
+                      oninput="setCustomValidity('')">
+                <c:forEach items="${inventarios}" var="inventario">
+                  <option value=${inventario.getId_producto()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                </c:forEach>
+              </select> 
+            </c:otherwise>    
+
+          </c:choose>
+        </div>
       </div>
     </div>
   </div>

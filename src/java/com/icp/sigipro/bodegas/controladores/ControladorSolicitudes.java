@@ -106,8 +106,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           redireccion = "Solicitudes/Editar.jsp";
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
+          Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
           InventarioDAO inventarioDAO = new InventarioDAO();
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usrDAO.obtenerUsuario(usuario_solicitante).getIdSeccion() );
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion() );
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Editar");
@@ -200,9 +201,14 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       request.setCharacterEncoding("UTF-8");
       boolean resultado = false;
       HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-
       Solicitud solicitud = new Solicitud();
-      Integer id_producto = Integer.parseInt(request.getParameter("seleccionproducto"));
+      Integer id_producto;
+      try {
+        id_producto = Integer.parseInt(request.getParameter("seleccionproducto"));
+      }
+      catch(java.lang.NumberFormatException e) {
+        id_producto = 0;
+      }
       Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
       String estado = request.getParameter("estado");
       String fch_sol =  request.getParameter("fecha_solicitud");
