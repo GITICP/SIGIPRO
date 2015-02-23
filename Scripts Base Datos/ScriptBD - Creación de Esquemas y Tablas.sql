@@ -197,11 +197,11 @@ CREATE TABLE bodega.usuarios_sub_bodegas_egresos (
 CREATE TABLE bodega.sub_bodegas ( 
 	id_sub_bodega serial NOT NULL,
 	id_seccion integer NOT NULL,
-        id_usuario integer NOT NULL
+        id_usuario integer NOT NULL,
+        nombre character varying(45) NOT NULL
  ); 
 
 CREATE TABLE bodega.inventarios_bodegas ( 
-	id_inventario_bodega serial NOT NULL,
 	id_sub_bodega integer,
 	id_producto integer,
      	cantidad integer NOT NULL
@@ -237,7 +237,7 @@ ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_re
 ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT pk_solicitudes PRIMARY KEY (id_solicitud);
 ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT pk_detalles_solicitudes PRIMARY KEY (id_detalle_solicitud);
 ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (id_sub_bodega);
-ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
+ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_sub_bodega, id_producto);
 ALTER TABLE ONLY bodega.ubicaciones ADD CONSTRAINT pk_ubicaciones PRIMARY KEY (id_ubicacion);
 ALTER TABLE ONLY bodega.ubicaciones_bodega ADD CONSTRAINT pk_ubicaciones_bodega PRIMARY KEY (id_ubicacion);
 	
