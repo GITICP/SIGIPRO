@@ -70,9 +70,8 @@ $(document).ready(function () {
   }
 });
 
-//$('#seleccionproducto').change( function() {
-//  alert($('option:selected').data('stock'));
-//  var max = $('option:selected').data('stock');
-//  $("input[name='cantidad']").attr("max", max);
-//}
-//        );
+$('#cantidadinput').change( function() {
+  var max = $('option:selected').data('stock');
+  $("input[name='cantidad']").attr("max", max);
+}
+        );

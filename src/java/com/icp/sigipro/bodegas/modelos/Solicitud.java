@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 public class Solicitud {
   private int id_solicitud; 
   private int id_usuario;
-  private int id_producto;
+  private int id_inventario;
   private int cantidad;
   private Date fecha_solicitud;
   private String estado;
@@ -26,13 +26,13 @@ public class Solicitud {
   
   private Usuario usuario;
   private Usuario usuario_receptor;
-  private ProductoInterno producto;
+  private Inventario inventario;
   
   public Solicitud(){
     };
   public void setId_solicitud(int id){ this.id_solicitud = id;}
   public void setId_usuario(int id){ this.id_usuario = id;}
-  public void setId_producto(int id){ this.id_producto = id;}
+  public void setId_inventario(int id){ this.id_inventario = id;}
   public void setCantidad(int id){ this.cantidad = id;}
   public void setFecha_solicitud(Date id){ this.fecha_solicitud = id;}
   public void setEstado(String id){ this.estado = id;}
@@ -40,17 +40,17 @@ public class Solicitud {
   public void setId_usuario_recibo(int id){ this.id_usuario_recibo = id;}
   
   public void setUsuario(Usuario u){this.usuario =u;}
-  public void setProducto(ProductoInterno u){this.producto =u;}
+  public void setInventario(Inventario u){this.inventario =u;}
   public void setUsuarioReceptor(Usuario u){this.usuario_receptor =u;}
   
   public Usuario getUsuario(){return usuario ;}
-  public ProductoInterno getProducto(){return producto;}
+  public Inventario getInventario(){return inventario;}
   public Usuario getUsuarioReceptor(){return usuario_receptor ;}
           
   
   public int getId_solicitud () {return id_solicitud; }
   public int getId_usuario () {return id_usuario; }
-  public int getId_producto () {return id_producto; }
+  public int getId_inventario () {return id_inventario; }
   public int getCantidad () {return cantidad; }
   public String getEstado () {return estado;}
   public String getFecha_solicitud()   {

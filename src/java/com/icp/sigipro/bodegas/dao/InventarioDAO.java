@@ -28,19 +28,18 @@ public class InventarioDAO {
     conexion = s.conectar();
   }
 
-  public boolean restarInventario(int id_producto, int id_seccion, int cant) {
+  public boolean restarInventario(int id_inventario, int cant) {
     boolean resultado = false;
     try {
 
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.inventarios "
               + " SET stock_actual= stock_actual + ?"
-              + " WHERE id_producto  = ? and id_seccion = ?; "
+              + " WHERE id_inventario  = ?; "
       );
       
       consulta.setInt(1, cant);
-      consulta.setInt(2, id_producto);
-      consulta.setInt(3, id_seccion);
+      consulta.setInt(2, id_inventario);
       int resultadoConsulta = consulta.executeUpdate();
       if (resultadoConsulta == 1) {
         resultado = true;
@@ -70,6 +69,7 @@ public class InventarioDAO {
 
       while (rs.next()) {
         Inventario inventario = new Inventario();
+        inventario.setId_inventario(rs.getInt("id_inventario"));
         inventario.setId_producto(rs.getInt("id_producto"));
         inventario.setId_seccion(rs.getInt("id_seccion"));
         inventario.setStock_actual(rs.getInt("stock_actual"));
@@ -90,6 +90,39 @@ public class InventarioDAO {
       ex.printStackTrace();
     }
     return resultado;
+  }
+  
+  public Inventario obtenerInventario(int id_inventario) {
+
+    Inventario inventario = new Inventario();
+
+    try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios Where id_inventario = ? ");
+      consulta.setInt(1, id_inventario);
+      ResultSet rs = consulta.executeQuery();
+
+      if (rs.next()) {
+        inventario.setId_inventario(rs.getInt("id_inventario"));
+        inventario.setId_producto(rs.getInt("id_producto"));
+        inventario.setId_seccion(rs.getInt("id_seccion"));
+        inventario.setStock_actual(rs.getInt("stock_actual"));
+        try {
+          ProductoInternoDAO pr = new ProductoInternoDAO();
+          SeccionDAO sc = new SeccionDAO();
+          inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+          inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return inventario;
   }
   
   private Connection getConexion() {

@@ -202,12 +202,12 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       boolean resultado = false;
       HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
       Solicitud solicitud = new Solicitud();
-      Integer id_producto;
+      Integer id_inventario;
       try {
-        id_producto = Integer.parseInt(request.getParameter("seleccionproducto"));
+        id_inventario = Integer.parseInt(request.getParameter("seleccioninventario"));
       }
       catch(java.lang.NumberFormatException e) {
-        id_producto = 0;
+        id_inventario = 0;
       }
       Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
       String estado = request.getParameter("estado");
@@ -236,7 +236,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
       }
 
-      solicitud.setId_producto(id_producto);
+      solicitud.setId_inventario(id_inventario);
       solicitud.setCantidad(cantidad);
       solicitud.setEstado(estado);
       solicitud.setId_usuario(id_us);
