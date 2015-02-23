@@ -48,7 +48,7 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>ID de Solicitud</th>
+                    <th>Número de Solicitud</th>
                     <th>Usuario Solicitante</th>
                     <th>Producto</th>
                     <th>Cantidad</th>

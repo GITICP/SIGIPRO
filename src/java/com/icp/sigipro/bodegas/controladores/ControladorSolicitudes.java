@@ -117,15 +117,20 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           redireccion = "Solicitudes/index.jsp";
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
-          solicitud.setEstado("Aprobada");
           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-          boolean resultado;
-          resultado = dao.editarSolicitud(solicitud);     
-          if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
-          } 
-          else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+          if (solicitud.getCantidad()<= solicitud.getInventario().getStock_actual())
+          { solicitud.setEstado("Aprobada");
+            boolean resultado;
+            resultado = dao.editarSolicitud(solicitud);     
+            if (resultado) {
+              request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
+            } 
+            else {
+              request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
+          }
+          else
+          {request.setAttribute("mensaje", helper.mensajeDeError("No se puede aprobar la solicitud, la cantidad solicitada es mayor a las existencias del producto"));
           }
 
           List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
@@ -288,6 +293,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           if (auth) {
+            InventarioDAO inventarioDAO = new InventarioDAO();
             java.util.Date hoy = new java.util.Date();
             Date hoysql = new Date(hoy.getTime());
             int id_us_recibo = usrDAO.obtenerIDUsuario(usuario);
@@ -296,7 +302,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             solicitud.setEstado("Entregada");
             boolean resultado;
             resultado = dao.editarSolicitud(solicitud);
-            if (resultado) {
+            boolean resta;
+            resta = inventarioDAO.restarInventario(solicitud.getId_inventario(), -(solicitud.getCantidad()));
+            if (resultado && resta) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada"));
             } 
             else {

@@ -112,7 +112,7 @@ public class SolicitudDAO {
     Solicitud solicitud = new Solicitud();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.solicitudes where id_solicitud = ? ORDER BY fehca_solicitud DESC");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.solicitudes where id_solicitud = ?");
 
       consulta.setInt(1, id);
 
@@ -151,9 +151,9 @@ public class SolicitudDAO {
     try {
       PreparedStatement consulta;
       if (id_usuario == 0) {
-        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes ");
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes ORDER BY fecha_solicitud DESC");
       } else {
-        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where id_usuario = ? ");
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where id_usuario = ? ORDER BY fecha_solicitud DESC");
         consulta.setInt(1, id_usuario);
       }
 
