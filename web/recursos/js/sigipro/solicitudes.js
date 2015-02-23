@@ -69,3 +69,10 @@ $(document).ready(function () {
     $('#ModalAutorizar').modal('show');  
   }
 });
+
+//$('#seleccionproducto').change( function() {
+//  alert($('option:selected').data('stock'));
+//  var max = $('option:selected').data('stock');
+//  $("input[name='cantidad']").attr("max", max);
+//}
+//        );
