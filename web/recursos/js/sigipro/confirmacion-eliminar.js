@@ -1,6 +1,6 @@
 $(document).ready(function () {
   if ($('.confirmable').length > 0) {
-    var elementoConfirmable = $('.confirmable')
+    var elementoConfirmable = $('.confirmable');
     var textoConfirmacion = elementoConfirmable.data('texto-confirmacion');
     var referencia = elementoConfirmable.data('href');
     $('body').append("<div class='modal fade' id='ModalEliminarGenerico' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='display: none;'>\

@@ -26,7 +26,7 @@ public class IngresoDAO extends DAO<Ingreso>
   }
 
   @Override
-  public Ingreso buscar(Long id)
+  public Ingreso buscar(int id)
   {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
@@ -50,12 +50,12 @@ public class IngresoDAO extends DAO<Ingreso>
   }
 
   @Override
-  public List<Ingreso> obtenerTodo() throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException
+  public List<Ingreso> obtenerTodo() throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
   {
     return obtenerPorEstado(Ingreso.DISPONIBLE);
   }
 
-  public List<Ingreso> obtenerPorEstado(String condicion) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException
+  public List<Ingreso> obtenerPorEstado(String condicion) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
   {
     PreparedStatement consulta = construirConsultaObtenerTodo(condicion);
     return construirLista(ejecutarConsulta(consulta));

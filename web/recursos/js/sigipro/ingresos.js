@@ -14,7 +14,7 @@ $(document).ready(function () {
       elementoError.text('');
       resultado = true;
     } else {
-      elementoError.text('Debe ser un número');
+      elementoError.text('Debe ser un n&uacute;mero');
       resultado = true;
     }
     return resultado;

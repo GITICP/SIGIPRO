@@ -121,7 +121,7 @@ public class InventarioDAO extends DAO<Inventario>{
   }
 
   @Override
-  public Inventario buscar(Long id)
+  public Inventario buscar(int id)
   {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }

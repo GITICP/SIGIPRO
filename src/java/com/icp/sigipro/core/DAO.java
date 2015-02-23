@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public abstract class DAO<T extends IModelo>
 {
+
   protected final Class<T> tipo;
   protected String nombreModulo;
   protected String nombreTabla;
@@ -56,10 +58,10 @@ public abstract class DAO<T extends IModelo>
     }
     return conexion;
   }
-  
+
   public void cerrarConexion()
   {
-    if (conexion != null){
+    if (conexion != null) {
       try {
         if (conexion.isClosed()) {
           conexion.close();
@@ -71,13 +73,38 @@ public abstract class DAO<T extends IModelo>
     }
   }
 
-  public abstract T buscar(Long id);
+  //No usar este método
+  public T buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException
+  {
+    throw new NotImplementedException();
+    /*
+    String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla;
+    T t = tipo.newInstance();
+    List<PropiedadModelo> propiedades = t.getMetodos("get");
+
+    for (PropiedadModelo p : propiedades) {
+      String nomTablaFinal = this.nombreTabla;
+      if(nombreTabla.endsWith("s")){
+        nomTablaFinal = this.nombreTabla.substring(0, this.nombreTabla.length() - 1);
+      }
+      if (p.getCampo().getName().equals("id_" + nomTablaFinal)) {
+        codigoConsulta += " WHERE " + p.getCampo().getName() + " = ?;";
+        break;
+      }
+    }
+    
+    PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+    consulta.setInt(1, id);
+    ResultSet resultado = ejecutarConsulta(consulta);
+    resultado.next();
+    return construirObjeto(t.getMetodos("set"), resultado);*/
+  }
 
   public abstract List<T> buscarPor(String[] campos, Object valor);
 
-  public List<T> obtenerTodo() throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException
+  public List<T> obtenerTodo() throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
   {
-    String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla ;
+    String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla;
     PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
     return construirLista(ejecutarConsulta(consulta));
   }
@@ -87,7 +114,7 @@ public abstract class DAO<T extends IModelo>
     PreparedStatement objetoConsulta = construirInsertar(param);
     return ejecutarConsultaSinResultado(objetoConsulta);
   }
-  
+
   public PreparedStatement construirInsertar(T param) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, SQLException
   {
     String accionTabla = "INSERT INTO " + this.nombreModulo + "." + this.nombreTabla;
@@ -109,7 +136,8 @@ public abstract class DAO<T extends IModelo>
             lista.add(resultadoGet);
           }
         }
-      } else {
+      }
+      else {
         if (!tupla.getCampo().getName().toLowerCase().startsWith("id")) {
           Object resultadoGet = tupla.getMetodo().invoke(param);
           columnas += tupla.getCampo().getName() + ",";
@@ -130,39 +158,40 @@ public abstract class DAO<T extends IModelo>
 
   public abstract boolean eliminar(T param);
 
-  protected List<T> construirLista(ResultSet resultadoConsulta) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException
+  protected List<T> construirLista(ResultSet resultadoConsulta) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
   {
     List<T> resultado = new ArrayList<T>();
     T pivote = tipo.newInstance();
 
-    try {
-      List<PropiedadModelo> camposYSetters = pivote.getMetodos("set");
-      while (resultadoConsulta.next()) {
-        T t = tipo.newInstance();
-        for (PropiedadModelo tupla : camposYSetters) {
-          if (tupla.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
-            IModelo o = (IModelo) tupla.getCampo().getType().newInstance();
-            List<PropiedadModelo> metodosAsociacion = o.getMetodos("set");
-            for (PropiedadModelo tuplaAsociacion : metodosAsociacion) {
-              if (!tuplaAsociacion.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
-                tuplaAsociacion.getMetodo().invoke(o, resultadoConsulta.getObject(tuplaAsociacion.getCampo().getName()));
-              }
-            }
-            tupla.getMetodo().invoke(t, o);
-          }
-          else {
-            Object objeto = resultadoConsulta.getObject(tupla.getCampo().getName());
-            tupla.getMetodo().invoke(t, objeto);
+    List<PropiedadModelo> camposYSetters = pivote.getMetodos("set");
+    while (resultadoConsulta.next()) {
+      T t = construirObjeto(camposYSetters, resultadoConsulta);
+      resultado.add(t);
+    }
+    resultadoConsulta.close();
+    return resultado;
+  }
+
+  protected T construirObjeto(List<PropiedadModelo> propiedades, ResultSet resultadoConsulta) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+  {
+    T t = tipo.newInstance();
+    for (PropiedadModelo tupla : propiedades) {
+      if (tupla.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
+        IModelo o = (IModelo) tupla.getCampo().getType().newInstance();
+        List<PropiedadModelo> metodosAsociacion = o.getMetodos("set");
+        for (PropiedadModelo tuplaAsociacion : metodosAsociacion) {
+          if (!tuplaAsociacion.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
+            tuplaAsociacion.getMetodo().invoke(o, resultadoConsulta.getObject(tuplaAsociacion.getCampo().getName()));
           }
         }
-        resultado.add(t);
+        tupla.getMetodo().invoke(t, o);
       }
-      resultadoConsulta.close();
+      else {
+        Object objeto = resultadoConsulta.getObject(tupla.getCampo().getName());
+        tupla.getMetodo().invoke(t, objeto);
+      }
     }
-    catch (NoSuchMethodException ex) {
-      ex.printStackTrace();
-    }
-    return resultado;
+    return t;
   }
 
   protected PreparedStatement construirConsulta(String consulta, Object... parametros) throws SQLException
@@ -181,7 +210,7 @@ public abstract class DAO<T extends IModelo>
       throw new UnsupportedOperationException();
     }
   }
-  
+
   protected PreparedStatement construirConsulta(String consulta, List<Object> parametros) throws SQLException
   {
     if (parametros.size() == consulta.length() - consulta.replace("?", "").length()) {
@@ -217,7 +246,7 @@ public abstract class DAO<T extends IModelo>
     long endTime = System.currentTimeMillis();
     long duration = (endTime - startTime);
     System.out.println("Ejecutar: " + duration);
-    
+
     return consulta.executeUpdate();
   }
 }
