@@ -71,7 +71,7 @@
                         </a>
                       </td>
                       <td>${solicitud.getUsuario().getNombreCompleto()}</td>
-                      <td>${solicitud.getProducto().getNombre()} (${solicitud.producto.getCodigo_icp()})</td>
+                      <td>${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()})</td>
                       <td>${solicitud.getCantidad()}</td>
                       <td>${solicitud.getFecha_solicitud()}</td>
                       <td>${solicitud.getEstado()}</td>

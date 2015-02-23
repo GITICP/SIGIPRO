@@ -32,12 +32,12 @@ public class SolicitudDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes ( id_usuario, id_producto, cantidad, fecha_solicitud, estado) "
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes ( id_usuario, id_inventario, cantidad, fecha_solicitud, estado) "
               + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
       
 
       consulta.setInt(1, p.getId_usuario());
-      consulta.setInt(2, p.getId_producto());
+      consulta.setInt(2, p.getId_inventario());
       consulta.setInt(3, p.getCantidad());
       consulta.setDate(4, p.getFecha_solicitudAsDate());
       consulta.setString(5, p.getEstado());
@@ -112,7 +112,7 @@ public class SolicitudDAO {
     Solicitud solicitud = new Solicitud();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.solicitudes where id_solicitud = ?");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.solicitudes where id_solicitud = ? ORDER BY fehca_solicitud DESC");
 
       consulta.setInt(1, id);
 
@@ -120,7 +120,7 @@ public class SolicitudDAO {
 
       if (rs.next()) {
         solicitud.setId_solicitud(rs.getInt("id_solicitud"));
-        solicitud.setId_producto(rs.getInt("id_producto"));
+        solicitud.setId_inventario(rs.getInt("id_inventario"));
         solicitud.setId_usuario(rs.getInt("id_usuario"));
         solicitud.setCantidad(rs.getInt("cantidad"));
         solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
@@ -129,9 +129,9 @@ public class SolicitudDAO {
         solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
         try {
             UsuarioDAO usr = new UsuarioDAO();
-            ProductoInternoDAO pr = new ProductoInternoDAO();
+            InventarioDAO pr = new InventarioDAO();
             solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-            solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+            solicitud.setInventario(pr.obtenerInventario(rs.getInt("id_inventario")));
             solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
           
         } catch (Exception ex) {
@@ -162,7 +162,7 @@ public class SolicitudDAO {
       while (rs.next()) {
         Solicitud solicitud = new Solicitud();
         solicitud.setId_solicitud(rs.getInt("id_solicitud"));
-        solicitud.setId_producto(rs.getInt("id_producto"));
+        solicitud.setId_inventario(rs.getInt("id_inventario"));
         solicitud.setId_usuario(rs.getInt("id_usuario"));
         solicitud.setCantidad(rs.getInt("cantidad"));
         solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
@@ -171,9 +171,9 @@ public class SolicitudDAO {
         solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
         try {
           UsuarioDAO usr = new UsuarioDAO();
-          ProductoInternoDAO pr = new ProductoInternoDAO();
+          InventarioDAO pr = new InventarioDAO();
           solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-          solicitud.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+          solicitud.setInventario(pr.obtenerInventario(rs.getInt("id_inventario")));
           solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
         } catch (Exception ex) {
           ex.printStackTrace();
