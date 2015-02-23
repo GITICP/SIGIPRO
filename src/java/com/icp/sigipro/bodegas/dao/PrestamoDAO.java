@@ -7,7 +7,7 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.Prestamo;
-import com.icp.sigipro.bodegas.modelos.Solicitud;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,13 +56,12 @@ public class PrestamoDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.solicitudes_prestamos "
-              + " SET id_seccion_presta=?, id_usuario_aprobo=? "
+              + " SET  id_usuario_aprobo=? "
               + " WHERE id_solicitud=?; "
       );
 
-      consulta.setInt(1, p.getId_seccion_presta());
-      consulta.setInt(2, p.getId_usuario_aprobo());
-      consulta.setInt(3, p.getId_solicitud());
+      consulta.setInt(1, p.getId_usuario_aprobo());
+      consulta.setInt(2, p.getId_solicitud());
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -117,6 +116,10 @@ public class PrestamoDAO {
         try {
             SolicitudDAO sol = new SolicitudDAO();
             solicitud.setSolicitud(sol.obtenerSolicitud(rs.getInt("id_solicitud")));
+            SeccionDAO sec = new SeccionDAO();
+            solicitud.setSeccion(sec.obtenerSeccion(rs.getInt("id_seccion_presta")) );
+            UsuarioDAO usr = new UsuarioDAO();
+            solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario_aprobo")));
           
         } catch (Exception ex) {
           ex.printStackTrace();
@@ -128,12 +131,21 @@ public class PrestamoDAO {
     return solicitud;
   }
 
-  public List<Prestamo> obtenerPrestamos() {
+  public List<Prestamo> obtenerPrestamos(int id_usuario) {
 
     List<Prestamo> resultado = new ArrayList<Prestamo>();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes_prestamos ");
+       PreparedStatement consulta;
+       if (id_usuario == 0) {
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes_prestamos");
+      }
+       
+       else{
+       consulta = getConexion().prepareStatement(" SELECT p* FROM bodega.solicitudes_prestamos p "
+              + " inner join bodega.solicitudes s ON p.id_solicitud=s.id_solicitud Where s.id_usuario = ? ");
+      consulta.setInt(1, id_usuario);
+       }
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
@@ -141,10 +153,13 @@ public class PrestamoDAO {
         solicitud.setId_solicitud(rs.getInt("id_solicitud"));
         solicitud.setId_seccion_presta(rs.getInt("id_seccion_presta"));
         solicitud.setId_usuario_aprobo(rs.getInt("id_usuario_aprobo"));
-       
         try {
           SolicitudDAO sol = new SolicitudDAO();
           solicitud.setSolicitud(sol.obtenerSolicitud(rs.getInt("id_solicitud")));
+          SeccionDAO sec = new SeccionDAO();
+          solicitud.setSeccion(sec.obtenerSeccion(rs.getInt("id_seccion_presta")) );
+          UsuarioDAO usr = new UsuarioDAO();
+          solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario_aprobo")));
         } catch (Exception ex) {
           ex.printStackTrace();
         }
@@ -158,7 +173,43 @@ public class PrestamoDAO {
     }
     return resultado;
   }
+  public List<Prestamo> obtenerPrestamosAdmin(int seccion) {
 
+    List<Prestamo> resultado = new ArrayList<Prestamo>();
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT p.* FROM (bodega.solicitudes_prestamos p "
+              + " inner join bodega.solicitudes s ON p.id_solicitud=s.id_solicitud)"
+              + " inner join seguridad.usuarios u ON s.id_usuario = u.id_usuario Where u.id_seccion = ? ");
+      consulta.setInt(1, seccion);
+      ResultSet rs = consulta.executeQuery();
+
+      while (rs.next()) {
+        Prestamo solicitud = new Prestamo();
+        solicitud.setId_solicitud(rs.getInt("id_solicitud"));
+        solicitud.setId_seccion_presta(rs.getInt("id_seccion_presta"));
+        solicitud.setId_usuario_aprobo(rs.getInt("id_usuario_aprobo"));
+       
+        try {
+          SolicitudDAO sol = new SolicitudDAO();
+          solicitud.setSolicitud(sol.obtenerSolicitud(rs.getInt("id_solicitud")));
+          SeccionDAO sec = new SeccionDAO();
+          solicitud.setSeccion(sec.obtenerSeccion(rs.getInt("id_seccion_presta")) );
+          UsuarioDAO usr = new UsuarioDAO();
+          solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario_aprobo")));
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+        resultado.add(solicitud);
+      }
+
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
   private Connection getConexion() {
     try {
 

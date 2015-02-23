@@ -54,17 +54,19 @@ public class InventarioDAO {
     return resultado;
   }
 
-  public List<Inventario> obtenerInventarios(int id_seccion) {
+  public List<Inventario> obtenerInventarios(int id_seccion, int flag_prestamos) {
 
     List<Inventario> resultado = new ArrayList<Inventario>();
 
     try {
       PreparedStatement consulta;
-      if (id_seccion==0)
-        { consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios ");}
+      if (flag_prestamos==0)
+        { consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios Where id_seccion != ? AND id_seccion != 0");
+          }
       else
         {consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios Where id_seccion = ? or id_seccion = 0 ");
-         consulta.setInt(1, id_seccion);}
+         }
+      consulta.setInt(1, id_seccion);
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {

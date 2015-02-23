@@ -87,7 +87,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           Solicitud solicitud = new Solicitud();
           InventarioDAO inventarioDAO = new InventarioDAO();
           Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion() );
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),1);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Agregar");
@@ -108,7 +108,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
           Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
           InventarioDAO inventarioDAO = new InventarioDAO();
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion() );
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),1);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Editar");
@@ -217,10 +217,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
       String estado = request.getParameter("estado");
       String fch_sol =  request.getParameter("fecha_solicitud");
-      String fch_ent =  request.getParameter("fecha_entrega");
-      Integer id_us = Integer.parseInt(request.getParameter("id_usuario"));
-      Integer id_us_recibo = Integer.parseInt(request.getParameter("id_usuario_recibo"));
-
       SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
       java.util.Date fecha_solicitud;
       java.sql.Date fecha_solicitudSQL;
@@ -231,21 +227,10 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       } catch (ParseException ex) {
         Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
       }
-      java.util.Date fecha_entrega;
-      java.sql.Date fecha_entregaSQL;
-      try {
-        fecha_entrega = formatoFecha.parse(fch_ent);
-        fecha_entregaSQL = new java.sql.Date(fecha_entrega.getTime());
-        solicitud.setFecha_entrega(fecha_entregaSQL);
-      } catch (ParseException ex) {
-        Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
-      }
 
       solicitud.setId_inventario(id_inventario);
       solicitud.setCantidad(cantidad);
       solicitud.setEstado(estado);
-      solicitud.setId_usuario(id_us);
-      solicitud.setId_usuario_recibo(id_us_recibo);
 
       String id = request.getParameter("id_solicitud");
 
@@ -262,6 +247,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud ingresada correctamente"));
       }
       else {
+        Integer id_us = Integer.parseInt(request.getParameter("id_usuario"));
+        solicitud.setId_usuario(id_us);
         solicitud.setId_solicitud(Integer.parseInt(id));
         resultado = dao.editarSolicitud(solicitud);
         redireccion = "Solicitudes/Editar.jsp";

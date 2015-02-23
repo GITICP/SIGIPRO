@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bodegas.modelos.Prestamo;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.sql.Connection;
@@ -52,7 +53,38 @@ public class SolicitudDAO {
     }
     return resultado;
   }
+  
+  public boolean insertarSolicitud_Prestamo(Solicitud p, Prestamo pr) {
 
+    boolean resultado = false;
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes ( id_usuario, id_inventario, cantidad, fecha_solicitud, estado) "
+              + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
+      
+
+      consulta.setInt(1, p.getId_usuario());
+      consulta.setInt(2, p.getId_inventario());
+      consulta.setInt(3, p.getCantidad());
+      consulta.setDate(4, p.getFecha_solicitudAsDate());
+      consulta.setString(5, p.getEstado());
+      ResultSet resultadoConsulta = consulta.executeQuery();
+      if (resultadoConsulta.next()) {
+        PrestamoDAO prDAO = new PrestamoDAO();
+        int id_solicitud = resultadoConsulta.getInt("id_solicitud");
+        pr.setId_solicitud(id_solicitud);
+        boolean resultado_prestamo = prDAO.insertarPrestamo(pr);
+        if (resultado_prestamo)
+        {resultado = true;}
+        
+      }
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
   public boolean editarSolicitud(Solicitud p) {
 
     boolean resultado = false;
@@ -151,9 +183,9 @@ public class SolicitudDAO {
     try {
       PreparedStatement consulta;
       if (id_usuario == 0) {
-        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes ORDER BY fecha_solicitud DESC");
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC");
       } else {
-        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where id_usuario = ? ORDER BY fecha_solicitud DESC");
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where id_usuario = ? AND estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC");
         consulta.setInt(1, id_usuario);
       }
 
