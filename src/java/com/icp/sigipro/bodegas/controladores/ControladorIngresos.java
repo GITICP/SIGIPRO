@@ -75,7 +75,15 @@ public class ControladorIngresos extends SIGIPROServlet
           validarPermisos(permisos, listaPermisos);
           redireccion = "Ingresos/Ver.jsp";
 
-          // CARGAR PRODUCTO Y SECCIÓN
+          int id = Integer.parseInt(request.getParameter("id_ingreso"));
+
+          try {
+            Ingreso i = dao.buscar(id);
+            request.setAttribute("ingreso", i);
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
         }
         else if (accion.equalsIgnoreCase("agregar")) {
           validarPermiso(11, listaPermisos);
@@ -87,6 +95,47 @@ public class ControladorIngresos extends SIGIPROServlet
           request.setAttribute("productos", productos);
           request.setAttribute("secciones", secciones);
           request.setAttribute("accion", "Registrar");
+        }
+        else if (accion.equalsIgnoreCase("editar")) {
+          validarPermiso(11, listaPermisos);
+          redireccion = "Ingresos/Editar.jsp";
+          ProductoInternoDAO productosDAO = new ProductoInternoDAO();
+          SeccionDAO seccionesDAO = new SeccionDAO();
+          List<ProductoInterno> productos = productosDAO.obtenerProductosYCuarentena();
+          List<Seccion> secciones = seccionesDAO.obtenerSecciones();
+
+          int id = Integer.parseInt(request.getParameter("id_ingreso"));
+
+          Ingreso ingreso;
+          try {
+            ingreso = dao.buscar(id);
+            request.setAttribute("ingreso", ingreso);
+            int index = 0;
+            for (Seccion s : secciones) {
+              if (s.getId_seccion() == ingreso.getSeccion().getId_seccion()) {
+                break;
+              }
+              index++;
+            }
+            secciones.remove(index);
+            index = 0;
+
+            for (ProductoInterno p : productos) {
+              if (p.getId_producto() == ingreso.getProducto().getId_producto()) {
+                break;
+              }
+              index++;
+            }
+            productos.remove(index);
+
+            productos.remove(ingreso.getProducto());
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
+          request.setAttribute("productos", productos);
+          request.setAttribute("secciones", secciones);
+          request.setAttribute("accion", "Editar");
         }
         else {
           validarPermisos(permisos, listaPermisos);
@@ -158,21 +207,22 @@ public class ControladorIngresos extends SIGIPROServlet
         int id = Integer.parseInt(llave.split("-")[1]);
         if (valor.equalsIgnoreCase("true")) {
           Ingreso i = new Ingreso();
-          
+
           i.setId_ingreso(id);
-          i.setCantidad(Integer.parseInt(request.getParameter("decision-"+id+"-cantidad")));
+          i.setCantidad(Integer.parseInt(request.getParameter("decision-" + id + "-cantidad")));
           ProductoInterno p = new ProductoInterno();
           Seccion s = new Seccion();
-          p.setId_producto(Integer.parseInt(request.getParameter("decision-"+id+"-id_producto")));
-          s.setId_seccion(Integer.parseInt(request.getParameter("decision-"+id+"-id_seccion")));
-          
+          p.setId_producto(Integer.parseInt(request.getParameter("decision-" + id + "-id_producto")));
+          s.setId_seccion(Integer.parseInt(request.getParameter("decision-" + id + "-id_seccion")));
+
           i.setProducto(p);
           i.setSeccion(s);
           porAprobar.add(i);
-        } else if (valor.equalsIgnoreCase("false")){
+        }
+        else if (valor.equalsIgnoreCase("false")) {
           Ingreso i = new Ingreso();
           i.setId_ingreso(id);
-          
+
           porRechazar.add(i);
         }
       }
@@ -215,8 +265,8 @@ public class ControladorIngresos extends SIGIPROServlet
 
         ingreso.setFecha_ingreso(s.parsearFecha(fechaIngreso));
         ingreso.setFecha_registro(new java.sql.Date(fechaActual.getTime()));
-        
-        if (fechaVencimiento.equals("") || fechaVencimiento.isEmpty()){
+
+        if (!(fechaVencimiento.equals("") || fechaVencimiento.isEmpty())) {
           ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
         }
       }
@@ -233,12 +283,19 @@ public class ControladorIngresos extends SIGIPROServlet
           }
         }
         catch (Exception ex) {
-          ex.printStackTrace();
           resultado = false;
         }
       }
       else {
-        // Tareas de sacar de cuarentena
+        int idParseado = Integer.parseInt(id);
+        int cantidadPrevia = Integer.parseInt(request.getParameter("control-cantidad"));
+        try {
+          dao.actualizar(ingreso, ingreso.getCantidad() - cantidadPrevia);
+          resultado = true;
+        }
+        catch (Exception ex) {
+          resultado = false;
+        }
       }
     }
 

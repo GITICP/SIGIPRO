@@ -7,8 +7,10 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.PropiedadModelo;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,17 @@ public class IngresoDAO extends DAO<Ingreso>
   }
 
   @Override
-  public Ingreso buscar(int id)
+  public Ingreso buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException
   {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla + " i INNER JOIN bodega.catalogo_interno ci on ci.id_producto = i.id_producto INNER JOIN seguridad.secciones s on i.id_seccion = s.id_seccion WHERE id_ingreso = ?;";
+    
+    Ingreso t = tipo.newInstance();
+    
+    PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+    consulta.setInt(1, id);
+    ResultSet resultado = ejecutarConsulta(consulta);
+    resultado.next();
+    return construirObjeto(t.getMetodos("set"), resultado);
   }
 
   @Override
@@ -112,6 +122,87 @@ public class IngresoDAO extends DAO<Ingreso>
         upsertInventario.close();
       }
       getConexion().setAutoCommit(true);
+      getConexion().close();
+    }
+    return resultado;
+  }
+  
+  public boolean actualizar(Ingreso ingreso, int diferencia) throws SQLException {
+    
+    boolean resultado = false;
+    
+    PreparedStatement actualizarIngreso = null;
+    PreparedStatement actualizarInventario = null;
+    
+    boolean resultadoUpdate = false;
+    boolean resultadoUpsert = true;
+    
+    try {
+
+      getConexion().setAutoCommit(false);
+      
+      actualizarIngreso = getConexion().prepareStatement( " UPDATE bodega.ingresos "
+                                                        + " SET id_producto = ?, "
+                                                        + "     id_seccion = ?"
+                                                        + "     fecha_ingreso = ?"
+                                                        + "     fecha_registro = ?"
+                                                        + "     fecha_vencimiento = ?"
+                                                        + "     cantidad = ?"
+                                                        + "     estado = ?"
+                                                        + "     precio = ?"
+                                                        + " WHERE id_ingreso = ?");
+      
+      actualizarIngreso.setInt(1, ingreso.getProducto().getId_producto());
+      actualizarIngreso.setInt(2, ingreso.getSeccion().getId_seccion());
+      actualizarIngreso.setDate(3, ingreso.getFecha_ingreso());
+      actualizarIngreso.setDate(4, ingreso.getFecha_registro());
+      actualizarIngreso.setDate(5, ingreso.getFecha_vencimiento());
+      actualizarIngreso.setInt(6, ingreso.getCantidad());
+      actualizarIngreso.setString(7, ingreso.getEstado());
+      actualizarIngreso.setInt(8, ingreso.getPrecio());
+      actualizarIngreso.setInt(9, ingreso.getId_ingreso());
+      
+      if(actualizarIngreso.executeUpdate() == 1){
+        resultadoUpdate = true;
+      } else {
+        resultadoUpdate = false;
+      }
+      
+      if(diferencia != 0) {
+        ingreso.setCantidad(diferencia);
+        actualizarInventario = construirUpsertInventario(ingreso);
+        int filasActualizarInventario = actualizarInventario.executeUpdate();
+        if ( filasActualizarInventario == 0 || filasActualizarInventario == 1) {
+          resultadoUpsert = true;
+        } else {
+          resultadoUpsert = false;
+        }
+      } else {
+        resultadoUpsert = true;
+      }     
+      
+      resultado = resultadoUpsert && resultadoUpdate;
+    }
+    catch (SQLException e) {
+      resultado = false;
+      e.printStackTrace();
+      try {
+        getConexion().rollback();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    }
+    finally {
+      if (resultado) {
+        getConexion().commit();
+      }
+      if (actualizarIngreso != null) {
+        actualizarIngreso.close();
+      }
+      if (actualizarInventario != null) {
+        actualizarInventario.close();
+      }
       getConexion().close();
     }
     return resultado;

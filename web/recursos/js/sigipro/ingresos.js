@@ -29,13 +29,13 @@ $(document).ready(function () {
       $("#radio-disponible").prop("checked", true);
     }
     if (opcion.data("perecedero")){
-      campoVencimiento.hide();
-      campoVencimiento.find('#fechaVencimiento').prop('required', false);
-      $("#label-fecha-vencimiento").hide();
-    } else {
       campoVencimiento.show();
       campoVencimiento.find('#fechaVencimiento').prop('required', true);
       $("#label-fecha-vencimiento").show();
+    } else {
+      campoVencimiento.hide();
+      campoVencimiento.find('#fechaVencimiento').prop('required', false);
+      $("#label-fecha-vencimiento").hide();
     }
   });
 
@@ -61,4 +61,5 @@ $(document).ready(function () {
   });
   
   $("#seleccionProducto").change();
+  $("input[type=radio][value='"+ $("#hiddenID").data("estado") + "']").prop('checked', true);
 });

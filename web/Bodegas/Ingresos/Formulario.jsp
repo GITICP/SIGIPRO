@@ -13,7 +13,7 @@
   <div class="row">
 
     <div class="col-md-6">
-      <input hidden="true" name="id_ingreso" value="${ingreso.getId_ingreso()}">
+      <input id="hiddenID" hidden="true" name="id_ingreso" value="${ingreso.getId_ingreso()}" data-estado="${ingreso.getEstado()}">
       <label for="producto" class="control-label">* Producto</label>
       <div class="form-group">
         <div class="col-sm-12">
@@ -21,6 +21,9 @@
             <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="producto" required
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
+              <c:if test="${ingreso.getProducto() != null}">
+                <option value=${ingreso.getProducto().getId_producto()} data-cuarentena=${ingreso.getProducto().isCuarentena()} data-perecedero="${ingreso.getProducto().isPerecedero()}">${ingreso.getProducto().getNombre()} (${ingreso.getProducto().getCodigo_icp()})</option>
+              </c:if>
               <c:forEach items="${productos}" var="producto">
                 <option value=${producto.getId_producto()} data-cuarentena=${producto.isCuarentena()} data-perecedero="${producto.isPerecedero()}">${producto.getNombre()} (${producto.getCodigo_icp()})</option>
               </c:forEach>
@@ -35,6 +38,9 @@
             <select id="seleccionSeccion" class="select2" style='background-color: #fff;' name="seccion" required
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
+              <c:if test="${ingreso.getSeccion() != null}">
+                <option value=${ingreso.getSeccion().getID()}>${ingreso.getSeccion().getNombre_seccion()}</option>
+              </c:if>
               <c:forEach items="${secciones}" var="seccion">
                 <option value=${seccion.getID()}>${seccion.getNombre_seccion()}</option>
               </c:forEach>
@@ -46,7 +52,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" value="${ingreso.getFecha_ingreso()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaIngreso" class="form-control sigiproDatePicker" name="fechaIngreso" data-date-format="dd/mm/yyyy" required
+            <input type="text" value="${ingreso.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaIngreso" class="form-control sigiproDatePicker" name="fechaIngreso" data-date-format="dd/mm/yyyy" required
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    onchange="setCustomValidity('')">
           </div>
@@ -56,7 +62,7 @@
       <div id="campo-fecha-vencimiento" class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" value="${ingreso.getFecha_vencimiento()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaVencimiento" class="form-control sigiproDatePicker" name="fechaVencimiento" data-date-format="dd/mm/yyyy" required
+            <input type="text" value="${ingreso.getFecha_vencimientoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaVencimiento" class="form-control sigiproDatePicker" name="fechaVencimiento" data-date-format="dd/mm/yyyy" required
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    onchange="setCustomValidity('')">
           </div>
@@ -69,6 +75,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
+            <input id="control-cantidad" hidden="true" name="control-cantidad" value="${ingreso.getCantidad()}">
             <input id="cantidad" maxlength="45" placeholder="0" class="form-control campo-numero" name="cantidad" value="${ingreso.getCantidad()}"
                    required
                    oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -91,6 +98,10 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
+            
+            <!-- QUEDÉ CAMBIANDO EL ESTADO -->
+            
+            <input id="control-estado" hidden="true" name="control-estado" value="${ingreso.getEstado()}">
             <label class="fancy-radio">
               <input id="radio-disponible" type="radio" name="estado" value="Disponible"><span><i></i>Disponible</span> 
             </label>
