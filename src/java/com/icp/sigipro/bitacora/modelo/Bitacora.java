@@ -60,4 +60,62 @@ public class Bitacora {
         this.estado = estado;
         
     }
+    
+    public int getId_bitacora(){
+        return this.id_bitacora;
+    }
+    
+    public Date getFecha_accion(){
+        return this.fecha_accion;
+    }
+    
+    public String getAccion(){
+        return this.accion;
+    }
+    
+    public String getEstado(){
+        return this.estado;
+    }
+    
+    public String getIp(){
+        return this.ip;
+    }
+    
+    public String getNombre_usuario(){
+        return this.nombre_usuario;
+    }
+    
+    public String getTabla(){
+        return this.tabla;
+    }
+    
+    public void setId_bitacora(int id_bitacora){
+        this.id_bitacora = id_bitacora;
+    }
+    
+    public void setFecha_accion(Date fecha_accion){
+        this.fecha_accion = fecha_accion;
+    }
+    
+    public void setAccion(String accion){
+        this.accion = accion;
+    }
+    
+    public void setEstado(String estado){
+        this.estado = estado;
+    }
+    
+    public void setIp(String ip){
+        this.ip = ip;
+    }
+    
+    public void setNombre_usuario(String nombre_usuario){
+        this.nombre_usuario = nombre_usuario;
+    }
+    
+    public void setTabla(String tabla){
+        this.tabla = tabla;
+    }
+        
+
 }
