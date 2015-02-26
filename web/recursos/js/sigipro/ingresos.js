@@ -14,7 +14,7 @@ $(document).ready(function () {
       elementoError.text('');
       resultado = true;
     } else {
-      elementoError.text('Debe ser un n&uacute;mero');
+      elementoError.text('Debe ser un número');
       resultado = true;
     }
     return resultado;
@@ -43,6 +43,7 @@ $(document).ready(function () {
   agregarValidacionNumero($("#precio"), $("#errorPrecio"));
 
   $("#ingresoForm").submit(function () {
+    alert('Se llama');
     var validacionCantidad = validar($("#cantidad"), $("#errorCantidad"));
     var validacionPrecio = validar($("#precio"), $("#errorPrecio"));
     var validez = validacionCantidad && validacionPrecio;

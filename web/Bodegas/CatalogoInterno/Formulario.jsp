@@ -106,77 +106,85 @@
     </div>
   </div>
 
-  <div id="form-reactivo" class="row" ${formReactivo}>
-    <div class="col-md-6">
-      <label for="numero_cas" class="control-label">* Número Cas</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="" class="form-control campo-reactivo" name="numero_cas" value="${producto.getReactivo().getNumero_cas()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+  <div id="form-reactivo" class="row" ${formReactivo} style="padding:1em;">
+    <div class="widget widget-table">
+      <div class="widget-header">
+        <h3><i class="fa fa-flask"></i> Información Reactivo</h3>
+      </div>
+      <div class="widget-content">
+
+        <div class="col-md-6">
+          <label for="numero_cas" class="control-label">* Número Cas</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" maxlength="45" placeholder="" class="form-control campo-reactivo" name="numero_cas" value="${producto.getReactivo().getNumero_cas()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" > 
+              </div>
+            </div>
+          </div>
+          <label for="formula_quimica" class="control-label">* Fórmula Química</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" maxlength="45" placeholder="Ejemplo: 12H2O" class="form-control campo-reactivo" name="formula_quimica" value="${producto.getReactivo().getFormula_quimica()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" > 
+              </div>
+            </div>
+          </div>
+          <label for="familia" class="control-label">* Familia</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" maxlength="45" placeholder="Ejemplo: sulfato de amonio y aluminio " class="form-control campo-reactivo" name="familia" value="${producto.getReactivo().getFamilia()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" > 
+              </div>
+            </div>
+          </div>
+          <label for="cantidad_botella_bodega" class="control-label">* Cantidad Botella Bodega</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" id=cantBodega maxlength="45" placeholder="Ejemplo: 25" class="form-control campo-reactivo campo-numero" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" ><p id="errorCantBodega" class="error-form"></p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <label for="formula_quimica" class="control-label">* Fórmula Química</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: 12H2O" class="form-control campo-reactivo" name="formula_quimica" value="${producto.getReactivo().getFormula_quimica()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+        <div class="col-md-6">
+          <label for="cantidad_botella_lab" class="control-label">* Cantidad Botella Laboratorio</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" id=cantLab maxlength="45" placeholder="Ejemplo: 40" class="form-control campo-reactivo campo-numero" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" ><p id="errorCantLab" class="error-form"></p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <label for="familia" class="control-label">* Familia</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: sulfato de amonio y aluminio " class="form-control campo-reactivo" name="familia" value="${producto.getReactivo().getFamilia()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+          <label for="volumen_bodega" class="control-label">* Volumen Bodega</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" maxlength="45" placeholder="Ejemplo: 10cm3" class="form-control campo-reactivo" name="volumen_bodega" value="${producto.getReactivo().getVolumen_bodega()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" > 
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <label for="cantidad_botella_bodega" class="control-label">* Cantidad Botella Bodega</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" id=cantBodega maxlength="45" placeholder="Ejemplo: 25" class="form-control campo-reactivo campo-numero" name="cantidad_botella_bodega" value="${producto.getReactivo().getCantidad_botella_bodega()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" ><p id="errorCantBodega" class="error-form"></p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <label for="cantidad_botella_lab" class="control-label">* Cantidad Botella Laboratorio</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" id=cantLab maxlength="45" placeholder="Ejemplo: 40" class="form-control campo-reactivo campo-numero" name="cantidad_botella_lab" value="${producto.getReactivo().getCantidad_botella_lab()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" ><p id="errorCantLab" class="error-form"></p>
-          </div>
-        </div>
-      </div>
-      <label for="volumen_bodega" class="control-label">* Volumen Bodega</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: 10cm3" class="form-control campo-reactivo" name="volumen_bodega" value="${producto.getReactivo().getVolumen_bodega()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
-          </div>
-        </div>
-      </div>
-      <label for="volumen_lab" class="control-label">* Volumen Laboratorio</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Ejemplo: 5cm3" class="form-control campo-reactivo" name="volumen_lab" value="${producto.getReactivo().getVolumen_lab()}"
-                   oninvalid="setCustomValidity('Este campo es requerido ')"
-                   oninput="setCustomValidity('')" > 
+          <label for="volumen_lab" class="control-label">* Volumen Laboratorio</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" maxlength="45" placeholder="Ejemplo: 5cm3" class="form-control campo-reactivo" name="volumen_lab" value="${producto.getReactivo().getVolumen_lab()}"
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       oninput="setCustomValidity('')" > 
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -224,7 +232,7 @@
     <div class="col-md-6">
       <div class="widget widget-table">
         <div class="widget-header">
-          <h3><i class="fa fa-truck"></i> Producto Externo</h3>
+          <h3><i class="fa fa-truck"></i> Asociaciones con Productos Externos</h3>
           <div class="btn-group widget-header-toolbar">
             <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProductoExterno">Agregar</a>
           </div>
