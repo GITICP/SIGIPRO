@@ -108,7 +108,6 @@ CREATE TABLE bitacora.bitacora (
         ip character varying(18) NOT NULL,
 	accion character varying(45) NOT NULL,
         tabla character varying(45),
-        id_objeto int,
         estado json
  );
 
