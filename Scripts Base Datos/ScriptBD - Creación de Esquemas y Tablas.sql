@@ -331,6 +331,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]Aceptar y Rechazar Préstamos', 'Permite aceptar o rechazar préstamos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]AgregarIngresos', 'Permite registrar ingresos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]EditarIngresos', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]Aprobar/Rechazar Ingresos', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
 
 
 -- Observación importante:
@@ -342,6 +345,8 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (103, 100, 'Activos Fijos', '/Bodegas/ActivosFijos');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (104, 100, 'Ubicaciones Act.', '/Bodegas/Ubicaciones');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (105, 100, 'Ubicaciones Bod.', '/Bodegas/UbicacionesBodega');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (106, 100,'Solicitudes', '/Bodegas/Solicitudes');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (107, 100,'Ingresos', '/Bodegas/Ingresos');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);
@@ -357,7 +362,6 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (902, 900,'Correo', '/Configuracion/Correo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1000, 0,'Compras', '/Compras/Proveedores');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1001, 900,'Proveedores', '/Compras/Proveedores');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (106, 100,'Solicitudes', '/Bodegas/Solicitudes');
 
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
@@ -372,9 +376,13 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (11, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (12, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (13, 101);
-
--- TODOS LOS PERMISOS DE BODEGA SE ASOCIAN A AGREGAR PRODUCTO EXTERNO -- 
--- ¡ESTO NO SE PUEDE QUEDAR ASÍ! --
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (14, 1001);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (15, 1001);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (16, 1001);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (17, 801);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (18, 803);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (19, 803);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (20, 803);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 102);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 102);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 102);
@@ -389,11 +397,11 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (24, 106);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (25, 106);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (26, 106);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (27, 107);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (28, 107);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (29, 107);
 
-
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (18, 803);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (19, 803);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (20, 803);
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Encargado de seguridad', 'Administración del módulo de seguridad');

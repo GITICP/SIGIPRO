@@ -15,7 +15,7 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-8 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
@@ -24,7 +24,7 @@
             <li class="active"> Editar Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()}</li>
           </ul>
         </div>
-        <div class="col-md-8 ">
+        <div class="col-md-4 ">
           <div class="top-content">
 
           </div>

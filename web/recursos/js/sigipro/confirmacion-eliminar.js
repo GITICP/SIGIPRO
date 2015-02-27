@@ -63,8 +63,6 @@ $(document).ready(function () {
       var textoConfirmacion = $(this).data('texto-confirmacion');
       var form = $(this).data('form-id');
       $(this).click(function(){
-        alert(form);
-        alert(textoConfirmacion);
         modalFormConfirmable(form, textoConfirmacion, referencia);
       });
     });

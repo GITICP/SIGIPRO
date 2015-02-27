@@ -35,17 +35,19 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()} </h3>
-              <div class="btn-group widget-header-toolbar">
-                <c:set var="contienePermisoEditar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 12}">
-                    <c:set var="contienePermisoEditar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/Ingresos?accion=editar&id_ingreso=${ingreso.getId_ingreso()}">Editar</a>
+
+              <c:set var="contienePermisoEditar" value="false" />
+              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                <c:if test="${permiso == 1 || permiso == 28}">
+                  <c:set var="contienePermisoEditar" value="true" />
                 </c:if>
-              </div>
+              </c:forEach>
+              <c:if test="${contienePermisoEditar}">
+                <div class="btn-group widget-header-toolbar">
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/Ingresos?accion=editar&id_ingreso=${ingreso.getId_ingreso()}">Editar</a>
+                </div>
+              </c:if>
+
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -62,13 +64,13 @@
                 <tr><td> <strong>Precio: </strong></td> <td>${ingreso.getPrecio()} </td></tr>
               </table>
               <br>
-            <!-- END WIDGET TICKET TABLE -->
+              <!-- END WIDGET TICKET TABLE -->
+            </div>
+            <!-- /main-content -->
           </div>
-          <!-- /main-content -->
+          <!-- /main -->
         </div>
-        <!-- /main -->
-      </div>
 
-    </jsp:attribute>
+      </jsp:attribute>
 
-  </t:plantilla_general>
+    </t:plantilla_general>
