@@ -23,6 +23,7 @@ public class Solicitud {
   private String estado;
   private Date fecha_entrega;
   private int id_usuario_recibo;
+  private String observaciones;
   
   private Usuario usuario;
   private Usuario usuario_receptor;
@@ -38,6 +39,7 @@ public class Solicitud {
   public void setEstado(String id){ this.estado = id;}
   public void setFecha_entrega(Date id){ this.fecha_entrega = id;}
   public void setId_usuario_recibo(int id){ this.id_usuario_recibo = id;}
+  public void setObservaciones(String id){ this.observaciones = id;}
   
   public void setUsuario(Usuario u){this.usuario =u;}
   public void setInventario(Inventario u){this.inventario =u;}
@@ -67,6 +69,7 @@ public class Solicitud {
     else
     {return "Sin fecha";}}
   public int getId_usuario_recibo() {return id_usuario_recibo; }
+  public String getObservaciones () {return observaciones;}
   
   
   private String formatearFecha(Date fecha)

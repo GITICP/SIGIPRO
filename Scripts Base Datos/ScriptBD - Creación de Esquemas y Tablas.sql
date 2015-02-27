@@ -175,7 +175,8 @@ CREATE TABLE bodega.solicitudes (
      	fecha_solicitud date NOT NULL,
         estado character varying(45) NOT NULL,
         fecha_entrega date,
-        id_usuario_recibo integer
+        id_usuario_recibo integer,
+        observaciones character varying(200)
  ); 
 CREATE TABLE bodega.solicitudes_prestamos ( 
 	id_solicitud integer NOT NULL,

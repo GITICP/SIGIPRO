@@ -139,24 +139,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           request.setAttribute("booladmin", boolAdmin);
           request.setAttribute("listaSolicitudes", solicitudes);
         } 
-        else if (accion.equalsIgnoreCase("rechazar")) {
-          redireccion = "Solicitudes/index.jsp";
-          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-          Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
-          solicitud.setEstado("Rechazada");
-          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-          boolean resultado;
-          resultado = dao.editarSolicitud(solicitud);
-          if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
-          } 
-          else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-          }
-          List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
-          request.setAttribute("booladmin", boolAdmin);
-          request.setAttribute("listaSolicitudes", solicitudes);
-        } 
         else {
           validarPermisos(permisos, listaPermisos);
           redireccion = "Solicitudes/index.jsp";
@@ -195,6 +177,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     HttpSession sesion = request.getSession();
     List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
     int[] permisos = {24, 25, 1};
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     if (verificarPermiso(25, listaPermisos))
       { boolAdmin = true;
         usuario_solicitante = 0;
@@ -207,7 +190,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     if (accionindex.equals("")){      
       request.setCharacterEncoding("UTF-8");
       boolean resultado = false;
-      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
       Solicitud solicitud = new Solicitud();
       Integer id_inventario;
       try {
@@ -270,9 +252,30 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       request.setAttribute("solicitud", solicitud);
       RequestDispatcher vista = request.getRequestDispatcher(redireccion);
       vista.forward(request, response);
-    }
-    else
-    {
+    } 
+    
+    else if (accionindex.equals("accionindex_rechazar")) {
+      redireccion = "Solicitudes/index.jsp";
+      String obs = request.getParameter("observaciones");
+      int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
+      Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
+      solicitud.setEstado("Rechazada");
+      solicitud.setObservaciones(obs);
+      boolean resultado;
+      resultado = dao.editarSolicitud(solicitud);
+      if (resultado) {
+        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
+      } else {
+        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      }
+      List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+      request.setAttribute("booladmin", boolAdmin);
+      request.setAttribute("listaSolicitudes", solicitudes);
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
+
+    } 
+    else {
           redireccion = "Solicitudes/index.jsp";
           String usuario = request.getParameter("usr");
           String contrasena = request.getParameter("passw");
@@ -280,7 +283,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
           int id_seccion = solicitud.getUsuario().getIdSeccion();
           boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
-           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           if (auth) {
             InventarioDAO inventarioDAO = new InventarioDAO();
             java.util.Date hoy = new java.util.Date();

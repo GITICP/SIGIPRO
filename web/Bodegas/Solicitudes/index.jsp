@@ -45,7 +45,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table id="tabladeSolicitudes" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -81,14 +81,14 @@
                           <c:when test="${solicitud.getEstado().equals('Pendiente')}">
                             <td>
                               <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=aprobar&id_solicitud=" onclick="AprobarSolicitud(${solicitud.getId_solicitud()})">Aprobar</a>
-                              <a class="btn btn-danger btn-sm boton-accion confirmableRechazar" data-texto-confirmacion="rechazar esta solicitud " data-href="/SIGIPRO/Bodegas/Solicitudes?accion=rechazar&id_solicitud=" onclick="RechazarSolicitud(${solicitud.getId_solicitud()})">Rechazar</a>
+                              <a class="btn btn-danger btn-sm boton-accion" onclick="RechazarSolicitud(${solicitud.getId_solicitud()})">Rechazar</a>
                             </td>
                           </c:when>
                           <c:otherwise>
                             <c:choose>
                               <c:when test="${solicitud.getEstado().equals('Aprobada')}">
                                 <td>
-                                 <a class="btn btn-primary btn-sm boton-accion confirmableEntregar" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}" onclick="confirmarAuth(${solicitud.getId_solicitud()})">Entregar</a>
+                                 <a class="btn btn-primary btn-sm boton-accion " onclick="confirmarAuth(${solicitud.getId_solicitud()})">Entregar</a>
                                 </td>
                               </c:when>
                               <c:otherwise>
@@ -141,6 +141,37 @@
                        onchange="setCustomValidity('')">
               </div>
               <p id='mensajeValidación' style='color:red;'><p>
+            </div>
+          </div>
+        <div class="form-group">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
+          </div>
+        </div>
+        </form>
+
+
+      </jsp:attribute>
+
+    </t:modal>
+        
+    <t:modal idModal="ModalRechazar" titulo="Observaciones">
+
+      <jsp:attribute name="form">
+        <h5> ¿Está seguro que desea rechazar esta solicitud? De ser así por favor indique las observaciones: </h5>
+        <form class="form-horizontal" id="form_modalrechazar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
+          <input hidden="true" name="id_solicitud_rech" id="id_solicitud_rech" >
+          <input hidden="true" name="accionindex" id="accionindex" value="accionindex_rechazar">
+          ${mensaje_auth}
+          <label for="observaciones" class="control-label">Observaciones</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group" style="display:table;">
+                <input class="input-large" type="text" maxlength="200" id="observaciones"  name="observaciones" required
+                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                       onchange="setCustomValidity('')">
+              </div>
             </div>
           </div>
         <div class="form-group">

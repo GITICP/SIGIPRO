@@ -32,3 +32,17 @@ $('#cantidadinput').change( function() {
   $("input[name='cantidad']").attr("max", max);
 }
         );
+
+$(document).ready(function () {
+
+         table = $('#tabladeSolicitudes').DataTable();
+         table.destroy();
+
+         table = $('#tabladeSolicitudes').DataTable( { 
+           sDom: // redefine sDom without lengthChange and default search box
+              "t" +
+              "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+          "order": [[ 0, "desc" ]]
+    } );
+}
+);

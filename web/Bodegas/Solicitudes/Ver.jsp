@@ -56,6 +56,7 @@
                 <tr><td> <strong>Estado:</strong> <td>${solicitud.getEstado()} </td></tr>
                 <tr><td> <strong>Fecha Entrega:</strong> <td>${solicitud.getFecha_entrega()} </td></tr>
                 <tr><td> <strong>Usuario que Recibe:</strong></td> <td>${solicitud.getUsuarioReceptor().getNombreCompleto()} </td></tr>
+                <tr><td> <strong>Observaciones:</strong></td> <td>${solicitud.getObservaciones()} </td></tr>
               </table>
               <br>
             </div>

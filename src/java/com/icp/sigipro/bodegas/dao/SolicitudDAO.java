@@ -92,7 +92,7 @@ public class SolicitudDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.solicitudes "
-              + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?"
+              + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
               + " WHERE id_solicitud=?; "
       );
 
@@ -103,7 +103,9 @@ public class SolicitudDAO {
       {consulta.setNull(4, java.sql.Types.INTEGER );}
       else
       {consulta.setInt(4, p.getId_usuario_recibo());}
-      consulta.setInt(5, p.getId_solicitud());
+      consulta.setString(5, p.getObservaciones());
+      consulta.setInt(6, p.getId_solicitud());
+
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -159,6 +161,7 @@ public class SolicitudDAO {
         solicitud.setEstado(rs.getString("estado"));
         solicitud.setFecha_entrega(rs.getDate("fecha_entrega"));
         solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
+        solicitud.setObservaciones(rs.getString("observaciones"));
         try {
             UsuarioDAO usr = new UsuarioDAO();
             InventarioDAO pr = new InventarioDAO();
@@ -201,6 +204,7 @@ public class SolicitudDAO {
         solicitud.setEstado(rs.getString("estado"));
         solicitud.setFecha_entrega(rs.getDate("fecha_entrega"));
         solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
+        solicitud.setObservaciones(rs.getString("observaciones"));
         try {
           UsuarioDAO usr = new UsuarioDAO();
           InventarioDAO pr = new InventarioDAO();
