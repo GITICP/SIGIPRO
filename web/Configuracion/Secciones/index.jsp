@@ -27,9 +27,12 @@ Secciones
 <%
   List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
   System.out.println(permisos);
+  try{
   if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10))) {
-    request.getRequestDispatcher("/").forward(request, response);
+    response.sendRedirect("/index");
   }
+  }
+  catch(NullPointerException e){response.sendRedirect("/index");}
 %>
 
 

@@ -150,7 +150,7 @@ CREATE TABLE bodega.ingresos (
  );
 
 CREATE TABLE bodega.inventarios ( 
-	id_inventario serial NOT NULL,
+        id_inventario serial NOT NULL,
 	id_producto integer,
 	id_seccion integer NOT NUll,
      	stock_actual integer NOT NULL
@@ -171,18 +171,21 @@ CREATE TABLE bodega.reactivos (
 CREATE TABLE bodega.solicitudes ( 
 	id_solicitud serial NOT NULL,
 	id_usuario integer NOT NULL ,
+	id_inventario integer NOT NULL,
+	cantidad integer NOT NULL,
      	fecha_solicitud date NOT NULL,
-        estado character varying(45)
+        estado character varying(45) NOT NULL,
+        fecha_entrega date,
+        id_usuario_recibo integer,
+        observaciones character varying(200)
  ); 
+CREATE TABLE bodega.solicitudes_prestamos ( 
+	id_solicitud integer NOT NULL,
+	id_seccion_presta integer NOT NULL,
+	id_usuario_aprobo integer
+); 
 
-CREATE TABLE bodega.detalles_solicitudes ( 
-	id_detalle_solicitud serial NOT NULL,
-	id_solicitud integer,
-	id_producto integer,
-	estado character varying(45) NOT NULL,
-     	cantidad integer NOT NULL,
-	fecha_entrega date
- ); 
+
 
 CREATE TABLE bodega.usuarios_sub_bodegas_ingresos ( 
 	id_sub_bodega serial NOT NULL,
@@ -235,7 +238,7 @@ ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT pk_ingresos PRIMARY KEY (id_ingr
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT pk_inventarios PRIMARY KEY (id_inventario);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_reactivo);
 ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT pk_solicitudes PRIMARY KEY (id_solicitud);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT pk_detalles_solicitudes PRIMARY KEY (id_detalle_solicitud);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT pk_prestamos PRIMARY KEY (id_solicitud);
 ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (id_sub_bodega);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
 ALTER TABLE ONLY bodega.ubicaciones ADD CONSTRAINT pk_ubicaciones PRIMARY KEY (id_ubicacion);
@@ -244,7 +247,7 @@ ALTER TABLE ONLY bodega.ubicaciones_bodega ADD CONSTRAINT pk_ubicaciones_bodega 
 --Indices unicos esquema bodega
 CREATE UNIQUE INDEX i_codigo_icp ON bodega.catalogo_interno USING btree (codigo_icp);
 
---Llaves foraneas esquema seguridad
+--Llaves foraneas esquema bodega
 ALTER TABLE ONLY bodega.catalogos_internos_externos ADD CONSTRAINT fk_id_producto_ext FOREIGN KEY (id_producto_ext) REFERENCES bodega.catalogo_externo(id_producto_ext);
 ALTER TABLE ONLY bodega.catalogos_internos_externos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.ubicaciones_catalogo_interno ADD CONSTRAINT fk_id_ubicacion FOREIGN KEY (id_ubicacion) REFERENCES bodega.ubicaciones_bodega(id_ubicacion);
@@ -253,8 +256,12 @@ ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_p
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion);
 ALTER TABLE ONLY bodega.inventarios ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
-ALTER TABLE ONLY bodega.detalles_solicitudes ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
+ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT fk_id_inventario FOREIGN KEY (id_inventario) REFERENCES bodega.inventarios(id_inventario);
+ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT fk_id_usuario_recibo FOREIGN KEY (id_usuario_recibo) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bodega.solicitudes(id_solicitud);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion_presta) REFERENCES seguridad.secciones(id_seccion);
+ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT fk_id_usuario_aprobo FOREIGN KEY (id_usuario_aprobo) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 ALTER TABLE ONLY bodega.activos_fijos ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion)on delete set null;
@@ -321,6 +328,10 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Se
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]Aceptar y Rechazar Préstamos', 'Permite aceptar o rechazar préstamos');
+
 
 -- Observación importante:
 -- Los tags de los módulos como tales deben estar de 
@@ -346,6 +357,8 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (902, 900,'Correo', '/Configuracion/Correo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1000, 0,'Compras', '/Compras/Proveedores');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1001, 900,'Proveedores', '/Compras/Proveedores');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (106, 100,'Solicitudes', '/Bodegas/Solicitudes');
+
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (2, 801);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (3, 801);
@@ -374,6 +387,8 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 105);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 105);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (24, 106);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (25, 106);
 
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (18, 803);
@@ -407,7 +422,7 @@ INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,8);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,9);
 INSERT INTO seguridad.permisos_roles(id_rol, id_permiso) VALUES (5,10);
 
-
+INSERT INTO seguridad.secciones(id_seccion, nombre_seccion, descripcion) VALUES (0,'Unificada','Seccion compartida');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Producción','Dedicados a la producción');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Control de Calidad','Dedicados al control de calidad');
 INSERT INTO seguridad.secciones(nombre_seccion, descripcion) VALUES ('Ventas','Dedicados a la venta de productos');
@@ -423,14 +438,12 @@ INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_comple
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('ametico', md5('sigipro'), 'ametico@gmail.com', 'Amed Espinoza', '3-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('isaaclpez', md5('sigipro'), 'isaaclpez@gmail.com', 'Isaac Lopez', '4-2345-6789', 1 , 1, '2014-12-01', '2014-12-01', false, true);
 INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('estebav8', md5('sigipro'), 'estebav8@gmail.com', 'Esteban Aguilar Valverde', '5-2345-6789', 1, 1, '2014-12-01', '2014-12-01', true, true);
-INSERT INTO seguridad.usuarios(nombre_usuario, contrasena, correo, nombre_completo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) VALUES ('luisdiegocm', md5('sigipro'), 'ld.conejo@gmail.com', 'Luis Diego Conejo Mora', '1-1537-0976', 1, 1, '2014-12-01', '2014-12-01', true, true);
 
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (1, 1, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (2, 2, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (3, 3, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (4, 4, '2014-12-01', '2014-12-01');
 INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (5, 5, '2014-12-01', '2014-12-01');
-INSERT INTO seguridad.roles_usuarios(id_usuario, id_rol, fecha_activacion, fecha_desactivacion) VALUES (6, 1, '2014-12-01', '2014-12-01');
 
 
 
