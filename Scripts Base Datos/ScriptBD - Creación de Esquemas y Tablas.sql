@@ -116,7 +116,7 @@ CREATE TABLE bodega.activos_fijos (
 
 CREATE TABLE bodega.catalogo_interno(
 	id_producto serial NOT NULL,
-        nombre character varying(45) NOT NULL,
+        nombre character varying(70) NOT NULL,
 	codigo_icp character varying(45) NOT NULL,
 	stock_minimo integer NOT NULL,
 	stock_maximo integer NOT NULL,
