@@ -331,9 +331,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]Aceptar y Rechazar Préstamos', 'Permite aceptar o rechazar préstamos');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]AgregarIngresos', 'Permite registrar ingresos');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]EditarIngresos', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]Aprobar/Rechazar Ingresos', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]Agregar Ingresos', 'Permite registrar ingresos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]Editar Ingresos', 'Permite modificar toda la información de un ingreso');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]Aprobar/Rechazar Ingresos', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
 
 
 -- Observación importante:
