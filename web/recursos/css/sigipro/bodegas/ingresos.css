@@ -1,0 +1,54 @@
+.sigipro-tab-content {
+  padding: 0px;
+}
+
+.sigipro-nav-tabs li {
+  float: right;
+}
+
+.icono-decision {
+  font-size: 2em;
+}
+
+.icono-decision:hover{
+  cursor: pointer;
+}
+
+#icono-aprobar:hover{
+  color: green;
+}
+
+#icono-rechazar:hover{
+  color: red;
+}
+
+.fila-decision {
+  text-align: center;
+}
+
+.decision-izq {
+  padding-right: 1em;
+}
+
+label.radio-decision-cuarentena {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+}
+
+label.radio-decision-cuarentena:before {
+  content: "";
+  display: inline-block;
+}
+
+input[type=radio].radio-decision-cuarentena {
+  display: none;
+}
+
+input[type=radio]:checked.radio-decision-cuarentena + label > i#icono-aprobar{
+  color: green;
+}
+
+input[type=radio]:checked.radio-decision-cuarentena + label > i#icono-rechazar{
+  color: red;
+}

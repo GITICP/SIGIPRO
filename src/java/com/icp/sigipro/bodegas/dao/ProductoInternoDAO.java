@@ -37,8 +37,8 @@ public class ProductoInternoDAO
     
     try{
       getConexion().setAutoCommit(false);
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogo_interno (nombre, codigo_icp, stock_minimo, stock_maximo, presentacion, descripcion, cuarentena) " +
-                                                             " VALUES (?,?,?,?,?,?,?) RETURNING id_producto");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.catalogo_interno (nombre, codigo_icp, stock_minimo, stock_maximo, presentacion, descripcion, cuarentena, perecedero) " +
+                                                             " VALUES (?,?,?,?,?,?,?,?) RETURNING id_producto");
       
       consulta.setString(1, p.getNombre());
       consulta.setString(2, p.getCodigo_icp());
@@ -47,6 +47,7 @@ public class ProductoInternoDAO
       consulta.setString(5, p.getPresentacion());
       consulta.setString(6, p.getDescripcion());
       consulta.setBoolean(7, p.isCuarentena());
+      consulta.setBoolean(8, p.isPerecedero());
       ResultSet resultadoConsulta = consulta.executeQuery();
       if ( resultadoConsulta.next() ){
         resultado = true;
@@ -120,7 +121,7 @@ public class ProductoInternoDAO
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.catalogo_interno " +
               " SET nombre=?, codigo_icp=?, stock_minimo=?, stock_maximo=?, " + 
-              " presentacion=?, descripcion=?, cuarentena=? " +
+              " presentacion=?, descripcion=?, cuarentena=?, perecedero=? " +
               " WHERE id_producto=?; "
       );
       
@@ -131,7 +132,8 @@ public class ProductoInternoDAO
       consulta.setString(5, p.getPresentacion());
       consulta.setString(6, p.getDescripcion());
       consulta.setBoolean(7, p.isCuarentena());
-      consulta.setInt(8, p.getId_producto());
+      consulta.setBoolean(8, p.isPerecedero());
+      consulta.setInt(9, p.getId_producto());
       
       consulta.executeUpdate();
       
@@ -259,7 +261,6 @@ public class ProductoInternoDAO
       PreparedStatement consulta = getConexion().prepareStatement(
               " DELETE FROM bodega.catalogo_interno " +
               " WHERE id_producto=?; "
-
       );
       
       consulta.setInt(1, id_producto);
@@ -303,6 +304,8 @@ public class ProductoInternoDAO
         producto.setStock_maximo(rs.getInt("stock_maximo"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
+        producto.setCuarentena(rs.getBoolean("cuarentena"));
+        producto.setPerecedero(rs.getBoolean("perecedero"));
         
         if( rs.getInt("id_reactivo") != 0 ){
           Reactivo r = new Reactivo();
@@ -329,7 +332,10 @@ public class ProductoInternoDAO
     List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();
     
     try{
-      PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM bodega.catalogo_interno ");
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT ci.*, r.id_reactivo "
+                                                                + " FROM bodega.catalogo_interno ci "
+                                                                + "   LEFT OUTER JOIN bodega.reactivos r "
+                                                                + "     on ci.id_producto = r.id_producto ");
       ResultSet rs = consulta.executeQuery();
       
       while(rs.next()){
@@ -341,6 +347,42 @@ public class ProductoInternoDAO
         producto.setStock_maximo(rs.getInt("stock_maximo"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
+        producto.setCuarentena(rs.getBoolean("cuarentena"));
+        producto.setPerecedero(rs.getBoolean("perecedero"));
+        
+        int id_reactivo = rs.getInt("id_reactivo");
+        if (id_reactivo > 0) {
+          producto.setReactivo(new Reactivo());
+        }
+        
+        System.out.println(id_reactivo);
+        
+        resultado.add(producto);
+      }      
+      
+      consulta.close();
+      conexion.close();
+    }
+    catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
+  
+  public List<ProductoInterno> obtenerProductosYCuarentena(){
+    List<ProductoInterno> resultado = new ArrayList<ProductoInterno>();
+    
+    try{
+      PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_producto, nombre, codigo_icp, cuarentena, perecedero FROM bodega.catalogo_interno ");
+      ResultSet rs = consulta.executeQuery();
+      
+      while(rs.next()){
+        ProductoInterno producto = new ProductoInterno();
+        producto.setId_producto(rs.getInt("id_producto"));
+        producto.setNombre(rs.getString("nombre"));
+        producto.setCodigo_icp(rs.getString("codigo_icp"));
+        producto.setCuarentena(rs.getBoolean("cuarentena"));
+        producto.setPerecedero(rs.getBoolean("perecedero"));
         
         resultado.add(producto);
       }      
@@ -373,6 +415,8 @@ public class ProductoInternoDAO
         producto.setStock_maximo(rs.getInt("stock_maximo"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
+        producto.setPerecedero(rs.getBoolean("perecedero"));
+        producto.setCuarentena(rs.getBoolean("cuarentena"));
         
         resultado.add(producto);
       }
@@ -405,6 +449,8 @@ public class ProductoInternoDAO
         producto.setStock_maximo(rs.getInt("stock_maximo"));
         producto.setPresentacion(rs.getString("presentacion"));
         producto.setDescripcion(rs.getString("descripcion"));
+        producto.setCuarentena(rs.getBoolean("cuarentena"));
+        producto.setPerecedero(rs.getBoolean("perecedero"));
         
         resultado.add(producto);
       }

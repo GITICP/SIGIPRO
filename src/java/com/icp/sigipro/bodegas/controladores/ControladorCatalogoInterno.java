@@ -151,9 +151,11 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       productoInterno.setCodigo_icp(request.getParameter("codigoICP"));
       productoInterno.setStock_minimo(Integer.parseInt(request.getParameter("stockMinimo")));
       productoInterno.setStock_maximo(Integer.parseInt(request.getParameter("stockMaximo")));
-      productoInterno.setUbicacion(request.getParameter("ubicacion"));
       productoInterno.setPresentacion(request.getParameter("presentacion"));
       productoInterno.setDescripcion(request.getParameter("descripcion"));
+      if (productoInterno.getDescripcion().equals("") || productoInterno.getDescripcion().isEmpty()){
+        productoInterno.setDescripcion("Sin descripción.");
+      }
 
       String ubicaciones = request.getParameter("ubicaciones");
       String productosExternos = request.getParameter("productosExternos");
@@ -162,6 +164,13 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       }
       else {
         productoInterno.setCuarentena(false);
+      }
+      
+      if (request.getParameter("perecedero") != null) {
+        productoInterno.setPerecedero(true);
+      }
+      else {
+        productoInterno.setPerecedero(false);
       }
 
       if (request.getParameter("reactivo") != null) {

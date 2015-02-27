@@ -51,7 +51,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-bodegas-catalogo-interno" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -62,6 +62,7 @@
                     <th>Presentación</th>
                     <th>Descripción</th>
                     <th>Ingresa en Cuarentena</th>
+                    <th>Es perecedero</th>
                     <th>Es reactivo</th>
                   </tr>
                 </thead>
@@ -82,6 +83,7 @@
                       <td>${producto.getPresentacion()}</td>
                       <td>${producto.getDescripcion()}</td>
                       <td>${producto.getCuarentena()}</td>
+                      <td>${producto.getPerecedero()}</td>
                       <td>${producto.isReactivo()}</td>
                     </tr>
 

@@ -30,6 +30,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="description" content="KingAdmin Dashboard">
     <meta name="author" content="The Develovers">
+    <link rel="shortcut icon" href="../${direccion_contexto}/favicon.ico">
 
     <!-- CSS -->
     <link href="${direccionContexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">

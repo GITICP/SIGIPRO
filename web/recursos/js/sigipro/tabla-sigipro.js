@@ -1,26 +1,31 @@
 $(document).ready(function () {
-  if ($('.sigipro-tabla-filter').length > 0) {
+  var cantidadTablas = $('.sigipro-tabla-filter').length;
+  if (cantidadTablas > 0) {
     var selectorTabla = '.sigipro-tabla-filter';
-    var dtTable = $(selectorTabla).DataTable({// use DataTable, not dataTable
-      sDom: // redefine sDom without lengthChange and default search box
-              "t" +
-              "<'row'<'col-sm-6'i><'col-sm-6'p>>"
-    });
-    var ths = '';
-    $(selectorTabla + ' thead th').each(function () {
-      ths += '<th></th>';
-    });
+    $(selectorTabla).each(function () {
+      var dtTable = $(this).DataTable({// use DataTable, not dataTable
+        sDom: // redefine sDom without lengthChange and default search box
+                "t" +
+                "<'row'<'col-sm-6'i><'col-sm-6'p>>"
+      });
+      var ths = '';
+      var cantidadColumnas = $(this).find('thead th').length;
 
-    $(selectorTabla + ' thead').append('<tr class="row-filter">' + ths + '</tr>');
-    $(selectorTabla + ' thead .row-filter th').each(function () {
-      $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
-    });
+      for (i = 0; i < cantidadColumnas; i++) {
+        ths += '<th></th>';
+      }
 
-    $(selectorTabla + ' .row-filter input').on('keyup change', function () {
-      dtTable
-              .column($(this).parent().index() + ':visible')
-              .search(this.value)
-              .draw();
+      $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
+      $(this).find('thead .row-filter th').each(function () {
+        $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+      });
+
+      $(this).find('.row-filter input').on('keyup change', function () {
+        dtTable
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+      });
     });
   }
 });

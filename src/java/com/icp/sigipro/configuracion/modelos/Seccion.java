@@ -5,47 +5,63 @@
  */
 package com.icp.sigipro.configuracion.modelos;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.icp.sigipro.core.IModelo;
 
 /**
  *
  * @author Boga
  */
-public class Seccion 
+public class Seccion extends IModelo
 {
-    
-    int id_seccion;
-    String nombre_seccion;
-    String descripcion;
 
-    
-    public Seccion(){}
-    
-    public Seccion (int p_id_seccion, String p_nombre_seccion, String p_descripcion)
-    {
-        id_seccion = p_id_seccion;
-        nombre_seccion = p_nombre_seccion;
-        descripcion = p_descripcion;
-    }
+  int id_seccion;
+  String nombre_seccion;
+  String descripcion;
 
-    public void setId_seccion(int id_seccion) {
-        this.id_seccion = id_seccion;
-    }
+  public Seccion()
+  {
+  }
 
-    public void setNombre_seccion(String nombre_seccion) {
-        this.nombre_seccion = nombre_seccion;
-    }
+  public Seccion(int p_id_seccion, String p_nombre_seccion, String p_descripcion)
+  {
+    id_seccion = p_id_seccion;
+    nombre_seccion = p_nombre_seccion;
+    descripcion = p_descripcion;
+  }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+  public int getId_seccion()
+  {
+    return id_seccion;
+  }
 
-    public int getID()                 {return id_seccion;}
-    public String getNombre_seccion()   {return nombre_seccion;}
-    public String getDescripcion()          {return descripcion;}
+  public void setId_seccion(int id_seccion)
+  {
+    this.id_seccion = id_seccion;
+  }
 
-    
-    
+  public void setNombre_seccion(String nombre_seccion)
+  {
+    this.nombre_seccion = nombre_seccion;
+  }
+
+  public void setDescripcion(String descripcion)
+  {
+    this.descripcion = descripcion;
+  }
+
+  public int getID()
+  {
+    return id_seccion;
+  }
+
+  public String getNombre_seccion()
+  {
+    return nombre_seccion;
+  }
+
+  public String getDescripcion()
+  {
+    return descripcion;
+  }
+
 }

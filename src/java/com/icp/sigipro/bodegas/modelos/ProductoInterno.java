@@ -5,21 +5,23 @@
  */
 package com.icp.sigipro.bodegas.modelos;
 
+import com.icp.sigipro.core.IModelo;
+
 /**
  *
  * @author Boga
  */
-public class ProductoInterno
+public class ProductoInterno extends IModelo
 {
   private int id_producto;
   private String nombre;
   private String codigo_icp;
   private int stock_minimo;
   private int stock_maximo;
-  private String ubicacion;
   private String presentacion;
   private String descripcion;
   private boolean cuarentena;
+  private boolean perecedero;
   private Reactivo reactivo;
  
   public ProductoInterno(){}
@@ -74,16 +76,6 @@ public class ProductoInterno
     this.stock_maximo = stock_maximo;
   }
 
-  public String getUbicacion()
-  {
-    return ubicacion;
-  }
-
-  public void setUbicacion(String ubicacion)
-  {
-    this.ubicacion = ubicacion;
-  }
-
   public String getPresentacion()
   {
     return presentacion;
@@ -113,6 +105,16 @@ public class ProductoInterno
   {
     this.cuarentena = cuarentena;
   }
+
+  public boolean isPerecedero()
+  {
+    return perecedero;
+  }
+
+  public void setPerecedero(boolean perecedero)
+  {
+    this.perecedero = perecedero;
+  }
   
   public Reactivo getReactivo()
   {
@@ -126,6 +128,14 @@ public class ProductoInterno
   
   public String getCuarentena(){
     if (isCuarentena()){
+      return "Sí";
+    } else {
+      return "No";
+    }
+  }
+  
+  public String getPerecedero(){
+    if (isPerecedero()){
       return "Sí";
     } else {
       return "No";

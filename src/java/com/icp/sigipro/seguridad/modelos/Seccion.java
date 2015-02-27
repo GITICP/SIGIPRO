@@ -5,11 +5,13 @@
  */
 package com.icp.sigipro.seguridad.modelos;
 
+import com.icp.sigipro.core.IModelo;
+
 /**
  *
  * @author Amed
  */
-public class Seccion {
+public class Seccion extends IModelo{
   int id_seccion;
   String nombre_seccion;
   String descripcion;
@@ -18,6 +20,26 @@ public class Seccion {
   id_seccion = pid;
   nombre_seccion = pnombre;
   descripcion = pdesc;
+  }
+
+  public int getId_seccion()
+  {
+    return id_seccion;
+  }
+
+  public void setId_seccion(int id_seccion)
+  {
+    this.id_seccion = id_seccion;
+  }
+
+  public String getNombre_seccion()
+  {
+    return nombre_seccion;
+  }
+
+  public void setNombre_seccion(String nombre_seccion)
+  {
+    this.nombre_seccion = nombre_seccion;
   }
   
   public int getID()                 {return id_seccion;}

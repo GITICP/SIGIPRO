@@ -6,10 +6,12 @@
     display: block;
     outline: none;
 }
+
 .botonCerrarSesion:hover{
     color:#fff;
     cursor: pointer;
 }
+
 .tablaSigipro{
     font-size: 13px;
 }

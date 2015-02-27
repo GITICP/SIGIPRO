@@ -82,9 +82,7 @@
       <li><a href='<%= request.getContextPath()%>'> Inicio </a></li>
         <c:forEach items="${modulos}" var="modulo">
         <li>
-          <a href="#">
-            ${modulo.getModulo()}
-          </a>
+          <a>${modulo.getModulo()}</a>
           <ul>
             <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
               <li>
