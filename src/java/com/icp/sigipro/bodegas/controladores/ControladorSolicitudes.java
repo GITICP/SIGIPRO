@@ -71,7 +71,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           boolAdmin = true;}
       else
       {   String nombre_usr = (String) sesion.getAttribute("usuario");
-          usuario_solicitante = usrDAO.obtenerIDUsuario(nombre_usr);
+          int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+          Usuario us = usrDAO.obtenerUsuario(id_usuario);
+          usuario_solicitante = us.getIdSeccion();
       }
 
       if (accion != null) {

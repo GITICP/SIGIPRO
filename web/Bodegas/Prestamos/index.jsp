@@ -39,6 +39,7 @@
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> Préstamos</h3>
                 <div class="btn-group widget-header-toolbar">
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes">Solicitudes</a>
                   <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=agregar">Solicitar nuevo Préstamo</a>
                 </div>
             </div>

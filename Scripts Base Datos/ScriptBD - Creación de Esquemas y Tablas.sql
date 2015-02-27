@@ -328,7 +328,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]AdministrarPrestamos', 'Permite administrar aceptar o rechazar préstamos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]Aceptar y Rechazar Préstamos', 'Permite aceptar o rechazar préstamos');
 
 
 -- Observación importante:

@@ -32,10 +32,10 @@
                 <c:forEach items="${inventarios}" var="inventario">
                   <c:choose>
                     <c:when test="${inventario.getId_inventario() == prestamo.getSolicitud().getId_inventario()}">
-                      <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()} selected> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                      <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()} selected> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                     </c:when>
                     <c:otherwise>
-                      <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                      <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                     </c:otherwise>
                   </c:choose>
                 </c:forEach>
@@ -46,7 +46,7 @@
                       oninvalid="setCustomValidity('Este campo es requerido')"
                       oninput="setCustomValidity('')">
                 <c:forEach items="${inventarios}" var="inventario">
-                  <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Existencias: ${inventario.getStock_actual()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                  <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                 </c:forEach>
               </select> 
             </c:otherwise>    
