@@ -331,9 +331,10 @@ public class ControladorIngresos extends SIGIPROServlet
         int idParseado = Integer.parseInt(id);
         ingreso.setId_ingreso(idParseado);
         int cantidadPrevia = Integer.parseInt(request.getParameter("control-cantidad"));
+        String estadoPrevio = request.getParameter("control-estado");
         if (valido) {
           try {
-            dao.actualizar(ingreso, ingreso.getCantidad() - cantidadPrevia);
+            dao.actualizar(ingreso, cantidadPrevia, estadoPrevio);
             resultado = true;
           }
           catch (Exception ex) {

@@ -36,9 +36,10 @@ public class IngresoDAO extends DAO<Ingreso>
     PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
     consulta.setInt(1, id);
     ResultSet resultado = ejecutarConsulta(consulta);
-    if (resultado.next()){
+    if (resultado.next()) {
       return construirObjeto(t.getMetodos("set"), resultado);
-    } else {
+    }
+    else {
       SIGIPROException ex = new SIGIPROException("El ingreso que está intentando buscar no existe.");
       throw ex;
     }
@@ -130,16 +131,15 @@ public class IngresoDAO extends DAO<Ingreso>
     return resultado;
   }
 
-  public boolean actualizar(Ingreso ingreso, int diferencia) throws SQLException
+  public boolean actualizar(Ingreso ingreso, int cantidadPrevia, String estadoOriginal) throws SQLException
   {
-
     boolean resultado = false;
 
     PreparedStatement actualizarIngreso = null;
     PreparedStatement actualizarInventario = null;
 
     boolean resultadoUpdate = false;
-    boolean resultadoUpsert = true;
+    boolean resultadoUpsert = false;
 
     try {
 
@@ -147,12 +147,12 @@ public class IngresoDAO extends DAO<Ingreso>
 
       actualizarIngreso = getConexion().prepareStatement(" UPDATE bodega.ingresos "
                                                          + " SET id_producto = ?, "
-                                                         + "     id_seccion = ?"
-                                                         + "     fecha_ingreso = ?"
-                                                         + "     fecha_registro = ?"
-                                                         + "     fecha_vencimiento = ?"
-                                                         + "     cantidad = ?"
-                                                         + "     estado = ?"
+                                                         + "     id_seccion = ?,"
+                                                         + "     fecha_ingreso = ?,"
+                                                         + "     fecha_registro = ?,"
+                                                         + "     fecha_vencimiento = ?,"
+                                                         + "     cantidad = ?,"
+                                                         + "     estado = ?,"
                                                          + "     precio = ?"
                                                          + " WHERE id_ingreso = ?");
 
@@ -173,19 +173,34 @@ public class IngresoDAO extends DAO<Ingreso>
         resultadoUpdate = false;
       }
 
-      if (diferencia != 0) {
-        ingreso.setCantidad(diferencia);
-        actualizarInventario = construirUpsertInventario(ingreso);
-        int filasActualizarInventario = actualizarInventario.executeUpdate();
-        if (filasActualizarInventario == 0 || filasActualizarInventario == 1) {
-          resultadoUpsert = true;
+      if (ingreso.getEstado().equalsIgnoreCase(Ingreso.DISPONIBLE) || estadoOriginal.equalsIgnoreCase(Ingreso.DISPONIBLE)) {
+        if (ingreso.getEstado().equalsIgnoreCase(estadoOriginal)) {
+          int diferencia = ingreso.getCantidad() - cantidadPrevia;
+          if ( diferencia != 0) {
+            ingreso.setCantidad(diferencia);
+            actualizarInventario = construirUpsertInventario(ingreso);
+          }
+          else {
+            resultadoUpsert = true;
+          }
+        }
+        else if (ingreso.getEstado().equals(Ingreso.DISPONIBLE)) {
+          actualizarInventario = construirUpsertInventario(ingreso);
         }
         else {
-          resultadoUpsert = false;
+          int nuevaCantidad = cantidadPrevia * -1;
+          ingreso.setCantidad(nuevaCantidad);
+          actualizarInventario = construirUpsertInventario(ingreso);
         }
-      }
-      else {
-        resultadoUpsert = true;
+        if (!resultadoUpsert) {
+          int filasActualizarInventario = actualizarInventario.executeUpdate();
+          if (filasActualizarInventario == 0 || filasActualizarInventario == 1) {
+            resultadoUpsert = true;
+          }
+          else {
+            resultadoUpsert = false;
+          }
+        }
       }
 
       resultado = resultadoUpsert && resultadoUpdate;
@@ -269,7 +284,8 @@ public class IngresoDAO extends DAO<Ingreso>
         if (registrosInventarios == 1 || registrosInventarios == 0) {
           resultadoInventario = true;
         }
-      } else {
+      }
+      else {
         resultadoInventario = true;
       }
 

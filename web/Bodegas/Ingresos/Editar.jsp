@@ -21,7 +21,7 @@
             <li> 
               <a href="/SIGIPRO/Bodegas/Ingresos?">Ingresos</a>
             </li>
-            <li class="active"> Editar Ingreso</li>
+            <li class="active"> Editar Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()}</li>
           </ul>
         </div>
         <div class="col-md-8 ">
