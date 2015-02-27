@@ -13,15 +13,14 @@ import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -62,8 +61,13 @@ public class ControladorIngresos extends SIGIPROServlet
   {
     try {
       String redireccion = "";
+      String mensaje = null;
+      String explicacion = null;
+
       String accion = request.getParameter("accion");
+
       IngresoDAO dao = new IngresoDAO();
+      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
       HttpSession sesion = request.getSession();
       List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
@@ -81,7 +85,18 @@ public class ControladorIngresos extends SIGIPROServlet
             Ingreso i = dao.buscar(id);
             request.setAttribute("ingreso", i);
           }
-          catch (Exception ex) {
+          catch (SIGIPROException ex) {
+            mensaje = ex.getMessage();
+            request.setAttribute("mensaje", helper.mensajeDeError(mensaje));
+          }
+          catch (SQLException ex) {
+            mensaje = "Ha ocurrido un error con la base de datos. Favor inténtelo nuevamente y si el problema persiste contacte al administrador del sistema.";
+            request.setAttribute("mensaje", helper.mensajeDeError(mensaje + explicacion));
+            ex.printStackTrace();
+          }
+          catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+            mensaje = "Ha ocurrido un error inesperado. Favor contacte al administrador del sistema.";
+            request.setAttribute("mensaje", helper.mensajeDeError(mensaje + explicacion));
             ex.printStackTrace();
           }
         }
@@ -104,7 +119,13 @@ public class ControladorIngresos extends SIGIPROServlet
           List<ProductoInterno> productos = productosDAO.obtenerProductosYCuarentena();
           List<Seccion> secciones = seccionesDAO.obtenerSecciones();
 
-          int id = Integer.parseInt(request.getParameter("id_ingreso"));
+          int id = 0;
+          try {
+            id = Integer.parseInt(request.getParameter("id_ingreso"));
+          }
+          catch (NumberFormatException ex) {
+
+          }
 
           Ingreso ingreso;
           try {
@@ -127,10 +148,22 @@ public class ControladorIngresos extends SIGIPROServlet
               index++;
             }
             productos.remove(index);
-
-            productos.remove(ingreso.getProducto());
           }
-          catch (Exception ex) {
+          catch (SIGIPROException ex) {
+            mensaje = ex.getMessage();
+            redireccion = "Ingresos/index.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeError(mensaje));
+          }
+          catch (SQLException ex) {
+            mensaje = "Ha ocurrido un error con la base de datos. Favor inténtelo nuevamente y si el problema persiste contacte al administrador del sistema.";
+            redireccion = "Ingresos/index.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeError(mensaje + explicacion));
+            ex.printStackTrace();
+          }
+          catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+            mensaje = "Ha ocurrido un error inesperado. Favor contacte al administrador del sistema.";
+            redireccion = "Ingresos/index.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeError(mensaje + explicacion));
             ex.printStackTrace();
           }
           request.setAttribute("productos", productos);
@@ -170,6 +203,7 @@ public class ControladorIngresos extends SIGIPROServlet
 
         }
         catch (Exception ex) {
+          System.out.println(ex.getMessage());
           ex.printStackTrace();
         }
       }
@@ -188,58 +222,53 @@ public class ControladorIngresos extends SIGIPROServlet
   {
     request.setCharacterEncoding("UTF-8");
     boolean resultado = false;
-    boolean aprobaciones = false;
     String redireccion = "Ingresos/Agregar.jsp";
     IngresoDAO dao = new IngresoDAO();
 
-    Map<String, String[]> mapa = request.getParameterMap();
+    String accion = request.getParameter("accion");
+    String mensaje = null;
+    String explicacion = null;
 
-    List<Ingreso> porAprobar = new ArrayList<Ingreso>();
-    List<Ingreso> porRechazar = new ArrayList<Ingreso>();
-
-    Iterator entries = mapa.entrySet().iterator();
-    while (entries.hasNext()) {
-      Entry thisEntry = (Entry) entries.next();
-      String llave = (String) thisEntry.getKey();
-      String valor = request.getParameter(llave);
-      if (llave.startsWith("decision-")) {
-        aprobaciones = true;
-        int id = Integer.parseInt(llave.split("-")[1]);
-        if (valor.equalsIgnoreCase("true")) {
-          Ingreso i = new Ingreso();
-
-          i.setId_ingreso(id);
-          i.setCantidad(Integer.parseInt(request.getParameter("decision-" + id + "-cantidad")));
-          ProductoInterno p = new ProductoInterno();
-          Seccion s = new Seccion();
-          p.setId_producto(Integer.parseInt(request.getParameter("decision-" + id + "-id_producto")));
-          s.setId_seccion(Integer.parseInt(request.getParameter("decision-" + id + "-id_seccion")));
-
-          i.setProducto(p);
-          i.setSeccion(s);
-          porAprobar.add(i);
-        }
-        else if (valor.equalsIgnoreCase("false")) {
-          Ingreso i = new Ingreso();
-          i.setId_ingreso(id);
-
-          porRechazar.add(i);
-        }
-      }
-      else {
-        aprobaciones = false;
-        break;
-      }
-    }
-
-    if (aprobaciones) {
+    if (accion != null) {
+      String idSinParsear = request.getParameter("id_ingreso");
+      redireccion = "Ingresos/index.jsp";
+      int id = Integer.parseInt(idSinParsear);
+      Ingreso ingreso = null;
       try {
-        dao.decisionesCuarentena(porAprobar, porRechazar);
-        resultado = true;
+        ingreso = dao.buscar(id);
+      }
+      catch (SIGIPROException ex) {
+        mensaje = ex.getMessage();
       }
       catch (SQLException ex) {
+        explicacion = ex.getMessage();
         ex.printStackTrace();
-        resultado = false;
+      }
+      catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+        explicacion = "Ha ocurrido un error inesperado. Favor contacte al administrador del sistema.";
+        ex.printStackTrace();
+      }
+      if (ingreso != null) {
+        if (accion.equalsIgnoreCase("aprobar")) {
+          mensaje = "aprobado";
+          try {
+            dao.decisionesCuarentena(ingreso, Ingreso.DISPONIBLE);
+            resultado = true;
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+        else if (accion.equalsIgnoreCase("rechazar")) {
+          mensaje = "rechazado";
+          try {
+            dao.decisionesCuarentena(ingreso, Ingreso.RECHAZADO);
+            resultado = true;
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
       }
     }
     else {
@@ -253,11 +282,14 @@ public class ControladorIngresos extends SIGIPROServlet
       seccion.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
       ingreso.setSeccion(seccion);
 
-      ingreso.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
-      ingreso.setPrecio(Integer.parseInt(request.getParameter("precio")));
-      ingreso.setEstado(request.getParameter("estado"));
+      boolean valido = false;
+
       try {
         SingletonBD s = SingletonBD.getSingletonBD();
+
+        ingreso.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+        ingreso.setPrecio(Integer.parseInt(request.getParameter("precio")));
+        ingreso.setEstado(request.getParameter("estado"));
 
         String fechaIngreso = request.getParameter("fechaIngreso");
         String fechaVencimiento = request.getParameter("fechaVencimiento");
@@ -269,35 +301,51 @@ public class ControladorIngresos extends SIGIPROServlet
         if (!(fechaVencimiento.equals("") || fechaVencimiento.isEmpty())) {
           ingreso.setFecha_vencimiento(s.parsearFecha(fechaVencimiento));
         }
+
+        valido = true;
       }
       catch (ParseException ex) {
-
+        explicacion = "por error en formatos de fechas o números.";
       }
 
       String id = request.getParameter("id_ingreso");
 
       if (id.isEmpty() || id.equals("0")) {
-        try {
-          if (dao.registrarIngreso(ingreso)) {
-            resultado = true;
+        mensaje = "registrado";
+        if (valido) {
+          try {
+            if (dao.registrarIngreso(ingreso)) {
+              resultado = true;
+            }
+          }
+          catch (Exception ex) {
+            resultado = false;
           }
         }
-        catch (Exception ex) {
+        else {
           resultado = false;
         }
       }
       else {
+        mensaje = "editado";
         int idParseado = Integer.parseInt(id);
+        ingreso.setId_ingreso(idParseado);
         int cantidadPrevia = Integer.parseInt(request.getParameter("control-cantidad"));
-        try {
-          dao.actualizar(ingreso, ingreso.getCantidad() - cantidadPrevia);
-          resultado = true;
-        }
-        catch (Exception ex) {
+        if (valido) {
+          try {
+            dao.actualizar(ingreso, ingreso.getCantidad() - cantidadPrevia);
+            resultado = true;
+          }
+          catch (Exception ex) {
+            resultado = false;
+          }
+        } else {
           resultado = false;
         }
       }
     }
+
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
     if (resultado) {
       redireccion = "Ingresos/index.jsp";
@@ -310,10 +358,15 @@ public class ControladorIngresos extends SIGIPROServlet
         request.setAttribute("listaIngresosCuarentena", ingresosCuarentena);
         request.setAttribute("listaIngresosRechazados", ingresosRechazados);
         request.setAttribute("listaIngresosNoDisponibles", ingresosNoDisponibles);
+        request.setAttribute("mensaje", helper.mensajeDeExito("Ingreso " + mensaje + " con éxito."));
       }
       catch (Exception ex) {
         ex.printStackTrace();
+        request.setAttribute("mensaje", helper.mensajeDeError("Error de comunicación con la base de datos. Favor comuníquese con el administrador del sistema."));
       }
+    }
+    else {
+      request.setAttribute("mensaje", helper.mensajeDeError("Ingreso " + mensaje + " sin éxito. " + explicacion));
     }
     RequestDispatcher vista = request.getRequestDispatcher(redireccion);
     vista.forward(request, response);

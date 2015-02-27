@@ -18,11 +18,16 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="producto" required
+            <c:choose>
+              <c:when test="${accion == 'Editar'}">
+                <input name="producto" value=${ingreso.getProducto().getId_producto()}>
+              </c:when>
+            </c:choose>
+            <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="producto" required data-editar="${accionEditar}"
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
               <c:if test="${ingreso.getProducto() != null}">
-                <option value=${ingreso.getProducto().getId_producto()} data-cuarentena=${ingreso.getProducto().isCuarentena()} data-perecedero="${ingreso.getProducto().isPerecedero()}">${ingreso.getProducto().getNombre()} (${ingreso.getProducto().getCodigo_icp()})</option>
+                <option value=${ingreso.getProducto().getId_producto()} data-cuarentena=${ingreso.getProducto().isCuarentena()} data-perecedero="${ingreso.getProducto().isPerecedero()}" selected>${ingreso.getProducto().getNombre()} (${ingreso.getProducto().getCodigo_icp()})</option>
               </c:if>
               <c:forEach items="${productos}" var="producto">
                 <option value=${producto.getId_producto()} data-cuarentena=${producto.isCuarentena()} data-perecedero="${producto.isPerecedero()}">${producto.getNombre()} (${producto.getCodigo_icp()})</option>
@@ -35,11 +40,11 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <select id="seleccionSeccion" class="select2" style='background-color: #fff;' name="seccion" required
+            <select id="seleccionSeccion" class="select2" style='background-color: #fff;' name="seccion" required data-editar="${accionEditar}"
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
               <c:if test="${ingreso.getSeccion() != null}">
-                <option value=${ingreso.getSeccion().getID()}>${ingreso.getSeccion().getNombre_seccion()}</option>
+                <option selected value=${ingreso.getSeccion().getID()} selected>${ingreso.getSeccion().getNombre_seccion()}</option>
               </c:if>
               <c:forEach items="${secciones}" var="seccion">
                 <option value=${seccion.getID()}>${seccion.getNombre_seccion()}</option>
@@ -94,13 +99,10 @@
           </div>
         </div>
       </div>
-      <label for="estado" class="control-label">Estado</label>
+      <label for="estado" class="control-label">* Estado</label>
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            
-            <!-- QUEDÉ CAMBIANDO EL ESTADO -->
-            
             <input id="control-estado" hidden="true" name="control-estado" value="${ingreso.getEstado()}">
             <label class="fancy-radio">
               <input id="radio-disponible" type="radio" name="estado" value="Disponible"><span><i></i>Disponible</span> 
@@ -111,6 +113,11 @@
             <label class="fancy-radio">
               <input type="radio" name="estado" value="No Disponible"><span><i></i>No disponible</span> 
             </label>
+            <c:if test="${ingreso.getEstado() == 'Rechazado'}">
+              <label class="fancy-radio">
+                <input type="radio" name="estado" value="Rechazado" selected><span><i></i>Rechazado</span> 
+              </label>
+            </c:if>
           </div>
         </div>
       </div>
