@@ -75,12 +75,22 @@ public class ControladorPrestamos extends SIGIPROServlet {
       List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
       int[] permisos = {24, 25, 1};
       int usuario_solicitante;
+      int seccion_admin = 0;
       UsuarioDAO usrDAO = new UsuarioDAO();
       boolean boolAdmin = false;
+      boolean boolAdminPrest = false;
+      if (verificarPermiso(26, listaPermisos)) {
+        boolAdminPrest = true;
+        String nombre_usr = (String) sesion.getAttribute("usuario");
+        int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+        Usuario us = usrDAO.obtenerUsuario(id_usuario);
+        seccion_admin = us.getIdSeccion();
+      }
       if (verificarPermiso(25, listaPermisos)) {
         usuario_solicitante = 0;
         boolAdmin = true;
-      } else {
+      }
+      else {
         String nombre_usr = (String) sesion.getAttribute("usuario");
         int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
         Usuario us = usrDAO.obtenerUsuario(id_usuario);
@@ -122,7 +132,8 @@ public class ControladorPrestamos extends SIGIPROServlet {
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("prestamo", prestamo);
           request.setAttribute("accion", "Editar");
-        } else if (accion.equalsIgnoreCase("reponer")) {
+        } 
+        else if (accion.equalsIgnoreCase("reponer")) {
           redireccion = "Prestamos/index.jsp";
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           SolicitudDAO soldao = new SolicitudDAO();
@@ -138,12 +149,61 @@ public class ControladorPrestamos extends SIGIPROServlet {
           }
           List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
           request.setAttribute("booladmin", boolAdmin);
+          request.setAttribute("booladminprest", boolAdminPrest);
           request.setAttribute("listaPrestamos", prestamos);
-        } else {
+        } 
+         else if (accion.equalsIgnoreCase("aceptar")) {
+          redireccion = "Prestamos/indexAdm.jsp";
+          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+          SolicitudDAO soldao = new SolicitudDAO();
+          Solicitud prestamo = soldao.obtenerSolicitud(id_solicitud);
+          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          prestamo.setEstado("Pendiente");
+          boolean resultado;
+          resultado = soldao.editarSolicitud(prestamo);
+          if (resultado) {
+            request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo aceptado"));
+          } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+          }
+          List<Prestamo> prestamos = dao.obtenerPrestamosAdm(seccion_admin);
+          request.setAttribute("booladmin", boolAdmin);
+          request.setAttribute("booladminprest", boolAdminPrest);
+          request.setAttribute("listaPrestamos", prestamos);
+        } 
+         else if (accion.equalsIgnoreCase("rechazar")) {
+          redireccion = "Prestamos/indexAdm.jsp";
+          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+          SolicitudDAO soldao = new SolicitudDAO();
+          Solicitud prestamo = soldao.obtenerSolicitud(id_solicitud);
+          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          prestamo.setEstado("Rechazada");
+          boolean resultado;
+          resultado = soldao.editarSolicitud(prestamo);
+          if (resultado) {
+            request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo rechazado"));
+          } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+          }
+          List<Prestamo> prestamos = dao.obtenerPrestamosAdm(seccion_admin);
+          request.setAttribute("booladmin", boolAdmin);
+          request.setAttribute("booladminprest", boolAdminPrest);
+          request.setAttribute("listaPrestamos", prestamos);
+        }
+         else if (accion.equalsIgnoreCase("admin")){
+          verificarPermiso(26, listaPermisos);
+          redireccion = "Prestamos/indexAdm.jsp";
+          List<Prestamo> prestamos = dao.obtenerPrestamosAdm(seccion_admin);
+          request.setAttribute("booladmin", boolAdmin);
+          request.setAttribute("booladminprest", boolAdminPrest);
+          request.setAttribute("listaPrestamos", prestamos);
+        }
+        else {
           validarPermisos(permisos, listaPermisos);
           redireccion = "Prestamos/index.jsp";
           List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
           request.setAttribute("booladmin", boolAdmin);
+          request.setAttribute("booladminprest", boolAdminPrest);
           request.setAttribute("listaPrestamos", prestamos);
         }
       } else {
@@ -151,6 +211,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
         redireccion = "Prestamos/index.jsp";
         List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
         request.setAttribute("booladmin", boolAdmin);
+        request.setAttribute("booladminprest", boolAdminPrest);
         request.setAttribute("listaPrestamos", prestamos);
       }
 
@@ -182,6 +243,10 @@ public class ControladorPrestamos extends SIGIPROServlet {
     int usuario_solicitante;
     HttpSession sesion = request.getSession();
     List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
+    boolean boolAdminPrest = false;
+      if (verificarPermiso(26, listaPermisos)) {
+        boolAdminPrest = true;
+      }
     if (verificarPermiso(25, listaPermisos)) {
       boolAdmin = true;
       usuario_solicitante = 0;
@@ -249,6 +314,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
     if (resultado) {
       redireccion = "Prestamos/index.jsp";
       request.setAttribute("booladmin", boolAdmin);
+      request.setAttribute("booladminprest", boolAdminPrest);
       List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
       request.setAttribute("listaPrestamos", prestamos);
     } else {

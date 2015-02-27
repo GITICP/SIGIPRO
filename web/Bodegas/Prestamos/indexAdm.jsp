@@ -1,6 +1,6 @@
 
 <%-- 
-    Document   : index
+    Document   : indexAdm
     Created on : Jan 27, 2015, 2:08:13 PM
     Author     : Amed
 --%>
@@ -23,6 +23,8 @@
             <li> 
               <a href="/SIGIPRO/Bodegas/Prestamos?">Préstamos</a>
             </li>
+            <li class="active"> Administrar los Préstamos de Sección</li>
+
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -37,14 +39,10 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Préstamos</h3>
+              <h3><i class="fa fa-barcode"></i> Administrar Préstamos</h3>
                 <div class="btn-group widget-header-toolbar">
-                  <c:if test="${booladminprest}">
-                     <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=admin">Administrar Prestamos</a>
-                  </c:if>
-                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes">Solicitudes</a>
-                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=agregar">Solicitar nuevo Préstamo</a>
-                </div>
+                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos">Volver a Préstamos</a>
+               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -59,7 +57,7 @@
                     <th>Fecha de Solicitud</th>
                     <th>Sección que Presta </th>
                     <th>Estado</th>
-                    <c:if test="${booladmin}">
+                    <c:if test="${booladminprest}">
                       <th> Cambio Estado</th>
                     </c:if>
                   </tr>
@@ -81,28 +79,29 @@
                       <td>${prestamo.getSolicitud().getFecha_solicitud()}</td>
                       <td>${prestamo.getSeccion().getNombre_seccion()}</td>
                       <td>${prestamo.getSolicitud().getEstado()}</td>
-                      <c:if test="${booladmin}">
+                      <c:if test="${booladminprest}">
                         <c:choose>
-                          <c:when test="${prestamo.getSolicitud().getEstado().equals('Entregada')}">
-                            <td>
-                              <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="marcar este préstamo como 'Repuesto'" data-href="/SIGIPRO/Bodegas/Prestamos?accion=reponer&id_solicitud=" onclick="AprobarSolicitud(${prestamo.getSolicitud().getId_solicitud()})">Reponer</a>
-                            </td>
+                          <c:when test="${prestamo.getSolicitud().getEstado().equals('Pendiente Prestamo')}">
+                                <td>
+                                  <a class="btn btn-primary btn-sm boton-accion confirmableAceptar" data-texto-confirmacion="aceptar esta solicitud de préstamo" data-href="/SIGIPRO/Bodegas/Prestamos?accion=aceptar&id_solicitud=" onclick="AceptarSolicitud(${prestamo.getSolicitud().getId_solicitud()})">Aprobar</a>
+                                  <a class="btn btn-danger btn-sm boton-accion confirmableRechazar" data-texto-confirmacion="rechazar esta solicitud de préstamo" data-href="/SIGIPRO/Bodegas/Prestamos?accion=rechazar&id_solicitud=" onclick="RechazarSolicitud(${prestamo.getSolicitud().getId_solicitud()})">Rechazar</a>
+                                    </td>
                           </c:when>
                           <c:otherwise>
-                            <c:choose>
-                              <c:when test="${prestamo.getSolicitud().getEstado().equals('Rechazada') || prestamo.getSolicitud().getEstado().equals('Prestamo Repuesto')}" >
-                                <td>
-                                  <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Finalizada</button>
-                                </td>
-                              </c:when>
-                              <c:otherwise>
-                                <td>
-                                  <button class="btn btn-warning btn-sm boton-accion" disabled >Por Reponer</button>
-                                </td>
-                              </c:otherwise>
-                            </c:choose>
+                                <c:choose>
+                                  <c:when test="${prestamo.getSolicitud().getEstado().equals('Rechazada') || prestamo.getSolicitud().getEstado().equals('Prestamo Repuesto')}" >
+                                    <td>
+                                     <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Finalizada</button>
+                                    </td>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <td>
+                                     <button class="btn btn-warning btn-sm boton-accion" disabled >Por Reponer</button>
+                                    </td>
+                                  </c:otherwise>
+                                </c:choose>             
                           </c:otherwise>
-                        </c:choose>     
+                        </c:choose>        
                       </c:if>
                     </tr>
 
@@ -122,3 +121,4 @@
     </jsp:attribute>
 
   </t:plantilla_general>
+

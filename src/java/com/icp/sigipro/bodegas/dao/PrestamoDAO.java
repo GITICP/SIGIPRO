@@ -144,7 +144,50 @@ public class PrestamoDAO {
        else{
        consulta = getConexion().prepareStatement(" SELECT p.* FROM (bodega.solicitudes_prestamos p inner join bodega.solicitudes s"
                + "ON p.id_solicitud=s.id_solicitud) inner join seguridad.usuarios u on u.id_usuario = s.id_usuario "
-               + "Where u.id_seccion = 1 ");
+               + "Where u.id_seccion = ? ");
+      consulta.setInt(1, id_usuario);
+       }
+      ResultSet rs = consulta.executeQuery();
+
+      while (rs.next()) {
+        Prestamo solicitud = new Prestamo();
+        solicitud.setId_solicitud(rs.getInt("id_solicitud"));
+        solicitud.setId_seccion_presta(rs.getInt("id_seccion_presta"));
+        solicitud.setId_usuario_aprobo(rs.getInt("id_usuario_aprobo"));
+        try {
+          SolicitudDAO sol = new SolicitudDAO();
+          solicitud.setSolicitud(sol.obtenerSolicitud(rs.getInt("id_solicitud")));
+          SeccionDAO sec = new SeccionDAO();
+          solicitud.setSeccion(sec.obtenerSeccion(rs.getInt("id_seccion_presta")) );
+          UsuarioDAO usr = new UsuarioDAO();
+          solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario_aprobo")));
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+        resultado.add(solicitud);
+      }
+
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return resultado;
+  }
+  public List<Prestamo> obtenerPrestamosAdm(int id_usuario) {
+
+    List<Prestamo> resultado = new ArrayList<Prestamo>();
+
+    try {
+       PreparedStatement consulta;
+       if (id_usuario == 0) {
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes_prestamos");
+      }
+       
+       else{
+       consulta = getConexion().prepareStatement(" SELECT p.* FROM bodega.solicitudes_prestamos p inner join bodega.solicitudes s "
+               + "ON p.id_solicitud=s.id_solicitud "
+               + "Where p.id_seccion_presta = ? AND s.estado= 'Pendiente Prestamo' ");
       consulta.setInt(1, id_usuario);
        }
       ResultSet rs = consulta.executeQuery();
