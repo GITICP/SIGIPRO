@@ -1,6 +1,6 @@
 package com.icp.sigipro.bitacora.modelo;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +17,7 @@ public class Bitacora {
     private String ip;
     private String accion;
     private String tabla;
-    //Almacena el estado anterior del sistema, se almacenará en forma de JSON
+    //Almacena el estado despues de la accion, se almacenará en forma de JSON
     private String estado;
     
     //Variables de Tablas
@@ -50,9 +50,19 @@ public class Bitacora {
    
     }
     
-    public Bitacora(int id_bitacora, Date fecha_accion, String nombre_usuario, String ip, String accion, String tabla, String estado){
+    public Bitacora(int id_bitacora, Date fecha_accion, String nombre_usuario, String ip, String accion, String tabla,String estado){
         this.id_bitacora = id_bitacora;
         this.fecha_accion = fecha_accion;
+        this.nombre_usuario = nombre_usuario;
+        this.ip = ip;
+        this.accion = accion;
+        this.tabla = tabla;
+        this.estado = estado;
+        
+    }
+    public Bitacora(String nombre_usuario, String ip, String accion, String tabla, String estado){
+        Date date = new Date();
+        this.fecha_accion = date;
         this.nombre_usuario = nombre_usuario;
         this.ip = ip;
         this.accion = accion;

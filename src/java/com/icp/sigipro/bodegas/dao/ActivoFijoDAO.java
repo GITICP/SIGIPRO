@@ -2,6 +2,8 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ActivoFijo;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,15 +18,23 @@ import java.util.List;
  *
  * @author Walter
  */
+
+//Cada DAO tiene su propia conexion a la Bitacora
 public class ActivoFijoDAO {
 
     private Connection conexion;
+    private final BitacoraDAO bitacora;
 
     public ActivoFijoDAO() {
         SingletonBD s = SingletonBD.getSingletonBD();
         conexion = s.conectar();
+        this.bitacora = new BitacoraDAO(conexion);
     }
-
+    
+    public BitacoraDAO getBitacora(){
+        return this.bitacora;
+    }
+    
     public boolean insertarActivoFijo(ActivoFijo a) {
 
         boolean resultado = false;
@@ -60,6 +70,7 @@ public class ActivoFijoDAO {
             if (resultadoConsulta.next()) {
                 resultado = true;
                 a.setId_activo_fijo(resultadoConsulta.getInt("id_activo_fijo"));
+                
             }
             consulta.close();
             conexion.close();
@@ -226,5 +237,6 @@ public class ActivoFijoDAO {
 
         return conexion;
     }
+
 
 }

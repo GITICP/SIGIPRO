@@ -9,6 +9,8 @@ import com.icp.sigipro.bodegas.dao.ActivoFijoDAO;
 import com.icp.sigipro.bodegas.dao.UbicacionDAO;
 import com.icp.sigipro.bodegas.modelos.ActivoFijo;
 import com.icp.sigipro.bodegas.modelos.Ubicacion;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.configuracion.modelos.Seccion;
@@ -169,11 +171,15 @@ public class ControladorActivoFijo extends SIGIPROServlet
 
     if (id.isEmpty() || id.equals("0")) {
       resultado = dao.insertarActivoFijo(activofijo);
+      //Funcion que genera la bitacora
+      setBitacora(activofijo,Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),request.getRemoteAddr(),dao);
+      //*----------------------------*
       redireccion = "ActivosFijos/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo ingresado correctamente"));
     }
     else {
       activofijo.setId_activo_fijo(Integer.parseInt(id));
+
       resultado = dao.editarActivoFijo(activofijo);
       redireccion = "ActivosFijos/index.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo editado correctamente"));
@@ -203,5 +209,10 @@ public class ControladorActivoFijo extends SIGIPROServlet
   {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
+
+  private void setBitacora(ActivoFijo a, String accion, Object nombre_usuario, String ip,ActivoFijoDAO dao){
+      Bitacora bitacora = new Bitacora(nombre_usuario.toString(),ip,accion,Bitacora.TABLA_ACTIVOFIJO,a.parseJSON());      
+      dao.getBitacora().insertarBitacora(bitacora);
+ }
 
 }
