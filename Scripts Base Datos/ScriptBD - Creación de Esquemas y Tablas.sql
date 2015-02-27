@@ -94,6 +94,29 @@ ALTER TABLE ONLY seguridad.roles_usuarios ADD CONSTRAINT fk_id_usuario FOREIGN K
 ALTER TABLE ONLY seguridad.permisos_menu_principal ADD CONSTRAINT fk_permiso FOREIGN KEY (id_permiso) REFERENCES seguridad.permisos(id_permiso);
 ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_seccion FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones(id_seccion) on delete set null;; 
 ALTER TABLE ONLY seguridad.usuarios ADD CONSTRAINT fk_id_puesto FOREIGN KEY (id_puesto) REFERENCES seguridad.puestos(id_puesto)on delete set null;; 
+
+--######ESQUEMA bitacora######
+DROP SCHEMA IF EXISTS bitacora CASCADE;
+CREATE SCHEMA bitacora;
+
+--Tabla esquema bitacora
+
+CREATE TABLE bitacora.bitacora ( 
+	id_bitacora serial NOT NULL,
+	fecha_accion character varying(45) NOT NULL,
+        nombre_usuario character varying(45) NOT NULL,
+        ip character varying(18) NOT NULL,
+	accion character varying(45) NOT NULL,
+        tabla character varying(45),
+        id_objeto int,
+        estado json
+ );
+
+ALTER TABLE ONLY bitacora.bitacora ADD CONSTRAINT pk_bitacora PRIMARY KEY (id_bitacora);
+
+ALTER TABLE ONLY bitacora.bitacora ADD CONSTRAINT fk_nombre_usuario FOREIGN KEY (nombre_usuario) REFERENCES seguridad.usuarios(nombre_usuario);
+
+
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;

@@ -37,6 +37,21 @@ public class ActivoFijo {
     this.fecha_registro = fecha_registro;
     this.estado = estado;
   }
+  
+      
+    public String parseJSON(){
+        String JSON = "{\"id_objeto\":\""+this.getId_activo_fijo()+"\","
+                + "\"placa\":\""+this.getPlaca()+"\", "
+                + "\"equipo\":\""+this.getEquipo()+"\", "
+                + "\"marca\":\""+this.getMarca()+"\", "
+                + "\"fecha_movimiento\":\""+this.getFecha_movimiento()+"\", "
+                + "\"id_seccion\":\""+this.getId_seccion()+"\", "
+                + "\"id_ubicacion\":\""+this.getId_ubicacion()+"\", "
+                + "\"fecha_registro\":\""+this.getFecha_registro()+"\", "
+                + "\"estado\":\""+this.getEstado()+"\"}";
+        
+        return JSON;
+    }
 
   public int getId_activo_fijo() {
     return id_activo_fijo;
