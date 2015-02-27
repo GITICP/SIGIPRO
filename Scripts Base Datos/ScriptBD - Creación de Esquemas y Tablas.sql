@@ -175,10 +175,11 @@ CREATE TABLE bodega.solicitudes (
      	fecha_solicitud date NOT NULL,
         estado character varying(45) NOT NULL,
         fecha_entrega date,
-        id_usuario_recibo integer
+        id_usuario_recibo integer,
+        observaciones character varying(200)
  ); 
 CREATE TABLE bodega.solicitudes_prestamos ( 
-	id_solicitud serial NOT NULL,
+	id_solicitud integer NOT NULL,
 	id_seccion_presta integer NOT NULL,
 	id_usuario_aprobo integer
 ); 
@@ -328,6 +329,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]Aceptar y Rechazar Préstamos', 'Permite aceptar o rechazar préstamos');
 
 
 -- Observación importante:

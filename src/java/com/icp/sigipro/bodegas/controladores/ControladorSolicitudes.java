@@ -71,7 +71,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           boolAdmin = true;}
       else
       {   String nombre_usr = (String) sesion.getAttribute("usuario");
-          usuario_solicitante = usrDAO.obtenerIDUsuario(nombre_usr);
+          int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+          Usuario us = usrDAO.obtenerUsuario(id_usuario);
+          usuario_solicitante = us.getIdSeccion();
       }
 
       if (accion != null) {
@@ -87,7 +89,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           Solicitud solicitud = new Solicitud();
           InventarioDAO inventarioDAO = new InventarioDAO();
           Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion() );
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),1);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Agregar");
@@ -108,7 +110,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
           Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
           InventarioDAO inventarioDAO = new InventarioDAO();
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion() );
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),1);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
           request.setAttribute("accion", "Editar");
@@ -133,24 +135,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           {request.setAttribute("mensaje", helper.mensajeDeError("No se puede aprobar la solicitud, la cantidad solicitada es mayor a las existencias del producto"));
           }
 
-          List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
-          request.setAttribute("booladmin", boolAdmin);
-          request.setAttribute("listaSolicitudes", solicitudes);
-        } 
-        else if (accion.equalsIgnoreCase("rechazar")) {
-          redireccion = "Solicitudes/index.jsp";
-          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-          Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
-          solicitud.setEstado("Rechazada");
-          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-          boolean resultado;
-          resultado = dao.editarSolicitud(solicitud);
-          if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
-          } 
-          else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-          }
           List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
           request.setAttribute("booladmin", boolAdmin);
           request.setAttribute("listaSolicitudes", solicitudes);
@@ -193,6 +177,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     HttpSession sesion = request.getSession();
     List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
     int[] permisos = {24, 25, 1};
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     if (verificarPermiso(25, listaPermisos))
       { boolAdmin = true;
         usuario_solicitante = 0;
@@ -205,7 +190,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     if (accionindex.equals("")){      
       request.setCharacterEncoding("UTF-8");
       boolean resultado = false;
-      HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
       Solicitud solicitud = new Solicitud();
       Integer id_inventario;
       try {
@@ -217,10 +201,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
       String estado = request.getParameter("estado");
       String fch_sol =  request.getParameter("fecha_solicitud");
-      String fch_ent =  request.getParameter("fecha_entrega");
-      Integer id_us = Integer.parseInt(request.getParameter("id_usuario"));
-      Integer id_us_recibo = Integer.parseInt(request.getParameter("id_usuario_recibo"));
-
       SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
       java.util.Date fecha_solicitud;
       java.sql.Date fecha_solicitudSQL;
@@ -231,21 +211,10 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       } catch (ParseException ex) {
         Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
       }
-      java.util.Date fecha_entrega;
-      java.sql.Date fecha_entregaSQL;
-      try {
-        fecha_entrega = formatoFecha.parse(fch_ent);
-        fecha_entregaSQL = new java.sql.Date(fecha_entrega.getTime());
-        solicitud.setFecha_entrega(fecha_entregaSQL);
-      } catch (ParseException ex) {
-        Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
-      }
 
       solicitud.setId_inventario(id_inventario);
       solicitud.setCantidad(cantidad);
       solicitud.setEstado(estado);
-      solicitud.setId_usuario(id_us);
-      solicitud.setId_usuario_recibo(id_us_recibo);
 
       String id = request.getParameter("id_solicitud");
 
@@ -262,6 +231,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud ingresada correctamente"));
       }
       else {
+        Integer id_us = Integer.parseInt(request.getParameter("id_usuario"));
+        solicitud.setId_usuario(id_us);
         solicitud.setId_solicitud(Integer.parseInt(id));
         resultado = dao.editarSolicitud(solicitud);
         redireccion = "Solicitudes/Editar.jsp";
@@ -281,9 +252,30 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       request.setAttribute("solicitud", solicitud);
       RequestDispatcher vista = request.getRequestDispatcher(redireccion);
       vista.forward(request, response);
-    }
-    else
-    {
+    } 
+    
+    else if (accionindex.equals("accionindex_rechazar")) {
+      redireccion = "Solicitudes/index.jsp";
+      String obs = request.getParameter("observaciones");
+      int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
+      Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
+      solicitud.setEstado("Rechazada");
+      solicitud.setObservaciones(obs);
+      boolean resultado;
+      resultado = dao.editarSolicitud(solicitud);
+      if (resultado) {
+        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
+      } else {
+        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      }
+      List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+      request.setAttribute("booladmin", boolAdmin);
+      request.setAttribute("listaSolicitudes", solicitudes);
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
+
+    } 
+    else {
           redireccion = "Solicitudes/index.jsp";
           String usuario = request.getParameter("usr");
           String contrasena = request.getParameter("passw");
@@ -291,7 +283,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
           int id_seccion = solicitud.getUsuario().getIdSeccion();
           boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
-           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           if (auth) {
             InventarioDAO inventarioDAO = new InventarioDAO();
             java.util.Date hoy = new java.util.Date();

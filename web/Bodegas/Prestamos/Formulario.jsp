@@ -13,13 +13,13 @@
   <c:set var="boolEditar" value="true" />
 </c:if>
 
-<form id="formSolicitud" class="form-horizontal" autocomplete="off" method="post" action="Solicitudes">
+<form id="formSolicitud" class="form-horizontal" autocomplete="off" method="post" action="Prestamos">
   <div class="col-md-12">
     <input hidden="true" name="accionindex" id="accionindex" value="">
-    <input hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
-    <input hidden="true" name="id_usuario" value="${solicitud.getId_usuario()}">
-    <input hidden="true" name="fecha_solicitud" value="${solicitud.getFecha_solicitudAsDate()}">
-    <input hidden="true" name="estado" value="${solicitud.getEstado()}">
+    <input hidden="true" name="id_solicitud" value="${prestamo.getSolicitud().getId_solicitud()}">
+    <input hidden="true" name="id_usuario" value="${prestamo.getSolicitud().getId_usuario()}">
+    <input hidden="true" name="fecha_solicitud" value="${prestamo.getSolicitud().getFecha_solicitudAsDate()}">
+    <input hidden="true" name="estado" value="${prestamo.getSolicitud().getEstado()}">
     <label for="seleccioninventario" class="control-label"> *Producto</label>
     <div class="form-group">
       <div class="col-sm-12">
@@ -31,11 +31,11 @@
                       oninput="setCustomValidity('')" disabled>
                 <c:forEach items="${inventarios}" var="inventario">
                   <c:choose>
-                    <c:when test="${inventario.getId_inventario() == solicitud.getId_inventario()}">
+                    <c:when test="${inventario.getId_inventario() == prestamo.getSolicitud().getId_inventario()}">
                       <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()} selected> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                     </c:when>
                     <c:otherwise>
-                      <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} -  Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                      <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                     </c:otherwise>
                   </c:choose>
                 </c:forEach>
@@ -46,7 +46,7 @@
                       oninvalid="setCustomValidity('Este campo es requerido')"
                       oninput="setCustomValidity('')">
                 <c:forEach items="${inventarios}" var="inventario">
-                  <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()}  - Presentación: ${inventario.getProducto().getPresentacion()} </option>
+                  <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                 </c:forEach>
               </select> 
             </c:otherwise>    
@@ -61,8 +61,8 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="cantidadinput" placeholder="Número mayor a 1" type="number" min="1" class="form-control" name="cantidad" value="${solicitud.getCantidad()}"required 
-                  oninvalid="setCustomValidity('No hay suficientes existencias para realizar la solicitud. ')"
+          <input id="cantidadinput" type="number" min="1" class="form-control" name="cantidad" value="${prestamo.getSolicitud().getCantidad()}"required 
+                  oninvalid="setCustomValidity('Por favor introduzca un número entre 1 y la cantidad de existencias del producto seleccionado')"
                   oninput="setCustomValidity('')"> 
         </div>
       </div>
@@ -76,7 +76,7 @@
     <div class="form-group">
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Solicitud</button>
+        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Préstamo</button>
       </div>
     </div>
   </div>

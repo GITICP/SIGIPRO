@@ -26,26 +26,6 @@ function AprobarSolicitud(id_solicitud){
     $("#ModalEliminarGenerico").modal('show');
 }
 
-function RechazarSolicitud(id_solicitud){
-  $('#id_solicitud_rech').val(id_solicitud);
-  $('#ModalRechazar').modal('show');
-}
-
-
-function confirmarAuth(id_solicitud){
-  $('#id_solicitud_auth2').val(id_solicitud);
-  $('.alert-dismissible').remove();
-  $('#ModalAutorizar').modal('show');
-}
-
-$(document).ready(function () {
-  if ($('#form_modalautorizar').data('show-auth'))
-  { 
-    var id_solicitud = $('#id_solicitud_auth').val();
-    $('#id_solicitud_auth2').val(id_solicitud);
-    $('#ModalAutorizar').modal('show');  
-  }
-});
 
 $('#cantidadinput').change( function() {
   var max = $('option:selected').data('stock');
