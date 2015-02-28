@@ -6,8 +6,10 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.core.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,13 +21,10 @@ import java.util.List;
  *
  * @author Amed
  */
-public class InventarioDAO {
-
-  private Connection conexion;
+public class InventarioDAO extends DAO<Inventario> {
 
   public InventarioDAO() {
-    SingletonBD s = SingletonBD.getSingletonBD();
-    conexion = s.conectar();
+    super(Inventario.class,"bodega","inventarios");
   }
 
   public boolean restarInventario(int id_inventario, int cant) {
@@ -126,18 +125,19 @@ public class InventarioDAO {
     }
     return inventario;
   }
-  
-  private Connection getConexion() {
-    try {
 
-      if (conexion.isClosed()) {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-      }
-    } catch (Exception ex) {
-      conexion = null;
+    @Override
+    public List<Inventario> buscarPor(String[] campos, Object valor) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    return conexion;
-  }
+    @Override
+    public boolean actualizar(Inventario param) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean eliminar(Inventario param) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -115,7 +115,6 @@ ALTER TABLE ONLY bitacora.bitacora ADD CONSTRAINT pk_bitacora PRIMARY KEY (id_bi
 
 ALTER TABLE ONLY bitacora.bitacora ADD CONSTRAINT fk_nombre_usuario FOREIGN KEY (nombre_usuario) REFERENCES seguridad.usuarios(nombre_usuario);
 
-
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;

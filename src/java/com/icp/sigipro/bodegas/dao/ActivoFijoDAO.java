@@ -23,16 +23,10 @@ import java.util.List;
 public class ActivoFijoDAO {
 
     private Connection conexion;
-    private final BitacoraDAO bitacora;
 
     public ActivoFijoDAO() {
         SingletonBD s = SingletonBD.getSingletonBD();
         conexion = s.conectar();
-        this.bitacora = new BitacoraDAO(conexion);
-    }
-    
-    public BitacoraDAO getBitacora(){
-        return this.bitacora;
     }
     
     public boolean insertarActivoFijo(ActivoFijo a) {
