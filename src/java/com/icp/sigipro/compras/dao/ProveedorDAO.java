@@ -32,19 +32,21 @@ public class ProveedorDAO {
     public boolean insertarProveedor(Proveedor proveedor) {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexion
-                    .prepareStatement("insert into compras.proveedores(nombre_proveedor,telefono1,telefono2,telefono3,correo) values (?, ?, ?, ?, ?)");
+            PreparedStatement consulta = conexion
+                    .prepareStatement("insert into compras.proveedores(nombre_proveedor,telefono1,telefono2,telefono3,correo) values (?, ?, ?, ?, ?) RETURNING id_proveedor");
             // Parameters start with 1
-            preparedStatement.setString(1, proveedor.getNombre_proveedor());
-            preparedStatement.setString(2, proveedor.getTelefono1());
-            preparedStatement.setString(3, proveedor.getTelefono2());
-            preparedStatement.setString(4, proveedor.getTelefono3());
-            preparedStatement.setString(5, proveedor.getCorreo());
+            consulta.setString(1, proveedor.getNombre_proveedor());
+            consulta.setString(2, proveedor.getTelefono1());
+            consulta.setString(3, proveedor.getTelefono2());
+            consulta.setString(4, proveedor.getTelefono3());
+            consulta.setString(5, proveedor.getCorreo());
 
-           
-           if (preparedStatement.executeUpdate() == 1){
-               resultado = true;
-           }
+           ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = true;
+                proveedor.setId_proveedor(resultadoConsulta.getInt("id_proveedor"));
+                
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

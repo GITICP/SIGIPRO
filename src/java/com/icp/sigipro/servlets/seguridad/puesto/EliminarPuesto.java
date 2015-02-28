@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.seguridad.puesto;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import java.io.IOException;
@@ -63,11 +65,16 @@ public class EliminarPuesto extends SIGIPROServlet {
         out = response.getWriter();
         request.setCharacterEncoding("UTF-8");
         try {
-            String idpuesto = request.getParameter("controlIDPuesto");
+            String id_puesto = request.getParameter("controlIDPuesto");
 
             PuestoDAO s = new PuestoDAO();
 
-            boolean Exito = s.EliminarPuesto(idpuesto);
+            boolean Exito = s.EliminarPuesto(id_puesto);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(Integer.parseInt(id_puesto),Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PUESTO,request.getRemoteAddr());
+            //*----------------------------*
 
             if (Exito) {
                 request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"

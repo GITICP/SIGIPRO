@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.seguridad.usuario;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
@@ -18,6 +20,8 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -99,34 +103,48 @@ public class AgregarUsuario extends SIGIPROServlet
     out = response.getWriter();
 
     try {
-      String nombreUsuario;
-      nombreUsuario = request.getParameter("nombreUsuario");
-      String nombreCompleto;
-      nombreCompleto = request.getParameter("nombreCompleto");
-      String correoElectronico;
-      correoElectronico = request.getParameter("correoElectronico");
-      String cedula;
-      cedula = request.getParameter("cedula");
-      String seccion;
-      seccion = request.getParameter("seccion");
-      String puesto;
-      puesto = request.getParameter("puesto");
-      String fechaActivacion;
-      fechaActivacion = request.getParameter("fechaActivacion");
-      String fechaDesactivacion;
-      fechaDesactivacion = request.getParameter("fechaDesactivacion");
+        Usuario usuario = new Usuario();
+      usuario.setNombre_usuario(request.getParameter("nombreUsuario"));
+      usuario.setNombre_completo(request.getParameter("nombreCompleto"));
+      usuario.setCorreo(request.getParameter("correoElectronico"));
+      usuario.setCedula(request.getParameter("cedula"));
+      usuario.setIdSeccion(Integer.parseInt(request.getParameter("seccion")));
+      usuario.setIdPuesto(Integer.parseInt(request.getParameter("puesto")));
+      
+      try {
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+        String fechaactivacion = request.getParameter("fechaActivacion");
+        java.util.Date fActivacion = formatoFecha.parse(fechaactivacion);
+
+        String fechadesactivacion = request.getParameter("fechaDesactivacion");
+        java.util.Date fDesactivacion = formatoFecha.parse(fechadesactivacion);
+
+        java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+        java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+
+        usuario.setFechaActivacion(fActivacionSQL);
+        usuario.setFechaDesactivacion(fDesactivacionSQL);
+    } catch (ParseException ex){
+      ex.printStackTrace();
+    }
 
       UsuarioDAO u = new UsuarioDAO();
       HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
       
-      boolean nombre_usuario_activo = u.validarNombreUsuario(nombreUsuario, 0);
-      boolean correo_activo = u.validarCorreo(correoElectronico, 0);
+      boolean nombre_usuario_activo = u.validarNombreUsuario(usuario.getNombreUsuario(), 0);
+      boolean correo_activo = u.validarCorreo(usuario.getCorreo(), 0);
       if (correo_activo && nombre_usuario_activo) {
-        boolean insercionExitosa = u.insertarUsuario(nombreUsuario, nombreCompleto, correoElectronico, cedula,
-                                                     Integer.parseInt(seccion), Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion);
+          
+        boolean insercionExitosa = u.insertarUsuario(usuario);
+        
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(usuario.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
+        //*----------------------------*
 
         if (insercionExitosa) {
-          int id_usuario = u.obtenerIDUsuario(nombreUsuario);
+          int id_usuario = u.obtenerIDUsuario(usuario.getNombreUsuario());
 
           String rolesUsuario = request.getParameter("listaRolesUsuario");
           RolUsuarioDAO ru = new RolUsuarioDAO();
@@ -134,7 +152,10 @@ public class AgregarUsuario extends SIGIPROServlet
             List<RolUsuario> roles = ru.parsearRoles(rolesUsuario, id_usuario);
             boolean f = true;
             for (RolUsuario i : roles) {
-              boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
+              boolean e = ru.insertarRolUsuario(i);
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ROLUSUARIO,request.getRemoteAddr());
+                //*----------------------------*
               if (!e) {
                 f = false;
                 break;

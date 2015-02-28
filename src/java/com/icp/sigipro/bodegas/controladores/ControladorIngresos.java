@@ -6,6 +6,8 @@
 package com.icp.sigipro.bodegas.controladores;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.IngresoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.modelos.Ingreso;
@@ -293,6 +295,11 @@ public class ControladorIngresos extends SIGIPROServlet
             validarPermiso(27, listaPermisos);
             try {
               if (dao.registrarIngreso(ingreso)) {
+                  
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+                //*----------------------------*
                 resultado = true;
               }
             }

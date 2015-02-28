@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class RolUsuarioDAO {
 
-  public boolean insertarRolUsuario(int idusuario, int idrol, String fechaActivacion, String fechaDesactivacion) {
+  public boolean insertarRolUsuario(RolUsuario ru) {
     boolean resultado = false;
 
     try {
@@ -37,12 +37,12 @@ public class RolUsuarioDAO {
                 + " (id_usuario, id_rol, fecha_activacion, fecha_desactivacion) "
                 + " VALUES "
                 + " (?,?,?,? )");
-        consulta.setInt(1, idusuario);
-        consulta.setInt(2, idrol);
+        consulta.setInt(1, ru.getIDUsuario());
+        consulta.setInt(2, ru.getIDRol());
 
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
-        java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
+        java.util.Date fActivacion = formatoFecha.parse(ru.getFechaActivacion());
+        java.util.Date fDesactivacion = formatoFecha.parse(ru.getFechaDesactivacion());
         java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
         java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
 

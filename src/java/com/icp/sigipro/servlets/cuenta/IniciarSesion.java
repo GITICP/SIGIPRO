@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.cuenta;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.seguridad.dao.BarraFuncionalidadDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.BarraFuncionalidad;
@@ -106,6 +108,11 @@ public class IniciarSesion extends HttpServlet
             session.setAttribute("usuario", usuario);   // Asignar atributo "usuario" a la sesión.
             session.setAttribute("idusuario", idUsuario);
 
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(0,Bitacora.ACCION_LOGIN,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
+            //*----------------------------*
+            
             List<Integer> l = u.obtenerPermisos(idUsuario);
             session.setAttribute("listaPermisos", l);
             

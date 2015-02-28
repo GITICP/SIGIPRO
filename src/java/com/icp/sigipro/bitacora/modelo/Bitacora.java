@@ -24,11 +24,17 @@ public class Bitacora {
     
     public static final String TABLA_ACTIVOFIJO = "ACTIVO FIJO";
     public static final String TABLA_CATALOGOEXTERNO = "CATALOGO EXTERNO";
+    public static final String TABLA_CATALOGOEXTERNOINTERNO = "CATALOGO EXTERNO";
     public static final String TABLA_CATALOGOINTERNO = "CATALOGO INTERNO";
+    public static final String TABLA_REACTIVO = "REACTIVO";
     public static final String TABLA_UBICACION = "UBICACION";
     public static final String TABLA_UBICACIONBODEGA = "UBICACION BODEGA";
     public static final String TABLA_PROVEEDOR = "PROVEEDOR";
     public static final String TABLA_CORREO = "CORREO";
+    public static final String TABLA_INGRESO = "INGRESO";
+    public static final String TABLA_PRESTAMO = "PRESTAMO";
+    public static final String TABLA_SOLICITUD = "SOLICITUD";
+    public static final String TABLA_INVENTARIO = "INVENTARIO";
     public static final String TABLA_SECCION = "SECCION";
     public static final String TABLA_PERMISO = "PERMISO";
     public static final String TABLA_PERMISOROL = "PERMISO ROL";

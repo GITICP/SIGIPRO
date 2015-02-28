@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.configuracion.seccion;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
@@ -81,11 +83,16 @@ public class EliminarSeccion extends SIGIPROServlet {
         request.setCharacterEncoding("UTF-8");
         try
         {
-            String idseccion = request.getParameter("controlIDSeccion");
+            String id_seccion = request.getParameter("controlIDSeccion");
             
             SeccionDAO s = new SeccionDAO();
             
-            boolean Exito = s.EliminarSeccion( idseccion);
+            boolean Exito = s.EliminarSeccion( id_seccion);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(Integer.parseInt(id_seccion),Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SECCION,request.getRemoteAddr());
+            //*----------------------------*
             
             if(Exito)
             {

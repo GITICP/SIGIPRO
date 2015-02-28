@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoExternoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.dao.UbicacionBodegaDAO;
@@ -92,6 +94,12 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           validarPermiso(13, listaPermisos);
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           dao.eliminarProductoInterno(id_producto);
+          
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
+          //*----------------------------*
+            
           redireccion = "CatalogoInterno/index.jsp";
           List<ProductoInterno> productos = dao.obtenerProductos();
           request.setAttribute("listaProductos", productos);
@@ -172,9 +180,9 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       else {
         productoInterno.setPerecedero(false);
       }
-
+      Reactivo r = null;
       if (request.getParameter("reactivo") != null) {
-        Reactivo r = new Reactivo();
+        r = new Reactivo();
         r.setNumero_cas(request.getParameter("numero_cas"));
         r.setFormula_quimica(request.getParameter("formula_quimica"));
         r.setFamilia(request.getParameter("familia"));
@@ -196,6 +204,16 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
       if (id.isEmpty() || id.equals("0")) {
         if ( dao.validarCodigoICP(productoInterno.getCodigo_icp(), 0) ){
           resultado = dao.insertarProductoInterno(productoInterno, ubicaciones, productosExternos);
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(productoInterno.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
+          //*----------------------------*
+          if (request.getParameter("reactivo") != null){
+              //Funcion que genera la bitacora
+               bitacora.setBitacora(r.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_REACTIVO,request.getRemoteAddr());
+               //*----------------------------*
+          }
+          
         } else {
           resultado = false;
           codigoValido = false;
@@ -207,6 +225,12 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
         productoInterno.setId_producto(Integer.parseInt(id));
         if ( dao.validarCodigoICP(productoInterno.getCodigo_icp(), productoInterno.getId_producto()) ){
           resultado = dao.editarProductoInterno(productoInterno, ubicaciones, productosExternos);
+          
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(productoInterno.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
+          //*----------------------------*
+          
         } else {
           resultado = false;
           codigoValido = false;

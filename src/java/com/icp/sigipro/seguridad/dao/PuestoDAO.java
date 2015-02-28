@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class PuestoDAO {
 
-    public boolean insertarPuesto(String nombre, String descripcion) {
+    public boolean insertarPuesto(Puesto puesto) {
         boolean resultado = false;
 
         try {
@@ -31,12 +31,14 @@ public class PuestoDAO {
                 PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.puestos "
                         + " ( nombre_puesto, descripcion) "
                         + " VALUES "
-                        + " (?,? )");
-                consulta.setString(1, nombre);
-                consulta.setString(2, descripcion);
-                int resultadoConsulta = consulta.executeUpdate();
-                if (resultadoConsulta == 1) {
+                        + " (?,? ) RETURNING id_puesto");
+                consulta.setString(1, puesto.getNombre_puesto());
+                consulta.setString(2, puesto.getDescripcion());
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                if (resultadoConsulta.next()) {
                     resultado = true;
+                    puesto.setId_puesto(resultadoConsulta.getInt("id_puesto"));
+
                 }
                 consulta.close();
                 conexion.close();

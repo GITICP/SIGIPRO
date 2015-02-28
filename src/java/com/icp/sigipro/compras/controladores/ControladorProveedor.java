@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.compras.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.compras.dao.ProveedorDAO;
 import com.icp.sigipro.compras.modelos.Proveedor;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -77,6 +79,12 @@ public class ControladorProveedor extends SIGIPROServlet
           validarPermiso(15, listaPermisos);
           int id_proveedor = Integer.parseInt(request.getParameter("id_proveedor"));
           p.eliminarProveedor(id_proveedor);
+          
+          //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_proveedor,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PROVEEDOR,request.getRemoteAddr());
+            //*----------------------------*
+          
           redireccion = "Proveedores/index.jsp";
           request.setAttribute("proveedores", p.obtenerProveedores());
         }
@@ -123,11 +131,23 @@ public class ControladorProveedor extends SIGIPROServlet
     String id = request.getParameter("id_proveedor");
 
     if (id == null || id.isEmpty() || "0".equals(id)) {
-      resultado = p.insertarProveedor(proveedor);
+        resultado = p.insertarProveedor(proveedor);
+        
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(proveedor.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PROVEEDOR,request.getRemoteAddr());
+        //*----------------------------*
+      
     }
     else {
-      proveedor.setId_proveedor(Integer.parseInt(id));
-      resultado = p.editarProveedor(proveedor);
+        proveedor.setId_proveedor(Integer.parseInt(id));
+        resultado = p.editarProveedor(proveedor);
+        
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(proveedor.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PROVEEDOR,request.getRemoteAddr());
+        //*----------------------------*
+        
     }
     if (resultado) {
       RequestDispatcher vista = request.getRequestDispatcher("/Compras/Proveedores/index.jsp");
