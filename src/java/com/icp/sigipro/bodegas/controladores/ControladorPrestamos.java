@@ -325,11 +325,13 @@ public class ControladorPrestamos extends SIGIPROServlet {
       solicitud.setFecha_solicitud(hoysql);
       solicitud.setEstado("Pendiente Prestamo");
       resultado = soldao.insertarSolicitud_Prestamo(solicitud, prestamo);
-      
+      Inventario invNuevo = invDAO.obtenerInventario(id_inventario);
+
       //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
           bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
           bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+          bitacora.setBitacora(invNuevo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
           //*----------------------------*
       redireccion = "Prestamos/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo ingresada correctamente"));

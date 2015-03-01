@@ -212,6 +212,18 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
           bitacora.setBitacora(productoInterno.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
+          String[] u = dao.parsearAsociacion("#u#", ubicaciones);
+          String[] pe = dao.parsearAsociacion("#p#", productosExternos);
+          if (u != null){
+                for (String us : u){
+                    bitacora.setBitacora("{\"id_objeto\":"+productoInterno.getId_producto()+",\"id_ubicacion\":"+Integer.parseInt(us)+"}",Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACIONCATALOGOINTERNO,request.getRemoteAddr());
+                }
+          }
+          if (pe != null){
+                for (String pes : pe){
+                    bitacora.setBitacora("{\"id_objeto\":"+productoInterno.getId_producto()+",\"id_producto_ext\":"+Integer.parseInt(pes)+"}",Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNOINTERNO,request.getRemoteAddr());
+                }
+          }
           //*----------------------------*
           if (request.getParameter("reactivo") != null){
               //Funcion que genera la bitacora
@@ -234,7 +246,19 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
           bitacora.setBitacora(productoInterno.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
-          //*----------------------------*
+          String[] u = dao.parsearAsociacion("#u#", ubicaciones);
+          String[] pe = dao.parsearAsociacion("#p#", productosExternos);
+          if (u != null){
+                for (String us : u){
+                    bitacora.setBitacora("{\"id_objeto\":"+productoInterno.getId_producto()+",\"id_ubicacion\":"+Integer.parseInt(us)+"}",Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACIONCATALOGOINTERNO,request.getRemoteAddr());
+                }
+          }
+          if (pe != null){
+                for (String pes : pe){
+                    bitacora.setBitacora("{\"id_objeto\":"+productoInterno.getId_producto()+",\"id_producto_ext\":"+Integer.parseInt(pes)+"}",Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNOINTERNO,request.getRemoteAddr());
+                }
+          }
+          //*----------------------------*          
           if (productoInterno.isReactivo().equals("Sí")){
               //Funcion que genera la bitacora
                bitacora.setBitacora(r.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_REACTIVO,request.getRemoteAddr());

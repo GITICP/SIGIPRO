@@ -29,6 +29,7 @@ public class Bitacora {
     public static final String TABLA_REACTIVO = "REACTIVOS";
     public static final String TABLA_UBICACION = "UBICACIONES";
     public static final String TABLA_UBICACIONBODEGA = "UBICACIONES_BODEGA";
+    public static final String TABLA_UBICACIONCATALOGOINTERNO = "UBICACIONES_CATALOGO_INTERNO";
     public static final String TABLA_PROVEEDOR = "PROVEEDORES";
     public static final String TABLA_CORREO = "CORREO";
     public static final String TABLA_INGRESO = "INGRESOS";

@@ -510,7 +510,7 @@ public class ProductoInternoDAO
     return resultado;
   }
   
-  private String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
+  public String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
     String[] idsTemp = asociacionesCodificadas.split(pivote);
     return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
   }
