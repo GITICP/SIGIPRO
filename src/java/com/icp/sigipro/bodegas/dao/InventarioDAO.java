@@ -6,7 +6,6 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.core.DAO;
@@ -92,6 +91,41 @@ public class InventarioDAO extends DAO<Inventario> {
     }
     return resultado;
   }
+  
+   public List<Inventario> obtenerInventarios() {
+
+    List<Inventario> resultado = new ArrayList<Inventario>();
+
+    try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.inventarios");
+
+        ResultSet rs = consulta.executeQuery();
+
+        while (rs.next()) {
+            Inventario inventario = new Inventario();
+            System.out.println(rs.getInt("id_inventario"));
+            inventario.setId_inventario(rs.getInt("id_inventario"));
+            inventario.setId_producto(rs.getInt("id_producto"));
+            inventario.setId_seccion(rs.getInt("id_seccion"));
+            inventario.setStock_actual(rs.getInt("stock_actual"));
+            try {
+                ProductoInternoDAO pr = new ProductoInternoDAO();
+                SeccionDAO sc = new SeccionDAO();
+                inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+                inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            resultado.add(inventario);
+        }
+        consulta.close();
+        conexion.close();
+    }catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    return resultado;
+  }
+  
   
   public Inventario obtenerInventario(int id_inventario) {
 
