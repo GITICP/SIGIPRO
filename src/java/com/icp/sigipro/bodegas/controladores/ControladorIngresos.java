@@ -294,7 +294,8 @@ public class ControladorIngresos extends SIGIPROServlet
           if (valido) {
             validarPermiso(27, listaPermisos);
             try {
-              if (dao.registrarIngreso(ingreso)) {
+              Ingreso ingresoRegistrado = dao.registrarIngreso(ingreso);
+              if (ingresoRegistrado.getId_ingreso() != 0) {
                   
                 //Funcion que genera la bitacora
                 BitacoraDAO bitacora = new BitacoraDAO();

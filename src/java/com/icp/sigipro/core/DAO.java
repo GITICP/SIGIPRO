@@ -120,6 +120,7 @@ public abstract class DAO<T extends IModelo>
     String accionTabla = "INSERT INTO " + this.nombreModulo + "." + this.nombreTabla;
     String columnas = "(";
     String valores = "VALUES (";
+    String returning = " RETURNING ";
 
     List<Object> lista = new ArrayList<Object>();
 
@@ -143,13 +144,15 @@ public abstract class DAO<T extends IModelo>
           columnas += tupla.getCampo().getName() + ",";
           valores += "?,";
           lista.add(resultadoGet);
+        } else {
+          returning += tupla.getCampo().getName();
         }
       }
     }
 
     String columnasFinal = columnas.substring(0, columnas.length() - 1);
     String valoresFinal = valores.substring(0, valores.length() - 1);
-    String consulta = accionTabla + columnasFinal + ")" + valoresFinal + ");";
+    String consulta = accionTabla + columnasFinal + ")" + valoresFinal + ")" + returning + ";";
 
     return construirConsulta(consulta, lista);
   }
