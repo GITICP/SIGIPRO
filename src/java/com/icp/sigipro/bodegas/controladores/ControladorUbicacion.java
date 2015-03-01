@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.UbicacionDAO;
 import com.icp.sigipro.bodegas.modelos.Ubicacion;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -69,6 +71,12 @@ public class ControladorUbicacion extends SIGIPROServlet {
                     validarPermiso(13, listaPermisos);
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
                     dao.eliminarUbicacion(id_ubicacion);
+                    
+                    //Funcion que genera la bitacora
+                    BitacoraDAO bitacora = new BitacoraDAO();
+                    bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
+                    //*----------------------------*
+                    
                     redireccion = "Ubicaciones/index.jsp";
                     List<Ubicacion> ubicaciones = dao.obtenerUbicaciones();
                     request.setAttribute("listaUbicaciones", ubicaciones);
@@ -117,10 +125,22 @@ public class ControladorUbicacion extends SIGIPROServlet {
 
         if (id.isEmpty() || id.equals("0")) {
             resultado = dao.insertarUbicacion(ubicacion);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(ubicacion.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
+            //*----------------------------*
+            
             redireccion = "Ubicaciones/Agregar.jsp";
         } else {
             ubicacion.setId_ubicacion(Integer.parseInt(id));
             resultado = dao.editarUbicacion(ubicacion);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(ubicacion.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
+            //*----------------------------*
+            
             redireccion = "Ubicaciones/Editar.jsp";
         }
 

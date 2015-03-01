@@ -18,11 +18,6 @@ import org.json.JSONObject;
  */
 public class Ingreso extends IModelo
 {
-  public static final String CUARENTENA = "En Cuarentena";
-  public static final String DISPONIBLE = "Disponible";
-  public static final String NO_DISPONIBLE = "No Disponible";
-  public static final String RECHAZADO = "Rechazado";
-  
   int id_ingreso;
   ProductoInterno producto;
   Seccion seccion;
@@ -32,6 +27,13 @@ public class Ingreso extends IModelo
   int cantidad;
   String estado;
   int precio;
+  
+  public static final String CUARENTENA = "En Cuarentena";
+  public static final String DISPONIBLE = "Disponible";
+  public static final String NO_DISPONIBLE = "No Disponible";
+  public static final String RECHAZADO = "Rechazado";
+  
+  
 
   public int getId_ingreso()
   {

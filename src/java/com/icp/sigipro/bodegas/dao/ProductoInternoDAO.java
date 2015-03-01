@@ -59,7 +59,7 @@ public class ProductoInternoDAO
       if(reactivo != null){
         PreparedStatement consultaReactivo = getConexion().prepareStatement(
                 " INSERT INTO bodega.reactivos (id_producto, numero_cas, formula_quimica, familia, cantidad_botella_bodega, cantidad_botella_lab, volumen_bodega, volumen_lab) " +
-                " VALUES (?,?,?,?,?,?,?,?)");
+                " VALUES (?,?,?,?,?,?,?,?) RETURNING id_reactivo");
         
         consultaReactivo.setInt(1, p.getId_producto());
         consultaReactivo.setString(2, reactivo.getNumero_cas());
@@ -70,7 +70,11 @@ public class ProductoInternoDAO
         consultaReactivo.setString(7, reactivo.getVolumen_bodega());
         consultaReactivo.setString(8, reactivo.getVolumen_lab());
         
-        consultaReactivo.executeUpdate(); 
+        ResultSet resultadoConsultaR = consulta.executeQuery();
+        if ( resultadoConsultaR.next() ){
+          resultado = true;
+          reactivo.setId_reactivo(resultadoConsultaR.getInt("id_reactivo"));
+        }
       }
       
       if (ubicaciones != null){
@@ -275,6 +279,24 @@ public class ProductoInternoDAO
       ex.printStackTrace();
     }
     return resultado;
+  }
+  
+  public int obtenerIdReactivo(int id_producto){
+      try{
+      PreparedStatement consulta = getConexion().prepareStatement(
+                            "SELECT id_reactivo FROM bodega.reactivos WHERE id_producto = ?");
+      
+      consulta.setInt(1, id_producto);
+      
+      ResultSet rs = consulta.executeQuery();
+      
+      if(rs.next()){
+        return rs.getInt("id_producto");
+      }
+      }catch(Exception ex){
+      ex.printStackTrace();
+    }
+      return 0;
   }
   
   public ProductoInterno obtenerProductoInterno(int id_producto){

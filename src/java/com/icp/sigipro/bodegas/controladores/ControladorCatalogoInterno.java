@@ -93,13 +93,18 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
         else if (accion.equalsIgnoreCase("eliminar")) {
           validarPermiso(13, listaPermisos);
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
+          int id_reactivo = dao.obtenerIdReactivo(id_producto);
           dao.eliminarProductoInterno(id_producto);
           
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
           bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
           //*----------------------------*
-            
+           
+          //Funcion que genera la bitacora
+          bitacora.setBitacora(id_reactivo,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
+          //*----------------------------*
+          
           redireccion = "CatalogoInterno/index.jsp";
           List<ProductoInterno> productos = dao.obtenerProductos();
           request.setAttribute("listaProductos", productos);
@@ -230,7 +235,11 @@ public class ControladorCatalogoInterno extends SIGIPROServlet
           BitacoraDAO bitacora = new BitacoraDAO();
           bitacora.setBitacora(productoInterno.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOINTERNO,request.getRemoteAddr());
           //*----------------------------*
-          
+          if (productoInterno.isReactivo().equals("Sí")){
+              //Funcion que genera la bitacora
+               bitacora.setBitacora(r.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_REACTIVO,request.getRemoteAddr());
+               //*----------------------------*
+          }
         } else {
           resultado = false;
           codigoValido = false;
