@@ -92,9 +92,9 @@
     <div class="col-md-6">
       <div class="widget widget-table">
         <div class="widget-header">
-          <h3><i class="fa fa-sign-out"></i> Usuarios con permiso de sacar artículos a sub bodega</h3>
+          <h3><i class="fa fa-sign-out"></i> Usuarios con permiso de sacar artículos de sub bodega</h3>
           <div class="btn-group widget-header-toolbar">
-            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUsuariosIngresos">Agregar</a>
+            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUsuarioEgresos">Agregar</a>
           </div>
         </div>
         <div class="widget-content">
@@ -140,12 +140,11 @@
   <jsp:attribute name="form">
 
     <form class="form-horizontal" id="formAgregarUsuarioIngresos">
-      <input type="text" name="productoExterno"  hidden="true">
       <label for="id-usuario" class="control-label">*Usuario</label>
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <select id="seleccion-usuario" class="form-control" style='background-color: #fff;' name="id-usuario" required
+            <select id="seleccion-usuario-ingreso" class="form-control" style='background-color: #fff;' name="id-usuario" required
                     oninvalid="setCustomValidity('Este campo es requerido')"
                     oninput="setCustomValidity('')">
               <c:forEach items="${usuarios}" var="usuario">
@@ -165,4 +164,35 @@
 
   </jsp:attribute>
 
-</t:modal>    
+</t:modal>
+    
+<t:modal idModal="modalAgregarUsuarioEgresos" titulo="Agregar Usuario a Egresos de Sub Bodega">
+
+  <jsp:attribute name="form">
+
+    <form class="form-horizontal" id="formAgregarUsuarioEgresos">
+      <label for="id-usuario" class="control-label">*Usuario</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <select id="seleccion-usuario-egreso" class="form-control" style='background-color: #fff;' name="id-usuario" required
+                    oninvalid="setCustomValidity('Este campo es requerido')"
+                    oninput="setCustomValidity('')">
+              <c:forEach items="${usuarios}" var="usuario">
+                <option value=${usuario.getId_usuario()}>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</option>
+              </c:forEach> 
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="form-group">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+        <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarUsuarioEgresos()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+      </div>
+    </div>
+
+  </jsp:attribute>
+
+</t:modal>
