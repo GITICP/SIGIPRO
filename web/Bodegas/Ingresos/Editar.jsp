@@ -15,16 +15,16 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-8 ">
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
               <a href="/SIGIPRO/Bodegas/Ingresos?">Ingresos</a>
             </li>
-            <li class="active"> Registrar Ingreso </li>
+            <li class="active"> Editar Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()}</li>
           </ul>
         </div>
-        <div class="col-md-8 ">
+        <div class="col-md-4 ">
           <div class="top-content">
 
           </div>
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-sign-in"></i> Registrar Nuevo Ingreso </h3>
+              <h3><i class="fa fa-sign-in"></i> Editar Ingreso </h3>
             </div>
             ${mensaje}
             <div class="widget-content">

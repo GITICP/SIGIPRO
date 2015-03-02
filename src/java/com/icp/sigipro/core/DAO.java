@@ -74,7 +74,7 @@ public abstract class DAO<T extends IModelo>
   }
 
   //No usar este método
-  public T buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException
+  public T buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SIGIPROException
   {
     throw new NotImplementedException();
     /*

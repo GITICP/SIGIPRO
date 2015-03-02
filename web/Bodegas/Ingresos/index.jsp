@@ -7,7 +7,7 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
-  
+
   <jsp:attribute name="css">
     <link href="../recursos/css/sigipro/bodegas/ingresos.css" rel="stylesheet" type="text/css" media="screen">
   </jsp:attribute>
@@ -62,7 +62,7 @@
 
                   <c:set var="contienePermiso" value="false" />
                   <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                    <c:if test="${permiso == 1 || permiso == 11}">
+                    <c:if test="${permiso == 1 || permiso == 27}">
                       <c:set var="contienePermiso" value="true" />
                     </c:if>
                   </c:forEach>
@@ -122,19 +122,13 @@
                   <div class="widget-header">
                     <h3><i class="fa fa-sign-in"></i> Ingresos En Cuarentena </h3>
 
-                    <c:set var="contienePermiso" value="false" />
+                    <c:set var="contienePermisoAprobar" value="false" />
                     <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                      <c:if test="${permiso == 1 || permiso == 11}">
-                        <c:set var="contienePermiso" value="true" />
+                      <c:if test="${permiso == 1 || permiso == 29}">
+                        <c:set var="contienePermisoAprobar" value="true" />
                       </c:if>
                     </c:forEach>
-                    <c:if test="${contienePermiso}">
-                      <div class="btn-group widget-header-toolbar">
-                        <button class="btn btn-primary btn-sm boton-accion" type="submit">Confirmar Decisiones</button>
-                      </div>
-                    </c:if>
                   </div>
-                  ${mensaje}
                   <div class="widget-content">
                     <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                       <!-- Columnas -->
@@ -147,7 +141,9 @@
                           <th>Fecha Vencimiento</th>
                           <th>Cantidad</th>
                           <th>Precio</th>
-                          <th>Acción</th>
+                            <c:if test="${contienePermisoAprobar}">
+                            <th>Acción</th>
+                            </c:if>
                         </tr>
                       </thead>
                       <tbody>
@@ -167,15 +163,21 @@
                             <td>${ingresoCuarentena.getFecha_vencimientoAsString()}</td>
                             <td>${ingresoCuarentena.getCantidad()}</td>
                             <td>${ingresoCuarentena.getPrecio()}</td>
-                            <td class="fila-decision">
-                              <input type="text" value="${ingresoCuarentena.getProducto().getId_producto()}" hidden="true" name="decision-${ingresoCuarentena.getId_ingreso()}-id_producto">
-                              <input type="text" value="${ingresoCuarentena.getSeccion().getId_seccion()}" hidden="true" name="decision-${ingresoCuarentena.getId_ingreso()}-id_seccion">
-                              <input type="text" value="${ingresoCuarentena.getCantidad()}" hidden="true" name="decision-${ingresoCuarentena.getId_ingreso()}-cantidad">
-                              <input class="radio-decision-cuarentena" id="decision-${ingresoCuarentena.getId_ingreso()}-aprobar" type="radio" name="decision-${ingresoCuarentena.getId_ingreso()}-id_ingreso" value="true">
-                              <label class="radio-decision-cuarentena" for="decision-${ingresoCuarentena.getId_ingreso()}-aprobar"><i id="icono-aprobar" class="fa fa-check-circle icono-decision decision-izq"></i></label>
-                              <input class="radio-decision-cuarentena" id="decision-${ingresoCuarentena.getId_ingreso()}-rechazar" type="radio" name="decision-${ingresoCuarentena.getId_ingreso()}-id_ingreso" value="false">
-                              <label class="radio-decision-cuarentena" for="decision-${ingresoCuarentena.getId_ingreso()}-rechazar"><i id="icono-rechazar" class="fa fa-times-circle icono-decision"></i></label>
-                            </td>
+                            <c:if test="${contienePermisoAprobar}">
+                              <td class="fila-decision">
+                                <form></form> <!-- Necesario para que los otros forms sean válidos. No sé por qué -->
+                                <form id="form-ingreso-${ingresoCuarentena.getId_ingreso()}-aprobar" action="Ingresos" method="post">
+                                  <input type="hidden" name="id_ingreso" value="${ingresoCuarentena.getId_ingreso()}">
+                                  <input type="hidden" name="accion" value="aprobar">
+                                </form>
+                                <form id="form-ingreso-${ingresoCuarentena.getId_ingreso()}-rechazar" action="Ingresos" method="post">
+                                  <input type="hidden" name="id_ingreso" value="${ingresoCuarentena.getId_ingreso()}">
+                                  <input type="hidden" name="accion" value="rechazar">
+                                </form>
+                                <a class="btn btn-primary btn-sm boton-accion confirmable-form" data-texto-confirmacion="aprobar este ingreso" data-form-id="form-ingreso-${ingresoCuarentena.getId_ingreso()}-aprobar">Aprobar</a>
+                                <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="rechazar este ingreso" data-form-id="form-ingreso-${ingresoCuarentena.getId_ingreso()}-rechazar">Rechazar</a>
+                              </td>
+                            </c:if>
                           </tr>
                         </c:forEach>
                       </tbody>
@@ -233,7 +235,6 @@
                 <div class="widget-header">
                   <h3><i class="fa fa-sign-in"></i> Ingresos No Disponibles </h3>
                 </div>
-                ${mensaje}
                 <div class="widget-content">
                   <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                     <!-- Columnas -->

@@ -7,10 +7,11 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.SIGIPROException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,9 +27,22 @@ public class IngresoDAO extends DAO<Ingreso>
   }
 
   @Override
-  public Ingreso buscar(int id)
+  public Ingreso buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SIGIPROException
   {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla + " i INNER JOIN bodega.catalogo_interno ci on ci.id_producto = i.id_producto INNER JOIN seguridad.secciones s on i.id_seccion = s.id_seccion WHERE id_ingreso = ?;";
+
+    Ingreso t = tipo.newInstance();
+
+    PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+    consulta.setInt(1, id);
+    ResultSet resultado = ejecutarConsulta(consulta);
+    if (resultado.next()) {
+      return construirObjeto(t.getMetodos("set"), resultado);
+    }
+    else {
+      SIGIPROException ex = new SIGIPROException("El ingreso que está intentando buscar no existe.");
+      throw ex;
+    }
   }
 
   @Override
@@ -117,6 +131,105 @@ public class IngresoDAO extends DAO<Ingreso>
     return resultado;
   }
 
+  public boolean actualizar(Ingreso ingreso, int cantidadPrevia, String estadoOriginal) throws SQLException
+  {
+    boolean resultado = false;
+
+    PreparedStatement actualizarIngreso = null;
+    PreparedStatement actualizarInventario = null;
+
+    boolean resultadoUpdate = false;
+    boolean resultadoUpsert = false;
+
+    try {
+
+      getConexion().setAutoCommit(false);
+
+      actualizarIngreso = getConexion().prepareStatement(" UPDATE bodega.ingresos "
+                                                         + " SET id_producto = ?, "
+                                                         + "     id_seccion = ?,"
+                                                         + "     fecha_ingreso = ?,"
+                                                         + "     fecha_registro = ?,"
+                                                         + "     fecha_vencimiento = ?,"
+                                                         + "     cantidad = ?,"
+                                                         + "     estado = ?,"
+                                                         + "     precio = ?"
+                                                         + " WHERE id_ingreso = ?");
+
+      actualizarIngreso.setInt(1, ingreso.getProducto().getId_producto());
+      actualizarIngreso.setInt(2, ingreso.getSeccion().getId_seccion());
+      actualizarIngreso.setDate(3, ingreso.getFecha_ingreso());
+      actualizarIngreso.setDate(4, ingreso.getFecha_registro());
+      actualizarIngreso.setDate(5, ingreso.getFecha_vencimiento());
+      actualizarIngreso.setInt(6, ingreso.getCantidad());
+      actualizarIngreso.setString(7, ingreso.getEstado());
+      actualizarIngreso.setInt(8, ingreso.getPrecio());
+      actualizarIngreso.setInt(9, ingreso.getId_ingreso());
+
+      if (actualizarIngreso.executeUpdate() == 1) {
+        resultadoUpdate = true;
+      }
+      else {
+        resultadoUpdate = false;
+      }
+
+      if (ingreso.getEstado().equalsIgnoreCase(Ingreso.DISPONIBLE) || estadoOriginal.equalsIgnoreCase(Ingreso.DISPONIBLE)) {
+        if (ingreso.getEstado().equalsIgnoreCase(estadoOriginal)) {
+          int diferencia = ingreso.getCantidad() - cantidadPrevia;
+          if ( diferencia != 0) {
+            ingreso.setCantidad(diferencia);
+            actualizarInventario = construirUpsertInventario(ingreso);
+          }
+          else {
+            resultadoUpsert = true;
+          }
+        }
+        else if (ingreso.getEstado().equals(Ingreso.DISPONIBLE)) {
+          actualizarInventario = construirUpsertInventario(ingreso);
+        }
+        else {
+          int nuevaCantidad = cantidadPrevia * -1;
+          ingreso.setCantidad(nuevaCantidad);
+          actualizarInventario = construirUpsertInventario(ingreso);
+        }
+        if (!resultadoUpsert) {
+          int filasActualizarInventario = actualizarInventario.executeUpdate();
+          if (filasActualizarInventario == 0 || filasActualizarInventario == 1) {
+            resultadoUpsert = true;
+          }
+          else {
+            resultadoUpsert = false;
+          }
+        }
+      }
+
+      resultado = resultadoUpsert && resultadoUpdate;
+    }
+    catch (SQLException e) {
+      resultado = false;
+      e.printStackTrace();
+      try {
+        getConexion().rollback();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    }
+    finally {
+      if (resultado) {
+        getConexion().commit();
+      }
+      if (actualizarIngreso != null) {
+        actualizarIngreso.close();
+      }
+      if (actualizarInventario != null) {
+        actualizarInventario.close();
+      }
+      getConexion().close();
+    }
+    return resultado;
+  }
+
   private PreparedStatement construirUpsertInventario(Ingreso param) throws SQLException
   {
     PreparedStatement upsertInventario = getConexion().prepareStatement(
@@ -144,51 +257,39 @@ public class IngresoDAO extends DAO<Ingreso>
     return upsertInventario;
   }
 
-  public boolean decisionesCuarentena(List<Ingreso> porAprobar, List<Ingreso> porRechazar) throws SQLException
+  public boolean decisionesCuarentena(Ingreso ingreso, String estado) throws SQLException
   {
     boolean resultado = false;
-    boolean resultadoAprobar = false;
-    boolean resultadoRechazar = false;
+    boolean resultadoIngreso = false;
+    boolean resultadoInventario = false;
 
-    List<PreparedStatement> consultasAprobar = null;
-    PreparedStatement consultaRechazar = null;
+    PreparedStatement updateIngreso = null;
+    PreparedStatement upsertInventario = null;
 
     try {
 
-      if (porAprobar.size() > 0) {
-        consultasAprobar = prepararConsultaDecision(porAprobar, Ingreso.DISPONIBLE);
-      }
-
-      if (porRechazar.size() > 0) {
-        List<PreparedStatement> consultasRechazar = prepararConsultaDecision(porRechazar, Ingreso.RECHAZADO);
-        consultaRechazar = consultasRechazar.get(0); //solo va a ser una
-      }
+      PreparedStatement[] consultas = prepararConsultaDecision(ingreso, estado);
+      updateIngreso = consultas[0];
+      upsertInventario = consultas[1];
 
       getConexion().setAutoCommit(false);
 
-      if (consultasAprobar != null) {
-        for (PreparedStatement p : consultasAprobar) {
-          p.executeUpdate();
-        }
-        resultadoAprobar = true;
-      }
-      else {
-        resultadoAprobar = true;
+      int registrosIngresos = updateIngreso.executeUpdate();
+      if (registrosIngresos == 1) {
+        resultadoIngreso = true;
       }
 
-      if (consultaRechazar != null) {
-        if (consultaRechazar.executeUpdate() != porRechazar.size()) {
-          resultadoRechazar = false;
-        }
-        else {
-          resultadoRechazar = true;
+      if (upsertInventario != null) {
+        int registrosInventarios = upsertInventario.executeUpdate();
+        if (registrosInventarios == 1 || registrosInventarios == 0) {
+          resultadoInventario = true;
         }
       }
       else {
-        resultadoRechazar = true;
+        resultadoInventario = true;
       }
 
-      if (resultadoAprobar && resultadoRechazar) {
+      if (resultadoIngreso && resultadoInventario) {
         resultado = true;
       }
       else {
@@ -209,50 +310,33 @@ public class IngresoDAO extends DAO<Ingreso>
       if (resultado) {
         getConexion().commit();
       }
-      if (consultasAprobar != null) {
-        for (PreparedStatement p : consultasAprobar) {
-          p.close();
-        }
+      if (updateIngreso != null) {
+        updateIngreso.close();
       }
-      if (consultaRechazar != null) {
-        consultaRechazar.close();
+      if (upsertInventario != null) {
+        upsertInventario.close();
       }
-
       getConexion().close();
     }
     return resultado;
   }
 
-  private List<PreparedStatement> prepararConsultaDecision(List<Ingreso> ingresos, String estado) throws SQLException
+  private PreparedStatement[] prepararConsultaDecision(Ingreso ingreso, String estado) throws SQLException
   {
-    List<PreparedStatement> listaConsultas = new ArrayList<PreparedStatement>();
+    PreparedStatement[] listaConsultas = new PreparedStatement[2];
     String stringConsulta = " UPDATE " + this.nombreModulo + "." + this.nombreTabla
                             + " SET estado = ? "
-                            + " WHERE id_ingreso in (";
-
-    for (Ingreso i : ingresos) {
-      stringConsulta += "?,";
-    }
-
-    stringConsulta = stringConsulta.substring(0, stringConsulta.length() - 1);
-    stringConsulta += ");";
-
-    System.out.println(stringConsulta);
+                            + " WHERE id_ingreso = ?";
 
     PreparedStatement consulta = getConexion().prepareStatement(stringConsulta);
 
     consulta.setString(1, estado);
-    int index = 2;
+    consulta.setInt(2, ingreso.getId_ingreso());
 
-    for (Ingreso i : ingresos) {
-      consulta.setInt(index, i.getId_ingreso());
-      index++;
-      if (estado.equals(Ingreso.DISPONIBLE)) {
-        listaConsultas.add(this.construirUpsertInventario(i));
-      }
+    listaConsultas[0] = consulta;
+    if (estado.equals(Ingreso.DISPONIBLE)) {
+      listaConsultas[1] = this.construirUpsertInventario(ingreso);
     }
-
-    listaConsultas.add(consulta);
 
     return listaConsultas;
   }

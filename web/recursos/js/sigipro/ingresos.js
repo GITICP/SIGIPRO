@@ -14,8 +14,7 @@ $(document).ready(function () {
       elementoError.text('');
       resultado = true;
     } else {
-      elementoError.text('Debe ser un n&uacute;mero');
-      resultado = true;
+      elementoError.text('Debe ser un número');
     }
     return resultado;
   }
@@ -28,14 +27,14 @@ $(document).ready(function () {
     } else {
       $("#radio-disponible").prop("checked", true);
     }
-    if (opcion.data("perecedero")){
-      campoVencimiento.hide();
-      campoVencimiento.find('#fechaVencimiento').prop('required', false);
-      $("#label-fecha-vencimiento").hide();
-    } else {
+    if (opcion.data("perecedero")) {
       campoVencimiento.show();
       campoVencimiento.find('#fechaVencimiento').prop('required', true);
       $("#label-fecha-vencimiento").show();
+    } else {
+      campoVencimiento.hide();
+      campoVencimiento.find('#fechaVencimiento').prop('required', false);
+      $("#label-fecha-vencimiento").hide();
     }
   });
 
@@ -59,6 +58,7 @@ $(document).ready(function () {
       $(this).prop('previousValue', $(this).prop('checked'));
     });
   });
-  
+
   $("#seleccionProducto").change();
+  $("input[type=radio][value='" + $("#hiddenID").data("estado") + "']").prop('checked', true);
 });
