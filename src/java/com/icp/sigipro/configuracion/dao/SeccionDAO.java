@@ -20,7 +20,7 @@ import java.util.List;
 public class SeccionDAO
 {
 
-  public boolean insertarSeccion(String nombre, String descripcion)
+  public boolean insertarSeccion(Seccion seccion)
   {
     boolean resultado = false;
 
@@ -32,13 +32,15 @@ public class SeccionDAO
         PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.secciones "
                                                                + " ( nombre_seccion, descripcion) "
                                                                + " VALUES "
-                                                               + " (?,? )");
-        consulta.setString(1, nombre);
-        consulta.setString(2, descripcion);
-        int resultadoConsulta = consulta.executeUpdate();
-        if (resultadoConsulta == 1) {
-          resultado = true;
-        }
+                                                               + " (?,? ) RETURNING id_seccion");
+        consulta.setString(1, seccion.getNombre_seccion());
+        consulta.setString(2, seccion.getDescripcion());
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        if (resultadoConsulta.next()) {
+                resultado = true;
+                seccion.setId_seccion(resultadoConsulta.getInt("id_seccion"));
+                
+            }
         consulta.close();
         conexion.close();
       }

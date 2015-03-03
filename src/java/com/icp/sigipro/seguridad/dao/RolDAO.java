@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class RolDAO
 {
-    public boolean insertarRol(String nombre, String descripcion)
+    public boolean insertarRol(Rol r)
     {
         boolean resultado = false;
         
@@ -34,13 +34,14 @@ public class RolDAO
                 PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.roles "
                         + " ( nombre, descripcion) "
                         + " VALUES "
-                        + " (?,? )");
-                consulta.setString(1, nombre);
-                consulta.setString(2, descripcion);
-                int resultadoConsulta = consulta.executeUpdate();
-                if (resultadoConsulta == 1)
-                {
+                        + " (?,? ) RETURNING id_rol");
+                consulta.setString(1, r.getNombreRol());
+                consulta.setString(2, r.getDescripcion());
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                if (resultadoConsulta.next()) {
                     resultado = true;
+                    r.setId_rol(resultadoConsulta.getInt("id_rol"));
+
                 }
                 consulta.close();
                 conexion.close();

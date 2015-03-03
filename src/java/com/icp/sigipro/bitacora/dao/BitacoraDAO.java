@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import org.json.JSONObject;
 import org.postgresql.util.PGobject;
 
 
@@ -44,6 +45,22 @@ public class BitacoraDAO {
 
         return conexion;
       }
+    
+    public void setBitacora(String JSON, String accion, Object nombre_usuario, String tabla,String ip){
+        Bitacora bitacora = new Bitacora(nombre_usuario.toString(),ip,accion,tabla,JSON);      
+        this.insertarBitacora(bitacora);
+    }
+    
+    public void setBitacora(int id, String accion, Object nombre_usuario, String tabla,String ip){
+        JSONObject JSON = new JSONObject();
+        try{
+            JSON.put("id_objeto",id);
+        }catch (Exception e){
+            
+        }
+        Bitacora bitacora = new Bitacora(nombre_usuario.toString(),ip,accion,tabla,JSON.toString());      
+        this.insertarBitacora(bitacora);
+    }
     
     public boolean insertarBitacora(Bitacora b){
         boolean resultado = false;

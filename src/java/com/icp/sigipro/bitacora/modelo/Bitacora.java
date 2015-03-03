@@ -22,20 +22,27 @@ public class Bitacora {
     
     //Variables de Tablas
     
-    public static final String TABLA_ACTIVOFIJO = "ACTIVO FIJO";
-    public static final String TABLA_CATALOGOEXTERNO = "CATALOGO EXTERNO";
-    public static final String TABLA_CATALOGOINTERNO = "CATALOGO INTERNO";
-    public static final String TABLA_UBICACION = "UBICACION";
-    public static final String TABLA_UBICACIONBODEGA = "UBICACION BODEGA";
-    public static final String TABLA_PROVEEDOR = "PROVEEDOR";
+    public static final String TABLA_ACTIVOFIJO = "ACTIVOS_FIJOS";
+    public static final String TABLA_CATALOGOEXTERNO = "CATALOGO_EXTERNO";
+    public static final String TABLA_CATALOGOEXTERNOINTERNO = "CATALOGOS_INTERNOS_EXTERNOS";
+    public static final String TABLA_CATALOGOINTERNO = "CATALOGO_INTERNO";
+    public static final String TABLA_REACTIVO = "REACTIVOS";
+    public static final String TABLA_UBICACION = "UBICACIONES";
+    public static final String TABLA_UBICACIONBODEGA = "UBICACIONES_BODEGA";
+    public static final String TABLA_UBICACIONCATALOGOINTERNO = "UBICACIONES_CATALOGO_INTERNO";
+    public static final String TABLA_PROVEEDOR = "PROVEEDORES";
     public static final String TABLA_CORREO = "CORREO";
-    public static final String TABLA_SECCION = "SECCION";
-    public static final String TABLA_PERMISO = "PERMISO";
-    public static final String TABLA_PERMISOROL = "PERMISO ROL";
-    public static final String TABLA_PUESTO = "PUESTO";
-    public static final String TABLA_ROL = "ROL";
-    public static final String TABLA_ROLUSUARIO = "ROL USUARIO";
-    public static final String TABLA_USUARIO = "USUARIO";
+    public static final String TABLA_INGRESO = "INGRESOS";
+    public static final String TABLA_PRESTAMO = "SOLICITUDES_PRESTAMOS";
+    public static final String TABLA_SOLICITUD = "SOLICITUDES";
+    public static final String TABLA_INVENTARIO = "INVENTARIOS";
+    public static final String TABLA_SECCION = "SECCIONES";
+    public static final String TABLA_PERMISO = "PERMISOS";
+    public static final String TABLA_PERMISOROL = "PERMISO_ROLES";
+    public static final String TABLA_PUESTO = "PUESTOS";
+    public static final String TABLA_ROL = "ROLES";
+    public static final String TABLA_ROLUSUARIO = "ROLES_USUARIOS";
+    public static final String TABLA_USUARIO = "USUARIOS";
     
     
     //Variables de Accion

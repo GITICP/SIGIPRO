@@ -6,6 +6,8 @@
 package com.icp.sigipro.bodegas.controladores;
 
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.InventarioDAO;
 import com.icp.sigipro.bodegas.dao.SolicitudDAO;
 import com.icp.sigipro.bodegas.modelos.Inventario;
@@ -97,6 +99,12 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         else if (accion.equalsIgnoreCase("eliminar")) {
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           dao.eliminarSolicitud(id_solicitud);
+          
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_solicitud,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+            //*----------------------------* 
+          
           redireccion = "Solicitudes/index.jsp";
           List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
           request.setAttribute("listaSolicitudes", solicitudes);
@@ -123,7 +131,13 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           if (solicitud.getCantidad()<= solicitud.getInventario().getStock_actual())
           { solicitud.setEstado("Aprobada");
             boolean resultado;
-            resultado = dao.editarSolicitud(solicitud);     
+            resultado = dao.editarSolicitud(solicitud); 
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+            //*----------------------------* 
+            
             if (resultado) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
             } 
@@ -227,6 +241,12 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         solicitud.setFecha_solicitud(hoysql);
         solicitud.setEstado("Pendiente");
         resultado = dao.insertarSolicitud(solicitud);
+        
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+        //*----------------------------*
+        
         redireccion = "Solicitudes/Agregar.jsp";
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud ingresada correctamente"));
       }
@@ -235,6 +255,12 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         solicitud.setId_usuario(id_us);
         solicitud.setId_solicitud(Integer.parseInt(id));
         resultado = dao.editarSolicitud(solicitud);
+        
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+        //*----------------------------*        
+        
         redireccion = "Solicitudes/Editar.jsp";
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada correctamente"));
       }
@@ -263,6 +289,11 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       solicitud.setObservaciones(obs);
       boolean resultado;
       resultado = dao.editarSolicitud(solicitud);
+      
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+        //*----------------------------*
       if (resultado) {
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
       } else {
@@ -293,10 +324,23 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             solicitud.setEstado("Entregada");
             boolean resultado;
             resultado = dao.editarSolicitud(solicitud);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+            //*----------------------------*
+            
             boolean resta;
             resta = inventarioDAO.restarInventario(solicitud.getId_inventario(), -(solicitud.getCantidad()));
+            
             if (resultado && resta) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada"));
+              Inventario inventario = inventarioDAO.obtenerInventario(solicitud.getId_inventario());
+              
+              //Funcion que genera la bitacora
+              bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
+              //*----------------------------*
+              
             } 
             else {
               request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));

@@ -5,14 +5,15 @@
  */
 package com.icp.sigipro.servlets.configuracion.seccion;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -95,8 +96,16 @@ public class EditarSeccion extends SIGIPROServlet
 
       boolean nombre_valido = s.validarNombreSeccion(nombre, idSeccion);
       if (nombre_valido) {
+          
+        Seccion seccion = new Seccion(idSeccion,nombre, descripcion);
+        
         boolean resultado = s.editarSeccion(idSeccion, nombre, descripcion);
 
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(seccion.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SECCION,request.getRemoteAddr());
+        //*----------------------------*
+        
         if (resultado) {
           request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"
                                           + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"

@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.cuenta;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -79,7 +81,13 @@ public class CerrarSesion extends HttpServlet {
 
         try
         {
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(0,Bitacora.ACCION_LOGOUT,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
+            //*----------------------------*
+            
             HttpSession sesion = request.getSession(false);
+            
             System.out.println("user="+sesion.getAttribute("usuario"));
             if(sesion != null)
             {

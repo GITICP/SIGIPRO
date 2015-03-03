@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoExternoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoExterno_InternoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
@@ -99,6 +101,12 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           validarPermiso(23, listaPermisos);
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           dao.eliminarProductoExterno(id_producto);
+          
+          //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,request.getRemoteAddr());
+            //*----------------------------*
+            
           redireccion = "CatalogoExterno/index.jsp";
           List<ProductoExterno> productos = dao.obtenerProductos();
           request.setAttribute("listaProductos", productos);
@@ -175,12 +183,24 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
 
     if (id.isEmpty() || id.equals("0")) {
       resultado = dao.insertarProductoExterno(productoExterno);
+      
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(productoExterno.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,request.getRemoteAddr());
+        //*----------------------------*
+            
       redireccion = "CatalogoExterno/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo ingresado correctamente"));
     }
     else {
       productoExterno.setId_producto_ext(Integer.parseInt(id));
       resultado = dao.editarProductoExterno(productoExterno);
+      
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(productoExterno.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,request.getRemoteAddr());
+        //*----------------------------*
+        
       redireccion = "CatalogoExterno/Editar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo editado correctamente"));
     }
@@ -194,8 +214,12 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
       List<ProductoExternoInterno> ExtInt = exin.parsearProductosExternos_Internos(lista, productoExterno.getId_producto_ext());
       boolean e = true;
       for (ProductoExternoInterno i : ExtInt) {
-             e = exin.insertarProductoExterno_Interno(i);
-             if (!e){break;}
+            e = exin.insertarProductoExterno_Interno(i);
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNOINTERNO,request.getRemoteAddr());
+            //*----------------------------*
+            if (!e){break;}
         }
       if (!e){request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Producto del Catálogo Externo ingresado correctamente, pero sin Productos Internos Asociados"));}
     }
