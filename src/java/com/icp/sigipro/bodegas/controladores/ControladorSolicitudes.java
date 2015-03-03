@@ -128,17 +128,21 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          
           if (solicitud.getCantidad()<= solicitud.getInventario().getStock_actual())
           { solicitud.setEstado("Aprobada");
+            boolean resta;
+            InventarioDAO inventarioDAO = new InventarioDAO();
+            resta = inventarioDAO.restarInventario(solicitud.getId_inventario(), -(solicitud.getCantidad()));
             boolean resultado;
-            resultado = dao.editarSolicitud(solicitud); 
-            
+            resultado = dao.editarSolicitud(solicitud);     
+
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
             //*----------------------------* 
             
-            if (resultado) {
+            if (resultado && resta) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
             } 
             else {
@@ -315,7 +319,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           int id_seccion = solicitud.getUsuario().getIdSeccion();
           boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
           if (auth) {
-            InventarioDAO inventarioDAO = new InventarioDAO();
             java.util.Date hoy = new java.util.Date();
             Date hoysql = new Date(hoy.getTime());
             int id_us_recibo = usrDAO.obtenerIDUsuario(usuario);
@@ -330,15 +333,15 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
             //*----------------------------*
             
-            boolean resta;
-            resta = inventarioDAO.restarInventario(solicitud.getId_inventario(), -(solicitud.getCantidad()));
-            
-            if (resultado && resta) {
+            if (resultado ) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada"));
-              Inventario inventario = inventarioDAO.obtenerInventario(solicitud.getId_inventario());
+              
+              //    No estoy seguro si esto se debería comentar
+              // Inventario inventario = inventarioDAO.obtenerInventario(solicitud.getId_inventario());
+              //    
               
               //Funcion que genera la bitacora
-              bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
+              // bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
               //*----------------------------*
               
             } 

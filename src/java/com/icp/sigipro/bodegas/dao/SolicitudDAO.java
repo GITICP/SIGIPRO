@@ -91,9 +91,9 @@ public class SolicitudDAO {
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " UPDATE bodega.solicitudes "
+              " UPDATE bodega.solicitudes"
               + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
-              + " WHERE id_solicitud=?; "
+              + " WHERE id_solicitud=? AND cantidad <= (Select cantidad from bodega.inventarios where id_inventario =? ) "
       );
 
       consulta.setInt(1, p.getCantidad());
@@ -105,11 +105,13 @@ public class SolicitudDAO {
       {consulta.setInt(4, p.getId_usuario_recibo());}
       consulta.setString(5, p.getObservaciones());
       consulta.setInt(6, p.getId_solicitud());
+      consulta.setInt(7, p.getId_inventario());
 
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
+      
       consulta.close();
       conexion.close();
     } catch (Exception ex) {
