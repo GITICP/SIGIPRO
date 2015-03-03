@@ -6,6 +6,8 @@
 package com.icp.sigipro.servlets.seguridad.usuario;
 
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import com.icp.sigipro.seguridad.dao.RolUsuarioDAO;
@@ -19,6 +21,8 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -134,7 +138,39 @@ public class EditarUsuario extends SIGIPROServlet
       if (correo_inactivo) {
         boolean resultado;
         if (roles != null) {
+           
           resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion, roles, estado);
+          //Para manejo de bitacora no voy a tocar este Edit porque tiene mucha logica rara. 
+          Usuario usuario = new Usuario();
+          usuario.setIdUsuario(idUsuario);
+          usuario.setNombreCompleto(nomCompleto);
+          usuario.setCorreo(correo);
+          usuario.setCedula(cedula);
+          usuario.setIdSeccion(Integer.parseInt(seccion));
+          usuario.setIdPuesto(Integer.parseInt(puesto));
+          try {
+                    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+                    String fechaactivacion = request.getParameter("fechaActivacion");
+                    java.util.Date fActivacion = formatoFecha.parse(fechaactivacion);
+
+                    String fechadesactivacion = request.getParameter("fechaDesactivacion");
+                    java.util.Date fDesactivacion = formatoFecha.parse(fechadesactivacion);
+
+                    java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
+                    java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
+
+                    usuario.setFechaActivacion(fActivacionSQL);
+                    usuario.setFechaDesactivacion(fDesactivacionSQL);
+                    usuario.setFechaActivacion(fActivacionSQL);
+                    usuario.setFechaDesactivacion(fDesactivacionSQL);
+        } catch (ParseException ex){
+          ex.printStackTrace();
+        }
+         //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(usuario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
+        //*----------------------------*
         }
         else {
           resultado = false;

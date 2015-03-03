@@ -6,6 +6,8 @@
 package com.icp.sigipro.bodegas.controladores;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.IngresoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.modelos.Ingreso;
@@ -231,6 +233,12 @@ public class ControladorIngresos extends SIGIPROServlet
             mensaje = "aprobado";
             try {
               dao.decisionesCuarentena(ingreso, Ingreso.DISPONIBLE);
+              ingreso.setEstado(Ingreso.DISPONIBLE);
+              //Funcion que genera la bitacora
+              BitacoraDAO bitacora = new BitacoraDAO();
+              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+                //*----------------------------*
+              
               resultado = true;
             }
             catch (Exception ex) {
@@ -241,6 +249,11 @@ public class ControladorIngresos extends SIGIPROServlet
             mensaje = "rechazado";
             try {
               dao.decisionesCuarentena(ingreso, Ingreso.RECHAZADO);
+              ingreso.setEstado(Ingreso.RECHAZADO);
+              //Funcion que genera la bitacora
+              BitacoraDAO bitacora = new BitacoraDAO();
+              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+                //*----------------------------*
               resultado = true;
             }
             catch (Exception ex) {
@@ -292,7 +305,13 @@ public class ControladorIngresos extends SIGIPROServlet
           if (valido) {
             validarPermiso(27, listaPermisos);
             try {
-              if (dao.registrarIngreso(ingreso)) {
+              Ingreso ingresoRegistrado = dao.registrarIngreso(ingreso);
+              if (ingresoRegistrado.getId_ingreso() != 0) {
+                  
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(ingresoRegistrado.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+                //*----------------------------*
                 resultado = true;
               }
             }
@@ -314,6 +333,12 @@ public class ControladorIngresos extends SIGIPROServlet
             validarPermiso(28, listaPermisos);
             try {
               dao.actualizar(ingreso, cantidadPrevia, estadoPrevio);
+              
+              //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+                //*----------------------------*
+                
               resultado = true;
             }
             catch (Exception ex) {

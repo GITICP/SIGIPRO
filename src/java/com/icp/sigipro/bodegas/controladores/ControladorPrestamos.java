@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.InventarioDAO;
 import com.icp.sigipro.bodegas.dao.PrestamoDAO;
 import com.icp.sigipro.bodegas.dao.SolicitudDAO;
@@ -116,6 +118,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
         } else if (accion.equalsIgnoreCase("eliminar")) {
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           dao.eliminarPrestamo(id_solicitud);
+          
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(id_solicitud,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          //*----------------------------*
+          
           redireccion = "Prestamos/index.jsp";
           List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
           request.setAttribute("listaPrestamos", prestamos);
@@ -142,6 +150,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
           prestamo.setEstado("Prestamo Repuesto");
           boolean resultado;
           resultado = soldao.editarSolicitud(prestamo);
+          
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          //*----------------------------*
+          
           if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo marcado como 'Repuesto'"));
           } else {
@@ -161,6 +175,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
           prestamo.setEstado("Pendiente");
           boolean resultado;
           resultado = soldao.editarSolicitud(prestamo);
+          
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          //*----------------------------*
+          
           if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo aceptado"));
           } else {
@@ -180,6 +200,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
           prestamo.setEstado("Rechazada");
           boolean resultado;
           resultado = soldao.editarSolicitud(prestamo);
+          
+          //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          //*----------------------------*
+          
           if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo rechazado"));
           } else {
@@ -299,6 +325,14 @@ public class ControladorPrestamos extends SIGIPROServlet {
       solicitud.setFecha_solicitud(hoysql);
       solicitud.setEstado("Pendiente Prestamo");
       resultado = soldao.insertarSolicitud_Prestamo(solicitud, prestamo);
+      Inventario invNuevo = invDAO.obtenerInventario(id_inventario);
+
+      //Funcion que genera la bitacora
+          BitacoraDAO bitacora = new BitacoraDAO();
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+          bitacora.setBitacora(invNuevo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
+          //*----------------------------*
       redireccion = "Prestamos/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo ingresada correctamente"));
     } else {
@@ -307,6 +341,11 @@ public class ControladorPrestamos extends SIGIPROServlet {
       solicitud.setId_solicitud(Integer.parseInt(id));
       prestamo.setId_solicitud(Integer.parseInt(id));
       resultado = soldao.editarSolicitud(solicitud);
+      
+      //Funcion que genera la bitacora
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+      //*----------------------------* 
       redireccion = "Prestamos/Editar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo editada correctamente"));
     }

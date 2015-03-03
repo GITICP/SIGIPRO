@@ -5,13 +5,15 @@
  */
 package com.icp.sigipro.servlets.seguridad.puesto;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PuestoDAO;
+import com.icp.sigipro.seguridad.modelos.Puesto;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,7 +64,14 @@ public class EditarPuesto extends SIGIPROServlet {
 
             boolean nombre_valido = s.validarNombrePuesto(nombre, idPuesto);
             if (nombre_valido) {
+                
+                Puesto puesto = new Puesto(idPuesto,nombre,descripcion);
                 boolean resultado = s.editarPuesto(idPuesto, nombre, descripcion);
+                
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(puesto.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PUESTO,request.getRemoteAddr());
+                //*----------------------------*
 
                 if (resultado) {
                     request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">"

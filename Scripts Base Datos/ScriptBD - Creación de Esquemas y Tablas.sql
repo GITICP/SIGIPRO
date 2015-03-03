@@ -115,7 +115,6 @@ ALTER TABLE ONLY bitacora.bitacora ADD CONSTRAINT pk_bitacora PRIMARY KEY (id_bi
 
 ALTER TABLE ONLY bitacora.bitacora ADD CONSTRAINT fk_nombre_usuario FOREIGN KEY (nombre_usuario) REFERENCES seguridad.usuarios(nombre_usuario);
 
-
 --######ESQUEMA bodega######
 DROP SCHEMA IF EXISTS bodega CASCADE;
 CREATE SCHEMA bodega;
@@ -225,11 +224,11 @@ CREATE TABLE bodega.usuarios_sub_bodegas_egresos (
 CREATE TABLE bodega.sub_bodegas ( 
 	id_sub_bodega serial NOT NULL,
 	id_seccion integer NOT NULL,
-        id_usuario integer NOT NULL
+        id_usuario integer NOT NULL,
+        nombre character varying(45) NOT NULL
  ); 
 
 CREATE TABLE bodega.inventarios_bodegas ( 
-	id_inventario_bodega serial NOT NULL,
 	id_sub_bodega integer,
 	id_producto integer,
      	cantidad integer NOT NULL
@@ -265,7 +264,7 @@ ALTER TABLE ONLY bodega.reactivos ADD CONSTRAINT pk_reactivos PRIMARY KEY (id_re
 ALTER TABLE ONLY bodega.solicitudes ADD CONSTRAINT pk_solicitudes PRIMARY KEY (id_solicitud);
 ALTER TABLE ONLY bodega.solicitudes_prestamos ADD CONSTRAINT pk_prestamos PRIMARY KEY (id_solicitud);
 ALTER TABLE ONLY bodega.sub_bodegas ADD CONSTRAINT pk_sub_bodegas PRIMARY KEY (id_sub_bodega);
-ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_inventario_bodega);
+ALTER TABLE ONLY bodega.inventarios_bodegas ADD CONSTRAINT pk_inventarios_bodegas PRIMARY KEY (id_sub_bodega, id_producto);
 ALTER TABLE ONLY bodega.ubicaciones ADD CONSTRAINT pk_ubicaciones PRIMARY KEY (id_ubicacion);
 ALTER TABLE ONLY bodega.ubicaciones_bodega ADD CONSTRAINT pk_ubicaciones_bodega PRIMARY KEY (id_ubicacion);
 	
@@ -359,6 +358,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]Agregar Ingresos', 'Permite registrar ingresos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]Editar Ingresos', 'Permite modificar toda la información de un ingreso');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]Aprobar/Rechazar Ingresos', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (30, '[Bodegas]Ver Inventarios', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
 
 
 -- Observación importante:
@@ -372,6 +372,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (105, 100, 'Ubicaciones Bod.', '/Bodegas/UbicacionesBodega');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (106, 100,'Solicitudes', '/Bodegas/Solicitudes');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (107, 100,'Ingresos', '/Bodegas/Ingresos');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (108, 100,'Inventarios', '/Bodegas/Inventarios');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Bioterio', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (300, 0, 'Serpentario', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (400, 0, 'Caballeriza', null);
@@ -426,6 +427,7 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (27, 107);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (28, 107);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (29, 107);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (30, 108);
 
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');

@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.seguridad.dao.RolDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -85,6 +87,11 @@ public class EliminarRol extends HttpServlet {
             RolDAO r = new RolDAO();
             
             boolean Exito = r.EliminarRol( idrol);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(Integer.parseInt(idrol),Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ROL,request.getRemoteAddr());
+            //*----------------------------*
             
             if(Exito)
             {

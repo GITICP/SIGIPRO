@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PermisoDAO;
 import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
@@ -25,7 +27,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -124,8 +125,17 @@ public class AgregarRol extends SIGIPROServlet
       descripcionRol = request.getParameter("descripcionRol");
 
       RolDAO r = new RolDAO();
+      Rol rol = new Rol();
+      
+      rol.setNombre_rol(nombreRol);
+      rol.setDescripcion(descripcionRol);
 
-      boolean Exito = r.insertarRol(nombreRol, descripcionRol);
+      boolean Exito = r.insertarRol(rol);
+      
+      //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(rol.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ROL,request.getRemoteAddr());
+        //*----------------------------*
 
       if (Exito) {
 
@@ -146,7 +156,12 @@ public class AgregarRol extends SIGIPROServlet
           if (roles != null) {
             boolean f = true;
             for (RolUsuario i : roles) {
-              boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
+              boolean e = ru.insertarRolUsuario(i);
+                    //Funcion que genera la bitacora
+                    bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ROLUSUARIO,request.getRemoteAddr());
+                    //*----------------------------*
+              
+              
               if (!e) {
                 f = false;
                 break;
@@ -154,6 +169,9 @@ public class AgregarRol extends SIGIPROServlet
             }
             for (PermisoRol i : permisos) {
               boolean g = pr.insertarPermisoRol(i.getIDRol(), i.getIDPermiso());
+                    //Funcion que genera la bitacora
+                    bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PERMISOROL,request.getRemoteAddr());
+                    //*----------------------------*
               if (!g) {
                 f = false;
                 break;

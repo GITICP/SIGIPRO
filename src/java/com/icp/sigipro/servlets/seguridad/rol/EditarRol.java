@@ -6,6 +6,8 @@
 package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PermisoDAO;
 import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
@@ -133,13 +135,24 @@ public class EditarRol extends SIGIPROServlet {
       List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, idRol);
 
       RolDAO r = new RolDAO();
+      
+      Rol rol = new Rol(idRol,nombre,descripcion);
 
       boolean resultado = r.editarRol(idRol, nombre, descripcion);
+
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(rol.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ROL,request.getRemoteAddr());
+        //*----------------------------*
+        
       if (resultado) {
         if (roles != null) {
           boolean f = true;
           for (RolUsuario i : roles) {
-            boolean e = ru.insertarRolUsuario(i.getIDUsuario(), i.getIDRol(), i.getFechaActivacion(), i.getFechaDesactivacion());
+            boolean e = ru.insertarRolUsuario(i);
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ROLUSUARIO,request.getRemoteAddr());
+            //*----------------------------*
             if (!e) {
               f = false;
               break;
@@ -147,6 +160,9 @@ public class EditarRol extends SIGIPROServlet {
           }
           for (PermisoRol i : permisos) {
             boolean g = pr.insertarPermisoRol(i.getIDRol(), i.getIDPermiso());
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PERMISOROL,request.getRemoteAddr());
+            //*----------------------------*
             if (!g) {
               f = false;
               break;

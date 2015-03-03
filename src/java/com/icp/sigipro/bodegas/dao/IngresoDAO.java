@@ -86,7 +86,7 @@ public class IngresoDAO extends DAO<Ingreso>
     return consulta;
   }
 
-  public boolean registrarIngreso(Ingreso param) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, SQLException
+  public Ingreso registrarIngreso(Ingreso param) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, SQLException
   {
     boolean resultado = false;
 
@@ -101,8 +101,10 @@ public class IngresoDAO extends DAO<Ingreso>
         upsertInventario = construirUpsertInventario(param);
         upsertInventario.executeUpdate();
       }
-
-      insertIngreso.executeUpdate();
+      ResultSet resultadoInsert = insertIngreso.executeQuery();
+      if( resultadoInsert.next() ) {
+        param.setId_ingreso(resultadoInsert.getInt("id_ingreso"));
+      }
 
       getConexion().commit();
       resultado = true;
@@ -128,7 +130,7 @@ public class IngresoDAO extends DAO<Ingreso>
       getConexion().setAutoCommit(true);
       getConexion().close();
     }
-    return resultado;
+    return param;
   }
 
   public boolean actualizar(Ingreso ingreso, int cantidadPrevia, String estadoOriginal) throws SQLException

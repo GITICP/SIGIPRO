@@ -87,12 +87,18 @@ public class ControladorActivoFijo extends SIGIPROServlet
 
         }
         else if (accion.equalsIgnoreCase("eliminar")) {
-          validarPermiso(13, listaPermisos);
-          int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
-          dao.eliminarActivoFijo(id_activo_fijo);
-          redireccion = "ActivosFijos/index.jsp";
-          List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
-          request.setAttribute("listaActivosFijos", activosfijos);
+            validarPermiso(13, listaPermisos);
+            int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
+            dao.eliminarActivoFijo(id_activo_fijo);
+
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_activo_fijo,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
+            //*----------------------------*
+
+            redireccion = "ActivosFijos/index.jsp";
+            List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
+            request.setAttribute("listaActivosFijos", activosfijos);
         }
         else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(12, listaPermisos);
@@ -171,9 +177,12 @@ public class ControladorActivoFijo extends SIGIPROServlet
 
     if (id.isEmpty() || id.equals("0")) {
       resultado = dao.insertarActivoFijo(activofijo);
+      
       //Funcion que genera la bitacora
-      setBitacora(activofijo,Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),request.getRemoteAddr(),dao);
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
       //*----------------------------*
+      
       redireccion = "ActivosFijos/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo ingresado correctamente"));
     }
@@ -181,6 +190,12 @@ public class ControladorActivoFijo extends SIGIPROServlet
       activofijo.setId_activo_fijo(Integer.parseInt(id));
 
       resultado = dao.editarActivoFijo(activofijo);
+      
+      //Funcion que genera la bitacora
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
+      //*----------------------------*
+      
       redireccion = "ActivosFijos/index.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo editado correctamente"));
     }
@@ -209,10 +224,5 @@ public class ControladorActivoFijo extends SIGIPROServlet
   {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-
-  private void setBitacora(ActivoFijo a, String accion, Object nombre_usuario, String ip,ActivoFijoDAO dao){
-      Bitacora bitacora = new Bitacora(nombre_usuario.toString(),ip,accion,Bitacora.TABLA_ACTIVOFIJO,a.parseJSON());      
-      dao.getBitacora().insertarBitacora(bitacora);
- }
 
 }

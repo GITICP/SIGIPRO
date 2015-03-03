@@ -277,8 +277,7 @@ public class UsuarioDAO {
     return resultado;
   }
 
-  public boolean insertarUsuario(String nombreUsuario, String nombreCompleto, String correoElectronico,
-          String cedula, Integer id_seccion, Integer id_puesto, String fechaActivacion, String fechaDesactivacion) {
+  public boolean insertarUsuario(Usuario usuario) {
     boolean resultado = false;
 
     try {
@@ -289,34 +288,36 @@ public class UsuarioDAO {
         PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.usuarios "
                 + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) "
                 + " VALUES "
-                + " (?,?,?,?,?,?,?,?,?,?,true)");
+                + " (?,?,?,?,?,?,?,?,?,?,true) RETURNING id_usuario");
         String contrasena = generarContrasena();
-        consulta.setString(1, nombreUsuario);
+        consulta.setString(1, usuario.getNombre_usuario());
         consulta.setString(2, md5(contrasena));
-        consulta.setString(3, nombreCompleto);
-        consulta.setString(4, correoElectronico);
-        consulta.setString(5, cedula);
-        consulta.setInt(6, id_seccion);
-        consulta.setInt(7, id_puesto);
+        consulta.setString(3, usuario.getNombre_completo());
+        consulta.setString(4, usuario.getCorreo());
+        consulta.setString(5, usuario.getCedula());
+        consulta.setInt(6, usuario.getId_seccion());
+        consulta.setInt(7, usuario.getId_puesto());
 
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fActivacion = formatoFecha.parse(fechaActivacion);
-        java.util.Date fDesactivacion = formatoFecha.parse(fechaDesactivacion);
+        java.util.Date fActivacion = formatoFecha.parse(usuario.getFechaActivacion());
+        java.util.Date fDesactivacion = formatoFecha.parse(usuario.getFechaDesactivacion());
         java.sql.Date fActivacionSQL = new java.sql.Date(fActivacion.getTime());
         java.sql.Date fDesactivacionSQL = new java.sql.Date(fDesactivacion.getTime());
 
         consulta.setDate(8, fActivacionSQL);
         consulta.setDate(9, fDesactivacionSQL);
 
-        boolean permanente = fechaActivacion.equals(fechaDesactivacion);
+        boolean permanente = usuario.getFechaActivacion().equals(usuario.getFechaDesactivacion());
         consulta.setBoolean(10, compararFechas(fActivacionSQL, fDesactivacionSQL, formatoFecha));
 
-        int resultadoConsulta = consulta.executeUpdate();
-        if (resultadoConsulta == 1) {
-          resultado = true;
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        if (resultadoConsulta.next()) {
+            resultado = true;
+            usuario.setId_usuario(resultadoConsulta.getInt("id_usuario"));
+
         }
         UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
-        u.enviarUsuarioCreado(correoElectronico, nombreUsuario, contrasena, fechaActivacion, fechaDesactivacion, permanente);
+        u.enviarUsuarioCreado(usuario.getCorreo(), usuario.getNombre_usuario(), contrasena, usuario.getFechaActivacion(), usuario.getFechaDesactivacion(), permanente);
         consulta.close();
         conexion.close();
       }

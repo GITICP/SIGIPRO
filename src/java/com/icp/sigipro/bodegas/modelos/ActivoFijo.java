@@ -1,9 +1,11 @@
 package com.icp.sigipro.bodegas.modelos;
 
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.json.JSONObject;
 
 /**
  *
@@ -38,19 +40,24 @@ public class ActivoFijo {
     this.estado = estado;
   }
   
-      
+    //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
-        String JSON = "{\"id_objeto\":\""+this.getId_activo_fijo()+"\","
-                + "\"placa\":\""+this.getPlaca()+"\", "
-                + "\"equipo\":\""+this.getEquipo()+"\", "
-                + "\"marca\":\""+this.getMarca()+"\", "
-                + "\"fecha_movimiento\":\""+this.getFecha_movimiento()+"\", "
-                + "\"id_seccion\":\""+this.getId_seccion()+"\", "
-                + "\"id_ubicacion\":\""+this.getId_ubicacion()+"\", "
-                + "\"fecha_registro\":\""+this.getFecha_registro()+"\", "
-                + "\"estado\":\""+this.getEstado()+"\"}";
-        
-        return JSON;
+        Class _class = this.getClass();
+        JSONObject JSON = new JSONObject();
+        try{
+            Field properties[] = _class.getDeclaredFields();
+            for (int i = 0; i < properties.length; i++) {
+                Field field = properties[i];
+                if (i != 0){
+                    JSON.put(field.getName(), field.get(this));
+                }else{
+                    JSON.put("id_objeto", field.get(this));
+                }
+            }          
+        }catch (Exception e){
+            
+        }
+        return JSON.toString();
     }
 
   public int getId_activo_fijo() {
