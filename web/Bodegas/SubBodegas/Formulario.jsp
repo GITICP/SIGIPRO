@@ -8,13 +8,15 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<form id="ingresoForm" class="form-horizontal" autocomplete="off" method="post" action="SubBodegas">
+<form id="subbodegaForm" class="form-horizontal" autocomplete="off" method="post" action="SubBodegas">
 
   <div class="row">
 
     <div class="col-md-6">
       <input hidden="true" name="accion" value="${accion.toLowerCase()}">
       <input hidden="true" name="id_sub_bodega" value="${sub_bodega.getId_sub_bodega()}">
+      <input id="ids-ingresos" hidden="true" name="ids_ingresos" value="">
+      <input id="ids-egresos"  hidden="true" name="ids_egresos" value="">
       <label for="nombre" class="control-label">* Nombre</label>
       <div class="form-group">
         <div class="col-sm-12">

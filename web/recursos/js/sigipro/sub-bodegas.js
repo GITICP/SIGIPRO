@@ -1,3 +1,4 @@
+// Variables globales de tablas
 tIngresos = null;
 tEgresos = null;
 
@@ -10,6 +11,14 @@ $(document).ready(function () {
   };
   tIngresos = $("#ingresos-sub-bodegas").DataTable(configuracion);
   tEgresos = $("#egresos-sub-bodegas").DataTable(configuracion);
+  
+  $("#subbodegaForm").submit(function(){
+    llenarCampoAsociacion('i', tIngresos, $("#ids-ingresos"));
+    llenarCampoAsociacion('e', tEgresos, $("#ids-egresos"));
+    alert($("#ids-ingresos").val());
+    alert($("#ids-egresos").val());
+    return false;
+  });
 });
 
 // -- Ingresos -- //
@@ -60,4 +69,11 @@ function eliminarUsuarioEgreso(id) {
   fila.remove().draw();
   
   $("#seleccion-usuario-egreso").append(nuevaOpcion);
+}
+
+function llenarCampoAsociacion(string_pivote, tabla, campo_escondido){
+  asociacionCodificada = "";
+  pivote = "#" + string_pivote + "#";
+  alert(tabla.rows()[0].attr('id'));
+  campo_escondido.val(asociacionCodificada);
 }
