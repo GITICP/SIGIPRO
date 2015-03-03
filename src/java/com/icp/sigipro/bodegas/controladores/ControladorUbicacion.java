@@ -145,10 +145,10 @@ public class ControladorUbicacion extends SIGIPROServlet {
         }
 
         if (resultado) {
-            redireccion = String.format("Ubicaciones/Ver.jsp", id);
+            redireccion = String.format("Ubicaciones/index.jsp", id);
         }
-
-        request.setAttribute("ubicacion", ubicacion);
+        
+        request.setAttribute("listaUbicaciones", dao.obtenerUbicaciones());
         RequestDispatcher vista = request.getRequestDispatcher(redireccion);
         vista.forward(request, response);
     }
