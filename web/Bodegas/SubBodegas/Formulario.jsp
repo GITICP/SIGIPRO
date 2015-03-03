@@ -13,6 +13,7 @@
   <div class="row">
 
     <div class="col-md-6">
+      <input hidden="true" name="accion" value="${accion.toLowerCase()}">
       <input hidden="true" name="id_sub_bodega" value="${sub_bodega.getId_sub_bodega()}">
       <label for="nombre" class="control-label">* Nombre</label>
       <div class="form-group">
