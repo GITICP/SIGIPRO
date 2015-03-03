@@ -358,6 +358,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bo
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]Agregar Ingresos', 'Permite registrar ingresos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]Editar Ingresos', 'Permite modificar toda la información de un ingreso');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]Aprobar/Rechazar Ingresos', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (30, '[Bodegas]Ver Inventarios', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
 
 
 -- Observación importante:
@@ -426,6 +427,7 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (27, 107);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (28, 107);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (29, 107);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (30, 108);
 
 
 INSERT INTO seguridad.roles(nombre, descripcion) VALUES ('Administrador','Administrador, Mantenimiento y acceso a todo el sistema');

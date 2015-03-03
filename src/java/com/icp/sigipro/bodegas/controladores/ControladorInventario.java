@@ -86,12 +86,12 @@ public class ControladorInventario extends SIGIPROServlet {
             HttpSession sesion = request.getSession();
             //Ocupamos definir permisos
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-            int[] permisos = {27, 28, 29};
+            int permiso = 30;
             //-------------------------*
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
-                    validarPermisos(permisos, listaPermisos);
+                    validarPermiso(permiso, listaPermisos);
                     redireccion = "Inventarios/Ver.jsp";
 
                     int id = Integer.parseInt(request.getParameter("id_inventario"));
@@ -117,7 +117,7 @@ public class ControladorInventario extends SIGIPROServlet {
                     }*/
                 }
                 else {
-                    validarPermisos(permisos, listaPermisos);
+                    validarPermiso(permiso, listaPermisos);
                     redireccion = "Inventarios/index.jsp";
                     try {
                         List<Inventario> inventario = dao.obtenerInventarios();
@@ -129,7 +129,7 @@ public class ControladorInventario extends SIGIPROServlet {
                 }
             }
             else {
-                validarPermisos(permisos, listaPermisos);
+                validarPermiso(permiso, listaPermisos);
                 redireccion = "Inventarios/index.jsp";
                 try {
                     //Funcion vieja, ya que me dio error el obtenerTodo del DAO
