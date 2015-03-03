@@ -78,7 +78,7 @@
                   <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                     <thead>
                       <tr>
-                        <th>Nombre y Codigo del Producto</th>
+                        <th>Nombre y Código del Producto</th>
                       </tr>
                     </thead>
                     <tbody>
