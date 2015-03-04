@@ -52,7 +52,7 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
             UbicacionBodegaDAO dao = new UbicacionBodegaDAO();
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
-            int[] permisos = {27, 28, 29};
+            int[] permisos = {37, 38, 39};
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
@@ -62,13 +62,13 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
                     UbicacionBodega ubicacion = dao.obtenerUbicacion(id_ubicacion);
                     request.setAttribute("ubicacion", ubicacion);
                 } else if (accion.equalsIgnoreCase("agregar")) {
-                    validarPermiso(27, listaPermisos);
+                    validarPermiso(37, listaPermisos);
                     redireccion = "UbicacionesBodega/Agregar.jsp";
                     UbicacionBodega ubicacion = new UbicacionBodega();
                     request.setAttribute("ubicacion", ubicacion);
                     request.setAttribute("accion", "Agregar");
                 } else if (accion.equalsIgnoreCase("eliminar")) {
-                    validarPermiso(29, listaPermisos);
+                    validarPermiso(39, listaPermisos);
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
                     dao.eliminarUbicacion(id_ubicacion);
                     
@@ -81,7 +81,7 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
                     List<UbicacionBodega> ubicaciones = dao.obtenerUbicaciones();
                     request.setAttribute("listaUbicaciones", ubicaciones);
                 } else if (accion.equalsIgnoreCase("editar")) {
-                    validarPermiso(28, listaPermisos);
+                    validarPermiso(38, listaPermisos);
                     redireccion = "UbicacionesBodega/Editar.jsp";
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
                     UbicacionBodega ubicacion = dao.obtenerUbicacion(id_ubicacion);

@@ -10,7 +10,7 @@
 
     List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
     System.out.println(permisos);
-    if (!(permisos.contains(1) || permisos.contains(27) || permisos.contains(28) || permisos.contains(29))) {
+    if (!(permisos.contains(1) || permisos.contains(37) || permisos.contains(38) || permisos.contains(39))) {
         request.getRequestDispatcher("/").forward(request, response);
     }
 %>
@@ -43,7 +43,7 @@
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 27}">
+                <c:if test="${permiso == 1 || permiso == 37}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>
