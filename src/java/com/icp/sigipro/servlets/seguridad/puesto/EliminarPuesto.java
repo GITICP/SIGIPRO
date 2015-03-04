@@ -11,11 +11,15 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import javax.security.sasl.AuthenticationException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -60,6 +64,19 @@ public class EliminarPuesto extends SIGIPROServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+              try{
+                HttpSession sesion = request.getSession();
+                List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
+                if(validarPermiso(listaPermisos)) {
+                  processRequest(request, response);
+                } else {
+                  throw new AuthenticationException();
+                }
+              } catch(AuthenticationException ex){
+                ServletContext context = this.getServletContext();
+                context.getRequestDispatcher("/index.jsp").forward(request, response);
+                return;
+              }
 
         PrintWriter out;
         out = response.getWriter();
