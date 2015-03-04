@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Boga
  */
-public class BarraFuncionalidad implements IModelo
+public class BarraFuncionalidad
 {
     
     String Modulo = null;

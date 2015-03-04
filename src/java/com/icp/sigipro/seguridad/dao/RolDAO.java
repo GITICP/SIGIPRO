@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class RolDAO
 {
-    public boolean insertarRol(String nombre, String descripcion)
+    public boolean insertarRol(Rol r)
     {
         boolean resultado = false;
         
@@ -32,15 +32,16 @@ public class RolDAO
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("INSERT INTO SEGURIDAD.roles "
-                        + " ( nombrerol, descripcionrol) "
+                        + " ( nombre, descripcion) "
                         + " VALUES "
-                        + " (?,? )");
-                consulta.setString(1, nombre);
-                consulta.setString(2, descripcion);
-                int resultadoConsulta = consulta.executeUpdate();
-                if (resultadoConsulta == 1)
-                {
+                        + " (?,? ) RETURNING id_rol");
+                consulta.setString(1, r.getNombreRol());
+                consulta.setString(2, r.getDescripcion());
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                if (resultadoConsulta.next()) {
                     resultado = true;
+                    r.setId_rol(resultadoConsulta.getInt("id_rol"));
+
                 }
                 consulta.close();
                 conexion.close();
@@ -63,8 +64,8 @@ public class RolDAO
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("UPDATE SEGURIDAD.roles "
-                        + " SET nombrerol = ?, descripcionrol = ? "
-                        + " WHERE idrol = ? ");
+                        + " SET nombre = ?, descripcion = ? "
+                        + " WHERE id_rol = ? ");
                 
                 consulta.setString(1, nombre);
                 consulta.setString(2, descripcion);
@@ -74,8 +75,20 @@ public class RolDAO
                 if (resultadoConsulta == 1)
                 {
                     resultado = true;
-                }
+                }                
                 consulta.close();
+                
+                //Se eliminan los RolesUsuario y PermisosRoles asociados al Rol
+                PreparedStatement eliminarRolesUsuario = conexion.prepareStatement("Delete from seguridad.roles_usuarios where id_rol = ?");
+                eliminarRolesUsuario.setInt(1, idrol);
+                int result = eliminarRolesUsuario.executeUpdate();
+                eliminarRolesUsuario.close();
+                
+                PreparedStatement eliminarPermisosRoles = conexion.prepareStatement("Delete from seguridad.permisos_roles where id_rol = ?");
+                eliminarPermisosRoles.setInt(1, idrol);
+                int result2 = eliminarPermisosRoles.executeUpdate();
+                eliminarPermisosRoles.close();
+                
                 conexion.close();
             }
         }
@@ -95,7 +108,7 @@ public class RolDAO
             if(conexion != null)
             {
                 PreparedStatement consulta = conexion.prepareStatement("DELETE FROM SEGURIDAD.roles s " +
-                                                                        "WHERE  s.idrol = ? "
+                                                                        "WHERE  s.id_rol = ? "
                         );
                 consulta.setInt(1, Integer.parseInt(p_idrol) );
                 int resultadoConsulta = consulta.executeUpdate();
@@ -127,7 +140,7 @@ public class RolDAO
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement("SELECT r.idrol, r.nombrerol, r.descripcionrol "
+                consulta = conexion.prepareStatement("SELECT r.id_rol, r.nombre, r.descripcion "
                                                      + "FROM seguridad.roles r");
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarRoles(resultadoConsulta);
@@ -148,14 +161,181 @@ public class RolDAO
         
         while(resultadoConsulta.next())
         {
-            String nombreRol = resultadoConsulta.getString("nombrerol");
-            int idRol = resultadoConsulta.getInt("idrol");
-            String descripcionrol = resultadoConsulta.getString("descripcionrol");
+            String nombreRol = resultadoConsulta.getString("nombre");
+            int idRol = resultadoConsulta.getInt("id_rol");
+            String descripcionrol = resultadoConsulta.getString("descripcion");
             
             resultado.add(new Rol(idRol, nombreRol, descripcionrol));
         }
         return resultado;
     }
+    public String getNombreRol(String p_idrol) throws SQLException
+    {
+    String resultado = "Error";
+    try
+        {
+            SingletonBD s = SingletonBD.getSingletonBD();
+            Connection conexion = s.conectar();
+            
+            if(conexion != null)
+            {
+                PreparedStatement consulta = conexion.prepareStatement("SELECT s.nombre FROM SEGURIDAD.roles s WHERE s.id_rol = ?"
+                        );
+                consulta.setInt(1, Integer.parseInt(p_idrol) );
+                ResultSet resultadoConsulta =  consulta.executeQuery();
+                if(resultadoConsulta.next()){
+                  resultado = resultadoConsulta.getString("nombre");
+                }
+                else {resultado = "Error";}
+                consulta.close();
+                conexion.close();
+                
+            }
+            
+        }
+        catch(SQLException ex){System.out.println(ex); }
+    return resultado;
+    }
+    public Rol obtenerRol(int p_id) throws SQLException {
+    Rol resultado = null;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement(" Select nombre, descripcion"
+              + " From seguridad.roles"
+              + " Where id_rol = ? ");
+
+      consulta.setInt(1, p_id);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+
+        String nombre = resultadoConsulta.getString("nombre");
+        String descripcion = resultadoConsulta.getString("descripcion");
+       
+
+        resultado = new Rol(p_id, nombre, descripcion);
+      }
+    } catch (SQLException ex) {
+
+    }
+
+    return resultado;
+    }
     
+    public List<RolUsuario> obtenerUsuariosRol(String p_idrol) {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    List<RolUsuario> resultado = null;
+
+    if (conexion != null) {
+      try {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT r.nombre, ru.id_rol, ru.id_usuario, ru.fecha_activacion, ru.fecha_desactivacion "
+                + "FROM seguridad.roles r inner join seguridad.roles_usuarios ru  on r.id_rol = ru.id_rol AND ru.id_rol = ? ");
+        consulta.setInt(1, Integer.parseInt(p_idrol));
+        ResultSet resultadoConsulta = consulta.executeQuery();
+        resultado = llenarUsuariosRol(resultadoConsulta);
+        resultadoConsulta.close();
+        conexion.close();
+      } catch (SQLException ex) {
+        resultado = null;
+      }
+    }
+    return resultado;
+  }
+     private List<RolUsuario> llenarUsuariosRol(ResultSet resultadoConsulta) throws SQLException {
+    List<RolUsuario> resultado = new ArrayList<RolUsuario>();
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+
+    while (resultadoConsulta.next()) {
+      int idUsuario = resultadoConsulta.getInt("id_usuario");
+      String nombreRol = resultadoConsulta.getString("nombre");
+      int idRol = resultadoConsulta.getInt("id_rol");
+      Date fechaActivacion = resultadoConsulta.getDate("fecha_activacion");
+      Date fechaDesactivacion = resultadoConsulta.getDate("fecha_desactivacion");
+
+      RolUsuario ru = new RolUsuario(idRol, idUsuario, fechaActivacion, fechaDesactivacion, nombreRol);
+      
+      try {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT u.nombre_usuario "
+                + "FROM seguridad.usuarios u inner join seguridad.roles_usuarios ru  on u.id_usuario = ru.id_usuario AND ru.id_rol = ? AND ru.id_usuario =? ");
+        consulta.setInt(1, idRol);
+        consulta.setInt(2, idUsuario);
+        ResultSet ResConsulta;
+        ResConsulta = consulta.executeQuery();
+        if (ResConsulta.next())
+        {
+          String nombreu = ResConsulta.getString("nombre_usuario");
+          ru.setNombreUsuario(nombreu);
+        }
+        ResConsulta.close();
+      } catch (SQLException ex) {
+        System.out.println(ex);
+        resultado = null;
+      }
+
+      resultado.add(ru);
+    }
+    conexion.close();
+    return resultado;
+  }
+     
+  public int obtenerIDRol(String nombre) throws SQLException {
+    int resultado =0;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement(" Select id_rol"
+              + " From seguridad.roles"
+              + " Where nombre = ? ");
+
+      consulta.setString(1, nombre);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+        resultado = resultadoConsulta.getInt("id_rol");
+      }
+    } catch (SQLException ex) {
+
+    }
+
+    return resultado;
+    }
+  
+     public boolean validarNombreRol(String nombre)
+  {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    Connection conexion = s.conectar();
+    boolean resultado1 = false;
+
+    if (conexion != null)
+    {
+      try
+      {
+        PreparedStatement consulta;
+        consulta = conexion.prepareStatement("SELECT nombre FROM seguridad.roles WHERE nombre =? ");
+        consulta.setString(1, nombre);
+        
+        boolean resultadoConsulta = consulta.execute();
+        if (resultadoConsulta == true)
+      {
+        resultado1 = true;
+      }
+      }
+      catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    
+    }
+    return resultado1;
+    
+  }
 
 }

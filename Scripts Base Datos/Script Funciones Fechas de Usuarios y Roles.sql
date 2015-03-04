@@ -3,11 +3,11 @@ CREATE FUNCTION seguridad.f_FechasUsuario() RETURNS VOID
 AS
 $func$
 UPDATE seguridad.usuarios 
-	set estado = TRUE
-	where fecha_activacion = current_date;
-UPDATE seguridad.usuarios 
        set estado = FALSE
        where fecha_desactivacion = current_date;
+UPDATE seguridad.usuarios 
+	set estado = TRUE
+	where fecha_activacion = current_date;
 $func$
 LANGUAGE SQL;
 
@@ -16,6 +16,6 @@ CREATE FUNCTION seguridad.f_FechasRoles() RETURNS VOID
 AS
 $func$
  DELETE FROM seguridad.roles_usuarios
-        WHERE fecha_desactivacion= current_date;
+        WHERE fecha_desactivacion= current_date AND fecha_activacion!= current_date;
 $func$
 LANGUAGE SQL;

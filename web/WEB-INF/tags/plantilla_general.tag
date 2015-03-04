@@ -6,15 +6,18 @@
 
 <%@tag description="Plantilla general" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <c:if test="${sessionScope.usuario == null}">
-  <c:redirect url="/Cuenta/IniciarSesion.jsp" />
+  <c:redirect url="/Cuenta/IniciarSesion" />
 </c:if>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>
 <%@attribute name="title"%>
 <%@attribute name="direccion_contexto"%>
 <%@attribute name="contenido" fragment="true" required="true"%>
+<%@attribute name="scripts" fragment="true" required="false"%>
+<%@attribute name="css" fragment="true" required="false"%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -31,7 +34,10 @@
     <link href="${direccion_contexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
-    <link href="${direccion_contexto}/recursos/css/sigipro.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/sigipro/sigipro.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/sigipro/barra-navegacion.css" rel="stylesheet" type="text/css" media="screen">
+    
+    <jsp:invoke fragment="css" />
 
     <!--[if lte IE 9]>
         <link href="${direccion_contexto}/recursos/css/main-ie.css" rel="stylesheet" type="text/css" media="screen" />
@@ -43,7 +49,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${direccion_contexto}/recursos/ico/kingadmin-favicon114x114.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon72x72.png">
     <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="${direccion_contexto}/recursos/ico/kingadmin-favicon57x57.png">
-    <link rel="shortcut icon" href="${direccion_contexto}/recursos/ico/favicon.png">
+    <link rel="shortcut icon" href="${direccion_contexto}/favicon.ico">
   </head>
 
   <body>
@@ -73,7 +79,7 @@
     <script src="${direccion_contexto}/recursos/js/deliswitch.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 
-    <script src="${direccion_contexto}/recursos/js/plugins/stat/jquery.easypiechart.min.js"></script>
+    <!-- <script src="${direccion_contexto}/recursos/js/plugins/stat/jquery.easypiechart.min.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/raphael/raphael-2.1.0.min.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.min.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.resize.min.js"></script>
@@ -81,23 +87,47 @@
     <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.pie.min.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.tooltip.min.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/jquery-mapael/jquery.mapael.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/raphael/maps/usa_states.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-chart-stat.js"></script>
+    -->
+    <script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
 
-    <script src="${direccion_contexto}/recursos/js/sigipro.js"></script>
+    <!-- Esta se modificó -->
+    <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
 
+
+    <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
+
+    <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/CatalogoExterno.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/confirmacion-eliminar.js"></script>
+
+    
+
+    <script src="${direccion_contexto}/recursos/js/plugins/select2/select2.min.js"></script>
     <script>
-      $('.sigiproDatePicker').datepicker()
-              .on('changeDate', function () {
-                $(this).datepicker('hide');
-              });
+      $(document).ready(function () {
+        if ($('.sigiproDatePicker').length > 0) {
+          $('.sigiproDatePicker').datepicker()
+                  .on('changeDate', function () {
+                    $(this).datepicker('hide');
+                  });
+          $("#fechaActivacion").datepicker({startDate: 0});
+        }
+      });
     </script>
+
+    <jsp:include page="/plantillas/formCambiarContrasena.jsp" />
+    
+    <jsp:invoke fragment="scripts" />
 
   </body>
 </html>

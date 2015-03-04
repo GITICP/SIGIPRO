@@ -1,0 +1,41 @@
+.botonCerrarSesion{
+    border: none; 
+    background-color: transparent;
+    color: #fff;
+    position:relative;
+    display: block;
+    outline: none;
+}
+
+.botonCerrarSesion:hover{
+    color:#fff;
+    cursor: pointer;
+}
+
+.tablaSigipro{
+    font-size: 13px;
+}
+
+.input-group{
+  display: block;
+}
+
+.alert-warning{
+  background-color: #F0E39E;
+}
+
+.boton-accion{
+  margin-left:5px !important;
+  margin-right:5px !important;
+  color:#fff !important;
+  padding-top: 3px !important;
+}
+
+.campos-requeridos {
+  padding-left: 1.5em;
+}
+
+.error-form {
+  margin-bottom: 0px;
+  color: red;
+}

@@ -30,6 +30,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="description" content="KingAdmin Dashboard">
     <meta name="author" content="The Develovers">
+    <link rel="shortcut icon" href="../${direccion_contexto}/favicon.ico">
 
     <!-- CSS -->
     <link href="${direccionContexto}/recursos/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
@@ -71,41 +72,11 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block btn-"><i class="fa fa-arrow-circle-o-right"></i> Iniciar Sesión</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block btn-" style="background: #3c730d;"><i class="fa fa-arrow-circle-o-right"></i> Iniciar Sesión</button>
           </form>
           <br>
           <div class="links">
-            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">Recuperar contraseña</button>
-          </div>
-          <div class="widget-content">
-
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">Recuperar Contraseña</h4>
-                  </div>
-                  <div class="modal-body">
-                    <p>Ingrese el correo electrónico registrado.</p>
-                    <div class="form-group">
-                      <div class="col-sm-12">
-                        <div class="input-group">
-                          <input type="text" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                        </div>
-
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button type="button" class="btn btn-primary"><i class="fa fa-check-circle"></i> Enviar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <button class="btn btn-primary btn-sm" onclick="confirmacion()">Recuperar contraseña</button>
           </div>
         </div>
       </div>
@@ -113,6 +84,8 @@
     </div>
 
     <jsp:include page="/plantillas/footer.jsp" />
+    
+    <jsp:include page="/plantillas/formCambiarContrasena.jsp" />
 
     <!-- Javascript -->
     <script src="${direccionContexto}/recursos/js/jquery/jquery-2.1.0.min.js"></script>
@@ -128,14 +101,19 @@
     <script src="${direccionContexto}/recursos/js/plugins/stat/flot/jquery.flot.time.min.js"></script>
     <script src="${direccionContexto}/recursos/js/plugins/stat/flot/jquery.flot.pie.min.js"></script>
     <script src="${direccionContexto}/recursos/js/plugins/stat/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="${direccionContexto}/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="${direccionContexto}/js/plugins/datatable/jquery.dataTables.min.js"></script>
-    <script src="${direccionContexto}/js/plugins/datatable/dataTables.bootstrap.js"></script>
-    <script src="${direccionContexto}/js/plugins/jquery-mapael/jquery.mapael.js"></script>
-    <script src="${direccionContexto}/js/plugins/raphael/maps/usa_states.js"></script>
-    <script src="${direccionContexto}/js/king-chart-stat.js"></script>
-    <script src="${direccionContexto}/js/king-table.js"></script>
-    <script src="${direccionContexto}/js/king-components.js"></script>
-
+    <script src="${direccionContexto}/recursos/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/jquery-mapael/jquery.mapael.js"></script>
+    <script src="${direccionContexto}/recursos/js/plugins/raphael/maps/usa_states.js"></script>
+    <script src="${direccionContexto}/recursos/js/king-chart-stat.js"></script>
+    <script src="${direccionContexto}/recursos/js/king-table.js"></script>
+    <script src="${direccionContexto}/recursos/js/king-components.js"></script>
+    
+    <script src="${direccionContexto}/recursos/js/plugins/bootbox.js"></script>
+    <script src="${direccionContexto}/recursos/js/sigipro/iniciar-sesion.js"></script>
+    <script src="${direccionContexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
+    
+    ${caducada}
   </body>
 </html>

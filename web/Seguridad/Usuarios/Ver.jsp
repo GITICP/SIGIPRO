@@ -1,15 +1,26 @@
 <%-- 
-    Document   : Usuario
+    Document   : Ver Usuario
     Created on : Dec 14, 2014, 11:44:52 AM
     Author     : Boga
 --%>
 
+<%@page import="com.icp.sigipro.seguridad.dao.UsuarioDAO"%>
+<%@page import="java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.icp.sigipro.seguridad.modelos.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+
+<%
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!(permisos.contains(1) || permisos.contains(2) || permisos.contains(3) || permisos.contains(4)))
+    {
+      request.getRequestDispatcher("/").forward(request, response);
+    }
+%>
 
 <t:plantilla_general title="Seguridad" direccion_contexto="/SIGIPRO">
 
@@ -18,7 +29,7 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-10 content-wrapper">
+    <div class="col-md-12 content-wrapper">
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
@@ -44,9 +55,45 @@
             <div class="widget-header">
               <h3><i class="fa fa-group"></i> ${usuario.getNombreUsuario()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>                                    
-                <a class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Editar?id=${usuario.getID()}">Editar</a>
-                <a class="btn btn-primary btn-sm" style="margin-left:5px;margin-right:5px;color:#fff;" href="Agregar">Agregar</a>
+                
+                <c:set var="contienePermisoEliminar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 4}">
+                      <c:set var="contienePermisoEliminar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoEliminar}">
+                  <c:choose>
+                    <c:when test="${actividad}">
+                      <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#modalDesactivarUsuario">Desactivar</a>   
+                    </c:when>
+                    <c:otherwise>
+                      <c:if test="${boolfechadesactivacion}">
+                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalActivarUsuario">Activar</a>
+                      </c:if> 
+                    </c:otherwise>
+                  </c:choose> 
+                </c:if>
+
+                <c:set var="contienePermisoRestablecer" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 17}">
+                    <c:set var="contienePermisoRestablecer" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoRestablecer}">
+                  <a class="btn btn-warning btn-sm boton-accion " onclick="ConfirmacionRestablecerContrasena('/SIGIPRO/Cuenta/RecuperarContrasena?idUsuario=${usuario.getID()}&correoElectronico=${usuario.getCorreo()}')">Restablecer Contraseña</a>
+                </c:if>
+                  
+                <c:set var="contienePermisoEditar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 3}">
+                    <c:set var="contienePermisoEditar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoEditar}">
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Seguridad/Usuarios/Editar?id=${usuario.getID()}">Editar</a>
+                </c:if>
               </div>
             </div>
             ${mensaje}
@@ -55,17 +102,25 @@
                 <tr><td> <strong>Nombre de Usuario:</strong></td> <td>${usuario.getNombreUsuario()} </td></tr>
                 <tr><td> <strong>Nombre Completo:</strong> <td>${usuario.getNombreCompleto()} </td></tr>
                 <tr><td> <strong>Correo Electrónico:</strong> <td>${usuario.getCorreo()} </td></tr>
-                <tr><td> <strong>Cedula:</strong> <td>${usuario.getCedula()}</td></tr>
-                <tr><td> <strong>Departamento:</strong> <td>${usuario.getDepartamento()}</td></tr>
-                <tr><td> <strong>Puesto:</strong> <td>${usuario.getPuesto()}</td></tr>
+                <tr><td> <strong>Cédula:</strong> <td>${usuario.getCedula()}</td></tr>
+                <tr><td> <strong>Sección:</strong> <td>${usuario.getNombreSeccion()}</td></tr>
+                <tr><td> <strong>Puesto:</strong> <td>${usuario.getNombrePuesto()}</td></tr>
                 <tr><td> <strong>Fecha de Activación:</strong> <td>${usuario.getFechaActivacion()}</td></tr>
-                <tr><td> <strong>Fecha de Desactivacion:</strong>  <td>${usuario.getFechaDesactivacion()}</td></tr>
+                <c:choose>
+                  <c:when test="${usuario.getFechaActivacion() == usuario.getFechaDesactivacion()}">
+                    <tr><td> <strong>Fecha de Desactivación:</strong>  <td> Usuario Permanente</td></tr>
+                  </c:when>
+                  <c:otherwise>
+                    <tr><td> <strong>Fecha de Desactivación:</strong>  <td>${usuario.getFechaDesactivacion()}</td></tr>
+                  </c:otherwise>
+                </c:choose>
+
                 <tr><td> <strong>Estado:</strong> <td>${usuario.getActivo()}</td></tr>
               </table>
               <br>
               <div class="widget widget-table">
                 <div class="widget-header">
-                  <h3><i class="fa fa-group"></i> Roles ${usuario.getNombreUsuario()} </h3>
+                  <h3><i class="fa fa-legal"></i> Roles ${usuario.getNombreUsuario()} </h3>
                 </div>
                 <div class="widget-content">
                   <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
@@ -96,138 +151,7 @@
       </div>
       <!-- /main -->
     </div>
-
-    <t:modal idModal="modalAgregarRolUsuario" titulo="Agregar Rol">
-
-      <jsp:attribute name="form">
-
-        <form class="form-horizontal" role="form" action="InsertarRolUsuario" method="post">
-          <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
-          <label for="nombreUsuario" class="control-label">*Rol</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <select name="idrol" required
-                        oninvalid="setCustomValidity('Este campo es requerido ')"
-                        oninput="setCustomValidity('')">
-                  <c:forEach items="${rolesRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreRol()}</option>
-                  </c:forEach>
-                </select>
-              </div>
-            </div>
-          </div>
-          <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-            </div>
-          </div>
-          <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker2" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Rol</button>
-            </div>
-          </div>
-        </form>
-
-      </jsp:attribute>
-
-    </t:modal>
-
-    <t:modal idModal="modalEditarRolUsuario" titulo="Editar Rol">
-
-      <jsp:attribute name="form">
-
-        <form class="form-horizontal" role="form" action="EditarRolUsuario" method="post">
-          <input type="text" value="${usuario.getID()}"  name="idUsuarioEditar"  hidden="true">
-          <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
-          <input type="text" name="rol"  hidden="true">
-          <label for="nombreUsuario" class="control-label">*Rol</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <select name="idrol" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
-                  <c:forEach items="${rolesRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreRol()}</option>
-                  </c:forEach>
-                </select>
-
-              </div>
-            </div>
-          </div>
-          <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker3" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-            </div>
-          </div>
-          <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker4" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Editar Rol</button>
-            </div>
-          </div>
-        </form>
-
-      </jsp:attribute>
-
-    </t:modal>
-
-    <t:modal idModal="modalEliminarRolUsuario" titulo="Confirmacion">
-
-      <jsp:attribute name="form">
-        <form class="form-horizontal" role="form" action="EliminarRolUsuario" method="post">
-          <h5>¿Está seguro que desea desasignar el rol a este usuario? </h5>
-          <input hidden="false" id="idRolUsuarioEliminar" name="controlIDRol">
-          <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
-          <div class="form-group">
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar </button>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar </button>
-            </div>
-          </div>
-        </form>
-      </jsp:attribute>
-
-    </t:modal>
-
-    <t:modal idModal="modalDesactivarUsuario" titulo="Confirmacion">
+    <t:modal idModal="modalDesactivarUsuario" titulo="Confirmación">
 
       <jsp:attribute name="form">
         <form class="form-horizontal" role="form" action="Desactivar" method="post">
@@ -235,7 +159,23 @@
           <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
           <div class="form-group">
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar </button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar </button>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar </button>
+            </div>
+          </div>
+        </form>
+      </jsp:attribute>
+
+    </t:modal>
+    <t:modal idModal="modalActivarUsuario" titulo="Confirmación">
+
+      <jsp:attribute name="form">
+        <form class="form-horizontal" role="form" action="Activar" method="post">
+          <h5>¿Está seguro que desea activar este usuario? </h5>
+          <input type="text" value="${usuario.getID()}"  name="usuario"  hidden="true">
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar </button>
               <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar </button>
             </div>
           </div>

@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!-- content-wrapper -->
-<div class="col-md-10 content-wrapper">
+<div class="col-md-12 content-wrapper">
     <div class="row">
         <div class="col-md-4 ">
             <ul class="breadcrumb">
@@ -30,9 +30,9 @@
                 <div class="widget-header">
                     <h3><i class="fa fa-group"></i> Usuarios</h3>
                     <div class="btn-group widget-header-toolbar">
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Eliminar</button>
-                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Editar</button>
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" style="margin-left:5px;margin-right:5px;">Agregar</button>
+                        <button class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#myModal" >Eliminar</button>
+                        <button class="btn btn-warning btn-sm boton-accion" data-toggle="modal" data-target="#myModal" >Editar</button>
+                        <button class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#myModal" >Agregar</button>
                     </div>
                 </div>
                 <div class="widget-content">

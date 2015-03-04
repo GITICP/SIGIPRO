@@ -1,5 +1,5 @@
 <%-- 
-    Document   : Editar
+    Document   : Editar Usuario
     Created on : Dec 14, 2014, 11:44:07 AM
     Author     : Boga
 --%>
@@ -18,7 +18,7 @@
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
-    <div class="col-md-10 content-wrapper">
+    <div class="col-md-12 content-wrapper">
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
@@ -44,7 +44,9 @@
             <div class="widget-header">
               <h3><i class="fa fa-group"></i> ${usuario.getNombreUsuario()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-danger btn-sm"  style="margin-left:5px;margin-right:5px;color:#fff;" >Desactivar</a>                                    
+                <c:if test="${actividad}">
+                <a class="btn btn-danger btn-sm boton-accion">Desactivar</a>   
+                </c:if>
               </div>
             </div>
             ${mensaje}
@@ -56,13 +58,14 @@
                   <div class="col-md-6">
                     <input id="editarIDUsuario" hidden="true" name="editarIDUsuario" value="${usuario.getID()}">
                     <input id="rolesUsuario" hidden="true" name="listaRolesUsuario" value="">
+                    <input id="boolEstado" hidden="true" name="boolEstado" value="${usuario.getEstado()}">
                     <label for="nombreUsuario" class="control-label">*Nombre de Usuario</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
+                          <input id="nombreUsuario"   type="text" value="${usuario.getNombreUsuario()}" maxlength="45" placeholder="Nombre de Usuario" class="form-control" name="nombreUsuario" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')" > 
+                                 oninput="setCustomValidity('')" disabled> 
                         </div>
                       </div>
                     </div>
@@ -70,7 +73,7 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <input type="text" value="${usuario.getNombreCompleto()}" maxlength="200" placeholder="Nombre Completo" class="form-control" name="nombreCompleto" required
+                          <input type="text" value="${usuario.getNombreCompleto()}" maxlength="200" placeholder="Nombre Completo" class="form-control" name="nombreCompleto" id="nombreCompleto"required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  oninput="setCustomValidity('')">
                         </div>
@@ -80,9 +83,9 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="email" maxlength="45" value="${usuario.getCorreo()}" placeholder="usuario@icp.ucr.ac.cr" class="form-control" name="correoElectronico" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
+                          <input type="email" maxlength="45" value="${usuario.getCorreo()}" placeholder="usuario@icp.ucr.ac.cr" class="form-control"  name="correoElectronico" id="correoElectronico" required
+                                 oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca un correo electrónico válido')"
                                  oninput="setCustomValidity('')">
                         </div>
                       </div>
@@ -91,23 +94,33 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628" pattern="[0-9]{1}-[0-9]{4}-[0-9]{4}" class="form-control" name="cedula" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
+                          <input type="text" value="${usuario.getCedula()}" placeholder="1-0001-4628"  class="form-control"  name="cedula" id="cedula" required
+                                 oninvalid="setCustomValidity('Este campo es requerido, por favor introduzca una cédula válida')"
                                  oninput="setCustomValidity('')">
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="departamento" class="control-label">*Departamento</label>
+                    <label for="seccion" class="control-label">*Sección</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getDepartamento()}" maxlength="200" placeholder="Producción" class="form-control" name="departamento" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')">
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
+                          <select id="seleccionSeccion" class="form-control" name="seccion" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                            <c:forEach items="${secciones}" var="seccion">
+                              <c:choose>
+                                <c:when test="${seccion.getID() == usuario.getIdSeccion()}" >
+                                  <option value=${seccion.getID()} selected> ${seccion.getNombreSeccion()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=${seccion.getID()}>${seccion.getNombreSeccion()}</option>
+                                </c:otherwise>
+                              </c:choose>
+                            </c:forEach>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -115,10 +128,20 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                          <input type="text" value="${usuario.getPuesto()}" maxlength="200" placeholder="Jefe" class="form-control" name="puesto" required
-                                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                                 oninput="setCustomValidity('')">
+                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
+                          <select id="seleccionPuesto" class="form-control" name="puesto" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                            <c:forEach items="${puestos}" var="puesto">
+                              <c:choose>
+                                <c:when test="${puesto.getId_puesto() == usuario.getIdPuesto()}" >
+                                  <option value=${puesto.getId_puesto()} selected> ${puesto.getNombre_puesto()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=${puesto.getId_puesto()}>${puesto.getNombre_puesto()}</option>
+                                </c:otherwise>
+                              </c:choose>
+                            </c:forEach>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -126,31 +149,34 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                          <input type="text" value="${usuario.getFechaActivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="usuarioFechaActivacion" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
+                          <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>           SE ELIMINA EL ICONO --%>
+                          <input type="text" value="${usuario.getFechaActivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaActivacion" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  onchange="setCustomValidity('')">
                         </div>
                       </div>
                     </div>
+                    <%--title="Fecha de Desactivación: Si desea un usuario permanente, introduzca la misma fecha de activación" --%>             
                     <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                          <input type="text" value="${usuario.getFechaDesactivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="usuarioFechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                          <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>           SE ELIMINA EL ICONO --%>
+                          <input type="text" value="${usuario.getFechaDesactivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  onchange="setCustomValidity('')">
                         </div>
+                        <p id='mensajeFechas' style='color:red;'><p>
                       </div>
                     </div>
+                    
                   </div>
                 </div>
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-group"></i> Roles</h3>
+                    <h3><i class="fa fa-legal"></i> Roles asociados al usuario</h3>
                     <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarRolUsuario" style="margin-left:5px;margin-right:5px;color:#fff">Agregar</a>
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
@@ -170,8 +196,8 @@
                             <td>${rolUsuario.getFechaActivacion()}</td>
                             <td>${rolUsuario.getFechaDesactivacion()}</td>
                             <td>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   style="margin-left:5px;margin-right:5px;">Editar</button>
-                              <button type="button" class="btn btn-primary btn-sm" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" style="margin-left:5px;margin-right:5px;">Eliminar</button>
+                              <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getIDRol()})"   >Editar</button>
+                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getIDRol()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>
@@ -181,7 +207,7 @@
                 </div>
                 <div class="form-group">
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-volver" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="confirmacion()"><i class="fa fa-check-circle"></i> Confirmar Cambios </button>
                   </div>
                 </div>
@@ -199,15 +225,15 @@
 
       <jsp:attribute name="form">
 
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="formAgregarRolUsuario">
           <input type="text" name="rol"  hidden="true">
           <label for="idrol" class="control-label">*Rol</label>
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
+                <select id="seleccionRol" class="form-control" name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
+                        oninput="setCustomValidity('')" style='background-color: #fff;'>
                   <c:forEach items="${rolesRestantes}" var="rol">
                     <option value=${rol.getID()}>${rol.getNombreRol()}</option>
                   </c:forEach>
@@ -218,7 +244,7 @@
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
+              <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -226,14 +252,17 @@
               </div>
             </div>
           </div>
-          <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
+          <div title="Fecha de Desactivación: Si desea un rol permanente, introduzca la misma fecha de activación">
+            <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group" style="display:table;">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')">
+                </div>
+                <p id='mensajeFechasModalAgregar' style='color:red;'><p>
               </div>
             </div>
           </div>
@@ -253,28 +282,13 @@
     <t:modal idModal="modalEditarRolUsuario" titulo="Editar Rol">
 
       <jsp:attribute name="form">
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
-          <label for="nombreUsuario" class="control-label">*Rol</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <select id="seleccionRol" name="idrol" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
-                  <c:forEach items="${rolesRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreRol()}</option>
-                  </c:forEach>
-                </select>
-
-              </div>
-            </div>
-          </div>
           <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
+              <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
@@ -285,12 +299,13 @@
           <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
+              <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
               </div>
+              <p id='mensajeFechasModalEditar' style='color:red;'><p>
             </div>
           </div>
           <div class="form-group">
@@ -305,21 +320,19 @@
 
     </t:modal>
           
-    <t:modal idModal="modalConfirmacion" titulo="Confirmar Cambios">
+    <t:modal idModal="modalErrorFechaDesactivacion" titulo="Error">
 
       <jsp:attribute name="form">
-        
-        <h5>¿Está seguro que desea confirmar todos los cambios realizados? </h5>
-        
+
+        <h5>Las fechas de activación y desactivación deben ser iguales o posteriores a la de hoy. Además, la fecha de desactivación debe ser posterior o igual a la fecha de activación. </h5>
+
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <button type="button" class="btn btn-primary" onclick="confirmarCambios()"><i class="fa fa-check-circle"></i> Confirmar</button>
+          <button id="exitErrorFechaDesactivacion" type="button" data-dismiss="modal" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Confirmar</button>
         </div>
 
       </jsp:attribute>
-      
+
     </t:modal>
-  
   </jsp:attribute>
 
 </t:plantilla_general>

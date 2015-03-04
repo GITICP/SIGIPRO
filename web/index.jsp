@@ -7,41 +7,36 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:plantilla_general title="Inicio" direccion_contexto="/SIGIPRO">
-    
-    <jsp:attribute name="contenido">
 
-        <jsp:include page="plantillas/barraFuncionalidad.jsp" />
+  <jsp:attribute name="contenido">
 
-        <!-- content-wrapper -->
-        <div class="col-md-10 content-wrapper">
-                <div class="row">
-                        <div class="col-md-4 ">
-                                <ul class="breadcrumb">
-                                        <li class="active">Inicio</li>
-                                </ul>
-                        </div>
-                        <div class="col-md-8 ">
-                                <div class="top-content">
+    <jsp:include page="plantillas/barraFuncionalidad.jsp" />
 
-                                </div>
-                        </div>
-                </div>
-
-                <!-- main -->
-                <div class="content">
-                    <h2>Inicio</h2>
-
-                        <div class="main-content">
-                            
-                            <!-- Acá va contenido importante, notificaciones, etc. -->
-                            
-                        </div>
-                        <!-- /main-content -->
-                </div>
-                <!-- /main -->
+    <!-- content-wrapper -->
+    <div class="col-md-12 content-wrapper">
+      <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-8">${mensaje}</div>
+        <div class="col-xs-2"></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+          <h1>Inicio</h1>
         </div>
-        <!-- /content-wrapper -->
+        <div class="col-xs-1"></div>
+      </div>
+      <!-- main -->
+      <div class="content">
+        <div class="main-content">
+          <!-- Acá va contenido importante, notificaciones, etc. -->
+        </div>
+        <!-- /main-content -->
+      </div>
+      <!-- /main -->
+    </div>
+    <!-- /content-wrapper -->
 
-    </jsp:attribute>
+  </jsp:attribute>
 
 </t:plantilla_general>

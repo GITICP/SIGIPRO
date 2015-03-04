@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.servlets.seguridad.usuario;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -89,12 +91,17 @@ public class EliminarUsuario extends HttpServlet {
         
         boolean desactivacionExitosa = u.desactivarUsuario(idUsuario);
         
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(idUsuario,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
+        //*----------------------------*
+        
         if (desactivacionExitosa)
         {
             request.setAttribute("mensaje", "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "Usuario inactivado correctamente." +
+                                                        "Usuario desactivado correctamente." +
                                                 "</div>");
             }
         else
@@ -102,7 +109,7 @@ public class EliminarUsuario extends HttpServlet {
             request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                 "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                 "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                    "Usuario no pudo ser inactivado." +
+                                                    "Usuario no pudo ser desactivado." +
                                             "</div>");
         }
         request.getRequestDispatcher("/Seguridad/Usuarios/Ver?id="+String.valueOf(idUsuario)).forward(request, response);

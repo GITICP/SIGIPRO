@@ -5,52 +5,78 @@
  */
 package com.icp.sigipro.seguridad.modelos;
 
+import com.icp.sigipro.core.IModelo;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import org.json.JSONObject;
 
 /**
  *
  * @author Boga
  */
-public class Usuario 
+public class Usuario  extends IModelo
 {
     
-    int idUsuario;
-    String nombreUsuario;
+    int id_usuario;
+    String nombre_usuario;
     String correo;
-    String nombreCompleto;
+    String nombre_completo;
     String cedula;
-    String departamento;
-    String puesto;
-    Date fechaActivacion;
-    Date fechaDesactivacion;
+    int ref_seccion;
+    int ref_puesto;
+    Date fecha_activacion;
+    Date fecha_desactivacion;
     boolean activo;
+    //Opcionales para cosas de interfaz
+    String nombre_seccion;
+    String nombre_puesto;
     
     public Usuario(){}
     
     public Usuario (int p_idUsuario, String p_nombreUsuario, String p_correo, String p_nombreCompleto,
-            String p_cedula, String p_departamento, String p_puesto, Date p_fechaActivacion, Date p_fechaDesactivacion,
+            String p_cedula, int p_departamento, int p_puesto, Date p_fechaActivacion, Date p_fechaDesactivacion,
             boolean p_activo)
     {
-        idUsuario = p_idUsuario;
-        nombreUsuario = p_nombreUsuario;
+        id_usuario = p_idUsuario;
+        nombre_usuario = p_nombreUsuario;
         correo = p_correo;
-        nombreCompleto = p_nombreCompleto;
+        nombre_completo = p_nombreCompleto;
         cedula = p_cedula;
-        departamento = p_departamento;
-        puesto = p_puesto;
-        fechaActivacion = p_fechaActivacion;
-        fechaDesactivacion = p_fechaDesactivacion;
+        ref_seccion = p_departamento;
+        ref_puesto = p_puesto;
+        fecha_activacion = p_fechaActivacion;
+        fecha_desactivacion = p_fechaDesactivacion;
         activo = p_activo;
     }
 
+              //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
+    public String parseJSON(){
+        Class _class = this.getClass();
+        JSONObject JSON = new JSONObject();
+        try{
+            Field properties[] = _class.getDeclaredFields();
+            for (int i = 0; i < properties.length; i++) {
+                Field field = properties[i];
+                if (i != 0){
+                    JSON.put(field.getName(), field.get(this));
+                }else{
+                    JSON.put("id_objeto", field.get(this));
+                }
+            }          
+        }catch (Exception e){
+            
+        }
+        return JSON.toString();
+    }
+    
     public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+        this.id_usuario = idUsuario;
     }
 
     public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+        this.nombre_usuario = nombreUsuario;
     }
 
     public void setCorreo(String correo) {
@@ -58,42 +84,50 @@ public class Usuario
     }
 
     public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+        this.nombre_completo = nombreCompleto;
     }
 
     public void setCedula(String cedula) {
         this.cedula = cedula;
     }
 
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
+    public void setIdSeccion(int seccion) {
+        this.ref_seccion = seccion;
     }
 
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
+    public void setIdPuesto(int puesto) {
+        this.ref_puesto = puesto;
     }
 
     public void setFechaActivacion(Date fechaActivacion) {
-        this.fechaActivacion = fechaActivacion;
+        this.fecha_activacion = fechaActivacion;
     }
 
     public void setFechaDesactivacion(Date fechaDesactivacion) {
-        this.fechaDesactivacion = fechaDesactivacion;
+        this.fecha_desactivacion = fechaDesactivacion;
     }
 
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
-    
-    public int getID()                 {return idUsuario;}
-    public String getNombreUsuario()   {return nombreUsuario;}
+    public void setNombreSeccion(String activo) {
+        this.nombre_seccion = activo;
+    }
+     public void setNombrePuesto(String activo) {
+        this.nombre_puesto = activo;
+    }
+    public int getID()                 {return id_usuario;}
+    public String getNombreUsuario()   {return nombre_usuario;}
     public String getCorreo()          {return correo;}
-    public String getNombreCompleto()  {return nombreCompleto;}
+    public String getNombreCompleto()  {return nombre_completo;}
     public String getCedula()          {return cedula;}
-    public String getDepartamento()    {return departamento;}
-    public String getPuesto()          {return puesto;}
-    public String getFechaActivacion()   {return formatearFecha(fechaActivacion);}
-    public String getFechaDesactivacion(){return formatearFecha(fechaDesactivacion);}
+    public Integer getIdSeccion()    {return ref_seccion;}
+    public Integer getIdPuesto()          {return ref_puesto;}
+    public String getFechaActivacion()   {return formatearFecha(fecha_activacion);}
+    public Date getFechaDesactivacionAsDate()   {return fecha_desactivacion;}
+    public Date getFechaActivacionAsDate()   {return fecha_activacion;}
+    public String getFechaDesactivacion(){return formatearFecha(fecha_desactivacion);}
+    public boolean getEstado() {return activo;}
     public String getActivo()         {
         if(activo){
             return "Activo" ;
@@ -102,6 +136,8 @@ public class Usuario
             return "Inactivo";
         }
     }
+    public String getNombreSeccion() {return nombre_seccion;}
+    public String getNombrePuesto() {return nombre_puesto;}
     
 
     
@@ -110,6 +146,101 @@ public class Usuario
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
     }
+
+  public int getId_usuario()
+  {
+    return id_usuario;
+  }
+
+  public void setId_usuario(int id_usuario)
+  {
+    this.id_usuario = id_usuario;
+  }
     
+  public String getNombre_usuario()
+  {
+    return nombre_usuario;
+  }
+
+  public void setNombre_usuario(String nombre_usuario)
+  {
+    this.nombre_usuario = nombre_usuario;
+  }
+
+  public String getNombre_completo()
+  {
+    return nombre_completo;
+  }
+
+  public void setNombre_completo(String nombre_completo)
+  {
+    this.nombre_completo = nombre_completo;
+  }
+
+  public int getId_seccion()
+  {
+    return ref_seccion;
+  }
+
+  public void setId_seccion(int id_seccion)
+  {
+    this.ref_seccion = id_seccion;
+  }
+
+  public int getId_puesto()
+  {
+    return ref_puesto;
+  }
+
+  public void setId_puesto(int id_puesto)
+  {
+    this.ref_puesto = id_puesto;
+  }
+
+  public Date getFecha_activacion()
+  {
+    return fecha_activacion;
+  }
+
+  public void setFecha_activacion(Date fecha_activacion)
+  {
+    this.fecha_activacion = fecha_activacion;
+  }
+
+  public Date getFecha_desactivacion()
+  {
+    return fecha_desactivacion;
+  }
+
+  public void setFecha_desactivacion(Date fecha_desactivacion)
+  {
+    this.fecha_desactivacion = fecha_desactivacion;
+  }
+
+  public String getNombre_seccion()
+  {
+    return nombre_seccion;
+  }
+
+  public void setNombre_seccion(String nombre_seccion)
+  {
+    this.nombre_seccion = nombre_seccion;
+  }
+
+  public String getNombre_puesto()
+  {
+    return nombre_puesto;
+  }
+
+  public void setNombre_puesto(String nombre_puesto)
+  {
+    this.nombre_puesto = nombre_puesto;
+  }
+
+  public boolean isActivo()
+  {
+    return activo;
+  }
     
+  
 }
