@@ -53,7 +53,7 @@
       <div class="content">
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Proveedores </h3>
+              <h3><i class="fa fa-truck"></i> Proveedores </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
