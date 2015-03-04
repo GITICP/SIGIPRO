@@ -11,13 +11,19 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%        
+<%
+
+    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
+    System.out.println(permisos);
+    if (!(permisos.contains(1) || permisos.contains(14) || permisos.contains(15) || permisos.contains(16))) {
+        request.getRequestDispatcher("/").forward(request, response);
+    }
+    
     ProveedorDAO p = new ProveedorDAO();
 
     List<Proveedor> proveedores = p.obtenerProveedores();
 
-    if(proveedores!=null)
-    {
+    if (proveedores != null) {
         request.setAttribute("listaProveedores", proveedores);
     }
 %>
@@ -45,14 +51,21 @@
       </div>
       <!-- main -->
       <div class="content">
-        <div class="main-content">
-          <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-truck"></i> Proveedores</h3>
-              <div class="btn-group widget-header-toolbar">
-                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Compras/Proveedores?accion=agregar">Agregar Proveedor</a>
+              <h3><i class="fa fa-truck"></i> Proveedores </h3>
+
+              <c:set var="contienePermiso" value="false" />
+              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                <c:if test="${permiso == 1 || permiso == 14}">
+                  <c:set var="contienePermiso" value="true" />
+                </c:if>
+              </c:forEach>
+              <c:if test="${contienePermiso}">
+                <div class="btn-group widget-header-toolbar">
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Compras/Proveedores?accion=agregar">Agregar Proveedor</a>
                 </div>
+              </c:if>
             </div>
             ${mensaje}
             <div class="widget-content">
