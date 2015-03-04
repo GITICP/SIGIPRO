@@ -1,4 +1,4 @@
-﻿--####CATALOGO DE UBICACIONES####
+--####CATALOGO DE UBICACIONES####
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Alberto Alape',Null);--1
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Alexandra Rucabado Romero',Null);--2
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Auditorio',Null);--3
