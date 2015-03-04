@@ -42,7 +42,7 @@
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 20}">
+                  <c:if test="${permiso == 1 || permiso == 23}">
                     <c:set var="contienePermisoEliminar" value="true" />
                   </c:if>
                 </c:forEach>
@@ -52,7 +52,7 @@
 
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 19}">
+                  <c:if test="${permiso == 1 || permiso == 22}">
                     <c:set var="contienePermisoEditar" value="true" />
                   </c:if>
                 </c:forEach>

@@ -12,11 +12,14 @@ import com.icp.sigipro.seguridad.dao.PuestoDAO;
 import com.icp.sigipro.seguridad.modelos.Puesto;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,7 +42,18 @@ public class AgregarPuesto extends SIGIPROServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+      try{
+        HttpSession sesion = request.getSession();
+        List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
+        if(validarPermiso(listaPermisos)) {
+          processRequest(request, response);
+        } else {
+          throw new AuthenticationException();
+        }
+      } catch(AuthenticationException ex){
+        ServletContext context = this.getServletContext();
+        context.getRequestDispatcher("/index.jsp").forward(request, response);
+      }
     }
 
     @Override
@@ -108,7 +122,7 @@ public class AgregarPuesto extends SIGIPROServlet {
 
     @Override
     protected int getPermiso() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 18;
     }
 
 }

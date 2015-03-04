@@ -27,7 +27,7 @@ Puestos
 <%
   List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
   System.out.println(permisos);
-  if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10))) {
+  if (!(permisos.contains(1) || permisos.contains(18) || permisos.contains(19) || permisos.contains(20))) {
     request.getRequestDispatcher("/").forward(request, response);
   }
 %>
