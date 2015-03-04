@@ -115,7 +115,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
    
         }
         else if (accion.equalsIgnoreCase("editar")) {
-          validarPermiso(21, listaPermisos);
+          validarPermiso(22, listaPermisos);
           redireccion = "CatalogoExterno/Editar.jsp";
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           ProductoExterno producto = dao.obtenerProductoExterno(id_producto);
