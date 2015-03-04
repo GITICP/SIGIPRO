@@ -4,6 +4,9 @@ UPDATE seguridad.permisos SET descripcion = 'Permite visualizar los artículos e
 --Update de una entrada del menú
 UPDATE seguridad.permisos_menu_principal SET id_padre = 1000 WHERE id_menu_principal = 1001 and id_padre = 900;
 
+--Actualización tabla producto externo
+ALTER TABLE bodega.catalogo_externo ALTER COLUMN producto TYPE character varying(200);
+
 --Eliminación de permisos erróneos
 DELETE FROM seguridad.permisos_menu_principal WHERE id_permiso = 21 AND id_menu_principal = 103;
 DELETE FROM seguridad.permisos_menu_principal WHERE id_permiso = 22 AND id_menu_principal = 103;
