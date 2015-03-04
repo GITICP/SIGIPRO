@@ -363,12 +363,15 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (20, '[Se
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (21, '[Bodegas]AgregarProductoExterno', 'Permite agregar un proudcto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (22, '[Bodegas]EditarProductoExterno', 'Permite modificar un producto Externo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (23, '[Bodegas]EliminarProductoExterno', 'Permite eliminar un producto Externo');
+--Permisos asociados a solicitudes
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (24, '[Bodegas]Solicitudes', 'Permite solicitar productos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (25, '[Bodegas]AdministrarSolicitudes', 'Permite administrar las Solicitudes además de solicitar productos(admin bodega)');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (26, '[Bodegas]Aceptar y Rechazar Préstamos', 'Permite aceptar o rechazar préstamos');
+--Permisos asociados a ingresos
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (27, '[Bodegas]Agregar Ingresos', 'Permite registrar ingresos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (28, '[Bodegas]Editar Ingresos', 'Permite modificar toda la información de un ingreso');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (29, '[Bodegas]Aprobar/Rechazar Ingresos', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
+--Permisos asociados a inventarios
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (30, '[Bodegas]Ver Inventarios', 'Permite aprobar o rechazar un ingreso que se encuentre en cuarentena');
 
 
@@ -420,31 +423,29 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (11, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (12, 101);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (13, 101);
+--Proveedores
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (14, 1001);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (15, 1001);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (16, 1001);
+--Restablecer contraseña
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (17, 801);
+--Puestos
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (18, 803);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (19, 803);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (20, 803);
+--Catálogo Externo
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 102);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 102);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 102);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 103);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 103);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 103);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 104);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 104);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 104);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (21, 105);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (22, 105);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (23, 105);
+--Solicitudes
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (24, 106);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (25, 106);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (26, 106);
+--Ingresos
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (27, 107);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (28, 107);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (29, 107);
+--Inventarios
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (30, 108);
 
 
