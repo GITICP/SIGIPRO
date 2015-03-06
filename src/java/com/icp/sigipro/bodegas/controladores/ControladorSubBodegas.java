@@ -183,7 +183,13 @@ public class ControladorSubBodegas extends SIGIPROServlet
   @Override
   protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
   {
-    if (accionesGet.contains(accion)) {
+    List<String> listaAcciones;
+    if (accion.equals("get")) {
+      listaAcciones = accionesGet;
+    } else {
+      listaAcciones = accionesPost;
+    }
+    if (listaAcciones.contains(accion)) {
       String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
       Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
       metodo.invoke(this, request, response);
