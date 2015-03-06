@@ -1,24 +1,27 @@
 // Variables globales de tablas
 tIngresos = null;
 tEgresos = null;
+T_INGRESOS_SELECTOR = "#ingresos-sub-bodegas";
+T_EGRESOS_SELECTOR = "#egresos-sub-bodegas";
 
-$(document).ready(function () {
+$(document).ready(function() {
+  
+  $("#subbodegaForm").submit(function (event) {
+    event.preventDefault();
+    llenarCampoAsociacion('i', T_INGRESOS_SELECTOR, $("#ids-ingresos"));
+    llenarCampoAsociacion('e', T_EGRESOS_SELECTOR, $("#ids-egresos"));
+    alert($("#ids-ingresos").val());
+    alert($("#ids-egresos").val());
+  });
+  
   var configuracion = {
     "paging": false,
     "ordering": false,
     "bFilter": false,
     "info": false
   };
-  tIngresos = $("#ingresos-sub-bodegas").DataTable(configuracion);
-  tEgresos = $("#egresos-sub-bodegas").DataTable(configuracion);
-  
-  $("#subbodegaForm").submit(function(){
-    llenarCampoAsociacion('i', tIngresos, $("#ids-ingresos"));
-    llenarCampoAsociacion('e', tEgresos, $("#ids-egresos"));
-    alert($("#ids-ingresos").val());
-    alert($("#ids-egresos").val());
-    return false;
-  });
+  tIngresos = $(T_INGRESOS_SELECTOR).DataTable(configuracion);
+  tEgresos = $(T_EGRESOS_SELECTOR).DataTable(configuracion);  
 });
 
 // -- Ingresos -- //
@@ -72,8 +75,11 @@ function eliminarUsuarioEgreso(id) {
 }
 
 function llenarCampoAsociacion(string_pivote, tabla, campo_escondido){
-  asociacionCodificada = "";
-  pivote = "#" + string_pivote + "#";
-  alert(tabla.rows()[0].attr('id'));
+  var asociacionCodificada = "";
+  var pivote = "#" + string_pivote + "#";
+  $(tabla).find("tr[id]").each(function(){
+    var asociacion = pivote + $(this).attr('id').split("-")[1];
+    asociacionCodificada += asociacion;
+  });
   campo_escondido.val(asociacionCodificada);
 }
