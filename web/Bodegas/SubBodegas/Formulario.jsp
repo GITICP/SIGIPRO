@@ -15,8 +15,8 @@
     <div class="col-md-6">
       <input hidden="true" name="accion" value="${accion.toLowerCase()}">
       <input hidden="true" name="id_sub_bodega" value="${sub_bodega.getId_sub_bodega()}">
-      <input id="ids-ingresos" hidden="true" name="ids_ingresos" value="">
-      <input id="ids-egresos"  hidden="true" name="ids_egresos" value="">
+      <input id="ids-ingresos" hidden="true" name="ids-ingresos" value="">
+      <input id="ids-egresos"  hidden="true" name="ids-egresos" value="">
       <label for="nombre" class="control-label">* Nombre</label>
       <div class="form-group">
         <div class="col-sm-12">

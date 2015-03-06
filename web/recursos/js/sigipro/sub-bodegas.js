@@ -6,12 +6,10 @@ T_EGRESOS_SELECTOR = "#egresos-sub-bodegas";
 
 $(document).ready(function() {
   
-  $("#subbodegaForm").submit(function (event) {
-    event.preventDefault();
+  $("#subbodegaForm").submit(function() {
     llenarCampoAsociacion('i', T_INGRESOS_SELECTOR, $("#ids-ingresos"));
     llenarCampoAsociacion('e', T_EGRESOS_SELECTOR, $("#ids-egresos"));
-    alert($("#ids-ingresos").val());
-    alert($("#ids-egresos").val());
+    $(this).submit();
   });
   
   var configuracion = {

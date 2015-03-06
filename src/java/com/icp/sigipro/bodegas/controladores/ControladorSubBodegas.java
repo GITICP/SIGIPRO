@@ -9,6 +9,7 @@ import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -17,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -137,11 +137,20 @@ public class ControladorSubBodegas extends SIGIPROServlet
     
     SubBodega sb = construirObjeto(request);
     
-    
+    try {
+      dao = new SubBodegaDAO();
+      String[] idsIngresos = dao.parsearAsociacion("#i#", request.getParameter("ids-ingresos"));
+      String[] idsEgresos = dao.parsearAsociacion("#e#", request.getParameter("ids-egresos"));
+      if (dao.insertar(sb, idsIngresos, idsEgresos)){
+        redireccion = "index.jsp";
+      }
+    } catch(SIGIPROException ex) {
+      ex.printStackTrace();
+    }
     
     redireccionar(request, response, redireccion);
   }
-  
+   
   protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
     String id = request.getParameter("id_sub_bodega");
