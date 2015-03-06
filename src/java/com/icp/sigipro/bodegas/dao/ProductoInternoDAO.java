@@ -50,7 +50,6 @@ public class ProductoInternoDAO
       consulta.setBoolean(8, p.isPerecedero());
       ResultSet resultadoConsulta = consulta.executeQuery();
       if ( resultadoConsulta.next() ){
-        resultado = true;
         p.setId_producto(resultadoConsulta.getInt("id_producto"));
       }
       
@@ -70,7 +69,7 @@ public class ProductoInternoDAO
         consultaReactivo.setString(7, reactivo.getVolumen_bodega());
         consultaReactivo.setString(8, reactivo.getVolumen_lab());
         
-        ResultSet resultadoConsultaR = consulta.executeQuery();
+        ResultSet resultadoConsultaR = consultaReactivo.executeQuery();
         if ( resultadoConsultaR.next() ){
           resultado = true;
           reactivo.setId_reactivo(resultadoConsultaR.getInt("id_reactivo"));
@@ -108,6 +107,7 @@ public class ProductoInternoDAO
       }
       
       getConexion().commit();
+      resultado = true;
       consulta.close();
       conexion.close();
     }
