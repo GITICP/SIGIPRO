@@ -61,13 +61,15 @@
 
       <jsp:attribute name="form">
 
-        <form class="form-horizontal">
+        <form name="form-Interno-Externo" id="form-Interno-Externo" class="form-horizontal">
           <input type="text" name="productoexterno"  hidden="true">
           <label for="idinterno" class="control-label">Seleccione un producto del catálogo interno:</label>
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <select id="seleccioninterno" class="form-control" style='background-color: #fff;' name="idinterno" >
+                <select id="seleccioninterno" class="form-control" style='background-color: #fff;' name="idinterno" required
+                        oninvalid="setCustomValidity('Este campo es requerido ')"
+                        oninput="setCustomValidity('')" >
                   <c:forEach items="${productos_internos_restantes}" var="pr">
                     <option value=${pr.getId_producto()}>${pr.getNombre()} (${pr.getCodigo_icp()})</option>
                   </c:forEach>

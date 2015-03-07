@@ -329,7 +329,7 @@
     <div class="form-group">
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-        <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarProductoExterno()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+        <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarProductoExterno()"><i class="fa fa-check-circle"></i> Asociar Producto Externo</button>
       </div>
     </div>
 
