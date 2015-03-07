@@ -236,7 +236,7 @@ public class ControladorIngresos extends SIGIPROServlet
               ingreso.setEstado(Ingreso.DISPONIBLE);
               //Funcion que genera la bitacora
               BitacoraDAO bitacora = new BitacoraDAO();
-              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
                 //*----------------------------*
               
               resultado = true;
@@ -252,7 +252,7 @@ public class ControladorIngresos extends SIGIPROServlet
               ingreso.setEstado(Ingreso.RECHAZADO);
               //Funcion que genera la bitacora
               BitacoraDAO bitacora = new BitacoraDAO();
-              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_RECHAZAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
                 //*----------------------------*
               resultado = true;
             }
