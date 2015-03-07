@@ -10,6 +10,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.activosfijos.dao.UbicacionDAO;
 import com.icp.sigipro.activosfijos.modelos.Ubicacion;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -122,6 +123,7 @@ public class ControladorUbicacion extends SIGIPROServlet {
         UbicacionDAO dao = new UbicacionDAO();
         String id = request.getParameter("id_ubicacion");
         String redireccion;
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
         if (id.isEmpty() || id.equals("0")) {
             resultado = dao.insertarUbicacion(ubicacion);
@@ -132,6 +134,7 @@ public class ControladorUbicacion extends SIGIPROServlet {
             //*----------------------------*
             
             redireccion = "Ubicaciones/Agregar.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación de activo fijo agregada correctamente"));
         } else {
             ubicacion.setId_ubicacion(Integer.parseInt(id));
             resultado = dao.editarUbicacion(ubicacion);
@@ -142,10 +145,14 @@ public class ControladorUbicacion extends SIGIPROServlet {
             //*----------------------------*
             
             redireccion = "Ubicaciones/Editar.jsp";
+            request.setAttribute("ubicacion", ubicacion);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación de activo fijo editada correctamente"));
         }
 
         if (resultado) {
             redireccion = String.format("Ubicaciones/index.jsp", id);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ubicación no puso ser editada."));
         }
         
         request.setAttribute("listaUbicaciones", dao.obtenerUbicaciones());
