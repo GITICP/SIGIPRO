@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form class="form-horizontal" autocomplete="off" method="post" action="ActivosFijos">
+<form class="form-horizontal" autocomplete="off" method="post" action="Activos">
     <div class="col-md-6">
         <input hidden="true" name="id_activo_fijo" value="${activofijo.getId_activo_fijo()}">
         <label for="placa" class="control-label">Placa del Activo Fijo</label>

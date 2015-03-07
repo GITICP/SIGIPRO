@@ -10,7 +10,7 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Activos Fijos" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -21,9 +21,9 @@
       <div class="row">
         <div class="col-md-8 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Activos Fijos</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/CatalogoInterno?">Ubicaciones de Activos Fijos</a>
+              <a href="/SIGIPRO/ActivosFijos/Ubicaciones?">Ubicaciones de Activos Fijos</a>
             </li>
             <li class="active"> Agregar Ubicación de Activo Fijo</li>
 

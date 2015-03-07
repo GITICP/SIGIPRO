@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.bodegas.controladores;
+package com.icp.sigipro.activosfijos.controladores;
 
-import com.icp.sigipro.bodegas.dao.ActivoFijoDAO;
-import com.icp.sigipro.bodegas.dao.UbicacionDAO;
-import com.icp.sigipro.bodegas.modelos.ActivoFijo;
-import com.icp.sigipro.bodegas.modelos.Ubicacion;
+import com.icp.sigipro.activosfijos.dao.ActivoFijoDAO;
+import com.icp.sigipro.activosfijos.dao.UbicacionDAO;
+import com.icp.sigipro.activosfijos.modelos.ActivoFijo;
+import com.icp.sigipro.activosfijos.modelos.Ubicacion;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Walter
  */
-@WebServlet(name = "ControladorActivoFijo", urlPatterns = {"/Bodegas/ActivosFijos"})
+@WebServlet(name = "ControladorActivoFijo", urlPatterns = {"/ActivosFijos/Activos"})
 public class ControladorActivoFijo extends SIGIPROServlet
 {
 
@@ -70,14 +70,14 @@ public class ControladorActivoFijo extends SIGIPROServlet
       if (accion != null) {
         if (accion.equalsIgnoreCase("ver")) {
           validarPermisos(permisos, listaPermisos);
-          redireccion = "ActivosFijos/Ver.jsp";
+          redireccion = "Activos/Ver.jsp";
           int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
           ActivoFijo activofijo = dao.obtenerActivoFijo(id_activo_fijo);
           request.setAttribute("activofijo", activofijo);
         }
         else if (accion.equalsIgnoreCase("agregar")) {
           validarPermiso(31, listaPermisos);
-          redireccion = "ActivosFijos/Agregar.jsp";
+          redireccion = "Activos/Agregar.jsp";
           ActivoFijo activofijo = new ActivoFijo();
           request.setAttribute("secciones", secciones);
           request.setAttribute("ubicaciones", ubicaciones);
@@ -96,13 +96,13 @@ public class ControladorActivoFijo extends SIGIPROServlet
             bitacora.setBitacora(id_activo_fijo,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
             //*----------------------------*
 
-            redireccion = "ActivosFijos/index.jsp";
+            redireccion = "Activos/index.jsp";
             List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
             request.setAttribute("listaActivosFijos", activosfijos);
         }
         else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(32, listaPermisos);
-          redireccion = "ActivosFijos/Editar.jsp";
+          redireccion = "Activos/Editar.jsp";
           int id_activo_fijo = Integer.parseInt(request.getParameter("id_activo_fijo"));
           ActivoFijo activofijo = dao.obtenerActivoFijo(id_activo_fijo);
           request.setAttribute("secciones", secciones);
@@ -113,14 +113,14 @@ public class ControladorActivoFijo extends SIGIPROServlet
         }
         else {
           validarPermisos(permisos, listaPermisos);
-          redireccion = "ActivosFijos/index.jsp";
+          redireccion = "Activos/index.jsp";
           List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
           request.setAttribute("listaActivosFijos", activosfijos);
         }
       }
       else {
         validarPermisos(permisos, listaPermisos);
-        redireccion = "ActivosFijos/index.jsp";
+        redireccion = "Activos/index.jsp";
         List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
         request.setAttribute("listaActivosFijos", activosfijos);
       }
@@ -183,7 +183,7 @@ public class ControladorActivoFijo extends SIGIPROServlet
       bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
       //*----------------------------*
       
-      redireccion = "ActivosFijos/Agregar.jsp";
+      redireccion = "Activos/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo ingresado correctamente"));
     }
     else {
@@ -196,13 +196,13 @@ public class ControladorActivoFijo extends SIGIPROServlet
       bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
       //*----------------------------*
       
-      redireccion = "ActivosFijos/index.jsp";
+      redireccion = "Activos/index.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo editado correctamente"));
     }
 
     if (resultado) {
       request.setAttribute("activofijo", activofijo);
-      redireccion = String.format("ActivosFijos/index.jsp", id);
+      redireccion = String.format("Activos/index.jsp", id);
     }
     else {
       request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));

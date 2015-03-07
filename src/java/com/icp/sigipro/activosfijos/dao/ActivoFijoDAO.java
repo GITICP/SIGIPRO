@@ -1,7 +1,7 @@
-package com.icp.sigipro.bodegas.dao;
+package com.icp.sigipro.activosfijos.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.bodegas.modelos.ActivoFijo;
+import com.icp.sigipro.activosfijos.modelos.ActivoFijo;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import java.sql.Connection;

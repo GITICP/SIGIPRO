@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.bodegas.controladores;
+package com.icp.sigipro.activosfijos.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bodegas.dao.UbicacionDAO;
-import com.icp.sigipro.bodegas.modelos.Ubicacion;
+import com.icp.sigipro.activosfijos.dao.UbicacionDAO;
+import com.icp.sigipro.activosfijos.modelos.Ubicacion;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Walter
  */
-@WebServlet(name = "ControladorUbicacion", urlPatterns = {"/Bodegas/Ubicaciones"})
+@WebServlet(name = "ControladorUbicacion", urlPatterns = {"/ActivosFijos/Ubicaciones"})
 public class ControladorUbicacion extends SIGIPROServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

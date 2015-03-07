@@ -1,4 +1,4 @@
-package com.icp.sigipro.bodegas.modelos;
+package com.icp.sigipro.activosfijos.modelos;
 
 import java.lang.reflect.Field;
 import java.sql.Date;

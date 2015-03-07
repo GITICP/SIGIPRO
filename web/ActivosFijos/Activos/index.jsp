@@ -4,8 +4,8 @@
     Author     : Walter
 --%>
 <%@page import="java.util.List"%>
-<%@page import="com.icp.sigipro.bodegas.modelos.ActivoFijo"%>
-<%@page import="com.icp.sigipro.bodegas.dao.ActivoFijoDAO"%>
+<%@page import="com.icp.sigipro.activosfijos.modelos.ActivoFijo"%>
+<%@page import="com.icp.sigipro.activosfijos.dao.ActivoFijoDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
@@ -27,7 +27,7 @@
     }
 %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Activos Fijos" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -38,9 +38,9 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Activos Fijos</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/ActivosFijos?">Activos Fijos</a>
+              <a href="/SIGIPRO/ActivosFijos/Activos?">Activos Fijos</a>
             </li>
           </ul>
         </div>
@@ -66,7 +66,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/ActivosFijos?accion=agregar">Agregar Activo Fijo</a>
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ActivosFijos/Activos?accion=agregar">Agregar Activo Fijo</a>
                 </div>
               </c:if>
             </div>
@@ -91,7 +91,7 @@
 
                     <tr id ="${activos.getId_activo_fijo()}">
                       <td>
-                        <a href="/SIGIPRO/Bodegas/ActivosFijos?accion=ver&id_activo_fijo=${activos.getId_activo_fijo()}">
+                        <a href="/SIGIPRO/ActivosFijos/Activos?accion=ver&id_activo_fijo=${activos.getId_activo_fijo()}">
                           <div style="height:100%;width:100%">
                             ${activos.getPlaca()}
                           </div>

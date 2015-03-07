@@ -9,7 +9,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Activos Fijos" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -18,16 +18,16 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-8 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Activos Fijos</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/ActivosFijos?">Activos Fijos</a>
+              <a href="/SIGIPRO/ActivosFijos/Ubicaciones?">Ubicaciones de Activos Fijos</a>
             </li>
-            <li class="active"> ${activofijo.getNombreFormato()} </li>
+            <li class="active"> ${ubicacion.getNombre()} </li>
           </ul>
         </div>
-        <div class="col-md-8 ">
+        <div class="col-md-4 ">
           <div class="top-content">
 
           </div>
@@ -39,42 +39,36 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> ${activofijo.getNombreFormato()} </h3>
+              <h3><i class="fa fa-barcode"></i> ${ubicacion.getNombre()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 33}">
+                  <c:if test="${permiso == 1 || permiso == 36}">
                     <c:set var="contienePermisoEliminar" value="true" />
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el activo fijo" data-href="/SIGIPRO/Bodegas/ActivosFijos?accion=eliminar&id_activo_fijo=${activofijo.getId_activo_fijo()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la ubicación" data-href="/SIGIPRO/ActivosFijos/Ubicaciones?accion=eliminar&id_ubicacion=${ubicacion.getId_ubicacion()}">Eliminar</a>
                 </c:if>
 
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 32}">
+                  <c:if test="${permiso == 1 || permiso == 35}">
                     <c:set var="contienePermisoEditar" value="true" />
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/ActivosFijos?accion=editar&id_activo_fijo=${activofijo.getId_activo_fijo()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ActivosFijos/Ubicaciones?accion=editar&id_ubicacion=${ubicacion.getId_ubicacion()}">Editar</a>
                 </c:if>
               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
-                <table>
-                    <tr><td> <strong>Placa del Activo:</strong></td> <td>${activofijo.getPlaca()} </td></tr>
-                    <tr><td> <strong>Equipo:</strong> <td>${activofijo.getEquipo()} </td></tr>
-                    <tr><td> <strong>Marca:</strong> <td>${activofijo.getMarca()} </td></tr>
-                    <tr><td> <strong>Fecha de Movimiento:</strong> <td>${activofijo.getFecha_movimiento()} </td></tr>
-                    <tr><td> <strong>Sección:</strong> <td>${activofijo.getNombre_seccion()} </td></tr>
-                    <tr><td> <strong>Ubicación:</strong> <td>${activofijo.getNombre_ubicacion()} </td></tr>
-                    <tr><td> <strong>Fecha de Registro:</strong> <td>${activofijo.getFecha_registro()} </td></tr>
-                    <tr><td> <strong>Estado:</strong> <td>${activofijo.getEstado()} </td></tr>
-                </table>
-                <br>
+              <table>
+                <tr><td> <strong>Nombre del Producto:</strong></td> <td>${ubicacion.getNombre()} </td></tr>
+                <tr><td> <strong>Descripción:</strong> <td>${ubicacion.getDescripcion()} </td></tr>
+              </table>
+              <br>
             </div>
           </div>
           <!-- END WIDGET TICKET TABLE -->
