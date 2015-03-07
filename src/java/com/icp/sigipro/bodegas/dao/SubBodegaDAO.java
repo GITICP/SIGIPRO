@@ -97,6 +97,13 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
     boolean resultado = false;
     try {
+      /*
+      ------------------------------------
+        METER COMO TRANSACCIÓN
+      ------------------------------------
+      */
+              
+      
       PreparedStatement consultaInsertar = getConexion().prepareStatement(" INSERT INTO " + this.nombreModulo + "." + this.nombreTabla
                                                                         + " (id_seccion, id_usuario, nombre) VALUES (?,?,?) RETURNING id_sub_bodega");
 
