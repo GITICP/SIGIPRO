@@ -67,7 +67,7 @@
             <div class="form-group">
               <div class="col-sm-12">
                 <div class="input-group">
-                  <input type="password" placeholder="password" class="form-control" name="contrasenna">
+                  <input type="password" placeholder="Contraseña" class="form-control" name="contrasenna">
                   <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                 </div>
               </div>
