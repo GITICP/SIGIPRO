@@ -152,7 +152,8 @@ public class ControladorActivoFijo extends SIGIPROServlet
     activofijo.setId_ubicacion(Integer.parseInt(request.getParameter("ubicacion")));
 
     activofijo.setEstado(request.getParameter("estado"));
-
+    activofijo.setResponsable(request.getParameter("responsable"));
+    activofijo.setSerie(request.getParameter("serie"));
     try {
       SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
