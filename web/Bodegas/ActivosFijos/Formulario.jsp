@@ -138,11 +138,11 @@
         </div>
       </div>
     </div>
-    <label for="serie" class="control-label">Serie</label>
+    <label for="serie" class="control-label"> Número de Serie</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" maxlength="45" placeholder="Serie" class="form-control" name="serie" value="${activofijo.getSerie()}" > 
+          <input type="text" maxlength="45" placeholder="Número de serie" class="form-control" name="serie" value="${activofijo.getSerie()}" > 
         </div>
       </div>
     </div>

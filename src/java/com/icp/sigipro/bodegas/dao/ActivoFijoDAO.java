@@ -34,7 +34,7 @@ public class ActivoFijoDAO {
         boolean resultado = false;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado, responsable, serie) "
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado, responsable, numero_serie) "
                     + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
 
             consulta.setString(1, a.getPlaca());
@@ -82,7 +82,7 @@ public class ActivoFijoDAO {
     try{
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.activos_fijos SET placa=?, equipo=?, marca=?, fecha_movimiento=?, " + 
-              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=?, responsable=?, serie=? " +
+              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=?, responsable=?, numero_serie=? " +
               " WHERE id_activo_fijo=?; "
 
       );
@@ -185,7 +185,7 @@ public class ActivoFijoDAO {
                 String ubicacion = resultadoConsultaUbicacion.getString("nombre");
                 activo.setNombre_ubicacion(ubicacion);
                 activo.setResponsable(rs.getString("responsable"));
-                activo.setSerie(rs.getString("serie"));
+                activo.setSerie(rs.getString("numero_serie"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -213,7 +213,7 @@ public class ActivoFijoDAO {
                 activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
                 activo.setResponsable(rs.getString("responsable"));
-                activo.setSerie(rs.getString("serie"));
+                activo.setSerie(rs.getString("numero_serie"));
 
                 resultado.add(activo);
             }
