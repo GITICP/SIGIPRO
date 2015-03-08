@@ -68,17 +68,7 @@ Secciones
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-puzzle-piece"></i> Secciones</h3>
-              <div class="btn-group widget-header-toolbar">      
-                <c:set var="contienePermisoAgregar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 8}">
-                    <c:set var="contienePermisoAgregar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoAgregar}">
-                  <a class="btn btn-primary btn-sm boton-accion" href="Agregar">Agregar Sección</a>
-                </c:if>
-                
+              <div class="btn-group widget-header-toolbar">                    
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 10}">
@@ -97,6 +87,15 @@ Secciones
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
                   <a class="btn btn-warning btn-sm boton-accion" onclick="editarSeccion()" >Editar</a>
+                </c:if>
+                <c:set var="contienePermisoAgregar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 8}">
+                    <c:set var="contienePermisoAgregar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoAgregar}">
+                  <a class="btn btn-primary btn-sm boton-accion" href="Agregar">Agregar Sección</a>
                 </c:if>
                 </div>
               </div>
