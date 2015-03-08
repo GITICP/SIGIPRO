@@ -9,6 +9,7 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.activosfijos.dao.UbicacionDAO;
 import com.icp.sigipro.activosfijos.modelos.Ubicacion;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -54,6 +55,8 @@ public class ControladorUbicacion extends SIGIPROServlet {
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
             int[] permisos = {34, 35, 36};
+            
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
@@ -71,12 +74,19 @@ public class ControladorUbicacion extends SIGIPROServlet {
                 } else if (accion.equalsIgnoreCase("eliminar")) {
                     validarPermiso(36, listaPermisos);
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
-                    dao.eliminarUbicacion(id_ubicacion);
-                    
-                    //Funcion que genera la bitacora
-                    BitacoraDAO bitacora = new BitacoraDAO();
-                    bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
-                    //*----------------------------*
+                    try{
+                        dao.eliminarUbicacion(id_ubicacion);
+                        
+                        //Funcion que genera la bitacora
+                        BitacoraDAO bitacora = new BitacoraDAO();
+                        bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
+                        //*----------------------------*
+                        
+                        request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación eliminada correctamente."));
+                        
+                    }catch(SIGIPROException sig_ex) {
+                        request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                    }
                     
                     redireccion = "Ubicaciones/index.jsp";
                     List<Ubicacion> ubicaciones = dao.obtenerUbicaciones();
