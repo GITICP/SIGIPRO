@@ -108,7 +108,7 @@
                 <div class="form-group">
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-volver" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                    <button type="submit" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Confirmar Cambios</button>
+                    <button type="submit" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                   </div>
                 </div>
               </form>

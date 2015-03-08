@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 <form class="form-horizontal" autocomplete="off" method="post" action="Proveedores">
@@ -27,7 +28,7 @@
         <div class="input-group">
           <input type="email" maxlength="45" placeholder="proveedor@ejemplo.com" class="form-control" name="correo" value="${proveedor.getCorreo()}"
                  required
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                 oninvalid="setCustomValidity('Por favor ingrese un correo electrónico válido, este campo es requerido. ')"
                  oninput="setCustomValidity('')" > 
         </div>
       </div>
@@ -45,13 +46,11 @@
         </div>
       </div>
     </div>
-    <label for="telefono2" class="control-label">*Teléfono 2</label>
+    <label for="telefono2" class="control-label">Teléfono 2</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono2" value="${proveedor.getTelefono2()}"
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                 oninput="setCustomValidity('')" > 
+          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono2" value="${proveedor.getTelefono2()}"> 
         </div>
       </div>
     </div>
@@ -59,9 +58,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono3" value="${proveedor.getTelefono3()}"
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                 oninput="setCustomValidity('')" > 
+          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono3" value="${proveedor.getTelefono3()}"> 
         </div>
       </div>
     </div>
@@ -74,7 +71,14 @@
   <div class="form-group">
     <div class="modal-footer">
       <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-      <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Proveedor</button>
+      <c:choose>
+          <c:when test= "${accion.equals('Editar')}">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+          </c:when>
+          <c:otherwise>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Proveedor</button>
+          </c:otherwise>
+      </c:choose>
     </div>
   </div>
 

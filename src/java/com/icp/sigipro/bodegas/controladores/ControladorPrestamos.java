@@ -153,7 +153,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
           
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_REPONER,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
           //*----------------------------*
           
           if (resultado) {
@@ -178,7 +178,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
           
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
           //*----------------------------*
           
           if (resultado) {
@@ -203,7 +203,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
           
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_RECHAZAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
           //*----------------------------*
           
           if (resultado) {

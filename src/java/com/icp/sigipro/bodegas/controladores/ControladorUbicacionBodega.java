@@ -9,7 +9,9 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.UbicacionBodegaDAO;
 import com.icp.sigipro.bodegas.modelos.UbicacionBodega;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -53,6 +55,8 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
             int[] permisos = {37, 38, 39};
+            
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
@@ -70,12 +74,18 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
                 } else if (accion.equalsIgnoreCase("eliminar")) {
                     validarPermiso(39, listaPermisos);
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
-                    dao.eliminarUbicacion(id_ubicacion);
-                    
-                    //Funcion que genera la bitacora
-                    BitacoraDAO bitacora = new BitacoraDAO();
-                    bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACIONBODEGA,request.getRemoteAddr());
-                    //*----------------------------*
+                    try{
+                        dao.eliminarUbicacion(id_ubicacion);
+                        
+                        //Funcion que genera la bitacora
+                        BitacoraDAO bitacora = new BitacoraDAO();
+                        bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
+                        //*----------------------------*
+                        
+                        request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación eliminada correctamente."));
+                    }catch(SIGIPROException sig_ex) {
+                        request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                    }
                     
                     redireccion = "UbicacionesBodega/index.jsp";
                     List<UbicacionBodega> ubicaciones = dao.obtenerUbicaciones();
@@ -122,6 +132,7 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
         UbicacionBodegaDAO dao = new UbicacionBodegaDAO();
         String id = request.getParameter("id_ubicacion");
         String redireccion;
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
         if (id.isEmpty() || id.equals("0")) {
             resultado = dao.insertarUbicacion(ubicacion);
@@ -132,6 +143,7 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
             //*----------------------------*
             
             redireccion = "UbicacionesBodega/Agregar.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación de bodega agregada correctamente"));
         } else {
             ubicacion.setId_ubicacion(Integer.parseInt(id));
             resultado = dao.editarUbicacion(ubicacion);
@@ -142,10 +154,14 @@ public class ControladorUbicacionBodega extends SIGIPROServlet {
             //*----------------------------*
             
             redireccion = "UbicacionesBodega/Editar.jsp";
+            request.setAttribute("ubicacion", ubicacion);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación de bodega editada correctamente"));
         }
 
         if (resultado) {
             redireccion = String.format("UbicacionesBodega/index.jsp", id);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ubicación no puso ser editada."));
         }
 
         request.setAttribute("listaUbicaciones", dao.obtenerUbicaciones());

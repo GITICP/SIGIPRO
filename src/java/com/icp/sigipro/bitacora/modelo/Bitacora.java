@@ -22,27 +22,28 @@ public class Bitacora {
     
     //Variables de Tablas
     
-    public static final String TABLA_ACTIVOFIJO = "ACTIVOS_FIJOS";
-    public static final String TABLA_CATALOGOEXTERNO = "CATALOGO_EXTERNO";
-    public static final String TABLA_CATALOGOEXTERNOINTERNO = "CATALOGOS_INTERNOS_EXTERNOS";
-    public static final String TABLA_CATALOGOINTERNO = "CATALOGO_INTERNO";
-    public static final String TABLA_REACTIVO = "REACTIVOS";
-    public static final String TABLA_UBICACION = "UBICACIONES";
-    public static final String TABLA_UBICACIONBODEGA = "UBICACIONES_BODEGA";
-    public static final String TABLA_UBICACIONCATALOGOINTERNO = "UBICACIONES_CATALOGO_INTERNO";
-    public static final String TABLA_PROVEEDOR = "PROVEEDORES";
-    public static final String TABLA_CORREO = "CORREO";
-    public static final String TABLA_INGRESO = "INGRESOS";
-    public static final String TABLA_PRESTAMO = "SOLICITUDES_PRESTAMOS";
-    public static final String TABLA_SOLICITUD = "SOLICITUDES";
-    public static final String TABLA_INVENTARIO = "INVENTARIOS";
-    public static final String TABLA_SECCION = "SECCIONES";
-    public static final String TABLA_PERMISO = "PERMISOS";
-    public static final String TABLA_PERMISOROL = "PERMISO_ROLES";
-    public static final String TABLA_PUESTO = "PUESTOS";
-    public static final String TABLA_ROL = "ROLES";
-    public static final String TABLA_ROLUSUARIO = "ROLES_USUARIOS";
-    public static final String TABLA_USUARIO = "USUARIOS";
+    public static final String TABLA_ACTIVOFIJO = "BODEGA.ACTIVOS_FIJOS";
+    public static final String TABLA_CATALOGOEXTERNO = "BODEGA.CATALOGO_EXTERNO";
+    public static final String TABLA_CATALOGOEXTERNOINTERNO = "BODEGA.CATALOGOS_INTERNOS_EXTERNOS";
+    public static final String TABLA_CATALOGOINTERNO = "BODEGA.CATALOGO_INTERNO";
+    public static final String TABLA_REACTIVO = "BODEGA.REACTIVOS";
+    public static final String TABLA_UBICACION = "BODEGA.UBICACIONES";
+    public static final String TABLA_UBICACIONBODEGA = "BODEGA.UBICACIONES_BODEGA";
+    public static final String TABLA_UBICACIONCATALOGOINTERNO = "BODEGA.UBICACIONES_CATALOGO_INTERNO";
+    public static final String TABLA_PROVEEDOR = "COMPRAS.PROVEEDORES";
+    public static final String TABLA_CORREO = "CONFIGURACION.CORREO";
+    public static final String TABLA_INGRESO = "BODEGA.INGRESOS";
+    public static final String TABLA_SUBBODEGAS = "BODEGA.SUB_BODEGAS";
+    public static final String TABLA_PRESTAMO = "BODEGA.SOLICITUDES_PRESTAMOS";
+    public static final String TABLA_SOLICITUD = "BODEGA.SOLICITUDES";
+    public static final String TABLA_INVENTARIO = "BODEGA.INVENTARIOS";
+    public static final String TABLA_SECCION = "SEGURIDAD.SECCIONES";
+    public static final String TABLA_PERMISO = "SEGURIDAD.PERMISOS";
+    public static final String TABLA_PERMISOROL = "SEGURIDAD.PERMISO_ROLES";
+    public static final String TABLA_PUESTO = "SEGURIDAD.PUESTOS";
+    public static final String TABLA_ROL = "SEGURIDAD.ROLES";
+    public static final String TABLA_ROLUSUARIO = "SEGURIDAD.ROLES_USUARIOS";
+    public static final String TABLA_USUARIO = "SEGURIDAD.USUARIOS";
     
     
     //Variables de Accion
@@ -51,6 +52,12 @@ public class Bitacora {
     public static final String ACCION_ELIMINAR = "ELIMINAR";
     public static final String ACCION_LOGIN = "LOG IN";
     public static final String ACCION_LOGOUT = "LOG OUT";
+    public static final String ACCION_APROBAR = "APROBAR";
+    public static final String ACCION_RECHAZAR = "RECHAZAR";
+    public static final String ACCION_ENTREGAR = "ENTREGAR";
+    public static final String ACCION_REPONER = "REPONER";
+
+   
     
     
     public Bitacora(){

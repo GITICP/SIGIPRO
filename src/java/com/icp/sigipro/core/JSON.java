@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.core;
 
-import com.icp.sigipro.bodegas.modelos.ActivoFijo;
+import com.icp.sigipro.activosfijos.modelos.ActivoFijo;
 import java.lang.reflect.Field;
 import org.json.JSONObject;
 

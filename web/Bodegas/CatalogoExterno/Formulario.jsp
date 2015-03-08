@@ -43,18 +43,19 @@
         </div>
       </div>
     </div>  
-    <label for="proveedor" class="control-label">Proveedor</label>
+    <label for="proveedor" class="control-label">*Proveedor</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <select id="proveedor" class="form-control" name="proveedor" style='background-color: #fff;' > 
+          <select id="proveedor" class="form-control" name="proveedor" style='background-color: #fff;' required
+                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                 oninput="setCustomValidity('')" > 
             <c:set var='varAccion' value="Agregar"/>
             <c:choose>
               <c:when test="${accion eq varAccion || producto.getId_Proveedor()==0}">
                 <c:forEach items="${proveedores}" var="pr">
                   <option value=${pr.getId_proveedor()}>${pr.getNombre_proveedor()}</option>
                 </c:forEach>
-                <option value=0 selected> -- Sin selección --</option> 
               </c:when>
               <c:otherwise>               
                 <c:forEach items="${proveedores}" var="pr">              
@@ -110,8 +111,15 @@
 
     <div class="form-group">
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+         <c:choose>
+          <c:when test= "${accion.equals('Editar')}">
+            <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+          </c:when>
+          <c:otherwise>
+            <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+          </c:otherwise>
+        </c:choose>
       </div>
     </div>
   </div>
