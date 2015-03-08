@@ -27,10 +27,6 @@
                 <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="producto" required data-editar="${accionEditar}"
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
-                  <%--
-                  <c:if test="${ingreso.getProducto() != null}">
-                    <option value=${ingreso.getProducto().getId_producto()} data-cuarentena=${ingreso.getProducto().isCuarentena()} data-perecedero="${ingreso.getProducto().isPerecedero()}" selected>${ingreso.getProducto().getNombre()} (${ingreso.getProducto().getCodigo_icp()})</option>
-                  </c:if>--%>
                   <c:forEach items="${productos}" var="producto">
                     <option value=${producto.getId_producto()} data-cuarentena=${producto.isCuarentena()} data-perecedero="${producto.isPerecedero()}">${producto.getNombre()} (${producto.getCodigo_icp()})</option>
                   </c:forEach>
@@ -53,10 +49,6 @@
                 <select id="seleccionSeccion" class="select2" style='background-color: #fff;' name="seccion" required data-editar="${accionEditar}"
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         oninput="setCustomValidity('')">
-                  <%--
-                  <c:if test="${ingreso.getSeccion() != null}">
-                    <option selected value=${ingreso.getSeccion().getID()} selected>${ingreso.getSeccion().getNombre_seccion()}</option>
-                  </c:if>--%>
                   <c:forEach items="${secciones}" var="seccion">
                     <option value=${seccion.getID()}>${seccion.getNombre_seccion()}</option>
                   </c:forEach>
