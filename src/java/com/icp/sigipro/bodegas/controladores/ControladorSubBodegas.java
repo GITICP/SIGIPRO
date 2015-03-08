@@ -127,9 +127,24 @@ public class ControladorSubBodegas extends SIGIPROServlet
         validarPermiso(12, listaPermisos);
         String redireccion = "SubBodegas/Editar.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
-        SubBodega sb = null;
+        SubBodega sb;
         try {
             sb = dao.buscarSubBodega(id_sub_bodega);
+            
+            List<Usuario> usuarios_ingresos;
+            List<Usuario> usuarios_egresos;
+            List<Usuario> usuarios_ver;
+            List<Usuario> usuarios;
+            
+            usuarios_ingresos = dao.usuariosPermisos(SubBodegaDAO.INGRESAR, id_sub_bodega);
+            usuarios_egresos = dao.usuariosPermisos(SubBodegaDAO.EGRESAR, id_sub_bodega);
+            usuarios_ver = dao.usuariosPermisos(SubBodegaDAO.VER, id_sub_bodega);
+            usuarios = daoUsuarios.obtenerUsuarios();
+            
+            request.setAttribute("usuarios", usuarios);
+            request.setAttribute("usuarios_ingresos", usuarios_ingresos);
+            request.setAttribute("usuarios_egresos", usuarios_egresos);
+            request.setAttribute("usuarios_ver", usuarios_ver);
             request.setAttribute("sub_bodega", sb);
             request.setAttribute("accion", "Editar");
         } catch (SIGIPROException ex) {
@@ -139,7 +154,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
             } catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
             }
-            
             redireccion = "SubBodegas/index.jsp";
         }
         
@@ -170,9 +184,10 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
         try {
             dao = new SubBodegaDAO();
-            String[] idsIngresos = dao.parsearAsociacion("#i#", request.getParameter("ids-ingresos"));
-            String[] idsEgresos = dao.parsearAsociacion("#e#", request.getParameter("ids-egresos"));
-            if (dao.insertar(sb, idsIngresos, idsEgresos)) {
+            String[] ids_ingresos = dao.parsearAsociacion("#i#", request.getParameter("ids-ingresos"));
+            String[] ids_egresos = dao.parsearAsociacion("#e#", request.getParameter("ids-egresos"));
+            String[] ids_ver = dao.parsearAsociacion("#v#", request.getParameter("ids-ver"));
+            if (dao.insertar(sb, ids_ingresos, ids_egresos, ids_ver)) {
                 try {
                     request.setAttribute("mensaje", helper.mensajeDeExito("SubBodega agregada correctamente."));
                     request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());

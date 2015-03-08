@@ -1,16 +1,27 @@
 // Variables globales de tablas
 tIngresos = null;
 tEgresos = null;
+tVer = null;
 T_INGRESOS_SELECTOR = "#ingresos-sub-bodegas";
 T_EGRESOS_SELECTOR = "#egresos-sub-bodegas";
+T_VER_SELECTOR = "#ver-sub-bodegas";
+
+SELECCION_INGRESOS = "#seleccion-usuario-ingreso";
+SELECCION_EGRESOS = "#seleccion-usuario-egreso";
+SELECCION_VER = "#seleccion-usuario-ver";
 
 $(document).ready(function() {
   
   $("#subbodegaForm").submit(function() {
     llenarCampoAsociacion('i', T_INGRESOS_SELECTOR, $("#ids-ingresos"));
     llenarCampoAsociacion('e', T_EGRESOS_SELECTOR, $("#ids-egresos"));
+    llenarCampoAsociacion('v', T_VER_SELECTOR, $("#ids-ver"));
     $(this).submit();
   });
+  
+  eliminarOpciones(T_INGRESOS_SELECTOR, SELECCION_INGRESOS);
+  eliminarOpciones(T_EGRESOS_SELECTOR, SELECCION_EGRESOS);
+  eliminarOpciones(T_VER_SELECTOR, SELECCION_VER);
   
   var configuracion = {
     "paging": false,
@@ -20,12 +31,15 @@ $(document).ready(function() {
   };
   tIngresos = $(T_INGRESOS_SELECTOR).DataTable(configuracion);
   tEgresos = $(T_EGRESOS_SELECTOR).DataTable(configuracion);  
+  tVer = $(T_VER_SELECTOR).DataTable(configuracion);
+  
+  
 });
 
 // -- Ingresos -- //
 
 function agregarUsuarioIngresos() {
-  var usuarioSeleccionado = $("#seleccion-usuario-ingreso :selected");
+  var usuarioSeleccionado = $(SELECCION_INGRESOS + " :selected");
   usuarioSeleccionado.remove();
   var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioIngreso(" + usuarioSeleccionado.val() + ")>");
   botonEliminar.text("Eliminar");
@@ -44,13 +58,13 @@ function eliminarUsuarioIngreso(id) {
   
   fila.remove().draw();
   
-  $("#seleccion-usuario-ingreso").append(nuevaOpcion);
+  $(SELECCION_INGRESOS).append(nuevaOpcion);
 }
 
 // -- Egresos -- //
 
 function agregarUsuarioEgresos() {
-  var usuarioSeleccionado = $("#seleccion-usuario-egreso :selected");
+  var usuarioSeleccionado = $(SELECCION_EGRESOS +  " :selected");
   usuarioSeleccionado.remove();
   var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioEgreso(" + usuarioSeleccionado.val() + ")>");
   botonEliminar.text("Eliminar");
@@ -69,8 +83,35 @@ function eliminarUsuarioEgreso(id) {
   
   fila.remove().draw();
   
-  $("#seleccion-usuario-egreso").append(nuevaOpcion);
+  $(SELECCION_EGRESOS).append(nuevaOpcion);
 }
+
+// -- Ver -- //
+
+function agregarUsuarioVer() {
+  var usuarioSeleccionado = $(SELECCION_VER + " :selected");
+  usuarioSeleccionado.remove();
+  var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioVer(" + usuarioSeleccionado.val() + ")>");
+  botonEliminar.text("Eliminar");
+  
+  var nuevaFila = tVer.row.add([usuarioSeleccionado.text(), botonEliminar[0].outerHTML]).draw().node();
+
+  $(nuevaFila).attr("id", "ver-" + usuarioSeleccionado.val());
+}
+
+function eliminarUsuarioVer(id) {
+  var fila = tVer.row('#ver-' + id);
+  
+  var nuevaOpcion = $('<option>');
+  nuevaOpcion.val(id);
+  nuevaOpcion.text(fila.data()[0]);
+  
+  fila.remove().draw();
+  
+  $(SELECCION_VER).append(nuevaOpcion);
+}
+
+// -- Compartido -- //
 
 function llenarCampoAsociacion(string_pivote, tabla, campo_escondido){
   var asociacionCodificada = "";
@@ -80,4 +121,12 @@ function llenarCampoAsociacion(string_pivote, tabla, campo_escondido){
     asociacionCodificada += asociacion;
   });
   campo_escondido.val(asociacionCodificada);
+}
+
+function eliminarOpciones(selector_tabla, selector_seleccion) {
+    var elemento_seleccion = $(selector_seleccion);
+    $(selector_tabla).find('tr[id]').each(function(){
+        var id = $(this).attr('id').split('-')[1];
+        elemento_seleccion.find('option[value=' + id + ']').remove();
+    });
 }

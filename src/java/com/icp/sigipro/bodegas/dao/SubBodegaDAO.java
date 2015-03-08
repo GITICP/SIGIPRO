@@ -24,6 +24,10 @@ import java.util.List;
  */
 public class SubBodegaDAO extends DAO<SubBodega>
 {
+    
+    public static final String INGRESAR = "bodega.usuarios_sub_bodegas_ingresos";
+    public static final String EGRESAR = "bodega.usuarios_sub_bodegas_egresos";
+    public static final String VER = "bodega.usuarios_sub_bodegas_ver";
 
     public SubBodegaDAO()
     {
@@ -134,7 +138,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public boolean insertar(SubBodega param, String[] idsIngresos, String[] idsEgresos) throws SIGIPROException
+    public boolean insertar(SubBodega param, String[] idsIngresos, String[] idsEgresos, String[] idsVer) throws SIGIPROException
     {
 
         boolean resultado = false;
@@ -163,15 +167,19 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
             PreparedStatement consultaEliminarIngresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = ?");
             PreparedStatement consultaEliminarEgresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = ?");
+            PreparedStatement consultaEliminarVer = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = ?");
 
             consultaEliminarIngresos.setInt(1, param.getId_sub_bodega());
             consultaEliminarEgresos.setInt(1, param.getId_sub_bodega());
+            consultaEliminarVer.setInt(1, param.getId_sub_bodega());
 
             consultaEliminarIngresos.executeUpdate();
             consultaEliminarEgresos.executeUpdate();
+            consultaEliminarVer.executeUpdate();
 
             PreparedStatement insertarIngresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ingresos (id_sub_bodega, id_usuario) VALUES (?,?)");
             PreparedStatement insertarEgresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_egresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            PreparedStatement insertarVer = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ver (id_sub_bodega, id_usuario) VALUES (?,?)");
 
             for (String idIngreso : idsIngresos) {
                 insertarIngresos.setInt(1, param.getId_sub_bodega());
@@ -184,16 +192,55 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 insertarEgresos.setInt(2, Integer.parseInt(idEgreso));
                 insertarEgresos.addBatch();
             }
+            
+            for (String idVer : idsVer) {
+                insertarVer.setInt(1, param.getId_sub_bodega());
+                insertarVer.setInt(2, Integer.parseInt(idVer));
+                insertarVer.addBatch();
+            }
 
             insertarIngresos.executeBatch();
             insertarEgresos.executeBatch();
-
+            insertarVer.executeBatch();
+            
+            resultado = true;
         }
         catch (SQLException ex) {
             throw new SIGIPROException("Error al insertar sub bodega");
         }
 
-        return true;
+        return resultado;
+    }
+    
+    public List<Usuario> usuariosPermisos(String tabla_por_buscar, int id_sub_bodega) throws SIGIPROException {
+        List<Usuario> usuarios = new ArrayList<Usuario>();
+        
+        try{
+            PreparedStatement consulta_permisos = getConexion().prepareStatement(" SELECT u.id_usuario, u.nombre_completo, u.nombre_usuario "
+                                                                           + " FROM " + tabla_por_buscar + " p_sb "
+                                                                           + " INNER JOIN seguridad.usuarios u ON u.id_usuario = p_sb.id_usuario "
+                                                                           + " WHERE id_sub_bodega = ?;");
+            
+            consulta_permisos.setInt(1, id_sub_bodega);
+            
+            ResultSet resultados = consulta_permisos.executeQuery();
+            
+            while( resultados.next() ) {
+                Usuario u = new Usuario();
+                
+                u.setId_usuario(resultados.getInt("id_usuario"));
+                u.setNombre_completo(resultados.getString("nombre_completo"));
+                u.setNombre_usuario(resultados.getString("nombre_usuario"));
+                
+                usuarios.add(u);
+            }
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener los usuarios con permisos.");
+        }
+        
+        return usuarios;
     }
 
     public String[] parsearAsociacion(String pivote, String asociacionesCodificadas)
