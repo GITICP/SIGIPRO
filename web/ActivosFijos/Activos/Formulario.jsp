@@ -95,17 +95,6 @@
             </div>
         </div>
     </div>                 
-    <label for="fecha_registro" class="control-label">*Fecha de Registro</label>
-    <div class="form-group">
-        <div class="col-sm-12">
-            <div class="input-group" style="display:table;">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" value="${activofijo.getFecha_registro()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_registro" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-            </div>
-        </div>
-    </div>
     <label for="estado" class="control-label"> *Estado</label>
     <div class="form-group">
       <div class="col-sm-12">
@@ -132,8 +121,8 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" minlength="10" maxlength="100" placeholder="Responsable" class="form-control" name="responsable" value="${activofijo.getResponsable()}"
-                 oninvalid="setCustomValidity('Este campo debe ser de más de 10 caracteres')"
+          <input type="text" minlength="5" maxlength="100" placeholder="Responsable" class="form-control" name="responsable" value="${activofijo.getResponsable()}"
+                 oninvalid="setCustomValidity('Este campo debe ser de más de 5 caracteres')"
                  oninput="setCustomValidity('')" > 
         </div>
       </div>
@@ -147,10 +136,13 @@
       </div>
     </div>
 </div>
+       
+        <div class="col-md-12">
 <!-- Esta parte es la de los permisos de un rol -->
 <p class="campos-requeridos">
     Los campos marcados con * son requeridos.
 </p>  
+
 
 <div class="form-group">
     <div class="modal-footer">
@@ -166,5 +158,5 @@
     </div>
 </div>
 
-
+</div>
 </form>

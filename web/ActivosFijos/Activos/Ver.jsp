@@ -74,7 +74,7 @@
                     <tr><td> <strong>Fecha de Registro:</strong> <td>${activofijo.getFecha_registro()} </td></tr>
                     <tr><td> <strong>Estado:</strong> <td>${activofijo.getEstado()} </td></tr>
                     <tr><td> <strong>Responsable:</strong> <td>${activofijo.getResponsable()} </td></tr>
-                    <tr><td> <strong>Serie:</strong> <td>${activofijo.getSerie()} </td></tr>
+                    <tr><td> <strong>Número de Serie:</strong> <td>${activofijo.getSerie()} </td></tr>
                 </table>
                 <br>
             </div>
