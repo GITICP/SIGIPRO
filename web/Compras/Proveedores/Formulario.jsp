@@ -27,7 +27,7 @@
         <div class="input-group">
           <input type="email" maxlength="45" placeholder="proveedor@ejemplo.com" class="form-control" name="correo" value="${proveedor.getCorreo()}"
                  required
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
+                 oninvalid="setCustomValidity('Por favor ingrese un correo electrónico válido, este campo es requerido. ')"
                  oninput="setCustomValidity('')" > 
         </div>
       </div>
@@ -45,13 +45,11 @@
         </div>
       </div>
     </div>
-    <label for="telefono2" class="control-label">*Teléfono 2</label>
+    <label for="telefono2" class="control-label">Teléfono 2</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono2" value="${proveedor.getTelefono2()}"
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                 oninput="setCustomValidity('')" > 
+          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono2" value="${proveedor.getTelefono2()}"> 
         </div>
       </div>
     </div>
@@ -59,9 +57,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono3" value="${proveedor.getTelefono3()}"
-                 oninvalid="setCustomValidity('Este campo es requerido ')"
-                 oninput="setCustomValidity('')" > 
+          <input type="text" maxlength="45" placeholder="2267-0000" class="form-control" name="telefono3" value="${proveedor.getTelefono3()}"> 
         </div>
       </div>
     </div>

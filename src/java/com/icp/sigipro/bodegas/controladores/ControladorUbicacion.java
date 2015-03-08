@@ -10,6 +10,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.UbicacionDAO;
 import com.icp.sigipro.bodegas.modelos.Ubicacion;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -76,7 +77,8 @@ public class ControladorUbicacion extends SIGIPROServlet {
                     BitacoraDAO bitacora = new BitacoraDAO();
                     bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
                     //*----------------------------*
-                    
+                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación eliminada correctamente"));
                     redireccion = "Ubicaciones/index.jsp";
                     List<Ubicacion> ubicaciones = dao.obtenerUbicaciones();
                     request.setAttribute("listaUbicaciones", ubicaciones);
@@ -122,10 +124,11 @@ public class ControladorUbicacion extends SIGIPROServlet {
         UbicacionDAO dao = new UbicacionDAO();
         String id = request.getParameter("id_ubicacion");
         String redireccion;
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
         if (id.isEmpty() || id.equals("0")) {
             resultado = dao.insertarUbicacion(ubicacion);
-            
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación ingresada correctamente"));
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(ubicacion.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
@@ -135,6 +138,7 @@ public class ControladorUbicacion extends SIGIPROServlet {
         } else {
             ubicacion.setId_ubicacion(Integer.parseInt(id));
             resultado = dao.editarUbicacion(ubicacion);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación editada correctamente"));
             
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -146,6 +150,10 @@ public class ControladorUbicacion extends SIGIPROServlet {
 
         if (resultado) {
             redireccion = String.format("Ubicaciones/index.jsp", id);
+        }
+        else{
+          request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar la solicitud"));
+
         }
         
         request.setAttribute("listaUbicaciones", dao.obtenerUbicaciones());

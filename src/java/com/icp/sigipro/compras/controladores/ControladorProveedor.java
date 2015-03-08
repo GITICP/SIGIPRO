@@ -10,6 +10,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.compras.dao.ProveedorDAO;
 import com.icp.sigipro.compras.modelos.Proveedor;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -84,7 +85,8 @@ public class ControladorProveedor extends SIGIPROServlet
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(id_proveedor,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PROVEEDOR,request.getRemoteAddr());
             //*----------------------------*
-          
+          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          request.setAttribute("mensaje", helper.mensajeDeExito("Proveedor eliminado correctamente"));
           redireccion = "Proveedores/index.jsp";
           request.setAttribute("proveedores", p.obtenerProveedores());
         }
@@ -129,34 +131,40 @@ public class ControladorProveedor extends SIGIPROServlet
 
     ProveedorDAO p = new ProveedorDAO();
     String id = request.getParameter("id_proveedor");
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    String redireccion;
 
     if (id == null || id.isEmpty() || "0".equals(id)) {
         resultado = p.insertarProveedor(proveedor);
-        
+        request.setAttribute("mensaje", helper.mensajeDeExito("Proveedor ingresado correctamente"));
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(proveedor.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PROVEEDOR,request.getRemoteAddr());
         //*----------------------------*
-      
+        redireccion = "Proveedores/Agregar.jsp";
     }
     else {
         proveedor.setId_proveedor(Integer.parseInt(id));
         resultado = p.editarProveedor(proveedor);
+        request.setAttribute("mensaje", helper.mensajeDeExito("Proveedor editado correctamente"));
         
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(proveedor.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PROVEEDOR,request.getRemoteAddr());
         //*----------------------------*
-        
+        redireccion = "Proveedores/Editar.jsp";
     }
     if (resultado) {
-      RequestDispatcher vista = request.getRequestDispatcher("/Compras/Proveedores/index.jsp");
-      vista.forward(request, response);
+      redireccion = "Proveedores/index.jsp";
+      request.setAttribute("proveedores", p.obtenerProveedores());
     }
+    
     else {
-      RequestDispatcher vista = request.getRequestDispatcher("/Fallo");
-      vista.forward(request, response);
+      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar la solicitud"));
     }
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
+    
   }
 
   @Override
