@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form class="form-horizontal" autocomplete="off" method="post" action="ActivosFijos">
+<form class="form-horizontal" autocomplete="off" method="post" action="Activos">
     <div class="col-md-6">
         <input hidden="true" name="id_activo_fijo" value="${activofijo.getId_activo_fijo()}">
         <label for="placa" class="control-label">Placa del Activo Fijo</label>
@@ -50,8 +50,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="col-md-6">
     <label for="seccion" class="control-label">*Sección</label>
     <div class="form-group">
         <div class="col-sm-12">
@@ -73,6 +71,8 @@
             </div>
         </div>
     </div>
+</div>
+<div class="col-md-6">
     <label for="ubicacion" class="control-label">*Ubicación</label>
     <div class="form-group">
         <div class="col-sm-12">
@@ -95,17 +95,6 @@
             </div>
         </div>
     </div>                 
-    <label for="fecha_registro" class="control-label">*Fecha de Registro</label>
-    <div class="form-group">
-        <div class="col-sm-12">
-            <div class="input-group" style="display:table;">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" value="${activofijo.getFecha_registro()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_registro" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-            </div>
-        </div>
-    </div>
     <label for="estado" class="control-label"> *Estado</label>
     <div class="form-group">
       <div class="col-sm-12">
@@ -128,19 +117,46 @@
         </div>
       </div>
     </div>
+    <label for="responsable" class="control-label">Responsable</label>
+    <div class="form-group">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input type="text" minlength="5" maxlength="100" placeholder="Responsable" class="form-control" name="responsable" value="${activofijo.getResponsable()}"
+                 oninvalid="setCustomValidity('Este campo debe ser de más de 5 caracteres')"
+                 oninput="setCustomValidity('')" > 
+        </div>
+      </div>
+    </div>
+    <label for="serie" class="control-label"> Número de Serie</label>
+    <div class="form-group">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input type="text" maxlength="45" placeholder="Número de serie" class="form-control" name="serie" value="${activofijo.getSerie()}" > 
+        </div>
+      </div>
+    </div>
 </div>
-</div>
+       
+        <div class="col-md-12">
 <!-- Esta parte es la de los permisos de un rol -->
 <p class="campos-requeridos">
     Los campos marcados con * son requeridos.
 </p>  
 
+
 <div class="form-group">
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Activo Fijo</button>
+        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+        <c:choose>
+          <c:when test= "${accion.equals('Editar')}">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+          </c:when>
+          <c:otherwise>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Activo Fijo</button>
+          </c:otherwise>
+        </c:choose>
     </div>
 </div>
 
-
+</div>
 </form>

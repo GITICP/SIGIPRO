@@ -107,7 +107,7 @@ public class EliminarSeccion extends SIGIPROServlet {
                 request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">" +
                                                     "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n" +
                                                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                                                        "La sección no pudo ser eliminada porque está asignado a uno o más usuarios" +
+                                                        "La sección no pudo ser eliminada porque está asignada a uno o más usuarios, activos, préstamos u otros." +
                                                 "</div>");
             }
             request.getRequestDispatcher("/Configuracion/Secciones/").forward(request, response);

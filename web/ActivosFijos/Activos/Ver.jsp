@@ -9,7 +9,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Activos Fijos" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -20,9 +20,9 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Activos Fijos</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/ActivosFijos?">Activos Fijos</a>
+              <a href="/SIGIPRO/ActivosFijos/Activos?">Activos Fijos</a>
             </li>
             <li class="active"> ${activofijo.getNombreFormato()} </li>
           </ul>
@@ -48,7 +48,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el activo fijo" data-href="/SIGIPRO/Bodegas/ActivosFijos?accion=eliminar&id_activo_fijo=${activofijo.getId_activo_fijo()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el activo fijo" data-href="/SIGIPRO/ActivosFijos/Activos?accion=eliminar&id_activo_fijo=${activofijo.getId_activo_fijo()}">Eliminar</a>
                 </c:if>
 
                 <c:set var="contienePermisoEditar" value="false" />
@@ -58,7 +58,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/ActivosFijos?accion=editar&id_activo_fijo=${activofijo.getId_activo_fijo()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ActivosFijos/Activos?accion=editar&id_activo_fijo=${activofijo.getId_activo_fijo()}">Editar</a>
                 </c:if>
               </div>
             </div>
@@ -73,6 +73,8 @@
                     <tr><td> <strong>Ubicación:</strong> <td>${activofijo.getNombre_ubicacion()} </td></tr>
                     <tr><td> <strong>Fecha de Registro:</strong> <td>${activofijo.getFecha_registro()} </td></tr>
                     <tr><td> <strong>Estado:</strong> <td>${activofijo.getEstado()} </td></tr>
+                    <tr><td> <strong>Responsable:</strong> <td>${activofijo.getResponsable()} </td></tr>
+                    <tr><td> <strong>Número de Serie:</strong> <td>${activofijo.getSerie()} </td></tr>
                 </table>
                 <br>
             </div>

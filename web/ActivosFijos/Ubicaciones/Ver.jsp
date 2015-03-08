@@ -9,7 +9,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Activos Fijos" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -20,9 +20,9 @@
       <div class="row">
         <div class="col-md-8 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Activos Fijos</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones de Activos Fijos</a>
+              <a href="/SIGIPRO/ActivosFijos/Ubicaciones?">Ubicaciones de Activos Fijos</a>
             </li>
             <li class="active"> ${ubicacion.getNombre()} </li>
           </ul>
@@ -48,7 +48,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la ubicación" data-href="/SIGIPRO/Bodegas/Ubicaciones?accion=eliminar&id_ubicacion=${ubicacion.getId_ubicacion()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la ubicación" data-href="/SIGIPRO/ActivosFijos/Ubicaciones?accion=eliminar&id_ubicacion=${ubicacion.getId_ubicacion()}">Eliminar</a>
                 </c:if>
 
                 <c:set var="contienePermisoEditar" value="false" />
@@ -58,7 +58,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/Ubicaciones?accion=editar&id_ubicacion=${ubicacion.getId_ubicacion()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ActivosFijos/Ubicaciones?accion=editar&id_ubicacion=${ubicacion.getId_ubicacion()}">Editar</a>
                 </c:if>
               </div>
             </div>
