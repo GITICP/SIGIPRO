@@ -85,7 +85,7 @@
                     <th>Fecha de Registro</th>
                     <th>Estado</th>
                     <th>Responsable</th>
-                    <th>Serie</th>
+                    <th>Número de Serie</th>
                   </tr>
                 </thead>
                 <tbody>

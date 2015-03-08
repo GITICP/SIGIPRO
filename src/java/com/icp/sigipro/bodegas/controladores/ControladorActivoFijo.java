@@ -14,6 +14,7 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,11 +52,12 @@ public class ControladorActivoFijo extends SIGIPROServlet
   {
     try {
       List<String> estados = new ArrayList<String>();
-      estados.add("Normal");
+      estados.add("Activo");
       estados.add("Reubicado");
       estados.add("Desechado");
       estados.add("Por Reubicar");
       estados.add("Por Desechar");
+      estados.add("Por Reasignar");
       String redireccion = "";
       String accion = request.getParameter("accion");
       SeccionDAO sec = new SeccionDAO();
@@ -160,8 +162,7 @@ public class ControladorActivoFijo extends SIGIPROServlet
       String fechamovimiento = request.getParameter("fecha_movimiento");
       java.util.Date fMovimiento = formatoFecha.parse(fechamovimiento);
 
-      String fecharegistro = request.getParameter("fecha_registro");
-      java.util.Date fRegistro = formatoFecha.parse(fecharegistro);
+      java.util.Date fRegistro = new java.util.Date();
 
       java.sql.Date fMovimientoSQL = new java.sql.Date(fMovimiento.getTime());
       java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
@@ -175,17 +176,22 @@ public class ControladorActivoFijo extends SIGIPROServlet
     ActivoFijoDAO dao = new ActivoFijoDAO();
     String id = request.getParameter("id_activo_fijo");
     String redireccion;
-
+    boolean flag_error_sql = false;
     if (id.isEmpty() || id.equals("0")) {
-      resultado = dao.insertarActivoFijo(activofijo);
-      
-      //Funcion que genera la bitacora
+      try{
+        resultado = dao.insertarActivoFijo(activofijo);
+        //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
       //*----------------------------*
-      
-      redireccion = "ActivosFijos/Agregar.jsp";
       request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo ingresado correctamente"));
+      }
+      catch(SIGIPROException e){
+        flag_error_sql =true;
+        request.setAttribute("mensaje", helper.mensajeDeError("El número de placa ingresado ya existe"));
+        resultado=false;
+      }
+      redireccion = "ActivosFijos/Agregar.jsp";
     }
     else {
       activofijo.setId_activo_fijo(Integer.parseInt(id));
@@ -206,7 +212,8 @@ public class ControladorActivoFijo extends SIGIPROServlet
       redireccion = String.format("ActivosFijos/index.jsp", id);
     }
     else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      if (!flag_error_sql){
+      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));}
     }
 
     request.setAttribute("activofijo", activofijo);

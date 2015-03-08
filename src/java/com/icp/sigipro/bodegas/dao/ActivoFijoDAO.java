@@ -4,15 +4,20 @@ import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ActivoFijo;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -29,7 +34,7 @@ public class ActivoFijoDAO {
         conexion = s.conectar();
     }
     
-    public boolean insertarActivoFijo(ActivoFijo a) {
+    public boolean insertarActivoFijo(ActivoFijo a) throws SIGIPROException {
 
         boolean resultado = false;
 
@@ -70,9 +75,11 @@ public class ActivoFijoDAO {
             }
             consulta.close();
             conexion.close();
+        } catch (PSQLException ex) {
+           throw new SIGIPROException("Esta placa ya existe en el sistema");
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Logger.getLogger(ActivoFijoDAO.class.getName()).log(Level.SEVERE, null, ex);
+      }
         return resultado;
     }
   public boolean editarActivoFijo(ActivoFijo a){
