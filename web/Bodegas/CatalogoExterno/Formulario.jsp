@@ -112,7 +112,14 @@
     <div class="form-group">
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+         <c:choose>
+          <c:when test= "${accion.equals('Editar')}">
+            <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+          </c:when>
+          <c:otherwise>
+            <button type="button" class="btn btn-primary" onclick="confirmacionAgregarProductoExterno()"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+          </c:otherwise>
+        </c:choose>
       </div>
     </div>
   </div>

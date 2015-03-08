@@ -271,10 +271,18 @@
     <input hidden="true" id="ubicaciones"  name="ubicaciones" value="">
     <input hidden="true" id="productosExternos"  name="productosExternos" value="">
 
+
     <div class="form-group">
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+            <c:choose>
+                <c:when test= "${accion.equals('Editar')}">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                </c:when>
+                <c:otherwise>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Producto</button>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </form>
@@ -336,10 +344,9 @@
         <div class="form-group">
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarProductoExterno()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarProductoExterno()"><i class="fa fa-check-circle"></i> Asociar Producto Externo</button>
             </div>
         </div>
-
 
     </jsp:attribute>
 

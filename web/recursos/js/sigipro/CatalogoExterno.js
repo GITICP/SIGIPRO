@@ -6,22 +6,28 @@
 
 // Funcion que agrega el producto interno
 function agregarProductoInterno() {
-  $('#modalAgregarCatalogoInterno').modal('hide');
-
   permisoSeleccionado = $('#seleccioninterno :selected');
   idPermiso = permisoSeleccionado.val();
-  textoPermiso = permisoSeleccionado.text();
+  if (idPermiso==null) {
+     $('<input type="submit">').hide().appendTo($('#form-Interno-Externo')).click().remove();
+     $('#form-Interno-Externo').find(':submit').click();
+  }
+  else {
+    $('#modalAgregarCatalogoInterno').modal('hide');
 
-  permisoSeleccionado.remove();
+    textoPermiso = permisoSeleccionado.text();
 
-  fila = '<tr ' + 'id=' + idPermiso + '>';
-  fila += '<td>' + textoPermiso + '</td>';
-  fila += '<td>';
-  fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProductoInterno(' + idPermiso + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
-  fila += '</td>';
-  fila += '</tr>';
-  
-  $('#datatable-column-filter-permisos > tbody:last').append(fila);
+    permisoSeleccionado.remove();
+
+    fila = '<tr ' + 'id=' + idPermiso + '>';
+    fila += '<td>' + textoPermiso + '</td>';
+    fila += '<td>';
+    fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProductoInterno(' + idPermiso + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+    fila += '</td>';
+    fila += '</tr>';
+
+    $('#datatable-column-filter-permisos > tbody:last').append(fila);
+  }
 }
 
 // Funcion que elimina el producto interno l
