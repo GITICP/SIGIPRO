@@ -2,15 +2,14 @@ package com.icp.sigipro.activosfijos.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.activosfijos.modelos.ActivoFijo;
-import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -216,6 +215,68 @@ public class ActivoFijoDAO {
             ex.printStackTrace();
         }
         return resultado;
+    }
+    
+    public boolean eliminarMasivo(String ids) throws SIGIPROException {
+        boolean resultado = false;
+        try {
+            getConexion().setAutoCommit(false);
+            
+            PreparedStatement consulta_eliminar = getConexion().prepareStatement("DELETE FROM bodega.activos_fijos WHERE id_activo_fijo = ?;");
+            
+            String[] ids_parseados = parsearAsociacion("#af#", ids);
+            
+            for (int i = 0; i < ids_parseados.length; i++) {
+                consulta_eliminar.setInt(1, Integer.parseInt(ids_parseados[i]));
+                consulta_eliminar.addBatch();
+            }
+            
+            int[] resultados = consulta_eliminar.executeBatch();
+            
+            boolean ciclo_break = false;
+            
+            for (int i = 0; i < resultados.length; i++) {
+                if (resultados[i] != 1) {
+                    ciclo_break = true;
+                    break;
+                }
+            }
+            
+            if(ciclo_break) {
+                resultado = false;
+            } else {
+                resultado = true;
+            }
+            
+        } catch(SQLException ex) {
+            try {
+                getConexion().rollback();
+                
+                // Mapear mensaje.
+                throw new SIGIPROException("No se pudo eliminar debido a que el activo fijo se referencia con otros registros.");
+            } catch(SQLException roll_ex) {
+                throw new SIGIPROException("Error de conexión con la base de datos.");
+            }
+        } finally {
+            try {
+                if(resultado) {
+                    getConexion().commit();
+                    getConexion().close();
+                } else {
+                    getConexion().rollback();
+                    getConexion().close();
+                    throw new SIGIPROException("Ocurrió un error a la hora de eliminar los activos fijos. Inténtelo nuevamente.");
+                }
+            } catch (SQLException roll_ex) {
+                throw new SIGIPROException("Error de conexión con la base de datos.");
+            }
+        }
+        return resultado;
+    }
+    
+    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
+        String[] idsTemp = asociacionesCodificadas.split(pivote);
+        return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
     }
 
     private Connection getConexion() {

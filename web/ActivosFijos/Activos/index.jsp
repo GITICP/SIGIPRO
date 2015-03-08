@@ -57,7 +57,23 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i> Activos Fijos </h3>
-
+              <div class="btn-group widget-header-toolbar">
+              <c:set var="contienePermisoEliminar" value="false" />
+              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                <c:if test="${permiso == 1 || permiso == 33}">
+                  <c:set var="contienePermisoEliminar" value="true" />
+                </c:if>
+              </c:forEach>
+              <c:if test="${contienePermisoEliminar}">
+                  <form id="form-eliminar" action="Activos" method="post">
+                      <input name="accion" hidden="true" value="eliminar-masivo">
+                      <input id="ids-por-eliminar" name="ids-por-eliminar" hidden="true">
+                  </form>
+                  <a id="btn-eliminar-activos-fijos" 
+                     class="btn btn-danger btn-sm boton-accion confirmable-form"
+                     data-form-id="form-eliminar"
+                     data-texto-confirmacion="eliminar los activos fijos seleccionados">Eliminar</a>
+              </c:if>
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                 <c:if test="${permiso == 1 || permiso == 31}">
@@ -65,17 +81,17 @@
                 </c:if>
               </c:forEach>
               <c:if test="${contienePermiso}">
-                <div class="btn-group widget-header-toolbar">
                   <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ActivosFijos/Activos?accion=agregar">Agregar Activo Fijo</a>
-                </div>
               </c:if>
+                  </div>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-activos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
+                    <th>Selección</th>
                     <th>Placa</th>
                     <th>Equipo</th>
                     <th>Marca</th>
@@ -88,8 +104,8 @@
                 </thead>
                 <tbody>
                   <c:forEach items="${listaActivosFijos}" var="activos">
-
                     <tr id ="${activos.getId_activo_fijo()}">
+                        <td><input type="checkbox" name="eliminar" value="${activos.getId_activo_fijo()}"></td>
                       <td>
                         <a href="/SIGIPRO/ActivosFijos/Activos?accion=ver&id_activo_fijo=${activos.getId_activo_fijo()}">
                           <div style="height:100%;width:100%">
@@ -105,7 +121,6 @@
                       <td>${activos.getFecha_registro()}</td>
                       <td>${activos.getEstado()}</td>
                     </tr>
-
                   </c:forEach>
                 </tbody>
               </table>
@@ -118,5 +133,9 @@
       <!-- /main -->
 
     </jsp:attribute>
-
+      
+      <jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/activos-fijos.js"></script>
+      </jsp:attribute>
+      
   </t:plantilla_general>

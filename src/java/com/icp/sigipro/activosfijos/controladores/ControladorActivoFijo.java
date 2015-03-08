@@ -14,6 +14,7 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -134,84 +135,108 @@ public class ControladorActivoFijo extends SIGIPROServlet
     }
   }
 
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
-  {
-    request.setCharacterEncoding("UTF-8");
-    boolean resultado = false;
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    {
+        ActivoFijoDAO dao = new ActivoFijoDAO();
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        boolean resultado = false;
+        String redireccion;
+        
+        request.setCharacterEncoding("UTF-8");
+        String accion = request.getParameter("accion");
+        if( accion != null) {
+            if(accion.equals("eliminar-masivo")){
+                String ids  = request.getParameter("ids-por-eliminar");
+                try {
+                    resultado = dao.eliminarMasivo(ids);
+                    if( resultado ) {
+                        request.setAttribute("mensaje", helper.mensajeDeExito("Activos fijos seleccionados eliminados correctamente."));
+                    } else {
+                        request.setAttribute("mensaje", helper.mensajeDeError("Los activos no pudieron ser eliminados correctamente. Inténtelo nuevamente"));
+                    }
+                } catch(SIGIPROException sig_ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                }
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Inténtelo nuevamente."));
+            }
+            redireccion = "Activos/index.jsp";
+            List<ActivoFijo> activosfijos = dao.obtenerActivosFijos();
+            request.setAttribute("listaActivosFijos", activosfijos);
+            RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+            vista.forward(request, response);  
+        } else { 
+            ActivoFijo activofijo = new ActivoFijo();
 
-    ActivoFijo activofijo = new ActivoFijo();
+            activofijo.setPlaca(request.getParameter("placa"));
+            activofijo.setEquipo(request.getParameter("equipo"));
+            activofijo.setMarca(request.getParameter("marca"));
 
-    activofijo.setPlaca(request.getParameter("placa"));
-    activofijo.setEquipo(request.getParameter("equipo"));
-    activofijo.setMarca(request.getParameter("marca"));
+            activofijo.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
+            activofijo.setId_ubicacion(Integer.parseInt(request.getParameter("ubicacion")));
 
-    activofijo.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
-    activofijo.setId_ubicacion(Integer.parseInt(request.getParameter("ubicacion")));
+            activofijo.setEstado(request.getParameter("estado"));
 
-    activofijo.setEstado(request.getParameter("estado"));
+            try {
+              SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
-    try {
-      SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+              String fechamovimiento = request.getParameter("fecha_movimiento");
+              java.util.Date fMovimiento = formatoFecha.parse(fechamovimiento);
 
-      String fechamovimiento = request.getParameter("fecha_movimiento");
-      java.util.Date fMovimiento = formatoFecha.parse(fechamovimiento);
+              String fecharegistro = request.getParameter("fecha_registro");
+              java.util.Date fRegistro = formatoFecha.parse(fecharegistro);
 
-      String fecharegistro = request.getParameter("fecha_registro");
-      java.util.Date fRegistro = formatoFecha.parse(fecharegistro);
+              java.sql.Date fMovimientoSQL = new java.sql.Date(fMovimiento.getTime());
+              java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
 
-      java.sql.Date fMovimientoSQL = new java.sql.Date(fMovimiento.getTime());
-      java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
+              activofijo.setFecha_movimiento(fMovimientoSQL);
+              activofijo.setFecha_registro(fRegistroSQL);
+            } catch (ParseException ex){
+              ex.printStackTrace();
+            }
 
-      activofijo.setFecha_movimiento(fMovimientoSQL);
-      activofijo.setFecha_registro(fRegistroSQL);
-    } catch (ParseException ex){
-      ex.printStackTrace();
+            String id = request.getParameter("id_activo_fijo");
+
+            if (id.isEmpty() || id.equals("0")) {
+              resultado = dao.insertarActivoFijo(activofijo);
+
+              //Funcion que genera la bitacora
+              BitacoraDAO bitacora = new BitacoraDAO();
+              bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
+              //*----------------------------*
+
+              redireccion = "Activos/Agregar.jsp";
+              request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo ingresado correctamente"));
+            }
+            else {
+              activofijo.setId_activo_fijo(Integer.parseInt(id));
+
+              resultado = dao.editarActivoFijo(activofijo);
+
+              //Funcion que genera la bitacora
+              BitacoraDAO bitacora = new BitacoraDAO();
+              bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
+              //*----------------------------*
+
+              redireccion = "Activos/index.jsp";
+              request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo editado correctamente"));
+            }
+
+            if (resultado) {
+              request.setAttribute("activofijo", activofijo);
+              redireccion = "Activos/index.jsp";
+            }
+            else {
+              request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
+
+            request.setAttribute("activofijo", activofijo);
+            RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+            vista.forward(request, response);   
+        }
     }
-
-    ActivoFijoDAO dao = new ActivoFijoDAO();
-    String id = request.getParameter("id_activo_fijo");
-    String redireccion;
-
-    if (id.isEmpty() || id.equals("0")) {
-      resultado = dao.insertarActivoFijo(activofijo);
-      
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
-      //*----------------------------*
-      
-      redireccion = "Activos/Agregar.jsp";
-      request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo ingresado correctamente"));
-    }
-    else {
-      activofijo.setId_activo_fijo(Integer.parseInt(id));
-
-      resultado = dao.editarActivoFijo(activofijo);
-      
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(activofijo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ACTIVOFIJO,request.getRemoteAddr());
-      //*----------------------------*
-      
-      redireccion = "Activos/index.jsp";
-      request.setAttribute("mensaje", helper.mensajeDeExito("Activo Fijo editado correctamente"));
-    }
-
-    if (resultado) {
-      request.setAttribute("activofijo", activofijo);
-      redireccion = String.format("Activos/index.jsp", id);
-    }
-    else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-    }
-
-    request.setAttribute("activofijo", activofijo);
-    RequestDispatcher vista = request.getRequestDispatcher(redireccion);
-    vista.forward(request, response);
-  }
 
   @Override
   public String getServletInfo()
