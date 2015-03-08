@@ -100,6 +100,8 @@
                     <th>Ubicación</th>
                     <th>Fecha de Registro</th>
                     <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Serie</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -120,6 +122,8 @@
                       <td>${activos.getNombre_ubicacion()}</td>
                       <td>${activos.getFecha_registro()}</td>
                       <td>${activos.getEstado()}</td>
+                      <td>${activos.getResponsable()}</td>
+                      <td>${activos.getSerie()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

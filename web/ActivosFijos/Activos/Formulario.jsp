@@ -50,8 +50,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="col-md-6">
     <label for="seccion" class="control-label">*Sección</label>
     <div class="form-group">
         <div class="col-sm-12">
@@ -73,6 +71,8 @@
             </div>
         </div>
     </div>
+</div>
+<div class="col-md-6">
     <label for="ubicacion" class="control-label">*Ubicación</label>
     <div class="form-group">
         <div class="col-sm-12">
@@ -128,7 +128,24 @@
         </div>
       </div>
     </div>
-</div>
+    <label for="responsable" class="control-label">Responsable</label>
+    <div class="form-group">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input type="text" minlength="10" maxlength="100" placeholder="Responsable" class="form-control" name="responsable" value="${activofijo.getResponsable()}"
+                 oninvalid="setCustomValidity('Este campo debe ser de más de 10 caracteres')"
+                 oninput="setCustomValidity('')" > 
+        </div>
+      </div>
+    </div>
+    <label for="serie" class="control-label"> Número de Serie</label>
+    <div class="form-group">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input type="text" maxlength="45" placeholder="Número de serie" class="form-control" name="serie" value="${activofijo.getSerie()}" > 
+        </div>
+      </div>
+    </div>
 </div>
 <!-- Esta parte es la de los permisos de un rol -->
 <p class="campos-requeridos">

@@ -176,7 +176,10 @@ public class ControladorActivoFijo extends SIGIPROServlet
 
             activofijo.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
             activofijo.setId_ubicacion(Integer.parseInt(request.getParameter("ubicacion")));
-
+            
+            activofijo.setResponsable(request.getParameter("responsable"));
+            activofijo.setSerie(request.getParameter("serie"));
+            
             activofijo.setEstado(request.getParameter("estado"));
 
             try {

@@ -33,8 +33,8 @@ public class ActivoFijoDAO {
         boolean resultado = false;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) "
-                    + " VALUES (?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado, responsable, numero_serie) "
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
 
             consulta.setString(1, a.getPlaca());
             consulta.setString(2, a.getEquipo());
@@ -59,6 +59,8 @@ public class ActivoFijoDAO {
             java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
             consulta.setDate(7, fRegistroSQL);
             consulta.setString(8, a.getEstado());
+            consulta.setString(9, a.getResponsable());
+            consulta.setString(10, a.getSerie());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
                 resultado = true;
@@ -79,7 +81,7 @@ public class ActivoFijoDAO {
     try{
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.activos_fijos SET placa=?, equipo=?, marca=?, fecha_movimiento=?, " + 
-              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=? " +
+              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=?, responsable=?, numero_serie=? " +
               " WHERE id_activo_fijo=?; "
 
       );
@@ -106,7 +108,9 @@ public class ActivoFijoDAO {
             java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
             consulta.setDate(7, fRegistroSQL);
             consulta.setString(8, a.getEstado()); 
-            consulta.setInt(9, a.getId_activo_fijo());
+            consulta.setString(9, a.getResponsable()); 
+            consulta.setString(10, a.getSerie()); 
+            consulta.setInt(11, a.getId_activo_fijo());
       
       if ( consulta.executeUpdate() == 1){
         resultado = true;
@@ -179,6 +183,8 @@ public class ActivoFijoDAO {
                 resultadoConsultaUbicacion.next();
                 String ubicacion = resultadoConsultaUbicacion.getString("nombre");
                 activo.setNombre_ubicacion(ubicacion);
+                activo.setResponsable(rs.getString("responsable"));
+                activo.setSerie(rs.getString("numero_serie"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -205,6 +211,8 @@ public class ActivoFijoDAO {
                 activo.setNombre_ubicacion(rs.getString("nombre"));
                 activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
+                activo.setResponsable(rs.getString("responsable"));
+                activo.setSerie(rs.getString("numero_serie"));
 
                 resultado.add(activo);
             }
@@ -217,7 +225,7 @@ public class ActivoFijoDAO {
         return resultado;
     }
     
-    public boolean eliminarMasivo(String ids) throws SIGIPROException {
+        public boolean eliminarMasivo(String ids) throws SIGIPROException {
         boolean resultado = false;
         try {
             getConexion().setAutoCommit(false);
