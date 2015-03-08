@@ -6,9 +6,9 @@
 package com.icp.sigipro.core;
 
 import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +28,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "SIGIPROServlet", urlPatterns = {"/SIGIPROServlet"})
 public abstract class SIGIPROServlet extends HttpServlet
 {
+    protected HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
