@@ -160,7 +160,7 @@ public class BitacoraDAO {
             }catch (Exception ex) {
                 ex.printStackTrace();
             }
-            resultado.add(inventario);
+            //resultado.add(inventario);
         }
         consulta.close();
         conexion.close();
