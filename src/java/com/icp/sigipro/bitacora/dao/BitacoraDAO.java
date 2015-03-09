@@ -2,11 +2,16 @@ package com.icp.sigipro.bitacora.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
+import com.icp.sigipro.bodegas.modelos.Inventario;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 import org.postgresql.util.PGobject;
 
@@ -97,5 +102,105 @@ public class BitacoraDAO {
         return resultado;
     }
     
-    
+       public List<Inventario> obtenerInventarios() {
+
+    List<Inventario> resultado = new ArrayList<Inventario>();
+
+    try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.inventarios");
+
+        ResultSet rs = consulta.executeQuery();
+
+        while (rs.next()) {
+            Inventario inventario = new Inventario();
+            System.out.println(rs.getInt("id_inventario"));
+            inventario.setId_inventario(rs.getInt("id_inventario"));
+            inventario.setId_producto(rs.getInt("id_producto"));
+            inventario.setId_seccion(rs.getInt("id_seccion"));
+            inventario.setStock_actual(rs.getInt("stock_actual"));
+            try {
+                ProductoInternoDAO pr = new ProductoInternoDAO();
+                SeccionDAO sc = new SeccionDAO();
+                inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+                inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            resultado.add(inventario);
+        }
+        consulta.close();
+        conexion.close();
+    }catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    return resultado;
+  }
+   
+   public List<Bitacora> obtenerBitacoras() {
+
+    List<Bitacora> resultado = new ArrayList<Bitacora>();
+
+    try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT id_bitacora, fecha_accion, nombre_usuario,ip,tabla, accion,estado FROM bitacora.bitacora, tabla ORDER BY fecha_accion DESC where ");
+
+        ResultSet rs = consulta.executeQuery();
+
+        while (rs.next()) {
+            Inventario inventario = new Inventario();
+            System.out.println(rs.getInt("id_inventario"));
+            inventario.setId_inventario(rs.getInt("id_inventario"));
+            inventario.setId_producto(rs.getInt("id_producto"));
+            inventario.setId_seccion(rs.getInt("id_seccion"));
+            inventario.setStock_actual(rs.getInt("stock_actual"));
+            try {
+                ProductoInternoDAO pr = new ProductoInternoDAO();
+                SeccionDAO sc = new SeccionDAO();
+                inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+                inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            resultado.add(inventario);
+        }
+        consulta.close();
+        conexion.close();
+    }catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    return resultado;
+  }
+
+  public Inventario obtenerInventario(int id_inventario) {
+
+    Inventario inventario = new Inventario();
+
+    try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement(" SELECT * FROM bodega.inventarios Where id_inventario = ? ");
+      consulta.setInt(1, id_inventario);
+      ResultSet rs = consulta.executeQuery();
+
+      if (rs.next()) {
+        inventario.setId_inventario(rs.getInt("id_inventario"));
+        inventario.setId_producto(rs.getInt("id_producto"));
+        inventario.setId_seccion(rs.getInt("id_seccion"));
+        inventario.setStock_actual(rs.getInt("stock_actual"));
+        try {
+          ProductoInternoDAO pr = new ProductoInternoDAO();
+          SeccionDAO sc = new SeccionDAO();
+          inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
+          inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+
+      consulta.close();
+      conexion.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return inventario;
+  }   
+   
 }
