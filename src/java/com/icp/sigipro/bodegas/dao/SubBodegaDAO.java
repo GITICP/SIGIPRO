@@ -212,6 +212,76 @@ public class SubBodegaDAO extends DAO<SubBodega>
         return resultado;
     }
     
+    public boolean editarSubBodega(SubBodega param, String[] idsIngresos, String[] idsEgresos, String[] idsVer) throws SIGIPROException
+    {
+
+        boolean resultado = false;
+        try {
+            /*
+             ------------------------------------
+             METER COMO TRANSACCIÓN
+             ------------------------------------
+             */
+
+            PreparedStatement consultaInsertar = getConexion().prepareStatement(" UPDATE " + this.nombreModulo + "." + this.nombreTabla
+                                                                                + " SET id_seccion = ?, id_usuario = ?, nombre = ? WHERE id_sub_bodega = ?");
+
+            consultaInsertar.setInt(1, param.getSeccion().getId_seccion());
+            consultaInsertar.setInt(2, param.getUsuario().getId_usuario());
+            consultaInsertar.setString(3, param.getNombre());
+            consultaInsertar.setInt(4, param.getId_sub_bodega());
+
+            if (consultaInsertar.executeUpdate() != 1) {
+                throw new SIGIPROException("Error al editar sub bodega");
+            }
+
+            PreparedStatement consultaEliminarIngresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = ?");
+            PreparedStatement consultaEliminarEgresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = ?");
+            PreparedStatement consultaEliminarVer = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = ?");
+
+            consultaEliminarIngresos.setInt(1, param.getId_sub_bodega());
+            consultaEliminarEgresos.setInt(1, param.getId_sub_bodega());
+            consultaEliminarVer.setInt(1, param.getId_sub_bodega());
+
+            consultaEliminarIngresos.executeUpdate();
+            consultaEliminarEgresos.executeUpdate();
+            consultaEliminarVer.executeUpdate();
+
+            PreparedStatement insertarIngresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ingresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            PreparedStatement insertarEgresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_egresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            PreparedStatement insertarVer = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ver (id_sub_bodega, id_usuario) VALUES (?,?)");
+
+            for (String idIngreso : idsIngresos) {
+                insertarIngresos.setInt(1, param.getId_sub_bodega());
+                insertarIngresos.setInt(2, Integer.parseInt(idIngreso));
+                insertarIngresos.addBatch();
+            }
+
+            for (String idEgreso : idsEgresos) {
+                insertarEgresos.setInt(1, param.getId_sub_bodega());
+                insertarEgresos.setInt(2, Integer.parseInt(idEgreso));
+                insertarEgresos.addBatch();
+            }
+            
+            for (String idVer : idsVer) {
+                insertarVer.setInt(1, param.getId_sub_bodega());
+                insertarVer.setInt(2, Integer.parseInt(idVer));
+                insertarVer.addBatch();
+            }
+
+            insertarIngresos.executeBatch();
+            insertarEgresos.executeBatch();
+            insertarVer.executeBatch();
+            
+            resultado = true;
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("Error al editar sub bodega");
+        }
+
+        return resultado;
+    }
+    
     public List<Usuario> usuariosPermisos(String tabla_por_buscar, int id_sub_bodega) throws SIGIPROException {
         List<Usuario> usuarios = new ArrayList<Usuario>();
         

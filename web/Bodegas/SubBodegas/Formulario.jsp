@@ -36,7 +36,14 @@
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${secciones}" var="seccion">
-                                <option value=${seccion.getID()}>${seccion.getNombre_seccion()}</option>
+                              <c:choose>
+                                <c:when test="${seccion.getId_seccion() == sub_bodega.getSeccion().getId_seccion()}" >
+                                  <option value=${seccion.getId_seccion()} selected> ${seccion.getNombre_seccion()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=${seccion.getId_seccion()}>${seccion.getNombre_seccion()}</option>
+                                </c:otherwise>
+                              </c:choose>
                             </c:forEach>
                         </select>
                     </div>
@@ -52,7 +59,14 @@
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
-                                <option value=${usuario.getId_usuario()}>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</option>
+                              <c:choose>
+                                <c:when test="${usuario.getId_usuario() == sub_bodega.getUsuario().getId_usuario()}" >
+                                  <option value=${usuario.getId_usuario()} selected>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=${usuario.getId_usuario()}>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</option>
+                                </c:otherwise>
+                              </c:choose>
                             </c:forEach>
                         </select>
                     </div>
