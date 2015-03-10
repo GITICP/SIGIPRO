@@ -5,84 +5,87 @@
  */
 package com.icp.sigipro.bitacora.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONObject;
 
 /**
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorBitacora", urlPatterns = {"/SIGIPRO/Bitacora"})
-public class ControladorBitacora extends HttpServlet {
+@WebServlet(name = "ControladorBitacora", urlPatterns = {"/Bitacora/Bitacora"})
+public class ControladorBitacora extends SIGIPROServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ControladorBitacora</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ControladorBitacora at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+    private final int[] permisos = {1, 1, 1};
+    private BitacoraDAO dao = new BitacoraDAO();
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+    protected final Class clase = ControladorBitacora.class;
+    protected final List<String> accionesGet = new ArrayList<String>()
+    {
+      {
+        add("index");
+        add("ver");
+      }
+    };
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
+   protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+   {
+     List<Integer> listaPermisos = getPermisosUsuario(request);
+     validarPermisos(permisos, listaPermisos);
+     String redireccion = "Bitacora/index.jsp";
+     List<Bitacora> bitacoras = dao.obtenerBitacoras();
+     request.setAttribute("listaBitacoras", bitacoras);
+     redireccionar(request, response, redireccion);
+   }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+   protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+   {
+     List<Integer> listaPermisos = getPermisosUsuario(request);
+     validarPermisos(permisos, listaPermisos);
+     String redireccion = "Bitacora/Ver.jsp";
+     int id_bitacora = Integer.parseInt(request.getParameter("id_bitacora"));
+     try {
+       Bitacora b = dao.obtenerBitacora(id_bitacora);
+       request.setAttribute("bitacora", b);
+       JSONObject json = new JSONObject(b.getEstado());
+       Iterator<?> keys = json.keys();
+       request.setAttribute("llaves", keys);
+     }
+     catch (Exception ex) {
+       ex.printStackTrace();
+     }
+     redireccionar(request, response, redireccion);
+   }
 
-}
+       // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
+     @Override
+     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
+     {
+       if (accionesGet.contains(accion)) {
+         String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
+         Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+         metodo.invoke(this, request, response);
+       }
+       else {
+         Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
+         metodo.invoke(this, request, response);
+       }
+     }
+     @Override
+     protected int getPermiso() {
+         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     }
+
+ }
