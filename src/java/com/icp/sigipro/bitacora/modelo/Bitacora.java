@@ -44,6 +44,7 @@ public class Bitacora {
     public static final String TABLA_ROL = "SEGURIDAD.ROLES";
     public static final String TABLA_ROLUSUARIO = "SEGURIDAD.ROLES_USUARIOS";
     public static final String TABLA_USUARIO = "SEGURIDAD.USUARIOS";
+    public static final String TABLA_ESPECIE = "SERPENTARIO.ESPECIES";
     
     
     //Variables de Accion
