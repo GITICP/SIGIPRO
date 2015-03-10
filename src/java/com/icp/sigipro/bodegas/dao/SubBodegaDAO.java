@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
+import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
@@ -282,6 +283,73 @@ public class SubBodegaDAO extends DAO<SubBodega>
         return resultado;
     }
     
+    public boolean registrarIngreso(InventarioSubBodega inventario_sub_bodega) throws SIGIPROException {
+        
+        boolean resultado = false;
+        
+        try {
+            String primera_parte_consulta = " WITH upsert AS "
+                                          + " (UPDATE bodega.inventarios_sub_bodegas "
+                                          + "  SET cantidad = cantidad + ? "
+                                          + "  WHERE id_producto = ? and id_sub_bodega = ? and fecha_vencimiento";
+            String segunda_parte_consulta = "     INSERT INTO bodega.inventarios_sub_bodegas(id_producto, "
+                                          + "                                                id_sub_bodega, "
+                                          + "                                                fecha_vencimiento, "
+                                          + "                                                cantidad"
+                                          + "                                               ) "
+                                          + "                                               SELECT ?, "
+                                          + "                                                      ?, "
+                                          + "                                                      ?, "          
+                                          + "                                                      ?  "
+                                          + "                                                      WHERE NOT EXISTS (SELECT * FROM upsert); ";
+            
+            String consulta_final;
+            boolean fechas_null = false;
+            if ( inventario_sub_bodega.getFecha_vencimiento() != null ){
+                consulta_final = primera_parte_consulta + " = ? RETURNING *) " + segunda_parte_consulta;
+            } else {
+                fechas_null = true;
+                consulta_final = primera_parte_consulta + " is null RETURNING *) " + segunda_parte_consulta;
+            }
+             
+            PreparedStatement upsert_inventario = getConexion().prepareStatement( consulta_final );
+            
+            if (fechas_null) {
+                upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
+                upsert_inventario.setInt(7, inventario_sub_bodega.getCantidad());
+
+                upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
+                upsert_inventario.setInt(4, inventario_sub_bodega.getProducto().getId_producto());
+
+                upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                upsert_inventario.setInt(5, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                
+                upsert_inventario.setNull(6, java.sql.Types.DATE);
+                
+            } else {
+                upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
+                upsert_inventario.setInt(8, inventario_sub_bodega.getCantidad());
+
+                upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
+                upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
+
+                upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                
+                upsert_inventario.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+                upsert_inventario.setDate(7, inventario_sub_bodega.getFecha_vencimiento());
+            }
+            
+            upsert_inventario.executeUpdate();
+            resultado = true;
+            
+        } catch (SQLException ex) {
+            throw new SIGIPROException("Error al registrar ingreso. Inténtelo nuevamente.");
+        }
+        
+        return resultado;
+    }
+    
     public List<Usuario> usuariosPermisos(String tabla_por_buscar, int id_sub_bodega) throws SIGIPROException {
         List<Usuario> usuarios = new ArrayList<Usuario>();
         
@@ -313,8 +381,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
         return usuarios;
     }
 
-    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas)
-    {
+    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas) {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
     }

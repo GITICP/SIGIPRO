@@ -2,6 +2,7 @@
 tIngresos = null;
 tEgresos = null;
 tVer = null;
+
 T_INGRESOS_SELECTOR = "#ingresos-sub-bodegas";
 T_EGRESOS_SELECTOR = "#egresos-sub-bodegas";
 T_VER_SELECTOR = "#ver-sub-bodegas";
@@ -29,11 +30,28 @@ $(document).ready(function() {
     "bFilter": false,
     "info": false
   };
+  
   tIngresos = $(T_INGRESOS_SELECTOR).DataTable(configuracion);
   tEgresos = $(T_EGRESOS_SELECTOR).DataTable(configuracion);  
   tVer = $(T_VER_SELECTOR).DataTable(configuracion);
   
+  var select_producto = $("#seleccionProducto");
+  select_producto .change(function () {
+    var opcion = $(this).find(":selected");
+    var campoVencimiento = $("#campo-fecha-vencimiento");
+    
+    if (opcion.data("perecedero")) {
+      campoVencimiento.show();
+      campoVencimiento.find('#fechaVencimiento').prop('required', true);
+      $("#label-fecha-vencimiento").show();
+    } else {
+      campoVencimiento.hide();
+      campoVencimiento.find('#fechaVencimiento').prop('required', false);
+      $("#label-fecha-vencimiento").hide();
+    }
+  });
   
+  select_producto .change();
 });
 
 // -- Ingresos -- //
@@ -113,7 +131,7 @@ function eliminarUsuarioVer(id) {
 
 // -- Compartido -- //
 
-function llenarCampoAsociacion(string_pivote, tabla, campo_escondido){
+function llenarCampoAsociacion(string_pivote, tabla, campo_escondido) {
   var asociacionCodificada = "";
   var pivote = "#" + string_pivote + "#";
   $(tabla).find("tr[id]").each(function(){
