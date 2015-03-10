@@ -1,3 +1,6 @@
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1200, 0,'Bitacora', '/Bitacora/Bitacora');
+ALTER TABLE BITACORA.BITACORA
+ALTER COLUMN fecha_accion TYPE timestamp
+USING CAST(fecha_accion as timestamp);
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1201, 1200, 'Bitacora', '/Bitacora/Bitacora');
+ALTER TABLE BITACORA.BITACORA
+DROP CONSTRAINT FK_NOMBRE_USUARIO;
