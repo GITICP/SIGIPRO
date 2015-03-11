@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
+import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
@@ -119,6 +120,56 @@ public class SubBodegaDAO extends DAO<SubBodega>
             throw new SIGIPROException("Error al obtener sub bodega");
         }
         return s;
+    }
+    
+    public SubBodega buscarSubBodegaEInventarios(int id) throws SIGIPROException
+    {
+        SubBodega sub_bodega = null;
+        try {
+            String codigoConsulta = " SELECT sb.id_sub_bodega, isb.id_inventario_sub_bodega,sb.nombre, ci.id_producto, ci.nombre as nombre_producto, ci.codigo_icp, isb.cantidad, isb.fecha_vencimiento "
+                                  + " FROM " + nombreModulo + "." + nombreTabla + " sb "
+                                  + "   INNER JOIN bodega.inventarios_sub_bodegas isb on isb.id_sub_bodega = sb.id_sub_bodega and isb.cantidad > 0"
+                                  + "   INNER JOIN bodega.catalogo_interno ci on ci.id_producto = isb.id_producto " 
+                                  + " WHERE sb.id_sub_bodega = ?";
+
+            PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+            consulta.setInt(1, id);
+            ResultSet resultado = ejecutarConsulta(consulta);
+
+            if ( resultado.next() ) {
+                sub_bodega = new SubBodega();
+                
+                sub_bodega.setId_sub_bodega(id);
+                sub_bodega.setNombre(resultado.getString("nombre"));
+                
+                List<InventarioSubBodega> inventarios = new ArrayList<InventarioSubBodega>();
+                do {
+                    InventarioSubBodega inventario_sb = new InventarioSubBodega();
+                    
+                    inventario_sb.setCantidad(resultado.getInt("cantidad"));
+                    inventario_sb.setId_inventario_sub_bodega(resultado.getInt("id_inventario_sub_bodega"));
+                    inventario_sb.setFecha_vencimiento(resultado.getDate("fecha_vencimiento"));
+                    
+                    ProductoInterno p = new ProductoInterno();
+                    
+                    p.setId_producto(resultado.getInt("id_producto"));
+                    p.setNombre(resultado.getString("nombre_producto"));
+                    p.setCodigo_icp(resultado.getString("codigo_icp"));
+                    
+                    inventario_sb.setProducto(p);
+                    inventario_sb.setSub_bodega(sub_bodega);
+                    
+                    inventarios.add(inventario_sb);
+                } while ( resultado.next() );
+                
+                sub_bodega.setInventarios(inventarios);
+            } else {
+                throw new SIGIPROException("No se encontraron registros de inventario para esta sub bodega");
+            }
+        } catch (SQLException ex) {
+            throw new SIGIPROException("Error al obtener sub bodega");
+        }
+        return sub_bodega;
     }
 
     @Override
@@ -379,6 +430,28 @@ public class SubBodegaDAO extends DAO<SubBodega>
         }
         
         return usuarios;
+    }
+    
+    public boolean consumirArticulo(int id_inventario, int cantidad) throws SIGIPROException {
+        boolean resultado = false;
+        
+        try {
+            PreparedStatement actualizar_inventario = getConexion().prepareStatement(" UPDATE bodega.inventarios_sub_bodegas SET cantidad = cantidad - ? WHERE id_inventario_sub_bodega = ?; ");
+            
+            actualizar_inventario.setInt(1, cantidad);
+            actualizar_inventario.setInt(2, id_inventario);
+            
+            if( actualizar_inventario.executeUpdate() != 1 ){
+                throw new SIGIPROException("Error al consumir de la sub bodega. Inténtelo nuevamente.");
+            } else {
+                resultado = true;
+            }
+            
+        } catch(SQLException ex) {
+            throw new SIGIPROException("Error de conexión con la base de datos. Contacte al administrador del sistema.");
+        }
+        
+        return resultado;
     }
 
     public String[] parsearAsociacion(String pivote, String asociacionesCodificadas) {
