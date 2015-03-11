@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bodegas.modelos;
 
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.sql.Date;
  */
 public class InventarioSubBodega
 {
-
+    int id_inventario_sub_bodega;
     SubBodega sub_bodega;
     ProductoInterno producto;
     int cantidad;
@@ -21,6 +22,16 @@ public class InventarioSubBodega
 
     public InventarioSubBodega()
     {
+    }
+
+    public int getId_inventario_sub_bodega()
+    {
+        return id_inventario_sub_bodega;
+    }
+
+    public void setId_inventario_sub_bodega(int id_inventario_sub_bodega)
+    {
+        this.id_inventario_sub_bodega = id_inventario_sub_bodega;
     }
 
     public SubBodega getSub_bodega()
@@ -63,4 +74,18 @@ public class InventarioSubBodega
         this.fecha_vencimiento = fecha_vencimiento;
     }
 
+    public String getFecha_vencimientoAsString()
+    {
+        if(fecha_vencimiento != null){
+            return formatearFecha(fecha_vencimiento);
+        } else {
+            return "";
+        }        
+    }
+
+    private String formatearFecha(Date fecha)
+    {
+        HelperFechas h = HelperFechas.getSingletonHelperFechas();
+        return h.formatearFecha(fecha);
+    }
 }
