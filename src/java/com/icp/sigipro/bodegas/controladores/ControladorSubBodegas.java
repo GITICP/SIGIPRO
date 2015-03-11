@@ -173,8 +173,10 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
         SubBodega sb = null;
         try {
-            sb = dao.buscarSubBodega(id_sub_bodega);
+            sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+            
             request.setAttribute("sub_bodega", sb);
+            
             List<Usuario> usuarios_ingresos = dao.usuariosPermisos(SubBodegaDAO.INGRESAR, sb.getId_sub_bodega());
             List<Usuario> usuarios_egresos = dao.usuariosPermisos(SubBodegaDAO.EGRESAR, sb.getId_sub_bodega());
             List<Usuario> usuarios_ver = dao.usuariosPermisos(SubBodegaDAO.VER, sb.getId_sub_bodega());
@@ -182,6 +184,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             request.setAttribute("usuarios_ingresos", usuarios_ingresos);
             request.setAttribute("usuarios_egresos", usuarios_egresos);
             request.setAttribute("usuarios_ver", usuarios_ver);
+            request.setAttribute("inventarios", sb.getInventarios());
             request.setAttribute("sub_bodega", sb);
         }
         catch (SIGIPROException ex) {
