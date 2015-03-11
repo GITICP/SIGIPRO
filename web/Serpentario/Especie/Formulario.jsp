@@ -12,6 +12,8 @@
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_especie" value="${especie.getId_especie()}">
+      <input hidden="true" name="accion" value="${accion}">
+      
       <label for="genero" class="control-label">* Nombre del Género</label>
       <div class="form-group">
         <div class="col-sm-12">

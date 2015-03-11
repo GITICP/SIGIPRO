@@ -112,7 +112,7 @@ public class ControladorEspecie extends SIGIPROServlet {
     }
     // </editor-fold>
   
-    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+  // <editor-fold defaultstate="collapsed" desc="Métodos Post">
   
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -151,16 +151,16 @@ public class ControladorEspecie extends SIGIPROServlet {
   @Override
   protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
   {
-    if (accionesGet.contains(accion)) {
-        System.out.print(accion);
-        String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
-        Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
-        metodo.invoke(this, request, response);
-    }else if (accionesPost.contains(accion)){
-        System.out.print(accion);
-        String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
-        Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
-        metodo.invoke(this, request, response);
+      List<String> lista_acciones;
+      if (accionHTTP.equals("get")){
+          lista_acciones = accionesGet; 
+      } else {
+          lista_acciones = accionesPost;
+      }
+    if (lista_acciones.contains(accion.toLowerCase())) {
+      String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
+      Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+      metodo.invoke(this, request, response);
     }
     else {
       Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);

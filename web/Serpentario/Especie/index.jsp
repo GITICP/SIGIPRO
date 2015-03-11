@@ -70,7 +70,7 @@
                       <td>
                         <a href="/SIGIPRO/Serpentario/Especie?accion=ver&id_especie=${especie.getId_especie()}">
                           <div style="height:100%;width:100%">
-                            ${especie.getGénero()}
+                            ${especie.getGenero()}
                           </div>
                         </a>
                       </td>
