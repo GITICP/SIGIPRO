@@ -449,7 +449,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
             redireccion = "SubBodegas/index.jsp";
         }
         redireccionar(request, response, redireccion);
-        
     }
 
     // </editor-fold>
