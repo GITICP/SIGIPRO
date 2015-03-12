@@ -3983,8 +3983,9 @@ INSERT INTO bodega.reactivos (id_producto, numero_cas, formula_quimica, familia)
 INSERT INTO bodega.reactivos (id_producto, numero_cas, formula_quimica, familia) VALUES ('1029','1330-20-7','[C6H4(CH3)2]','6');
 INSERT INTO bodega.reactivos (id_producto, numero_cas, formula_quimica, familia) VALUES ('1030','','','');
 
-UPDATE bodega.reactivos SET numero_cas='No tiene numero CAS' where numero_cas= '';
-UPDATE bodega.reactivos SET formula_quimica='No tiene formula quimica' where formula_quimica= '';
-UPDATE bodega.reactivos SET familia='No tiene formula quimica' where familia= '';
+UPDATE bodega.reactivos SET numero_cas='Sin número CAS' where numero_cas= '';
+UPDATE bodega.reactivos SET formula_quimica='Sin fórmula química' where formula_quimica= '';
+UPDATE bodega.reactivos SET familia='Sin familia' where familia= '';
 
-
+UPDATE bodega.catalogo_interno SET perecedero = false WHERE perecedero is null;
+UPDATE bodega.catalogo_interno SET descripcion = 'Sin descripción' WHERE descripcion = 'Sin descrición';
