@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorSubBodegas extends SIGIPROServlet
 {
 
-    private final int[] permisos = {1, 1, 1};
+    private final int[] permisos = {1, 1, 2};
     private SubBodegaDAO dao = new SubBodegaDAO();
     private SeccionDAO daoSecciones = new SeccionDAO();
     private UsuarioDAO daoUsuarios = new UsuarioDAO();
@@ -158,7 +158,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             if (lista_permisos.contains(0)) {
                 request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
             } else {
-                //request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
+                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
             }
             
         }

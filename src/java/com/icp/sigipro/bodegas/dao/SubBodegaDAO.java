@@ -58,6 +58,38 @@ public class SubBodegaDAO extends DAO<SubBodega>
         }
         return listaResultado;
     }
+    
+    public List<SubBodega> obtenerSubBodegas(int id_usuario) throws SIGIPROException
+    {
+
+        List<SubBodega> listaResultado = new ArrayList<SubBodega>();
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                        " SELECT sb.id_sub_bodega, sb.nombre, u.nombre_completo, s.nombre_seccion "
+                      + " FROM bodega.sub_bodegas sb INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
+                      + "                              INNER JOIN seguridad.usuarios u on u.id_usuario = sb.id_usuario "
+                      + " WHERE sb.id_usuario = ? "
+                      + "       OR ? in (SELECT id_usuario FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = sb.id_sub_bodega) "
+                      + "       OR ? in (SELECT id_usuario FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = sb.id_sub_bodega) "
+                      + "       OR ? in (SELECT id_usuario FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = sb.id_sub_bodega);");
+            
+            consulta.setInt(1, id_usuario);
+            consulta.setInt(2, id_usuario);
+            consulta.setInt(3, id_usuario);
+            consulta.setInt(4, id_usuario);
+            
+            ResultSet resultados = consulta.executeQuery();
+
+            while (resultados.next()) {
+                listaResultado.add(construirSubBodega(resultados));
+            }
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("Error al obtener subbodegas.");
+        }
+        return listaResultado;
+    }
 
     private SubBodega construirSubBodega(ResultSet resultados) throws SQLException
     {

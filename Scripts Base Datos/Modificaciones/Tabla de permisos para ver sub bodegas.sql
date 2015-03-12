@@ -1,6 +1,5 @@
 DROP TABLE bodega.usuarios_sub_bodegas_ingresos;
 DROP TABLE bodega.usuarios_sub_bodegas_egresos;
-DROP TABLE bodega.inventarios_sub_bodegas;
 
 CREATE TABLE bodega.usuarios_sub_bodegas_ingresos ( 
 	id_sub_bodega integer NOT NULL,
