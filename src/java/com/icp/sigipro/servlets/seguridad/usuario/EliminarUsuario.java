@@ -8,6 +8,7 @@ package com.icp.sigipro.servlets.seguridad.usuario;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -91,9 +92,11 @@ public class EliminarUsuario extends HttpServlet {
         
         boolean desactivacionExitosa = u.desactivarUsuario(idUsuario);
         
+        Usuario usuario = u.obtenerUsuario(idUsuario);
+        
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(idUsuario,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
+        bitacora.setBitacora(usuario.parseJSON(),Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIO,request.getRemoteAddr());
         //*----------------------------*
         
         if (desactivacionExitosa)
