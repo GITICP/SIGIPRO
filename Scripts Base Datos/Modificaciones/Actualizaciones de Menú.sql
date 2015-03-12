@@ -65,23 +65,56 @@ WHERE id_menu_principal = 108;
 UPDATE seguridad.entradas_menu_principal
 SET id_menu_principal = 102
 WHERE id_menu_principal = 25001;
+
+UPDATE seguridad.permisos_menu_principal
+SET id_menu_principal = 102
+WHERE id_permiso in (11,12,13);
+
+
         -- Catálogo Externo
 UPDATE seguridad.entradas_menu_principal
 SET id_menu_principal = 103
 WHERE id_menu_principal = 25002;
+
+UPDATE seguridad.permisos_menu_principal
+SET id_menu_principal = 103
+WHERE id_permiso in (21,22,23);
+
+
         -- Ubicaciones
 UPDATE seguridad.entradas_menu_principal
 SET id_menu_principal = 101
 WHERE id_menu_principal = 25005;
+
+UPDATE seguridad.permisos_menu_principal
+SET id_menu_principal = 101
+WHERE id_permiso in (37,39,39);
+
         -- Solicitudes
 UPDATE seguridad.entradas_menu_principal
 SET id_menu_principal = 106
 WHERE id_menu_principal = 25006;
+
+UPDATE seguridad.permisos_menu_principal
+SET id_menu_principal = 106
+WHERE id_permiso in (24,25,26);
+
+
         -- Ingresos
 UPDATE seguridad.entradas_menu_principal
 SET id_menu_principal = 104
 WHERE id_menu_principal = 25007;
+
+UPDATE seguridad.permisos_menu_principal
+SET id_menu_principal = 104
+WHERE id_permiso in (27,28,29);
+
+
         -- Inventarios
 UPDATE seguridad.entradas_menu_principal
 SET id_menu_principal = 105
 WHERE id_menu_principal = 25008;
+
+UPDATE seguridad.permisos_menu_principal
+SET id_menu_principal = 105
+WHERE id_permiso = 30;
