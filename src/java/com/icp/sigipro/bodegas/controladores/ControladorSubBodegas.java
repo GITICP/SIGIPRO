@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -149,11 +150,17 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        List<Integer> lista_permisos = getPermisosUsuario(request);
+        int id_usuario = getIdUsuario(request);
+        validarPermisos(permisos, lista_permisos);
 
         try {
-            request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+            if (lista_permisos.contains(0)) {
+                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+            } else {
+                //request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
+            }
+            
         }
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeAdvertencia("No se pudo obtener el listado completo. Refresque la página."));
@@ -500,6 +507,11 @@ public class ControladorSubBodegas extends SIGIPROServlet
     protected int getPermiso()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    protected void verificarPermiso() throws AuthenticationException
+    {
+        
     }
 
   // </editor-fold>

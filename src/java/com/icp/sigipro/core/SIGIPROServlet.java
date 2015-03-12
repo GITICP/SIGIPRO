@@ -137,4 +137,10 @@ public abstract class SIGIPROServlet extends HttpServlet
     HttpSession sesion = request.getSession();
     return (List<Integer>) sesion.getAttribute("listaPermisos");
   }
+  
+  protected int getIdUsuario(HttpServletRequest request) 
+  {
+      HttpSession sesion = request.getSession();
+      return (int) sesion.getAttribute("idusuario");
+  }
 }
