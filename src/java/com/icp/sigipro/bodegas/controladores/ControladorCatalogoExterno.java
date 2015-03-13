@@ -19,6 +19,7 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.util.List;
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.RequestDispatcher;
@@ -101,10 +102,15 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           validarPermiso(23, listaPermisos);
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           dao.eliminarProductoExterno(id_producto);
+          System.out.println(request.getRemoteAddr());
+          System.out.println(request.getRemoteHost());
+          System.out.println(request.getRemoteUser());
+          System.out.println(InetAddress.getLocalHost().getHostName());
+          
           
           //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,request.getRemoteAddr());
+            bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,InetAddress.getLocalHost().getHostName());
             //*----------------------------*
             
           redireccion = "CatalogoExterno/index.jsp";

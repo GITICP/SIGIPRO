@@ -79,6 +79,7 @@ public class AgregarUsuario extends SIGIPROServlet
       request.setAttribute("rolesRestantes", rolesRestantes);
       request.setAttribute("secciones", secciones);
       request.setAttribute("puestos", puestos);
+      request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
       ServletContext context = this.getServletContext();
       context.getRequestDispatcher("/Seguridad/Usuarios/Agregar.jsp").forward(request, response);
 

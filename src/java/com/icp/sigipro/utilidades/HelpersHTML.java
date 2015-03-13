@@ -5,6 +5,10 @@
  */
 package com.icp.sigipro.utilidades;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author Boga
@@ -24,6 +28,12 @@ public class HelpersHTML
       theSingleton = new HelpersHTML();
     }
     return theSingleton;
+  }
+  
+    public String getFecha_hoy(){
+      Date date = new Date();
+      DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+      return df.format(date);
   }
 
   public String mensajeDeError(String mensaje)

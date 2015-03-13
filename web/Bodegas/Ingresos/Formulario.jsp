@@ -70,7 +70,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" value="${ingreso.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaIngreso" class="form-control sigiproDatePicker" name="fechaIngreso" data-date-format="dd/mm/yyyy" required
+            <input type="text" value="${(ingreso.getFecha_ingreso() == null) ? helper.getFecha_hoy() : ingreso.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaIngreso" class="form-control sigiproDatePicker" name="fechaIngreso" data-date-format="dd/mm/yyyy" required
                    oninvalid="setCustomValidity('Este campo es requerido ')"
                    onchange="setCustomValidity('')">
           </div>

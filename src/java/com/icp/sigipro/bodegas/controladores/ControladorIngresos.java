@@ -111,8 +111,9 @@ public class ControladorIngresos extends SIGIPROServlet
           request.setAttribute("productos", productos);
           request.setAttribute("secciones", secciones);
           request.setAttribute("accion", "Registrar");
-        }
-        else if (accion.equalsIgnoreCase("editar")) {
+          request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
+        } 
+       else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(28, listaPermisos);
           redireccion = "Ingresos/Editar.jsp";
 

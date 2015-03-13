@@ -12,6 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -132,7 +135,7 @@ public class IngresoDAO extends DAO<Ingreso>
     }
     return param;
   }
-
+  
   public boolean actualizar(Ingreso ingreso, int cantidadPrevia, String estadoOriginal) throws SQLException
   {
     boolean resultado = false;

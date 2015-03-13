@@ -44,7 +44,7 @@
         <div class="col-sm-12">
             <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" value="${activofijo.getFecha_movimiento()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_movimiento" data-date-format="dd/mm/yyyy" required
+                <input type="text" value="${(activofijo.getFecha_movimientoAsDate() == null) ? helper.getFecha_hoy() : activofijo.getFecha_movimiento()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_movimiento" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
             </div>
