@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.security.sasl.AuthenticationException;
 
 /**
  *
@@ -34,6 +35,30 @@ public class SubBodegaDAO extends DAO<SubBodega>
     public SubBodegaDAO()
     {
         super(SubBodega.class, "bodega", "sub_bodegas");
+    }
+    
+    public boolean validarAcceso(String tabla, int id_usuario, int id_sub_bodega) throws AuthenticationException, SIGIPROException {
+        boolean resultado = false;
+        
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT 1 FROM " + tabla + " WHERE id_usuario = ? and id_sub_bodega = ?; ");
+            
+            consulta.setInt(1, id_usuario);
+            consulta.setInt(2, id_sub_bodega);
+            
+            ResultSet resultado_consulta = consulta.executeQuery();
+            
+            if (resultado_consulta.next()){
+                resultado = true;
+            } else {
+                throw new AuthenticationException();
+            }
+            
+        } catch(SQLException ex) {
+            throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
+        }
+        
+        return resultado;
     }
 
     public List<SubBodega> obtenerSubBodegas() throws SIGIPROException

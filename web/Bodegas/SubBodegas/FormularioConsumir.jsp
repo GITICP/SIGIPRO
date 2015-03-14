@@ -13,6 +13,7 @@
     <div class="row">
         <div class="col-md-6">
             <input id="accion" hidden="true" name="accion" value="${accion}">
+            <input id="id-sub-bodega" hidden="true" name="id-sub-bodega" value="${sub_bodega.getId_sub_bodega()}">
             <label for="producto" class="control-label">* Producto</label>
             <div class="form-group">
                 <div class="col-sm-12">

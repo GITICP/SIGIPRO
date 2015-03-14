@@ -64,7 +64,9 @@ public abstract class SIGIPROServlet extends HttpServlet
         vista.forward(request, response);
       }
       catch (SIGIPROException sigipro) {
-        // Obtener la redirección de alguna manera 
+        request.setAttribute("mensaje", helper.mensajeDeError(sigipro.getMessage()));
+        RequestDispatcher vista = request.getRequestDispatcher(sigipro.getRedireccion());
+        vista.forward(request, response);
       }
       catch (Throwable ex1) {
         Logger.getLogger(ControladorSubBodegas.class.getName()).log(Level.SEVERE, null, ex1);
