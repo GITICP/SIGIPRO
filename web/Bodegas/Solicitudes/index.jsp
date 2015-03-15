@@ -73,7 +73,7 @@
                       </td>
                       <td>${solicitud.getUsuario().getNombreCompleto()}</td>
                       <td>${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()})</td>
-                      <td>${solicitud.getCantidad()}</td>
+                      <td>${solicitud.getCantidad()} (${solicitud.getInventario().getSeccion().getNombre_seccion()})</td>
                       <td>${solicitud.getFecha_solicitud()}</td>
                       <td>${solicitud.getEstado()}</td>
                       <c:if test="${booladmin}">

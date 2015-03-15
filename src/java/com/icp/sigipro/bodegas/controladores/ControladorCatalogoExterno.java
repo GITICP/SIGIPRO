@@ -15,6 +15,7 @@ import com.icp.sigipro.bodegas.modelos.ProductoExternoInterno;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.compras.dao.ProveedorDAO;
 import com.icp.sigipro.compras.modelos.Proveedor;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -101,6 +102,11 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
         else if (accion.equalsIgnoreCase("eliminar")) {
           validarPermiso(23, listaPermisos);
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
+          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          redireccion = "CatalogoExterno/index.jsp";
+          List<ProductoExterno> productos = dao.obtenerProductos();
+          request.setAttribute("listaProductos", productos);
+          try {
           dao.eliminarProductoExterno(id_producto);
           System.out.println(request.getRemoteAddr());
           System.out.println(request.getRemoteHost());
@@ -113,12 +119,11 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
             bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,InetAddress.getLocalHost().getHostName());
             //*----------------------------*
             
-          redireccion = "CatalogoExterno/index.jsp";
-          List<ProductoExterno> productos = dao.obtenerProductos();
-          request.setAttribute("listaProductos", productos);
-          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo eliminado correctamente"));
-   
+          }
+          catch (SIGIPROException ex)
+          {  request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+          }
         }
         else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(22, listaPermisos);
