@@ -142,9 +142,9 @@ public class PrestamoDAO {
       }
        
        else{
-       consulta = getConexion().prepareStatement(" SELECT p.* FROM (bodega.solicitudes_prestamos p inner join bodega.solicitudes s"
-               + "ON p.id_solicitud=s.id_solicitud) inner join seguridad.usuarios u on u.id_usuario = s.id_usuario "
-               + "Where u.id_seccion = ? ");
+       consulta = getConexion().prepareStatement(" SELECT p.* FROM (bodega.solicitudes_prestamos p inner join bodega.solicitudes s "
+               + " ON p.id_solicitud=s.id_solicitud) inner join seguridad.usuarios u on u.id_usuario = s.id_usuario "
+               + " Where u.id_seccion = ? ");
       consulta.setInt(1, id_usuario);
        }
       ResultSet rs = consulta.executeQuery();

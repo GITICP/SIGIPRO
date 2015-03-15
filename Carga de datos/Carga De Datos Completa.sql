@@ -1201,12 +1201,12 @@ INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_sec
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('332256','TELEFONO','CISCO',Null,Null,56,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('337701','Liofilizador de 6 litros ','LABCONCO',Null,Null,24,CURRENT_DATE,Null);
 
-UPDATE bodega.activos_fijos SET placa = 'No tiene placa' WHERE placa='0';
+UPDATE bodega.activos_fijos SET placa = 'Sin placa' WHERE placa='0';
 UPDATE bodega.activos_fijos SET estado = 'Normal';
-UPDATE bodega.activos_fijos SET numero_serie = 'No tiene numero de serie';
-UPDATE bodega.activos_fijos SET marca = 'No tiene marca' WHERE marca='';
-UPDATE bodega.activos_fijos SET modelo = 'No tiene modelo';
-UPDATE bodega.activos_fijos SET responsable = 'No tiene responsable';
+UPDATE bodega.activos_fijos SET numero_serie = 'Sin número de serie';
+UPDATE bodega.activos_fijos SET marca = 'Sin marca' WHERE marca='';
+UPDATE bodega.activos_fijos SET modelo = 'Sin modelo';
+UPDATE bodega.activos_fijos SET responsable = 'Sin responsable';
 UPDATE bodega.activos_fijos SET fecha_movimiento = Null;
 UPDATE bodega.activos_fijos SET id_seccion = Null;
 
@@ -3989,3 +3989,5 @@ UPDATE bodega.reactivos SET familia='Sin familia' where familia= '';
 
 UPDATE bodega.catalogo_interno SET perecedero = false WHERE perecedero is null;
 UPDATE bodega.catalogo_interno SET descripcion = 'Sin descripción' WHERE descripcion = 'Sin descrición';
+
+UPDATE bodega.activo_fijo SET id_seccion = 0 WHERE id_seccion is null;
