@@ -39,7 +39,8 @@ CREATE TABLE serpentario.eventos(
     id_usuario integer NOT NULL,
     fecha_evento date NOT NULL,
     evento character varying(45) NOT NULL,
-    observaciones character varying (100)
+    observaciones character varying (100),
+    id_extraccion integer
 );
 
 ALTER TABLE ONLY serpentario.eventos ADD CONSTRAINT pk_eventos PRIMARY KEY (id_evento);
@@ -85,6 +86,8 @@ ALTER TABLE ONLY serpentario.usuarios_extraccion ADD CONSTRAINT fk_id_extraccion
 
 ALTER TABLE ONLY serpentario.usuarios_extraccion ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 
+ALTER TABLE ONLY serpentario.eventos ADD CONSTRAINT fk_id_extraccion FOREIGN KEY(id_extraccion) REFERENCES serpentario.extraccion(id_extraccion);
+
 CREATE TABLE serpentario.centrifugado(
     id_extraccion integer NOT NULL,
     volumen_recuperado integer NOT NULL,
@@ -104,6 +107,10 @@ CREATE TABLE serpentario.liofilizacion(
 ALTER TABLE ONLY serpentario.centrifugado ADD CONSTRAINT pk_id_centrifugado PRIMARY KEY (id_extraccion);
 
 ALTER TABLE ONLY serpentario.liofilizacion ADD CONSTRAINT pk_id_liofilizacion PRIMARY KEY (id_extraccion);
+
+ALTER TABLE ONLY serpentario.centrifugado ADD CONSTRAINT fk_id_extraccion FOREIGN KEY(id_extraccion) REFERENCES serpentario.extraccion(id_extraccion);
+
+ALTER TABLE ONLY serpentario.liofilizacion ADD CONSTRAINT fk_id_extraccion FOREIGN KEY(id_extraccion) REFERENCES serpentario.extraccion(id_extraccion);
 
 ALTER TABLE ONLY serpentario.centrifugado ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 
@@ -134,14 +141,25 @@ ALTER TABLE ONLY serpentario.extracciones_lote ADD CONSTRAINT fk_id_extraccion F
 
 CREATE TABLE serpentario.venenos(
     id_veneno serial NOT NULL,
-    id_lote integer NOT NULL,
+    id_especie integer NOT NULL,
     restriccion boolean NOT NULL,
     cantidad_maxima integer
 );
 
 ALTER TABLE ONLY serpentario.venenos ADD CONSTRAINT pk_id_veneno PRIMARY KEY (id_veneno);
 
-ALTER TABLE ONLY serpentario.venenos ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
+ALTER TABLE ONLY serpentario.venenos ADD CONSTRAINT fk_id_especie FOREIGN KEY (id_especie) REFERENCES serpentario.especies(id_especie);
+
+CREATE TABLE serpentario.lotes_veneno(
+    id_veneno integer NOT NULL,
+    id_lote integer NOT NULL
+);
+
+ALTER TABLE ONLY serpentario.lotes_veneno ADD CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno) REFERENCES serpentario.venenos(id_veneno);
+
+ALTER TABLE ONLY serpentario.lotes_veneno ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
+
+
 
 --Solicitudes de Venenos
 
