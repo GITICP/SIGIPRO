@@ -10,10 +10,16 @@ CREATE TABLE serpentario.especies (
 ALTER TABLE ONLY serpentario.especies ADD CONSTRAINT pk_especies PRIMARY KEY (id_especie);
 
 
+CREATE TABLE serpentario.serpientes(
+    id_serpiente serial NOT NULL,
+    
+
+
 --Permisos
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (40, '[Serpentario]AgregarEspecie', 'Permite agregar una especie al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (41, '[Serpentario]EliminarEspecie', 'Permite eliminar una especie al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (42, '[Serpentario]EditarEspecie', 'Permite editar una especie al catálogo');
 
 --Menu
 

@@ -70,6 +70,34 @@ public class EspecieDAO {
         }
         return resultado;
     }  
+    
+    public boolean editarEspecie(Especie e){
+        boolean resultado = false;
+    
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE serpentario.especies " +
+                  " SET genero=?, especie=? " +
+                  " WHERE id_especie=?; "
+
+          );
+
+            consulta.setString(1, e.getGenero());
+            consulta.setString(2, e.getEspecie());
+            consulta.setInt(3, e.getId_especie());
+
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+        
+    }
   
     public Especie obtenerEspecie(int id_especie){
         Especie especie = new Especie();

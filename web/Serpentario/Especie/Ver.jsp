@@ -45,6 +45,16 @@
                 <c:if test="${contienePermisoEliminar}">
                   <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la especie" data-href="/SIGIPRO/Serpentario/Especie?accion=eliminar&id_especie=${especie.getId_especie()}">Eliminar</a>
                 </c:if>
+                  
+                <c:set var="contienePermisoEditar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 42}">
+                    <c:set var="contienePermisoEditar" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:if test="${contienePermisoEditar}">
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Especie?accion=editar&id_especie=${especie.getId_especie()}">Editar</a>
+                </c:if>
               </div>
             </div>
             ${mensaje}

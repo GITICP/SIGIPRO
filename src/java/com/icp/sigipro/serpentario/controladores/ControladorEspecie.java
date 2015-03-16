@@ -44,12 +44,14 @@ public class ControladorEspecie extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("eliminar");
+            add("editar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
     {
         {
             add("agregar");
+            add("editar");
         }
     };
 
@@ -93,6 +95,19 @@ public class ControladorEspecie extends SIGIPROServlet {
         }
         
     }
+    
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(42, listaPermisos);
+        String redireccion = "Especie/Editar.jsp";
+        int id_especie = Integer.parseInt(request.getParameter("id_especie"));
+        Especie especie = dao.obtenerEspecie(id_especie);
+        request.setAttribute("especie", especie);
+        request.setAttribute("accion", "Editar");
+        redireccionar(request, response, redireccion);
+
+    }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -124,7 +139,6 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        System.out.println("NO SIRVO");
         String redireccion = "Especie/Agregar.jsp";
         Especie e = construirObjeto(request);
         resultado = dao.insertarEspecie(e);
@@ -134,6 +148,26 @@ public class ControladorEspecie extends SIGIPROServlet {
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente agregada correctamente"));
+        if (resultado){
+            redireccion = "Especie/index.jsp";
+        }
+        request.setAttribute("listaEspecies", dao.obtenerEspecies());
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Especie/Editar.jsp";
+        Especie e = construirObjeto(request);
+        e.setId_especie(Integer.parseInt(request.getParameter("id_especie")));
+        resultado = dao.editarEspecie(e);
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
+        //*----------------------------*
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente editada correctamente"));
         if (resultado){
             redireccion = "Especie/index.jsp";
         }
