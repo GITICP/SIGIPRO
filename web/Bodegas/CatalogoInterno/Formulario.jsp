@@ -285,10 +285,11 @@
             <label for="idUbicacion" class="control-label">*Ubicación</label>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="seleccionUbicacion" class="form-control" style='background-color: #fff;' name="idUbicacion" required
+                    <div class="input-group" id='inputGroupSeleccionUbicacion'>
+                        <select id="seleccionUbicacion" class="select2" style='background-color: #fff;' name="idUbicacion" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                                onchange="setCustomValidity('')">
+                            <option value='' ></option>
                             <c:forEach items="${ubicacionesRestantes}" var="ubicacion">
                                 <option value=${ubicacion.getId_ubicacion()}>${ubicacion.getNombre()}</option>
                             </c:forEach> 
@@ -318,10 +319,11 @@
             <label for="idProductoExterno" class="control-label">*Producto Externo</label>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="seleccionProductoExterno" class="form-control" style='background-color: #fff;' name="idProductoExterno" required
+                    <div class="input-group" id='inputGroupSeleccionProductoExterno'>
+                        <select id="seleccionProductoExterno" class="select2" style='background-color: #fff;' name="idProductoExterno" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                                onchange="setCustomValidity('')">
+                            <option value='' ></option>
                             <c:forEach items="${productosExternosRestantes}" var="producto">
                                 <option value=${producto.getId_producto_ext()}>${producto.getProducto()} (${producto.getCodigo_Externo()})</option>
                             </c:forEach> 

@@ -55,8 +55,11 @@
         <div class="col-sm-12">
             <div class="input-group">
                 <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                <select id="seleccionSeccion" class="form-control" name="seccion"
-                        style='background-color: #fff;' >
+                <select id="seleccionSeccion" class="select2" name="seccion"
+                        style='background-color: #fff;' required
+                        oninvalid="setCustomValidity('Este campo es requerido')"
+                        onchange="setCustomValidity('')">
+                    <option value=''></option>
                     <c:forEach items="${secciones}" var="seccion">
                         <c:choose>
                             <c:when test="${seccion.getID() == activofijo.getId_seccion()}" >
@@ -68,6 +71,12 @@
                         </c:choose>
                     </c:forEach>
                 </select>
+                <c:choose>
+                        <c:when test="${accion.equals('Agregar')}">
+                            <script>document.getElementById('seleccionSeccion').selectedIndex = -1;</script> 
+                        </c:when>
+                        <c:otherwise></c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>
@@ -78,9 +87,11 @@
         <div class="col-sm-12">
             <div class="input-group">
                 <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                <select id="seleccionUbicacion" class="form-control" name="ubicacion"
+                <select id="seleccionUbicacion" class="select2" name="ubicacion"
                         style='background-color: #fff;' required
-                        oninvalid="setCustomValidity('Por favor seleccione una ubicación')">
+                        oninvalid="setCustomValidity('Por favor seleccione una ubicación')"
+                        onchange="setCustomValidity('')">
+                    <option value=''></option>
                     <c:forEach items="${ubicaciones}" var="ubicacion">
                         <c:choose>
                             <c:when test="${ubicacion.getId_ubicacion() == activofijo.getId_ubicacion()}" >
@@ -99,10 +110,11 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <select id="seleccionestado" class="form-control" name="estado"
+          <select id="seleccionestado" class="select2" name="estado"
                   style='background-color: #fff;' required
                   oninvalid="setCustomValidity('Por favor seleccione un estado')"
                   onchange="setCustomValidity('')">
+              <option value=''></option>
             <c:forEach items="${estados}" var="estado">
               <c:choose>
                 <c:when test="${estado.equals(activofijo.getEstado())}" >
