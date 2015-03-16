@@ -17,12 +17,13 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (41, '[Se
 
 --Menu
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 300, 'Especie', '/Serpentario/Especie');
-
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' WHERE id_menu_principal = 300;
 
---Permisos Menu Principal
 
---Producto
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 300, 'Especie', '/Serpentario/Especie');
+
+------Permisos Menu Principal
+
+--Especie
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (40, 301);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (41, 301);
