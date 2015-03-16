@@ -29,6 +29,7 @@ $(document).ready(function () {
       $('#errorStockMinimo').text('Debe ser un número');
       stockMinValido = true;
     }
+    $('#stockMaximo').keyup();
   });
   
   $('#cantBodega').keyup(function(){
