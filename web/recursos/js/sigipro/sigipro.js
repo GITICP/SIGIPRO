@@ -161,7 +161,7 @@ function agregarRol() {
   }
   else {
   $('#modalAgregarRolUsuario').modal('hide');
-  $('#select2-chosen-1').text("");
+  //$('#inputGroupSeleccionRol').find('#select2-chosen-1').text("");
   rolSeleccionado = $('#seleccionRol :selected');
   inputFechaAct = $('#agregarFechaActivacion');
   inputFechaDesact = $('#agregarFechaDesactivacion');
@@ -191,6 +191,10 @@ function agregarRol() {
   //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
 
   $('#datatable-column-filter-roles > tbody:last').append(fila);
+  
+  $('#inputGroupSeleccionRol').find('.select2-chosen').each(function(){$(this).prop('id',''); $(this).text('');});
+
+  
   }
 }
 

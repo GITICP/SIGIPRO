@@ -151,6 +151,8 @@ function agregarUbicacion() {
     campoOcultoUbicaciones = $('#ubicaciones');
     campoOcultoUbicaciones.val(campoOcultoUbicaciones.val() + "#u#" + idUbicacion);
     $('#datatable-column-filter-ubicaciones-formulario > tbody:last').append(fila);
+    
+    $('#inputGroupSeleccionUbicacion').find('.select2-chosen').each(function(){$(this).prop('id',''); $(this).text('');});
   }
 }
 
@@ -188,5 +190,7 @@ function agregarProductoExterno() {
     campoOcultoProductosExternos = $('#productosExternos');
     campoOcultoProductosExternos.val(campoOcultoProductosExternos.val() + "#p#" + idProductoExterno);
     $('#datatable-column-filter-productos-externos > tbody:last').append(fila);
+    
+    $('#inputGroupSeleccionProductoExterno').find('.select2-chosen').each(function(){$(this).prop('id',''); $(this).text('');});
   }
 }

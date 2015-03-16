@@ -108,8 +108,9 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <select id="seleccionSeccion" class="form-control" name="seccion" required
-                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                          <select id="seleccionSeccion" class="select2" name="seccion" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+              
                             <c:forEach items="${secciones}" var="seccion">
                               <c:choose>
                                 <c:when test="${seccion.getID() == usuario.getIdSeccion()}" >
@@ -129,8 +130,8 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <select id="seleccionPuesto" class="form-control" name="puesto" required
-                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                          <select id="seleccionPuesto" class="select2" name="puesto" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                             <c:forEach items="${puestos}" var="puesto">
                               <c:choose>
                                 <c:when test="${puesto.getId_puesto() == usuario.getIdPuesto()}" >
@@ -230,10 +231,11 @@
           <label for="idrol" class="control-label">*Rol</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
-                <select id="seleccionRol" class="form-control" name="idrol" required
+              <div class="input-group" id='inputGroupSeleccionRol'>
+                <select id="seleccionRol" class="select2" name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')" style='background-color: #fff;'>
+                        style='background-color: #fff;' onchange="setCustomValidity('')">
+                <option value=''></option>
                   <c:forEach items="${rolesRestantes}" var="rol">
                     <option value=${rol.getID()}>${rol.getNombreRol()}</option>
                   </c:forEach>

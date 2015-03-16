@@ -24,9 +24,10 @@
                 <input class="form-control" value="${ingreso.getProducto().getNombre()} (${ingreso.getProducto().getCodigo_icp()})" disabled>
               </c:when>
               <c:when test="${accion == 'Registrar'}">
-                <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="producto" required data-editar="${accionEditar}"
+                <select id="seleccionProducto" class="select2" style='background-color: #fff;' value= ' ' name="producto" required data-editar="${accionEditar}"
                         oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
+                        onchange="setCustomValidity('')">
+                    <option value=''></option>
                   <%--
                   <c:if test="${ingreso.getProducto() != null}">
                     <option value=${ingreso.getProducto().getId_producto()} data-cuarentena=${ingreso.getProducto().isCuarentena()} data-perecedero="${ingreso.getProducto().isPerecedero()}" selected>${ingreso.getProducto().getNombre()} (${ingreso.getProducto().getCodigo_icp()})</option>
@@ -52,7 +53,8 @@
               <c:when test="${accion == 'Registrar'}">
                 <select id="seleccionSeccion" class="select2" style='background-color: #fff;' name="seccion" required data-editar="${accionEditar}"
                         oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')">
+                        onchange="setCustomValidity('')">
+                    <option value=''></option>
                   <%--
                   <c:if test="${ingreso.getSeccion() != null}">
                     <option selected value=${ingreso.getSeccion().getID()} selected>${ingreso.getSeccion().getNombre_seccion()}</option>
