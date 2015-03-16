@@ -168,9 +168,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group" style="display:table;">
-                <input class="input-large" type="text" maxlength="200" id="observaciones"  name="observaciones" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
+                <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${ubicacion.getDescripcion()}</textarea>
               </div>
             </div>
           </div>

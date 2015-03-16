@@ -56,6 +56,7 @@
                 <tr><td> <strong>Estado:</strong> <td>${prestamo.getSolicitud().getEstado()} </td></tr>
                 <tr><td> <strong>Sección que Presta:</strong> <td>${prestamo.getSeccion().getNombre_seccion()} </td></tr>
                 <tr><td> <strong>Usuario que aprobó el Préstamo:</strong></td> <td>${prestamo.getUsuario().getNombreCompleto()} </td></tr>
+                <tr><td> <strong>Observaciones:</strong></td> <td>${prestamo.getSolicitud().getObservaciones()} </td></tr>
               </table>
               <br>
             </div>

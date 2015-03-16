@@ -187,7 +187,7 @@ public class PrestamoDAO {
        else{
        consulta = getConexion().prepareStatement(" SELECT p.* FROM bodega.solicitudes_prestamos p inner join bodega.solicitudes s "
                + "ON p.id_solicitud=s.id_solicitud "
-               + "Where p.id_seccion_presta = ? AND s.estado= 'Pendiente Prestamo' ");
+               + "Where p.id_seccion_presta = ?");
       consulta.setInt(1, id_usuario);
        }
       ResultSet rs = consulta.executeQuery();
