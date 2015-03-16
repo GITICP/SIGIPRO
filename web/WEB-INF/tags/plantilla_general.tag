@@ -119,6 +119,7 @@
           $('.sigiproDatePicker').datepicker()
                   .on('changeDate', function () {
                     $(this).datepicker('hide');
+                    $(':input:eq(' + ($(':input').index(this) + 1) + ')').focus();
                   });
           $("#fechaActivacion").datepicker({startDate: 0});
         }
