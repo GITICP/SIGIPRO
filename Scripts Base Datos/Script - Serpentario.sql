@@ -59,7 +59,8 @@ CREATE TABLE serpentario.extraccion(
     fecha_extraccion date NOT NULL,
     volumen_extraido integer,
     id_usuario_registro integer,
-    fecha_registro date
+    fecha_registro date,
+    id_lote integer
 );
 
 CREATE TABLE serpentario.serpientes_extraccion(
@@ -121,13 +122,13 @@ ALTER TABLE ONLY serpentario.liofilizacion ADD CONSTRAINT fk_id_usuario_fin FORE
 --Lotes
 
 CREATE TABLE serpentario.lote(
-    id_lote serial NOT NULL
+    id_lote serial NOT NULL,
+    id_especie integer NOT NULL
 );
 
-CREATE TABLE serpentario.extracciones_lote(
-    id_lote integer NOT NULL,
-    id_extraccion integer NOT NULL
-);
+ALTER TABLE ONLY serpentario.lote ADD CONSTRAINT fk_id_especie FOREIGN KEY (id_especie) REFERENCES serpentario.especies(id_especie);
+
+ALTER TABLE ONLY serpentario.extraccion ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
 
 ALTER TABLE ONLY serpentario.lote ADD CONSTRAINT pk_id_lote PRIMARY KEY(id_lote);
 
