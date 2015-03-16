@@ -8,6 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ page import="com.icp.sigipro.bodegas.modelos.Ingreso" %>
 
 <t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
 
@@ -35,7 +36,7 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-barcode"></i> Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()} </h3>
-                            <c:if test="${ingreso.getEstado().equals(Ingreso.RECHAZADO)}">
+                            <c:if test="${!(ingreso.getEstado() == 'Rechazado')}">
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                                     <c:if test="${permiso == 1 || permiso == 28}">
