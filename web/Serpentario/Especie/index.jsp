@@ -3,17 +3,9 @@
     Created on : Nov 26, 2014, 10:16:57 PM
     Author     : ld.conejo
 --%>
-<%@page import="java.util.List"%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-<%
-    //No esta implementado
-    List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
-    System.out.println(permisos);
-    if (!(permisos.contains(1) || permisos.contains(37) || permisos.contains(38) || permisos.contains(39))) {
-        request.getRequestDispatcher("/").forward(request, response);
-    }
-%>
 
 <t:plantilla_general title="Serpentario" direccion_contexto="/SIGIPRO">
 
@@ -43,7 +35,7 @@
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 37}">
+                <c:if test="${permiso == 1 || permiso == 40}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>

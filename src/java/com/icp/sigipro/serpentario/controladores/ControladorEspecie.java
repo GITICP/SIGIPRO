@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorEspecie extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 1, 1};
+    private final int[] permisos = {1, 40, 41};
     //-----------------
     private EspecieDAO dao = new EspecieDAO();
 
@@ -58,9 +58,8 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        //No esta implementado
-        validarPermiso(11, listaPermisos);
-        //--------------------
+        validarPermiso(40, listaPermisos);
+
         String redireccion = "Especie/Agregar.jsp";
         Especie e = new Especie();
         request.setAttribute("especie", e);
@@ -70,10 +69,8 @@ public class ControladorEspecie extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //No esta implementado
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        //--------------------
         String redireccion = "Especie/index.jsp";
         List<Especie> especies = dao.obtenerEspecies();
         request.setAttribute("listaEspecies", especies);
@@ -82,33 +79,43 @@ public class ControladorEspecie extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //No esta implementado
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        //--------------------
         String redireccion = "Especie/Ver.jsp";
         int id_especie = Integer.parseInt(request.getParameter("id_especie"));
         try {
             Especie e = dao.obtenerEspecie(id_especie);
+            request.setAttribute("especie", e);
+            redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
+        
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //No esta implementado
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(12, listaPermisos);
-        //--------------------
-        String redireccion = "Especie/Editar.jsp";
+        validarPermiso(41, listaPermisos);
         int id_especie = Integer.parseInt(request.getParameter("id_especie"));
-        Especie especie = dao.obtenerEspecie(id_especie);
-        // Obtener todo y asociaciones restantes
-        // Setear
-        request.setAttribute("especie", especie);
-        request.setAttribute("accion", "Editar");
+        try{
+            dao.eliminarEspecie(id_especie);
+            String redireccion = "Especie/index.jsp";
+            
+            //Funcion que genera la bitacora 
+            BitacoraDAO bitacora = new BitacoraDAO(); 
+            bitacora.setBitacora(id_especie,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr()); 
+            //----------------------------
+            
+            List<Especie> especies = dao.obtenerEspecies();
+            request.setAttribute("listaEspecies", especies);
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
     }
     // </editor-fold>
   
