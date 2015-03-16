@@ -88,7 +88,7 @@ WHERE id_menu_principal = 25005;
 
 UPDATE seguridad.permisos_menu_principal
 SET id_menu_principal = 101
-WHERE id_permiso in (37,39,39);
+WHERE id_permiso in (37,38,39);
 
         -- Solicitudes
 UPDATE seguridad.entradas_menu_principal
