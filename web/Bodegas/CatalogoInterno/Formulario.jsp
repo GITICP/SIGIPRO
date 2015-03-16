@@ -23,17 +23,6 @@
                     </div>
                 </div>
             </div>
-            <label for="codigoICP" class="control-label">* Código ICP</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Ejemplo: 73b" class="form-control" name="codigoICP" value="${producto.getCodigo_icp()}"
-                               required
-                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                               oninput="setCustomValidity('')" > 
-                    </div>
-                </div>
-            </div>
             <label for="stockMinimo" class="control-label">* Stock Mínimo</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -56,8 +45,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
             <label for="presentacion" class="control-label">* Presentación</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -69,6 +56,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
             <label for="descripcion" class="control-label">Descripción</label>
             <div class="form-group">
                 <div class="col-sm-12">

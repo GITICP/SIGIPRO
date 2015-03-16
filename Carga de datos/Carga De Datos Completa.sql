@@ -3989,5 +3989,6 @@ UPDATE bodega.reactivos SET familia='Sin familia' where familia= '';
 
 UPDATE bodega.catalogo_interno SET perecedero = false WHERE perecedero is null;
 UPDATE bodega.catalogo_interno SET descripcion = 'Sin descripción' WHERE descripcion = 'Sin descrición';
+UPDATE bodega.catalogo_interno SET codigo_icp = id_producto;
 
-UPDATE bodega.activo_fijo SET id_seccion = 0 WHERE id_seccion is null;
+UPDATE bodega.activos_fijos SET id_seccion = 0 WHERE id_seccion is null;
