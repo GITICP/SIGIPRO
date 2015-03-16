@@ -7,6 +7,7 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ProductoExterno;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,7 +88,7 @@ public class ProductoExternoDAO {
     return resultado;
   }
 
-  public boolean eliminarProductoExterno(int id_producto_ext) {
+  public boolean eliminarProductoExterno(int id_producto_ext) throws SIGIPROException {
 
     boolean resultado = false;
 
@@ -105,7 +106,7 @@ public class ProductoExternoDAO {
       consulta.close();
       conexion.close();
     } catch (Exception ex) {
-      ex.printStackTrace();
+      throw new SIGIPROException("No se puede borrar este producto externo porque está ligado a uno o más productos internos.");
     }
     return resultado;
   }

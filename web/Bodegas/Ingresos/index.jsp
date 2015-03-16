@@ -140,7 +140,6 @@
                           <th>Fecha Registro</th>
                           <th>Fecha Vencimiento</th>
                           <th>Cantidad</th>
-                          <th>Precio</th>
                             <c:if test="${contienePermisoAprobar}">
                             <th>Acción</th>
                             </c:if>
@@ -162,7 +161,6 @@
                             <td>${ingresoCuarentena.getFecha_registroAsString()}</td>
                             <td>${ingresoCuarentena.getFecha_vencimientoAsString()}</td>
                             <td>${ingresoCuarentena.getCantidad()}</td>
-                            <td>${ingresoCuarentena.getPrecio()}</td>
                             <c:if test="${contienePermisoAprobar}">
                               <td class="fila-decision">
                                 <form></form> <!-- Necesario para que los otros forms sean válidos. No sé por qué -->

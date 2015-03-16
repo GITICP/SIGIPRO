@@ -86,6 +86,7 @@ public class ControladorActivoFijo extends SIGIPROServlet
           request.setAttribute("activofijo", activofijo);
           request.setAttribute("accion", "Agregar");
           request.setAttribute("estados", estados);
+          request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
 
         }
         else if (accion.equalsIgnoreCase("eliminar")) {
