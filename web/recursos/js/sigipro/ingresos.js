@@ -11,10 +11,10 @@ $(document).ready(function () {
         var regex = /^[0-9]+$/;
         var resultado = false;
         if (elementoPrincipal.val().match(regex)) {
-            elementoError.text('');
+            $(elementoError).text('');
             resultado = true;
         } else {
-            elementoError.text('Debe ser un número');
+            $(elementoError).text('Debe ser un número');
         }
         return resultado;
     }
@@ -48,8 +48,8 @@ $(document).ready(function () {
         ensenarCampoPerecedero(perecedero);
     });
 
-    agregarValidacionNumero($("#cantidad"), $("#errorCantidad"));
-    agregarValidacionNumero($("#precio"), $("#errorPrecio"));
+    agregarValidacionNumero($("#cantidad"), "#errorCantidad");
+    agregarValidacionNumero($("#precio"), "#errorPrecio");
 
     $("#ingresoForm").submit(function () {
         var validacionCantidad = validar($("#cantidad"), $("#errorCantidad"));
