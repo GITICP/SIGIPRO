@@ -21,13 +21,14 @@ $(document).ready(function () {
 
     function ensenarCampoPerecedero(pivote) {
         var campoVencimiento = $("#campo-fecha-vencimiento");
+        var input = $("#campo-fecha-vencimiento");
         if (pivote) {
             campoVencimiento.show();
-            campoVencimiento.find('#fechaVencimiento').prop('required', true);
+            campoVencimiento.find('#fechaVencimiento').prop('required', true).attr('hidden', false);
             $("#label-fecha-vencimiento").show();
         } else {
             campoVencimiento.hide();
-            campoVencimiento.find('#fechaVencimiento').prop('required', false);
+            campoVencimiento.find('#fechaVencimiento').prop('required', false).attr('hidden', true);
             $("#label-fecha-vencimiento").hide();
         }
     }
