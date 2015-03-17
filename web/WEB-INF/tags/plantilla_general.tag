@@ -121,7 +121,6 @@
                     $(this).datepicker('hide');
                   var indice = ($(':input').index(this) + 1);
                     var proximo_elemento = $(':input:eq(' + indice + ')');
-                    alert(proximo_elemento.attr('hidden'));
                     while( proximo_elemento.attr('hidden') === "hidden" ) {
                         indice++;
                         proximo_elemento = $(':input:eq(' + indice + ')');
