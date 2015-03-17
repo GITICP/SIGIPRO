@@ -42,7 +42,7 @@ public class PrestamoDAO {
         resultado = true;
       }
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -67,7 +67,7 @@ public class PrestamoDAO {
         resultado = true;
       }
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -90,7 +90,7 @@ public class PrestamoDAO {
         resultado = true;
       }
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -125,6 +125,9 @@ public class PrestamoDAO {
           ex.printStackTrace();
         }
       }
+      rs.close();
+      consulta.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -166,9 +169,9 @@ public class PrestamoDAO {
         }
         resultado.add(solicitud);
       }
-
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -209,25 +212,45 @@ public class PrestamoDAO {
         }
         resultado.add(solicitud);
       }
-
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
     return resultado;
   }
-  private Connection getConexion() {
-    try {
-
-      if (conexion.isClosed()) {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-      }
-    } catch (Exception ex) {
-      conexion = null;
+  
+  private Connection getConexion()
+  {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    if (conexion == null) {
+      conexion = s.conectar();
     }
-
+    else {
+      try {
+        if (conexion.isClosed()) {
+          conexion = s.conectar();
+        }
+      }
+      catch (Exception ex) {
+        conexion = null;
+      }
+    }
     return conexion;
+  }
+
+  public void cerrarConexion()
+  {
+    if (conexion != null) {
+      try {
+        if (conexion.isClosed()) {
+          conexion.close();
+        }
+      }
+      catch (Exception ex) {
+        conexion = null;
+      }
+    }
   }
 }
