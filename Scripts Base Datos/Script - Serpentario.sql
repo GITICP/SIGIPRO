@@ -249,6 +249,10 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (40, '[Se
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (41, '[Serpentario]EliminarEspecie', 'Permite eliminar una especie al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (42, '[Serpentario]EditarEspecie', 'Permite editar una especie al catálogo');
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (43, '[Serpentario]AgregarSerpiente', 'Permite agregar una serpiente al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (44, '[Serpentario]EditarSerpiente', 'Permite editar una serpiente al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (45, '[Serpentario]EventoSerpiente', 'Permite registrar eventos a una serpiente al catálogo');
+
 --Menu
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' WHERE id_menu_principal = 300;

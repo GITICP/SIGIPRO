@@ -7,16 +7,20 @@ package com.icp.sigipro.serpentario.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bodegas.modelos.SubBodega;
-import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.serpentario.dao.EspecieDAO;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.serpentario.dao.EventoDAO;
+import com.icp.sigipro.serpentario.dao.SerpienteDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
+import com.icp.sigipro.serpentario.modelos.Evento;
+import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Blob;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -28,23 +32,24 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorEspecie", urlPatterns = {"/Serpentario/Especie"})
-public class ControladorEspecie extends SIGIPROServlet {
+@WebServlet(name = "ControladorSerpiente", urlPatterns = {"/Serpentario/Serpiente"})
+public class ControladorSerpiente extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 40, 41};
+    private final int[] permisos = {1, 43, 44, 45};
     //-----------------
-    private EspecieDAO dao = new EspecieDAO();
+    private SerpienteDAO dao = new SerpienteDAO();
 
-    protected final Class clase = ControladorEspecie.class;
+    protected final Class clase = ControladorSerpiente.class;
     protected final List<String> accionesGet = new ArrayList<String>()
     {
         {
             add("index");
             add("ver");
             add("agregar");
-            add("eliminar");
             add("editar");
+            add("coleccionviva");
+            add("deceso");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -52,6 +57,11 @@ public class ControladorEspecie extends SIGIPROServlet {
         {
             add("agregar");
             add("editar");
+            add("evento");
+            //Cuando esta muerta
+            add("coleccionhumeda");
+            add("catalogotejidos");
+            
         }
     };
 
@@ -60,11 +70,11 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(40, listaPermisos);
+        validarPermiso(43, listaPermisos);
 
-        String redireccion = "Especie/Agregar.jsp";
-        Especie e = new Especie();
-        request.setAttribute("especie", e);
+        String redireccion = "Serpiente/Agregar.jsp";
+        Serpiente s = new Serpiente();
+        request.setAttribute("serpiente", s);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -73,9 +83,9 @@ public class ControladorEspecie extends SIGIPROServlet {
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Especie/index.jsp";
-        List<Especie> especies = dao.obtenerEspecies();
-        request.setAttribute("listaEspecies", especies);
+        String redireccion = "Serpiente/index.jsp";
+        List<Serpiente> serpientes = dao.obtenerSerpientes();
+        request.setAttribute("listaSerpientes", serpientes);
         redireccionar(request, response, redireccion);
     }
 
@@ -83,11 +93,14 @@ public class ControladorEspecie extends SIGIPROServlet {
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Especie/Ver.jsp";
-        int id_especie = Integer.parseInt(request.getParameter("id_especie"));
+        String redireccion = "Serpiente/Ver.jsp";
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
         try {
-            Especie e = dao.obtenerEspecie(id_especie);
-            request.setAttribute("especie", e);
+            Serpiente s = dao.obtenerSerpiente(id_serpiente);
+            request.setAttribute("serpiente", s);
+            EventoDAO eventodao = new EventoDAO();
+            List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
+            request.setAttribute("listaEventos",eventos);
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -99,39 +112,68 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(42, listaPermisos);
-        String redireccion = "Especie/Editar.jsp";
-        int id_especie = Integer.parseInt(request.getParameter("id_especie"));
-        Especie especie = dao.obtenerEspecie(id_especie);
-        request.setAttribute("especie", especie);
+        validarPermiso(44, listaPermisos);
+        String redireccion = "Serpiente/Editar.jsp";
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
+        Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
+        request.setAttribute("serpiente", serpiente);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
     }
-
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    
+    protected void getColeccionviva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(41, listaPermisos);
-        int id_especie = Integer.parseInt(request.getParameter("id_especie"));
-        try{
-            dao.eliminarEspecie(id_especie);
-            String redireccion = "Especie/index.jsp";
-            
-            //Funcion que genera la bitacora 
-            BitacoraDAO bitacora = new BitacoraDAO(); 
-            bitacora.setBitacora(id_especie,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr()); 
-            //----------------------------
-            
-            List<Especie> especies = dao.obtenerEspecies();
-            request.setAttribute("listaEspecies", especies);
-            redireccionar(request, response, redireccion);
+        validarPermiso(45, listaPermisos);
+        String redireccion = "Serpiente/index.jsp";
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
+        Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
+        Evento e = this.setEvento(serpiente, "Pase a Coleccion Viva", request);
+        //----Agregar el Evento al Sistema
+        EventoDAO eventodao = new EventoDAO();
+        boolean resultado = eventodao.insertarEvento(e);
+        //Bitacora
+        //--------------------------------
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente pasada a Colección Viva con éxito."));
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Error en la Base de Datos. Serpiente no pudo pasarse a Coleccion Viva."));
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        
+        List<Serpiente> serpientes = dao.obtenerSerpientes();
+        request.setAttribute("listaSerpientes", serpientes);
+        redireccionar(request, response, redireccion);
+
     }
+      
+
+    protected void getDeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(45, listaPermisos);
+        String redireccion = "Serpiente/index.jsp";
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
+        Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
+        Evento e = this.setEvento(serpiente, "Deceso", request);
+        //----Agregar el Evento al Sistema
+        EventoDAO eventodao = new EventoDAO();
+        boolean resultado = eventodao.insertarEvento(e);
+        //Bitacora
+        //--------------------------------
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente registrada como Deceso con éxito."));
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Error en la Base de Datos. Serpiente no pudo ser registrada como Deceso."));
+        }
+        List<Serpiente> serpientes = dao.obtenerSerpientes();
+        request.setAttribute("listaSerpientes", serpientes);
+        redireccionar(request, response, redireccion);
+
+    }
+
+
     // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
@@ -139,19 +181,19 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Especie/Agregar.jsp";
-        Especie e = construirObjeto(request);
-        resultado = dao.insertarEspecie(e);
+        String redireccion = "Serpiente/Agregar.jsp";
+        Serpiente s = construirObjeto(request);
+        resultado = dao.insertarSerpiente(s);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
+        bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente agregada correctamente"));
         if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente agregada correctamente"));
             redireccion = "Especie/index.jsp";
         }
-        request.setAttribute("listaEspecies", dao.obtenerEspecies());
+        request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);
     }
     
@@ -159,33 +201,78 @@ public class ControladorEspecie extends SIGIPROServlet {
     {
         boolean resultado = false;
         String redireccion = "Especie/Editar.jsp";
-        Especie e = construirObjeto(request);
-        e.setId_especie(Integer.parseInt(request.getParameter("id_especie")));
-        resultado = dao.editarEspecie(e);
+        Serpiente s = construirObjeto(request);
+        s.setId_serpiente(Integer.parseInt(request.getParameter("id_serpiente")));
+        resultado = dao.editarSerpiente(s);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
+        bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente editada correctamente"));
         if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente editada correctamente"));
             redireccion = "Especie/index.jsp";
         }
-        request.setAttribute("listaEspecies", dao.obtenerEspecies());
+        request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);
     }
   // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   
-    private Especie construirObjeto(HttpServletRequest request) {
-        Especie e = new Especie();
-        e.setGenero(request.getParameter("genero"));
-        e.setEspecie(request.getParameter("especie"));
-
-        return e;
+    private Serpiente construirObjeto(HttpServletRequest request) {
+        Serpiente s = new Serpiente();
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date fecha_ingreso;
+        java.sql.Date fecha_ingresoSQL;
+        try {
+          fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
+          fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
+          s.setFecha_ingreso(fecha_ingresoSQL);
+        } catch (ParseException ex) {
+            
+        }
+        s.setLocalidad_origen(request.getParameter("localidad_origen"));
+        s.setColectada(request.getParameter("colectada"));
+        s.setRecibida(request.getParameter("recibida"));
+        s.setSexo(request.getParameter("sexo"));
+        s.setTalla_cabeza(Integer.parseInt(request.getParameter("talla_cabeza")));
+        s.setTalla_cola(Integer.parseInt(request.getParameter("talla_cola")));
+        s.setPeso(Integer.parseInt(request.getParameter("peso")));
+        //No se si sirve   
+        try{
+            String imagen = request.getParameter("imagen");
+            Blob blob = s.getImagen();
+            blob.setBytes(1,imagen.getBytes());
+            s.setImagen(blob);
+        }catch (Exception e){
+            
+        }
+        //-------------
+        return s;
     }
   
+    //Para Coleccion Viva, Deceso
+    private Evento setEvento(Serpiente serpiente,String evento,HttpServletRequest request){
+        Evento e = new Evento();
+        e.setEvento(evento);
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date fecha_evento;
+        java.sql.Date fecha_eventoSQL;
+        try {
+          fecha_evento = formatoFecha.parse(new java.util.Date().toString());
+          fecha_eventoSQL = new java.sql.Date(fecha_evento.getTime());
+          e.setFecha_evento(fecha_eventoSQL);
+        } catch (ParseException ex) {
+            
+        }
+        e.setSerpiente(serpiente);
+        UsuarioDAO usuariodao = new UsuarioDAO();
+        e.setUsuario(usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString()));
+        
+        return e;
+    }
+    
   // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">

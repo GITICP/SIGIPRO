@@ -179,6 +179,36 @@ public class UsuarioDAO {
 
     return resultado;
   }
+  
+  public Usuario obtenerUsuario(String nombre_usuario) {
+    Usuario resultado = null;
+    try {
+      SingletonBD s = SingletonBD.getSingletonBD();
+      Connection conexion = s.conectar();
+
+      PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario "
+              + " From seguridad.usuarios"
+              + " Where nombre_usuario = ? ");
+
+      consulta.setString(1, nombre_usuario);
+
+      ResultSet resultadoConsulta = consulta.executeQuery();
+
+      if (resultadoConsulta.next()) {
+        resultado = new Usuario();
+
+        int id_usuario = resultadoConsulta.getInt("id_usuario");
+
+        resultado.setId_usuario(id_usuario);
+        resultado.setNombre_usuario(nombre_usuario);
+
+      }
+    } catch (SQLException ex) {
+
+    }
+
+    return resultado;
+  }
 
   public boolean validarActividad(int p_id) {
     boolean resultado = false;

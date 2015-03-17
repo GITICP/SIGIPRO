@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorEspecie extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 40, 41};
+    private final int[] permisos = {1, 40, 41, 42};
     //-----------------
     private EspecieDAO dao = new EspecieDAO();
 
