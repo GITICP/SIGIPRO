@@ -19,20 +19,21 @@ import java.util.List;
  *
  * @author Walter
  */
-public class ProveedorDAO {
-    
+public class ProveedorDAO
+{
+
     private Connection conexion;
 
-    public ProveedorDAO() {
-        
-            SingletonBD s = SingletonBD.getSingletonBD();
-            conexion = s.conectar();
+    public ProveedorDAO()
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
     }
 
-    public boolean insertarProveedor(Proveedor proveedor) {
+    public boolean insertarProveedor(Proveedor proveedor)
+    {
         boolean resultado = false;
         try {
-            PreparedStatement consulta = conexion
+            PreparedStatement consulta = getConexion()
                     .prepareStatement("insert into compras.proveedores(nombre_proveedor,telefono1,telefono2,telefono3,correo) values (?, ?, ?, ?, ?) RETURNING id_proveedor");
             // Parameters start with 1
             consulta.setString(1, proveedor.getNombre_proveedor());
@@ -41,25 +42,30 @@ public class ProveedorDAO {
             consulta.setString(4, proveedor.getTelefono3());
             consulta.setString(5, proveedor.getCorreo());
 
-           ResultSet resultadoConsulta = consulta.executeQuery();
+            ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
                 resultado = true;
                 proveedor.setId_proveedor(resultadoConsulta.getInt("id_proveedor"));
-                
+
             }
 
-        } catch (SQLException e) {
+            resultadoConsulta.close();
+            consulta.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return resultado;
     }
 
-    public boolean editarProveedor(Proveedor proveedor) {
+    public boolean editarProveedor(Proveedor proveedor)
+    {
         boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexion
+            PreparedStatement preparedStatement = getConexion()
                     .prepareStatement("update compras.proveedores set nombre_proveedor=?, telefono1=?, telefono2=?, telefono3=?, correo=?"
-                            + "where id_proveedor=?");
+                                      + "where id_proveedor=?");
             // Parameters start with 1
             preparedStatement.setString(1, proveedor.getNombre_proveedor());
             preparedStatement.setString(2, proveedor.getTelefono1());
@@ -68,37 +74,43 @@ public class ProveedorDAO {
             preparedStatement.setString(5, proveedor.getCorreo());
             preparedStatement.setInt(6, proveedor.getId_proveedor());
 
-        if (preparedStatement.executeUpdate() == 1){
-               resultado = true;
-           }
-
-        } catch (SQLException e) {
+            if (preparedStatement.executeUpdate() == 1) {
+                resultado = true;
+            }
+            preparedStatement.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return resultado;
     }
-    
-        public boolean eliminarProveedor(int id_proveedor) {
-        boolean resultado = false;            
+
+    public boolean eliminarProveedor(int id_proveedor)
+    {
+        boolean resultado = false;
         try {
-            PreparedStatement preparedStatement = conexion
+            PreparedStatement preparedStatement = getConexion()
                     .prepareStatement("delete from compras.proveedores where id_proveedor=?");
-            // Parameters start with 1
             preparedStatement.setInt(1, id_proveedor);
-        if (preparedStatement.executeUpdate() == 1){
-               resultado = true;
-           }
+            if (preparedStatement.executeUpdate() == 1) {
+                resultado = true;
+            }
+            preparedStatement.close();
+            getConexion().close();
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return resultado;
     }
-        
-    public Proveedor obtenerProveedor(int id_proveedor) {
+
+    public Proveedor obtenerProveedor(int id_proveedor)
+    {
         Proveedor proveedor = new Proveedor();
         try {
-            PreparedStatement preparedStatement = conexion.
+            PreparedStatement preparedStatement = getConexion().
                     prepareStatement("select * from compras.proveedores where id_proveedor=?");
             preparedStatement.setInt(1, id_proveedor);
             ResultSet rs = preparedStatement.executeQuery();
@@ -111,17 +123,22 @@ public class ProveedorDAO {
                 proveedor.setTelefono3(rs.getString("telefono3"));
                 proveedor.setCorreo(rs.getString("correo"));
             }
-        } catch (SQLException e) {
+            rs.close();
+            preparedStatement.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
         return proveedor;
     }
-    
-    public List<Proveedor> obtenerProveedores() {
+
+    public List<Proveedor> obtenerProveedores()
+    {
         List<Proveedor> proveedores = new ArrayList<Proveedor>();
         try {
-            Statement statement = conexion.createStatement();
+            Statement statement = getConexion().createStatement();
             ResultSet rs = statement.executeQuery("select * from compras.proveedores");
             while (rs.next()) {
                 Proveedor proveedor = new Proveedor();
@@ -133,11 +150,41 @@ public class ProveedorDAO {
                 proveedor.setCorreo(rs.getString("correo"));
                 proveedores.add(proveedor);
             }
-        } catch (SQLException e) {
+            
+            rs.close();
+            statement.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
         return proveedores;
-    }    
+    }
+
+    private Connection getConexion()
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        if (conexion == null) {
+            long startTime = System.currentTimeMillis();
+
+            conexion = s.conectar();
+
+            long endTime = System.currentTimeMillis();
+            long duration = (endTime - startTime);
+            System.out.println("Conectar: " + duration);
+        }
+        else {
+            try {
+                if (conexion.isClosed()) {
+                    conexion = s.conectar();
+                }
+            }
+            catch (Exception ex) {
+                conexion = null;
+            }
+        }
+        return conexion;
+    }
 
 }
