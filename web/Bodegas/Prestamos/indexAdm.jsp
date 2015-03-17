@@ -46,7 +46,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="tabladeSolicitudes" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
