@@ -67,7 +67,13 @@ public class UsuarioDAO {
       us.setNombreSeccion(seccion);
       us.setNombrePuesto(puesto);
       resultado.add(us);
+      
+      resultadoConsultaSeccion.close();
+      resultadoconsultaPuesto.close();
+      consultaSeccion.close();
+      consultaPuesto.close();
     }
+    conexion.close();
     return resultado;
   }
 
@@ -171,6 +177,13 @@ public class UsuarioDAO {
         resultado.setActivo(activo);
         resultado.setNombreSeccion(seccion);
         resultado.setNombrePuesto(puesto);
+        
+        resultadoconsultaPuesto.close();
+        resultadoConsultaSeccion.close();
+        consulta.close();
+        consultaPuesto.close();
+        consultaSeccion.close();
+        conexion.close();
 
       }
     } catch (SQLException ex) {
@@ -198,6 +211,9 @@ public class UsuarioDAO {
 
         resultado = resultadoConsulta.getBoolean("estado");
       }
+      resultadoConsulta.close();
+      consulta.close();
+      conexion.close();
     } catch (SQLException ex) {
 
     }
@@ -223,6 +239,9 @@ public class UsuarioDAO {
 
         resultado = resultadoConsulta.getInt("id_usuario");
       }
+      resultadoConsulta.close();
+      consulta.close();
+      conexion.close();
     } catch (SQLException ex) {
 
     }
@@ -246,6 +265,9 @@ public class UsuarioDAO {
         if (!resultadoConsulta.next()) {
           resultado = true;
         }
+        resultadoConsulta.close();
+        consulta.close();
+        conexion.close();
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
@@ -270,6 +292,10 @@ public class UsuarioDAO {
         if (!resultadoConsulta.next()) {
           resultado = true;
         }
+        
+        resultadoConsulta.close();
+        consulta.close();
+        conexion.close();
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
@@ -318,6 +344,8 @@ public class UsuarioDAO {
         }
         UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
         u.enviarUsuarioCreado(usuario.getCorreo(), usuario.getNombre_usuario(), contrasena, usuario.getFechaActivacion(), usuario.getFechaDesactivacion(), permanente);
+        
+        resultadoConsulta.close();
         consulta.close();
         conexion.close();
       }
@@ -408,6 +436,7 @@ public class UsuarioDAO {
           operacion.close();
         }
         conexion.commit();
+        consulta.close();
         conexion.close();
         resultado = true;
       }
@@ -491,6 +520,7 @@ public class UsuarioDAO {
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarUsuarios(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;
@@ -549,6 +579,7 @@ public class UsuarioDAO {
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarRolesUsuario(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();                
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;
@@ -572,6 +603,7 @@ public class UsuarioDAO {
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarRoles(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;
@@ -626,6 +658,7 @@ public class UsuarioDAO {
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarUsuarios(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;
@@ -660,6 +693,7 @@ public class UsuarioDAO {
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarPermisos(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;
@@ -688,6 +722,7 @@ public class UsuarioDAO {
           u.enviarRecuperacionContrasena(correoElectronico, nombre_usuario, contrasena);
           resultado = 1;
         }
+        resultadoConsulta.close();
         consulta.close();
         conexion.close();
       } catch (SQLException ex) {
@@ -727,6 +762,9 @@ public class UsuarioDAO {
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
+      
+      consulta.close();
+      conexion.close();
     } catch (SQLException ex) {
       ex.printStackTrace();
     }
@@ -753,7 +791,7 @@ public class UsuarioDAO {
         {
           resultado = true;
         }
-        
+        resultadoConsulta.close();
         consultaContrasena.close();
         conexion.close();
       } catch (SQLException ex) {
