@@ -43,7 +43,7 @@ public class InventarioDAO extends DAO<Inventario> {
         resultado = true;
       }
       consulta.close();
-      conexion.close();
+      cerrarConexion();
 
     } catch (SQLException ex) {
       System.out.println(ex);
@@ -83,9 +83,9 @@ public class InventarioDAO extends DAO<Inventario> {
         }
         resultado.add(inventario);
       }
-
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -118,8 +118,9 @@ public class InventarioDAO extends DAO<Inventario> {
             }
             resultado.add(inventario);
         }
+        rs.close();
         consulta.close();
-        conexion.close();
+        cerrarConexion();
     }catch (Exception ex) {
         ex.printStackTrace();
     }
@@ -151,9 +152,9 @@ public class InventarioDAO extends DAO<Inventario> {
           ex.printStackTrace();
         }
       }
-
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
