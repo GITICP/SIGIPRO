@@ -6,35 +6,35 @@ INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Auditorio',Null);--
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Balanzas',Null);--4
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Baño De Caballeriza',Null);--5
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bio Ensayos',Null);--6
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Biologia Molecular',Null);--7
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bioquimica',Null);--8
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Biología Molecular',Null);--7
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bioquímica',Null);--8
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bioseguridad',Null);--9
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bodega De Alimentos',Null);--10
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bodega De Caballeriza',Null);--11
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bodega Investigacion',Null);--12
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bodega Plasticos',Null);--13
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bodega Investigación',Null);--12
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bodega Plásticos',Null);--13
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Bruno Lomonte',Null);--14
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Caseta De Guardas',Null);--15
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cecilia Diaz',Null);--16
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Centro De Cubiculos',Null);--17
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Centro De Cubículos',Null);--17
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Comedor',Null);--18
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Comedor De Caballeriza',Null);--19
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Conejera',Null);--20
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Congeladores',Null);--21
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Control De Calidad',Null);--22
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cuarto De Ratones',Null);--23
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cuarto Maquinas',Null);--24
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cuarto Máquinas',Null);--24
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cuarto Oscuro',Null);--25
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cubiculo De Estudiantes',Null);--26
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Cultivo Celular',Null);--27
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Desarrollo Tecnologico',Null);--28
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Desarrollo Tecnológico',Null);--28
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Ericka Camacho',Null);--29
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Español',Null);--30
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Fernando Chaves Mora',Null);--31
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Finca I.C.P Cascajal',Null);--32
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Franklin',Null);--33
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Galeron De Picadora Burucha',Null);--34
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Histologia',Null);--35
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Galerán De Picadora Burucha',Null);--34
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Histologáa',Null);--35
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Incubadora',Null);--36
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('José María Gutierrez',Null);--37
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Lab.Estabilidad',Null);--38
@@ -45,7 +45,7 @@ INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Laboratorio General
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Laura Monterioli',Null);--43
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Mahmood Sasa',Null);--44
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Mangas De Sangria',Null);--45
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Maquinas',Null);--46
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Máquinas',Null);--46
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Marietta Flores',Null);--47
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Marvin',Null);--48
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Marvin Madrigal',Null);--49
@@ -53,29 +53,29 @@ INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Materiales(Rodrigo 
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Mezanine',Null);--51
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Microscopia',Null);--52
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Oficina Caballeriza',Null);--53
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Oficina Farmaceutico',Null);--54
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Oficina Farmacéutico',Null);--54
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Oficina Investigación',Null);--55
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Oficina Producción',Null);--56
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Orlando Morales',Null);--57
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Pablo',Null);--58
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Pasadizo De Investigacion',Null);--59
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Pasadizo De Investigación',Null);--59
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción',Null);--60
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Baños)',Null);--61
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Bodega Estabilidad)',Null);--62
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Bodega Reactivos)',Null);--63
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Cuarto Balanzas)',Null);--64
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Cuarto De Aseo)',Null);--65
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Cuarto Frio Mat.Prima',Null);--66
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Cuarto Maquinas)',Null);--67
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Etiquetado)',Null);--68
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Lavado)',Null);--69
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Mesanine)',Null);--70
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Pasillos)',Null);--71
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Proceso)',Null);--72
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Produccion(Separacion De Plasma)',Null);--73
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Baños)',Null);--61
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Bodega Estabilidad)',Null);--62
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Bodega Reactivos)',Null);--63
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Cuarto Balanzas)',Null);--64
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Cuarto De Aseo)',Null);--65
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Cuarto Frio Mat.Prima',Null);--66
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Cuarto Maquinas)',Null);--67
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Etiquetado)',Null);--68
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Lavado)',Null);--69
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Mesanine)',Null);--70
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Pasillos)',Null);--71
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Proceso)',Null);--72
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Producción(Separación De Plasma)',Null);--73
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Ratonera',Null);--74
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Serpentario',Null);--75
-INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Sintesis De Pepidos',Null);--76
+INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Síntesis De Pepidos',Null);--76
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Teresa Escalante Muñoz',Null);--77
 INSERT INTO bodega.ubicaciones (nombre,descripcion) VALUES ('Yamilet Angulo Ugalde',Null);--78
 
@@ -196,10 +196,10 @@ INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_sec
 --#####Investigacion####
 --Cultivo Celular
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('151581','Baño María','PRECISION',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('219171','Camara de flujo laminar 1','CLEAN BENCH',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('171224','Camara de flujo laminar 2','NUAIRE',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('95123','Camara de flujo laminar 3','GELAIRE',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('95607','Centrifuga','IEC',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('219171','Cámara de flujo laminar 1','CLEAN BENCH',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('171224','ámara  de flujo laminar 2','NUAIRE',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('95123','ámara  de flujo laminar 3','GELAIRE',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('95607','Centrífuga','IEC',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('144389','Deshumedecedor','LG',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('222487','Incubadora 1','HERACUS',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('191471','Incubadora 2','REVCO',Null,Null,27,CURRENT_DATE,Null);
@@ -208,14 +208,14 @@ INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_sec
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('194944','Microscopio Invertido 1','OLYMPUS',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('161918','Microscopio Invertido 2','OLYMPUS',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225753','Mueble Lab.8.Gav peq 2 gdes','',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225748','Mueble Lab.Aereo','',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225748','Mueble Lab.Aéreo','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225749','Muebles con Lavatorio','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225750','Muebles Laboratorio','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225751','Muebles Laboratorio','',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('215463','Pipeta Automatica 0,5-10 ul','',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('215461','Pipeta Automatica 100-1000ul','',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('192452','Pipeta Automatica 100-1000ul','',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('215460','Pipeta Automatica 500-5000ul','',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('215463','Pipeta Automática 0,5-10 ul','',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('215461','Pipeta Automática 100-1000ul','',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('192452','Pipeta Automática 100-1000ul','',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('215460','Pipeta Automática 500-5000ul','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('162996','Pipeteador','PIPET-AID',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('182793','Pipeteador','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('95605','Pipeteador 1','PIPET-AID',Null,Null,27,CURRENT_DATE,Null);
@@ -228,19 +228,19 @@ INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_sec
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('209739','Silla Rotatoria Tipo Banco','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('144475','Silla Rotatoria Tipo Banco','',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('142387','Silla Rotatoria Tipo Banco','',Null,Null,27,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('332240','Telefono ','PANASONIC',Null,Null,27,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('332240','Teléfono ','PANASONIC',Null,Null,27,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('120736','Vortex','GENIE 2',Null,Null,27,CURRENT_DATE,Null);
 
 --Sintesis  de peptidos
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('139759','CAMARA DE EXTRACCION','LABCONCO',Null,Null,76,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('139759','CÁMARA DE EXTRACCIÓN','LABCONCO',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('272899','CPU ','DELL',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('272901','IMPRESORA ','HP',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('272900','MONITOR','',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225755','MUBLE LAB.4 GAVETAS','',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225756','MUEBLE LAB.AEREO','',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('225754','MUEBLE LAB.CON LAVATORIO','',Null,Null,76,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('209725','SILLA RATATORIA TIPO BANCO','INDUSTRIA METALERA',Null,Null,76,CURRENT_DATE,Null);
-INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('332241','TELEFONO','PANASONIC',Null,Null,76,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('209725','SILLA ROTATORIA TIPO BANCO','INDUSTRIA METALERA',Null,Null,76,CURRENT_DATE,Null);
+INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('332241','TELÉFONO','PANASONIC',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('272886','UPS','',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('307744','REFRIGERADORA','ATLAS',Null,Null,76,CURRENT_DATE,Null);
 INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) VALUES ('272898','SECUENCIADOR','',Null,Null,76,CURRENT_DATE,Null);

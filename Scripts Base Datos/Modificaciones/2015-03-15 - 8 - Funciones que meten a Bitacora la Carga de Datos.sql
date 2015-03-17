@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION bitacora.insertBitacoraAF() RETURNS BOOLEAN AS $$
 DECLARE
     fecha_accion TIMESTAMP := now();
-    nombre_usuario CHARACTER VARYING(45) := '';
+    nombre_usuario CHARACTER VARYING(45) := 'Carga de Datos Inicial';
     ip CHARACTER VARYING(18) := '127.0.0.1';
     accion CHARACTER VARYING(45):= 'AGREGAR';
     tabla CHARACTER VARYING(45):= 'BODEGA.ACTIVOS_FIJOS';
@@ -65,7 +65,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION bitacora.insertBitacoraCI() RETURNS BOOLEAN AS $$
 DECLARE
     fecha_accion TIMESTAMP := now();
-    nombre_usuario CHARACTER VARYING(45) := '';
+    nombre_usuario CHARACTER VARYING(45) := 'Carga de Datos Inicial';
     ip CHARACTER VARYING(18) := '127.0.0.1';
     accion CHARACTER VARYING(45):= 'AGREGAR';
     tabla CHARACTER VARYING(45):= 'BODEGA.CATALOGO_INTERNO';
@@ -113,7 +113,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION bitacora.insertBitacoraCE() RETURNS BOOLEAN AS $$
 DECLARE
     fecha_accion TIMESTAMP := now();
-    nombre_usuario CHARACTER VARYING(45) := '';
+    nombre_usuario CHARACTER VARYING(45) := 'Carga de Datos Inicial';
     ip CHARACTER VARYING(18) := '127.0.0.1';
     accion CHARACTER VARYING(45):= 'AGREGAR';
     tabla CHARACTER VARYING(45):= 'BODEGA.CATALOGO_EXTERNO';
@@ -152,7 +152,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION bitacora.insertBitacoraU() RETURNS BOOLEAN AS $$
 DECLARE
     fecha_accion TIMESTAMP := now();
-    nombre_usuario CHARACTER VARYING(45) := '';
+    nombre_usuario CHARACTER VARYING(45) := 'Carga de Datos Inicial';
     ip CHARACTER VARYING(18) := '127.0.0.1';
     accion CHARACTER VARYING(45):= 'AGREGAR';
     tabla CHARACTER VARYING(45):= 'BODEGA.UBICACIONES';
@@ -184,7 +184,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION bitacora.insertBitacoraCIE() RETURNS BOOLEAN AS $$
 DECLARE
     fecha_accion TIMESTAMP := now();
-    nombre_usuario CHARACTER VARYING(45) := '';
+    nombre_usuario CHARACTER VARYING(45) := 'Carga de Datos Inicial';
     ip CHARACTER VARYING(18) := '127.0.0.1';
     accion CHARACTER VARYING(45):= 'AGREGAR';
     tabla CHARACTER VARYING(45):= 'BODEGA.CATALOGOS_INTERNOS_EXTERNOS';
@@ -213,7 +213,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION bitacora.insertBitacoraR() RETURNS BOOLEAN AS $$
 DECLARE
     fecha_accion TIMESTAMP := now();
-    nombre_usuario CHARACTER VARYING(45) := '';
+    nombre_usuario CHARACTER VARYING(45) := 'Carga de Datos Inicial';
     ip CHARACTER VARYING(18) := '127.0.0.1';
     accion CHARACTER VARYING(45):= 'AGREGAR';
     tabla CHARACTER VARYING(45):= 'BODEGA.REACTIVOS';
