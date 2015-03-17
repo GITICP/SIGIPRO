@@ -240,7 +240,7 @@ public class PrestamoDAO {
     return conexion;
   }
 
-  public void cerrarConexion()
+  private void cerrarConexion()
   {
     if (conexion != null) {
       try {

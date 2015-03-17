@@ -48,8 +48,9 @@ public class ProductoExternoDAO {
         resultado = true;
         p.setId_producto_ext(resultadoConsulta.getInt("id_producto_ext"));
       }
+      resultadoConsulta.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -81,7 +82,7 @@ public class ProductoExternoDAO {
         resultado = true;
       }
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -104,7 +105,7 @@ public class ProductoExternoDAO {
         resultado = true;
       }
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       throw new SIGIPROException("No se puede borrar este producto externo porque está ligado a uno o más productos internos.");
     }
@@ -135,10 +136,16 @@ public class ProductoExternoDAO {
           if (rs2.next()) {
             producto.setNombreProveedor(rs2.getString("nombre_proveedor"));
           }
+          rs2.close();
+          consulta2.close();
         } catch (Exception ex) {
           ex.printStackTrace();
         }
       }
+      rs.close();
+      consulta.close();
+      cerrarConexion();
+      
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -167,14 +174,16 @@ public class ProductoExternoDAO {
           if (rs2.next()) {
             producto.setNombreProveedor(rs2.getString("nombre_proveedor"));
           }
+          rs2.close();
+          consulta2.close();
         } catch (Exception ex) {
           ex.printStackTrace();
         }
         resultado.add(producto);
       }
-
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -198,8 +207,9 @@ public class ProductoExternoDAO {
         
         resultado.add(producto);
       }
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -224,9 +234,9 @@ public class ProductoExternoDAO {
         
         resultado.add(producto);
       }
-       
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       resultado = null;
     }
@@ -252,9 +262,9 @@ public class ProductoExternoDAO {
         
         resultado.add(producto);
       }
-       
+      rs.close();
       consulta.close();
-      conexion.close();
+      cerrarConexion();
     } catch (Exception ex) {
       resultado = null;
     }
@@ -262,20 +272,36 @@ public class ProductoExternoDAO {
     return resultado;
   }
 
-  private Connection getConexion() {
-    try {
-
-      if (conexion.isClosed()) {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-      }
-    } catch (Exception ex) {
-      conexion = null;
+  private Connection getConexion()
+  {
+    SingletonBD s = SingletonBD.getSingletonBD();
+    if (conexion == null) {
+      conexion = s.conectar();
     }
-
+    else {
+      try {
+        if (conexion.isClosed()) {
+          conexion = s.conectar();
+        }
+      }
+      catch (Exception ex) {
+        conexion = null;
+      }
+    }
     return conexion;
   }
-  
-  
 
+  private void cerrarConexion()
+  {
+    if (conexion != null) {
+      try {
+        if (conexion.isClosed()) {
+          conexion.close();
+        }
+      }
+      catch (Exception ex) {
+        conexion = null;
+      }
+    }
+  }
 }
