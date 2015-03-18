@@ -32,8 +32,12 @@ function RechazarSolicitud(id_solicitud){
 }
 
 
-function confirmarAuth(id_solicitud){
+function confirmarAuth(id_solicitud, usuario, producto, cantidad){
   $('#id_solicitud_auth2').val(id_solicitud);
+  $('#num-sol').val(id_solicitud);
+  $('#usr-sol').val(usuario);
+  $('#prd').val(producto);
+  $('#cnt').val(cantidad);
   $('.alert-dismissible').remove();
   $('#ModalAutorizar').modal('show');
 }
