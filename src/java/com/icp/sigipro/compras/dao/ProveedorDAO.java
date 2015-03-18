@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.icp.sigipro.compras.modelos.Proveedor;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class ProveedorDAO
         return resultado;
     }
 
-    public boolean eliminarProveedor(int id_proveedor)
+    public boolean eliminarProveedor(int id_proveedor) throws SIGIPROException
     {
         boolean resultado = false;
         try {
@@ -98,10 +99,10 @@ public class ProveedorDAO
             }
             preparedStatement.close();
             getConexion().close();
-
         }
         catch (SQLException e) {
             e.printStackTrace();
+            throw new SIGIPROException("El proveedor no se pudo eliminar debido a que está referenciado en uno o más productos externos.");
         }
         return resultado;
     }
