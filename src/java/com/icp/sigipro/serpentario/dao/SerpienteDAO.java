@@ -32,8 +32,8 @@ public class SerpienteDAO {
     public boolean insertarSerpiente(Serpiente s){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes (id_especie, fecha_ingreso,localidad_origen,colectada,recibida,sexo,talla_cabeza,talla_cola,peso,imagen) " +
-                                                             " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_serpiente");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes (id_especie, fecha_ingreso,localidad_origen,colectada,recibida,sexo,talla_cabeza,talla_cola,peso) " +
+                                                             " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_serpiente");
             consulta.setInt(1, s.getEspecie().getId_especie());
             consulta.setDate(2, s.getFecha_ingreso());
             consulta.setString(3, s.getLocalidad_origen());
@@ -43,7 +43,7 @@ public class SerpienteDAO {
             consulta.setInt(7, s.getTalla_cabeza());
             consulta.setInt(8, s.getTalla_cola());
             consulta.setInt(9, s.getPeso());
-            consulta.setBlob(10,s.getImagen());
+            
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;

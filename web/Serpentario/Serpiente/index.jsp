@@ -35,38 +35,50 @@
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 40}">
+                <c:if test="${permiso == 1 || permiso == 43}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Especie?accion=agregar">Agregar Especie</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Serpiente?accion=agregar">Agregar Serpiente</a>
                 </div>
               </c:if>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-ubicaciones" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Género</th>
+                    <th>Numero de Ingreso</th>
                     <th>Especie</th>
+                    <th>Fecha de Ingreso</th>
+                    <th>Localidad de Origen</th>
+                    <th>Sexo</th>
+                    <th>Talla Cabeza-Cloaca</th>
+                    <th>Talla Cola</th>
+                    <th>Peso</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaEspecies}" var="especie">
+                  <c:forEach items="${listaSerpientes}" var="serpiente">
 
-                    <tr id ="${especie.getId_especie()}">
+                    <tr id ="${serpiente.getId_serpiente()}">
                       <td>
-                        <a href="/SIGIPRO/Serpentario/Especie?accion=ver&id_especie=${especie.getId_especie()}">
+                        <a href="/SIGIPRO/Serpentario/Serpiente?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">
                           <div style="height:100%;width:100%">
-                            ${especie.getGenero()}
+                            ${serpiente.getId_serpiente()}
                           </div>
                         </a>
                       </td>
-                      <td>${especie.getEspecie()}</td>
+                      <td>${serpiente.getEspecie().getGenero_especie()}</td>
+                      <td>${serpiente.getFecha_ingreso()}</td>
+                      <td>${serpiente.getLocalidad_origen()}</td>
+                      <td>${serpiente.getSexo()}</td>
+                      <td>${serpiente.getTalla_cabeza()}</td>
+                      <td>${serpiente.getTalla_cola()}</td>
+                      <td>${serpiente.getPeso()}</td>
                     </tr>
 
                   </c:forEach>
