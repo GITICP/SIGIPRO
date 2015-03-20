@@ -23,7 +23,7 @@ $(document).ready(function () {
         var campoVencimiento = $("#campo-fecha-vencimiento");
         if (pivote) {
             campoVencimiento.show();
-            campoVencimiento.find('#fechaVencimiento').prop('required', true).attr('hidden', false).val(null);
+            campoVencimiento.find('#fechaVencimiento').prop('required', true).attr('hidden', false);
             $("#label-fecha-vencimiento").show();
         } else {
             campoVencimiento.hide();
