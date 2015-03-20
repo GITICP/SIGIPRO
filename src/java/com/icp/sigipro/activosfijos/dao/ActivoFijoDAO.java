@@ -128,7 +128,7 @@ public class ActivoFijoDAO {
     }
     return resultado;
   }
-    public boolean eliminarActivoFijo(int id_activo_fijo) {
+    public boolean eliminarActivoFijo(int id_activo_fijo) throws SIGIPROException{
 
         boolean resultado = false;
 
@@ -142,10 +142,12 @@ public class ActivoFijoDAO {
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
+            } else {
+                throw new SIGIPROException("El activo que está intentando eliminar no existe.");
             }
             consulta.close();
             conexion.close();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return resultado;
