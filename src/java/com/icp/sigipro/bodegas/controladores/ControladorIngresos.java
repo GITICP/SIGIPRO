@@ -111,8 +111,9 @@ public class ControladorIngresos extends SIGIPROServlet
           request.setAttribute("productos", productos);
           request.setAttribute("secciones", secciones);
           request.setAttribute("accion", "Registrar");
-        }
-        else if (accion.equalsIgnoreCase("editar")) {
+          request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
+        } 
+       else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(28, listaPermisos);
           redireccion = "Ingresos/Editar.jsp";
 
@@ -236,7 +237,7 @@ public class ControladorIngresos extends SIGIPROServlet
               ingreso.setEstado(Ingreso.DISPONIBLE);
               //Funcion que genera la bitacora
               BitacoraDAO bitacora = new BitacoraDAO();
-              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
                 //*----------------------------*
               
               resultado = true;
@@ -252,7 +253,7 @@ public class ControladorIngresos extends SIGIPROServlet
               ingreso.setEstado(Ingreso.RECHAZADO);
               //Funcion que genera la bitacora
               BitacoraDAO bitacora = new BitacoraDAO();
-              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
+              bitacora.setBitacora(ingreso.parseJSON(),Bitacora.ACCION_RECHAZAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INGRESO,request.getRemoteAddr());
                 //*----------------------------*
               resultado = true;
             }

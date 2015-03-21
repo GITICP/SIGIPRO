@@ -108,8 +108,9 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <select id="seleccionSeccion" class="form-control" name="seccion" required
-                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                          <select id="seleccionSeccion" class="select2" name="seccion" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+              
                             <c:forEach items="${secciones}" var="seccion">
                               <c:choose>
                                 <c:when test="${seccion.getID() == usuario.getIdSeccion()}" >
@@ -129,8 +130,8 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
-                          <select id="seleccionPuesto" class="form-control" name="puesto" required
-                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' >
+                          <select id="seleccionPuesto" class="select2" name="puesto" required
+                                  oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                             <c:forEach items="${puestos}" var="puesto">
                               <c:choose>
                                 <c:when test="${puesto.getId_puesto() == usuario.getIdPuesto()}" >
@@ -150,7 +151,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>           SE ELIMINA EL ICONO --%>
-                          <input type="text" value="${usuario.getFechaActivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaActivacion" class="form-control sigiproDatePicker" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
+                          <input type="text" value="${usuario.getFechaActivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaActivacion" class="form-control sigiproDatePickerEspecial" name="fechaActivacion" data-date-format="dd/mm/yyyy" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  onchange="setCustomValidity('')">
                         </div>
@@ -162,7 +163,7 @@
                       <div class="col-sm-12">
                         <div class="input-group">
                           <%--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>           SE ELIMINA EL ICONO --%>
-                          <input type="text" value="${usuario.getFechaDesactivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePicker" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                          <input type="text" value="${usuario.getFechaDesactivacion()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaDesactivacion" class="form-control sigiproDatePickerEspecial" name="fechaDesactivacion" data-date-format="dd/mm/yyyy" required
                                  oninvalid="setCustomValidity('Este campo es requerido ')"
                                  onchange="setCustomValidity('')">
                         </div>
@@ -208,7 +209,7 @@
                 <div class="form-group">
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-volver" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmacion()"><i class="fa fa-check-circle"></i> Confirmar Cambios </button>
+                    <button type="button" class="btn btn-primary" onclick="confirmacion()"><i class="fa fa-check-circle"></i> Guardar Cambios </button>
                   </div>
                 </div>
               </form>
@@ -230,10 +231,11 @@
           <label for="idrol" class="control-label">*Rol</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group">
-                <select id="seleccionRol" class="form-control" name="idrol" required
+              <div class="input-group" id='inputGroupSeleccionRol'>
+                <select id="seleccionRol" class="select2" name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
-                        oninput="setCustomValidity('')" style='background-color: #fff;'>
+                        style='background-color: #fff;' onchange="setCustomValidity('')">
+                <option value=''></option>
                   <c:forEach items="${rolesRestantes}" var="rol">
                     <option value=${rol.getID()}>${rol.getNombreRol()}</option>
                   </c:forEach>
@@ -246,7 +248,7 @@
             <div class="col-sm-12">
               <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
+                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaActivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
               </div>
@@ -258,7 +260,7 @@
               <div class="col-sm-12">
                 <div class="input-group" style="display:table;">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
                          oninvalid="setCustomValidity('Este campo es requerido ')"
                          onchange="setCustomValidity('')">
                 </div>
@@ -290,7 +292,7 @@
             <div class="col-sm-12">
               <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaActivacion" class="form-control sigiproDatePicker" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
+                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaActivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
               </div>
@@ -301,7 +303,7 @@
             <div class="col-sm-12">
               <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaDesactivacion" class="form-control sigiproDatePicker" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
+                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaDesactivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
                        oninvalid="setCustomValidity('Este campo es requerido ')"
                        onchange="setCustomValidity('')">
               </div>

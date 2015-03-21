@@ -52,6 +52,7 @@ public class CorreoDAO {
           contrasena = resultadoConsulta.getString("contrasena");
           resultado.add(contrasena);
         }
+        resultadoConsulta.close();
         consulta.close();
         conexion.close();
       }
@@ -92,6 +93,7 @@ public class CorreoDAO {
           resultado = new Correo(id, host, puerto, starttls, nombreemisor, correo, contrasena);
         }
         consulta.close();
+        resultadoConsulta.close();
         conexion.close();
       }
     } catch (SQLException ex) {
@@ -135,6 +137,8 @@ public class CorreoDAO {
         consulta.setString(4, contrasena);
         consulta.setInt(5, id);
         consulta.executeUpdate();
+        
+        consulta.close();
         conexion.close();
         
         resultado = true;

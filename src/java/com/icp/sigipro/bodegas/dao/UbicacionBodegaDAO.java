@@ -2,9 +2,11 @@ package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.UbicacionBodega;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,7 @@ public class UbicacionBodegaDAO
     return resultado;
   }  
   
-  public boolean eliminarUbicacion(int id_ubicacion){
+  public boolean eliminarUbicacion(int id_ubicacion) throws SIGIPROException{
     
     boolean resultado = false;
     
@@ -93,8 +95,8 @@ public class UbicacionBodegaDAO
       consulta.close();
       conexion.close();
     }
-    catch(Exception ex){
-      ex.printStackTrace();
+    catch(SQLException ex){
+      throw new SIGIPROException("Ubicación no pudo ser eliminada debido a que uno o más productos se encuentran asociados a esta.");
     }
     return resultado;
   }  

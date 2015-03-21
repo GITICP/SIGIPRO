@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.bodegas.controladores;
+package com.icp.sigipro.activosfijos.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bodegas.dao.UbicacionDAO;
-import com.icp.sigipro.bodegas.modelos.Ubicacion;
+import com.icp.sigipro.activosfijos.dao.UbicacionDAO;
+import com.icp.sigipro.activosfijos.modelos.Ubicacion;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -24,7 +26,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Walter
  */
-@WebServlet(name = "ControladorUbicacion", urlPatterns = {"/Bodegas/Ubicaciones"})
+@WebServlet(name = "ControladorUbicacion", urlPatterns = {"/ActivosFijos/Ubicaciones"})
 public class ControladorUbicacion extends SIGIPROServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -53,6 +55,8 @@ public class ControladorUbicacion extends SIGIPROServlet {
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
             int[] permisos = {34, 35, 36};
+            
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
             if (accion != null) {
                 if (accion.equalsIgnoreCase("ver")) {
@@ -70,12 +74,19 @@ public class ControladorUbicacion extends SIGIPROServlet {
                 } else if (accion.equalsIgnoreCase("eliminar")) {
                     validarPermiso(36, listaPermisos);
                     int id_ubicacion = Integer.parseInt(request.getParameter("id_ubicacion"));
-                    dao.eliminarUbicacion(id_ubicacion);
-                    
-                    //Funcion que genera la bitacora
-                    BitacoraDAO bitacora = new BitacoraDAO();
-                    bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
-                    //*----------------------------*
+                    try{
+                        dao.eliminarUbicacion(id_ubicacion);
+                        
+                        //Funcion que genera la bitacora
+                        BitacoraDAO bitacora = new BitacoraDAO();
+                        bitacora.setBitacora(id_ubicacion,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_UBICACION,request.getRemoteAddr());
+                        //*----------------------------*
+                        
+                        request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación eliminada correctamente."));
+                        
+                    }catch(SIGIPROException sig_ex) {
+                        request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                    }
                     
                     redireccion = "Ubicaciones/index.jsp";
                     List<Ubicacion> ubicaciones = dao.obtenerUbicaciones();
@@ -122,6 +133,7 @@ public class ControladorUbicacion extends SIGIPROServlet {
         UbicacionDAO dao = new UbicacionDAO();
         String id = request.getParameter("id_ubicacion");
         String redireccion;
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
         if (id.isEmpty() || id.equals("0")) {
             resultado = dao.insertarUbicacion(ubicacion);
@@ -132,6 +144,7 @@ public class ControladorUbicacion extends SIGIPROServlet {
             //*----------------------------*
             
             redireccion = "Ubicaciones/Agregar.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación de activo fijo agregada correctamente"));
         } else {
             ubicacion.setId_ubicacion(Integer.parseInt(id));
             resultado = dao.editarUbicacion(ubicacion);
@@ -142,10 +155,14 @@ public class ControladorUbicacion extends SIGIPROServlet {
             //*----------------------------*
             
             redireccion = "Ubicaciones/Editar.jsp";
+            request.setAttribute("ubicacion", ubicacion);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Ubicación de activo fijo editada correctamente"));
         }
 
         if (resultado) {
             redireccion = String.format("Ubicaciones/index.jsp", id);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ubicación no puso ser editada."));
         }
         
         request.setAttribute("listaUbicaciones", dao.obtenerUbicaciones());

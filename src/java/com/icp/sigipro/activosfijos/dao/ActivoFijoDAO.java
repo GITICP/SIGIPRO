@@ -1,18 +1,20 @@
-package com.icp.sigipro.bodegas.dao;
+package com.icp.sigipro.activosfijos.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.bodegas.modelos.ActivoFijo;
-import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.activosfijos.modelos.ActivoFijo;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -29,13 +31,13 @@ public class ActivoFijoDAO {
         conexion = s.conectar();
     }
     
-    public boolean insertarActivoFijo(ActivoFijo a) {
+    public boolean insertarActivoFijo(ActivoFijo a) throws SIGIPROException {
 
         boolean resultado = false;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado) "
-                    + " VALUES (?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado, responsable, numero_serie) "
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
 
             consulta.setString(1, a.getPlaca());
             consulta.setString(2, a.getEquipo());
@@ -60,6 +62,8 @@ public class ActivoFijoDAO {
             java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
             consulta.setDate(7, fRegistroSQL);
             consulta.setString(8, a.getEstado());
+            consulta.setString(9, a.getResponsable());
+            consulta.setString(10, a.getSerie());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
                 resultado = true;
@@ -68,8 +72,10 @@ public class ActivoFijoDAO {
             }
             consulta.close();
             conexion.close();
+        } catch (PSQLException ex) {
+           throw new SIGIPROException("Esta placa ya existe en el sistema");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.getLogger(ActivoFijoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
     }
@@ -80,7 +86,7 @@ public class ActivoFijoDAO {
     try{
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.activos_fijos SET placa=?, equipo=?, marca=?, fecha_movimiento=?, " + 
-              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=? " +
+              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=?, responsable=?, numero_serie=? " +
               " WHERE id_activo_fijo=?; "
 
       );
@@ -107,7 +113,9 @@ public class ActivoFijoDAO {
             java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
             consulta.setDate(7, fRegistroSQL);
             consulta.setString(8, a.getEstado()); 
-            consulta.setInt(9, a.getId_activo_fijo());
+            consulta.setString(9, a.getResponsable()); 
+            consulta.setString(10, a.getSerie()); 
+            consulta.setInt(11, a.getId_activo_fijo());
       
       if ( consulta.executeUpdate() == 1){
         resultado = true;
@@ -120,7 +128,7 @@ public class ActivoFijoDAO {
     }
     return resultado;
   }
-    public boolean eliminarActivoFijo(int id_activo_fijo) {
+    public boolean eliminarActivoFijo(int id_activo_fijo) throws SIGIPROException{
 
         boolean resultado = false;
 
@@ -134,10 +142,12 @@ public class ActivoFijoDAO {
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
+            } else {
+                throw new SIGIPROException("El activo que está intentando eliminar no existe.");
             }
             consulta.close();
             conexion.close();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return resultado;
@@ -180,6 +190,8 @@ public class ActivoFijoDAO {
                 resultadoConsultaUbicacion.next();
                 String ubicacion = resultadoConsultaUbicacion.getString("nombre");
                 activo.setNombre_ubicacion(ubicacion);
+                activo.setResponsable(rs.getString("responsable"));
+                activo.setSerie(rs.getString("numero_serie"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -206,6 +218,8 @@ public class ActivoFijoDAO {
                 activo.setNombre_ubicacion(rs.getString("nombre"));
                 activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
+                activo.setResponsable(rs.getString("responsable"));
+                activo.setSerie(rs.getString("numero_serie"));
 
                 resultado.add(activo);
             }
@@ -216,6 +230,68 @@ public class ActivoFijoDAO {
             ex.printStackTrace();
         }
         return resultado;
+    }
+    
+        public boolean eliminarMasivo(String ids) throws SIGIPROException {
+        boolean resultado = false;
+        try {
+            getConexion().setAutoCommit(false);
+            
+            PreparedStatement consulta_eliminar = getConexion().prepareStatement("DELETE FROM bodega.activos_fijos WHERE id_activo_fijo = ?;");
+            
+            String[] ids_parseados = parsearAsociacion("#af#", ids);
+            
+            for (int i = 0; i < ids_parseados.length; i++) {
+                consulta_eliminar.setInt(1, Integer.parseInt(ids_parseados[i]));
+                consulta_eliminar.addBatch();
+            }
+            
+            int[] resultados = consulta_eliminar.executeBatch();
+            
+            boolean ciclo_break = false;
+            
+            for (int i = 0; i < resultados.length; i++) {
+                if (resultados[i] != 1) {
+                    ciclo_break = true;
+                    break;
+                }
+            }
+            
+            if(ciclo_break) {
+                resultado = false;
+            } else {
+                resultado = true;
+            }
+            
+        } catch(SQLException ex) {
+            try {
+                getConexion().rollback();
+                
+                // Mapear mensaje.
+                throw new SIGIPROException("No se pudo eliminar debido a que el activo fijo se referencia con otros registros.");
+            } catch(SQLException roll_ex) {
+                throw new SIGIPROException("Error de conexión con la base de datos.");
+            }
+        } finally {
+            try {
+                if(resultado) {
+                    getConexion().commit();
+                    getConexion().close();
+                } else {
+                    getConexion().rollback();
+                    getConexion().close();
+                    throw new SIGIPROException("Ocurrió un error a la hora de eliminar los activos fijos. Inténtelo nuevamente.");
+                }
+            } catch (SQLException roll_ex) {
+                throw new SIGIPROException("Error de conexión con la base de datos.");
+            }
+        }
+        return resultado;
+    }
+    
+    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
+        String[] idsTemp = asociacionesCodificadas.split(pivote);
+        return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
     }
 
     private Connection getConexion() {

@@ -91,14 +91,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
       if (verificarPermiso(25, listaPermisos)) {
         usuario_solicitante = 0;
         boolAdmin = true;
-      }
-      else {
+      } else {
         String nombre_usr = (String) sesion.getAttribute("usuario");
         int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
         Usuario us = usrDAO.obtenerUsuario(id_usuario);
         usuario_solicitante = us.getIdSeccion();
       }
-
       if (accion != null) {
         validarPermisos(permisos, listaPermisos);
         if (accion.equalsIgnoreCase("ver")) {
@@ -111,19 +109,19 @@ public class ControladorPrestamos extends SIGIPROServlet {
           Prestamo prestamo = new Prestamo();
           InventarioDAO inventarioDAO = new InventarioDAO();
           Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),0);
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(), 0);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("prestamo", prestamo);
           request.setAttribute("accion", "Agregar");
         } else if (accion.equalsIgnoreCase("eliminar")) {
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           dao.eliminarPrestamo(id_solicitud);
-          
+
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(id_solicitud,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(id_solicitud, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRESTAMO, request.getRemoteAddr());
           //*----------------------------*
-          
+
           redireccion = "Prestamos/index.jsp";
           List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
           request.setAttribute("listaPrestamos", prestamos);
@@ -136,12 +134,11 @@ public class ControladorPrestamos extends SIGIPROServlet {
           Prestamo prestamo = dao.obtenerPrestamo(id_solicitud);
           InventarioDAO inventarioDAO = new InventarioDAO();
           Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
-          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),0);
+          List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(), 0);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("prestamo", prestamo);
           request.setAttribute("accion", "Editar");
-        } 
-        else if (accion.equalsIgnoreCase("reponer")) {
+        } else if (accion.equalsIgnoreCase("reponer")) {
           redireccion = "Prestamos/index.jsp";
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           SolicitudDAO soldao = new SolicitudDAO();
@@ -150,12 +147,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
           prestamo.setEstado("Prestamo Repuesto");
           boolean resultado;
           resultado = soldao.editarSolicitud(prestamo);
-          
+
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(prestamo.parseJSON(), Bitacora.ACCION_REPONER, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRESTAMO, request.getRemoteAddr());
           //*----------------------------*
-          
+
           if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo marcado como 'Repuesto'"));
           } else {
@@ -165,8 +162,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
           request.setAttribute("booladmin", boolAdmin);
           request.setAttribute("booladminprest", boolAdminPrest);
           request.setAttribute("listaPrestamos", prestamos);
-        } 
-         else if (accion.equalsIgnoreCase("aceptar")) {
+        } else if (accion.equalsIgnoreCase("aceptar")) {
           redireccion = "Prestamos/indexAdm.jsp";
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           SolicitudDAO soldao = new SolicitudDAO();
@@ -175,12 +171,12 @@ public class ControladorPrestamos extends SIGIPROServlet {
           prestamo.setEstado("Pendiente");
           boolean resultado;
           resultado = soldao.editarSolicitud(prestamo);
-          
+
           //Funcion que genera la bitacora
           BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+          bitacora.setBitacora(prestamo.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRESTAMO, request.getRemoteAddr());
           //*----------------------------*
-          
+
           if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo aceptado"));
           } else {
@@ -191,40 +187,14 @@ public class ControladorPrestamos extends SIGIPROServlet {
           request.setAttribute("booladminprest", boolAdminPrest);
           request.setAttribute("listaPrestamos", prestamos);
         } 
-         else if (accion.equalsIgnoreCase("rechazar")) {
-          redireccion = "Prestamos/indexAdm.jsp";
-          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-          SolicitudDAO soldao = new SolicitudDAO();
-          Solicitud prestamo = soldao.obtenerSolicitud(id_solicitud);
-          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-          prestamo.setEstado("Rechazada");
-          boolean resultado;
-          resultado = soldao.editarSolicitud(prestamo);
-          
-          //Funcion que genera la bitacora
-          BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
-          //*----------------------------*
-          
-          if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo rechazado"));
-          } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-          }
-          List<Prestamo> prestamos = dao.obtenerPrestamosAdm(seccion_admin);
-          request.setAttribute("booladmin", boolAdmin);
-          request.setAttribute("booladminprest", boolAdminPrest);
-          request.setAttribute("listaPrestamos", prestamos);
-        }
-         else if (accion.equalsIgnoreCase("admin")){
+         else if (accion.equalsIgnoreCase("admin")) {
           verificarPermiso(26, listaPermisos);
           redireccion = "Prestamos/indexAdm.jsp";
           List<Prestamo> prestamos = dao.obtenerPrestamosAdm(seccion_admin);
           request.setAttribute("booladmin", boolAdmin);
           request.setAttribute("booladminprest", boolAdminPrest);
           request.setAttribute("listaPrestamos", prestamos);
-        }
-        else {
+        } else {
           validarPermisos(permisos, listaPermisos);
           redireccion = "Prestamos/index.jsp";
           List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
@@ -266,104 +236,141 @@ public class ControladorPrestamos extends SIGIPROServlet {
     UsuarioDAO usrDAO = new UsuarioDAO();
     InventarioDAO invDAO = new InventarioDAO();
     boolean boolAdmin = false;
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     int usuario_solicitante;
+    int seccion_admin = 0;
     HttpSession sesion = request.getSession();
     List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
     boolean boolAdminPrest = false;
-      if (verificarPermiso(26, listaPermisos)) {
-        boolAdminPrest = true;
-      }
+    if (verificarPermiso(26, listaPermisos)) {
+      boolAdminPrest = true;
+    }
     if (verificarPermiso(25, listaPermisos)) {
       boolAdmin = true;
       usuario_solicitante = 0;
-    } else {
       String nombre_usr = (String) sesion.getAttribute("usuario");
-      usuario_solicitante = usrDAO.obtenerIDUsuario(nombre_usr);
-    }
-    request.setCharacterEncoding("UTF-8");
-    boolean resultado = false;
-    boolean resultado_prestamo = false;
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    Solicitud solicitud = new Solicitud();
-    Prestamo prestamo = new Prestamo();
-    Integer id_inventario;
-    try {
-      id_inventario = Integer.parseInt(request.getParameter("seleccioninventario"));
-    } catch (java.lang.NumberFormatException e) {
-      id_inventario = 0;
-    }
-    Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
-    String estado = request.getParameter("estado");
-    String fch_sol = request.getParameter("fecha_solicitud");
-
-    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-    java.util.Date fecha_solicitud;
-    java.sql.Date fecha_solicitudSQL;
-    try {
-      fecha_solicitud = formatoFecha.parse(fch_sol);
-      fecha_solicitudSQL = new java.sql.Date(fecha_solicitud.getTime());
-      solicitud.setFecha_solicitud(fecha_solicitudSQL);
-    } catch (ParseException ex) {
-      Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-    solicitud.setId_inventario(id_inventario);
-    solicitud.setCantidad(cantidad);
-    solicitud.setEstado(estado);
-    
-    Inventario inv = invDAO.obtenerInventario(id_inventario);
-    prestamo.setId_seccion_presta(inv.getId_seccion());
-
-    String id = request.getParameter("id_solicitud");
-
-    if (id.isEmpty() || id.equals("0")) {
-      java.util.Date hoy = new java.util.Date();
-      Date hoysql = new Date(hoy.getTime());
-      String nombre_usr = (String) sesion.getAttribute("usuario");
-      int usuario_solicitante2 = usrDAO.obtenerIDUsuario(nombre_usr);
-      solicitud.setId_usuario(usuario_solicitante2);
-      solicitud.setFecha_solicitud(hoysql);
-      solicitud.setEstado("Pendiente Prestamo");
-      resultado = soldao.insertarSolicitud_Prestamo(solicitud, prestamo);
-      Inventario invNuevo = invDAO.obtenerInventario(id_inventario);
-
-      //Funcion que genera la bitacora
-          BitacoraDAO bitacora = new BitacoraDAO();
-          bitacora.setBitacora(prestamo.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
-          bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
-          bitacora.setBitacora(invNuevo.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
-          //*----------------------------*
-      redireccion = "Prestamos/Agregar.jsp";
-      request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo ingresada correctamente"));
+      int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+      Usuario us = usrDAO.obtenerUsuario(id_usuario);
+      seccion_admin = us.getIdSeccion();
     } else {
-      Integer id_us = Integer.parseInt(request.getParameter("id_usuario"));
-      solicitud.setId_usuario(id_us);
-      solicitud.setId_solicitud(Integer.parseInt(id));
-      prestamo.setId_solicitud(Integer.parseInt(id));
+        String nombre_usr = (String) sesion.getAttribute("usuario");
+        int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+        Usuario us = usrDAO.obtenerUsuario(id_usuario);
+        usuario_solicitante = us.getIdSeccion();
+    }
+    String accionindex = request.getParameter("accionindex");
+    if (accionindex.equals("")) {
+      request.setCharacterEncoding("UTF-8");
+      boolean resultado = false;
+      boolean resultado_prestamo = false;
+   
+      Solicitud solicitud = new Solicitud();
+      Prestamo prestamo = new Prestamo();
+      Integer id_inventario;
+      try {
+        id_inventario = Integer.parseInt(request.getParameter("seleccioninventario"));
+      } catch (java.lang.NumberFormatException e) {
+        id_inventario = 0;
+      }
+      Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
+      String estado = request.getParameter("estado");
+      String fch_sol = request.getParameter("fecha_solicitud");
+
+      SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+      java.util.Date fecha_solicitud;
+      java.sql.Date fecha_solicitudSQL;
+      try {
+        fecha_solicitud = formatoFecha.parse(fch_sol);
+        fecha_solicitudSQL = new java.sql.Date(fecha_solicitud.getTime());
+        solicitud.setFecha_solicitud(fecha_solicitudSQL);
+      } catch (ParseException ex) {
+        Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+      }
+
+      solicitud.setId_inventario(id_inventario);
+      solicitud.setCantidad(cantidad);
+      solicitud.setEstado(estado);
+
+      Inventario inv = invDAO.obtenerInventario(id_inventario);
+      prestamo.setId_seccion_presta(inv.getId_seccion());
+
+      String id = request.getParameter("id_solicitud");
+
+      if (id.isEmpty() || id.equals("0")) {
+        java.util.Date hoy = new java.util.Date();
+        Date hoysql = new Date(hoy.getTime());
+        String nombre_usr = (String) sesion.getAttribute("usuario");
+        int usuario_solicitante2 = usrDAO.obtenerIDUsuario(nombre_usr);
+        solicitud.setId_usuario(usuario_solicitante2);
+        solicitud.setFecha_solicitud(hoysql);
+        solicitud.setEstado("Pendiente Prestamo");
+        resultado = soldao.insertarSolicitud_Prestamo(solicitud, prestamo);
+        Inventario invNuevo = invDAO.obtenerInventario(id_inventario);
+
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(prestamo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRESTAMO, request.getRemoteAddr());
+        bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+        bitacora.setBitacora(invNuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INVENTARIO, request.getRemoteAddr());
+        //*----------------------------*
+        redireccion = "Prestamos/Agregar.jsp";
+        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo ingresada correctamente"));
+      } else {
+        Integer id_us = Integer.parseInt(request.getParameter("id_usuario"));
+        solicitud.setId_usuario(id_us);
+        solicitud.setId_solicitud(Integer.parseInt(id));
+        prestamo.setId_solicitud(Integer.parseInt(id));
+        resultado = soldao.editarSolicitud(solicitud);
+
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+        //*----------------------------* 
+        redireccion = "Prestamos/Editar.jsp";
+        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo editada correctamente"));
+      }
+
+      if (resultado) {
+        redireccion = "Prestamos/index.jsp";
+        request.setAttribute("booladmin", boolAdmin);
+        request.setAttribute("booladminprest", boolAdminPrest);
+        List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
+        request.setAttribute("listaPrestamos", prestamos);
+      } else {
+        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      }
+
+      request.setAttribute("solicitud", solicitud);
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
+
+    }
+    else if (accionindex.equals("accionindex_rechazar")) {
+      redireccion = "Prestamos/indexAdm.jsp";
+      String obs = request.getParameter("observaciones");
+      int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
+      Solicitud solicitud = soldao.obtenerSolicitud(id_solicitud);
+      solicitud.setEstado("Rechazada");
+      solicitud.setObservaciones("(Préstamo Rechazado) " + obs);
+      boolean resultado;
       resultado = soldao.editarSolicitud(solicitud);
       
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
-      //*----------------------------* 
-      redireccion = "Prestamos/Editar.jsp";
-      request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de préstamo editada correctamente"));
-    }
-
-    if (resultado) {
-      redireccion = "Prestamos/index.jsp";
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_RECHAZAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_PRESTAMO,request.getRemoteAddr());
+        //*----------------------------*
+      if (resultado) {
+        request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo rechazado"));
+      } else {
+        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      }
+      List<Prestamo> prestamos = dao.obtenerPrestamosAdm(seccion_admin);
       request.setAttribute("booladmin", boolAdmin);
-      request.setAttribute("booladminprest", boolAdminPrest);
-      List<Prestamo> prestamos = dao.obtenerPrestamos(usuario_solicitante);
       request.setAttribute("listaPrestamos", prestamos);
-    } else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+      vista.forward(request, response);
+
     }
-
-    request.setAttribute("solicitud", solicitud);
-    RequestDispatcher vista = request.getRequestDispatcher(redireccion);
-    vista.forward(request, response);
-
   }
 
   /**

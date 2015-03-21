@@ -139,7 +139,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
 
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
             //*----------------------------* 
             
             if (resultado && resta) {
@@ -296,7 +296,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+        bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_RECHAZAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
         //*----------------------------*
       if (resultado) {
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
@@ -330,18 +330,16 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_ENTREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
             //*----------------------------*
             
             if (resultado ) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada"));
-              
-              //    No estoy seguro si esto se debería comentar
-              // Inventario inventario = inventarioDAO.obtenerInventario(solicitud.getId_inventario());
-              //    
-              
+              InventarioDAO inventarioDAO = new InventarioDAO();
+              Inventario inventario = inventarioDAO.obtenerInventario(solicitud.getId_inventario());
+
               //Funcion que genera la bitacora
-              // bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
+              bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
               //*----------------------------*
               
             } 

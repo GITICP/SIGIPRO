@@ -46,7 +46,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="tabladeSolicitudes" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -84,8 +84,8 @@
                           <c:when test="${prestamo.getSolicitud().getEstado().equals('Pendiente Prestamo')}">
                                 <td>
                                   <a class="btn btn-primary btn-sm boton-accion confirmableAceptar" data-texto-confirmacion="aceptar esta solicitud de préstamo" data-href="/SIGIPRO/Bodegas/Prestamos?accion=aceptar&id_solicitud=" onclick="AceptarSolicitud(${prestamo.getSolicitud().getId_solicitud()})">Aprobar</a>
-                                  <a class="btn btn-danger btn-sm boton-accion confirmableRechazar" data-texto-confirmacion="rechazar esta solicitud de préstamo" data-href="/SIGIPRO/Bodegas/Prestamos?accion=rechazar&id_solicitud=" onclick="RechazarSolicitud(${prestamo.getSolicitud().getId_solicitud()})">Rechazar</a>
-                                    </td>
+                                  <a class="btn btn-danger btn-sm boton-accion" onclick="RechazarSolicitud(${prestamo.getSolicitud().getId_solicitud()})">Rechazar</a>
+                                </td>
                           </c:when>
                           <c:otherwise>
                                 <c:choose>
@@ -115,6 +115,34 @@
         <!-- /main-content -->
       </div>
       <!-- /main -->
+    <t:modal idModal="ModalRechazar" titulo="Observaciones">
+
+      <jsp:attribute name="form">
+        <h5> ¿Está seguro que desea rechazar esta solicitud de préstamo? De ser así por favor indique las observaciones: </h5>
+        <form class="form-horizontal" id="form_modalrechazar" data-show-auth="${show_modal_auth}" method="post" action="Prestamos">
+          <input hidden="true" name="id_solicitud_rech" id="id_solicitud_rech" >
+          <input hidden="true" name="accionindex" id="accionindex" value="accionindex_rechazar">
+          ${mensaje_auth}
+          <label for="observaciones" class="control-label">Observaciones</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group" style="display:table;">
+                <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${ubicacion.getDescripcion()}</textarea>
+              </div>
+            </div>
+          </div>
+        <div class="form-group">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
+          </div>
+        </div>
+        </form>
+
+
+      </jsp:attribute>
+
+    </t:modal>
     </jsp:attribute>
     <jsp:attribute name="scripts">
       <script src="/SIGIPRO/recursos/js/sigipro/prestamos.js"></script>

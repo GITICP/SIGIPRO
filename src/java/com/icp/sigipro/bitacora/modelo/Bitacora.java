@@ -1,9 +1,9 @@
 package com.icp.sigipro.bitacora.modelo;
 
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.json.JSONObject;
 
 /**
  *
@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class Bitacora {
     
     private int id_bitacora;
-    private Date fecha_accion;
+    private Timestamp fecha_accion;
     private String nombre_usuario;
     private String ip;
     private String accion;
@@ -22,27 +22,28 @@ public class Bitacora {
     
     //Variables de Tablas
     
-    public static final String TABLA_ACTIVOFIJO = "ACTIVOS_FIJOS";
-    public static final String TABLA_CATALOGOEXTERNO = "CATALOGO_EXTERNO";
-    public static final String TABLA_CATALOGOEXTERNOINTERNO = "CATALOGOS_INTERNOS_EXTERNOS";
-    public static final String TABLA_CATALOGOINTERNO = "CATALOGO_INTERNO";
-    public static final String TABLA_REACTIVO = "REACTIVOS";
-    public static final String TABLA_UBICACION = "UBICACIONES";
-    public static final String TABLA_UBICACIONBODEGA = "UBICACIONES_BODEGA";
-    public static final String TABLA_UBICACIONCATALOGOINTERNO = "UBICACIONES_CATALOGO_INTERNO";
-    public static final String TABLA_PROVEEDOR = "PROVEEDORES";
-    public static final String TABLA_CORREO = "CORREO";
-    public static final String TABLA_INGRESO = "INGRESOS";
-    public static final String TABLA_PRESTAMO = "SOLICITUDES_PRESTAMOS";
-    public static final String TABLA_SOLICITUD = "SOLICITUDES";
-    public static final String TABLA_INVENTARIO = "INVENTARIOS";
-    public static final String TABLA_SECCION = "SECCIONES";
-    public static final String TABLA_PERMISO = "PERMISOS";
-    public static final String TABLA_PERMISOROL = "PERMISO_ROLES";
-    public static final String TABLA_PUESTO = "PUESTOS";
-    public static final String TABLA_ROL = "ROLES";
-    public static final String TABLA_ROLUSUARIO = "ROLES_USUARIOS";
-    public static final String TABLA_USUARIO = "USUARIOS";
+    public static final String TABLA_ACTIVOFIJO = "BODEGA.ACTIVOS_FIJOS";
+    public static final String TABLA_CATALOGOEXTERNO = "BODEGA.CATALOGO_EXTERNO";
+    public static final String TABLA_CATALOGOEXTERNOINTERNO = "BODEGA.CATALOGOS_INTERNOS_EXTERNOS";
+    public static final String TABLA_CATALOGOINTERNO = "BODEGA.CATALOGO_INTERNO";
+    public static final String TABLA_REACTIVO = "BODEGA.REACTIVOS";
+    public static final String TABLA_UBICACION = "BODEGA.UBICACIONES";
+    public static final String TABLA_UBICACIONBODEGA = "BODEGA.UBICACIONES_BODEGA";
+    public static final String TABLA_UBICACIONCATALOGOINTERNO = "BODEGA.UBICACIONES_CATALOGO_INTERNO";
+    public static final String TABLA_PROVEEDOR = "COMPRAS.PROVEEDORES";
+    public static final String TABLA_CORREO = "CONFIGURACION.CORREO";
+    public static final String TABLA_INGRESO = "BODEGA.INGRESOS";
+    public static final String TABLA_SUBBODEGAS = "BODEGA.SUB_BODEGAS";
+    public static final String TABLA_PRESTAMO = "BODEGA.SOLICITUDES_PRESTAMOS";
+    public static final String TABLA_SOLICITUD = "BODEGA.SOLICITUDES";
+    public static final String TABLA_INVENTARIO = "BODEGA.INVENTARIOS";
+    public static final String TABLA_SECCION = "SEGURIDAD.SECCIONES";
+    public static final String TABLA_PERMISO = "SEGURIDAD.PERMISOS";
+    public static final String TABLA_PERMISOROL = "SEGURIDAD.PERMISO_ROLES";
+    public static final String TABLA_PUESTO = "SEGURIDAD.PUESTOS";
+    public static final String TABLA_ROL = "SEGURIDAD.ROLES";
+    public static final String TABLA_ROLUSUARIO = "SEGURIDAD.ROLES_USUARIOS";
+    public static final String TABLA_USUARIO = "SEGURIDAD.USUARIOS";
     
     
     //Variables de Accion
@@ -51,13 +52,19 @@ public class Bitacora {
     public static final String ACCION_ELIMINAR = "ELIMINAR";
     public static final String ACCION_LOGIN = "LOG IN";
     public static final String ACCION_LOGOUT = "LOG OUT";
+    public static final String ACCION_APROBAR = "APROBAR";
+    public static final String ACCION_RECHAZAR = "RECHAZAR";
+    public static final String ACCION_ENTREGAR = "ENTREGAR";
+    public static final String ACCION_REPONER = "REPONER";
+
+   
     
     
     public Bitacora(){
    
     }
     
-    public Bitacora(int id_bitacora, Date fecha_accion, String nombre_usuario, String ip, String accion, String tabla,String estado){
+    public Bitacora(int id_bitacora, Timestamp fecha_accion, String nombre_usuario, String ip, String accion, String tabla,String estado){
         this.id_bitacora = id_bitacora;
         this.fecha_accion = fecha_accion;
         this.nombre_usuario = nombre_usuario;
@@ -68,7 +75,7 @@ public class Bitacora {
         
     }
     public Bitacora(String nombre_usuario, String ip, String accion, String tabla, String estado){
-        Date date = new Date();
+        Timestamp date = new Timestamp(new Date().getTime());
         this.fecha_accion = date;
         this.nombre_usuario = nombre_usuario;
         this.ip = ip;
@@ -82,7 +89,21 @@ public class Bitacora {
         return this.id_bitacora;
     }
     
-    public Date getFecha_accion(){
+    public JSONObject getEstado_parse(){
+        try{
+            return new JSONObject(this.estado);
+        }catch(Exception e){
+            return null;
+        }
+        
+    }
+    
+    public String getFecha_accion_parse(){
+          String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(this.fecha_accion); 
+          return date;
+    }
+    
+    public Timestamp getFecha_accion(){
         return this.fecha_accion;
     }
     
@@ -102,6 +123,17 @@ public class Bitacora {
         return this.nombre_usuario;
     }
     
+    public int getId_objeto(){
+        int id_objeto = 0;
+        try{
+            JSONObject json = new JSONObject(this.estado);
+            id_objeto = json.getInt("id_objeto");
+        }catch (Exception e){
+            
+        }
+        return id_objeto;
+    }
+    
     public String getTabla(){
         return this.tabla;
     }
@@ -110,7 +142,7 @@ public class Bitacora {
         this.id_bitacora = id_bitacora;
     }
     
-    public void setFecha_accion(Date fecha_accion){
+    public void setFecha_accion(Timestamp fecha_accion){
         this.fecha_accion = fecha_accion;
     }
     

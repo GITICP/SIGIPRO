@@ -42,7 +42,7 @@
               <div class="btn-group widget-header-toolbar">
                 <c:if test="${prestamo.getSolicitud().getEstado() == 'Pendiente' || prestamo.getSolicitud().getEstado() == 'Pendiente Prestamo'}">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=editar&id_solicitud=${prestamo.getSolicitud().getId_solicitud()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la Prestamo" data-href="/SIGIPRO/Bodegas/Prestamos?accion=eliminar&id_solicitud=${prestamo.getSolicitud().getId_solicitud()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el préstamo" data-href="/SIGIPRO/Bodegas/Prestamos?accion=eliminar&id_solicitud=${prestamo.getSolicitud().getId_solicitud()}">Eliminar</a>
                 </c:if>
               </div>
             </div>
@@ -56,6 +56,7 @@
                 <tr><td> <strong>Estado:</strong> <td>${prestamo.getSolicitud().getEstado()} </td></tr>
                 <tr><td> <strong>Sección que Presta:</strong> <td>${prestamo.getSeccion().getNombre_seccion()} </td></tr>
                 <tr><td> <strong>Usuario que aprobó el Préstamo:</strong></td> <td>${prestamo.getUsuario().getNombreCompleto()} </td></tr>
+                <tr><td> <strong>Observaciones:</strong></td> <td>${prestamo.getSolicitud().getObservaciones()} </td></tr>
               </table>
               <br>
             </div>

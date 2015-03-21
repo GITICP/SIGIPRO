@@ -1,4 +1,4 @@
-package com.icp.sigipro.bodegas.modelos;
+package com.icp.sigipro.activosfijos.modelos;
 
 import java.lang.reflect.Field;
 import java.sql.Date;
@@ -24,6 +24,8 @@ public class ActivoFijo {
   String estado;
   String nombre_seccion;
   String nombre_ubicacion;
+  String responsable;
+  String serie;
 
   public ActivoFijo() {
   }
@@ -181,5 +183,21 @@ public class ActivoFijo {
   
   public String getNombreFormato() {
     return this.getEquipo() + " (" + this.getPlaca() + ")";
+  }
+  
+  public void setResponsable(String responsable) {
+    this.responsable = responsable;
+  }
+
+  public void setSerie(String serie) {
+    this.serie = serie;
+  }
+
+  public String getResponsable() {
+    return responsable;
+  }
+
+  public String getSerie() {
+    return serie;
   }
 }

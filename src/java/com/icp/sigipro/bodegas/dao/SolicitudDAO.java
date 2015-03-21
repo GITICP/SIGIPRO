@@ -190,7 +190,7 @@ public class SolicitudDAO {
       if (id_usuario == 0) {
         consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC");
       } else {
-        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes s inner join seguridad.usuarios u on s.id_usuario = u.id_usuario Where id_seccion = ? AND estado != 'Pendiente Prestamo' ORDER BY s.id_solicitud DESC");
+        consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes s inner join seguridad.usuarios u on s.id_usuario = u.id_usuario Where u.id_seccion = ? AND s.estado != 'Pendiente Prestamo' ORDER BY s.id_solicitud DESC");
         consulta.setInt(1, id_usuario);
       }
 

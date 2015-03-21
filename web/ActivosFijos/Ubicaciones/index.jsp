@@ -15,7 +15,7 @@
     }
 %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Activos Fijos" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -26,9 +26,9 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Activos Fijos</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Ubicaciones?">Ubicaciones de Activos Fijos</a>
+              <a href="/SIGIPRO/ActivosFijos/Ubicaciones?">Ubicaciones de Activos Fijos</a>
             </li>
           </ul>
         </div>
@@ -54,7 +54,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Bodegas/Ubicaciones?accion=agregar">Agregar Ubicación</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ActivosFijos/Ubicaciones?accion=agregar">Agregar Ubicación</a>
                 </div>
               </c:if>
             </div>
@@ -73,7 +73,7 @@
 
                     <tr id ="${ubicacion.getId_ubicacion()}">
                       <td>
-                        <a href="/SIGIPRO/Bodegas/Ubicaciones?accion=ver&id_ubicacion=${ubicacion.getId_ubicacion()}">
+                        <a href="/SIGIPRO/ActivosFijos/Ubicaciones?accion=ver&id_ubicacion=${ubicacion.getId_ubicacion()}">
                           <div style="height:100%;width:100%">
                             ${ubicacion.getNombre()}
                           </div>

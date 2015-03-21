@@ -28,7 +28,8 @@
             <c:when test="${boolEditar}">
               <select id="seleccioninventario" class="select2" style='background-color: #fff;' name="seleccioninventario" required
                       oninvalid="setCustomValidity('Este campo es requerido')"
-                      oninput="setCustomValidity('')" disabled>
+                      onchange="setCustomValidity('')">
+                <option value=''></option>
                 <c:forEach items="${inventarios}" var="inventario">
                   <c:choose>
                     <c:when test="${inventario.getId_inventario() == prestamo.getSolicitud().getId_inventario()}">
@@ -44,7 +45,8 @@
             <c:otherwise>
               <select id="seleccioninventario" class="select2" style='background-color: #fff;' name="seleccioninventario" required
                       oninvalid="setCustomValidity('Este campo es requerido')"
-                      oninput="setCustomValidity('')">
+                      onchange="setCustomValidity('')">
+                <option value=''></option>
                 <c:forEach items="${inventarios}" var="inventario">
                   <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                 </c:forEach>
@@ -75,8 +77,15 @@
 
     <div class="form-group">
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="history.back()"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Préstamo</button>
+        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+        <c:choose>
+          <c:when test= "${accion.equals('Editar')}">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+          </c:when>
+          <c:otherwise>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Préstamo</button>
+          </c:otherwise>
+      </c:choose>
       </div>
     </div>
   </div>
