@@ -31,22 +31,32 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <select id="seleccionEspecie" class="select2" name="especie"
-                        style='background-color: #fff;' required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        onchange="setCustomValidity('')">
-                    <option value=''></option>
-                    <c:forEach items="${especies}" var="especie">
-                        <c:choose>
-                            <c:when test="${especie.getId_especie() == serpiente.getEspecie().getId_especie()}" >
-                                <option value=${especie.getId_especie()} selected> ${especie.getGenero_especie()}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value=${especie.getId_especie()}>${especie.getGenero_especie()}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                </select>
+                    <c:choose>
+                        <c:when test='${serpiente.getEspecie()==null}'>
+                            <select id="seleccionEspecie" class="select2" name="especie"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${especies}" var="especie">
+                                <c:choose>
+                                    <c:when test="${especie.getId_especie() == serpiente.getEspecie().getId_especie()}" >
+                                        <option value=${especie.getId_especie()} selected> ${especie.getGenero_especie()}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value=${especie.getId_especie()}>${especie.getGenero_especie()}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                            </select>
+                        </c:when>
+                        <c:otherwise>
+                            <select id="seleccionEspecie" class="select2" name="especie" disabled="true"
+                                style='background-color: #fff;' value="${serpiente.getEspecie().getId_especie()}">
+                                <option value='${serpiente.getEspecie().getId_especie()}' selected="true">${serpiente.getEspecie().getGenero_especie()}</option>
+                            </select>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
@@ -127,43 +137,50 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-                <select id="seleccionSexo" class="select2" name="sexo"
+                <select id="seleccionSexo" class="select2" name="sexo" 
                         style='background-color: #fff;' required
                         oninvalid="setCustomValidity('Por favor seleccione un sexo')"
                         onchange="setCustomValidity('')">
                     <option value=''></option>
-                    <option value="Macho">Macho</option>
-                    <option value="Hembra">Hembra</option>
-                    <option value="Indefinido">Indefinido</option>
+                    <c:forEach items="${sexos}" var="sexo">
+                        <c:choose>
+                          <c:when test="${sexo.equals(serpiente.getSexo())}" >
+                            <option value="${sexo}" selected> ${sexo}</option>
+                          </c:when>
+                          <c:otherwise>
+                            <option value="${sexo}">${sexo}</option>
+                          </c:otherwise>
+                        </c:choose>
+                      </c:forEach>
                 </select>
             </div>
         </div>
     </div>                 
-    <label for="talla_cabeza" class="control-label">*Longitud de la Cabeza a la Cloaca</label>
+    <label for="talla_cabeza" class="control-label">Longitud de la Cabeza a la Cloaca (Metros)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="talla_cabeza" placeholder="Número mayor a uno" type="number" min="1" class="form-control" name="talla_cabeza" value="${serpiente.getTalla_cabeza()}" required 
+          <input id="talla_cabeza" placeholder="Número mayor a uno" type="number" step="any" class="form-control" name="talla_cabeza" value="${serpiente.getTalla_cabeza()}" 
                   oninvalid="setCustomValidity('La Longitud de la serpiente debe ser mayor que uno. ')"
                   oninput="setCustomValidity('')"> 
         </div>
       </div>
     </div>
-    <label for="talla_cola" class="control-label">*Longitud de la Cola</label>
+    <label for="talla_cola" class="control-label">Longitud de la Cola (Metros)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="talla_cola" placeholder="Número mayor a uno" type="number" min="1" class="form-control" name="talla_cola" value="${serpiente.getTalla_cola()}" required 
+          <input id="talla_cola" placeholder="Número mayor a uno" type="number" step="any" class="form-control" name="talla_cola" value="${serpiente.getTalla_cola()}" 
                   oninvalid="setCustomValidity('La Longitud de la serpiente debe ser mayor que uno. ')"
                   oninput="setCustomValidity('')"> 
         </div>
       </div>
     </div>
-    <label for="peso" class="control-label">*Peso</label>
+    <label for="peso" class="control-label">Peso (Gramos)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="peso" placeholder="Número mayor a uno" type="number" min="1" class="form-control" name="peso" value="${serpiente.getPeso()}" required 
+          <input id="peso" placeholder="Número mayor a uno" type="number" step="any" class="form-control" name="peso" value="${serpiente.getPeso()}" 
                   oninvalid="setCustomValidity('El peso de la serpiente debe ser mayor que uno. ')"
                   oninput="setCustomValidity('')"> 
         </div>

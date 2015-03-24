@@ -40,9 +40,9 @@ public class SerpienteDAO {
             consulta.setString(4,s.getColectada());
             consulta.setString(5,s.getRecibida());
             consulta.setString(6,s.getSexo());
-            consulta.setInt(7, s.getTalla_cabeza());
-            consulta.setInt(8, s.getTalla_cola());
-            consulta.setInt(9, s.getPeso());
+            consulta.setFloat(7, s.getTalla_cabeza());
+            consulta.setFloat(8, s.getTalla_cola());
+            consulta.setFloat(9, s.getPeso());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -91,9 +91,9 @@ public class SerpienteDAO {
                   " WHERE id_serpiente=?; "
             );
             consulta.setString(1,s.getSexo());
-            consulta.setInt(2, s.getTalla_cabeza());
-            consulta.setInt(3, s.getTalla_cola());
-            consulta.setInt(4, s.getPeso());
+            consulta.setFloat(2, s.getTalla_cabeza());
+            consulta.setFloat(3, s.getTalla_cola());
+            consulta.setFloat(4, s.getPeso());
             consulta.setBlob(5,s.getImagen());
             consulta.setInt(6, s.getId_serpiente());
 
@@ -125,9 +125,9 @@ public class SerpienteDAO {
                 serpiente.setColectada(rs.getString("colectada"));
                 serpiente.setRecibida(rs.getString("recibida"));
                 serpiente.setSexo(rs.getString("sexo"));
-                serpiente.setTalla_cabeza(rs.getInt("talla_cabeza"));
-                serpiente.setTalla_cola(rs.getInt("talla_cola"));
-                serpiente.setPeso(rs.getInt("peso"));
+                serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
+                serpiente.setTalla_cola(rs.getFloat("talla_cola"));
+                serpiente.setPeso(rs.getFloat("peso"));
                 serpiente.setImagen(rs.getBlob("imagen"));
             }      
         }
@@ -152,9 +152,9 @@ public class SerpienteDAO {
                 serpiente.setColectada(rs.getString("colectada"));
                 serpiente.setRecibida(rs.getString("recibida"));
                 serpiente.setSexo(rs.getString("sexo"));
-                serpiente.setTalla_cabeza(rs.getInt("talla_cabeza"));
-                serpiente.setTalla_cola(rs.getInt("talla_cola"));
-                serpiente.setPeso(rs.getInt("peso"));
+                serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
+                serpiente.setTalla_cola(rs.getFloat("talla_cola"));
+                serpiente.setPeso(rs.getFloat("peso"));
                 serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
             }      

@@ -22,3 +22,11 @@ function previewFile(){
         alert('The File APIs are not fully supported in this browser.');
   }
 }
+
+$(document).on("click", ".open-Modal", function () {
+                            
+                            var observaciones = $(this).data('id');
+                            $("#observacionesModal").text(observaciones);
+
+                            
+                            });

@@ -21,9 +21,9 @@ CREATE TABLE serpentario.serpientes(
     colectada character varying (45) NOT NULL,
     recibida character varying (45) NOT NULL,
     sexo character varying(10) NOT NULL,
-    talla_cabeza integer,
-    talla_cola integer,
-    peso integer,
+    talla_cabeza float,
+    talla_cola float,
+    peso float,
     imagen bytea
 );
     

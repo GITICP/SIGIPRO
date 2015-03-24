@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.serpentario.modelos;
 
+import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.utilidades.HelpersHTML;
 import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.Date;
@@ -21,16 +23,16 @@ public class Serpiente {
     private String colectada;
     private String recibida;
     private String sexo;
-    private int talla_cabeza;
-    private int talla_cola;
-    private int peso;
+    private float talla_cabeza;
+    private float talla_cola;
+    private float peso;
     private Blob imagen;
     private Especie especie;
 
     public Serpiente() {
     }
 
-    public Serpiente(int id_serpiente, Date fecha_ingreso, String localidad_origen, String colectada, String recibida, String sexo, int talla_cabeza, int talla_cola, int peso, Blob imagen, Especie especie) {
+    public Serpiente(int id_serpiente, Date fecha_ingreso, String localidad_origen, String colectada, String recibida, String sexo, float talla_cabeza, float talla_cola, float peso, Blob imagen, Especie especie) {
         this.id_serpiente = id_serpiente;
         this.fecha_ingreso = fecha_ingreso;
         this.localidad_origen = localidad_origen;
@@ -44,7 +46,27 @@ public class Serpiente {
         this.especie = especie;
     }
 
-    public int getTalla_total(){
+    public int getDias_cautiverio(){
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        java.util.Date fecha_hoy = helper.getFecha_hoy_asDate();
+        Date date_ingreso = this.fecha_ingreso;
+        long diferencia = 0;
+        long dias = 0;
+        try{
+            SingletonBD parser = SingletonBD.getSingletonBD();
+            
+            Date date_hoy = new Date(fecha_hoy.getTime());
+                        
+            System.out.println("DATE "+date_hoy.getTime());
+            diferencia = date_hoy.getTime() - date_ingreso.getTime();
+            dias = diferencia / (1000 * 60 * 60 * 24);
+        }catch (Exception e){
+            System.out.println("Error "+ e);
+        }
+        return (int)dias;
+    }
+    
+    public float getTalla_total(){
         return this.talla_cabeza+this.talla_cola;
     }
     
@@ -96,27 +118,27 @@ public class Serpiente {
         this.sexo = sexo;
     }
 
-    public int getTalla_cabeza() {
+    public float getTalla_cabeza() {
         return talla_cabeza;
     }
 
-    public void setTalla_cabeza(int talla_cabeza) {
+    public void setTalla_cabeza(float talla_cabeza) {
         this.talla_cabeza = talla_cabeza;
     }
 
-    public int getTalla_cola() {
+    public float getTalla_cola() {
         return talla_cola;
     }
 
-    public void setTalla_cola(int talla_cola) {
+    public void setTalla_cola(float talla_cola) {
         this.talla_cola = talla_cola;
     }
 
-    public int getPeso() {
+    public float getPeso() {
         return peso;
     }
 
-    public void setPeso(int peso) {
+    public void setPeso(float peso) {
         this.peso = peso;
     }
 

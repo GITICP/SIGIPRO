@@ -79,6 +79,7 @@
                 <br>
             </div>
           </div>
+          
           <!-- END WIDGET TICKET TABLE -->
         </div>
         <!-- /main-content -->

@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -66,6 +68,14 @@ public class ControladorSerpiente extends SIGIPROServlet {
             
         }
     };
+    protected final List<String> sexo = new ArrayList<String>()
+    {
+        {
+            add("Macho");
+            add("Hembra");
+            add("Indefinido");
+        }
+    };
 
   // <editor-fold defaultstate="collapsed" desc="Métodos Get">
   
@@ -82,6 +92,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
         request.setAttribute("serpiente", s);
         request.setAttribute("especies",especies);
         request.setAttribute("accion", "Agregar");
+        request.setAttribute("sexos",sexo);
         redireccionar(request, response, redireccion);
     }
 
@@ -105,8 +116,14 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             request.setAttribute("serpiente", s);
             EventoDAO eventodao = new EventoDAO();
+            Evento coleccionviva = eventodao.validarPasoCV(id_serpiente);
             List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
             request.setAttribute("listaEventos",eventos);
+            if (coleccionviva.getId_evento() != 0){
+                request.setAttribute("coleccionViva",coleccionviva);
+            }else{
+                 request.setAttribute("coleccionViva",null);               
+            }
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -122,8 +139,12 @@ public class ControladorSerpiente extends SIGIPROServlet {
         String redireccion = "Serpiente/Editar.jsp";
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
         Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
+        EspecieDAO especiedao = new EspecieDAO();
+        List<Especie> especies = especiedao.obtenerEspecies();
+        request.setAttribute("especies",especies);
         request.setAttribute("serpiente", serpiente);
         request.setAttribute("accion", "Editar");
+        request.setAttribute("sexos",sexo);
         redireccionar(request, response, redireccion);
 
     }
@@ -248,6 +269,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
         Serpiente s = new Serpiente();
         
         EspecieDAO especiedao = new EspecieDAO();
+        System.out.println(request.getParameter("especie"));
         Especie especie = especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie")));
         s.setEspecie(especie);
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -264,9 +286,9 @@ public class ControladorSerpiente extends SIGIPROServlet {
         s.setColectada(request.getParameter("colectada"));
         s.setRecibida(request.getParameter("recibida"));
         s.setSexo(request.getParameter("sexo"));
-        s.setTalla_cabeza(Integer.parseInt(request.getParameter("talla_cabeza")));
-        s.setTalla_cola(Integer.parseInt(request.getParameter("talla_cola")));
-        s.setPeso(Integer.parseInt(request.getParameter("peso")));
+        s.setTalla_cabeza(Float.parseFloat(request.getParameter("talla_cabeza")));
+        s.setTalla_cola(Float.parseFloat(request.getParameter("talla_cola")));
+        s.setPeso(Float.parseFloat(request.getParameter("peso")));
         //No se si sirve   
         try{
             String imagen = request.getParameter("imagen");
@@ -284,16 +306,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
     private Evento setEvento(Serpiente serpiente,String evento,HttpServletRequest request){
         Evento e = new Evento();
         e.setEvento(evento);
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fecha_evento;
-        java.sql.Date fecha_eventoSQL;
-        try {
-          fecha_evento = formatoFecha.parse(new java.util.Date().toString());
-          fecha_eventoSQL = new java.sql.Date(fecha_evento.getTime());
-          e.setFecha_evento(fecha_eventoSQL);
-        } catch (ParseException ex) {
-            
-        }
+        java.sql.Date date = new java.sql.Date(new Date().getTime());
+        e.setFecha_evento(date);
         e.setSerpiente(serpiente);
         UsuarioDAO usuariodao = new UsuarioDAO();
         e.setUsuario(usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString()));
