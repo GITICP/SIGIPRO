@@ -12,38 +12,19 @@ import org.json.JSONObject;
  *
  * @author Walter
  */
-public class GrupoCaballos {
+public class EventoClinicoCaballo {
+    private EventoClinico id_evento;
+    private Caballo id_caballo;
 
-    private GrupoDeCaballos grupo_de_caballos;
-    private Caballo caballo;
-
-    public GrupoCaballos() {
+    public EventoClinicoCaballo() {
     }
 
-    public GrupoCaballos(GrupoDeCaballos grupo_de_caballos, Caballo caballo) {
-        this.grupo_de_caballos = grupo_de_caballos;
-        this.caballo = caballo;
+    public EventoClinicoCaballo(EventoClinico id_evento, Caballo id_caballo) {
+        this.id_evento = id_evento;
+        this.id_caballo = id_caballo;
     }
-
-    public GrupoDeCaballos getGrupo_de_caballos() {
-        return grupo_de_caballos;
-    }
-
-    public void setGrupo_de_caballos(GrupoDeCaballos grupo_de_caballos) {
-        this.grupo_de_caballos = grupo_de_caballos;
-    }
-
-    public Caballo getCaballo() {
-        return caballo;
-    }
-
-    public void setCaballo(Caballo caballo) {
-        this.caballo = caballo;
-    }
-
-
     
-        //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
+//Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
@@ -57,11 +38,29 @@ public class GrupoCaballos {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_grupo_caballo",this.grupo_de_caballos.getId_grupo_caballo());
-            JSON.put("id_caballo",this.caballo.getId_caballo());
+            JSON.put("id_evento",this.id_evento.getId_evento());
+            JSON.put("id_caballo",this.id_caballo.getId_caballo());
+
         }catch (Exception e){
             
         }
         return JSON.toString();
+    }    
+
+    public EventoClinico getId_evento() {
+        return id_evento;
     }
+
+    public void setId_evento(EventoClinico id_evento) {
+        this.id_evento = id_evento;
+    }
+
+    public Caballo getId_caballo() {
+        return id_caballo;
+    }
+
+    public void setId_caballo(Caballo id_caballo) {
+        this.id_caballo = id_caballo;
+    }
+    
 }

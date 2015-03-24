@@ -22,12 +22,13 @@ public class Caballo {
     private String color;
     private String otras_sennas;
     private Blob fotografia;
-    private boolean estado;    
+    private boolean estado;
+    private GrupoDeCaballos grupo_de_caballos;
 
     public Caballo() {
     }
 
-    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, Blob fotografia, boolean estado) {
+    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, Blob fotografia, boolean estado, GrupoDeCaballos grupo_de_caballos) {
         this.id_caballo = id_caballo;
         this.nombre = nombre;
         this.numero_microchip = numero_microchip;
@@ -38,7 +39,10 @@ public class Caballo {
         this.otras_sennas = otras_sennas;
         this.fotografia = fotografia;
         this.estado = estado;
+        this.grupo_de_caballos = grupo_de_caballos;
     }
+
+
     
     
       //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
@@ -54,7 +58,8 @@ public class Caballo {
                 }else{
                     JSON.put("id_objeto", field.get(this));
                 }
-            }          
+            }
+            JSON.put("id_grupo_caballo",this.grupo_de_caballos.getId_grupo_caballo());
         }catch (Exception e){
             
         }
@@ -139,6 +144,14 @@ public class Caballo {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public GrupoDeCaballos getGrupo_de_caballos() {
+        return grupo_de_caballos;
+    }
+
+    public void setGrupo_de_caballos(GrupoDeCaballos grupo_de_caballos) {
+        this.grupo_de_caballos = grupo_de_caballos;
     }
         
 }

@@ -19,15 +19,17 @@ public class EventoClinico {
     private Date fecha;
     private String descripcion;
     private Usuario responsable;
+    private TipoEvento id_tipo_evento;
 
     public EventoClinico() {
     }
 
-    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable) {
+    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable, TipoEvento id_tipo_evento) {
         this.id_evento = id_evento;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.responsable = responsable;
+        this.id_tipo_evento = id_tipo_evento;
     }
     
 
@@ -63,6 +65,15 @@ public class EventoClinico {
         this.responsable = responsable;
     }
 
+    public TipoEvento getId_tipo_evento() {
+        return id_tipo_evento;
+    }
+
+    public void setId_tipo_evento(TipoEvento id_tipo_evento) {
+        this.id_tipo_evento = id_tipo_evento;
+    }
+    
+
 //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
         Class _class = this.getClass();
@@ -78,6 +89,8 @@ public class EventoClinico {
                 }
             }
             JSON.put("id_usuario",this.responsable.getID());
+            JSON.put("id_tipo_evento",this.id_tipo_evento.getId_tipo_evento());
+
         }catch (Exception e){
             
         }
