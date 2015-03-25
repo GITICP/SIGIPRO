@@ -124,7 +124,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
   }
     @Override
     protected int getPermiso() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
