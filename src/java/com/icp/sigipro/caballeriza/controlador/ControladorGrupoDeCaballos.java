@@ -41,6 +41,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
             add("index");
             add("ver");
             add("agregar");
+            add("eliminar");
             add("editar");
         }
     };
