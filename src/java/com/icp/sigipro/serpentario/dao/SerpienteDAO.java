@@ -7,6 +7,7 @@ package com.icp.sigipro.serpentario.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,7 +39,7 @@ public class SerpienteDAO {
             consulta.setDate(2, s.getFecha_ingreso());
             consulta.setString(3, s.getLocalidad_origen());
             consulta.setString(4,s.getColectada());
-            consulta.setString(5,s.getRecibida());
+            consulta.setString(5,s.getRecibida().getNombre_usuario());
             consulta.setString(6,s.getSexo());
             consulta.setFloat(7, s.getTalla_cabeza());
             consulta.setFloat(8, s.getTalla_cola());
@@ -56,6 +57,25 @@ public class SerpienteDAO {
             ex.printStackTrace();
         }
         return resultado;
+    }
+    
+    public int obtenerProximoId(){
+        boolean resultado = false;
+        int nextval = 0;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT last_value FROM serpentario.serpientes_id_serpiente_seq;");
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()){
+                resultado=true;
+                int currval = resultadoConsulta.getInt("last_value");
+                nextval = currval + 1;
+            }
+            consulta.close();
+            conexion.close();
+        }catch (Exception e){
+            
+        }
+        return nextval;
     }
     
     public boolean eliminarSerpiente(int id_serpiente) throws SIGIPROException{
@@ -123,7 +143,9 @@ public class SerpienteDAO {
                 serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
                 serpiente.setColectada(rs.getString("colectada"));
-                serpiente.setRecibida(rs.getString("recibida"));
+                UsuarioDAO usuariodao = new UsuarioDAO();
+                
+                serpiente.setRecibida(usuariodao.obtenerUsuario(rs.getString("recibida")));
                 serpiente.setSexo(rs.getString("sexo"));
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));
@@ -150,7 +172,9 @@ public class SerpienteDAO {
                 serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
                 serpiente.setColectada(rs.getString("colectada"));
-                serpiente.setRecibida(rs.getString("recibida"));
+                UsuarioDAO usuariodao = new UsuarioDAO();
+                
+                serpiente.setRecibida(usuariodao.obtenerUsuario(rs.getString("recibida")));
                 serpiente.setSexo(rs.getString("sexo"));
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));

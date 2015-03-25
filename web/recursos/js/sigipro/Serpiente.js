@@ -30,3 +30,9 @@ $(document).on("click", ".open-Modal", function () {
 
                             
                             });
+                            
+$(document).on("click", ".evento-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente").val(id_serpiente);                          
+                            });
+                            

@@ -71,7 +71,7 @@
                                 onchange="setCustomValidity('')">
                         </c:when>
                         <c:otherwise>
-                            <input type="text" disabled='true' value="${serpiente.getFecha_ingreso()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                            <input type="text" disabled='true' value="${serpiente.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                 oninvalid="setCustomValidity('Este campo es requerido ')"
                                 onchange="setCustomValidity('')">
                         </c:otherwise>
@@ -114,23 +114,21 @@
             </div>
         </div>
     </div>
+    <c:choose>
+    <c:when test="${serpiente.getRecibida()==null}">
+    
+    </c:when>
+    <c:otherwise>
     <label for="recibida" class="control-label">*Recibida por</label>
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-                <c:choose>
-                    <c:when test="${serpiente.getRecibida()==null}">
-                        <input type="text" class="form-control" name="recibida"placeholder="Nombre de la persona" required
-                                oninvalid="setCustomValidity('Este campo es requerido ')"
-                                oninput="setCustomValidity('')"> 
-                    </c:when>
-                    <c:otherwise>
-                        <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getLocalidad_origen()}"> 
-                    </c:otherwise>
-                </c:choose>
+                        <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getLocalidad_origen()}">               
             </div>
         </div>
     </div>
+    </c:otherwise>
+    </c:choose>
 </div>
 <div class="col-md-6">
     <label for="sexo" class="control-label">*Sexo</label>

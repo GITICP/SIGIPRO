@@ -39,7 +39,7 @@ CREATE TABLE serpentario.eventos(
     id_usuario integer NOT NULL,
     fecha_evento date NOT NULL,
     evento character varying(45) NOT NULL,
-    observaciones character varying (100),
+    observaciones character varying (200),
     id_extraccion integer
 );
 

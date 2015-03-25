@@ -80,6 +80,28 @@ public class EventoDAO {
         
     }
     
+    public Evento validarDeceso(int id_serpiente) throws SIGIPROException{
+        boolean resultado = false;
+        Evento evento = new Evento();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Deceso' WHERE serpientes.id_serpiente=?");
+            
+            consulta.setInt(1,id_serpiente);
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            evento = new Evento();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
+            }
+            consulta.close();
+            conexion.close();
+            
+        }catch (Exception e){
+            
+        }
+        return evento;
+    }
+    
     public boolean insertarExtraccion(Evento e){
         boolean resultado = false;
         try{

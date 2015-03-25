@@ -73,7 +73,7 @@
                         </a>
                       </td>
                       <td>${serpiente.getEspecie().getGenero_especie()}</td>
-                      <td>${serpiente.getFecha_ingreso()}</td>
+                      <td>${serpiente.getFecha_ingresoAsString()}</td>
                       <td>${serpiente.getLocalidad_origen()}</td>
                       <td>${serpiente.getSexo()}</td>
                       <td>${serpiente.getTalla_cabeza()}</td>

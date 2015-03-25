@@ -8,6 +8,8 @@ package com.icp.sigipro.serpentario.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
 /**
@@ -63,6 +65,10 @@ public class Evento {
     public Date getFecha_evento() {
         return fecha_evento;
     }
+    
+    public String getFecha_eventoAsString() {
+        return formatearFecha(fecha_evento);
+    }
 
     public void setFecha_evento(Date fecha_evento) {
         this.fecha_evento = fecha_evento;
@@ -116,5 +122,11 @@ public class Evento {
             
         }
         return JSON.toString();
+    }
+    
+      private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
 }

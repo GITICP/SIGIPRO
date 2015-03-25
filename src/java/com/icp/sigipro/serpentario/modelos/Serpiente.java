@@ -6,10 +6,13 @@
 package com.icp.sigipro.serpentario.modelos;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
 /**
@@ -21,7 +24,7 @@ public class Serpiente {
     private Date fecha_ingreso;
     private String localidad_origen;
     private String colectada;
-    private String recibida;
+    private Usuario recibida;
     private String sexo;
     private float talla_cabeza;
     private float talla_cola;
@@ -32,7 +35,7 @@ public class Serpiente {
     public Serpiente() {
     }
 
-    public Serpiente(int id_serpiente, Date fecha_ingreso, String localidad_origen, String colectada, String recibida, String sexo, float talla_cabeza, float talla_cola, float peso, Blob imagen, Especie especie) {
+    public Serpiente(int id_serpiente, Date fecha_ingreso, String localidad_origen, String colectada, Usuario recibida, String sexo, float talla_cabeza, float talla_cola, float peso, Blob imagen, Especie especie) {
         this.id_serpiente = id_serpiente;
         this.fecha_ingreso = fecha_ingreso;
         this.localidad_origen = localidad_origen;
@@ -81,6 +84,10 @@ public class Serpiente {
     public Date getFecha_ingreso() {
         return fecha_ingreso;
     }
+    
+    public String getFecha_ingresoAsString() {
+        return formatearFecha(fecha_ingreso);
+    }
 
     public void setFecha_ingreso(Date fecha_ingreso) {
         this.fecha_ingreso = fecha_ingreso;
@@ -102,11 +109,11 @@ public class Serpiente {
         this.colectada = colectada;
     }
 
-    public String getRecibida() {
+    public Usuario getRecibida() {
         return recibida;
     }
 
-    public void setRecibida(String recibida) {
+    public void setRecibida(Usuario recibida) {
         this.recibida = recibida;
     }
 
@@ -177,6 +184,12 @@ public class Serpiente {
             
         }
         return JSON.toString();
+    }
+    
+      private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
     
 }
