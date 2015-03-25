@@ -8,6 +8,7 @@ package com.icp.sigipro.caballeriza.controlador;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.CaballoDAO;
+import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -35,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorCaballo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 43, 44, 45};
+    //private final int[] permisos = {1, 43, 44, 45};
     //-----------------
     private CaballoDAO dao = new CaballoDAO();
 
@@ -45,30 +46,47 @@ public class ControladorCaballo extends SIGIPROServlet {
             add("index");
             add("ver");
             add("agregar");
+            add("eliminar");            
             add("editar");
         }
     };
+     protected final List<String> sexo = new ArrayList<String>()
+    {
+        {
+            add("Macho");
+            add("Hembra");
+            add("Indefinido");
+        }
+    }; 
+     protected final List<String> estado = new ArrayList<String>()
+    {
+        {
+            add("Muerto");
+            add("Vivo");
+        }
+    };     
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
             add("editar");
-            add("evento");
 
         }
     };
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(43, listaPermisos);
+        //List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermiso(43, listaPermisos);
 
         String redireccion = "Caballo/Agregar.jsp";
         Caballo c = new Caballo();
-        //GrupoDeCaballoDAO grupodecaballodao = new GrupoDeCaballoDAO();
-        //List<GrupoDeCaballos> gruposdecaballos = grupodecaballodao.obtenerGruposDeCaballos();
+        GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
+        List<GrupoDeCaballos> listagrupos = grupodecaballosdao.obtenerGruposDeCaballos();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("caballo", c);
-        //request.setAttribute("gruposdecaballos",gruposdecaballos);
+        request.setAttribute("listagrupos",listagrupos);
         request.setAttribute("accion", "Agregar");
+        request.setAttribute("sexos",sexo);
+        request.setAttribute("estados",estado);
         redireccionar(request, response, redireccion);
     }
 
@@ -89,16 +107,16 @@ public class ControladorCaballo extends SIGIPROServlet {
             request.setAttribute("mensaje", helper.mensajeDeExito("Caballo agregado correctamente"));
             redireccion = "Caballo/index.jsp";
         }
-        //request.setAttribute("listaCaballos", dao.obtenerCaballos());
+        request.setAttribute("listaCaballos", dao.obtenerCaballos());
         redireccionar(request, response, redireccion);
     }
 
     private Caballo construirObjeto(HttpServletRequest request) {
         Caballo c = new Caballo();
         
-        //GrupoDeCaballoDAO grupodecaballodao = new GrupoDeCaballoDAO();
-        //GrupoDeCaballo grupodecaballo = grupodecaballodao.obtenerGrupoDeCaballo(Integer.parseInt(request.getParameter("grupodecaballo")));
-        //c.setGrupo_de_caballos(grupodecaballo);
+        GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
+        GrupoDeCaballos grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(Integer.parseInt(request.getParameter("grupodecaballo")));
+        c.setGrupo_de_caballos(grupodecaballo);
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha_ingreso;
         java.sql.Date fecha_ingresoSQL;
@@ -119,7 +137,7 @@ public class ControladorCaballo extends SIGIPROServlet {
         c.setSexo(request.getParameter("sexo"));
         c.setColor(request.getParameter("color"));
         c.setOtras_sennas(request.getParameter("otras_sennas"));
-        c.setEstado(Boolean.parseBoolean(request.getParameter("estado")));
+        c.setEstado(request.getParameter("estado"));
         //No se si sirve   
         try{
             String imagen = request.getParameter("fotografia");

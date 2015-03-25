@@ -4,15 +4,20 @@
  * and open the template in the editor.
  */
 package com.icp.sigipro.caballeriza.modelos;
+
 import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
+
 /**
  *
  * @author Walter
  */
 public class Caballo {
+
     private int id_caballo;
     private String nombre;
     private int numero_microchip;
@@ -22,13 +27,13 @@ public class Caballo {
     private String color;
     private String otras_sennas;
     private Blob fotografia;
-    private boolean estado;
+    private String estado;
     private GrupoDeCaballos grupo_de_caballos;
 
     public Caballo() {
     }
 
-    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, Blob fotografia, boolean estado, GrupoDeCaballos grupo_de_caballos) {
+    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, Blob fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
         this.id_caballo = id_caballo;
         this.nombre = nombre;
         this.numero_microchip = numero_microchip;
@@ -42,26 +47,23 @@ public class Caballo {
         this.grupo_de_caballos = grupo_de_caballos;
     }
 
-
-    
-    
-      //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
-    public String parseJSON(){
+    //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
-        try{
+        try {
             Field properties[] = _class.getDeclaredFields();
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
-                if (i != 0){
+                if (i != 0) {
                     JSON.put(field.getName(), field.get(this));
-                }else{
+                } else {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_grupo_caballo",this.grupo_de_caballos.getId_grupo_caballo());
-        }catch (Exception e){
-            
+            JSON.put("id_grupo_caballo", this.grupo_de_caballos.getId_grupo_caballo());
+        } catch (Exception e) {
+
         }
         return JSON.toString();
     }
@@ -98,8 +100,16 @@ public class Caballo {
         this.fecha_nacimiento = fecha_nacimiento;
     }
 
+    public String getFecha_nacimientoAsString() {
+        return formatearFecha(fecha_nacimiento);
+    }
+    
     public Date getFecha_ingreso() {
         return fecha_ingreso;
+    }
+
+    public String getFecha_ingresoAsString() {
+        return formatearFecha(fecha_ingreso);
     }
 
     public void setFecha_ingreso(Date fecha_ingreso) {
@@ -138,11 +148,11 @@ public class Caballo {
         this.fotografia = fotografia;
     }
 
-    public boolean isEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(boolean estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
@@ -153,5 +163,10 @@ public class Caballo {
     public void setGrupo_de_caballos(GrupoDeCaballos grupo_de_caballos) {
         this.grupo_de_caballos = grupo_de_caballos;
     }
-        
+
+    private String formatearFecha(Date fecha) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }
+
 }

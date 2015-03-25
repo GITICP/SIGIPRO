@@ -10,6 +10,8 @@ import com.icp.sigipro.caballeriza.modelos.Caballo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -37,7 +39,7 @@ public class CaballoDAO {
             consulta.setString(5,c.getSexo());
             consulta.setString(6,c.getColor());
             consulta.setString(7, c.getOtras_sennas());
-            consulta.setBoolean(8, c.isEstado());
+            consulta.setString(8, c.getEstado());
             consulta.setInt(9, c.getGrupo_de_caballos().getId_grupo_caballo());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
@@ -53,7 +55,33 @@ public class CaballoDAO {
         }
         return resultado;
     }
-    
+    public List<Caballo> obtenerCaballos(){
+        List<Caballo> resultado = new ArrayList<Caballo>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos ");
+            ResultSet rs = consulta.executeQuery();
+            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
+            while(rs.next()){
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(rs.getInt("id_caballo"));
+                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
+                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
+                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+                caballo.setSexo(rs.getString("sexo"));
+                caballo.setColor(rs.getString("color"));
+                caballo.setOtras_sennas(rs.getString("otras_sennas"));
+                caballo.setEstado(rs.getString("estado"));
+                caballo.setFotografia(rs.getBlob("fotografia"));
+                resultado.add(caballo);
+            }      
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }     
     private Connection getConexion(){
         try{     
             if ( conexion.isClosed() ){

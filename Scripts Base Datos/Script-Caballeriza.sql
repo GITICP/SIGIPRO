@@ -24,7 +24,7 @@ CREATE TABLE caballeriza.caballos (
     color character varying(45) NOT NULL,
     otras_sennas character varying(500),
     fotografia bytea,
-    estado boolean NOT NULL,
+    estado character varying(45) NOT NULL,
     id_grupo_de_caballo int
 );
 
