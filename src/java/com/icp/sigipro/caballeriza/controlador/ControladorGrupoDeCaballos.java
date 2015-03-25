@@ -1,13 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -27,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Walter
  */
-@WebServlet(name = "ControladorGrupoDeCaballos", urlPatterns = {"/ControladorGrupoDeCaballos"})
+@WebServlet(name = "ControladorGrupoDeCaballos", urlPatterns = {"/Caballeriza/GrupoDeCaballos"})
 public class ControladorGrupoDeCaballos extends SIGIPROServlet {
 
     //Falta implementar
@@ -41,7 +39,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
             add("index");
             add("ver");
             add("agregar");
-            add("eliminar");
+            add("eliminar");            
             add("editar");
         }
     };
@@ -72,6 +70,57 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         List<GrupoDeCaballos> grupos = dao.obtenerGruposDeCaballos();
         request.setAttribute("listaGrupos", grupos);
         redireccionar(request, response, redireccion);
+    }
+        protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        //List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermisos(permisos, listaPermisos);
+        String redireccion = "GrupoDeCaballos/Ver.jsp";
+        int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
+        try {
+            GrupoDeCaballos g = dao.obtenerGrupoDeCaballos(id_grupo_caballos);
+            request.setAttribute("grupodecaballos", g);
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        //List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermiso(42, listaPermisos);
+        String redireccion = "GrupoDeCaballos/Editar.jsp";
+        int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
+        GrupoDeCaballos grupodecaballos = dao.obtenerGrupoDeCaballos(id_grupo_caballos);
+        request.setAttribute("grupodecaballos", grupodecaballos);
+        request.setAttribute("accion", "Editar");
+        redireccionar(request, response, redireccion);
+
+    }
+    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+       // List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermiso(41, listaPermisos);
+        int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
+        try{
+            dao.eliminarGrupoDeCaballos(id_grupo_caballos);
+            String redireccion = "GrupoDeCaballos/index.jsp";
+            
+            //Funcion que genera la bitacora 
+            BitacoraDAO bitacora = new BitacoraDAO(); 
+            //bitacora.setBitacora(id_grupo_caballos,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_GRUPO_DE_CABALLO,request.getRemoteAddr()); 
+            //----------------------------
+            
+            List<GrupoDeCaballos> gruposdecaballos = dao.obtenerGruposDeCaballos();
+            request.setAttribute("listaGrupos", gruposdecaballos);
+            redireccionar(request, response, redireccion);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        
     }    
 
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -84,17 +133,35 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         resultado = dao.insertarGrupoDeCaballos(g);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
+        //bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO_DE_CABALLO, request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de Caballos agregado correctamente"));
             redireccion = "GrupoDeCaballos/index.jsp";
         }
-        //request.setAttribute("listaCaballos", dao.obtenerCaballos());
+        request.setAttribute("listaGrupos", dao.obtenerGruposDeCaballos());
         redireccionar(request, response, redireccion);
     }
-
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "GrupoDeCaballos/Editar.jsp";
+        GrupoDeCaballos g = construirObjeto(request);
+        g.setId_grupo_caballo(Integer.parseInt(request.getParameter("id_grupo_de_caballo")));
+        resultado = dao.editarGrupoDeCaballos(g);
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        //bitacora.setBitacora(g.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_GRUPO_DE_CABALLO,request.getRemoteAddr());
+        //*----------------------------*
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de Caballos editado correctamente"));
+        if (resultado){
+            redireccion = "GrupoDeCaballos/index.jsp";
+        }
+        request.setAttribute("listaGrupos", dao.obtenerGruposDeCaballos());
+        redireccionar(request, response, redireccion);
+    }
     private GrupoDeCaballos construirObjeto(HttpServletRequest request) {
         GrupoDeCaballos g = new GrupoDeCaballos();
         
@@ -124,7 +191,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
   }
     @Override
     protected int getPermiso() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
