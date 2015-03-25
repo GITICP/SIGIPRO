@@ -47,6 +47,8 @@ public class Bitacora {
     public static final String TABLA_ESPECIE = "SERPENTARIO.ESPECIES";
     public static final String TABLA_SERPIENTE = "SERPENTARIO.SERPIENTES";
     public static final String TABLA_EVENTO = "SERPENTARIO.EVENTOS";
+    public static final String TABLA_EXTRACCION = "SERPENTARIO.EXTRACCION";
+
     
     
     //Variables de Accion

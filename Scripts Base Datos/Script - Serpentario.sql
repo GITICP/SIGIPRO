@@ -57,7 +57,7 @@ CREATE TABLE serpentario.extraccion(
     id_especie integer NOT NULL,
     ingreso_CV boolean NOT NULL,
     fecha_extraccion date NOT NULL,
-    volumen_extraido integer,
+    volumen_extraido float,
     id_usuario_registro integer,
     fecha_registro date,
     id_lote integer

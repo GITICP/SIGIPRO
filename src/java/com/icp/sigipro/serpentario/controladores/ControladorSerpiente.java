@@ -41,9 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorSerpiente", urlPatterns = {"/Serpentario/Serpiente"})
 public class ControladorSerpiente extends SIGIPROServlet {
 
-    //Falta implementar
     private final int[] permisos = {1, 43, 44, 45};
-    //-----------------
     private SerpienteDAO dao = new SerpienteDAO();
 
     protected final Class clase = ControladorSerpiente.class;
@@ -99,8 +97,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
 
         String redireccion = "Serpiente/Agregar.jsp";
         Serpiente s = new Serpiente();
-        SerpienteDAO serpientedao = new SerpienteDAO();
-        s.setId_serpiente(serpientedao.obtenerProximoId());
+        s.setId_serpiente(dao.obtenerProximoId());
         EspecieDAO especiedao = new EspecieDAO();
         List<Especie> especies = especiedao.obtenerEspecies();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
@@ -276,13 +273,13 @@ public class ControladorSerpiente extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "Serpiente/Editar.jsp";
         Serpiente s = construirObjeto(request);
+        s.setId_serpiente(Integer.parseInt(request.getParameter("id_serpiente")));
         
         String usuarioString = request.getParameter("recibida");
         UsuarioDAO usuariodao = new UsuarioDAO();
         Usuario usuario = usuariodao.obtenerUsuario(usuarioString);
         s.setRecibida(usuario);
         
-        s.setId_serpiente(Integer.parseInt(request.getParameter("id_serpiente")));
         resultado = dao.editarSerpiente(s);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
@@ -302,9 +299,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "Serpiente/index.jsp";
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
-        SerpienteDAO serpientedao = new SerpienteDAO();
         
-        Serpiente serpiente = serpientedao.obtenerSerpiente(Integer.parseInt(request.getParameter("id_serpiente")));
+        Serpiente serpiente = dao.obtenerSerpiente(Integer.parseInt(request.getParameter("id_serpiente")));
 
         Evento evento = this.setEvento(serpiente, request);
         

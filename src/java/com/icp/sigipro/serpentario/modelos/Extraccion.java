@@ -8,6 +8,8 @@ package com.icp.sigipro.serpentario.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 import org.json.JSONObject;
 
@@ -21,7 +23,7 @@ public class Extraccion {
     private Especie especie;
     private boolean ingreso_cv;
     private Date fecha_extraccion;
-    private int volumen_extraido;
+    private float volumen_extraido;
     private Usuario usuario_registro;
     private Date fecha_registro;
     private Lote lote;
@@ -29,7 +31,7 @@ public class Extraccion {
     public Extraccion() {
     }
 
-    public Extraccion(int id_extraccion, String numero_extraccion, Especie especie, boolean ingreso_cv, Date fecha_extraccion, int volumen_extraido, Usuario usuario_registro, Date fecha_registro, Lote lote) {
+    public Extraccion(int id_extraccion, String numero_extraccion, Especie especie, boolean ingreso_cv, Date fecha_extraccion, float volumen_extraido, Usuario usuario_registro, Date fecha_registro, Lote lote) {
         this.id_extraccion = id_extraccion;
         this.numero_extraccion = numero_extraccion;
         this.especie = especie;
@@ -77,15 +79,23 @@ public class Extraccion {
         return fecha_extraccion;
     }
 
+    public String getFecha_extraccionAsString(){
+        return formatearFecha(fecha_extraccion);
+    }
+    
+    public String getFecha_registroAsString(){
+        return formatearFecha(fecha_registro);
+    }
+    
     public void setFecha_extraccion(Date fecha_extraccion) {
         this.fecha_extraccion = fecha_extraccion;
     }
 
-    public int getVolumen_extraido() {
+    public float getVolumen_extraido() {
         return volumen_extraido;
     }
 
-    public void setVolumen_extraido(int volumen_extraido) {
+    public void setVolumen_extraido(float volumen_extraido) {
         this.volumen_extraido = volumen_extraido;
     }
 
@@ -138,5 +148,11 @@ public class Extraccion {
             
         }
         return JSON.toString();
+    }
+    
+      private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
 }
