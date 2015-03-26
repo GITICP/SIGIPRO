@@ -60,7 +60,7 @@ public class CaballoDAO {
     
         try{
             //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
-            Caballo caballo = this.obtenerCaballo(c.getId_caballo());
+            //Caballo caballo = this.obtenerCaballo(c.getId_caballo());
             //------------------------------------------------------------
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE caballeriza.caballos " +
@@ -84,7 +84,94 @@ public class CaballoDAO {
         }
         return resultado;
         
-    }    
+    }
+    public boolean eliminarCaballoDeGrupos(int id_caballo){
+        boolean resultado = false;
+    
+        try{
+            //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
+            //Caballo caballo = this.obtenerCaballo(c.getId_caballo());
+            //------------------------------------------------------------
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE caballeriza.caballos " +
+                  " SET id_grupo_de_caballo=?," +
+                  " WHERE id_caballo=?; "
+            );
+            consulta.setInt(1,0);
+            consulta.setInt(2,id_caballo);
+
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+        
+    }        
+    public List<Caballo> obtenerCaballosGrupo(int id_grupo_de_caballo){
+        List<Caballo> resultado = new ArrayList<Caballo>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos where id_grupo_de_caballo = ?");
+            consulta.setInt(1, id_grupo_de_caballo);
+            ResultSet rs = consulta.executeQuery();
+            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
+            while(rs.next()){
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(rs.getInt("id_caballo"));
+                caballo.setNombre(rs.getString("nombre"));
+                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
+                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
+                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+                caballo.setSexo(rs.getString("sexo"));
+                caballo.setColor(rs.getString("color"));
+                caballo.setOtras_sennas(rs.getString("otras_sennas"));
+                caballo.setEstado(rs.getString("estado"));
+                caballo.setFotografia(rs.getBlob("fotografia"));
+                resultado.add(caballo);
+            }      
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    public List<Caballo> obtenerCaballosRestantes(){
+        List<Caballo> resultado = new ArrayList<Caballo>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos where id_grupo_de_caballo = ?");
+            consulta.setInt(1, 0);
+            ResultSet rs = consulta.executeQuery();
+            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
+            while(rs.next()){
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(rs.getInt("id_caballo"));
+                caballo.setNombre(rs.getString("nombre"));
+                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
+                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
+                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+                caballo.setSexo(rs.getString("sexo"));
+                caballo.setColor(rs.getString("color"));
+                caballo.setOtras_sennas(rs.getString("otras_sennas"));
+                caballo.setEstado(rs.getString("estado"));
+                caballo.setFotografia(rs.getBlob("fotografia"));
+                resultado.add(caballo);
+            }      
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }        
     public Caballo obtenerCaballo(int id_caballo){
         Caballo caballo = new Caballo();
         try{

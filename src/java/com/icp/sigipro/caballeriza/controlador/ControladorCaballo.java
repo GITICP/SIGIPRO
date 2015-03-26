@@ -174,7 +174,14 @@ public class ControladorCaballo extends SIGIPROServlet {
         Caballo c = new Caballo();
         
         GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
-        GrupoDeCaballos grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(Integer.parseInt(request.getParameter("grupodecaballo")));
+        String grupo=request.getParameter("grupodecaballo");
+        GrupoDeCaballos grupodecaballo;
+        if(grupo == ""){
+            grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(0);
+        }
+        else{
+            grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(Integer.parseInt(request.getParameter("grupodecaballo")));
+        }
         c.setGrupo_de_caballos(grupodecaballo);
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha_ingreso;

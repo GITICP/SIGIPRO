@@ -3,7 +3,9 @@ package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.caballeriza.dao.CaballoDAO;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
+import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -79,6 +81,9 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
         try {
             GrupoDeCaballos g = dao.obtenerGrupoDeCaballos(id_grupo_caballos);
+            CaballoDAO c = new CaballoDAO();
+            List<Caballo> caballos = c.obtenerCaballosGrupo(id_grupo_caballos);
+            request.setAttribute("caballos", caballos);
             request.setAttribute("grupodecaballos", g);
             redireccionar(request, response, redireccion);
         }
@@ -94,6 +99,11 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         String redireccion = "GrupoDeCaballos/Editar.jsp";
         int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
         GrupoDeCaballos grupodecaballos = dao.obtenerGrupoDeCaballos(id_grupo_caballos);
+        CaballoDAO c = new CaballoDAO();        
+        List<Caballo> caballos = c.obtenerCaballosGrupo(id_grupo_caballos);
+        List<Caballo> caballos_restantes = c.obtenerCaballosRestantes();
+        request.setAttribute("caballos", caballos);
+        request.setAttribute("caballos_restantes", caballos_restantes);        
         request.setAttribute("grupodecaballos", grupodecaballos);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);

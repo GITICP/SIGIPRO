@@ -46,13 +46,12 @@
                 </div>
             </div>
         </div>              
-        <label for="grupodecaballo" class="control-label">*Grupo del caballo</label>
+        <label for="grupodecaballo" class="control-label">Grupo del caballo</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
                     <select id="seleccionGrupoDeCaballo" class="select2" name="grupodecaballo"
-                            style='background-color: #fff;' required
-                            oninvalid="setCustomValidity('Por favor seleccione un grupo')"
+                            style='background-color: #fff;'
                             onchange="setCustomValidity('')">
                         <option value=''></option>
                         <c:forEach items="${listagrupos}" var="grupo">

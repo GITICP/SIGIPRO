@@ -6,3 +6,5 @@ INSERT INTO caballeriza.grupos_de_caballos(nombre)VALUES ('AC-1');
 INSERT INTO caballeriza.grupos_de_caballos(nombre)VALUES ('AF-1');
 INSERT INTO caballeriza.grupos_de_caballos(nombre)VALUES ('Caballos de cría');
 INSERT INTO caballeriza.grupos_de_caballos(nombre)VALUES ('De Trabajo');
+INSERT INTO caballeriza.grupos_de_caballos(id_grupo_de_caballo,nombre)VALUES (0,'No tiene grupo');
+INSERT INTO caballeriza.grupos_de_caballos(nombre)VALUES ('AH-1');
