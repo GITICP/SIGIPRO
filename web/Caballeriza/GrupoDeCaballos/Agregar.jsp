@@ -57,6 +57,38 @@
       </div>
       <!-- /main -->
     </div>
+      <t:modal idModal="modalAgregarCaballo" titulo="Asociar Caballo">
+
+      <jsp:attribute name="form">
+
+        <form name="form-Caballo-Grupo" id="form-Caballo-Grupo" class="form-horizontal">
+          <input type="text" name="grupodecaballos"  hidden="true">
+          <label for="idcaballo" class="control-label">Seleccione un caballo:</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group" id='inputGroupSeleccionCaballo'>
+                <select id="seleccioncaballo" class="select2" style='background-color: #fff;' name="idcaballo" required
+                        oninvalid="setCustomValidity('Este campo es requerido ')"
+                        onchange="setCustomValidity('')">
+                  <option value=''></option>
+                  <c:forEach items="${caballos_restantes}" var="pr">
+                    <option value=${pr.getId_caballo()}>${pr.getNombre()} (${pr.getNumero_microchip()})</option>
+                  </c:forEach>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarCaballo()"><i class="fa fa-check-circle"></i> Asociar Caballo</button>
+            </div>
+          </div>
+        </form>
+
+      </jsp:attribute>
+
+    </t:modal>              
 
   </jsp:attribute>
 
