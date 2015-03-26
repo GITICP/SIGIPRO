@@ -34,7 +34,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <c:choose>
-                        <c:when test="${caballo.getNumero_microchip()==null}">
+                        <c:when test="${caballo.getNumero_microchip()==null||caballo.getNumero_microchip()==0}">
                             <input type="number" placeholder="341341" class="form-control" name="numero_microchip" required
                                    oninvalid="setCustomValidity('Este campo es requerido ')"
                                    oninput="setCustomValidity('')"> 
