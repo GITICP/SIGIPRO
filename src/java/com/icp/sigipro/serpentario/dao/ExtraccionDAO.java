@@ -10,6 +10,7 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.modelos.Centrifugado;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
+import com.icp.sigipro.serpentario.modelos.Liofilizacion;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.serpentario.modelos.SerpientesExtraccion;
 import com.icp.sigipro.serpentario.modelos.UsuariosExtraccion;
@@ -60,6 +61,76 @@ public class ExtraccionDAO {
         return resultado;
     }
     
+    public boolean insertarCentrifugado(Centrifugado c){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.centrifugado (id_extraccion, volumen_recuperado,id_usuario,fecha_volumen_recuperado) " +
+                                                             " VALUES (?,?,?,?);");
+            consulta.setInt(1, c.getId_extraccion());
+            consulta.setFloat(2, c.getVolumen_recuperado());
+            consulta.setInt(3, c.getUsuario().getId_usuario());
+            consulta.setDate(4, c.getFecha_volumen_recuperado());
+            
+            if ( consulta.executeUpdate() == 1){
+                    resultado = true;
+                }
+                
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+        public boolean insertarLiofilizacionInicio(Liofilizacion l){
+            boolean resultado = false;
+            try{
+                PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.liofilizacion (id_extraccion, id_usuario_inicio,fecha_inicio) " +
+                                                                 " VALUES (?,?,?);");
+                consulta.setInt(1, l.getId_extraccion());
+                consulta.setInt(2, l.getUsuario_inicio().getId_usuario());
+                consulta.setDate(3, l.getFecha_inicio());
+
+                if ( consulta.executeUpdate() == 1){
+                    resultado = true;
+                }
+                
+                consulta.close();
+                conexion.close();
+            }
+            catch(Exception ex){
+                ex.printStackTrace();
+            }
+            return resultado;
+        }
+    
+        public boolean insertarLiofilizacionFin(Liofilizacion l){
+            boolean resultado = false;
+            try{
+                PreparedStatement consulta = getConexion().prepareStatement(" UPDATE serpentario.liofilizacion "
+                        + "SET peso_recuperado=?, id_usuario_fin=?, fecha_fin=?"
+                        + "WHERE id_extraccion=?");
+                consulta.setFloat(1, l.getPeso_recuperado());
+                consulta.setInt(2, l.getUsuario_fin().getId_usuario());
+                consulta.setDate(3, l.getFecha_fin());
+                consulta.setInt(4, l.getId_extraccion());
+                
+                System.out.println(consulta);
+                
+                if ( consulta.executeUpdate() == 1){
+                    resultado = true;
+                }
+                consulta.close();
+                conexion.close();
+            }
+            catch(Exception ex){
+                ex.printStackTrace();
+            }
+            return resultado;
+        }
+    
     public boolean editarExtraccion(Extraccion e){
         boolean resultado = false;
         try{
@@ -71,9 +142,8 @@ public class ExtraccionDAO {
             consulta.setInt(2,e.getUsuario_registro().getId_usuario());
             consulta.setDate(3,e.getFecha_registro());
             consulta.setInt(4,e.getId_extraccion());
-            
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            if ( resultadoConsulta.next() ){
+           
+            if ( consulta.executeUpdate() == 1){
                 resultado = true;
             }
             consulta.close();
@@ -236,24 +306,94 @@ public class ExtraccionDAO {
     }
     
     public void validarExtraccion(Extraccion e){
+        if (validarIsSerpiente(e)){
+            if (validarIsRegistro(e)){
+                if (validarIsCentrifugado(e)){
+                    if (validarIsLiofilizacionInicio(e)){
+                        if (validarIsLiofilizacionFin(e)){
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public boolean validarIsSerpiente(Extraccion e){
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes_extraccion WHERE id_extraccion=? ");
-            consulta.setInt(1, e.getId_extraccion());
-            ResultSet rs = consulta.executeQuery();
-            boolean resultado = false;
-            if(rs.next()){
-                resultado = true;
-            }     
-            if (resultado){
+            List<Serpiente> serpientes = this.obtenerSerpientesExtraccion(e.getId_extraccion());
+            if (!serpientes.isEmpty()){
                 e.setIsSerpiente(true);
+                return true;
             }else{
                 e.setIsSerpiente(false);
+                return false;
             }
-            consulta.close();
-            conexion.close();
         }
         catch(Exception ex){
             ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean validarIsRegistro(Extraccion e){
+            if (e.getVolumen_extraido() != 0.0){
+                e.setIsRegistro(true);
+                return true;
+            }else{
+                e.setIsRegistro(false);
+                return false;
+            }
+    }
+    
+    public boolean validarIsCentrifugado(Extraccion e){
+        try{
+            Centrifugado centrifugado = this.obtenerCentrifugado(e.getId_extraccion());
+            if (centrifugado.getVolumen_recuperado() !=0.0){
+                e.setIsCentrifugado(true);
+                return true;
+            }else{
+                e.setIsCentrifugado(false);
+                return false;
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean validarIsLiofilizacionInicio(Extraccion e){
+        try{
+            Liofilizacion liofilizacion = this.obtenerLiofilizacion(e.getId_extraccion());
+            if (liofilizacion.getFecha_inicio()!=null){
+                e.setIsLiofilizacionInicio(true);
+                return true;
+            }else{
+                e.setIsLiofilizacionInicio(false);
+                return false;
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean validarIsLiofilizacionFin(Extraccion e){
+        try{
+            Liofilizacion liofilizacion = this.obtenerLiofilizacion(e.getId_extraccion());
+            if (liofilizacion.getFecha_finAsString() !=""){
+                e.setIsLiofilizacionFin(true);
+                return true;
+            }else{
+                e.setIsLiofilizacionFin(false);
+                return false;
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            return false;
         }
     }
     
@@ -274,6 +414,7 @@ public class ExtraccionDAO {
                 extraccion.setVolumen_extraido(rs.getFloat("volumen_extraido"));
                 extraccion.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
+                validarExtraccion(extraccion);
             }      
             consulta.close();
             conexion.close();
@@ -284,7 +425,7 @@ public class ExtraccionDAO {
         return extraccion;
     }
     
-    public Extraccion obtenerCentrifugado(int id_extraccion){
+    public Centrifugado obtenerCentrifugado(int id_extraccion){
         Centrifugado centrifugado = new Centrifugado();
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.centrifugado WHERE id_extraccion=?; ");
@@ -303,26 +444,23 @@ public class ExtraccionDAO {
         catch(Exception ex){
             ex.printStackTrace();
         }
-        return extraccion;
+        return centrifugado;
     }
     
-    public Extraccion obtenerLiofilizacion(int id_extraccion){
-        Extraccion extraccion = new Extraccion();
+    public Liofilizacion obtenerLiofilizacion(int id_extraccion){
+        Liofilizacion liofilizacion = new Liofilizacion();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.extraccion WHERE id_extraccion=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.liofilizacion WHERE id_extraccion=?; ");
             consulta.setInt(1, id_extraccion);
             ResultSet rs = consulta.executeQuery();
-            EspecieDAO especiedao = new EspecieDAO();
             UsuarioDAO usuariodao = new UsuarioDAO();
             while(rs.next()){
-                extraccion.setId_extraccion(rs.getInt("id_extraccion"));
-                extraccion.setFecha_extraccion(rs.getDate("fecha_extraccion"));
-                extraccion.setFecha_registro(rs.getDate("fecha_registro"));
-                extraccion.setIngreso_cv(rs.getBoolean("ingreso_cv"));
-                extraccion.setNumero_extraccion(rs.getString("numero_extraccion"));
-                extraccion.setVolumen_extraido(rs.getFloat("volumen_extraido"));
-                extraccion.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
-                extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
+                liofilizacion.setId_extraccion(rs.getInt("id_extraccion"));
+                liofilizacion.setFecha_inicio(rs.getDate("fecha_inicio"));
+                liofilizacion.setFecha_fin(rs.getDate("fecha_fin"));
+                liofilizacion.setPeso_recuperado(rs.getFloat("peso_recuperado"));
+                liofilizacion.setUsuario_inicio(usuariodao.obtenerUsuario(rs.getInt("id_usuario_inicio")));
+                liofilizacion.setUsuario_fin(usuariodao.obtenerUsuario(rs.getInt("id_usuario_fin")));
             }      
             consulta.close();
             conexion.close();
@@ -330,7 +468,7 @@ public class ExtraccionDAO {
         catch(Exception ex){
             ex.printStackTrace();
         }
-        return extraccion;
+        return liofilizacion;
     }
     
     private Connection getConexion(){

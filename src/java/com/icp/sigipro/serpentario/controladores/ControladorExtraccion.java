@@ -13,8 +13,10 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
 import com.icp.sigipro.serpentario.dao.ExtraccionDAO;
 import com.icp.sigipro.serpentario.dao.SerpienteDAO;
+import com.icp.sigipro.serpentario.modelos.Centrifugado;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
+import com.icp.sigipro.serpentario.modelos.Liofilizacion;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.serpentario.modelos.SerpientesExtraccion;
 import com.icp.sigipro.serpentario.modelos.UsuariosExtraccion;
@@ -30,7 +32,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -40,7 +41,7 @@ import org.postgresql.util.PSQLException;
 public class ControladorExtraccion extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1};
+    private final int[] permisos = {1,320,321};
     //-----------------
     private ExtraccionDAO dao = new ExtraccionDAO();
     private BitacoraDAO bitacora = new BitacoraDAO();
@@ -64,8 +65,8 @@ public class ControladorExtraccion extends SIGIPROServlet {
             add("agregar");
             add("registrar");
             add("centrifugado");
-            add("inicioliofilizacion");
-            add("finliofilizacion");
+            add("liofilizacioninicio");
+            add("liofilizacionfin");
             add("editarserpientes");
             
         }
@@ -79,6 +80,13 @@ public class ControladorExtraccion extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Extraccion/index.jsp";
         List<Extraccion> extracciones = dao.obtenerExtracciones();
+        
+        for (Extraccion e : extracciones){
+            System.out.println(e.getNumero_extraccion());
+            System.out.println(e.isIsSerpiente());
+            System.out.println(e.isIsRegistro());
+            System.out.println(e.isIsCentrifugado());
+        }
         request.setAttribute("listaExtracciones", extracciones);
         redireccionar(request, response, redireccion);
     }
@@ -93,9 +101,15 @@ public class ControladorExtraccion extends SIGIPROServlet {
             Extraccion e = dao.obtenerExtraccion(id_extraccion);
             List<Serpiente> serpientesextraccion = dao.obtenerSerpientesExtraccion(id_extraccion);
             List<Usuario> usuariosextraccion = dao.obtenerUsuariosExtraccion(id_extraccion);
+            Centrifugado centrifugado = dao.obtenerCentrifugado(id_extraccion);
+            Liofilizacion liofilizacion = dao.obtenerLiofilizacion(id_extraccion);
             request.setAttribute("extraccion", e);
             request.setAttribute("listaSerpientes", serpientesextraccion);
             request.setAttribute("listaUsuarios", usuariosextraccion);
+            request.setAttribute("ejemplares",serpientesextraccion.size());
+            request.setAttribute("centrifugado", centrifugado);
+            System.out.println(centrifugado);
+            request.setAttribute("liofilizacion", liofilizacion);
 
             redireccionar(request, response, redireccion);
         }
@@ -108,7 +122,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(43, listaPermisos);
+        validarPermiso(320, listaPermisos);
 
         String redireccion = "Extraccion/Agregar.jsp";
         Extraccion e = new Extraccion();
@@ -129,7 +143,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
     protected void getEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(43, listaPermisos);
+        validarPermiso(320, listaPermisos);
         
         String redireccion = "Extraccion/EditarSerpientes.jsp";
         
@@ -149,7 +163,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
     protected void getEditarserpientes(HttpServletRequest request, HttpServletResponse response,int id_extraccion) throws ServletException, IOException{
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(43, listaPermisos);
+        validarPermiso(320, listaPermisos);
         
         String redireccion = "Extraccion/EditarSerpientes.jsp";
         
@@ -170,7 +184,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     
-    protected void postEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+  protected void postEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         boolean resultado = false;
         String redireccion = "Extraccion/EditarSerpientes.jsp";
         
@@ -265,6 +279,100 @@ public class ControladorExtraccion extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
     
+  protected void postCentrifugado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Extraccion/index.jsp";
+        
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+
+        Centrifugado c = new Centrifugado();
+        
+        c.setId_extraccion(id_extraccion);
+        java.sql.Date fecha_registro = new java.sql.Date(new Date().getTime());
+        c.setFecha_volumen_recuperado(fecha_registro);
+        
+        c.setVolumen_recuperado(Float.parseFloat(request.getParameter("volumen_recuperado")));
+        
+        Usuario usuario_registro = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+        c.setUsuario(usuario_registro);
+        
+        resultado = dao.insertarCentrifugado(c);
+        
+        //Funcion que genera la bitacora
+        bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CENTRIFUGADO,request.getRemoteAddr());
+        //*----------------------------*
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Centrifugado registrado correctamente"));
+            redireccion = "Extraccion/index.jsp";
+        }
+        request.setAttribute("listaExtracciones", dao.obtenerExtracciones());
+        redireccionar(request, response, redireccion);
+    }
+  
+    protected void postLiofilizacioninicio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Extraccion/index.jsp";
+        
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+
+        Liofilizacion l = new Liofilizacion();
+        
+        l.setId_extraccion(id_extraccion);
+        java.sql.Date fecha_registro = new java.sql.Date(new Date().getTime());
+        
+        l.setFecha_inicio(fecha_registro);
+        
+        Usuario usuario_registro = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+        l.setUsuario_inicio(usuario_registro);
+        
+        resultado = dao.insertarLiofilizacionInicio(l);
+        
+        //Funcion que genera la bitacora
+        bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
+        //*----------------------------*
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Liofilización registrado correctamente"));
+            redireccion = "Extraccion/index.jsp";
+        }
+        request.setAttribute("listaExtracciones", dao.obtenerExtracciones());
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void postLiofilizacionfin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Extraccion/index.jsp";
+        
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+
+        Liofilizacion l = dao.obtenerLiofilizacion(id_extraccion);
+       
+        java.sql.Date fecha_registro = new java.sql.Date(new Date().getTime());
+        l.setFecha_fin(fecha_registro);
+        
+        l.setPeso_recuperado(Float.parseFloat(request.getParameter("peso_recuperado")));
+        
+        Usuario usuario_registro = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+        l.setUsuario_fin(usuario_registro);
+        
+        resultado = dao.insertarLiofilizacionFin(l);
+        
+        //Funcion que genera la bitacora
+        bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
+        //*----------------------------*
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Liofilización finalizada correctamente"));
+            redireccion = "Extraccion/index.jsp";
+        }
+        request.setAttribute("listaExtracciones", dao.obtenerExtracciones());
+        redireccionar(request, response, redireccion);
+    }
+    
     
   // </editor-fold>
     
@@ -285,8 +393,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         e.setNumero_extraccion(request.getParameter("numero_extraccion"));
         
-        String ingreso_cv = request.getParameter("ingreso_cv");
-        if (ingreso_cv.equals("Coleccion Viva")){
+        if (request.getParameter("ingreso_cv") == "ingreso_cv"){
             e.setIngreso_cv(true);
         }else{
             e.setIngreso_cv(false);

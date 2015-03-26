@@ -61,7 +61,7 @@
     <div class="form-group opciones">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="checkbox" name="ingreso_cv" checked="true" value="true" ${checkedCV}><span>  Serpientes de Colección Viva.</span>
+                                <input type="checkbox" name="ingreso_cv" checked="true" value="ingreso_cv"><span>  Serpientes de Colección Viva.</span>
                             </div>
                         </div>
                     </div>

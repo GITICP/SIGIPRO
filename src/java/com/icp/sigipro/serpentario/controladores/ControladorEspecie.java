@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorEspecie extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 40, 41, 42};
+    private final int[] permisos = {1, 300, 301, 302};
     //-----------------
     private EspecieDAO dao = new EspecieDAO();
 
@@ -60,7 +60,7 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(40, listaPermisos);
+        validarPermiso(300, listaPermisos);
 
         String redireccion = "Especie/Agregar.jsp";
         Especie e = new Especie();
@@ -99,7 +99,7 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(42, listaPermisos);
+        validarPermiso(302, listaPermisos);
         String redireccion = "Especie/Editar.jsp";
         int id_especie = Integer.parseInt(request.getParameter("id_especie"));
         Especie especie = dao.obtenerEspecie(id_especie);
@@ -112,7 +112,7 @@ public class ControladorEspecie extends SIGIPROServlet {
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(41, listaPermisos);
+        validarPermiso(301, listaPermisos);
         int id_especie = Integer.parseInt(request.getParameter("id_especie"));
         try{
             dao.eliminarEspecie(id_especie);

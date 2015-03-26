@@ -8,6 +8,8 @@ package com.icp.sigipro.serpentario.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
 /**
@@ -18,7 +20,7 @@ public class Liofilizacion {
     private int id_extraccion;
     private Usuario usuario_inicio;
     private Date fecha_inicio;
-    private int peso_recuperado;
+    private float peso_recuperado;
     private Usuario usuario_fin;
     private Date fecha_fin;
     
@@ -27,7 +29,7 @@ public class Liofilizacion {
     public Liofilizacion() {
     }
 
-    public Liofilizacion(int id_extraccion, Usuario usuario_inicio, Date fecha_inicio, int peso_recuperado, Usuario usuario_fin, Date fecha_fin, Extraccion extraccion) {
+    public Liofilizacion(int id_extraccion, Usuario usuario_inicio, Date fecha_inicio, float peso_recuperado, Usuario usuario_fin, Date fecha_fin, Extraccion extraccion) {
         this.id_extraccion = id_extraccion;
         this.usuario_inicio = usuario_inicio;
         this.fecha_inicio = fecha_inicio;
@@ -61,11 +63,11 @@ public class Liofilizacion {
         this.fecha_inicio = fecha_inicio;
     }
 
-    public int getPeso_recuperado() {
+    public float getPeso_recuperado() {
         return peso_recuperado;
     }
 
-    public void setPeso_recuperado(int peso_recuperado) {
+    public void setPeso_recuperado(float peso_recuperado) {
         this.peso_recuperado = peso_recuperado;
     }
 
@@ -83,6 +85,14 @@ public class Liofilizacion {
 
     public void setFecha_fin(Date fecha_fin) {
         this.fecha_fin = fecha_fin;
+    }
+    
+    public String getFecha_finAsString(){
+        return formatearFecha(fecha_fin);
+    }
+    
+    public String getFecha_inicioAsString(){
+        return formatearFecha(fecha_inicio);
     }
 
     public Extraccion getExtraccion() {
@@ -117,5 +127,10 @@ public class Liofilizacion {
             
         }
         return JSON.toString();
+    }
+      private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
 }

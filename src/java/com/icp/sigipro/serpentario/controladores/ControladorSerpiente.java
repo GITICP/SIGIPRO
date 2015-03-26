@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorSerpiente", urlPatterns = {"/Serpentario/Serpiente"})
 public class ControladorSerpiente extends SIGIPROServlet {
 
-    private final int[] permisos = {1, 43, 44, 45};
+    private final int[] permisos = {1, 310, 311, 312};
     private SerpienteDAO dao = new SerpienteDAO();
 
     protected final Class clase = ControladorSerpiente.class;
@@ -93,7 +93,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(43, listaPermisos);
+        validarPermiso(310, listaPermisos);
 
         String redireccion = "Serpiente/Agregar.jsp";
         Serpiente s = new Serpiente();
@@ -154,7 +154,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(44, listaPermisos);
+        validarPermiso(311, listaPermisos);
         String redireccion = "Serpiente/Editar.jsp";
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
         Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
@@ -180,7 +180,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
         }
         if (pasoCV.getId_evento() == 0){
             List<Integer> listaPermisos = getPermisosUsuario(request);
-            validarPermiso(45, listaPermisos);
+            validarPermiso(312, listaPermisos);
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             Evento e = this.setEvento(s, "Pase a Coleccion Viva", request);
             //----Agregar el Evento al Sistema
@@ -216,7 +216,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
         }
         if (deceso.getId_evento() == 0){      
             List<Integer> listaPermisos = getPermisosUsuario(request);
-            validarPermiso(45, listaPermisos);
+            validarPermiso(312, listaPermisos);
             String redireccion = "Serpiente/index.jsp";
             Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
             Evento e = this.setEvento(serpiente, "Deceso", request);

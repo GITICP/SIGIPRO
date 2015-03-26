@@ -32,7 +32,7 @@ public class Extraccion {
     private boolean isRegistro;
     private boolean isCentrifugado;
     private boolean isLiofilizacionInicio;
-    private boolean isLiofilizacionFinal;
+    private boolean isLiofilizacionFin;
 
     public Extraccion() {
     }
@@ -81,12 +81,12 @@ public class Extraccion {
         this.isLiofilizacionInicio = isLiofilizacionInicio;
     }
 
-    public boolean isIsLiofilizacionFinal() {
-        return isLiofilizacionFinal;
+    public boolean isIsLiofilizacionFin() {
+        return isLiofilizacionFin;
     }
 
-    public void setIsLiofilizacionFinal(boolean isLiofilizacionFinal) {
-        this.isLiofilizacionFinal = isLiofilizacionFinal;
+    public void setIsLiofilizacionFin(boolean isLiofilizacionFinal) {
+        this.isLiofilizacionFin = isLiofilizacionFinal;
     }
     
     public int getId_extraccion() {

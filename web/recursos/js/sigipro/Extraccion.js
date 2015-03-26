@@ -79,7 +79,31 @@ $(document).on("click", ".registrar-Modal", function () {
                             var numero_extraccion = $(this).data('id');
                             console.log(numero_extraccion);
                             var arr = numero_extraccion.split("/-/");
-                            $('#numero_extraccion').text("Extraccion - "+arr[1]);
-                            $("#id_extraccion").val(arr[0]); 
+                            $('#class-registrar #numero_extraccion').text("Extraccion - "+arr[1]);
+                            $("#class-registrar #id_extraccion").val(arr[0]); 
+                            });
+                            
+                            
+
+$(document).on("click", ".centrifugado-Modal", function () {                            
+                            var numero_extraccion = $(this).data('id');
+                            console.log(numero_extraccion);
+                            var arr = numero_extraccion.split("/-/");
+                            $('#class-centrifugado #numero_extraccion').text("Extraccion - "+arr[1]);
+                            $("#class-centrifugado #id_extraccion").val(arr[0]); 
+                            });
+                            
+$(document).on("click", ".liofilizacion-inicio-Modal", function () {                            
+                            var numero_extraccion = $(this).data('id');
+                            var arr = numero_extraccion.split("/-/");
+                            $('#class-liofilizacion-inicio #numero_extraccion').text("Extraccion - "+arr[1]);
+                            $("#class-liofilizacion-inicio #id_extraccion").val(arr[0]); 
+                            });
+                            
+$(document).on("click", ".liofilizacion-fin-Modal", function () {                            
+                            var numero_extraccion = $(this).data('id');
+                            var arr = numero_extraccion.split("/-/");
+                            $('#class-liofilizacion-fin #numero_extraccion').text("Extraccion - "+arr[1]);
+                            $("#class-liofilizacion-fin #id_extraccion").val(arr[0]); 
                             });
                             
