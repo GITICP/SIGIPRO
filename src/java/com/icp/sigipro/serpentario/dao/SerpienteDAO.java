@@ -103,20 +103,20 @@ public class SerpienteDAO {
     
         try{
             //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
-            Serpiente serpiente = this.obtenerSerpiente(s.getId_serpiente());
             //------------------------------------------------------------
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE serpentario.serpientes " +
-                  " SET sexo=?, talla_cabeza=?, talla_cola=?,peso=?,imagen=? " +
+                  " SET sexo=?, talla_cabeza=?, talla_cola=?,peso=?" +
                   " WHERE id_serpiente=?; "
             );
             consulta.setString(1,s.getSexo());
             consulta.setFloat(2, s.getTalla_cabeza());
             consulta.setFloat(3, s.getTalla_cola());
             consulta.setFloat(4, s.getPeso());
-            consulta.setBlob(5,s.getImagen());
-            consulta.setInt(6, s.getId_serpiente());
+            //consulta.setBlob(5,s.getImagen());
+            consulta.setInt(5, s.getId_serpiente());
 
+            System.out.println(consulta);
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
             }
@@ -163,6 +163,39 @@ public class SerpienteDAO {
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes ");
+            ResultSet rs = consulta.executeQuery();
+            EspecieDAO dao = new EspecieDAO();
+            while(rs.next()){
+                Serpiente serpiente = new Serpiente();
+                serpiente.setId_serpiente(rs.getInt("id_serpiente"));
+                serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
+                serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+                serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
+                serpiente.setColectada(rs.getString("colectada"));
+                UsuarioDAO usuariodao = new UsuarioDAO();
+                
+                serpiente.setRecibida(usuariodao.obtenerUsuario(rs.getString("recibida")));
+                serpiente.setSexo(rs.getString("sexo"));
+                serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
+                serpiente.setTalla_cola(rs.getFloat("talla_cola"));
+                serpiente.setPeso(rs.getFloat("peso"));
+                serpiente.setImagen(rs.getBlob("imagen"));
+                resultado.add(serpiente);
+            }      
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public List<Serpiente> obtenerSerpientes(int id_especie){
+        List<Serpiente> resultado = new ArrayList<Serpiente>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=?");
+            consulta.setInt(1, id_especie);
             ResultSet rs = consulta.executeQuery();
             EspecieDAO dao = new EspecieDAO();
             while(rs.next()){

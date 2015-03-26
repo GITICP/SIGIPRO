@@ -123,7 +123,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-                        <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getLocalidad_origen()}">               
+                        <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getRecibida()}">               
             </div>
         </div>
     </div>

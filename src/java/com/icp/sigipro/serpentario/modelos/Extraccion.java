@@ -27,6 +27,12 @@ public class Extraccion {
     private Usuario usuario_registro;
     private Date fecha_registro;
     private Lote lote;
+    
+    private boolean isSerpiente;
+    private boolean isRegistro;
+    private boolean isCentrifugado;
+    private boolean isLiofilizacionInicio;
+    private boolean isLiofilizacionFinal;
 
     public Extraccion() {
     }
@@ -43,6 +49,46 @@ public class Extraccion {
         this.lote = lote;
     }
 
+        public boolean isIsSerpiente() {
+        return isSerpiente;
+    }
+
+    public void setIsSerpiente(boolean isSerpiente) {
+        this.isSerpiente = isSerpiente;
+    }
+
+    public boolean isIsRegistro() {
+        return isRegistro;
+    }
+
+    public void setIsRegistro(boolean isRegistro) {
+        this.isRegistro = isRegistro;
+    }
+
+    public boolean isIsCentrifugado() {
+        return isCentrifugado;
+    }
+
+    public void setIsCentrifugado(boolean isCentrifugado) {
+        this.isCentrifugado = isCentrifugado;
+    }
+
+    public boolean isIsLiofilizacionInicio() {
+        return isLiofilizacionInicio;
+    }
+
+    public void setIsLiofilizacionInicio(boolean isLiofilizacionInicio) {
+        this.isLiofilizacionInicio = isLiofilizacionInicio;
+    }
+
+    public boolean isIsLiofilizacionFinal() {
+        return isLiofilizacionFinal;
+    }
+
+    public void setIsLiofilizacionFinal(boolean isLiofilizacionFinal) {
+        this.isLiofilizacionFinal = isLiofilizacionFinal;
+    }
+    
     public int getId_extraccion() {
         return id_extraccion;
     }

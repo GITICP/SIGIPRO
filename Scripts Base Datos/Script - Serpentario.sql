@@ -53,7 +53,7 @@ ALTER TABLE ONLY serpentario.eventos ADD CONSTRAINT fk_id_usuario FOREIGN KEY (i
 
 CREATE TABLE serpentario.extraccion(
     id_extraccion serial NOT NULL,
-    numero_extraccion character varying(45) NOT NULL,
+    numero_extraccion character varying(45) NOT NULL UNIQUE,
     id_especie integer NOT NULL,
     ingreso_CV boolean NOT NULL,
     fecha_extraccion date NOT NULL,

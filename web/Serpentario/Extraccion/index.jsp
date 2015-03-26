@@ -58,6 +58,7 @@
                     <th>Volumen Extraído (mL)</th>
                     <th>Usuario de Registro</th>
                     <th>Fecha de Registro</th>
+                    <th>Acción</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -74,9 +75,27 @@
                       <td>${extraccion.getEspecie().getGenero_especie()}</td>
                       <td>${extraccion.isIngreso_cv()}</td>
                       <td>${extraccion.getFecha_extraccionAsString()}</td>
-                      <td>${extraccion.getVolumen_extraido()}</td>
-                      <td>${extraccion.getUsuario().getNombre_usuario()}</td>
-                      <td>${extraccion.getFecha_registroAsString()}</td>
+                      <c:choose>
+                          <c:when test="${extraccion.getVolumen_extraido() == 0}">
+                             <td></td>
+                            <td></td>
+                            <td></td> 
+                          </c:when>
+                          <c:otherwise>
+                              <td>${extraccion.getVolumen_extraido()}</td>
+                            <td>${extraccion.getUsuario_registro().getNombre_usuario()}</td>
+                            <td>${extraccion.getFecha_registroAsString()}</td>
+                          </c:otherwise>
+                      </c:choose>
+                      <td>
+                          <c:choose>
+                              <c:when test="${!extraccion.isIsSerpiente()}">
+                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Extraccion?accion=editarserpientes&id_extraccion=${extraccion.getId_extraccion()}">Agregar Serpientes</a></td>
+                              </c:when>
+                              <c:otherwise>
+                                    <a class="btn btn-info btn-sm boton-accion registrar-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarExtraccion">Registrar Extracción</a>
+                              </c:otherwise>
+                          </c:choose>
                     </tr>
 
                   </c:forEach>
@@ -94,3 +113,34 @@
 
   </t:plantilla_general>
 
+<t:modal idModal="modalRegistrarExtraccion" titulo="Registrar Extraccion">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="registrarExtraccion" autocomplete="off" method="post" action="Extraccion">
+                <input hidden="true" name="accion" value="Registrar">
+                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
+                <strong><div id="numero_extraccion" class="control-label"></div></strong>
+                <label for="observaciones" class="control-label">*Volumen Extraído (mL)</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <input name="volumen_extraido" id="volumen_extraido" type="number" step="any" placeholder="Número de mL extraídos" class="form-control" value="" required
+                             oninput="setCustomValidity(\'\')" 
+                             oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                    </div>
+                  </div>
+                </div>
+            
+        
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Extracción</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
