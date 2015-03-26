@@ -8,6 +8,8 @@ package com.icp.sigipro.serpentario.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
 /**
@@ -16,14 +18,14 @@ import org.json.JSONObject;
  */
 public class Centrifugado {
     private int id_extraccion;
-    private int volumen_recuperado;
+    private float volumen_recuperado;
     private Usuario usuario;
     private Date fecha_volumen_recuperado;
 
     public Centrifugado() {
     }
 
-    public Centrifugado(int id_extraccion, int volumen_recuperado, Usuario usuario, Date fecha_volumen_recuperado) {
+    public Centrifugado(int id_extraccion, float volumen_recuperado, Usuario usuario, Date fecha_volumen_recuperado) {
         this.id_extraccion = id_extraccion;
         this.volumen_recuperado = volumen_recuperado;
         this.usuario = usuario;
@@ -38,11 +40,11 @@ public class Centrifugado {
         this.id_extraccion = id_extraccion;
     }
 
-    public int getVolumen_recuperado() {
+    public float getVolumen_recuperado() {
         return volumen_recuperado;
     }
 
-    public void setVolumen_recuperado(int volumen_recuperado) {
+    public void setVolumen_recuperado(float volumen_recuperado) {
         this.volumen_recuperado = volumen_recuperado;
     }
 
@@ -58,6 +60,10 @@ public class Centrifugado {
         return fecha_volumen_recuperado;
     }
 
+    public String getFecha_volumen_recuperadoAsString(){
+        return formatearFecha(fecha_volumen_recuperado);
+    }
+    
     public void setFecha_volumen_recuperado(Date fecha_volumen_recuperado) {
         this.fecha_volumen_recuperado = fecha_volumen_recuperado;
     }
@@ -83,5 +89,10 @@ public class Centrifugado {
             
         }
         return JSON.toString();
+    }
+      private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
 }
