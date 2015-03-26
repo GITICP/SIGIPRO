@@ -8,25 +8,21 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Serpentario" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Caballeriza" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
-    <form method="get" action="Serpiente" id="form-pasoCV">
-                                    <input hidden="true" name="accion" value="coleccionviva">
-                                    <input hidden="true" name="id_serpiente" value="${serpiente.getId_serpiente()}">
-    </form>
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
         <div class="col-md-12 ">
           <ul class="breadcrumb">
-            <li>Serpentario</li>
+            <li>Caballeriza</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Serpiente?">Serpientes</a>
+              <a href="/SIGIPRO/Caballeriza/Caballo?">Caballos</a>
             </li>
-            <li class="active"> ${serpiente.getId_serpiente()} </li>
+            <li class="active"> ${caballo.getNumero_microchip()} </li>
           </ul>
         </div>
       </div>
@@ -36,7 +32,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> ${serpiente.getId_serpiente()} </h3>
+              <h3><i class="fa fa-barcode"></i> ${caballo.getNumero_microchip()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEvento" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -45,29 +41,9 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEvento}">
-                    <c:choose>
-                        <c:when test="${deceso==null}">
-                            <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="registrar el deceso de la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=deceso&id_serpiente=${serpiente.getId_serpiente()}">Deceso</a>
-                            <c:choose>
-                            <c:when test="${coleccionViva == null}">
-                                <a class="btn btn-info btn-sm boton-accion confirmable-form" data-form-id="form-pasoCV" data-texto-confirmacion="pasar la serpiente a Colección Viva">Paso a CV</a>
-                            </c:when>
-                            </c:choose>
-                            <a class="btn btn-info btn-sm boton-accion evento-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento</a>
-                        </c:when>
-                    </c:choose>
-                
+                   <a class="btn btn-info btn-sm boton-accion evento-Modal" data-id='${caballo.getId_caballo()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento clinico</a>  
                 </c:if>
                   <!--
-                <c:set var="contienePermisoEliminar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 41}">
-                    <c:set var="contienePermisoEliminar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la especie" data-href="/SIGIPRO/Serpentario/Especie?accion=eliminar&id_especie=${especie.getId_especie()}">Eliminar</a>
-                </c:if>
                 -->
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -76,34 +52,23 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=editar&id_caballo=${caballo.getId_caballo()}">Editar</a>
                 </c:if>
               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Nombre de la Especie:</strong> <td>${serpiente.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Numero de Ingreso:</strong> <td>${serpiente.getId_serpiente()} </td></tr>
-                <tr><td> <strong>Fecha de Ingreso:</strong> <td>${serpiente.getFecha_ingresoAsString()} </td></tr>
-                <tr><td> <strong>Localidad de Origen:</strong> <td>${serpiente.getLocalidad_origen()} </td></tr>
-                <tr><td> <strong>Colectada por:</strong> <td>${serpiente.getColectada()} </td></tr>
-                <tr><td> <strong>Recibida por:</strong> <td>${serpiente.getRecibida().getNombre_usuario()} </td></tr>
-                <tr><td> <strong>Sexo:</strong> <td>${serpiente.getSexo()} </td></tr>
-                <tr><td> <strong>Talla (Longitud Cabeza-Cloaca):</strong> <td>${serpiente.getTalla_cabeza()} Metros </td></tr>
-                <tr><td> <strong>Talla (Longitud Cola):</strong> <td>${serpiente.getTalla_cola()} Metros</td></tr>
-                <tr><td> <strong>Talla (Longitud Total):</strong> <td>${serpiente.getTalla_total()} Metros</td></tr>
-                <tr><td> <strong>Peso:</strong> <td>${serpiente.getPeso()} Gramos</td></tr>
-                <c:choose>
-                    <c:when test="${coleccionViva != null}">
-                        <tr><td><strong><div><br></div> </strong></td></tr>
-                        <tr><td> <strong>Fecha de Paso a Colección Viva:</strong> <td>${coleccionViva.getFecha_eventoAsString()} </td></tr>
-                        <tr><td> <strong>Responsable de Paso a Colección Viva:</strong> <td>${coleccionViva.getUsuario().getNombre_usuario()} </td></tr>
-                        <tr><td><strong><div><br></div></strong></td></tr>
-                    </c:when>
-                </c:choose>
-                <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio()} </td></tr>
-                <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${serpiente.getImagen()} </td></tr>
+                <tr><td> <strong>Nombre:</strong> <td>${caballo.getNombre()} </td></tr>
+                <tr><td> <strong>Numero de Microchip:</strong> <td>${caballo.getNumero_microchip()} </td></tr>
+                <tr><td> <strong>Grupo del Caballo:</strong> <td>${caballo.getGrupo_de_caballos().getNombre()} </td></tr>                
+                <tr><td> <strong>Fecha de Nacimiento:</strong> <td>${caballo.getFecha_nacimientoAsString()} </td></tr>
+                <tr><td> <strong>Fecha de Ingreso:</strong> <td>${caballo.getFecha_ingresoAsString()} </td></tr>
+                <tr><td> <strong>Sexo:</strong> <td>${caballo.getSexo()} </td></tr>
+                <tr><td> <strong>Color:</strong> <td>${caballo.getColor()} </td></tr>
+                <tr><td> <strong>Otras Señas:</strong> <td>${caballo.getOtras_sennas()}</td></tr>
+                <tr><td> <strong>Estado:</strong> <td>${caballo.getEstado()}</td></tr>
+                <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${caballo.getFotografia()} </td></tr>
                 <tr><td> <strong>Histórico de Eventos</strong> 
               </table>
             </div>

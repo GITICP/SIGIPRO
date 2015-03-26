@@ -95,15 +95,13 @@ public class Caballo {
     public Date getFecha_nacimiento() {
         return fecha_nacimiento;
     }
-
+    public String getFecha_nacimientoAsString() {
+        return formatearFecha(fecha_nacimiento);
+    }
     public void setFecha_nacimiento(Date fecha_nacimiento) {
         this.fecha_nacimiento = fecha_nacimiento;
     }
 
-    public String getFecha_nacimientoAsString() {
-        return formatearFecha(fecha_nacimiento);
-    }
-    
     public Date getFecha_ingreso() {
         return fecha_ingreso;
     }

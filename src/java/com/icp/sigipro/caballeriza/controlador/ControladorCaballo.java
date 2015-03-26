@@ -45,8 +45,7 @@ public class ControladorCaballo extends SIGIPROServlet {
         {
             add("index");
             add("ver");
-            add("agregar");
-            add("eliminar");            
+            add("agregar");           
             add("editar");
         }
     };
@@ -114,7 +113,23 @@ public class ControladorCaballo extends SIGIPROServlet {
         }
         
     }    
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        //List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermiso(42, listaPermisos);
+        String redireccion = "Caballo/Editar.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        Caballo caballo = dao.obtenerCaballo(id_caballo);
+        GrupoDeCaballosDAO grupodao = new GrupoDeCaballosDAO();
+        List<GrupoDeCaballos> listagrupos = grupodao.obtenerGruposDeCaballos();
+        request.setAttribute("listagrupos",listagrupos);      
+        request.setAttribute("caballo", caballo);
+        request.setAttribute("accion", "Editar");
+        request.setAttribute("sexos",sexo);
+        request.setAttribute("estados",estado);
+        redireccionar(request, response, redireccion);
 
+    }
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
         String redireccion = "Caballo/Agregar.jsp";
@@ -135,6 +150,25 @@ public class ControladorCaballo extends SIGIPROServlet {
         request.setAttribute("listaCaballos", dao.obtenerCaballos());
         redireccionar(request, response, redireccion);
     }
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Caballo/Editar.jsp";
+        Caballo c = construirObjeto(request);
+        c.setId_caballo(Integer.parseInt(request.getParameter("id_caballo")));
+        resultado = dao.editarCaballo(c);
+        //Funcion que genera la bitacora
+        BitacoraDAO bitacora = new BitacoraDAO();
+        //bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CABALLO,request.getRemoteAddr());
+        //*----------------------------*
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Caballo editado correctamente"));
+            redireccion = "Caballo/index.jsp";
+        }
+        request.setAttribute("listaCaballos", dao.obtenerCaballos());
+        redireccionar(request, response, redireccion);
+    }    
 
     private Caballo construirObjeto(HttpServletRequest request) {
         Caballo c = new Caballo();

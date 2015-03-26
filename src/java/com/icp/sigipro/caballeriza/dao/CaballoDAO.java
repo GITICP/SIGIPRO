@@ -55,6 +55,36 @@ public class CaballoDAO {
         }
         return resultado;
     }
+    public boolean editarCaballo(Caballo c){
+        boolean resultado = false;
+    
+        try{
+            //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
+            Caballo caballo = this.obtenerCaballo(c.getId_caballo());
+            //------------------------------------------------------------
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE caballeriza.caballos " +
+                  " SET id_grupo_de_caballo=?, otras_sennas=?, fotografia=?,estado=? " +
+                  " WHERE id_caballo=?; "
+            );
+            consulta.setInt(1,c.getGrupo_de_caballos().getId_grupo_caballo());
+            consulta.setString(2, c.getOtras_sennas());
+            consulta.setBlob(3, c.getFotografia());
+            consulta.setString(4, c.getEstado());
+            consulta.setInt(5,c.getId_caballo());
+
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+        
+    }    
     public Caballo obtenerCaballo(int id_caballo){
         Caballo caballo = new Caballo();
         try{
@@ -67,7 +97,7 @@ public class CaballoDAO {
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getInt("numero_microchip"));
                 caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
-                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
+                caballo.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 caballo.setSexo(rs.getString("sexo"));
                 caballo.setColor(rs.getString("color"));

@@ -29,15 +29,23 @@
                 </div>
             </div>
         </div>
-        <label for="numero_microchip" class="control-label">Número de Microchip</label>
+        <label for="numero_microchip" class="control-label">*Número de Microchip</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input id="numero_microchip" placeholder="523413" type="number" step="any" class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}" 
-                           oninput="setCustomValidity('')"> 
+                    <c:choose>
+                        <c:when test="${caballo.getNumero_microchip()==null}">
+                            <input type="number" placeholder="341341" class="form-control" name="numero_microchip" required
+                                   oninvalid="setCustomValidity('Este campo es requerido ')"
+                                   oninput="setCustomValidity('')"> 
+                        </c:when>
+                        <c:otherwise>
+                            <input type="number" disabled='true' class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}"> 
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
-        </div>        
+        </div>              
         <label for="grupodecaballo" class="control-label">*Grupo del caballo</label>
         <div class="form-group">
             <div class="col-sm-12">
@@ -104,34 +112,48 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <select id="seleccionSexo" class="select2" name="sexo" 
-                            style='background-color: #fff;' required
-                            oninvalid="setCustomValidity('Por favor seleccione un sexo')"
-                            onchange="setCustomValidity('')">
-                        <option value=''></option>
-                        <c:forEach items="${sexos}" var="sexo">
-                            <c:choose>
-                                <c:when test="${sexo.equals(caballo.getSexo())}" >
-                                    <option value="${sexo}" selected> ${sexo}</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="${sexo}">${sexo}</option>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </select>
+                    <c:choose>
+                        <c:when test="${caballo.getColor()==null}">
+                            <select id="seleccionSexo" class="select2" name="sexo" 
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Por favor seleccione un sexo')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${sexos}" var="sexo">
+                                    <c:choose>
+                                        <c:when test="${sexo.equals(caballo.getSexo())}" >
+                                            <option  value="${sexo}" selected> ${sexo}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${sexo}">${sexo}</option>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </select>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" disabled='true' class="form-control" name="sexo" value="${caballo.getSexo()}"> 
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
-        </div>                 
+        </div>
         <label for="color" class="control-label">Color</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input id="color" placeholder="Cafe" type="text" step="any" class="form-control" name="color" value="${caballo.getColor()}" 
-                           oninput="setCustomValidity('')"> 
+                    <c:choose>
+                        <c:when test="${caballo.getColor()==null}">
+                            <input type="text" placeholder="Negro" class="form-control" name="color"
+                                   oninput="setCustomValidity('')"> 
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" disabled='true' class="form-control" name="color" value="${caballo.getColor()}"> 
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
-        </div>
+        </div>         
         <label for="otras_sennas" class="control-label">Otras señas</label>
         <div class="form-group">
             <div class="col-sm-12">
