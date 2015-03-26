@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Caballeriza</li>
             <li> 
-              <a href="/SIGIPRO/Caballeriza/GrupoDeCaballos?">Grupos de Caballos</a>
+              <a href="/SIGIPRO/Caballeriza/Caballo?">Caballos</a>
             </li>
           </ul>
         </div>
@@ -31,42 +31,48 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Grupos de Caballos </h3>
+              <h3><i class="fa fa-barcode"></i> Caballos </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 40}">
+                <c:if test="${permiso == 1 || permiso == 43}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Caballeriza/GrupoDeCaballos?accion=agregar">Agregar Grupo</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Caballeriza/Caballo?accion=agregar">Agregar Caballo</a>
                 </div>
               </c:if>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-ubicaciones" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
+                    <th>Numero de Microchip</th>
                     <th>Nombre</th>
-                    <th>Descripción</th>
+                    <th>Grupo de Caballos</th>
+                    <th>Sexo</th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaGrupos}" var="grupo">
+                  <c:forEach items="${listaCaballos}" var="caballo">
 
-                    <tr id ="${grupo.getId_grupo_caballo()}">
+                    <tr id ="${caballo.getId_caballo()}">
                       <td>
-                        <a href="/SIGIPRO/Caballeriza/GrupoDeCaballos?accion=ver&id_grupo_de_caballo=${grupo.getId_grupo_caballo()}">
+                        <a href="/SIGIPRO/Caballeriza/Caballo?accion=ver&id_caballo=${caballo.getId_caballo()}">
                           <div style="height:100%;width:100%">
-                            ${grupo.getNombre()}
+                            ${caballo.getNumero_microchip()}
                           </div>
                         </a>
                       </td>
-                      <td>${grupo.getDescripcion()}</td>
+                      <td>${caballo.getNombre ()}</td>
+                      <td>${caballo.getGrupo_de_caballos().getNombre()}</td>
+                      <td>${caballo.getSexo()}</td>
+                      <td>${caballo.getEstado()}</td>
                     </tr>
 
                   </c:forEach>

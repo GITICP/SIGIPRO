@@ -89,6 +89,31 @@ public class ControladorCaballo extends SIGIPROServlet {
         request.setAttribute("estados",estado);
         redireccionar(request, response, redireccion);
     }
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        //List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/index.jsp";
+        List<Caballo> caballos = dao.obtenerCaballos();
+        request.setAttribute("listaCaballos", caballos);
+        redireccionar(request, response, redireccion);
+    }
+        protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        //List<Integer> listaPermisos = getPermisosUsuario(request);
+        //validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/Ver.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            request.setAttribute("caballo", g);
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }    
 
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;

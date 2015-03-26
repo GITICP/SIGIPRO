@@ -55,6 +55,32 @@ public class CaballoDAO {
         }
         return resultado;
     }
+    public Caballo obtenerCaballo(int id_caballo){
+        Caballo caballo = new Caballo();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.caballos where id_caballo = ?");
+            consulta.setInt(1, id_caballo);
+            ResultSet rs = consulta.executeQuery();
+            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
+            if(rs.next()){
+                caballo.setId_caballo(rs.getInt("id_caballo"));
+                caballo.setNombre(rs.getString("nombre"));
+                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
+                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
+                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+                caballo.setSexo(rs.getString("sexo"));
+                caballo.setColor(rs.getString("color"));
+                caballo.setOtras_sennas(rs.getString("otras_sennas"));
+                caballo.setEstado(rs.getString("estado"));
+                caballo.setFotografia(rs.getBlob("fotografia"));
+            }      
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return caballo;
+    }     
     public List<Caballo> obtenerCaballos(){
         List<Caballo> resultado = new ArrayList<Caballo>();
         try{
@@ -64,6 +90,8 @@ public class CaballoDAO {
             while(rs.next()){
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
+                caballo.setNombre(rs.getString("nombre"));
+                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
                 caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
                 caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
