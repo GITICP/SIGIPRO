@@ -74,7 +74,7 @@
                       </td>
                       <td>${extraccion.getEspecie().getGenero_especie()}</td>
                       <c:choose>
-                          <c:when test="${extraccion.isIngreso_cv()==false}">
+                          <c:when test="${extraccion.isIngreso_cv()!=false}">
                              <td>Si</td> 
                           </c:when>
                           <c:otherwise>

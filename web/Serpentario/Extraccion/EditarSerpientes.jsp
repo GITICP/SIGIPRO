@@ -84,6 +84,7 @@
                                       <th>Talla Cabeza</th>
                                       <th>Talla Cola</th>
                                       <th>Peso</th>
+                                      <th>Sexo</th>
                                       <th>Eliminar</th>
                                     </tr>
                                   </thead>

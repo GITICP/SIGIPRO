@@ -210,7 +210,43 @@ public class SerpienteDAO {
     public List<Serpiente> obtenerSerpientes(int id_especie){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=?");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=? AND ID_SERPIENTE NOT IN(SELECT ID_SERPIENTE "
+                    + "FROM SERPENTARIO.EVENTOS AS evento WHERE evento.evento='Deceso') "
+                    + "AND ID_SERPIENTE IN (SELECT ID_SERPIENTE FROM SERPENTARIO.EVENTOS WHERE EVENTO = 'Pase a Coleccion Viva')");
+            consulta.setInt(1, id_especie);
+            ResultSet rs = consulta.executeQuery();
+            EspecieDAO dao = new EspecieDAO();
+            while(rs.next()){
+                Serpiente serpiente = new Serpiente();
+                serpiente.setId_serpiente(rs.getInt("id_serpiente"));
+                serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
+                serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+                serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
+                serpiente.setColectada(rs.getString("colectada"));
+                UsuarioDAO usuariodao = new UsuarioDAO();
+                
+                serpiente.setRecibida(usuariodao.obtenerUsuario(rs.getString("recibida")));
+                serpiente.setSexo(rs.getString("sexo"));
+                serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
+                serpiente.setTalla_cola(rs.getFloat("talla_cola"));
+                serpiente.setPeso(rs.getFloat("peso"));
+                serpiente.setImagen(rs.getBlob("imagen"));
+                resultado.add(serpiente);
+            }      
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public List<Serpiente> obtenerSerpientesCuarentena(int id_especie){
+        List<Serpiente> resultado = new ArrayList<Serpiente>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=? AND ID_SERPIENTE NOT IN(SELECT ID_SERPIENTE "
+                    + "FROM SERPENTARIO.EVENTOS AS evento WHERE evento.evento='Deceso');");
             consulta.setInt(1, id_especie);
             ResultSet rs = consulta.executeQuery();
             EspecieDAO dao = new EspecieDAO();

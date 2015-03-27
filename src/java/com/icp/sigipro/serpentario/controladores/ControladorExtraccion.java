@@ -155,10 +155,14 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         request.setAttribute("id_extraccion", extraccion.getId_extraccion());
         request.setAttribute("numero_extraccion", extraccion.getNumero_extraccion());
-        System.out.println(extraccion.getEspecie().getId_especie());
-        SerpienteDAO serpientedao = new SerpienteDAO();
-        List<Serpiente> serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie());
+
+        List<Serpiente> serpientes;
         
+        if (extraccion.isIngreso_cv()){
+            serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie());
+        }else{
+            serpientes = serpientedao.obtenerSerpientesCuarentena(extraccion.getEspecie().getId_especie());
+        }
         request.setAttribute("serpientes",serpientes);
         request.setAttribute("accion", "Editarserpientes");
         redireccionar(request, response, redireccion);
@@ -175,10 +179,13 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         request.setAttribute("id_extraccion", extraccion.getId_extraccion());
         request.setAttribute("numero_extraccion", extraccion.getNumero_extraccion());
-        System.out.println(extraccion.getEspecie().getId_especie());
-        SerpienteDAO serpientedao = new SerpienteDAO();
-        List<Serpiente> serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie());
+        List<Serpiente> serpientes;
         
+        if (extraccion.isIngreso_cv()){
+            serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie());
+        }else{
+            serpientes = serpientedao.obtenerSerpientesCuarentena(extraccion.getEspecie().getId_especie());
+        }
         request.setAttribute("serpientes",serpientes);
         request.setAttribute("accion", "Editarserpientes");
         redireccionar(request, response, redireccion);
@@ -420,6 +427,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
             String tcabeza = request.getParameter("talla_cabeza_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             String tcola = request.getParameter("talla_cola_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             String tpeso = request.getParameter("peso_"+Integer.toString(i.getSerpiente().getId_serpiente()));
+            String tsexo = request.getParameter("sexo_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             Serpiente serpiente = i.getSerpiente();
             if (!tcabeza.equals("")){
                 float talla_cabeza = Float.parseFloat(tcabeza);
@@ -432,6 +440,10 @@ public class ControladorExtraccion extends SIGIPROServlet {
             if (!tpeso.equals("")){
                 float peso = Float.parseFloat(tpeso);
                 serpiente.setPeso(peso);
+            }
+            if (!tsexo.equals("")){
+                String sexo = tsexo;
+                serpiente.setSexo(sexo);
             }
             List<HelperSerpiente> cambios = serpientedao.editarSerpiente(serpiente);
             

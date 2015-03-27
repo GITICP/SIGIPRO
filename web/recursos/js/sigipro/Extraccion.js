@@ -15,25 +15,35 @@ function setSerpiente(){
             serpienteSeleccionada.remove();
 
             fila = '<tr ' + 'id=' + id_serpiente + '>';
-            fila += '<div class="col-md-3 ">'
-            fila += '<td>' + textoSerpiente + '</td>';
-            fila += '</div>';
-            fila += '<div class="col-md-3 ">'
-            fila += '<td>';
+            //fila += '<div class="col-md-2 ">';
+            fila += '<td width=50px>' + textoSerpiente + '</td>';
+            //fila += '</div>';
+            //fila += '<div class="col-md-1 ">';
+            fila += '<td width=150px>';
             fila += '<input type="number" step="any" placeholder="" class="form-control" name="talla_cabeza_'+id_serpiente+'" value="" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">';
             fila += '</td>';
-            fila += '</div>';
-            fila += '<div class="col-md-3 ">'
-            fila += '<td>';
+            //fila += '</div>';
+            //fila += '<div class="col-md-1 ">';
+            fila += '<td width=150px>';
             fila += '<input type="number" step="any" placeholder="" class="form-control" name="talla_cola_'+id_serpiente+'" value="" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">';
             fila += '</td>';
-            fila += '</div>';
-            fila += '<div class="col-md-3 ">'
-            fila += '<td>';
+            //fila += '</div>';
+            //fila += '<div class="col-md-1 ">';
+            fila += '<td width=150px>';
             fila += '<input type="number" step="any" placeholder="" class="form-control" name="peso_'+id_serpiente+'" value="" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">';
             fila += '</td>';
-            fila += '</div>';
-            fila += '<td>';
+            //fila += '</div>';
+            //fila += '<div class="col-md-1 ">';
+            fila += '<td width=150px>';
+            fila += '<select id="seleccionSexo" class="select2" name="sexo_'+id_serpiente+'" style=\'background-color: #fff;\'>';
+            fila += '<option value=\'\'></option>';
+            fila += '<option value=\'Macho\'>Macho</option>';
+            fila += '<option value=\'Hembra\'>Hembra</option>';
+            fila += '<option value=\'Indefinido\'>Indefinido</option>';
+            fila += '</select>';
+            fila += '</td>';
+            //fila += '</div>';
+            fila += '<td width=50px>';
             fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarSerpiente(' + id_serpiente + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
             fila += '</td>';
             fila += '</tr>';
