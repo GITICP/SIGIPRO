@@ -61,7 +61,8 @@
     <div class="form-group opciones">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="checkbox" name="ingreso_cv" checked="true" value="ingreso_cv"><span>  Serpientes de Colección Viva.</span>
+                                <c:set var="checkedIngresoCV" value="true" />
+                                <input type="checkbox" name="ingreso_cv" value="true" checked='true' ${checkedIngresoCV}><span>  Serpientes de Colección Viva.</span>
                             </div>
                         </div>
                     </div>

@@ -11,11 +11,14 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
+import com.icp.sigipro.serpentario.dao.EventoDAO;
 import com.icp.sigipro.serpentario.dao.ExtraccionDAO;
 import com.icp.sigipro.serpentario.dao.SerpienteDAO;
 import com.icp.sigipro.serpentario.modelos.Centrifugado;
 import com.icp.sigipro.serpentario.modelos.Especie;
+import com.icp.sigipro.serpentario.modelos.Evento;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
+import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Liofilizacion;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.serpentario.modelos.SerpientesExtraccion;
@@ -47,6 +50,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     private BitacoraDAO bitacora = new BitacoraDAO();
     private UsuarioDAO usuariodao = new UsuarioDAO();
     private SerpienteDAO serpientedao = new SerpienteDAO();
+    private EventoDAO eventodao = new EventoDAO();
 
 
     protected final Class clase = ControladorExtraccion.class;
@@ -192,11 +196,19 @@ public class ControladorExtraccion extends SIGIPROServlet {
         String serpientes = request.getParameter("serpientes");
                 
         List<SerpientesExtraccion> serpientesextraccion = dao.parsearSerpientesExtraccion(serpientes, id_extraccion);
-        
+        Extraccion extraccion = dao.obtenerExtraccion(id_extraccion);
         resultado = dao.insertarSerpientesExtraccion(serpientesextraccion);
         
         //Funcion que genera la bitacora
         for (SerpientesExtraccion i:serpientesextraccion){
+            Evento evento = new Evento();
+            evento.setEvento("Extraccion");
+            evento.setExtraccion(extraccion);
+            evento.setSerpiente(i.getSerpiente());
+            evento.setFecha_evento(extraccion.getFecha_extraccion());
+            Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+            evento.setUsuario(usuario_evento);
+            eventodao.insertarExtraccion(evento);
             bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTESEXTRACCION,request.getRemoteAddr());
         }
         
@@ -224,7 +236,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
             List<UsuariosExtraccion> usuariosextraccion = construirUsuarioExtraccion(request,e);
 
             dao.insertarUsuariosExtraccion(usuariosextraccion);
-
+                        
             //Funcion que genera la bitacora
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
             for (UsuariosExtraccion i:usuariosextraccion){
@@ -393,7 +405,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         e.setNumero_extraccion(request.getParameter("numero_extraccion"));
         
-        if (request.getParameter("ingreso_cv") == "ingreso_cv"){
+        if (request.getParameter("ingreso_cv") != null){
             e.setIngreso_cv(true);
         }else{
             e.setIngreso_cv(false);
@@ -421,7 +433,33 @@ public class ControladorExtraccion extends SIGIPROServlet {
                 float peso = Float.parseFloat(tpeso);
                 serpiente.setPeso(peso);
             }
-            resultado = serpientedao.editarSerpiente(serpiente);
+            List<HelperSerpiente> cambios = serpientedao.editarSerpiente(serpiente);
+            
+            for (HelperSerpiente j : cambios){
+                Evento e = new Evento();
+                java.sql.Date fecha_evento = new java.sql.Date(new Date().getTime());
+                e.setSerpiente(i.getSerpiente());
+                e.setFecha_evento(fecha_evento);
+                Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+                e.setUsuario(usuario_evento);
+                if (j.getCampo_cambiado()=="sexo"){
+                    e.setEvento("Sexo");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }if (j.getCampo_cambiado()=="talla_cabeza"){
+                    e.setEvento("Talla CabezaCloaca");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }if (j.getCampo_cambiado()=="talla_cola"){
+                    e.setEvento("Talla Cola");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }if (j.getCampo_cambiado()=="peso"){
+                    e.setEvento("Peso");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }
+            }
         }
         return resultado;
     }

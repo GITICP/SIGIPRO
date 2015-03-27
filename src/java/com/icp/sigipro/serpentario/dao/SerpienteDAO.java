@@ -8,6 +8,7 @@ package com.icp.sigipro.serpentario.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -98,17 +99,33 @@ public class SerpienteDAO {
         return resultado;
     }  
     
-    public boolean editarSerpiente(Serpiente s){
+    public List<HelperSerpiente> editarSerpiente(Serpiente s){
         boolean resultado = false;
-    
+        List<HelperSerpiente> lista = new ArrayList<HelperSerpiente>();
         try{
             //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
+            Serpiente old_s = obtenerSerpiente(s.getId_serpiente());
             //------------------------------------------------------------
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE serpentario.serpientes " +
                   " SET sexo=?, talla_cabeza=?, talla_cola=?,peso=?" +
                   " WHERE id_serpiente=?; "
             );
+            
+            if (!s.getSexo().equals(old_s.getSexo())){
+                HelperSerpiente cambio = new HelperSerpiente("sexo",old_s.getSexo());
+                lista.add(cambio);
+            }if (s.getTalla_cabeza()!=old_s.getTalla_cabeza()){
+                HelperSerpiente cambio = new HelperSerpiente("talla_cabeza",Float.toString(old_s.getTalla_cabeza()));
+                lista.add(cambio);
+            }if (s.getTalla_cola()!=old_s.getTalla_cola()){
+                HelperSerpiente cambio = new HelperSerpiente("talla_cola",Float.toString(old_s.getTalla_cola()));
+                lista.add(cambio);
+            }if (s.getPeso()!=old_s.getPeso()){
+                HelperSerpiente cambio = new HelperSerpiente("peso",Float.toString(old_s.getPeso()));
+                lista.add(cambio);
+            }
+            
             consulta.setString(1,s.getSexo());
             consulta.setFloat(2, s.getTalla_cabeza());
             consulta.setFloat(3, s.getTalla_cola());
@@ -116,7 +133,6 @@ public class SerpienteDAO {
             //consulta.setBlob(5,s.getImagen());
             consulta.setInt(5, s.getId_serpiente());
 
-            System.out.println(consulta);
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
             }
@@ -126,7 +142,7 @@ public class SerpienteDAO {
         catch(Exception ex){
             ex.printStackTrace();
         }
-        return resultado;
+        return lista;
         
     }
   

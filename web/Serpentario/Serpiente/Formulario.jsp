@@ -51,9 +51,10 @@
                             </select>
                         </c:when>
                         <c:otherwise>
-                            <select id="seleccionEspecie" class="select2" name="especie" disabled="true"
-                                style='background-color: #fff;' value="${serpiente.getEspecie().getId_especie()}">
-                                <option value='${serpiente.getEspecie().getId_especie()}' selected="true">${serpiente.getEspecie().getGenero_especie()}</option>
+                            <input hidden="true" name='especie' value="${serpiente.getEspecie().getId_especie()}">
+                            <select id="seleccionEspecie" class="select2" name="selectEspecie" disabled="true"
+                                style='background-color: #fff;'>
+                                <option value='${serpiente.getEspecie().getId_especie()}' selected>${serpiente.getEspecie().getGenero_especie()}</option>
                             </select>
                         </c:otherwise>
                     </c:choose>
@@ -123,7 +124,7 @@
     <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
-                        <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getRecibida()}">               
+                        <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getRecibida().getNombre_usuario()}">               
             </div>
         </div>
     </div>

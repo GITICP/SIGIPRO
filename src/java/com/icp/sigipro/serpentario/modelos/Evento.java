@@ -24,6 +24,7 @@ public class Evento {
     private String evento;
     private String observaciones;
     private Extraccion extraccion;
+    private String valor_cambiado;
 
     public Evento() {
     }
@@ -36,6 +37,14 @@ public class Evento {
         this.evento = evento;
         this.observaciones = observaciones;
         this.extraccion = extraccion;
+    }
+
+    public String getValor_cambiado() {
+        return valor_cambiado;
+    }
+
+    public void setValor_cambiado(String valor_cambiado) {
+        this.valor_cambiado = valor_cambiado;
     }
 
     public int getId_evento() {

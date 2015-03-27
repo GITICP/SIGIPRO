@@ -56,6 +56,32 @@ public class EventoDAO {
         return resultado;
     }
     
+    public boolean insertarCambio(Evento e){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,valor_cambiado) " +
+                                                             " VALUES (?,?,?,?,?) RETURNING id_evento");
+            consulta.setInt(1, e.getSerpiente().getId_serpiente());
+            consulta.setInt(2, e.getUsuario().getId_usuario());
+            consulta.setDate(3, e.getFecha_evento());
+            consulta.setString(4, e.getEvento());
+            consulta.setString(5, e.getValor_cambiado());
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                e.setId_evento(resultadoConsulta.getInt("id_evento"));
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    
+    
     public Evento validarPasoCV(int id_serpiente) throws SIGIPROException{
         boolean resultado = false;
         Evento evento = new Evento();
@@ -106,7 +132,7 @@ public class EventoDAO {
         boolean resultado = false;
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,observaciones,id_extraccion) " +
-                                                             " VALUES (?,?,?,?,?) RETURNING id_evento");
+                                                             " VALUES (?,?,?,?,?,?) RETURNING id_evento");
             consulta.setInt(1, e.getSerpiente().getId_serpiente());
             consulta.setInt(2, e.getUsuario().getId_usuario());
             consulta.setDate(3, e.getFecha_evento());
@@ -145,9 +171,13 @@ public class EventoDAO {
                 e.setFecha_evento(rs.getDate("fecha_evento"));
                 e.setEvento(rs.getString("evento"));
                 e.setObservaciones(rs.getString("observaciones"));
+                e.setValor_cambiado(rs.getString("valor_cambiado"));
                 try{
                     //Tratar de agarrar la extraccion desde el DAO
                     Extraccion extraccion = new Extraccion();
+                    ExtraccionDAO extracciondao = new ExtraccionDAO();
+                    extraccion = extracciondao.obtenerExtraccion(rs.getInt("id_extraccion"));
+                    e.setExtraccion(extraccion);
                 }catch (Exception ex){
                     
                 }
@@ -179,6 +209,7 @@ public class EventoDAO {
                 e.setFecha_evento(rs.getDate("fecha_evento"));
                 e.setEvento(rs.getString("evento"));
                 e.setObservaciones(rs.getString("observaciones"));
+                e.setValor_cambiado(rs.getString("valor_cambiado"));
                 try{
                     //Tratar de agarrar la extraccion desde el DAO
                     Extraccion extraccion = new Extraccion();

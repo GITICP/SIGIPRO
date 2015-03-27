@@ -16,6 +16,7 @@ import com.icp.sigipro.serpentario.dao.EventoDAO;
 import com.icp.sigipro.serpentario.dao.SerpienteDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Evento;
+import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -43,6 +44,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
 
     private final int[] permisos = {1, 310, 311, 312};
     private SerpienteDAO dao = new SerpienteDAO();
+    private EventoDAO eventodao = new EventoDAO();
+    private BitacoraDAO bitacora = new BitacoraDAO();
 
     protected final Class clase = ControladorSerpiente.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -127,7 +130,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
         try {
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             request.setAttribute("serpiente", s);
-            EventoDAO eventodao = new EventoDAO();
             Evento coleccionviva = eventodao.validarPasoCV(id_serpiente);
             Evento deceso = eventodao.validarDeceso(id_serpiente);
             List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
@@ -189,7 +191,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             if (resultado){
                 request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente pasada a Colección Viva con éxito."));
                  //Funcion que genera la bitacora
-                BitacoraDAO bitacora = new BitacoraDAO();
                 bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
                 //*----------------------------*
             }else{
@@ -225,7 +226,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             if (resultado){
                 request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente registrada como Deceso con éxito."));
                  //Funcion que genera la bitacora
-                BitacoraDAO bitacora = new BitacoraDAO();
                 bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
                 //*----------------------------*
             }else{
@@ -256,7 +256,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
         s.setRecibida(usuario);
         resultado = dao.insertarSerpiente(s);
         //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
@@ -279,10 +278,36 @@ public class ControladorSerpiente extends SIGIPROServlet {
         UsuarioDAO usuariodao = new UsuarioDAO();
         Usuario usuario = usuariodao.obtenerUsuario(usuarioString);
         s.setRecibida(usuario);
-        
-        resultado = dao.editarSerpiente(s);
+                
+        List<HelperSerpiente> cambios = dao.editarSerpiente(s);
+        resultado=true;    
+            for (HelperSerpiente j : cambios){
+                Evento e = new Evento();
+                java.sql.Date fecha_evento = new java.sql.Date(new Date().getTime());
+                e.setSerpiente(s);
+                e.setFecha_evento(fecha_evento);
+                Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+                e.setUsuario(usuario_evento);
+                if (j.getCampo_cambiado().equals("sexo")){
+                    e.setEvento("Sexo");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }if (j.getCampo_cambiado().equals("talla_cabeza")){
+                    e.setEvento("Talla CabezaCloaca");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }if (j.getCampo_cambiado().equals("talla_cola")){
+                    e.setEvento("Talla Cola");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }if (j.getCampo_cambiado().equals("peso")){
+                    e.setEvento("Peso");
+                    e.setValor_cambiado(j.getValor_cambiado());
+                    eventodao.insertarCambio(e);
+                }
+            }
         //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
+        
         bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
@@ -303,12 +328,9 @@ public class ControladorSerpiente extends SIGIPROServlet {
         Serpiente serpiente = dao.obtenerSerpiente(Integer.parseInt(request.getParameter("id_serpiente")));
 
         Evento evento = this.setEvento(serpiente, request);
-        
-        EventoDAO eventodao = new EventoDAO();
-        
+                
         resultado = eventodao.insertarEvento(evento);
         //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(evento.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
@@ -334,22 +356,24 @@ public class ControladorSerpiente extends SIGIPROServlet {
     private Serpiente construirObjeto(HttpServletRequest request) {
         Serpiente s = new Serpiente();
         
+        if (!request.getParameter("accion").equals("Editar")){
         EspecieDAO especiedao = new EspecieDAO();
-        System.out.println(request.getParameter("especie"));
         Especie especie = especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie")));
         s.setEspecie(especie);
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fecha_ingreso;
-        java.sql.Date fecha_ingresoSQL;
-        try {
-          fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
-          fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
-          s.setFecha_ingreso(fecha_ingresoSQL);
-        } catch (ParseException ex) {
-            
+        
+            java.util.Date fecha_ingreso;
+            java.sql.Date fecha_ingresoSQL;
+            try {
+              fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
+              fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
+              s.setFecha_ingreso(fecha_ingresoSQL);
+            } catch (ParseException ex) {
+
+            }
+            s.setLocalidad_origen(request.getParameter("localidad_origen"));
+            s.setColectada(request.getParameter("colectada"));
         }
-        s.setLocalidad_origen(request.getParameter("localidad_origen"));
-        s.setColectada(request.getParameter("colectada"));
         s.setSexo(request.getParameter("sexo"));
         s.setTalla_cabeza(Float.parseFloat(request.getParameter("talla_cabeza")));
         s.setTalla_cola(Float.parseFloat(request.getParameter("talla_cola")));

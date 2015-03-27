@@ -116,6 +116,7 @@
                     <th>Fecha del Evento</th>
                     <th>Evento</th>
                     <th>Usuario responsable</th>
+                    <th>Valor Cambiado</th>
                     <th>Extraccion</th>
                   </tr>
                 </thead>
@@ -132,8 +133,22 @@
                       </td>
                       <td>${eventos.getUsuario().getNombre_usuario()}</td>
                       <c:choose>
-                          <c:when test="${eventos.getExtraccion()!= null}">
-                              <td>${eventos.getExtraccion().getId_extraccion()}</td>
+                          <c:when test="${!eventos.getValor_cambiado().equals('')}">
+                              <td>${eventos.getValor_cambiado()}</td>
+                          </c:when>
+                          <c:otherwise>
+                              <td></td>
+                          </c:otherwise>
+                      </c:choose>
+                      <c:choose>
+                          <c:when test="${eventos.getExtraccion()!= null && eventos.getExtraccion().getId_extraccion()!=0}">
+                              <td>
+                              <a href="/SIGIPRO/Serpentario/Extraccion?accion=ver&id_extraccion=${eventos.getExtraccion().getId_extraccion()}">
+                                    <div style="height:100%;width:100%">
+                                      ${eventos.getExtraccion().getNumero_extraccion()}
+                                    </div>
+                                  </a>
+                               </td>
                           </c:when>
                           <c:otherwise>
                               <td></td>
