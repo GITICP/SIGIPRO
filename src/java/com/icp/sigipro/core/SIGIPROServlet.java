@@ -47,6 +47,7 @@ public abstract class SIGIPROServlet extends HttpServlet
           throws ServletException, IOException
   {
     String accion = request.getParameter("accion");
+    System.out.println(accion);
     if (accion == null) {
         accion = "index";
     }

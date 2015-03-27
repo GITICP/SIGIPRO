@@ -24,9 +24,9 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Especie?">Especies de Serpiente</a>
+              <a href="/SIGIPRO/Serpentario/Serpiente?">Serpientes</a>
             </li>
-            <li class="active">Especie ${especie.getGenero_especie()}</li>
+            <li class="active">Serpiente ${serpiente.getId_serpiente()}</li>
 
           </ul>
         </div>
@@ -43,7 +43,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Editar Especie </h3>
+              <h3><i class="fa fa-barcode"></i> Editar Serpiente </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -61,6 +61,5 @@
    
 
   </jsp:attribute>
-
 
 </t:plantilla_general>

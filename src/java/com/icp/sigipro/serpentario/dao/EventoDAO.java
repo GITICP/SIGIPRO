@@ -7,11 +7,14 @@ package com.icp.sigipro.serpentario.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.serpentario.modelos.Evento;
+import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,35 +22,30 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class SerpienteDAO {
-    private Connection conexion;
+public class EventoDAO {
+     private Connection conexion;
     
     
-    public SerpienteDAO()
+    public EventoDAO()
     {
         SingletonBD s = SingletonBD.getSingletonBD();
         conexion = s.conectar();
     } 
     
-    public boolean insertarSerpiente(Serpiente s){
+    public boolean insertarEvento(Evento e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes (id_especie, fecha_ingreso,localidad_origen,colectada,recibida,sexo,talla_cabeza,talla_cola,peso,imagen) " +
-                                                             " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_serpiente");
-            consulta.setInt(1, s.getEspecie().getId_especie());
-            consulta.setDate(2, s.getFecha_ingreso());
-            consulta.setString(3, s.getLocalidad_origen());
-            consulta.setString(4,s.getColectada());
-            consulta.setString(5,s.getRecibida());
-            consulta.setString(6,s.getSexo());
-            consulta.setInt(7, s.getTalla_cabeza());
-            consulta.setInt(8, s.getTalla_cola());
-            consulta.setInt(9, s.getPeso());
-            consulta.setBlob(10,s.getImagen());
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,observaciones) " +
+                                                             " VALUES (?,?,?,?,?) RETURNING id_evento");
+            consulta.setInt(1, e.getSerpiente().getId_serpiente());
+            consulta.setInt(2, e.getUsuario().getId_usuario());
+            consulta.setDate(3, e.getFecha_evento());
+            consulta.setString(4, e.getEvento());
+            consulta.setString(5, e.getObservaciones());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
-                s.setId_serpiente(resultadoConsulta.getInt("id_serpiente"));
+                e.setId_evento(resultadoConsulta.getInt("id_evento"));
             }
             consulta.close();
             conexion.close();
@@ -58,47 +56,20 @@ public class SerpienteDAO {
         return resultado;
     }
     
-    public boolean eliminarSerpiente(int id_serpiente) throws SIGIPROException{
+    public boolean insertarCambio(Evento e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM serpentario.serpientes " +
-                    " WHERE id_serpiente=?; "
-            );
-            consulta.setInt(1, id_serpiente);
-            if ( consulta.executeUpdate() == 1){
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,valor_cambiado) " +
+                                                             " VALUES (?,?,?,?,?) RETURNING id_evento");
+            consulta.setInt(1, e.getSerpiente().getId_serpiente());
+            consulta.setInt(2, e.getUsuario().getId_usuario());
+            consulta.setDate(3, e.getFecha_evento());
+            consulta.setString(4, e.getEvento());
+            consulta.setString(5, e.getValor_cambiado());
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
                 resultado = true;
-            }
-            consulta.close();
-            conexion.close();
-        }
-        catch(SQLException ex){
-            throw new SIGIPROException("Serpiente no pudo ser eliminada debido a que una o más objetos se encuentran asociadas a esta.");
-        }
-        return resultado;
-    }  
-    
-    public boolean editarSerpiente(Serpiente s){
-        boolean resultado = false;
-    
-        try{
-            //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
-            Serpiente serpiente = this.obtenerSerpiente(s.getId_serpiente());
-            //------------------------------------------------------------
-            PreparedStatement consulta = getConexion().prepareStatement(
-                  " UPDATE serpentario.serpientes " +
-                  " SET sexo=?, talla_cabeza=?, talla_cola=?,peso=?,imagen=? " +
-                  " WHERE id_serpiente=?; "
-            );
-            consulta.setString(1,s.getSexo());
-            consulta.setInt(2, s.getTalla_cabeza());
-            consulta.setInt(3, s.getTalla_cola());
-            consulta.setInt(4, s.getPeso());
-            consulta.setBlob(5,s.getImagen());
-            consulta.setInt(6, s.getId_serpiente());
-
-            if ( consulta.executeUpdate() == 1){
-                resultado = true;
+                e.setId_evento(resultadoConsulta.getInt("id_evento"));
             }
             consulta.close();
             conexion.close();
@@ -107,56 +78,110 @@ public class SerpienteDAO {
             ex.printStackTrace();
         }
         return resultado;
+    }
+    
+    
+    
+    public Evento validarPasoCV(int id_serpiente) throws SIGIPROException{
+        boolean resultado = false;
+        Evento evento = new Evento();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Pase a Coleccion Viva' WHERE serpientes.id_serpiente=?");
+            
+            consulta.setInt(1,id_serpiente);
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            evento = new Evento();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
+            }
+            consulta.close();
+            conexion.close();
+            
+        }catch (Exception e){
+            
+        }
+        return evento;
+        
         
     }
-  
-    public Serpiente obtenerSerpiente(int id_serpiente){
-        Serpiente serpiente = new Serpiente();
+    
+    public Evento validarDeceso(int id_serpiente) throws SIGIPROException{
+        boolean resultado = false;
+        Evento evento = new Evento();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM serpentario.serpientes where id_serpiente = ?");
-            consulta.setInt(1, id_serpiente);
-            ResultSet rs = consulta.executeQuery();
-            EspecieDAO dao = new EspecieDAO();
-            if(rs.next()){
-                serpiente.setId_serpiente(rs.getInt("id_serpiente"));
-                serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
-                serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
-                serpiente.setColectada(rs.getString("colectada"));
-                serpiente.setRecibida(rs.getString("recibida"));
-                serpiente.setSexo(rs.getString("sexo"));
-                serpiente.setTalla_cabeza(rs.getInt("talla_cabeza"));
-                serpiente.setTalla_cola(rs.getInt("talla_cola"));
-                serpiente.setPeso(rs.getInt("peso"));
-                serpiente.setImagen(rs.getBlob("imagen"));
-            }      
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Deceso' WHERE serpientes.id_serpiente=?");
+            
+            consulta.setInt(1,id_serpiente);
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            evento = new Evento();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
+            }
+            consulta.close();
+            conexion.close();
+            
+        }catch (Exception e){
+            
+        }
+        return evento;
+    }
+    
+    public boolean insertarExtraccion(Evento e){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,observaciones,id_extraccion) " +
+                                                             " VALUES (?,?,?,?,?,?) RETURNING id_evento");
+            consulta.setInt(1, e.getSerpiente().getId_serpiente());
+            consulta.setInt(2, e.getUsuario().getId_usuario());
+            consulta.setDate(3, e.getFecha_evento());
+            consulta.setString(4, e.getEvento());
+            consulta.setString(5, e.getObservaciones());
+            consulta.setInt(6, e.getExtraccion().getId_extraccion());
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                e.setId_evento(resultadoConsulta.getInt("id_evento"));
+            }
+            consulta.close();
+            conexion.close();
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
-        return serpiente;
+        return resultado;
     }
-  
-    public List<Serpiente> obtenerSerpientes(){
-        List<Serpiente> resultado = new ArrayList<Serpiente>();
+    
+    public List<Evento> obtenerEventos(int id_serpiente){
+        List<Evento> resultado = new ArrayList<Evento>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes ");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos WHERE id_serpiente=?;");
+            consulta.setInt(1, id_serpiente);
             ResultSet rs = consulta.executeQuery();
-            EspecieDAO dao = new EspecieDAO();
+            SerpienteDAO serpienteDao = new SerpienteDAO();
+            UsuarioDAO usuarioDao = new UsuarioDAO();
             while(rs.next()){
-                Serpiente serpiente = new Serpiente();
-                serpiente.setId_serpiente(rs.getInt("id_serpiente"));
-                serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
-                serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
-                serpiente.setColectada(rs.getString("colectada"));
-                serpiente.setRecibida(rs.getString("recibida"));
-                serpiente.setSexo(rs.getString("sexo"));
-                serpiente.setTalla_cabeza(rs.getInt("talla_cabeza"));
-                serpiente.setTalla_cola(rs.getInt("talla_cola"));
-                serpiente.setPeso(rs.getInt("peso"));
-                serpiente.setImagen(rs.getBlob("imagen"));
-                resultado.add(serpiente);
+                Evento e = new Evento();
+                e.setId_evento(rs.getInt("id_evento"));
+                Serpiente s = serpienteDao.obtenerSerpiente(rs.getInt("id_serpiente"));
+                e.setSerpiente(s);
+                Usuario u = usuarioDao.obtenerUsuario(rs.getInt("id_usuario"));
+                e.setUsuario(u);
+                e.setFecha_evento(rs.getDate("fecha_evento"));
+                e.setEvento(rs.getString("evento"));
+                e.setObservaciones(rs.getString("observaciones"));
+                e.setValor_cambiado(rs.getString("valor_cambiado"));
+                try{
+                    //Tratar de agarrar la extraccion desde el DAO
+                    Extraccion extraccion = new Extraccion();
+                    ExtraccionDAO extracciondao = new ExtraccionDAO();
+                    extraccion = extracciondao.obtenerExtraccion(rs.getInt("id_extraccion"));
+                    e.setExtraccion(extraccion);
+                }catch (Exception ex){
+                    
+                }
+                resultado.add(e);
             }      
             consulta.close();
             conexion.close();
@@ -165,6 +190,40 @@ public class SerpienteDAO {
             ex.printStackTrace();
         }
         return resultado;
+    }
+    
+    public Evento obtenerEvento(int id_evento){
+        Evento e = new Evento();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos WHERE id_evento=?;");
+            consulta.setInt(1, id_evento);
+            ResultSet rs = consulta.executeQuery();
+            SerpienteDAO serpienteDao = new SerpienteDAO();
+            UsuarioDAO usuarioDao = new UsuarioDAO();
+            if ( rs.next() ){
+                e.setId_evento(rs.getInt("id_evento"));
+                Serpiente s = serpienteDao.obtenerSerpiente(rs.getInt("id_serpiente"));
+                e.setSerpiente(s);
+                Usuario u = usuarioDao.obtenerUsuario(rs.getInt("id_usuario"));
+                e.setUsuario(u);
+                e.setFecha_evento(rs.getDate("fecha_evento"));
+                e.setEvento(rs.getString("evento"));
+                e.setObservaciones(rs.getString("observaciones"));
+                e.setValor_cambiado(rs.getString("valor_cambiado"));
+                try{
+                    //Tratar de agarrar la extraccion desde el DAO
+                    Extraccion extraccion = new Extraccion();
+                }catch (Exception ex){
+                    
+                }
+            }      
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return e;
     }
     
     private Connection getConexion(){
@@ -179,5 +238,5 @@ public class SerpienteDAO {
             conexion = null;
         }
         return conexion;
-    }  
+    }
 }

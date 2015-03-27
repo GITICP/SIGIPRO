@@ -21,9 +21,9 @@ CREATE TABLE serpentario.serpientes(
     colectada character varying (45) NOT NULL,
     recibida character varying (45) NOT NULL,
     sexo character varying(10) NOT NULL,
-    talla_cabeza integer,
-    talla_cola integer,
-    peso integer,
+    talla_cabeza float,
+    talla_cola float,
+    peso float,
     imagen bytea
 );
     
@@ -39,7 +39,8 @@ CREATE TABLE serpentario.eventos(
     id_usuario integer NOT NULL,
     fecha_evento date NOT NULL,
     evento character varying(45) NOT NULL,
-    observaciones character varying (100),
+    observaciones character varying (200),
+    valor_cambiado character varying(20),
     id_extraccion integer
 );
 
@@ -53,11 +54,11 @@ ALTER TABLE ONLY serpentario.eventos ADD CONSTRAINT fk_id_usuario FOREIGN KEY (i
 
 CREATE TABLE serpentario.extraccion(
     id_extraccion serial NOT NULL,
-    numero_extraccion character varying(45) NOT NULL,
+    numero_extraccion character varying(45) NOT NULL UNIQUE,
     id_especie integer NOT NULL,
     ingreso_CV boolean NOT NULL,
     fecha_extraccion date NOT NULL,
-    volumen_extraido integer,
+    volumen_extraido float,
     id_usuario_registro integer,
     fecha_registro date,
     id_lote integer
@@ -126,17 +127,12 @@ CREATE TABLE serpentario.lote(
     id_especie integer NOT NULL
 );
 
+ALTER TABLE ONLY serpentario.lote ADD CONSTRAINT pk_id_lote PRIMARY KEY(id_lote);
+
 ALTER TABLE ONLY serpentario.lote ADD CONSTRAINT fk_id_especie FOREIGN KEY (id_especie) REFERENCES serpentario.especies(id_especie);
 
 ALTER TABLE ONLY serpentario.extraccion ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
 
-ALTER TABLE ONLY serpentario.lote ADD CONSTRAINT pk_id_lote PRIMARY KEY(id_lote);
-
-ALTER TABLE ONLY serpentario.extracciones_lote ADD CONSTRAINT pk_extracciones_lote PRIMARY KEY (id_lote,id_extraccion);
-
-ALTER TABLE ONLY serpentario.extracciones_lote ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
-
-ALTER TABLE ONLY serpentario.extracciones_lote ADD CONSTRAINT fk_id_extraccion FOREIGN KEY (id_extraccion) REFERENCES serpentario.extraccion(id_extraccion);
 
 --Catalogo de Venenos
 
@@ -150,15 +146,6 @@ CREATE TABLE serpentario.venenos(
 ALTER TABLE ONLY serpentario.venenos ADD CONSTRAINT pk_id_veneno PRIMARY KEY (id_veneno);
 
 ALTER TABLE ONLY serpentario.venenos ADD CONSTRAINT fk_id_especie FOREIGN KEY (id_especie) REFERENCES serpentario.especies(id_especie);
-
-CREATE TABLE serpentario.lotes_veneno(
-    id_veneno integer NOT NULL,
-    id_lote integer NOT NULL
-);
-
-ALTER TABLE ONLY serpentario.lotes_veneno ADD CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno) REFERENCES serpentario.venenos(id_veneno);
-
-ALTER TABLE ONLY serpentario.lotes_veneno ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
 
 
 
@@ -242,12 +229,29 @@ ALTER TABLE ONLY serpentario.catalogo_tejido ADD CONSTRAINT fk_id_serpiente FORE
 
 ALTER TABLE ONLY serpentario.catalogo_tejido ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios (id_usuario);
 
+CREATE TABLE serpentario.lotes_veneno(
+    id_veneno integer NOT NULL,
+    id_lote integer NOT NULL
+);
+
+ALTER TABLE ONLY serpentario.lotes_veneno ADD CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno) REFERENCES serpentario.venenos(id_veneno);
+
+ALTER TABLE ONLY serpentario.lotes_veneno ADD CONSTRAINT fk_id_lote FOREIGN KEY (id_lote) REFERENCES serpentario.lote(id_lote);
+
+
 
 --Permisos
 
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (40, '[Serpentario]AgregarEspecie', 'Permite agregar una especie al catálogo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (41, '[Serpentario]EliminarEspecie', 'Permite eliminar una especie al catálogo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (42, '[Serpentario]EditarEspecie', 'Permite editar una especie al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (300, '[Serpentario]AgregarEspecie', 'Permite agregar una especie al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (301, '[Serpentario]EliminarEspecie', 'Permite eliminar una especie al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (302, '[Serpentario]EditarEspecie', 'Permite editar una especie al catálogo');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (310, '[Serpentario]AgregarSerpiente', 'Permite agregar una serpiente al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (311, '[Serpentario]EditarSerpiente', 'Permite editar una serpiente al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (312, '[Serpentario]EventoSerpiente', 'Permite registrar eventos a una serpiente al catálogo');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (320, '[Serpentario]AgregarExtraccion', 'Permite agregar una extraccion');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (321, '[Serpentario]EditarExtraccion', 'Permite editar una extraccion al catálogo');
 
 --Menu
 
@@ -255,9 +259,15 @@ UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' W
 
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 300, 'Especie', '/Serpentario/Especie');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (302, 300, 'Serpiente', '/Serpentario/Serpiente');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (303, 300, 'Extraccion', '/Serpentario/Extraccion');
 
 ------Permisos Menu Principal
 
 --Especie
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (40, 301);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (41, 301);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (300, 301);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (301, 301);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (310, 302);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (311, 302);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (320, 303);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (321, 303);
