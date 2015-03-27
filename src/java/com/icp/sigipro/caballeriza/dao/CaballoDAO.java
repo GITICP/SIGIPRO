@@ -7,6 +7,7 @@ package com.icp.sigipro.caballeriza.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,14 +65,21 @@ public class CaballoDAO {
             //------------------------------------------------------------
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE caballeriza.caballos " +
-                  " SET id_grupo_de_caballo=?, otras_sennas=?, fotografia=?,estado=? " +
+                  " SET otras_sennas=?,  estado=?, id_grupo_de_caballo=?" +
                   " WHERE id_caballo=?; "
             );
-            consulta.setInt(1,c.getGrupo_de_caballos().getId_grupo_caballo());
-            consulta.setString(2, c.getOtras_sennas());
-            consulta.setBlob(3, c.getFotografia());
-            consulta.setString(4, c.getEstado());
-            consulta.setInt(5,c.getId_caballo());
+//            int gC=c.getGrupo_de_caballos().getId_grupo_caballo();
+//            String sennas=c.getOtras_sennas();
+//            Blob foto=c.getFotografia();
+//            String ESTADO = c.getEstado();
+//            int id=c.getId_caballo();
+            consulta.setString(1, c.getOtras_sennas());
+            //consulta.setBlob(2, c.getFotografia());
+            consulta.setString(2, c.getEstado());
+            consulta.setInt(3,c.getGrupo_de_caballos().getId_grupo_caballo());
+            consulta.setInt(4,c.getId_caballo());
+            
+            int xxx= consulta.executeUpdate();
 
             if ( consulta.executeUpdate() == 1){
                 resultado = true;

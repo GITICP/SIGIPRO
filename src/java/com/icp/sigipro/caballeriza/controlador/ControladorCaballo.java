@@ -175,6 +175,13 @@ public class ControladorCaballo extends SIGIPROServlet {
         
         GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
         String grupo=request.getParameter("grupodecaballo");
+//        String nombre=request.getParameter("nombre");
+//        String micro=request.getParameter("numero_microchip");
+//        String sexo=request.getParameter("sexo");
+//        String color=request.getParameter("color");
+//        String sennas=request.getParameter("otras_sennas");
+//        String estado=request.getParameter("estado");
+        
         GrupoDeCaballos grupodecaballo;
         if(grupo == ""){
             grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(0);
@@ -189,6 +196,9 @@ public class ControladorCaballo extends SIGIPROServlet {
         java.util.Date fecha_nacimiento;
         java.sql.Date fecha_nacimientoSQL;
         try {
+          String fechaI2 =  request.getParameter("fecha_ingreso2");
+          String fechaI =  request.getParameter("fecha_ingreso");
+          String fechaN =  request.getParameter("fecha_nacimiento");
           fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
           fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
           fecha_nacimiento = formatoFecha.parse(request.getParameter("fecha_nacimiento"));

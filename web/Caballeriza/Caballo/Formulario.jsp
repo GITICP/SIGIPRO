@@ -24,6 +24,7 @@
                         </c:when>
                         <c:otherwise>
                             <input type="text" disabled='true' class="form-control" name="nombre" value="${caballo.getNombre()}"> 
+                            <input hidden="true" name="nombre" value="${caballo.getNombre()}">
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -41,6 +42,7 @@
                         </c:when>
                         <c:otherwise>
                             <input type="number" disabled='true' class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}"> 
+                            <input hidden="true" name="numero_microchip" value="${caballo.getNumero_microchip()}">
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -82,6 +84,7 @@
                             <input type="text" disabled='true' value="${caballo.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                    oninvalid="setCustomValidity('Este campo es requerido ')"
                                    onchange="setCustomValidity('')">
+                            <input hidden="true" name="fecha_ingreso" value="${caballo.getFecha_ingresoAsString()}">
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -100,6 +103,7 @@
                         <c:otherwise>
                             <input type="text" disabled='true' value="${caballo.getFecha_nacimientoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_nacimiento" data-date-format="dd/mm/yyyy"
                                    onchange="setCustomValidity('')">
+                            <input hidden="true" name="fecha_nacimiento" value="${caballo.getFecha_ingresoAsString()}">
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -132,9 +136,10 @@
                         </c:when>
                         <c:otherwise>
                             <input type="text" disabled='true' class="form-control" name="sexo" value="${caballo.getSexo()}"> 
+                            <input hidden="true" name="sexo" value="${caballo.getSexo()}">
                         </c:otherwise>
                     </c:choose>
-                </div>
+                           </div>
             </div>
         </div>
         <label for="color" class="control-label">Color</label>
@@ -148,6 +153,7 @@
                         </c:when>
                         <c:otherwise>
                             <input type="text" disabled='true' class="form-control" name="color" value="${caballo.getColor()}"> 
+                            <input hidden="true" name="color" value="${caballo.getColor()}">
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -205,7 +211,7 @@
                             <div class="col-sm-12">
                                 <div class="input-group">                
                                     <input type="file" value='' name="fotografia" accept="image/*" onchange="previewFile()" />
-                                    <input type='hidden' name='imagen2' id='fotografia' value=''>
+                                    <input type='hidden' name='fotografia' id='fotografia' value=''>
                                     <div><img name='imagenSubida' id="img_newjourney" src='' height="300" alt=""></div>
                                 </div>
                             </div>
