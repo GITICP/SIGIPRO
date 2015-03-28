@@ -137,8 +137,8 @@ public class ControladorLote extends SIGIPROServlet {
             bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LOTE,request.getRemoteAddr());
             //*----------------------------*
         }
-        request.setAttribute("listaLotes", dao.obtenerLotes());
-        redireccionar(request, response, redireccion);
+        request.setAttribute("id_lote", l.getId_lote());
+        this.getEditar(request, response);
     }
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
