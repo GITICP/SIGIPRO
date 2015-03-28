@@ -88,7 +88,8 @@ public class CepaDAO {
       consulta.setDate(12, p.getFecha_reposicionciclo_i());
       consulta.setDate(13, p.getFecha_reposicionciclo_f());
       consulta.setDate(14, p.getFecha_vigencia());
-
+      consulta.setInt(15, p.getId_cepa());
+      
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }

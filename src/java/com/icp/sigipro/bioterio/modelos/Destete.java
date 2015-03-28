@@ -46,7 +46,7 @@ public class Destete {
     if (this.fecha_destete != null)
     {return formatearFecha(fecha_destete);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
 
   public int getId_destete() {
     return id_destete;

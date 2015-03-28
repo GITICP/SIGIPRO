@@ -46,6 +46,7 @@ public class ControladorDestetes extends SIGIPROServlet {
       add("ver");
       add("agregar");
       add("editar");
+      add("eliminar");
     }
   };
   protected final List<String> accionesPost = new ArrayList<String>()
@@ -53,7 +54,6 @@ public class ControladorDestetes extends SIGIPROServlet {
     {
       add("agregar");
       add("editar");
-      add("eliminar");
     }
   };
   
@@ -131,6 +131,14 @@ public class ControladorDestetes extends SIGIPROServlet {
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(id_destete, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
       //*----------------------------* 
+      request.setAttribute("mensaje", helper.mensajeDeExito("Destete eliminado correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+    try {
+      List<Destete> destetes;
+      destetes = dao.obtenerDestetes();
+      request.setAttribute("listaDestetes", destetes);
     } catch (SIGIPROException ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
     }
@@ -156,11 +164,12 @@ public class ControladorDestetes extends SIGIPROServlet {
       request.setAttribute("mensaje", ex.getMessage() );
     }
     if (resultado){
-        redireccion = "Destetees/index.jsp";
+        redireccion = "Destetes/index.jsp";
         List<Destete> destetes;
       try {
         destetes = dao.obtenerDestetes();
         request.setAttribute("listaDestetes", destetes);
+        request.setAttribute("mensaje", helper.mensajeDeExito("Destete agregado con éxito"));
       } catch (SIGIPROException ex) {
         request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
       }
@@ -173,7 +182,34 @@ public class ControladorDestetes extends SIGIPROServlet {
   
   protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
-    String id = request.getParameter("id_destete");
+    boolean resultado = false;
+    String redireccion = "Destetes/Editar.jsp";
+    Destete destete = construirObjeto(request);
+    try {
+      resultado = dao.editarDestete(destete);
+      //Funcion que genera la bitacora
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(destete.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+      //*----------------------------*
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", ex.getMessage() );
+    }
+    if (resultado){
+        redireccion = "Destetes/index.jsp";
+        List<Destete> destetes;
+      try {
+        destetes = dao.obtenerDestetes();
+        request.setAttribute("listaDestetes", destetes);
+        request.setAttribute("mensaje", helper.mensajeDeExito("Destete editado con éxito"));
+
+      } catch (SIGIPROException ex) {
+        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+      }
+    }
+    else {
+      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+    }
+    redireccionar(request, response, redireccion);
   }
   
   // </editor-fold>
@@ -191,6 +227,7 @@ public class ControladorDestetes extends SIGIPROServlet {
     } catch (ParseException ex) {
       Logger.getLogger(ControladorDestetes.class.getName()).log(Level.SEVERE, null, ex);
     }
+    destete.setId_destete(Integer.parseInt(request.getParameter("id_destete")));
     destete.setNumero_hembras(Integer.parseInt(request.getParameter("numero_hembras")));
     destete.setNumero_machos(Integer.parseInt(request.getParameter("numero_machos")));
     return destete;

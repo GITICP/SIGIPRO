@@ -60,7 +60,8 @@ public class CajaRatoneraDAO {
 
       consulta.setInt(1, p.getNumero_caja());
       consulta.setInt(2, p.getCepa().getId_cepa());
-
+      consulta.setInt(3, p.getId_caja_ratonera());
+      
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }

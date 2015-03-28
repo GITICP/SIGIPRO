@@ -78,6 +78,7 @@ public class SolicitudRatoneraDAO {
       consulta.setString(8, p.getObservaciones());
       consulta.setString(9, p.getObservaciones_rechazo());
       consulta.setString(10, p.getEstado());
+      consulta.setInt(11, p.getId_solicitud());
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;

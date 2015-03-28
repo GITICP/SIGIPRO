@@ -88,12 +88,12 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (205, '[B
 
 
 --Entradas del Menu de Bioterio
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Conejera', '/Conejera/Cajas');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (250, 0, 'Ratonera', '/Ratonera/Cajas');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (201, 200, 'Cajas', '/Conejera/Cajas');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (250, 0, 'Conejera', '/Conejera/Cajas');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (200, 0, 'Ratonera', '/Ratonera/Cajas');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (201, 200, 'Cajas Ratonera', '/Ratonera/Cajas');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (202, 200, 'Cepas', '/Ratonera/Cepas');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (203, 200, 'Solicitudes de Ratones', '/Conejera/Solicitudes');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (204, 200, 'Destetes', '/Conejera/Destetes');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (203, 200, 'Solicitudes de Ratones', '/Ratonera/Solicitudes');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (204, 200, 'Destetes', '/Ratonera/Destetes');
 
 
 --Permisos del menu principal de Bioterio

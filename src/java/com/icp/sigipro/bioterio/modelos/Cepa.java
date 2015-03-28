@@ -175,57 +175,57 @@ public class Cepa {
     if (this.fecha_apareamiento_i != null)
     {return formatearFecha(fecha_apareamiento_i);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_apareamiento_f_S(){
     if (this.fecha_apareamiento_f != null)
     {return formatearFecha(fecha_apareamiento_f);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_eliminacionmacho_i_S(){
     if (this.fecha_eliminacionmacho_i != null)
     {return formatearFecha(fecha_eliminacionmacho_i);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_eliminacionmacho_f_S(){
     if (this.fecha_eliminacionmacho_f != null)
     {return formatearFecha(fecha_eliminacionmacho_f);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_eliminacionhembra_i_S(){
     if (this.fecha_eliminacionhembra_i != null)
     {return formatearFecha(fecha_eliminacionhembra_i);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_eliminacionhembra_f_S(){
     if (this.fecha_eliminacionhembra_f != null)
     {return formatearFecha(fecha_eliminacionhembra_f);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_seleccionnuevos_i_S(){
     if (this.fecha_seleccionnuevos_i != null)
     {return formatearFecha(fecha_seleccionnuevos_i);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_seleccionnuevos_f_S(){
     if (this.fecha_seleccionnuevos_f != null)
     {return formatearFecha(fecha_seleccionnuevos_f);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    public String getFecha_reposicionciclo_i_S(){
     if (this.fecha_reposicionciclo_i != null)
     {return formatearFecha(fecha_reposicionciclo_i);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
     public String getFecha_reposicionciclo_f_S(){
     if (this.fecha_reposicionciclo_f != null)
     {return formatearFecha(fecha_reposicionciclo_f);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
      public String getFecha_vigencia_S(){
     if (this.fecha_vigencia != null)
     {return formatearFecha(fecha_vigencia);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
    
    
   private String formatearFecha(Date fecha)

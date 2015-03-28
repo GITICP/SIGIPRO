@@ -61,7 +61,8 @@ public class DesteteDAO {
       consulta.setDate(1, p.getFecha_destete());
       consulta.setInt(2, p.getNumero_hembras());
       consulta.setInt(3, p.getNumero_machos());
-
+      consulta.setInt(4, p.getId_destete());
+      
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
