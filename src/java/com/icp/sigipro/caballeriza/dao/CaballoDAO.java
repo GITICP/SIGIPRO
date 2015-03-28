@@ -141,7 +141,8 @@ public class CaballoDAO {
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setFotografia(rs.getBlob("fotografia"));
                 resultado.add(caballo);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }

@@ -118,7 +118,7 @@ public class GrupoDeCaballosDAO {
     public List<GrupoDeCaballos> obtenerGruposDeCaballos(){
         List<GrupoDeCaballos> resultado = new ArrayList<GrupoDeCaballos>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("select * from caballeriza.grupos_de_caballos");
+            PreparedStatement consulta = getConexion().prepareStatement("select * from caballeriza.grupos_de_caballos where id_grupo_de_caballo != 0");
             ResultSet rs = consulta.executeQuery();
             while(rs.next()){
                 GrupoDeCaballos grupo = new GrupoDeCaballos();

@@ -59,7 +59,10 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
 
         String redireccion = "GrupoDeCaballos/Agregar.jsp";
         GrupoDeCaballos g = new GrupoDeCaballos();
+        CaballoDAO c = new CaballoDAO();
+        List<Caballo> caballos_restantes = c.obtenerCaballosRestantes();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
+        request.setAttribute("caballos_restantes", caballos_restantes);
         request.setAttribute("grupodecaballos", g);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
@@ -137,6 +140,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "GrupoDeCaballos/Agregar.jsp";
         GrupoDeCaballos g = construirObjeto(request);
+        String lista = request.getParameter("listaCaballos");
 
        // System.out.println(request.getParameter("imagen2").getBytes());
 
