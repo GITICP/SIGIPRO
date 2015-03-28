@@ -28,7 +28,8 @@
             <c:when test="${boolEditar}">
               <select id="seleccioninventario" class="select2" style='background-color: #fff;' name="seleccioninventario" required
                       oninvalid="setCustomValidity('Este campo es requerido')"
-                      oninput="setCustomValidity('')" disabled>
+                      onchange="setCustomValidity('')">
+                <option value=''></option>
                 <c:forEach items="${inventarios}" var="inventario">
                   <c:choose>
                     <c:when test="${inventario.getId_inventario() == prestamo.getSolicitud().getId_inventario()}">
@@ -44,7 +45,8 @@
             <c:otherwise>
               <select id="seleccioninventario" class="select2" style='background-color: #fff;' name="seleccioninventario" required
                       oninvalid="setCustomValidity('Este campo es requerido')"
-                      oninput="setCustomValidity('')">
+                      onchange="setCustomValidity('')">
+                <option value=''></option>
                 <c:forEach items="${inventarios}" var="inventario">
                   <option data-stock="${inventario.getStock_actual()}" value=${inventario.getId_inventario()}> Producto: ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) - Sección: ${inventario.getSeccion().getNombre_seccion()} - Presentación: ${inventario.getProducto().getPresentacion()} </option>
                 </c:forEach>

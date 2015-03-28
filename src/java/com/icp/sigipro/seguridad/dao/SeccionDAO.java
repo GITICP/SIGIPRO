@@ -35,6 +35,7 @@ public class SeccionDAO {
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarSecciones(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;

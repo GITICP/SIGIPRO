@@ -43,6 +43,7 @@ public class RolDAO
                     r.setId_rol(resultadoConsulta.getInt("id_rol"));
 
                 }
+                resultadoConsulta.close();
                 consulta.close();
                 conexion.close();
             }
@@ -145,6 +146,7 @@ public class RolDAO
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarRoles(resultadoConsulta);
                 resultadoConsulta.close();
+                consulta.close();
                 conexion.close();
             }
             catch(SQLException ex)
@@ -187,6 +189,7 @@ public class RolDAO
                   resultado = resultadoConsulta.getString("nombre");
                 }
                 else {resultado = "Error";}
+                resultadoConsulta.close();
                 consulta.close();
                 conexion.close();
                 
@@ -218,6 +221,9 @@ public class RolDAO
 
         resultado = new Rol(p_id, nombre, descripcion);
       }
+      resultadoConsulta.close();
+      consulta.close();
+      conexion.close();
     } catch (SQLException ex) {
 
     }
@@ -239,6 +245,7 @@ public class RolDAO
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarUsuariosRol(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;
@@ -274,6 +281,8 @@ public class RolDAO
           ru.setNombreUsuario(nombreu);
         }
         ResConsulta.close();
+        consulta.close();
+        conexion.close();
       } catch (SQLException ex) {
         System.out.println(ex);
         resultado = null;
@@ -281,7 +290,6 @@ public class RolDAO
 
       resultado.add(ru);
     }
-    conexion.close();
     return resultado;
   }
      
@@ -302,6 +310,9 @@ public class RolDAO
       if (resultadoConsulta.next()) {
         resultado = resultadoConsulta.getInt("id_rol");
       }
+      resultadoConsulta.close();
+      consulta.close();
+      conexion.close();
     } catch (SQLException ex) {
 
     }
@@ -328,6 +339,8 @@ public class RolDAO
       {
         resultado1 = true;
       }
+        consulta.close();
+        conexion.close();
       }
       catch (SQLException ex) {
       ex.printStackTrace();

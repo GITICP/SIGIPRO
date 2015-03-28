@@ -41,6 +41,7 @@ public class SeccionDAO
                 seccion.setId_seccion(resultadoConsulta.getInt("id_seccion"));
                 
             }
+        resultadoConsulta.close();
         consulta.close();
         conexion.close();
       }
@@ -129,6 +130,10 @@ public class SeccionDAO
         if (!resultadoConsulta.next()) {
           resultado = true;
         }
+        
+        resultadoConsulta.close();
+        consulta.close();
+        conexion.close();
       }
       catch (SQLException ex) {
         ex.printStackTrace();
@@ -151,6 +156,7 @@ public class SeccionDAO
         ResultSet resultadoConsulta = consulta.executeQuery();
         resultado = llenarSecciones(resultadoConsulta);
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       }
       catch (SQLException ex) {
@@ -178,6 +184,7 @@ public class SeccionDAO
           resultado.setDescripcion(resultadoConsulta.getString("descripcion"));
         }
         resultadoConsulta.close();
+        consulta.close();
         conexion.close();
       } catch (SQLException ex) {
         resultado = null;

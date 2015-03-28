@@ -20,13 +20,13 @@ DELETE FROM seguridad.permisos_menu_principal WHERE id_permiso = 23 AND id_menu_
 
 --Inserción de permisos de activos fijos y ubicaciones
   --Activos fijos
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 31, '[Bodegas]Agregar Activo Fijo', 'Permite ingresar un activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 31);
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 32, '[Bodegas]Editar Activo Fijo', 'Permite modificar y cambiar estado de un activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 32);
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 33, '[Bodegas]Eliminar Activo Fijo', 'Permite eliminar un activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 33);
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 31, '[ActivosFijos]Agregar Activo Fijo', 'Permite ingresar un activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 31);
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 32, '[ActivosFijos]Editar Activo Fijo', 'Permite modificar y cambiar estado de un activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 32);
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 33, '[ActivosFijos]Eliminar Activo Fijo', 'Permite eliminar un activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 33);
   --Ubicaciones activos fijos
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 34, '[Bodegas]Agregar Ubicación Activo Fijo', 'Permite agregar una ubicación de activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 34);
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 35, '[Bodegas]Editar Ubicación Activo Fijo', 'Permite editar una ubicación de activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 35);
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 36, '[Bodegas]Eliminar Ubicación Activo Fijo', 'Permite eliminar una ubicación de activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 36);
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 34, '[ActivosFijos]Agregar Ubicación Activo Fijo', 'Permite agregar una ubicación de activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 34);
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 35, '[ActivosFijos]Editar Ubicación Activo Fijo', 'Permite editar una ubicación de activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 35);
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 36, '[ActivosFijos]Eliminar Ubicación Activo Fijo', 'Permite eliminar una ubicación de activo fijo' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 36);
   --Ubicacoines de bodega
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 37, '[Bodegas]Agregar Ubicación de Bodega', 'Permite agregar una ubicación de bodega' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 37);
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) SELECT 38, '[Bodegas]Editar Ubicación de Bodega', 'Permite editar una ubicación de bodega' WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 38);

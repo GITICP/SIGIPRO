@@ -5,6 +5,11 @@
 
 // Funcion que agrega el permiso seleccionado el permiso seleccionado a la tabla de permisos en Agregar Rol
 function agregarPermiso() {
+     if (!$('#formAgregarPermisoRol')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formAgregarPermisoRol')).click().remove();
+    $('#formAgregarPermisoRol').find(':submit').click();
+  }
+  else{
   $('#modalAgregarPermisoRol').modal('hide');
 
   permisoSeleccionado = $('#seleccionPermiso :selected');
@@ -21,6 +26,9 @@ function agregarPermiso() {
   fila += '</tr>';
   
   $('#datatable-column-filter-permisos > tbody:last').append(fila);
+  
+  $('#inputGroupSeleccionPermiso').find('.select2-chosen').each(function(){$(this).prop('id',''); $(this).text('');});
+  }
 }
 
 // Funcion que elimina el permiso seleccionado de la tabla de permisos en Agregar Rol

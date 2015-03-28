@@ -50,7 +50,7 @@ public abstract class SIGIPROServlet extends HttpServlet
   {
     String accion = request.getParameter("accion");
     if (accion == null) {
-      accion = "index";
+        accion = "index";
     }
     try {
       ejecutarAccion(request, response, accion, accionHTTP);

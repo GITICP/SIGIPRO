@@ -122,6 +122,9 @@ public class PuestoDAO {
                 if (!resultadoConsulta.next()) {
                     resultado = true;
                 }
+                resultadoConsulta.close();
+                consulta.close();
+                conexion.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -142,6 +145,7 @@ public class PuestoDAO {
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarPuestos(resultadoConsulta);
                 resultadoConsulta.close();
+                consulta.close();
                 conexion.close();
             } catch (SQLException ex) {
                 resultado = null;

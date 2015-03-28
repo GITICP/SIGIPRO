@@ -23,17 +23,6 @@
                     </div>
                 </div>
             </div>
-            <label for="codigoICP" class="control-label">* Código ICP</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Ejemplo: 73b" class="form-control" name="codigoICP" value="${producto.getCodigo_icp()}"
-                               required
-                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                               oninput="setCustomValidity('')" > 
-                    </div>
-                </div>
-            </div>
             <label for="stockMinimo" class="control-label">* Stock Mínimo</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -56,8 +45,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
             <label for="presentacion" class="control-label">* Presentación</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -69,6 +56,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
             <label for="descripcion" class="control-label">Descripción</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -296,10 +285,11 @@
             <label for="idUbicacion" class="control-label">*Ubicación</label>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="seleccionUbicacion" class="form-control" style='background-color: #fff;' name="idUbicacion" required
+                    <div class="input-group" id='inputGroupSeleccionUbicacion'>
+                        <select id="seleccionUbicacion" class="select2" style='background-color: #fff;' name="idUbicacion" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                                onchange="setCustomValidity('')">
+                            <option value='' ></option>
                             <c:forEach items="${ubicacionesRestantes}" var="ubicacion">
                                 <option value=${ubicacion.getId_ubicacion()}>${ubicacion.getNombre()}</option>
                             </c:forEach> 
@@ -329,10 +319,11 @@
             <label for="idProductoExterno" class="control-label">*Producto Externo</label>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="seleccionProductoExterno" class="form-control" style='background-color: #fff;' name="idProductoExterno" required
+                    <div class="input-group" id='inputGroupSeleccionProductoExterno'>
+                        <select id="seleccionProductoExterno" class="select2" style='background-color: #fff;' name="idProductoExterno" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                                onchange="setCustomValidity('')">
+                            <option value='' ></option>
                             <c:forEach items="${productosExternosRestantes}" var="producto">
                                 <option value=${producto.getId_producto_ext()}>${producto.getProducto()} (${producto.getCodigo_Externo()})</option>
                             </c:forEach> 

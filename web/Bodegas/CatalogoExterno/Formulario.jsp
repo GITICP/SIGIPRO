@@ -47,9 +47,10 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <select id="proveedor" class="form-control" name="proveedor" style='background-color: #fff;' required
+          <select id="proveedor" class="select2" name="proveedor" style='background-color: #fff;' required
                  oninvalid="setCustomValidity('Este campo es requerido ')"
-                 oninput="setCustomValidity('')" > 
+                 onchange="setCustomValidity('')" > 
+            <option value='' ></option>
             <c:set var='varAccion' value="Agregar"/>
             <c:choose>
               <c:when test="${accion eq varAccion || producto.getId_Proveedor()==0}">

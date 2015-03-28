@@ -57,10 +57,7 @@
                   <tr>
                     <th>Código ICP</th>
                     <th>Nombre</th>
-                    <th>Stock Mínimo</th>
-                    <th>Stock Máximo</th>
                     <th>Presentación</th>
-                    <th>Descripción</th>
                     <th>Ingresa en Cuarentena</th>
                     <th>Es perecedero</th>
                     <th>Es reactivo</th>
@@ -78,10 +75,7 @@
                         </a>
                       </td>
                       <td>${producto.getNombre()}</td>
-                      <td>${producto.getStock_minimo()}</td>
-                      <td>${producto.getStock_maximo()}</td>
                       <td>${producto.getPresentacion()}</td>
-                      <td>${producto.getDescripcion()}</td>
                       <td>${producto.getCuarentena()}</td>
                       <td>${producto.getPerecedero()}</td>
                       <td>${producto.isReactivo()}</td>

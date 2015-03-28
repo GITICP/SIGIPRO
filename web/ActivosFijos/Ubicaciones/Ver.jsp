@@ -65,7 +65,7 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Nombre del Producto:</strong></td> <td>${ubicacion.getNombre()} </td></tr>
+                <tr><td> <strong>Nombre de la Ubicación:</strong></td> <td>${ubicacion.getNombre()} </td></tr>
                 <tr><td> <strong>Descripción:</strong> <td>${ubicacion.getDescripcion()} </td></tr>
               </table>
               <br>

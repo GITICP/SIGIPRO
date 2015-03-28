@@ -95,10 +95,8 @@
                     <th>Placa</th>
                     <th>Equipo</th>
                     <th>Marca</th>
-                    <th>Fecha de Movimiento</th>
                     <th>Sección</th>
                     <th>Ubicación</th>
-                    <th>Fecha de Registro</th>
                     <th>Estado</th>
                     <th>Responsable</th>
                     <th>Número de Serie</th>
@@ -117,10 +115,8 @@
                       </td>
                       <td>${activos.getEquipo()}</td>
                       <td>${activos.getMarca()}</td>
-                      <td>${activos.getFecha_movimiento()}</td>
                       <td>${activos.getNombre_seccion()}</td>
                       <td>${activos.getNombre_ubicacion()}</td>
-                      <td>${activos.getFecha_registro()}</td>
                       <td>${activos.getEstado()}</td>
                       <td>${activos.getResponsable()}</td>
                       <td>${activos.getSerie()}</td>

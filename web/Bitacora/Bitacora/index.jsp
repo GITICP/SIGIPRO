@@ -1,12 +1,13 @@
 <%-- 
     Document   : index
-    Created on : Nov 26, 2014, 10:16:57 PM
-    Author     : Walter
+    Created on : Jan 27, 2015, 2:08:13 PM
+    Author     : Conejo
 --%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Bitacora" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -17,9 +18,9 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Bitácora</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Inventarios?">Inventarios</a>
+              <a href="/SIGIPRO/Bitacora/Bitacora?">Bitácora</a>
             </li>
           </ul>
         </div>
@@ -35,39 +36,47 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Inventarios </h3>
+              <h3><i class="fa fa-barcode"></i> Bitácora </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 11}">
+                <c:if test="${permiso == 1 || permiso == 21}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table id="example" class="table table-sorting table-responsive table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Producto</th>
-                    <th>Sección</th>
-                    <th>Stock Actual</th>
+                    <th>Fecha Acción</th>
+                    <th>Usuario</th>
+                    <th>IP</th>
+                    <th>Tabla</th>
+                    <th>Acción</th>
+                    <th>ID Objeto</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaInventarios}" var="inventarios">
-                    <tr id ="${inventarios.getId_inventario()}">
+                  <c:forEach items="${listaBitacoras}" var="bitacora">
+
+                    <tr id ="${bitacora.getId_bitacora()}">
                       <td>
-                        <a href="/SIGIPRO/Bodegas/Inventarios?accion=ver&id_inventario=${inventarios.getId_inventario()}">
+                        <a href="/SIGIPRO/Bitacora/Bitacora?accion=ver&id_bitacora=${bitacora.getId_bitacora()}">
                           <div style="height:100%;width:100%">
-                            ${inventarios.getProducto().getNombre()}
+                            ${bitacora.getFecha_accion_parse()}
                           </div>
                         </a>
                       </td>
-                      <td>${inventarios.getSeccion().getNombre_seccion()}</td>
-                      <td>${inventarios.getStock_actual()}</td>
+                      <td>${bitacora.getNombre_usuario()}</td>
+                      <td>${bitacora.getIp()}</td>
+                      <td>${bitacora.getTabla()}</td>
+                      <td>${bitacora.getAccion()}</td>
+                      <td>${bitacora.getId_objeto()}</td>
                     </tr>
+
                   </c:forEach>
                 </tbody>
               </table>
