@@ -9,18 +9,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
-<form id="grupodecaballosForm" class="form-horizontal" autocomplete="off" method="post" action="GrupoDeCaballos">
+<form id="tipoeventoForm" class="form-horizontal" autocomplete="off" method="post" action="TipoEvento">
     <div class="row">
         <div class="col-md-6">
-            <input hidden="true" name="id_grupo_de_caballo" value="${grupodecaballos.getId_grupo_caballo()}">
-            <input id="caballos" hidden="true" name="listaCaballos" value="">
-            <input id="ids-caballos" hidden="true" name="ids_caballos" value="">
+            <input hidden="true" name="id_tipo_evento" value="${tipoevento.getId_grupo_caballo()}">
+            <input id="eventos" hidden="true" name="listaEventos" value="">
+            <input id="ids-eventos" hidden="true" name="ids_eventos" value="">
             <input hidden="true" name="accion" value="${accion}">
-            <label for="nombre" class="control-label">* Nombre del Grupo de Caballos</label>
+            <label for="nombre" class="control-label">* Nombre del Tipo de Eventos</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="AF-1" class="form-control" name="nombre" value="${grupodecaballos.getNombre()}"
+                        <input type="text" maxlength="45" placeholder="Tipo de evento" class="form-control" name="nombre" value="${tipoevento.getNombre()}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                oninput="setCustomValidity('')" > 
@@ -33,35 +33,35 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea rows="5" cols="50" maxlength="500" placeholder="Descripción" class="form-control" name="descripcion" >${grupodecaballos.getDescripcion()}</textarea>
+                        <textarea rows="5" cols="50" maxlength="200" placeholder="Descripción" class="form-control" name="descripcion" >${tipoevento.getDescripcion()}</textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-12">
-        <!-- Esta parte es la de los caballos del grupo -->
+        <!-- Esta parte es la de los eventos del tipo -->
         <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-check"></i> Caballos del Grupo de Caballos Asociados</h3>
+                <h3><i class="fa fa-check"></i> Eventos del Tipo Asociados</h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarCaballo">Agregar</a>
+                    <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarEvento">Agregar</a>
                 </div>
             </div>
             <div class="widget-content">
                 <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                     <thead>
                         <tr>
-                            <th>Nombre y Numero de Microchip</th>
+                            <th>Descripción</th>
                             <th>Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${caballos}" var="caballo">
-                            <tr id="${caballo.getId_caballo()}">
-                             <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                        <c:forEach items="${eventos}" var="caballo">
+                            <tr id="${caballo.getId_evento()}">
+                             <td>${caballo.getDescripcio ()}</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarCaballo(${caballo.getId_caballo()})">Eliminar</button>
+                                    <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarEvento(${caballo.getId_evento()})">Eliminar</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -78,10 +78,10 @@
                 <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
                 <c:choose>
                     <c:when test= "${accion.equals('Editar')}">
-                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarGrupo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarTipo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                     </c:when>
                     <c:otherwise>
-                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarGrupo()"><i class="fa fa-check-circle"></i> ${accion} Grupo de Caballos</button>
+                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarTipo()"><i class="fa fa-check-circle"></i> ${accion} Tipos de eventos</button>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -93,7 +93,7 @@
     <jsp:attribute name="form">
 
         <form name="form-Caballo-Grupo" id="form-Caballo-Grupo" class="form-horizontal">
-            <input type="text" name="grupodecaballos"  hidden="true">
+            <input type="text" name="tipoevento"  hidden="true">
             <label for="idcaballo" class="control-label">Seleccione un caballo:</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -102,7 +102,7 @@
                                 oninvalid="setCustomValidity('Este campo es requerido ')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
-                            <c:forEach items="${caballos_restantes}" var="pr">
+                            <c:forEach items="${eventos_restantes}" var="pr">
                                 <option value=${pr.getId_caballo()}>${pr.getNombre()} (${pr.getNumero_microchip()})</option>
                             </c:forEach>
                         </select>

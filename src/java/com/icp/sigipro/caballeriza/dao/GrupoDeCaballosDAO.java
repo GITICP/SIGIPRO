@@ -126,7 +126,8 @@ public class GrupoDeCaballosDAO {
                 grupo.setNombre(rs.getString("nombre"));
                 grupo.setDescripcion(rs.getString("descripcion"));
                 resultado.add(grupo);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }
