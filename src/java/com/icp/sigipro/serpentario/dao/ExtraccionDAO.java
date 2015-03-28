@@ -52,6 +52,7 @@ public class ExtraccionDAO {
                 resultado = true;
                 e.setId_extraccion(resultadoConsulta.getInt("id_extraccion"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
         }
@@ -116,9 +117,7 @@ public class ExtraccionDAO {
                 consulta.setInt(2, l.getUsuario_fin().getId_usuario());
                 consulta.setDate(3, l.getFecha_fin());
                 consulta.setInt(4, l.getId_extraccion());
-                
-                System.out.println(consulta);
-                
+                                
                 if ( consulta.executeUpdate() == 1){
                     resultado = true;
                 }
@@ -170,7 +169,7 @@ public class ExtraccionDAO {
                 }
                 resultado = true;
             }
-
+            
             consulta.close();
             conexion.close();
         }
@@ -241,7 +240,7 @@ public class ExtraccionDAO {
                 Serpiente serpiente = serpientedao.obtenerSerpiente(id_serpiente);
                 resultado.add(serpiente);
             }
-
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -265,7 +264,7 @@ public class ExtraccionDAO {
                 Usuario usuario = usuariodao.obtenerUsuario(id_usuario);
                 resultado.add(usuario);
             }
-
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -295,7 +294,8 @@ public class ExtraccionDAO {
                 extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
                 validarExtraccion(extraccion);
                 resultado.add(extraccion);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -416,6 +416,7 @@ public class ExtraccionDAO {
                 extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
                 validarExtraccion(extraccion);
             }      
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -438,6 +439,7 @@ public class ExtraccionDAO {
                 centrifugado.setVolumen_recuperado(rs.getFloat("volumen_recuperado"));
                 centrifugado.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
             }      
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -461,7 +463,8 @@ public class ExtraccionDAO {
                 liofilizacion.setPeso_recuperado(rs.getFloat("peso_recuperado"));
                 liofilizacion.setUsuario_inicio(usuariodao.obtenerUsuario(rs.getInt("id_usuario_inicio")));
                 liofilizacion.setUsuario_fin(usuariodao.obtenerUsuario(rs.getInt("id_usuario_fin")));
-            }      
+            } 
+            rs.close();
             consulta.close();
             conexion.close();
         }

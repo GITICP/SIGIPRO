@@ -47,6 +47,7 @@ public class EventoDAO {
                 resultado = true;
                 e.setId_evento(resultadoConsulta.getInt("id_evento"));
             }
+            resultadoConsulta.close();            
             consulta.close();
             conexion.close();
         }
@@ -71,6 +72,7 @@ public class EventoDAO {
                 resultado = true;
                 e.setId_evento(resultadoConsulta.getInt("id_evento"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
         }
@@ -95,6 +97,7 @@ public class EventoDAO {
                 resultado = true;
                 evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
             
@@ -119,6 +122,7 @@ public class EventoDAO {
                 resultado = true;
                 evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
             
@@ -144,6 +148,7 @@ public class EventoDAO {
                 resultado = true;
                 e.setId_evento(resultadoConsulta.getInt("id_evento"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
         }
@@ -182,7 +187,8 @@ public class EventoDAO {
                     
                 }
                 resultado.add(e);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -216,7 +222,8 @@ public class EventoDAO {
                 }catch (Exception ex){
                     
                 }
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }

@@ -42,6 +42,7 @@ public class EspecieDAO {
                 resultado = true;
                 e.setId_especie(resultadoConsulta.getInt("id_especie"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
         }
@@ -109,7 +110,10 @@ public class EspecieDAO {
                 especie.setId_especie(rs.getInt("id_especie"));
                 especie.setGenero(rs.getString("genero"));
                 especie.setEspecie(rs.getString("especie"));
-            }      
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -128,7 +132,8 @@ public class EspecieDAO {
                 especie.setGenero(rs.getString("genero"));
                 especie.setEspecie(rs.getString("especie"));
                 resultado.add(especie);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }

@@ -6,6 +6,7 @@
 package com.icp.sigipro.serpentario.modelos;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -14,7 +15,11 @@ import org.json.JSONObject;
  */
 public class Lote {
     private int id_lote;
+    private Especie especie;
     private Veneno veneno;
+    private List<Extraccion> extracciones;
+    private float cantidad_actual;
+    private float cantidad_total;
 
     public Lote() {
     }
@@ -30,6 +35,38 @@ public class Lote {
 
     public void setId_lote(int id_lote) {
         this.id_lote = id_lote;
+    }
+
+    public float getCantidad_actual() {
+        return cantidad_actual;
+    }
+
+    public void setCantidad_actual(float cantidad_actual) {
+        this.cantidad_actual = cantidad_actual;
+    }
+
+    public float getCantidad_total() {
+        return cantidad_total;
+    }
+
+    public void setCantidad_total(float cantidad_total) {
+        this.cantidad_total = cantidad_total;
+    }
+
+    public List<Extraccion> getExtracciones() {
+        return extracciones;
+    }
+
+    public void setExtracciones(List<Extraccion> extracciones) {
+        this.extracciones = extracciones;
+    }
+
+    public Especie getEspecie() {
+        return especie;
+    }
+
+    public void setEspecie(Especie especie) {
+        this.especie = especie;
     }
 
     public Veneno getVeneno() {

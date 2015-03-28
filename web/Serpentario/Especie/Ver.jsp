@@ -61,7 +61,7 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre del Género:</strong></td> <td>${especie.getGenero()} </td></tr>
-                <tr><td> <strong>Nombe de la Especie:</strong> <td>${especie.getEspecie()} </td></tr>
+                <tr><td> <strong>Nombre de la Especie:</strong> <td>${especie.getEspecie()} </td></tr>
               </table>
               <br>
             </div>

@@ -23,7 +23,7 @@
             <li> 
               <a href="/SIGIPRO/Serpentario/Extraccion?">Extracción</a>
             </li>
-            <li class="active"> ${extraccion.getId_extraccion()} </li>
+            <li class="active"> ${extraccion.getNumero_extraccion()} </li>
           </ul>
         </div>
         <div class="col-md-8 ">

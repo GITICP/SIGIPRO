@@ -51,6 +51,7 @@ public class SerpienteDAO {
                 resultado = true;
                 s.setId_serpiente(resultadoConsulta.getInt("id_serpiente"));
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
         }
@@ -69,8 +70,13 @@ public class SerpienteDAO {
             if (resultadoConsulta.next()){
                 resultado=true;
                 int currval = resultadoConsulta.getInt("last_value");
-                nextval = currval + 1;
+                if (nextval==1){
+                    nextval = currval;
+                }else{
+                    nextval = currval + 1;
+                }
             }
+            resultadoConsulta.close();
             consulta.close();
             conexion.close();
         }catch (Exception e){
@@ -167,7 +173,10 @@ public class SerpienteDAO {
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));
                 serpiente.setPeso(rs.getFloat("peso"));
                 serpiente.setImagen(rs.getBlob("imagen"));
-            }      
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -197,7 +206,8 @@ public class SerpienteDAO {
                 serpiente.setPeso(rs.getFloat("peso"));
                 serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -232,7 +242,8 @@ public class SerpienteDAO {
                 serpiente.setPeso(rs.getFloat("peso"));
                 serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
-            }      
+            } 
+            rs.close();
             consulta.close();
             conexion.close();
         }
@@ -266,7 +277,8 @@ public class SerpienteDAO {
                 serpiente.setPeso(rs.getFloat("peso"));
                 serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
-            }      
+            } 
+            rs.close();
             consulta.close();
             conexion.close();
         }
