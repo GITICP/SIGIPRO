@@ -246,6 +246,14 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (312, '[S
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (320, '[Serpentario]AgregarExtraccion', 'Permite agregar una extraccion');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (321, '[Serpentario]EditarExtraccion', 'Permite editar una extraccion al catálogo');
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (330, '[Serpentario]AgregarLote', 'Permite agregar un lote');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (331, '[Serpentario]EditarLote', 'Permite editar un lote al catálogo');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (340, '[Serpentario]VerVenenoSerpentario', 'Permite ver el catalogo de venenos completo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (341, '[Serpentario]VerVenenoExterno', 'Permite ver parte del catalogo de venenos.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (342, '[Serpentario]EditarVeneno', 'Permite editar los venenos.');
+
+
 --Menu
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' WHERE id_menu_principal = 300;
@@ -254,6 +262,8 @@ UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' W
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 300, 'Especie', '/Serpentario/Especie');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (302, 300, 'Serpiente', '/Serpentario/Serpiente');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (303, 300, 'Extraccion', '/Serpentario/Extraccion');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (304, 300, 'Lote', '/Serpentario/Lote');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (305, 300, 'Veneno', '/Serpentario/Veneno');
 
 ------Permisos Menu Principal
 
@@ -264,3 +274,8 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (311, 302);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (320, 303);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (321, 303);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (330, 304);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (331, 304);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (340, 305);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (341, 305);
+

@@ -173,6 +173,28 @@ public class LoteDAO {
         return resultado;
     }
     
+    public List<Lote> obtenerLotes(Especie e){
+        List<Lote> resultado = new ArrayList<Lote>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote FROM serpentario.lote WHERE id_especie=?; ");
+            consulta.setInt(1, e.getId_especie());
+            ResultSet rs = consulta.executeQuery();
+            while(rs.next()){
+                Lote lote = new Lote();
+                lote.setId_lote(rs.getInt("id_lote"));
+                lote.setEspecie(e);
+                resultado.add(lote);
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public Lote obtenerLote(int id_lote){
         Lote resultado = new Lote();
         try{

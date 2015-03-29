@@ -10,9 +10,10 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
 import com.icp.sigipro.serpentario.dao.LoteDAO;
+import com.icp.sigipro.serpentario.dao.VenenoDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
-import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.serpentario.modelos.Lote;
+import com.icp.sigipro.serpentario.modelos.Veneno;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -28,71 +29,56 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorLote", urlPatterns = {"/Serpentario/Lote"})
-public class ControladorLote extends SIGIPROServlet {
+@WebServlet(name = "ControladorVeneno", urlPatterns = {"/Serpentario/Veneno"})
+public class ControladorVeneno extends SIGIPROServlet {
 
-    //Falta implementar
-    private final int[] permisos = {1, 330, 331};
+    //340 ver Serpentario, 341 ver Externo, 342 Editar de serpentario
+    private final int[] permisos = {1, 340, 341, 342};
     //-----------------
-    private LoteDAO dao = new LoteDAO();
+    private VenenoDAO dao = new VenenoDAO();
+    private LoteDAO lotedao = new LoteDAO();
     private EspecieDAO especiedao = new EspecieDAO();
 
-    protected final Class clase = ControladorLote.class;
+    protected final Class clase = ControladorVeneno.class;
     protected final List<String> accionesGet = new ArrayList<String>()
     {
         {
             add("index");
             add("ver");
-            add("agregar");
+            add("verexterno");
             add("editar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
     {
         {
-            add("agregar");
             add("editar");
         }
     };
 
   // <editor-fold defaultstate="collapsed" desc="Métodos Get">
   
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(330, listaPermisos);
-
-        String redireccion = "Lote/Agregar.jsp";
-        Lote l = new Lote();
-        l.setId_lote(dao.obtenerProximoId());
-        List<Especie> especies = especiedao.obtenerEspecies();
-        request.setAttribute("lote", l);
-        request.setAttribute("especies",especies);
-        request.setAttribute("accion", "Agregar");
-        redireccionar(request, response, redireccion);
-    }
-
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Lote/index.jsp";
-        List<Lote> lotes = dao.obtenerLotes();
-        request.setAttribute("listaLotes", lotes);
+        String redireccion = "Veneno/index.jsp";
+        List<Veneno> venenos = dao.obtenerVenenos();
+        request.setAttribute("listaVenenos", venenos);
         redireccionar(request, response, redireccion);
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        String redireccion = "Lote/Ver.jsp";
-        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
+        validarPermiso(340, listaPermisos);
+        String redireccion = "Veneno/Ver.jsp";
+        int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
         try {
-            Lote l = dao.obtenerLote(id_lote);
-            List<Extraccion> extracciones = dao.obtenerExtracciones(l);
-            request.setAttribute("lote", l);
-            request.setAttribute("extracciones",extracciones);
+            Veneno v = dao.obtenerVeneno(id_veneno);
+            request.setAttribute("veneno", v);
+            List<Lote> lotes = lotedao.obtenerLotes(v.getEspecie());
+            request.setAttribute("lotes", lotes);
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -101,17 +87,32 @@ public class ControladorLote extends SIGIPROServlet {
         
     }
     
-    //Agrega mas Extracciones al Lote, pero no elimina
+    protected void getVerexterno(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(341, listaPermisos);
+        String redireccion = "Veneno/VerExterno.jsp";
+        int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
+        try {
+            Veneno v = dao.obtenerVeneno(id_veneno);
+            request.setAttribute("veneno", v);
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+    
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(331, listaPermisos);
-        String redireccion = "Lote/Editar.jsp";
-        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        Lote lote = dao.obtenerLote(id_lote);
-        List<Extraccion> extracciones = dao.obtenerExtracciones(lote.getEspecie());
-        request.setAttribute("lote", lote);
-        request.setAttribute("extracciones", extracciones);
+        validarPermiso(342, listaPermisos);
+        String redireccion = "Veneno/Editar.jsp";
+        int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
+        Veneno veneno = dao.obtenerVeneno(id_veneno);
+        System.out.println(veneno.isRestriccion());
+        request.setAttribute("veneno", veneno);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -119,60 +120,45 @@ public class ControladorLote extends SIGIPROServlet {
 
     // </editor-fold>
   
-  // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-  
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        boolean resultado = false;
-        String redireccion = "Lote/Agregar.jsp";
-        Lote l = construirObjeto(request);
-        resultado = dao.insertarLote(l);
-        
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Lote agregado correctamente"));
-        if (resultado){
-            redireccion = "Lote/index.jsp";
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LOTE,request.getRemoteAddr());
-            //*----------------------------*
-        }
-        request.setAttribute("id_lote", l.getId_lote());
-        this.getEditar(request, response);
-    }
-    
+  // <editor-fold defaultstate="collapsed" desc="Métodos Post">  
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Lote/Editar.jsp";
-        Lote l = construirObjeto(request);
-        l.setId_lote(Integer.parseInt(request.getParameter("id_lote")));
+        String redireccion = "Veneno/Editar.jsp";
+        Veneno v = construirObjeto(request);
         
-        String[] extracciones = request.getParameterValues("extracciones");
-        resultado = dao.insertarExtracciones(l, extracciones);
+        resultado = dao.editarVeneno(v);
         
-        //Funcion que genera la bitacora
-        //BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
-        //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Lote editado correctamente"));
+        request.setAttribute("mensaje", helper.mensajeDeExito("Veneno editado correctamente"));
         if (resultado){
-            redireccion = "Lote/index.jsp";
+            redireccion = "Veneno/index.jsp";
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(v.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_VENENO,request.getRemoteAddr());
+            //*----------------------------*
         }
-        request.setAttribute("listaLotes", dao.obtenerLotes());
+        request.setAttribute("listaVenenos", dao.obtenerVenenos());
         redireccionar(request, response, redireccion);
     }
   // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   
-    private Lote construirObjeto(HttpServletRequest request) {
-        Lote l = new Lote();
-        Especie e = especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie")));
-        l.setEspecie(e);
+    private Veneno construirObjeto(HttpServletRequest request) {
+        Veneno v = new Veneno();
+        v.setId_veneno(Integer.parseInt(request.getParameter("id_veneno")));
+        v.setEspecie(especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie"))));
 
-        return l;
+        if (request.getParameter("restriccion") != null){
+            v.setRestriccion(true);
+            v.setCantidad_maxima(Float.parseFloat(request.getParameter("cantidad_maxima")));
+        }else{
+            v.setRestriccion(false);
+            v.setCantidad_maxima(0);
+        }
+
+        return v;
     }
   
   // </editor-fold>

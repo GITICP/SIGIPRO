@@ -53,6 +53,7 @@ public class Bitacora {
     public static final String TABLA_CENTRIFUGADO = "SERPENTARIO.CENTRIFUGADO";
     public static final String TABLA_LIOFILIZACION = "SERPENTARIO.LIOFILIZACION";
     public static final String TABLA_LOTE = "SERPENTARIO.LOTE";
+    public static final String TABLA_VENENO = "SERPENTARIO.VENENOS";
     
     
     

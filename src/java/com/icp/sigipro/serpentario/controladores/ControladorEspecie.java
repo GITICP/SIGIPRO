@@ -7,12 +7,11 @@ package com.icp.sigipro.serpentario.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bodegas.modelos.SubBodega;
-import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
+import com.icp.sigipro.serpentario.dao.VenenoDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
+import com.icp.sigipro.serpentario.modelos.Veneno;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -35,6 +34,7 @@ public class ControladorEspecie extends SIGIPROServlet {
     private final int[] permisos = {1, 300, 301, 302};
     //-----------------
     private EspecieDAO dao = new EspecieDAO();
+    private VenenoDAO venenodao = new VenenoDAO();
 
     protected final Class clase = ControladorEspecie.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -150,6 +150,14 @@ public class ControladorEspecie extends SIGIPROServlet {
         request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente agregada correctamente"));
         if (resultado){
             redireccion = "Especie/index.jsp";
+            Veneno veneno = new Veneno();
+            int id_veneno = venenodao.insertarVeneno(e);
+            veneno.setEspecie(e);
+            veneno.setId_veneno(id_veneno);
+            veneno.setRestriccion(false);
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(veneno.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_VENENO,request.getRemoteAddr());
+            //*----------------------------*
         }
         request.setAttribute("listaEspecies", dao.obtenerEspecies());
         redireccionar(request, response, redireccion);

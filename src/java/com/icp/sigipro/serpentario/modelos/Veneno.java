@@ -15,14 +15,15 @@ import org.json.JSONObject;
 public class Veneno {
     private int id_veneno;
     private boolean restriccion;
-    private int cantidad_maxima;
+    private float cantidad;
+    private float cantidad_maxima;
     
     private Especie especie;
 
     public Veneno() {
     }
 
-    public Veneno(int id_veneno, boolean restriccion, int cantidad_maxima, Especie especie) {
+    public Veneno(int id_veneno, boolean restriccion, float cantidad_maxima, Especie especie) {
         this.id_veneno = id_veneno;
         this.restriccion = restriccion;
         this.cantidad_maxima = cantidad_maxima;
@@ -37,6 +38,14 @@ public class Veneno {
         this.id_veneno = id_veneno;
     }
 
+    public float getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(float cantidad) {
+        this.cantidad = cantidad;
+    }
+
     public boolean isRestriccion() {
         return restriccion;
     }
@@ -45,11 +54,11 @@ public class Veneno {
         this.restriccion = restriccion;
     }
 
-    public int getCantidad_maxima() {
+    public float getCantidad_maxima() {
         return cantidad_maxima;
     }
 
-    public void setCantidad_maxima(int cantidad_maxima) {
+    public void setCantidad_maxima(float cantidad_maxima) {
         this.cantidad_maxima = cantidad_maxima;
     }
 
