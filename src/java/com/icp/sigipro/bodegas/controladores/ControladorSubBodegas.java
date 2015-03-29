@@ -6,6 +6,8 @@
 package com.icp.sigipro.bodegas.controladores;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
@@ -187,7 +189,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        //validarPermisos(permisos, listaPermisos);
         String redireccion = "SubBodegas/Ver.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
         try {
@@ -299,6 +301,9 @@ public class ControladorSubBodegas extends SIGIPROServlet
             String[] ids_ver = dao.parsearAsociacion("#v#", request.getParameter("ids-ver"));
             if (dao.insertar(sb, ids_ingresos, ids_egresos, ids_ver)) {
                 try {
+                    BitacoraDAO bitacora_dao = new BitacoraDAO();
+                    bitacora_dao.setBitacora(sb.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SUBBODEGAS, request.getRemoteAddr());
+                    
                     request.setAttribute("mensaje", helper.mensajeDeExito("SubBodega agregada correctamente."));
                     request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
                     redireccion = "SubBodegas/index.jsp";
