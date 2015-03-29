@@ -12,7 +12,7 @@
 <form id="tipoeventoForm" class="form-horizontal" autocomplete="off" method="post" action="TipoEvento">
     <div class="row">
         <div class="col-md-6">
-            <input hidden="true" name="id_tipo_evento" value="${tipoevento.getId_grupo_caballo()}">
+            <input hidden="true" name="id_tipo_evento" value="${tipoevento.getId_tipo_evento()}">
             <input id="eventos" hidden="true" name="listaEventos" value="">
             <input id="ids-eventos" hidden="true" name="ids_eventos" value="">
             <input hidden="true" name="accion" value="${accion}">

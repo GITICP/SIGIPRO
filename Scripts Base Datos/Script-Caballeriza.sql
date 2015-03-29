@@ -72,3 +72,40 @@ ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_even
 --ALTER TABLE ONLY caballeriza.eventos_grupos_caballos ADD CONSTRAINT fk_id_grupo_de_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES caballeriza.tipos_eventos(id_tipo_evento);
+
+
+--Permisos
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (46, '[Caballeriza]AgregarTipoEvento', 'Permite agregar una TipoEvento al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (47, '[Caballeriza]EliminarTipoEvento', 'Permite eliminar una TipoEvento al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (48, '[Caballeriza]EditarTipoEvento', 'Permite editar una TipoEvento al catálogo');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (49, '[Caballeriza]AgregarCaballo', 'Permite agregar una Caballo al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (50, '[Caballeriza]EditarCaballo', 'Permite editar una Caballo al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (51, '[Caballeriza]EventoCaballo', 'Permite registrar eventos a una Caballo al catálogo');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (52, '[Caballeriza]AgregarGrupoCaballo', 'Permite agregar una Caballo al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (53, '[Caballeriza]EditarGrupoCaballo', 'Permite editar una Caballo al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (54, '[Caballeriza]EliminarGrupoCaballo', 'Permite eliminar un grupo de caballos');
+
+--Menu
+
+UPDATE seguridad.entradas_menu_principal SET redirect = '/Caballeriza/TipoEvento' WHERE id_menu_principal = 400;
+
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (401, 400, 'Tipo de Evento', '/Caballeriza/TipoEvento');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (402, 400, 'Caballos', '/Caballeriza/Caballo');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (403, 400, 'Grupos de Caballos', '/Caballeriza/GrupoDeCaballos');
+
+------Permisos Menu Principal
+
+--TipoEvento
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (46, 401);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (47, 401);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (48, 401);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (49, 402);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (50, 402);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (51, 402);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (52, 403);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (53, 403);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (54, 403);

@@ -8,6 +8,8 @@ package com.icp.sigipro.caballeriza.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
 /**
@@ -19,19 +21,19 @@ public class EventoClinico {
     private Date fecha;
     private String descripcion;
     private Usuario responsable;
-    private TipoEvento id_tipo_evento;
+    private TipoEvento tipo_evento;
 
     public EventoClinico() {
     }
 
-    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable, TipoEvento id_tipo_evento) {
+    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable, TipoEvento tipo_evento) {
         this.id_evento = id_evento;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.responsable = responsable;
-        this.id_tipo_evento = id_tipo_evento;
+        this.tipo_evento = tipo_evento;
     }
-    
+  
 
     public int getId_evento() {
         return id_evento;
@@ -44,7 +46,9 @@ public class EventoClinico {
     public Date getFecha() {
         return fecha;
     }
-
+    public String getFechaAsString() {
+        return formatearFecha(fecha);
+    }
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
@@ -65,13 +69,15 @@ public class EventoClinico {
         this.responsable = responsable;
     }
 
-    public TipoEvento getId_tipo_evento() {
-        return id_tipo_evento;
+    public TipoEvento getTipo_evento() {
+        return tipo_evento;
     }
 
-    public void setId_tipo_evento(TipoEvento id_tipo_evento) {
-        this.id_tipo_evento = id_tipo_evento;
+    public void setTipo_evento(TipoEvento tipo_evento) {
+        this.tipo_evento = tipo_evento;
     }
+
+
     
 
 //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
@@ -89,7 +95,7 @@ public class EventoClinico {
                 }
             }
             JSON.put("id_usuario",this.responsable.getID());
-            JSON.put("id_tipo_evento",this.id_tipo_evento.getId_tipo_evento());
+            JSON.put("id_tipo_evento",this.tipo_evento.getId_tipo_evento());
 
         }catch (Exception e){
             
@@ -97,4 +103,8 @@ public class EventoClinico {
         return JSON.toString();
     }
     
+    private String formatearFecha(Date fecha) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }    
 }
