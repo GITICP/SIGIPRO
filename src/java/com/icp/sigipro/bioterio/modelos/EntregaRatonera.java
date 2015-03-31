@@ -56,7 +56,7 @@ public class EntregaRatonera {
     if (this.fecha_entrega != null)
     {return formatearFecha(fecha_entrega);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
 
   public int getId_entrega() {
     return id_entrega;

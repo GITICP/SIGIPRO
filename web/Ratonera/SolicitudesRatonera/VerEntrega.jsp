@@ -21,9 +21,9 @@
           <ul class="breadcrumb">
             <li>Bioterio - Ratonera</li>
             <li> 
-              <a href="/SIGIPRO/Ratonera/Cepas?">Cepas</a>
+              <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?">Entrega Ratonera</a>
             </li>
-            <li class="active"> ${cepa.getNombre()} </li>
+            <li class="active"> Entrega ${entrega.getFecha_entrega()} </li>
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -38,17 +38,21 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cepa  ${cepa.getNombre()} </h3>
+              <h3><i class="fa fa-barcode"></i> Entrega del ${entrega.getFecha_entrega()}  de la solicitud número ${entrega.getSolicitud().getId_solicitud()}</h3>
               <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ratonera/Cepas?accion=editar&id_cepa=${cepa.getId_cepa()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Cepa" data-href="/SIGIPRO/Ratonera/Cepas?accion=eliminar&id_cepa=${cepa.getId_cepa()}">Eliminar</a>
               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table>
-                <tr><td> <strong>Nombre de la Cepa:</strong> <td>${cepa.getNombre()} </td></tr>
-              </table>
+              <table class="tabla-ver">
+                <tr><td> <strong>Numero de Solicitud:</strong> <td>${entrega.getSolicitud().getId_solicitud()} </td></tr>
+                <tr><td> <strong>Fecha Entrega:</strong> <td>${entrega.getFecha_entrega()} </td></tr>
+                <tr><td> <strong>Numero de Animales:</strong> <td>${entrega.getNumero_animales()} </td></tr>
+                <tr><td> <strong>Peso:</strong> <td>${entrega.getPeso()} </td></tr>
+                <tr><td> <strong>Numero de Cajas:</strong> <td>  ${entrega.getNumero_cajas()}</td></tr>
+                <tr><td> <strong>Sexo:</strong> <td>  ${entrega.getSexo()}</td></tr>
+                <tr><td> <strong>Cepa:</strong> <td>  ${entrega.getCepa().getNombre()}</td></tr>
+                <tr><td> <strong>Usuario Recipiente:</strong> <td>  ${entrega.getUsuario_recipiente().getNombreCompleto()}</td></tr>
               <br>
             </div>
             <!-- END WIDGET TICKET TABLE -->

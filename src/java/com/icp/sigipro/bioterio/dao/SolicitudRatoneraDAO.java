@@ -5,9 +5,11 @@
  */
 package com.icp.sigipro.bioterio.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bioterio.modelos.Cepa;
 import com.icp.sigipro.bioterio.modelos.SolicitudRatonera;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -139,7 +141,7 @@ public class SolicitudRatoneraDAO {
         solicitud_ratonera.setObservaciones(rs.getString("observaciones"));
         solicitud_ratonera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
         solicitud_ratonera.setEstado(rs.getString("estado"));
-
+        
 
       }
       rs.close();
@@ -151,30 +153,73 @@ public class SolicitudRatoneraDAO {
     return solicitud_ratonera;
   }
 
-  public List<SolicitudRatonera> obtenerSolicitudesRatonera() throws SIGIPROException {
+  public List<SolicitudRatonera> obtenerSolicitudesRatonera(int id_usuario) throws SIGIPROException {
 
     List<SolicitudRatonera> resultado = new ArrayList<SolicitudRatonera>();
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_ratonera");
+      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_ratonera s "
+              + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+              + "INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa WHERE s.usuario_solicitante=? ");
+      consulta.setInt(1, id_usuario);
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
         SolicitudRatonera solicitud_ratonera = new SolicitudRatonera();
-        CepaDAO cep = new CepaDAO();
-        UsuarioDAO usr = new UsuarioDAO();
+        Cepa cep;
+        Usuario usr;
         solicitud_ratonera.setId_solicitud(rs.getInt("id_solicitud"));
         solicitud_ratonera.setFecha_solicitud(rs.getDate("fecha_solicitud"));
         solicitud_ratonera.setNumero_animales(rs.getInt("numero_animales"));
         solicitud_ratonera.setPeso_requerido(rs.getString("peso_requerido"));
         solicitud_ratonera.setNumero_cajas(rs.getInt("numero_cajas"));
         solicitud_ratonera.setSexo(rs.getString("sexo"));
-        solicitud_ratonera.setCepa(cep.obtenerCepa(rs.getInt("id_cepa")));
-        solicitud_ratonera.setUsuario_solicitante(usr.obtenerUsuario(rs.getInt("usuario_solicitante")));
         solicitud_ratonera.setObservaciones(rs.getString("observaciones"));
         solicitud_ratonera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
         solicitud_ratonera.setEstado(rs.getString("estado"));
+        cep = new Cepa(rs.getInt("id_cepa"),rs.getString("nombre"));
+        usr = new Usuario(rs.getInt("id_usuario"),rs.getString("nombre_usuario"),rs.getString("correo"),rs.getString("nombre_completo"),rs.getString("cedula"),rs.getInt("id_seccion"),rs.getInt("id_puesto"),rs.getDate("fecha_activacion"),rs.getDate("fecha_desactivacion"),rs.getBoolean("estado"));
+        solicitud_ratonera.setCepa(cep);
+        solicitud_ratonera.setUsuario_solicitante(usr);
+        resultado.add(solicitud_ratonera);
+      }
+      rs.close();
+      consulta.close();
+      cerrarConexion();
+    } catch (Exception ex) {
+      throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+    }
+    return resultado;
+  }
+  public List<SolicitudRatonera> obtenerSolicitudesRatoneraAdm() throws SIGIPROException {
+
+    List<SolicitudRatonera> resultado = new ArrayList<SolicitudRatonera>();
+
+    try {
+      PreparedStatement consulta;
+      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_ratonera s "
+              + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+              + "INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa ");
+      ResultSet rs = consulta.executeQuery();
+
+      while (rs.next()) {
+        SolicitudRatonera solicitud_ratonera = new SolicitudRatonera();
+        Cepa cep;
+        Usuario usr;
+        solicitud_ratonera.setId_solicitud(rs.getInt("id_solicitud"));
+        solicitud_ratonera.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+        solicitud_ratonera.setNumero_animales(rs.getInt("numero_animales"));
+        solicitud_ratonera.setPeso_requerido(rs.getString("peso_requerido"));
+        solicitud_ratonera.setNumero_cajas(rs.getInt("numero_cajas"));
+        solicitud_ratonera.setSexo(rs.getString("sexo"));
+        solicitud_ratonera.setObservaciones(rs.getString("observaciones"));
+        solicitud_ratonera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
+        solicitud_ratonera.setEstado(rs.getString("estado"));
+        cep = new Cepa(rs.getInt("id_cepa"),rs.getString("nombre"));
+        usr = new Usuario(rs.getInt("id_usuario"),rs.getString("nombre_usuario"),rs.getString("correo"),rs.getString("nombre_completo"),rs.getString("cedula"),rs.getInt("id_seccion"),rs.getInt("id_puesto"),rs.getDate("fecha_activacion"),rs.getDate("fecha_desactivacion"),rs.getBoolean("estado"));
+        solicitud_ratonera.setCepa(cep);
+        solicitud_ratonera.setUsuario_solicitante(usr);
         resultado.add(solicitud_ratonera);
       }
       rs.close();

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.icp.sigipro.bioterio.dao;
+
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bioterio.modelos.Cepa;
 import com.icp.sigipro.core.SIGIPROException;
@@ -28,27 +29,11 @@ public class CepaDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.catalogo_cepas (nombre, macho_as, hembra_as,fecha_apareamiento_i,fecha_apareamiento_f,"
-              + "fecha_eliminacionmacho_i,fecha_eliminacionmacho_f,fecha_eliminacionhembra_i,fecha_eliminacionhembra_f,fecha_seleccionnuevos_i,fecha_seleccionnuevos_f,"
-              + "fecha_reposicionciclo_i,fecha_reposicionciclo_f,fecha_vigencia) "
-              + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id_cepa");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.cepas (nombre)"  
+              + " VALUES (?) RETURNING id_cepa");
       
-
       consulta.setString(1, p.getNombre());
-      consulta.setString(2, p.getMacho_as());
-      consulta.setString(3, p.getHembra_as());
-      consulta.setDate(4, p.getFecha_apareamiento_i());
-      consulta.setDate(5, p.getFecha_apareamiento_f());
-      consulta.setDate(6, p.getFecha_eliminacionmacho_i());
-      consulta.setDate(7, p.getFecha_eliminacionmacho_f());
-      consulta.setDate(8, p.getFecha_eliminacionhembra_i());
-      consulta.setDate(9, p.getFecha_eliminacionhembra_f());
-      consulta.setDate(10, p.getFecha_seleccionnuevos_i());
-      consulta.setDate(11, p.getFecha_seleccionnuevos_f());
-      consulta.setDate(12, p.getFecha_reposicionciclo_i());
-      consulta.setDate(13, p.getFecha_reposicionciclo_f());
-      consulta.setDate(14, p.getFecha_vigencia());
-
+      
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
         resultado = true;
@@ -67,28 +52,13 @@ public class CepaDAO {
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " UPDATE bioterio.catalogo_cepas "
-              + " SET  nombre=?, macho_as=?, hembra_as=?,fecha_apareamiento_i=?,fecha_apareamiento_f=?,"
-              + "fecha_eliminacionmacho_i=?,fecha_eliminacionmacho_f=?,fecha_eliminacionhembra_i=?,fecha_eliminacionhembra_f=?,fecha_seleccionnuevos_i=?,fecha_seleccionnuevos_f=?,"
-              + "fecha_reposicionciclo_i=?,fecha_reposicionciclo_f=?,fecha_vigencia=? "
+              " UPDATE bioterio.cepas "
+              + " SET  nombre=?"
               + " WHERE id_cepa=?; "
       );
 
       consulta.setString(1, p.getNombre());
-      consulta.setString(2, p.getMacho_as());
-      consulta.setString(3, p.getHembra_as());
-      consulta.setDate(4, p.getFecha_apareamiento_i());
-      consulta.setDate(5, p.getFecha_apareamiento_f());
-      consulta.setDate(6, p.getFecha_eliminacionmacho_i());
-      consulta.setDate(7, p.getFecha_eliminacionmacho_f());
-      consulta.setDate(8, p.getFecha_eliminacionhembra_i());
-      consulta.setDate(9, p.getFecha_eliminacionhembra_f());
-      consulta.setDate(10, p.getFecha_seleccionnuevos_i());
-      consulta.setDate(11, p.getFecha_seleccionnuevos_f());
-      consulta.setDate(12, p.getFecha_reposicionciclo_i());
-      consulta.setDate(13, p.getFecha_reposicionciclo_f());
-      consulta.setDate(14, p.getFecha_vigencia());
-      consulta.setInt(15, p.getId_cepa());
+      consulta.setInt(2, p.getId_cepa());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -107,7 +77,7 @@ public class CepaDAO {
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " DELETE FROM bioterio.catalogo_cepas "
+              " DELETE FROM bioterio.cepas "
               + " WHERE id_cepa=?; "
       );
 
@@ -129,7 +99,7 @@ public class CepaDAO {
     Cepa cepa = new Cepa();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.catalogo_cepas where id_cepa = ?");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.cepas where id_cepa = ?");
 
       consulta.setInt(1, id);
 
@@ -138,19 +108,6 @@ public class CepaDAO {
       if (rs.next()) {
         cepa.setId_cepa(rs.getInt("id_cepa"));
         cepa.setNombre(rs.getString("nombre"));
-        cepa.setMacho_as(rs.getString("macho_as"));
-        cepa.setHembra_as(rs.getString("hembra_as"));
-        cepa.setFecha_apareamiento_i(rs.getDate("fecha_apareamiento_i"));
-        cepa.setFecha_apareamiento_f(rs.getDate("fecha_apareamiento_f"));
-        cepa.setFecha_eliminacionmacho_i(rs.getDate("fecha_eliminacionmacho_i"));
-        cepa.setFecha_eliminacionmacho_f(rs.getDate("fecha_eliminacionmacho_f"));
-        cepa.setFecha_eliminacionhembra_i(rs.getDate("fecha_eliminacionhembra_i"));
-        cepa.setFecha_eliminacionhembra_f(rs.getDate("fecha_eliminacionhembra_f"));
-        cepa.setFecha_seleccionnuevos_i(rs.getDate("fecha_seleccionnuevos_i"));
-        cepa.setFecha_seleccionnuevos_f(rs.getDate("fecha_seleccionnuevos_f"));
-        cepa.setFecha_reposicionciclo_i(rs.getDate("fecha_reposicionciclo_i"));
-        cepa.setFecha_reposicionciclo_f(rs.getDate("fecha_reposicionciclo_f"));
-        cepa.setFecha_vigencia(rs.getDate("fecha_vigencia"));
       }
       rs.close();
       consulta.close();
@@ -167,26 +124,13 @@ public class CepaDAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.catalogo_cepas");
+      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.cepas");
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
         Cepa cepa = new Cepa();
         cepa.setId_cepa(rs.getInt("id_cepa"));
         cepa.setNombre(rs.getString("nombre"));
-        cepa.setMacho_as(rs.getString("macho_as"));
-        cepa.setHembra_as(rs.getString("hembra_as"));
-        cepa.setFecha_apareamiento_i(rs.getDate("fecha_apareamiento_i"));
-        cepa.setFecha_apareamiento_f(rs.getDate("fecha_apareamiento_f"));
-        cepa.setFecha_eliminacionmacho_i(rs.getDate("fecha_eliminacionmacho_i"));
-        cepa.setFecha_eliminacionmacho_f(rs.getDate("fecha_eliminacionmacho_f"));
-        cepa.setFecha_eliminacionhembra_i(rs.getDate("fecha_eliminacionhembra_i"));
-        cepa.setFecha_eliminacionhembra_f(rs.getDate("fecha_eliminacionhembra_f"));
-        cepa.setFecha_seleccionnuevos_i(rs.getDate("fecha_seleccionnuevos_i"));
-        cepa.setFecha_seleccionnuevos_f(rs.getDate("fecha_seleccionnuevos_f"));
-        cepa.setFecha_reposicionciclo_i(rs.getDate("fecha_reposicionciclo_i"));
-        cepa.setFecha_reposicionciclo_f(rs.getDate("fecha_reposicionciclo_f"));
-        cepa.setFecha_vigencia(rs.getDate("fecha_vigencia"));     
         resultado.add(cepa);
       }
       rs.close();

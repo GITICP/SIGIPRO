@@ -1,11 +1,14 @@
 <%-- 
-    Document   : Ver
-    Created on : Feb 19, 2015, 6:29:37 PM
+    Document   : Editar
+    Created on : Feb 19, 2015, 7:59:33 PM
     Author     : Amed
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:plantilla_general title="Ratonera" direccion_contexto="/SIGIPRO">
@@ -21,9 +24,10 @@
           <ul class="breadcrumb">
             <li>Bioterio - Ratonera</li>
             <li> 
-              <a href="/SIGIPRO/Ratonera/Cepas?">Cepas</a>
+              <a href="/SIGIPRO/Ratonera/Caras?">Caras</a>
             </li>
-            <li class="active"> ${cepa.getNombre()} </li>
+            <li class="active">Cara Número ${cara.getNumero_cara()}</li>
+
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -32,24 +36,21 @@
           </div>
         </div>
       </div>
+
       <!-- main -->
       <div class="content">
         <div class="main-content">
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cepa  ${cepa.getNombre()} </h3>
-              <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ratonera/Cepas?accion=editar&id_cepa=${cepa.getId_cepa()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Cepa" data-href="/SIGIPRO/Ratonera/Cepas?accion=eliminar&id_cepa=${cepa.getId_cepa()}">Eliminar</a>
-              </div>
+              <h3><i class="fa fa-barcode"></i> Editar Cara </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table>
-                <tr><td> <strong>Nombre de la Cepa:</strong> <td>${cepa.getNombre()} </td></tr>
-              </table>
-              <br>
+
+              <jsp:include page="Formulario.jsp"></jsp:include>
+
+              </div>
             </div>
             <!-- END WIDGET TICKET TABLE -->
           </div>
@@ -57,8 +58,7 @@
         </div>
         <!-- /main -->
       </div>
+   
 
-    </jsp:attribute>
-
-  </t:plantilla_general>
-
+  </jsp:attribute>
+</t:plantilla_general>

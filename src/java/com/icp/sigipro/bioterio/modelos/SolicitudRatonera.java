@@ -56,7 +56,7 @@ public class SolicitudRatonera {
     if (this.fecha_solicitud != null)
     {return formatearFecha(fecha_solicitud);}
     else
-    {return "Sin fecha";}}
+    {return "";}}
 
   public int getId_solicitud() {
     return id_solicitud;

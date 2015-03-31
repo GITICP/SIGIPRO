@@ -21,7 +21,7 @@
           <ul class="breadcrumb">
             <li>Bioterio - Ratonera</li>
             <li> 
-              <a href="/SIGIPRO/Ratonera/Cepas?">Cepas</a>
+              <a href="/SIGIPRO/Ratonera/Caras?">Caras</a>
             </li>
           </ul>
         </div>
@@ -37,9 +37,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cepas </h3>
+              <h3><i class="fa fa-barcode"></i> Caras </h3>
                 <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/Cepas?accion=agregar">Agregar Cepa</a>
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/Caras?accion=agregar">Agregar Cara</a>
                 </div>
             </div>
             ${mensaje}
@@ -48,20 +48,24 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Nombre de la Cepa</th>
+                    <th>Número de Cara</th>
+                    <th>Ascendencia Macho</th>
+                    <th>Ascendencia Hembra</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaCepas}" var="cepa">
+                  <c:forEach items="${listaCaras}" var="cara">
 
-                    <tr id ="${cepa.getId_cepa()}">
+                    <tr id ="${cara.getId_cara()}">
                       <td>
-                        <a href="/SIGIPRO/Ratonera/Cepas?accion=ver&id_cepa=${cepa.getId_cepa()}">
+                        <a href="/SIGIPRO/Ratonera/Caras?accion=ver&id_cara=${cara.getId_cara()}">
                           <div style="height:100%;width:100%">
-                            ${cepa.getNombre()}
+                            Número ${cara.getNumero_cara()}
                           </div>
                         </a>
                       </td>
+                      <td>${cara.getMacho_as()}</td>
+                      <td>${cara.getHembra_as()}</td>
                     </tr>
 
                   </c:forEach>
