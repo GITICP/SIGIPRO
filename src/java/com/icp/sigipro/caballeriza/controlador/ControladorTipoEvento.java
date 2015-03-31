@@ -4,6 +4,8 @@ package com.icp.sigipro.caballeriza.controlador;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.caballeriza.dao.TipoEventoDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.caballeriza.dao.EventoClinicoDAO;
+import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -82,9 +84,9 @@ public class ControladorTipoEvento extends SIGIPROServlet {
         int id_tipo_evento = Integer.parseInt(request.getParameter("id_tipo_evento"));
         try {
             TipoEvento g = dao.obtenerTipoEvento(id_tipo_evento);
-            //CaballoDAO c = new CaballoDAO();
-            //List<Caballo> caballos = c.obtenerCaballosGrupo(id_tipo_evento);
-            //request.setAttribute("caballos", caballos);
+            EventoClinicoDAO c = new EventoClinicoDAO();
+            List<EventoClinico> eventos = c.obtenerEventosTipo(id_tipo_evento);
+            request.setAttribute("eventos", eventos);
             request.setAttribute("tipoevento", g);
             redireccionar(request, response, redireccion);
         }

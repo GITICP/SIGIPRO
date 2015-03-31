@@ -160,7 +160,32 @@ public class EventoClinicoDAO {
         }
         return resultado;
     }
-
+    public List<EventoClinico> obtenerEventosTipo(int id_tipo_evento){
+        List<EventoClinico> resultado = new ArrayList<EventoClinico>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.eventos_clinicos where id_tipo_evento = ?");
+            consulta.setInt(1, id_tipo_evento);
+            ResultSet rs = consulta.executeQuery();
+            TipoEventoDAO daoTipo = new TipoEventoDAO();
+            UsuarioDAO daoUsuario = new UsuarioDAO();
+            while(rs.next()){
+                EventoClinico eventoclinico = new EventoClinico();
+                eventoclinico.setId_evento(rs.getInt("id_evento"));
+                eventoclinico.setFecha(rs.getDate("fecha"));
+                eventoclinico.setDescripcion(rs.getString("descripcion"));
+                eventoclinico.setResponsable(daoUsuario.obtenerUsuario(rs.getInt("responsable")));
+                eventoclinico.setTipo_evento(daoTipo.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
+                resultado.add(eventoclinico);
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
     private Connection getConexion() {
         try {
             if (conexion.isClosed()) {
