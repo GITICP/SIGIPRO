@@ -1,9 +1,8 @@
 <%-- 
     Document   : Ver
-    Created on : Jan 11, 2015, 11:57:19 AM
+    Created on : 25-mar-2015, 18:22:58
     Author     : Walter
 --%>
-
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -14,7 +13,6 @@
     <jsp:attribute name="contenido">
 
         <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
-
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
             <div class="row">
@@ -37,9 +35,11 @@
                             <h3><i class="fa fa-barcode"></i> ${eventoclinico.getId_evento()} </h3>
                             <div class="btn-group widget-header-toolbar">
 
+                                <!--
+                                -->
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 42}">
+                                    <c:if test="${permiso == 1 || permiso == 44}">
                                         <c:set var="contienePermisoEditar" value="true" />
                                     </c:if>
                                 </c:forEach>
@@ -49,36 +49,18 @@
                             </div>
                         </div>
                         ${mensaje}
+                        <th>Identificador</th>
                         <div class="widget-content">
                             <table>
-                                <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
-                                <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Identificador:</strong> <td>${eventoclinico.getId_evento()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                <tr><td> <strong>Reespondable:</strong> <td>${eventoclinico.getResponsable().getNombreUsuario()} </td></tr>
+                                <tr><td> <strong>Responsable:</strong> <td>${eventoclinico.getRespondable().getNombreUsuario()} </td></tr>                
+                                <tr><td> <strong>Descripción</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Tipo de Evento:</strong> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
                             </table>
-                            <br>
-                            <div class="widget widget-table">
-                                <div class="widget-header">
-                                    <h3><i class="fa fa-check"></i> Caballos del Grupo de Caballos Asociados</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre y Numero de Microchip</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${caballos}" var="caballo">
-                                                <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                         </div>
+                        <br>
+
                     </div>
                     <!-- END WIDGET TICKET TABLE -->
                 </div>

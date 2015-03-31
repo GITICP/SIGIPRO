@@ -56,10 +56,6 @@ public class ControladorTipoEvento extends SIGIPROServlet {
 
         String redireccion = "TipoEvento/Agregar.jsp";
         TipoEvento g = new TipoEvento();
-        //CaballoDAO c = new CaballoDAO();
-        //List<Caballo> caballos_restantes = c.obtenerCaballosRestantes();
-        request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
-        //request.setAttribute("caballos_restantes", caballos_restantes);
         request.setAttribute("tipoevento", g);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);

@@ -6,7 +6,6 @@
 package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
-import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.CaballoDAO;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
@@ -14,7 +13,6 @@ import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,21 +46,6 @@ public class ControladorCaballo extends SIGIPROServlet {
             add("editar");
         }
     };
-     protected final List<String> sexo = new ArrayList<String>()
-    {
-        {
-            add("Macho");
-            add("Hembra");
-            add("Indefinido");
-        }
-    }; 
-     protected final List<String> estado = new ArrayList<String>()
-    {
-        {
-            add("Muerto");
-            add("Vivo");
-        }
-    };     
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
@@ -84,8 +66,8 @@ public class ControladorCaballo extends SIGIPROServlet {
         request.setAttribute("caballo", c);
         request.setAttribute("listagrupos",listagrupos);
         request.setAttribute("accion", "Agregar");
-        request.setAttribute("sexos",sexo);
-        request.setAttribute("estados",estado);
+        request.setAttribute("sexos", Caballo.SEXOS);
+        request.setAttribute("estados",Caballo.ESTADOS);
         redireccionar(request, response, redireccion);
     }
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -125,8 +107,8 @@ public class ControladorCaballo extends SIGIPROServlet {
         request.setAttribute("listagrupos",listagrupos);      
         request.setAttribute("caballo", caballo);
         request.setAttribute("accion", "Editar");
-        request.setAttribute("sexos",sexo);
-        request.setAttribute("estados",estado);
+        request.setAttribute("sexos", Caballo.SEXOS);
+        request.setAttribute("estados",Caballo.ESTADOS);
         redireccionar(request, response, redireccion);
 
     }

@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="widget-content">
-                <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                <table id="caballos-grupo" class="table table-sorting table-striped table-hover datatable">
                     <thead>
                         <tr>
                             <th>Nombre y Numero de Microchip</th>
@@ -59,7 +59,7 @@
                     <tbody>
                         <c:forEach items="${caballos}" var="caballo">
                             <tr id="${caballo.getId_caballo()}">
-                             <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                                <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarCaballo(${caballo.getId_caballo()})">Eliminar</button>
                                 </td>
@@ -69,25 +69,26 @@
                 </table>
             </div>
         </div>
-        <p>                    
-            <!-- Esta parte es la de los permisos de un rol -->
-            <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
-        </p>
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                <c:choose>
-                    <c:when test= "${accion.equals('Editar')}">
-                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarGrupo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarGrupo()"><i class="fa fa-check-circle"></i> ${accion} Grupo de Caballos</button>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+    </div>
+    <p>                    
+        <!-- Esta parte es la de los permisos de un rol -->
+        <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
+    </p>
+    <div class="form-group">
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+            <c:choose>
+                <c:when test= "${accion.equals('Editar')}">
+                    <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarGrupo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                </c:when>
+                <c:otherwise>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Grupo de Caballos</button>
+                </c:otherwise>
+            </c:choose>
         </div>
+    </div>
 </form>
-<%--                        
+
 <t:modal idModal="modalAgregarCaballo" titulo="Asociar Caballo">
 
     <jsp:attribute name="form">
@@ -102,8 +103,8 @@
                                 oninvalid="setCustomValidity('Este campo es requerido ')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
-                            <c:forEach items="${caballos_restantes}" var="pr">
-                                <option value=${pr.getId_caballo()}>${pr.getNombre()} (${pr.getNumero_microchip()})</option>
+                            <c:forEach items="${caballos_restantes}" var="caballo">
+                                <option value=${caballo.getId_caballo()}>${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -119,5 +120,4 @@
 
     </jsp:attribute>
 
-</t:modal>
---%>
+</t:modal>              

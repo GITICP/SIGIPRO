@@ -10,6 +10,8 @@ import java.sql.Blob;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -17,7 +19,31 @@ import org.json.JSONObject;
  * @author Walter
  */
 public class Caballo {
-
+    
+    public static final String MUERTO = "Muerto";
+    public static final String VIVO = "Vivo";
+    
+    public static final String MACHO = "Macho";
+    public static final String HEMBRA = "Hembra";
+    
+    public static final List<String> ESTADOS = new ArrayList<String>()
+    {
+        {
+            add(MUERTO);
+            add(VIVO);
+        }
+    };
+    
+    public static final List<String> SEXOS = new ArrayList<String>()
+    {
+        {
+            add(MACHO);
+            add(HEMBRA);
+        }
+    };
+    
+    
+    
     private int id_caballo;
     private String nombre;
     private int numero_microchip;

@@ -21,7 +21,6 @@ import java.util.List;
 public class CaballoDAO {
     private Connection conexion;
     
-    
     public CaballoDAO()
     {
         SingletonBD s = SingletonBD.getSingletonBD();
@@ -154,25 +153,22 @@ public class CaballoDAO {
     public List<Caballo> obtenerCaballosRestantes(){
         List<Caballo> resultado = new ArrayList<Caballo>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos where id_grupo_de_caballo = ?");
-            consulta.setInt(1, 0);
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_caballo, nombre, numero_microchip FROM caballeriza.caballos where id_grupo_de_caballo is null AND estado = ?;");
+            
+            consulta.setString(1, Caballo.VIVO);
+            
             ResultSet rs = consulta.executeQuery();
             GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
+            
             while(rs.next()){
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getInt("numero_microchip"));
-                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
-                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
-                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                caballo.setSexo(rs.getString("sexo"));
-                caballo.setColor(rs.getString("color"));
-                caballo.setOtras_sennas(rs.getString("otras_sennas"));
-                caballo.setEstado(rs.getString("estado"));
-                caballo.setFotografia(rs.getBlob("fotografia"));
+                
                 resultado.add(caballo);
-            }      
+            }
+            rs.close();
             consulta.close();
             conexion.close();
         }

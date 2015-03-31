@@ -2,7 +2,6 @@
 package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
-import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.CaballoDAO;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
@@ -11,15 +10,12 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -141,6 +137,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         String redireccion = "GrupoDeCaballos/Agregar.jsp";
         GrupoDeCaballos g = construirObjeto(request);
         String lista = request.getParameter("listaCaballos");
+        String ids_caballos = request.getParameter("ids-caballos");
 
        // System.out.println(request.getParameter("imagen2").getBytes());
 
@@ -157,13 +154,15 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         request.setAttribute("listaGrupos", dao.obtenerGruposDeCaballos());
         redireccionar(request, response, redireccion);
     }
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         boolean resultado = false;
         String redireccion = "GrupoDeCaballos/Editar.jsp";
         GrupoDeCaballos g = construirObjeto(request);
         g.setId_grupo_caballo(Integer.parseInt(request.getParameter("id_grupo_de_caballo")));
-        resultado = dao.editarGrupoDeCaballos(g);
+        String ids_caballos = request.getParameter("ids_caballos");
+        String[] ids_caballos_parseados = dao.parsearAsociacion("#c#", ids_caballos);
+        resultado = dao.editarGrupoDeCaballos(g, ids_caballos_parseados);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         //bitacora.setBitacora(g.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_GRUPO_DE_CABALLO,request.getRemoteAddr());
