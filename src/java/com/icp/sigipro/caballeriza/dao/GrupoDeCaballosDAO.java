@@ -85,19 +85,21 @@ public class GrupoDeCaballosDAO {
             );
             consulta_caballos = getConexion().prepareStatement(
               "UPDATE caballeriza.caballos "
-               + "SET id_grupo_de_caballo=?"
-               +"WHERE id_caballo IN "+caballos+";"
-            );
+              + " SET id_grupo_de_caballo = (CASE "
+              + " WHEN id_caballo in "+caballos+ " THEN ? "
+              + " ELSE Null END) "
+              + " WHERE id_grupo_de_caballo = ? or id_caballo in "+caballos +";");
 
             consulta.setString(1, g.getNombre());
             consulta.setString(2, g.getDescripcion());
             consulta.setInt(3, g.getId_grupo_caballo());
             consulta_caballos.setInt(1,g.getId_grupo_caballo());
+            consulta_caballos.setInt(2,g.getId_grupo_caballo());
 
             int filas_grupo = consulta.executeUpdate();
             int filas_caballos = consulta_caballos.executeUpdate();
             
-            if (filas_grupo == 1 && filas_caballos == cant_caballos) {
+            if (filas_grupo == 1 && filas_caballos >= cant_caballos) {
                 resultado = true;
             } else 
             {
