@@ -55,10 +55,11 @@ public class CaraDAO {
       if (resultadoConsulta.next()) {
         resultado = true;
       }
+      resultadoConsulta.close();
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
-      throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+      throw new SIGIPROException("Se produjo un error al procesar el ingreso.");
     }
     return resultado;
   }
@@ -165,7 +166,7 @@ public class CaraDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
-      throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+      throw new SIGIPROException("Se produjo un error al procesar la solicitud.");
     }
     return cepa;
   }

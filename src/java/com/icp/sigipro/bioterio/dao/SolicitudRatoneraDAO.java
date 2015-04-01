@@ -50,6 +50,7 @@ public class SolicitudRatoneraDAO {
       if (resultadoConsulta.next()) {
         resultado = true;
       }
+      resultadoConsulta.close();
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
