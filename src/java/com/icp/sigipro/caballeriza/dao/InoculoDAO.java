@@ -32,17 +32,18 @@ public class InoculoDAO {
     public boolean insertarInoculo(Inoculo i) throws SIGIPROException {
         boolean resultado = false;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos (mnn, baa, bap, lms, tetox, otro, encargado_preparacion, encargado_inyeccion, fecha) "
-                    + " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_inoculo");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos (mnn, baa, bap, cdd, lms, tetox, otro, encargado_preparacion, encargado_inyeccion, fecha) "
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_inoculo");
             consulta.setString(1,i.getMnn());
             consulta.setString(2,i.getBaa());
             consulta.setString(3,i.getBap());
-            consulta.setString(4,i.getLms());
-            consulta.setString(5,i.getTetox());
-            consulta.setString(6,i.getOtro());
-            consulta.setString(7,i.getEncargado_preparacion());
-            consulta.setString(8,i.getEncargado_inyeccion());
-            consulta.setDate(9, i.getFecha());
+            consulta.setString(4,i.getCdd());
+            consulta.setString(5,i.getLms());
+            consulta.setString(6,i.getTetox());
+            consulta.setString(7,i.getOtro());
+            consulta.setString(8,i.getEncargado_preparacion());
+            consulta.setString(9,i.getEncargado_inyeccion());
+            consulta.setDate(10, i.getFecha());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -64,19 +65,20 @@ public class InoculoDAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE caballeriza.inoculos "
-                    + " SET mnn=?, baa=?, bap=?, lms=?, tetox=?, otro=?, encargado_preparacion=?, encargado_inyeccion=?, fecha=? "
+                    + " SET mnn=?, baa=?, bap=?, cdd=?, lms=?, tetox=?, otro=?, encargado_preparacion=?, encargado_inyeccion=?, fecha=? "
                     + " WHERE id_inoculo=?; "
             );
             consulta.setString(1,i.getMnn());
             consulta.setString(2,i.getBaa());
             consulta.setString(3,i.getBap());
-            consulta.setString(4,i.getLms());
-            consulta.setString(5,i.getTetox());
-            consulta.setString(6,i.getOtro());
-            consulta.setString(7,i.getEncargado_preparacion());
-            consulta.setString(8,i.getEncargado_inyeccion());
-            consulta.setDate(9, i.getFecha());
-            consulta.setInt(10,i.getId_inoculo());
+            consulta.setString(4,i.getCdd());
+            consulta.setString(5,i.getLms());
+            consulta.setString(6,i.getTetox());
+            consulta.setString(7,i.getOtro());
+            consulta.setString(8,i.getEncargado_preparacion());
+            consulta.setString(9,i.getEncargado_inyeccion());
+            consulta.setDate(10, i.getFecha());
+            consulta.setInt(11,i.getId_inoculo());
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
@@ -101,6 +103,7 @@ public class InoculoDAO {
                 inoculo.setMnn(rs.getString("mnn"));
                 inoculo.setBaa(rs.getString("baa"));
                 inoculo.setBap(rs.getString("bap"));
+                inoculo.setCdd(rs.getString("cdd"));
                 inoculo.setLms(rs.getString("lms"));
                 inoculo.setTetox(rs.getString("tetox"));
                 inoculo.setOtro(rs.getString("otro"));
@@ -128,6 +131,7 @@ public class InoculoDAO {
                 inoculo.setMnn(rs.getString("mnn"));
                 inoculo.setBaa(rs.getString("baa"));
                 inoculo.setBap(rs.getString("bap"));
+                inoculo.setCdd(rs.getString("cdd"));
                 inoculo.setLms(rs.getString("lms"));
                 inoculo.setTetox(rs.getString("tetox"));
                 inoculo.setOtro(rs.getString("otro"));
