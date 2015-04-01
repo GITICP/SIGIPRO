@@ -50,6 +50,7 @@ public class EntregaRatoneraDAO {
         resultado = true;
         revisarCompletitudEntrega(p.getSolicitud().getId_solicitud());
       }
+      resultadoConsulta.close();
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
@@ -78,6 +79,8 @@ public class EntregaRatoneraDAO {
           consulta3.close();
         }
       }
+      rs.close();
+      rs2.close();
       consulta.close();
       consulta2.close();
       cerrarConexion();
@@ -135,8 +138,6 @@ public class EntregaRatoneraDAO {
         entrega_ratonera.setSexo(rs.getString("sexo"));
         entrega_ratonera.setCepa(cep.obtenerCepa(rs.getInt("id_cepa")));
         entrega_ratonera.setUsuario_recipiente(usr.obtenerUsuario(rs.getInt("usuario_recipiente")));
-
-
       }
       rs.close();
       consulta.close();

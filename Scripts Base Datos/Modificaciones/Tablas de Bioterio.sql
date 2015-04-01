@@ -1,4 +1,5 @@
-﻿--Esquema bioterio
+--Esquema bioterio
+DROP SCHEMA IF EXISTS bioterio CASCADE;
 CREATE SCHEMA bioterio;
 --Tablas esquema bioterio
 CREATE TABLE bioterio.cepas(
