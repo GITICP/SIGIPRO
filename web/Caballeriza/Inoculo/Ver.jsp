@@ -54,7 +54,7 @@
                                 <tr><td> <strong>Fórmula de Inyección:</strong></td></tr>
                                 <tr><td></td><td><strong>M.n.n:</strong>  ${inoculo.getMnn()}</td></tr>
                                 <tr><td></td><td><strong>B.a -A:</strong> ${inoculo.getBaa()}</td></tr>
-                                <tr><td></td><td><strong>M.a -P:</strong> ${inoculo.getBap()} </td></tr>
+                                <tr><td></td><td><strong>B.a -P:</strong> ${inoculo.getBap()} </td></tr>
                                 <tr><td></td><td><strong>C.d.d:</strong>  ${inoculo.getCdd()} </td></tr>
                                 <tr><td></td><td><strong>L.m.s:</strong>  ${inoculo.getLms()} </td></tr>
                                 <tr><td></td><td><strong>Tetox:</strong>  ${inoculo.getTetox()}</td></tr>

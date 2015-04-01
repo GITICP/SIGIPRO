@@ -153,13 +153,48 @@ public class ControladorInoculo extends SIGIPROServlet {
         } catch (ParseException ex) {
 
         }
-        i.setMnn(request.getParameter("mnn"));
-        i.setBaa(request.getParameter("baa"));
-        i.setBap(request.getParameter("bap"));
-        i.setCdd(request.getParameter("cdd"));
-        i.setLms(request.getParameter("lms"));
-        i.setTetox(request.getParameter("tetox"));
-        i.setOtro(request.getParameter("otro"));
+        if(request.getParameter("mnn")==""){
+            i.setMnn("--");
+        }
+        else{
+            i.setMnn(request.getParameter("mnn"));
+        }
+        if(request.getParameter("baa")==""){
+            i.setBaa("--");
+        }
+        else{
+            i.setBaa(request.getParameter("baa"));
+        }
+        if(request.getParameter("bap")==""){
+            i.setBap("--");
+        }
+        else{
+            i.setBap(request.getParameter("bap"));
+        }
+        if(request.getParameter("cdd")==""){
+            i.setCdd("--");
+        }
+        else{
+            i.setCdd(request.getParameter("cdd"));
+        }
+        if(request.getParameter("lms")==""){
+            i.setLms("--");
+        }
+        else{
+            i.setLms(request.getParameter("lms"));
+        }
+        if(request.getParameter("tetox")==""){
+            i.setTetox("--");
+        }
+        else{
+            i.setTetox(request.getParameter("tetox"));
+        }
+        if(request.getParameter("otro")==""){
+            i.setOtro("--");
+        }
+        else{
+            i.setOtro(request.getParameter("otro"));
+        }
         i.setEncargado_preparacion(request.getParameter("encargado_preparacion"));
         i.setEncargado_inyeccion(request.getParameter("encargado_inyeccion"));
         return i;
