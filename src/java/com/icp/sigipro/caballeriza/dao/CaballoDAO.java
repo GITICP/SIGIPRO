@@ -40,8 +40,12 @@ public class CaballoDAO {
             consulta.setString(6,c.getColor());
             consulta.setString(7, c.getOtras_sennas());
             consulta.setString(8, c.getEstado());
-            consulta.setInt(9, c.getGrupo_de_caballos().getId_grupo_caballo());
-            
+            if (c.getGrupo_de_caballos()== null){
+                consulta.setNull(9, java.sql.Types.INTEGER);
+            }
+            else{
+               consulta.setInt(9, c.getGrupo_de_caballos().getId_grupo_caballo()); 
+            }
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
@@ -75,7 +79,12 @@ public class CaballoDAO {
             consulta.setString(1, c.getOtras_sennas());
             //consulta.setBlob(2, c.getFotografia());
             consulta.setString(2, c.getEstado());
-            consulta.setInt(3,c.getGrupo_de_caballos().getId_grupo_caballo());
+            if (c.getGrupo_de_caballos()== null){
+                consulta.setNull(3, java.sql.Types.INTEGER);
+            }
+            else{
+               consulta.setInt(3, c.getGrupo_de_caballos().getId_grupo_caballo()); 
+            }            
             consulta.setInt(4,c.getId_caballo());
             
             int xxx= consulta.executeUpdate();

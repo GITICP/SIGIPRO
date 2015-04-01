@@ -52,20 +52,31 @@
                         <div class="widget-content">
                             <table>
                                 <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
+                                <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                <tr><td> <strong>Reespondable:</strong> <td>${eventoclinico.getResponsable().getNombreUsuario()} </td></tr>
+                                <tr><td> <strong>Reespondable:</strong> <td>
+                                        <c:set var="val" value=""/>
+                                        <c:choose> 
+                                            <c:when test="${eventoclinico.getResponsable().getNombreUsuario() == null}">
+                                                No Tiene Usuario Responsable
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${eventoclinico.getResponsable().getNombreUsuario()}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td></tr>                                         
                             </table>
                             <br>
                             <div class="widget widget-table">
                                 <div class="widget-header">
-                                    <h3><i class="fa fa-check"></i> Caballos del Grupo de Caballos Asociados</h3>
+                                    <h3><i class="fa fa-check"></i> Caballos del Evento Clínico </h3>
                                 </div>
                                 <div class="widget-content">
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Numero de Microchip</th>
+                                                <th>Nombre y Número de Microchip</th>
                                             </tr>
                                         </thead>
                                         <tbody>

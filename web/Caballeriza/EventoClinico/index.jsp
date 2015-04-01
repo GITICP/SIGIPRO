@@ -52,8 +52,9 @@
                 <thead> 
                   <tr>
                     <th>Identificador</th>
-                    <th>Descripción</th>
-                    <th>Responsable</th>
+                    <th>Tipo de Evento</th>
+                    <th>Fecha</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -67,8 +68,8 @@
                           </div>
                         </a>
                       </td>
-                      <td>${evento.getDescripcion ()}</td>
-                      <td>${evento.getResponsable().getNombreUsuario()}</td>
+                      <td>${evento.getTipo_evento().getNombre()}</td>
+                      <td>${evento.getFecha()}</td>
                     </tr>
 
                   </c:forEach>

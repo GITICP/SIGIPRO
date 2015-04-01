@@ -70,7 +70,17 @@
                         </a>
                       </td>
                       <td>${caballo.getNombre ()}</td>
-                      <td>${caballo.getGrupo_de_caballos().getNombre()}</td>
+                      <td>
+                          <c:set var="val" value=""/>
+                          <c:choose> 
+                              <c:when test="${caballo.getGrupo_de_caballos().getNombre() == null}">
+                                  No tiene grupo
+                              </c:when>
+                              <c:otherwise>
+                                  ${caballo.getGrupo_de_caballos().getNombre()}
+                              </c:otherwise>
+                          </c:choose>
+                      </td>
                       <td>${caballo.getSexo()}</td>
                       <td>${caballo.getEstado()}</td>
                     </tr>

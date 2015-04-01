@@ -10,7 +10,7 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Caballos" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Caballeriza" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 

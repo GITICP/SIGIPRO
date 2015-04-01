@@ -33,7 +33,7 @@ CREATE TABLE caballeriza.eventos_clinicos(
     fecha Date NOT NULL,
     descripcion character varying(500) NOT NULL,
     responsable integer,
-    id_tipo_evento int
+    id_tipo_evento int NOT NULL
 );
 CREATE TABLE caballeriza.tipos_eventos (
     id_tipo_evento serial NOT NULL,
@@ -88,6 +88,8 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (52, '[Ca
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (53, '[Caballeriza]EditarGrupoCaballo', 'Permite editar una Caballo al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (54, '[Caballeriza]EliminarGrupoCaballo', 'Permite eliminar un grupo de caballos');
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (55, '[Caballeriza]AgregarEventoClinico', 'Permite agregar una Caballo al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (56, '[Caballeriza]EditarEventoClinico', 'Permite editar una Caballo al catálogo');
 --Menu
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Caballeriza/TipoEvento' WHERE id_menu_principal = 400;
@@ -96,6 +98,7 @@ UPDATE seguridad.entradas_menu_principal SET redirect = '/Caballeriza/TipoEvento
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (401, 400, 'Tipo de Evento', '/Caballeriza/TipoEvento');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (402, 400, 'Caballos', '/Caballeriza/Caballo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (403, 400, 'Grupos de Caballos', '/Caballeriza/GrupoDeCaballos');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (404, 400, 'Eventos Clinicos', '/Caballeriza/EventoClinico');
 
 ------Permisos Menu Principal
 
@@ -109,3 +112,5 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (52, 403);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (53, 403);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (54, 403);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (55, 404);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (56, 404);

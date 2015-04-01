@@ -183,7 +183,7 @@
                                     <option value="${estado}" selected> ${estado}</option>
                                 </c:when>
                                 <c:otherwise>
-                                    <option value="${estado}">${estado}</option>
+                                    <option value="${estado}" selected>${estado}</option>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>

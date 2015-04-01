@@ -52,3 +52,23 @@ function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
     });
     campo_escondido.val(asociacionCodificada);
 }
+
+/*var centerLocations = {
+    text1: 'some text1',
+    text2: 'some text2',
+    text3: 'some text3'
+};
+function selectTipos(){
+    $('#tipoevento').change(function () {
+    $("#descripcion").val(centerLocations["text" + this.value]);
+}).change();
+}
+*/
+$(document).ready(function(){
+     
+    $("select[name='tipoevento']").on('change', function() {
+        var split = $(this).val().split(",");
+    
+        $("textarea ").val(split[1]);
+});
+});

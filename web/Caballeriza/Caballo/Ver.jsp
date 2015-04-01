@@ -58,19 +58,29 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table>
-                <tr><td> <strong>Nombre:</strong> <td>${caballo.getNombre()} </td></tr>
-                <tr><td> <strong>Numero de Microchip:</strong> <td>${caballo.getNumero_microchip()} </td></tr>
-                <tr><td> <strong>Grupo del Caballo:</strong> <td>${caballo.getGrupo_de_caballos().getNombre()} </td></tr>                
-                <tr><td> <strong>Fecha de Nacimiento:</strong> <td>${caballo.getFecha_nacimientoAsString()} </td></tr>
-                <tr><td> <strong>Fecha de Ingreso:</strong> <td>${caballo.getFecha_ingresoAsString()} </td></tr>
-                <tr><td> <strong>Sexo:</strong> <td>${caballo.getSexo()} </td></tr>
-                <tr><td> <strong>Color:</strong> <td>${caballo.getColor()} </td></tr>
-                <tr><td> <strong>Otras Señas:</strong> <td>${caballo.getOtras_sennas()}</td></tr>
-                <tr><td> <strong>Estado:</strong> <td>${caballo.getEstado()}</td></tr>
-                <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${caballo.getFotografia()} </td></tr>
-                <tr><td> <strong>Histórico de Eventos</strong> 
-              </table>
+                <table>
+                    <tr><td> <strong>Nombre:</strong> <td>${caballo.getNombre()} </td></tr>
+                    <tr><td> <strong>Numero de Microchip:</strong> <td>${caballo.getNumero_microchip()} </td></tr>
+                    <tr><td> <strong>Grupo del Caballo:</strong> <td>
+                            <c:set var="val" value=""/>
+                            <c:choose> 
+                                <c:when test="${caballo.getGrupo_de_caballos().getNombre() == null}">
+                                    No tiene grupo
+                                </c:when>
+                                <c:otherwise>
+                                    ${caballo.getGrupo_de_caballos().getNombre()}
+                                </c:otherwise>
+                            </c:choose>
+                        </td></tr>                
+                    <tr><td> <strong>Fecha de Nacimiento:</strong> <td>${caballo.getFecha_nacimientoAsString()} </td></tr>
+                    <tr><td> <strong>Fecha de Ingreso:</strong> <td>${caballo.getFecha_ingresoAsString()} </td></tr>
+                    <tr><td> <strong>Sexo:</strong> <td>${caballo.getSexo()} </td></tr>
+                    <tr><td> <strong>Color:</strong> <td>${caballo.getColor()} </td></tr>
+                    <tr><td> <strong>Otras Señas:</strong> <td>${caballo.getOtras_sennas()}</td></tr>
+                    <tr><td> <strong>Estado:</strong> <td>${caballo.getEstado()}</td></tr>
+                    <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${caballo.getFotografia()} </td></tr>
+                    <tr><td> <strong>Histórico de Eventos</strong> 
+                </table>
             </div>
             <div class="widget-content">
               <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
@@ -78,9 +88,9 @@
                 <thead> 
                   <tr>
                     <th>Fecha del Evento</th>
-                    <th>Evento</th>
+                    <th>Tipo de Evento</th>
                     <th>Usuario responsable</th>
-                    <th>Extraccion</th>
+                    <th>Descripción</th>
                   </tr>
                 </thead>
                 <tbody>

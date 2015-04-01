@@ -87,6 +87,8 @@ public class ControladorCaballo extends SIGIPROServlet {
         int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
         try {
             Caballo g = dao.obtenerCaballo(id_caballo);
+            request.setAttribute("grupo", g.getGrupo_de_caballos());
+            request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
             request.setAttribute("caballo", g);
             redireccionar(request, response, redireccion);
         }
@@ -157,16 +159,10 @@ public class ControladorCaballo extends SIGIPROServlet {
         
         GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
         String grupo=request.getParameter("grupodecaballo");
-//        String nombre=request.getParameter("nombre");
-//        String micro=request.getParameter("numero_microchip");
-//        String sexo=request.getParameter("sexo");
-//        String color=request.getParameter("color");
-//        String sennas=request.getParameter("otras_sennas");
-//        String estado=request.getParameter("estado");
         
         GrupoDeCaballos grupodecaballo;
         if(grupo == ""){
-            grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(0);
+            grupodecaballo = null;
         }
         else{
             grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(Integer.parseInt(request.getParameter("grupodecaballo")));

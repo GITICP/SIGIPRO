@@ -24,9 +24,9 @@
           <ul class="breadcrumb">
             <li>Caballeriza</li>
             <li> 
-              <a href="/SIGIPRO/Caballeriza/Caballo?">Caballos</a>
+              <a href="/SIGIPRO/Caballeriza/EventoClinico?">Evento Clínico</a>
             </li>
-            <li class="active">Caballo ${caballo.getId_caballo()}</li>
+            <li class="active">Evento Clínico ${eventoclinico.getId_evento()}</li>
 
           </ul>
         </div>
@@ -43,7 +43,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Editar Caballo </h3>
+              <h3><i class="fa fa-barcode"></i> Editar Evento Clínico </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
