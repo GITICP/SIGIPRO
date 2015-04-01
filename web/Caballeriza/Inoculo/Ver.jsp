@@ -22,9 +22,9 @@
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/EventoClinico?">Eventos Clínicos</a>
+                            <a href="/SIGIPRO/Caballeriza/Inoculo?">Inóculo</a>
                         </li>
-                        <li class="active"> ${eventoclinico.getId_evento()} </li>
+                        <li class="active"> ${inoculo.getId_inoculo()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,38 +34,34 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> ${eventoclinico.getId_evento()} </h3>
+                            <h3><i class="fa fa-barcode"></i> ${inoculo.getId_inoculo()} </h3>
                             <div class="btn-group widget-header-toolbar">
 
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 56}">
+                                    <c:if test="${permiso == 1 || permiso == 58}">
                                         <c:set var="contienePermisoEditar" value="true" />
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/EventoClinico?accion=editar&id_evento=${eventoclinico.getId_evento()}">Editar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Inoculo?accion=editar&id_inoculo=${inoculo.getId_inoculo()}">Editar</a>
                                 </c:if>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <table>
-                                <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
-                                <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
-                                <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
-                                <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                <tr><td> <strong>Reespondable:</strong> <td>
-                                        <c:set var="val" value=""/>
-                                        <c:choose> 
-                                            <c:when test="${eventoclinico.getResponsable().getNombreUsuario() == null}">
-                                                No Tiene Usuario Responsable
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${eventoclinico.getResponsable().getNombreUsuario()}
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td></tr>                                         
+                                <tr><td> <strong>Fórmula de Inyección:</strong></td></tr>
+                                <tr><td></td><td><strong>M.n.n:</strong>  ${inoculo.getMnn()}</td></tr>
+                                <tr><td></td><td><strong>B.a -A:</strong> ${inoculo.getBaa()}</td></tr>
+                                <tr><td></td><td><strong>M.a -P:</strong> ${inoculo.getBap()} </td></tr>
+                                <tr><td></td><td><strong>C.d.d:</strong>  ${inoculo.getCdd()} </td></tr>
+                                <tr><td></td><td><strong>L.m.s:</strong>  ${inoculo.getLms()} </td></tr>
+                                <tr><td></td><td><strong>Tetox:</strong>  ${inoculo.getTetox()}</td></tr>
+                                <tr><td></td><td><strong>Otro:</strong>   ${inoculo.getOtro()}</td></tr>
+                                <tr><td> <strong>Encargado de Preparación:</strong></td> <td>${inoculo.getEncargado_preparacion()} </td></tr>
+                                <tr><td> <strong>Encargado de Inyección:</strong></td> <td>${inoculo.getEncargado_inyeccion()} </td></tr>
+                                <tr><td> <strong>Fecha:</strong></td> <td>${inoculo.getFechaAsString()} </td></tr>
                             </table>
                             <br>
                             <div class="widget widget-table">

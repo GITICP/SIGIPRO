@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Caballeriza</li>
             <li> 
-              <a href="/SIGIPRO/Caballeriza/EventoClinico?">Eventos Clínicos</a>
+              <a href="/SIGIPRO/Caballeriza/Inoculo?">Inóculos</a>
             </li>
           </ul>
         </div>
@@ -31,17 +31,17 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Eventos Clínicos </h3>
+              <h3><i class="fa fa-barcode"></i> Inóculos </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 55}">
+                <c:if test="${permiso == 1 || permiso == 57}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Caballeriza/EventoClinico?accion=agregar">Agregar Evento Clínico</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Caballeriza/Inoculo?accion=agregar">Agregar Inóculo</a>
                 </div>
               </c:if>
             </div>
@@ -52,24 +52,25 @@
                 <thead> 
                   <tr>
                     <th>Identificador</th>
-                    <th>Tipo de Evento</th>
+                    <th>Encargado de Preparación</th>
+                    <th>Encargado de Inyección</th>
                     <th>Fecha</th>
-                    
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaEventosClinicos}" var="evento">
+                  <c:forEach items="${listaInoculos}" var="inoculo">
 
-                    <tr id ="${evento.getId_evento()}">
+                    <tr id ="${inoculo.getId_inoculo()}">
                       <td>
-                        <a href="/SIGIPRO/Caballeriza/EventoClinico?accion=ver&id_evento=${evento.getId_evento()}">
+                        <a href="/SIGIPRO/Caballeriza/Inoculo?accion=ver&id_inoculo=${inoculo.getId_inoculo()}">
                           <div style="height:100%;width:100%">
-                            ${evento.getId_evento()}
+                            ${inoculo.getId_inoculo()}
                           </div>
                         </a>
                       </td>
-                      <td>${evento.getTipo_evento().getNombre()}</td>
-                      <td>${evento.getFecha()}</td>
+                      <td>${inoculo.getEncargado_preparacion()}</td>
+                      <td>${inoculo.getEncargado_inyeccion()}</td>
+                      <td>${inoculo.getFecha()}</td>
                     </tr>
 
                   </c:forEach>

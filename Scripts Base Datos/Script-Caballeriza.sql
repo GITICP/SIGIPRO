@@ -53,6 +53,7 @@ CREATE TABLE caballeriza.inoculos (
     mnn character varying(45) NOT NULL,
     baa character varying(45) NOT NULL,
     bap character varying(45) NOT NULL,
+    cdd character varying(45) NOT NULL,
     lms character varying(45) NOT NULL,
     tetox character varying(45) NOT NULL,
     otro character varying(45) NOT NULL,

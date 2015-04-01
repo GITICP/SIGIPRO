@@ -20,6 +20,7 @@ public class Inoculo {
     private String mnn;
     private String baa;
     private String bap;
+    private String cdd;
     private String lms;
     private String tetox;
     private String otro;
@@ -30,17 +31,21 @@ public class Inoculo {
     public Inoculo() {
     }
 
-    public Inoculo(int id_inoculo, String mnn, String baa, String bap, String lms, String tetox, String encargado_preparacion, String encargado_inyeccion, Date fecha) {
+    public Inoculo(int id_inoculo, String mnn, String baa, String bap, String cdd, String lms, String tetox, String otro, String encargado_preparacion, String encargado_inyeccion, Date fecha) {
         this.id_inoculo = id_inoculo;
         this.mnn = mnn;
         this.baa = baa;
         this.bap = bap;
+        this.cdd = cdd;
         this.lms = lms;
         this.tetox = tetox;
+        this.otro = otro;
         this.encargado_preparacion = encargado_preparacion;
         this.encargado_inyeccion = encargado_inyeccion;
         this.fecha = fecha;
     }
+
+
 
     public int getId_inoculo() {
         return id_inoculo;
@@ -72,6 +77,14 @@ public class Inoculo {
 
     public void setBap(String bap) {
         this.bap = bap;
+    }
+
+    public String getCdd() {
+        return cdd;
+    }
+
+    public void setCdd(String cdd) {
+        this.cdd = cdd;
     }
 
     public String getLms() {
