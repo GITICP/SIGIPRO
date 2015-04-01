@@ -6,6 +6,7 @@
 package com.icp.sigipro.caballeriza.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
@@ -159,6 +160,46 @@ public class GrupoDeCaballosDAO {
                 grupo.setNombre(rs.getString("nombre"));
                 grupo.setDescripcion(rs.getString("descripcion"));
                 resultado.add(grupo);
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public List<GrupoDeCaballos> obtenerGruposDeCaballosConCaballos() {
+        List<GrupoDeCaballos> resultado = new ArrayList<GrupoDeCaballos>();
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip "
+                  + " FROM caballeriza.grupos_de_caballos gc "
+                  + "     LEFT JOIN caballeriza.caballos c " 
+                  + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ?;");
+            
+            consulta.setString(1, Caballo.VIVO);
+            
+            GrupoDeCaballos g = null;
+            
+            ResultSet rs = consulta.executeQuery();
+            while (rs.next()) {
+                int id_grupo = rs.getInt("id_grupo_de_caballo");
+                
+                if (g == null || g.getId_grupo_caballo() != id_grupo) {
+                    g = new GrupoDeCaballos();
+                    g.setId_grupo_caballo(id_grupo);
+                    g.setNombre(rs.getString("nombre_grupo"));
+                    resultado.add(g);
+                }
+                
+                Caballo c = new Caballo();
+                c.setId_caballo(rs.getInt("id_caballo"));
+                c.setNombre(rs.getString("nombre_caballo"));
+                c.setNumero_microchip(rs.getInt("numero_microchip"));
+                
+                g.agregarCaballo(c);
             }
             rs.close();
             consulta.close();

@@ -6,6 +6,8 @@
 package com.icp.sigipro.caballeriza.modelos;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -16,6 +18,7 @@ public class GrupoDeCaballos {
     private int id_grupo_caballo;
     private String nombre;
     private String descripcion;
+    private List<Caballo> caballos;
 
     public GrupoDeCaballos() {
     }
@@ -67,8 +70,22 @@ public class GrupoDeCaballos {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
-    
 
+    public List<Caballo> getCaballos()
+    {
+        return caballos;
+    }
+
+    public void setCaballos(List<Caballo> caballos)
+    {
+        this.caballos = caballos;
+    }
     
+    public void agregarCaballo(Caballo c) {
+        if (this.caballos == null){
+            this.caballos = new ArrayList<Caballo>();
+        }
+        this.caballos.add(c);
+        
+    }
 }

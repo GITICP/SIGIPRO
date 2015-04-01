@@ -8,9 +8,11 @@ package com.icp.sigipro.caballeriza.controlador;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.EventoClinicoDAO;
+import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.dao.TipoEventoDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -18,21 +20,16 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Blob;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -42,7 +39,6 @@ import javax.servlet.http.HttpSession;
 public class ControladorEventoClinico extends SIGIPROServlet {
 
     private final int[] permisos = {1, 55, 56};
-    //-----------------
     private EventoClinicoDAO dao = new EventoClinicoDAO();
 
     protected final Class clase = ControladorEventoClinico.class;
@@ -70,14 +66,16 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         EventoClinico c = new EventoClinico();
         TipoEventoDAO tipoeventodao = new TipoEventoDAO();
         UsuarioDAO usrDAO = new UsuarioDAO();
+        GrupoDeCaballosDAO gdcDAO = new GrupoDeCaballosDAO();
+        List<GrupoDeCaballos> grupos_caballos = gdcDAO.obtenerGruposDeCaballosConCaballos();
         List<TipoEvento> listatipos = tipoeventodao.obtenerTiposEventos();
         List<Usuario> listaresponsables = usrDAO.obtenerUsuarios();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("evento", c);
+        request.setAttribute("grupos_caballos", grupos_caballos);
         request.setAttribute("listatipos", listatipos);
         request.setAttribute("listaresponsables", listaresponsables);
         request.setAttribute("accion", "Agregar");
-
         redireccionar(request, response, redireccion);
     }
 
@@ -104,7 +102,6 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
@@ -122,14 +119,14 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         request.setAttribute("listaresponsables", listaresponsables);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
-
     }
 
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "EventoClinico/Agregar.jsp";
         EventoClinico c = construirObjeto(request);
-        resultado = dao.insertarEventoClinico(c);
+        String[] ids_caballos = request.getParameterValues("caballos");
+        resultado = dao.insertarEventoClinico(c, ids_caballos);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());

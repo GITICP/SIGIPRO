@@ -15,7 +15,7 @@
             <input id="eventos" hidden="true" name="listaEventos" value="">
             <input id="ids-eventos" hidden="true" name="ids_eventos" value="">
             <input hidden="true" name="accion" value="${accion}">
-            <label for="nombre" class="control-label">* Nombre del Tipo de Eventos</label>
+            <label for="nombre" class="control-label">* Nombre del Tipo de Evento</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -50,7 +50,7 @@
                     <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarTipo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarTipo()"><i class="fa fa-check-circle"></i> ${accion} Tipos de eventos</button>
+                    <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarTipo()"><i class="fa fa-check-circle"></i> ${accion} Tipo de Evento</button>
                 </c:otherwise>
             </c:choose>
         </div>
