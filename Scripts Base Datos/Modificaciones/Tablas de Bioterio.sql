@@ -1,4 +1,4 @@
-﻿--Esquema bioterio
+--Esquema bioterio
 CREATE SCHEMA bioterio;
 --Tablas esquema bioterio
 CREATE TABLE bioterio.cajas_ratonera(
