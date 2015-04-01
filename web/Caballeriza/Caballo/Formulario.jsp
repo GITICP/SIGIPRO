@@ -216,41 +216,7 @@
         </div>
     </div>
 </div>                           
-<div class="col-md-12">
-    <!-- Esta parte es la de los caballos del grupo -->
-    <div class="widget widget-table">
-        <div class="widget-header">
-            <h3><i class="fa fa-check"></i> Eventos Clínicos Realizados Al Caballo</h3>
-            <div class="btn-group widget-header-toolbar">
-                <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarEvento">Agregar</a>
-            </div>
-        </div>
-        <div class="widget-content">
-            <table id="caballos-evento" class="table table-sorting table-striped table-hover datatable">
-                <thead>
-                    <tr>
-                        <th>Fecha del Evento</th>
-                        <th>Tipo del Evento</th>
-                        <th>Usuario Responsable</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach items="${listaEventos}" var="evento">
-                        <tr id="evento-${evento.getId_evento()}">
-                            <td>${evento.getFecha()}</td>
-                            <td>${evento.getTipo_evento().getNombre()}</td>
-                            <td>${evento.getResponsable().getNombre_usuario()}</td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarEventoDeCaballo(${evento.getId_evento()})">Eliminar</button>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+
 <p class="campos-requeridos">
     Los campos marcados con * son requeridos.
 </p>  

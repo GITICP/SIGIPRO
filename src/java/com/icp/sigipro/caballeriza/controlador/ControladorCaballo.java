@@ -6,6 +6,7 @@
 package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.CaballoDAO;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
@@ -34,8 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorCaballo", urlPatterns = {"/Caballeriza/Caballo"})
 public class ControladorCaballo extends SIGIPROServlet {
 
-    //Falta implementar
-    //private final int[] permisos = {1, 43, 44, 45};
+    private final int[] permisos = {1, 49, 50};
     //-----------------
     private CaballoDAO dao = new CaballoDAO();
 
@@ -57,8 +57,8 @@ public class ControladorCaballo extends SIGIPROServlet {
     };
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(43, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(49, listaPermisos);
 
         String redireccion = "Caballo/Agregar.jsp";
         Caballo c = new Caballo();
@@ -74,8 +74,8 @@ public class ControladorCaballo extends SIGIPROServlet {
     }
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
         String redireccion = "Caballo/index.jsp";
         List<Caballo> caballos = dao.obtenerCaballos();
         request.setAttribute("listaCaballos", caballos);
@@ -83,8 +83,8 @@ public class ControladorCaballo extends SIGIPROServlet {
     }
         protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
         String redireccion = "Caballo/Ver.jsp";
         int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
         try {
@@ -105,8 +105,8 @@ public class ControladorCaballo extends SIGIPROServlet {
     }    
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(42, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(50, listaPermisos);
         String redireccion = "Caballo/Editar.jsp";
         int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
         Caballo caballo = dao.obtenerCaballo(id_caballo);
@@ -134,7 +134,7 @@ public class ControladorCaballo extends SIGIPROServlet {
         resultado = dao.insertarCaballo(c);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
+        bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado) {
@@ -153,7 +153,7 @@ public class ControladorCaballo extends SIGIPROServlet {
         resultado = dao.editarCaballo(c);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CABALLO,request.getRemoteAddr());
+        bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CABALLO,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado){

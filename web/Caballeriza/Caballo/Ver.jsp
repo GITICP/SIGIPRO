@@ -34,20 +34,9 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-barcode"></i> ${caballo.getNumero_microchip()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoEvento" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 45}">
-                                        <c:set var="contienePermisoEvento" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEvento}">
-                                    <a class="btn btn-info btn-sm boton-accion evento-Modal" data-id='${caballo.getId_caballo()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento clinico</a>  
-                                </c:if>
-                                <!--
-                                -->
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 44}">
+                                    <c:if test="${permiso == 1 || permiso == 50}">
                                         <c:set var="contienePermisoEditar" value="true" />
                                     </c:if>
                                 </c:forEach>

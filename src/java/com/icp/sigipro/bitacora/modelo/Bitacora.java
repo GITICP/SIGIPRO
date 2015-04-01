@@ -22,6 +22,11 @@ public class Bitacora {
     
     //Variables de Tablas
     
+    public static final String TABLA_TIPO_EVENTO= "CABALLERIZA.TIPOS_EVENTOS";
+    public static final String TABLA_GRUPO_DE_CABALLOS= "CABALLERIZA.GRUPOS_DE_CABALLOS";
+    public static final String TABLA_CABALLO= "CABALLERIZA.CABALLOS";
+    public static final String TABLA_EVENTO_CLINICO= "CABALLERIZA.EVENTOS_CLINICOS";
+    public static final String TABLA_EVENTOSCLINICOSCABALLOS= "CABALLERIZA.EVENTOS_CLINICOS_CABALLOS";
     public static final String TABLA_ACTIVOFIJO = "BODEGA.ACTIVOS_FIJOS";
     public static final String TABLA_CATALOGOEXTERNO = "BODEGA.CATALOGO_EXTERNO";
     public static final String TABLA_CATALOGOEXTERNOINTERNO = "BODEGA.CATALOGOS_INTERNOS_EXTERNOS";

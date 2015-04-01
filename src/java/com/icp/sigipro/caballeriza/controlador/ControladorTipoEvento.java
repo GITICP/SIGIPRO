@@ -29,9 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorTipoEvento", urlPatterns = {"/Caballeriza/TipoEvento"})
 public class ControladorTipoEvento extends SIGIPROServlet {
 
-    //Falta implementar
-    //private final int[] permisos = {1, 43, 44, 45};
-    //-----------------
+
+    private final int[] permisos = {1, 46, 47, 48};
+
     private TipoEventoDAO dao = new TipoEventoDAO();
 
     protected final Class clase = ControladorTipoEvento.class;
@@ -53,8 +53,8 @@ public class ControladorTipoEvento extends SIGIPROServlet {
     };
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(43, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(46, listaPermisos);
 
         String redireccion = "TipoEvento/Agregar.jsp";
         TipoEvento g = new TipoEvento();
@@ -65,8 +65,8 @@ public class ControladorTipoEvento extends SIGIPROServlet {
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         try{
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
         String redireccion = "TipoEvento/index.jsp";
         List<TipoEvento> grupos = dao.obtenerTiposEventos();
         request.setAttribute("listaTipos", grupos);
@@ -78,8 +78,8 @@ public class ControladorTipoEvento extends SIGIPROServlet {
     }
         protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
         String redireccion = "TipoEvento/Ver.jsp";
         int id_tipo_evento = Integer.parseInt(request.getParameter("id_tipo_evento"));
         try {
@@ -97,16 +97,11 @@ public class ControladorTipoEvento extends SIGIPROServlet {
     }
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(42, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(48, listaPermisos);
         String redireccion = "TipoEvento/Editar.jsp";
         int id_tipo_evento = Integer.parseInt(request.getParameter("id_tipo_evento"));
-        TipoEvento tipoevento = dao.obtenerTipoEvento(id_tipo_evento);
-        //CaballoDAO c = new CaballoDAO();        
-        //List<Caballo> caballos = c.obtenerCaballosGrupo(id_tipo_evento);
-        //List<Caballo> caballos_restantes = c.obtenerCaballosRestantes();
-        //request.setAttribute("caballos", caballos);
-        //request.setAttribute("caballos_restantes", caballos_restantes);        
+        TipoEvento tipoevento = dao.obtenerTipoEvento(id_tipo_evento);      
         request.setAttribute("tipoevento", tipoevento);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
@@ -114,8 +109,8 @@ public class ControladorTipoEvento extends SIGIPROServlet {
     }
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-       // List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(41, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(47, listaPermisos);
         int id_tipo_evento = Integer.parseInt(request.getParameter("id_tipo_evento"));
         try{
             dao.eliminarTipoEvento(id_tipo_evento);
@@ -123,7 +118,7 @@ public class ControladorTipoEvento extends SIGIPROServlet {
             
             //Funcion que genera la bitacora 
             BitacoraDAO bitacora = new BitacoraDAO(); 
-            //bitacora.setBitacora(id_tipo_evento,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_GRUPO_DE_CABALLO,request.getRemoteAddr()); 
+            bitacora.setBitacora(id_tipo_evento,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPO_EVENTO,request.getRemoteAddr()); 
             //----------------------------
             
             List<TipoEvento> tiposeventso = dao.obtenerTiposEventos();
@@ -140,14 +135,10 @@ public class ControladorTipoEvento extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "TipoEvento/Agregar.jsp";
         TipoEvento g = construirObjeto(request);
-        //String lista = request.getParameter("listaCaballos");
-
-       // System.out.println(request.getParameter("imagen2").getBytes());
-
         resultado = dao.insertarTipoEvento(g);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO_DE_CABALLO, request.getRemoteAddr());
+        bitacora.setBitacora(g.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPO_EVENTO, request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado) {
@@ -166,7 +157,7 @@ public class ControladorTipoEvento extends SIGIPROServlet {
         resultado = dao.editarTipoEvento(g);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(g.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_GRUPO_DE_CABALLO,request.getRemoteAddr());
+        bitacora.setBitacora(g.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPO_EVENTO,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de evento editado correctamente"));

@@ -82,7 +82,6 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (48, '[Ca
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (49, '[Caballeriza]AgregarCaballo', 'Permite agregar una Caballo al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (50, '[Caballeriza]EditarCaballo', 'Permite editar una Caballo al catálogo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (51, '[Caballeriza]EventoCaballo', 'Permite registrar eventos a una Caballo al catálogo');
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (52, '[Caballeriza]AgregarGrupoCaballo', 'Permite agregar una Caballo al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (53, '[Caballeriza]EditarGrupoCaballo', 'Permite editar una Caballo al catálogo');
@@ -108,7 +107,6 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (48, 401);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (49, 402);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (50, 402);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (51, 402);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (52, 403);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (53, 403);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (54, 403);

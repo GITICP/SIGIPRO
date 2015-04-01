@@ -41,8 +41,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ControladorEventoClinico", urlPatterns = {"/Caballeriza/EventoClinico"})
 public class ControladorEventoClinico extends SIGIPROServlet {
 
-    //Falta implementar
-    //private final int[] permisos = {1, 43, 44, 45};
+    private final int[] permisos = {1, 55, 56};
     //-----------------
     private EventoClinicoDAO dao = new EventoClinicoDAO();
 
@@ -64,8 +63,8 @@ public class ControladorEventoClinico extends SIGIPROServlet {
     };
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(43, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(55, listaPermisos);
 
         String redireccion = "EventoClinico/Agregar.jsp";
         EventoClinico c = new EventoClinico();
@@ -83,8 +82,8 @@ public class ControladorEventoClinico extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
         String redireccion = "EventoClinico/index.jsp";
         List<EventoClinico> eventosclinicos = dao.obtenerEventosClinicos();
         request.setAttribute("listaEventosClinicos", eventosclinicos);
@@ -92,8 +91,8 @@ public class ControladorEventoClinico extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
         String redireccion = "EventoClinico/Ver.jsp";
         int id_evento = Integer.parseInt(request.getParameter("id_evento"));
         try {
@@ -109,8 +108,8 @@ public class ControladorEventoClinico extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        //List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermiso(42, listaPermisos);
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(56, listaPermisos);
         String redireccion = "EventoClinico/Editar.jsp";
         int id_evento = Integer.parseInt(request.getParameter("id_evento"));
         EventoClinico eventoclinico = dao.obtenerEventoClinico(id_evento);
@@ -130,12 +129,10 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "EventoClinico/Agregar.jsp";
         EventoClinico c = construirObjeto(request);
-
-       // System.out.println(request.getParameter("imagen2").getBytes());
         resultado = dao.insertarEventoClinico(c);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
+        bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado) {
@@ -154,7 +151,7 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         resultado = dao.editarEventoClinico(c);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CABALLO,request.getRemoteAddr());
+        bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO_CLINICO,request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado) {
