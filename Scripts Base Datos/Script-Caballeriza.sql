@@ -48,12 +48,30 @@ CREATE TABLE caballeriza.eventos_clinicos_caballos (
     id_evento integer NOT NULL,
     id_caballo integer NOT NULL
 );
+CREATE TABLE caballeriza.inoculos (
+    id_inoculo serial NOT NULL,
+    mnn character varying(45) NOT NULL,
+    baa character varying(45) NOT NULL,
+    bap character varying(45) NOT NULL,
+    lms character varying(45) NOT NULL,
+    tetox character varying(45) NOT NULL,
+    otro character varying(45) NOT NULL,
+    encargado_preparacion character varying(100) NOT NULL,
+    encargado_inyeccion character varying(100) NOT NULL,
+    fecha Date NOT NULL
+);
+
+CREATE TABLE caballeriza.inoculos_caballos (
+    id_inoculo integer NOT NULL,
+    id_caballo integer NOT NULL
+);
+
 --Llaves primarias esquema caballeriza
 ALTER TABLE ONLY caballeriza.grupos_de_caballos  ADD CONSTRAINT pk_grupos_de_caballos PRIMARY KEY (id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.caballos  ADD CONSTRAINT pk_caballos PRIMARY KEY (id_caballo);
---ALTER TABLE ONLY caballeriza.grupos_caballos  ADD CONSTRAINT pk_grupos_caballos PRIMARY KEY (id_grupo_de_caballo,id_caballo);
+ALTER TABLE ONLY caballeriza.inoculos  ADD CONSTRAINT pk_inoculos PRIMARY KEY (id_inoculo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos  ADD CONSTRAINT pk_eventos_clinicos PRIMARY KEY (id_evento);
---ALTER TABLE ONLY caballeriza.eventos_grupos_caballos  ADD CONSTRAINT pk_eventos_grupos_caballos PRIMARY KEY (id_evento,id_grupo_de_caballo);
+ALTER TABLE ONLY caballeriza.inoculos_caballos  ADD CONSTRAINT pk_inoculos_caballos PRIMARY KEY (id_caballo,id_inoculo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos  ADD CONSTRAINT pk_eventos_caballos PRIMARY KEY (id_evento,id_caballo);
 ALTER TABLE ONLY caballeriza.tipos_eventos  ADD CONSTRAINT pk_tipos_eventos PRIMARY KEY (id_tipo_evento);
 
@@ -65,13 +83,12 @@ CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (nume
 
 --Llaves foraneas esquema caballeriza
 ALTER TABLE ONLY caballeriza.caballos ADD CONSTRAINT fk_id_grupo_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
---ALTER TABLE ONLY caballeriza.grupos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
---ALTER TABLE ONLY caballeriza.eventos_grupos_caballos ADD CONSTRAINT fk_id_evento FOREIGN KEY (id_evento) REFERENCES caballeriza.eventos_clinicos(id_evento);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_evento FOREIGN KEY (id_evento) REFERENCES caballeriza.eventos_clinicos(id_evento);
---ALTER TABLE ONLY caballeriza.eventos_grupos_caballos ADD CONSTRAINT fk_id_grupo_de_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES caballeriza.tipos_eventos(id_tipo_evento);
+ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
+ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 
 
 --Permisos
@@ -89,6 +106,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (54, '[Ca
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (55, '[Caballeriza]AgregarEventoClinico', 'Permite agregar una Caballo al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (56, '[Caballeriza]EditarEventoClinico', 'Permite editar una Caballo al catálogo');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (57, '[Caballeriza]AgregarInoculo', 'Permite agregar un Inóculo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (58, '[Caballeriza]EditarInoculo', 'Permite editar un Inóculo');
 --Menu
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Caballeriza/TipoEvento' WHERE id_menu_principal = 400;
@@ -98,6 +118,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (402, 400, 'Caballos', '/Caballeriza/Caballo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (403, 400, 'Grupos de Caballos', '/Caballeriza/GrupoDeCaballos');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (404, 400, 'Eventos Clinicos', '/Caballeriza/EventoClinico');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (405, 400, 'Inóculos', '/Caballeriza/Inoculo');
 
 ------Permisos Menu Principal
 
@@ -112,3 +133,5 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (54, 403);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (55, 404);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (56, 404);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (57, 405);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (58, 405);
