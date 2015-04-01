@@ -45,7 +45,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="tabladeSolicitudes" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -71,7 +71,7 @@
                           </div>
                         </a>
                       </td>
-                      <td>${solicitud.getUsuario().getNombreCompleto()}</td>
+                      <td>${solicitud.getUsuario().getNombreCompleto()} (${solicitud.getUsuario().getNombreSeccion()})</td>
                       <td>${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()})</td>
                       <td>${solicitud.getCantidad()} (${solicitud.getInventario().getSeccion().getNombre_seccion()})</td>
                       <td>${solicitud.getFecha_solicitud()}</td>
@@ -88,7 +88,10 @@
                             <c:choose>
                               <c:when test="${solicitud.getEstado().equals('Aprobada')}">
                                 <td>
-                                 <a class="btn btn-primary btn-sm boton-accion " onclick="confirmarAuth(${solicitud.getId_solicitud()})">Entregar</a>
+                                 <a class="btn btn-primary btn-sm boton-accion "  onclick="confirmarAuth(${solicitud.getId_solicitud()},
+                                              '${solicitud.getUsuario().getNombreCompleto()}', 
+                                              '${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()})',
+                                              '${solicitud.getCantidad()} (${solicitud.getInventario().getSeccion().getNombre_seccion()})')" >Entregar</a>
                                 </td>
                               </c:when>
                               <c:otherwise>
@@ -115,75 +118,98 @@
       
       <t:modal idModal="ModalAutorizar" titulo="Autenticación">
 
-      <jsp:attribute name="form">
-        <h5> Para validar la entrega, el usuario recipiente debe iniciar sesión. </h5>
-        <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
-          <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
-          <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
-          <input hidden="true" name="accionindex" id="accionindex" value="accionindex">
-          ${mensaje_auth}
-          <label for="usr" class="control-label">Usuario</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group" style="display:table;">
-                <input type="text" id="usr"  name="usr" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-            </div>
-          </div>
-          <label for="passw" class="control-label">Contraseña</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group" style="display:table;">
-                <input type="password" id="passw" name="passw" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-              <p id='mensajeValidación' style='color:red;'><p>
-            </div>
-          </div>
-        <div class="form-group">
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
-          </div>
-        </div>
-        </form>
-
-
-      </jsp:attribute>
-
-    </t:modal>
+        <jsp:attribute name="form">
+          <h5> Para validar la entrega, el usuario recipiente debe iniciar sesión. </h5>
+          <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
+            <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
+            <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
+            <input hidden="true" name="accionindex" id="accionindex" value="accionindex">
+            ${mensaje_auth}
         
-    <t:modal idModal="ModalRechazar" titulo="Observaciones">
-
-      <jsp:attribute name="form">
-        <h5> ¿Está seguro que desea rechazar esta solicitud? De ser así por favor indique las observaciones: </h5>
-        <form class="form-horizontal" id="form_modalrechazar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
-          <input hidden="true" name="id_solicitud_rech" id="id_solicitud_rech" >
-          <input hidden="true" name="accionindex" id="accionindex" value="accionindex_rechazar">
-          ${mensaje_auth}
-          <label for="observaciones" class="control-label">Observaciones</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group" style="display:table;">
-                <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${ubicacion.getDescripcion()}</textarea>
+            <label for="usr" class="control-label">Usuario</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group" style="display:table;">
+                  <input type="text" id="usr"  name="usr" required
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')">
+                </div>
               </div>
             </div>
-          </div>
-        <div class="form-group">
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
-          </div>
-        </div>
-        </form>
+            <label for="passw" class="control-label">Contraseña</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group" style="display:table;">
+                  <input type="password" id="passw" name="passw" required
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')">
+                </div>
+                <p id='mensajeValidación' style='color:red;'><p>
+              </div>
+            </div>
+            
+            <hr>
+            <h4> Información sobre la solicitud </h4>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <label for="num-sol" class="control-label"> Número de Solicitud: </label>  
+                <input type="text" id="num-sol"  name="num-sol" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="usr-sol" class="control-label"> Usuario Solicitante: </label>
+                <input type="text" id="usr-sol"  name="usr-sol" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="prd" class="control-label"> Producto:  </label>
+                <input type="text" id="prd"  name="prd" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="cnt" class="control-label"> Cantidad: </label>
+                <input type="text" id="cnt"  name="cnt" disabled>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
+              </div>
+            </div>
+          </form>
 
 
-      </jsp:attribute>
+        </jsp:attribute>
 
-    </t:modal>
+      </t:modal>
+
+      <t:modal idModal="ModalRechazar" titulo="Observaciones">
+
+        <jsp:attribute name="form">
+          <h5> ¿Está seguro que desea rechazar esta solicitud? De ser así por favor indique las observaciones: </h5>
+          <form class="form-horizontal" id="form_modalrechazar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
+            <input hidden="true" name="id_solicitud_rech" id="id_solicitud_rech" >
+            <input hidden="true" name="accionindex" id="accionindex" value="accionindex_rechazar">
+            ${mensaje_auth}
+            <label for="observaciones" class="control-label">Observaciones</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group" style="display:table;">
+                  <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${ubicacion.getDescripcion()}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
+              </div>
+            </div>
+          </form>
+
+
+        </jsp:attribute>
+
+      </t:modal>
 
     </jsp:attribute>
     <jsp:attribute name="scripts">

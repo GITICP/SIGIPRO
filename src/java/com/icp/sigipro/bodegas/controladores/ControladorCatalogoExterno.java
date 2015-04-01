@@ -104,8 +104,7 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           int id_producto = Integer.parseInt(request.getParameter("id_producto"));
           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           redireccion = "CatalogoExterno/index.jsp";
-          List<ProductoExterno> productos = dao.obtenerProductos();
-          request.setAttribute("listaProductos", productos);
+          
           try {
           dao.eliminarProductoExterno(id_producto);
           System.out.println(request.getRemoteAddr());
@@ -118,12 +117,14 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(id_producto,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOEXTERNO,InetAddress.getLocalHost().getHostName());
             //*----------------------------*
-            
-          request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo eliminado correctamente"));
+
+            request.setAttribute("mensaje", helper.mensajeDeExito("Producto del Catálogo Externo eliminado correctamente"));
           }
           catch (SIGIPROException ex)
           {  request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
           }
+          List<ProductoExterno> productos = dao.obtenerProductos();
+          request.setAttribute("listaProductos", productos);
         }
         else if (accion.equalsIgnoreCase("editar")) {
           validarPermiso(22, listaPermisos);

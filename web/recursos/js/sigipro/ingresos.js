@@ -23,11 +23,11 @@ $(document).ready(function () {
         var campoVencimiento = $("#campo-fecha-vencimiento");
         if (pivote) {
             campoVencimiento.show();
-            campoVencimiento.find('#fechaVencimiento').prop('required', true);
+            campoVencimiento.find('#fechaVencimiento').prop('required', true).attr('hidden', false);
             $("#label-fecha-vencimiento").show();
         } else {
             campoVencimiento.hide();
-            campoVencimiento.find('#fechaVencimiento').prop('required', false);
+            campoVencimiento.find('#fechaVencimiento').prop('required', false).attr('hidden', true).val(null);
             $("#label-fecha-vencimiento").hide();
         }
     }

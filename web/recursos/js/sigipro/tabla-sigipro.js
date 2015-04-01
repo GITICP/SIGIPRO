@@ -28,9 +28,9 @@ $(document).ready(function () {
       });
     });
   }
-    var cantidadTablas = $('.sigipro-bitacora-filter').length;
+    var cantidadTablas = $('.sigipro-desc-filter').length;
     if (cantidadTablas > 0) {
-      var selectorTabla = '.sigipro-bitacora-filter';
+      var selectorTabla = '.sigipro-desc-filter';
       $(selectorTabla).each(function () {
         var dtTable = $(this).DataTable({// use DataTable, not dataTable
           sDom: // redefine sDom without lengthChange and default search box

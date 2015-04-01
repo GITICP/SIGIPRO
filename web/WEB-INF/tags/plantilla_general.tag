@@ -122,9 +122,22 @@
           $('.sigiproDatePicker').datepicker()
                   .on('changeDate', function () {
                     $(this).datepicker('hide');
-                    $(':input:eq(' + ($(':input').index(this) + 1) + ')').focus();
-                  });
+                  var indice = ($(':input').index(this) + 1);
+                    var proximo_elemento = $(':input:eq(' + indice + ')');
+                    while( proximo_elemento.attr('hidden') === "hidden" ) {
+                        indice++;
+                        proximo_elemento = $(':input:eq(' + indice + ')');
+                    }
+                    proximo_elemento.focus();
+                });
           $("#fechaActivacion").datepicker({startDate: 0});
+        }
+        if($('.sigiproDatePickerEspecial').length > 0){
+            $('.sigiproDatePickerEspecial').datepicker()
+                  .on('changeDate', function () {
+                    $(this).datepicker('hide');
+                  }); 
+            $("#fechaActivacion").datepicker({startDate: 0});      
         }
       });
     </script>

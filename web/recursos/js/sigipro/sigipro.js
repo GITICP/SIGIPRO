@@ -399,7 +399,7 @@ $(document).ready(function(){
 function ConfirmacionRestablecerContrasena(ref){
     bootbox.dialog({
       title: "Confirmaci&oacute;n",
-      message: "&iquest;Desea restablecer la contraseña de este usuario?",
+      message: "&iquest;Desea restablecer la contrase&ntilde;a de este usuario?",
       buttons:{
         danger: {
           label: "Cancelar",

@@ -3,22 +3,8 @@
     Created on : Nov 26, 2014, 10:16:57 PM
     Author     : Walter
 --%>
-<%@page import="java.util.List"%>
-<%@page import="com.icp.sigipro.bodegas.modelos.Inventario"%>
-<%@page import="com.icp.sigipro.bodegas.dao.InventarioDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
-<%        
-    InventarioDAO p = new InventarioDAO();
-
-    List<Inventario> inventarios = p.obtenerInventarios();
-
-    if(inventarios!=null)
-    {
-        request.setAttribute("listaInventarios", inventarios);
-    }
-%>
 
 <t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
 
