@@ -5,9 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form class="form-horizontal" autocomplete="off" method="post" action="Caballo">
+<form id="caballosform" class="form-horizontal" autocomplete="off" method="post" action="Caballo">
     <div class="col-md-6">
         <input hidden="true" name="id_caballo" value="${caballo.getId_caballo()}">
         <input hidden="true" name="accion" value="${accion}">
@@ -139,7 +140,7 @@
                             <input hidden="true" name="sexo" value="${caballo.getSexo()}">
                         </c:otherwise>
                     </c:choose>
-                           </div>
+                </div>
             </div>
         </div>
         <label for="color" class="control-label">Color</label>
@@ -192,49 +193,122 @@
             </div>
         </div>  
     </div>
-
-    <div class="col-md-12">
-        <!-- Esta parte es la de los permisos de un rol -->
-        <p class="campos-requeridos">
-            Los campos marcados con * son requeridos.
-        </p>  
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="widget widget-table">
-                    <div class="widget-header">
-                        <h3><i class="fa fa-map-marker"></i> Fotografía (Sin Implementar)</h3>
-                    </div>
-                    <div class="widget-content">
-                        <label for="fotografia" class="control-label">Fotografía</label>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="input-group">                
-                                    <input type="file" value='' name="fotografia" accept="image/*" onchange="previewFile()" />
-                                    <input type='hidden' name='fotografia' id='fotografia' value=''>
-                                    <div><img name='imagenSubida' id="img_newjourney" src='' height="300" alt=""></div>
-                                </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <h3><i class="fa fa-map-marker"></i> Fotografía (Sin Implementar)</h3>
+                </div>
+                <div class="widget-content">
+                    <label for="fotografia" class="control-label">Fotografía</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">                
+                                <input type="file" value='' name="fotografia" accept="image/*" onchange="previewFile()" />
+                                <input type='hidden' name='fotografia' id='fotografia' value=''>
+                                <div><img name='imagenSubida' id="img_newjourney" src='' height="300" alt=""></div>
                             </div>
                         </div>
-                        <img src="${caballo.getFotografia()}"
                     </div>
+                    <img src="${caballo.getFotografia()}"
                 </div>
             </div>
         </div>
     </div>
-    <div class="form-group">
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <c:choose>
-                <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                </c:when>
-                <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
-                </c:otherwise>
-            </c:choose>
+</div>                           
+<div class="col-md-12">
+    <!-- Esta parte es la de los caballos del grupo -->
+    <div class="widget widget-table">
+        <div class="widget-header">
+            <h3><i class="fa fa-check"></i> Eventos Clínicos Realizados Al Caballo</h3>
+            <div class="btn-group widget-header-toolbar">
+                <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarEvento">Agregar</a>
+            </div>
+        </div>
+        <div class="widget-content">
+            <table id="caballos-evento" class="table table-sorting table-striped table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Fecha del Evento</th>
+                        <th>Tipo del Evento</th>
+                        <th>Usuario Responsable</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${listaEventos}" var="evento">
+                        <tr id="evento-${evento.getId_evento()}">
+                            <td>${evento.getFecha()}</td>
+                            <td>${evento.getTipo_evento().getNombre()}</td>
+                            <td>${evento.getResponsable().getNombre_usuario()}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarEventoDeCaballo(${evento.getId_evento()})">Eliminar</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
         </div>
     </div>
-
+</div>
+<p class="campos-requeridos">
+    Los campos marcados con * son requeridos.
+</p>  
+<div class="form-group">
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+        <c:choose>
+            <c:when test= "${accion.equals('Editar')}">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+            </c:when>
+            <c:otherwise>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
+            </c:otherwise>
+        </c:choose>
+    </div>
 </div>
 </form>
+
+<t:modal idModal="modalAgregarEvento" titulo="Agregar Eventos">
+    <jsp:attribute name="form">
+            <form class="form-horizontal" id="agregarEventos" autocomplete="off" method="post" action="Caballeriza">
+                <input hidden="true" name="accion" value="Evento">
+                <input id="ids-eventos" hidden="true" name="ids_eventos" value="">
+                <input hidden="true" id='id_caballo' name='id_caballo' value="">
+                <label for="tipo-evento" class="control-label">*Seleccione El Evento:</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <select id="eventoModal" class="select2" name="eventoModal"
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${listaEventosRestantes}" var="evento">
+                                    <option value="${evento.getId_evento()}|${evento.getDescripcion().toString()}|${evento.getFecha()}|${evento.getTipo_evento().getNombre()}|${evento.getResponsable().getNombre_usuario()}"> ID: ${evento.getId_evento()} -- Fecha: ${evento.getFechaAsString()} -- Tipo: ${evento.getTipo_evento().getNombre()}</option>
+                                </c:forEach>
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label for="observaciones" class="control-label">Descripción del Evento:</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <BR>
+                            <textarea disabled='true' rows="8" cols="50" maxlength="500" placeholder="Descripción Del Evento" class="form-control" name="observaciones" id="observaciones"></textarea>
+                        </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button id="btn-agregarEventoCaballo" type="button" class="btn btn-primary" onclick="agregarEventoCaballo()"><i class="fa fa-check-circle"></i> Agregar Evento</button>
+                </div>
+            </div>
+            </form>
+
+    </jsp:attribute>
+
+</t:modal>                   

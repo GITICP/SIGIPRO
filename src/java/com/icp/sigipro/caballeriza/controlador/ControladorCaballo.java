@@ -9,7 +9,9 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.caballeriza.dao.CaballoDAO;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -87,9 +89,13 @@ public class ControladorCaballo extends SIGIPROServlet {
         int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
         try {
             Caballo g = dao.obtenerCaballo(id_caballo);
+            List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
+            
             request.setAttribute("grupo", g.getGrupo_de_caballos());
             request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
             request.setAttribute("caballo", g);
+            request.setAttribute("listaEventos", listaeventos);
+
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -97,7 +103,7 @@ public class ControladorCaballo extends SIGIPROServlet {
         }
         
     }    
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         //List<Integer> listaPermisos = getPermisosUsuario(request);
         //validarPermiso(42, listaPermisos);
@@ -106,11 +112,15 @@ public class ControladorCaballo extends SIGIPROServlet {
         Caballo caballo = dao.obtenerCaballo(id_caballo);
         GrupoDeCaballosDAO grupodao = new GrupoDeCaballosDAO();
         List<GrupoDeCaballos> listagrupos = grupodao.obtenerGruposDeCaballos();
+        List<EventoClinico> listaeventosrestantes = dao.ObtenerEventosCaballoRestantes(id_caballo);
+        List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
         request.setAttribute("listagrupos",listagrupos);      
         request.setAttribute("caballo", caballo);
         request.setAttribute("accion", "Editar");
         request.setAttribute("sexos", Caballo.SEXOS);
         request.setAttribute("estados",Caballo.ESTADOS);
+        request.setAttribute("listaEventosRestantes", listaeventosrestantes);
+        request.setAttribute("listaEventos", listaeventos);
         redireccionar(request, response, redireccion);
 
     }
