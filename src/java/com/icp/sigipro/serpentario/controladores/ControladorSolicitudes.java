@@ -57,6 +57,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("entregar");
+            add("aprobar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -66,7 +67,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             add("editar");
             add("rechazar");
             add("entregar");
-            add("aprobar");
+           
             
         }
     };
@@ -107,6 +108,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Solicitudes/index.jsp";
+        request.setAttribute("booladmin", true);
+
         List<Solicitud> solicitudes = dao.obtenerSolicitudes();
         request.setAttribute("listaSolicitudes", solicitudes);
         redireccionar(request, response, redireccion);
@@ -154,6 +157,36 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         }
     }
 
+       protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Solicitudes/index.jsp";
+        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        
+        if (s.getEstado().equals("Solicitado")){
+            s.setEstado("Aprobado");
+            s.setObservaciones("La solicitud fue aprobada.");
+            resultado = dao.editarSolicitud(s);
+
+            if (resultado){
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
+                //*----------------------------*
+                redireccion = "Solicitudes/index.jsp";
+                request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+                HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada correctamente"));
+            }
+            redireccionar(request, response, redireccion);
+        }else{
+            redireccion = "Solicitudes/index.jsp";
+            request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser aprobada."));
+            redireccionar(request, response, redireccion);
+        }
+    }
     // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
@@ -236,37 +269,6 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser rechazazda."));
-            redireccionar(request, response, redireccion);
-        }
-    }
-    
-    protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        boolean resultado = false;
-        String redireccion = "Solicitudes/index.jsp";
-        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
-        
-        if (s.getEstado().equals("Solicitado")){
-            s.setEstado("Aprobado");
-            s.setObservaciones("La solicitud fue aprobada.");
-            resultado = dao.editarSolicitud(s);
-
-            if (resultado){
-                //Funcion que genera la bitacora
-                BitacoraDAO bitacora = new BitacoraDAO();
-                bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
-                //*----------------------------*
-                redireccion = "Solicitudes/index.jsp";
-                request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-                HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada correctamente"));
-            }
-            redireccionar(request, response, redireccion);
-        }else{
-            redireccion = "Solicitudes/index.jsp";
-            request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-            request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser aprobada."));
             redireccionar(request, response, redireccion);
         }
     }
