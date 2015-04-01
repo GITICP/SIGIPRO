@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bioterio.controladores;
 
+
 import com.icp.sigipro.bioterio.dao.CepaDAO;
 import com.icp.sigipro.bioterio.modelos.Cepa;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
@@ -15,25 +16,22 @@ import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  *
  * @author Amed
  */
 @WebServlet(name = "ControladorCepas", urlPatterns = {"/Ratonera/Cepas"})
-public class ControladorCepas extends SIGIPROServlet {
+public class ControladorCepas extends  SIGIPROServlet {
 
-  private final int[] permisos = {204, 1, 1};
+  private final int[] permisos = {202, 1, 1};
   private CepaDAO dao = new CepaDAO();
   private HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
@@ -61,11 +59,10 @@ public class ControladorCepas extends SIGIPROServlet {
   protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
     List<Integer> listaPermisos = getPermisosUsuario(request);
-    validarPermiso(204, listaPermisos);
+    validarPermiso(202, listaPermisos);
     String redireccion = "Cepas/Agregar.jsp";
 
     Cepa ds = new Cepa();
-
     request.setAttribute("cepa", ds);
     request.setAttribute("accion", "Agregar");
 
@@ -152,8 +149,8 @@ public class ControladorCepas extends SIGIPROServlet {
   {
     boolean resultado = false;
     String redireccion = "Cepas/Agregar.jsp";
-    Cepa cepa = construirObjeto(request);
     try {
+      Cepa cepa = construirObjeto(request);
       resultado = dao.insertarCepa(cepa);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
@@ -183,8 +180,8 @@ public class ControladorCepas extends SIGIPROServlet {
   {
     boolean resultado = false;
     String redireccion = "Cepas/Editar.jsp";
-    Cepa cepa = construirObjeto(request);
     try {
+      Cepa cepa = construirObjeto(request);
       resultado = dao.editarCepa(cepa);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
@@ -213,87 +210,12 @@ public class ControladorCepas extends SIGIPROServlet {
   
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-   private Cepa construirObjeto(HttpServletRequest request) {
+   private Cepa construirObjeto(HttpServletRequest request) throws SIGIPROException {
     Cepa cepa = new Cepa();
-    String fecha_apai = request.getParameter("fecha_apai");
-    String fecha_apaf = request.getParameter("fecha_apaf");
-    String fecha_elimi = request.getParameter("fecha_elimi");
-    String fecha_elimf = request.getParameter("fecha_elimf");
-    String fecha_elihi = request.getParameter("fecha_elihi");
-    String fecha_elihf = request.getParameter("fecha_elihf");
-    String fecha_selni = request.getParameter("fecha_selni");
-    String fecha_selnf = request.getParameter("fecha_selnf");
-    String fecha_repoi = request.getParameter("fecha_repoi");
-    String fecha_repof = request.getParameter("fecha_repof");
-    String fecha_vig = request.getParameter("fecha_vigencia");
-    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-    java.util.Date Dfecha_apai;
-    java.sql.Date fecha_apaiSQL;
-    java.util.Date Dfecha_apaf;
-    java.sql.Date fecha_apafSQL;
-    java.util.Date Dfecha_elimi;
-    java.sql.Date fecha_elimiSQL;
-    java.util.Date Dfecha_elimf;
-    java.sql.Date fecha_elimfSQL;
-    java.util.Date Dfecha_elihi;
-    java.sql.Date fecha_elihiSQL;
-    java.util.Date Dfecha_elihf;
-    java.sql.Date fecha_elihfSQL;
-    java.util.Date Dfecha_selni;
-    java.sql.Date fecha_selniSQL;
-    java.util.Date Dfecha_selnf;
-    java.sql.Date fecha_selnfSQL;
-    java.util.Date Dfecha_repoi;
-    java.sql.Date fecha_repoiSQL;
-    java.util.Date Dfecha_repof;
-    java.sql.Date fecha_repofSQL;
-    java.util.Date Dfecha_vig;
-    java.sql.Date fecha_vigSQL;
-    try {
-      Dfecha_apai = formatoFecha.parse(fecha_apai);
-      Dfecha_apaf = formatoFecha.parse(fecha_apaf);
-      Dfecha_elimi = formatoFecha.parse(fecha_elimi);
-      Dfecha_elimf = formatoFecha.parse(fecha_elimf);
-      Dfecha_elihi = formatoFecha.parse(fecha_elihi);
-      Dfecha_elihf = formatoFecha.parse(fecha_elihf);
-      Dfecha_selni = formatoFecha.parse(fecha_selni);
-      Dfecha_selnf = formatoFecha.parse(fecha_selnf);
-      Dfecha_repoi = formatoFecha.parse(fecha_repoi);
-      Dfecha_repof = formatoFecha.parse(fecha_repof);
-      Dfecha_vig = formatoFecha.parse(fecha_vig);
-      
-      fecha_apaiSQL = new java.sql.Date(Dfecha_apai.getTime());
-      fecha_apafSQL = new java.sql.Date(Dfecha_apaf.getTime());
-      fecha_elimiSQL = new java.sql.Date(Dfecha_elimi.getTime());
-      fecha_elimfSQL = new java.sql.Date(Dfecha_elimf.getTime());
-      fecha_elihiSQL = new java.sql.Date(Dfecha_elihi.getTime());
-      fecha_elihfSQL = new java.sql.Date(Dfecha_elihf.getTime());
-      fecha_selniSQL = new java.sql.Date(Dfecha_selni.getTime());
-      fecha_selnfSQL = new java.sql.Date(Dfecha_selnf.getTime());
-      fecha_repoiSQL = new java.sql.Date(Dfecha_repoi.getTime());
-      fecha_repofSQL = new java.sql.Date(Dfecha_repof.getTime());
-      fecha_vigSQL = new java.sql.Date(Dfecha_vig.getTime());
-
-      
-      cepa.setFecha_apareamiento_i(fecha_apaiSQL);
-      cepa.setFecha_apareamiento_f(fecha_apafSQL);
-      cepa.setFecha_eliminacionmacho_i(fecha_elimiSQL);
-      cepa.setFecha_eliminacionmacho_f(fecha_elimfSQL);
-      cepa.setFecha_eliminacionhembra_i(fecha_elihiSQL);
-      cepa.setFecha_eliminacionhembra_f(fecha_elihfSQL);
-      cepa.setFecha_seleccionnuevos_i(fecha_selniSQL);
-      cepa.setFecha_seleccionnuevos_f(fecha_selnfSQL);
-      cepa.setFecha_reposicionciclo_i(fecha_repoiSQL);
-      cepa.setFecha_reposicionciclo_f(fecha_repofSQL);
-      cepa.setFecha_vigencia(fecha_vigSQL);
-      
-    } catch (ParseException ex) {
-      Logger.getLogger(ControladorCepas.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    
     cepa.setId_cepa(Integer.parseInt(request.getParameter("id_cepa")));
     cepa.setNombre(request.getParameter("nombre"));
-    cepa.setMacho_as(request.getParameter("macho_as"));
-    cepa.setHembra_as(request.getParameter("hembra_as"));
+    
     return cepa;
   }
   
