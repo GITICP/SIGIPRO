@@ -51,6 +51,8 @@
                     <th>Número de Cara</th>
                     <th>Ascendencia Macho</th>
                     <th>Ascendencia Hembra</th>
+                    <th>Cepa</th>
+                    <th>Fecha de Vigencia</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -66,6 +68,8 @@
                       </td>
                       <td>${cara.getMacho_as()}</td>
                       <td>${cara.getHembra_as()}</td>
+                      <td>${cara.getCepa().getNombre()}</td>
+                      <td>${cara.getFecha_vigencia()}</td>
                     </tr>
 
                   </c:forEach>

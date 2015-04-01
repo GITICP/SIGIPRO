@@ -60,6 +60,9 @@
 
 
   </jsp:attribute>
+      <jsp:attribute name="scripts">
+      <script src="/SIGIPRO/recursos/js/sigipro/caras.js"></script>
+    </jsp:attribute>
 
 </t:plantilla_general>
 

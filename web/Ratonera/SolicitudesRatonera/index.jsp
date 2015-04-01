@@ -89,7 +89,12 @@
                             <c:choose>
                               <c:when test="${solicitud.getEstado().equals('Aprobada') || solicitud.getEstado().equals('Abierta')}">
                                 <td>
-                                  <a class="btn btn-primary btn-sm boton-accion "  onclick="entregarSolicitud(${solicitud.getId_solicitud()})" >Entregar</a>
+                                  <a class="btn btn-primary btn-sm boton-accion "  onclick="entregarSolicitud(${solicitud.getId_solicitud()},
+                                                                                                              ${solicitud.getNumero_animales()},
+                                                                                                              '${solicitud.getPeso_requerido()}',
+                                                                                                              ${solicitud.getNumero_cajas()},
+                                                                                                              '${solicitud.getSexo()}',
+                                                                                                              '${solicitud.getCepa().getNombre()}')" >Entregar</a>
                                 </td>
                               </c:when>
                               <c:otherwise>
@@ -253,6 +258,34 @@
                     </c:choose>
                   </c:forEach>
                 </select>
+              </div>
+            </div>
+            <hr>
+            <h4> Información sobre la solicitud </h4>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <label for="num-sol" class="control-label"> Número de Solicitud: </label>  
+                <input type="text" id="numsol"  name="numsol" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="usr-sol" class="control-label"> Numero de animales: </label>
+                <input type="text" id="numan"  name="numan" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="prd" class="control-label"> Peso:  </label>
+                <input type="text" id="pesosol"  name="pesosol" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="cnt" class="control-label"> Numero Cajas: </label>
+                <input type="text" id="cajassol"  name="cajassol" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="cnt" class="control-label"> Sexo: </label>
+                <input type="text" id="sexsol"  name="sexsol" disabled>
+              </div>
+              <div class="col-sm-12">
+                <label for="cnt" class="control-label"> Cepa: </label>
+                <input type="text" id="cepasol"  name="cepasol" disabled>
               </div>
             </div>
             <div class="form-group">

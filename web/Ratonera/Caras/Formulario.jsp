@@ -77,7 +77,7 @@
     <div class="widget-header">
       <h3><i class="fa fa-calendar"></i> Fechas de la Cara</h3>
     </div>
-    <div class="widget-content">
+    <div class="widget-content"> 
       <div class="col-md-6">
         <label for="cantidad" class="control-label"><strong>*Fechas de Apareamiento</strong></label>
         <div class="form-group">
@@ -120,6 +120,7 @@
           </div>
         </div>  
       </div>
+
       <div class="col-md-6">
         <label for="cantidad" class="control-label"><strong>*Fechas de Eliminación de la Hembra</strong></label>
         <div class="form-group">
@@ -141,6 +142,7 @@
           </div>
         </div>  
       </div>
+
       <div class="col-md-6">
         <label for="cantidad" class="control-label"><strong>*Fechas de Selección de Machos y Hembras</strong></label>
         <div class="form-group">
@@ -162,6 +164,7 @@
           </div>
         </div>  
       </div>
+
       <div class="col-md-6">
         <label for="cantidad" class="control-label"><strong>*Fechas de Reposición del Ciclo</strong></label>
         <div class="form-group">
@@ -183,6 +186,7 @@
           </div>
         </div>  
       </div>
+
       <div class="col-md-6">
         <label for="cantidad" class="control-label"><strong>*Fecha Límite de Vigencia</strong></label>
         <div class="form-group">
@@ -196,6 +200,11 @@
           </div>
         </div>
       </div>
+      <p id='mensajeFechas1' style='color:red;'><p>
+      <p id='mensajeFechas2' style='color:red;'><p> 
+      <p id='mensajeFechas3' style='color:red;'><p> 
+      <p id='mensajeFechas4' style='color:red;'><p> 
+      <p id='mensajeFechas5' style='color:red;'><p> 
     </div>
   </div>
   <hr>

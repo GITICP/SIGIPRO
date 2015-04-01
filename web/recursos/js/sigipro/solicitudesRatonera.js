@@ -31,11 +31,18 @@ function RechazarSolicitud(id_solicitud){
   $('#observaciones').val("");
   $('#ModalRechazar').modal('show');
 }
-function entregarSolicitud(id_solicitud){
+function entregarSolicitud(id_solicitud, numeroan, peso, numerocajas, sexo, cepa){
+  
   $('#numero_animales').val("");
   $('#numero_cajas').val("");
   $('#id_solicitud_ent').val(id_solicitud);
   $('#ModalEntrega').modal('show');
+  $('#numsol').val(id_solicitud);
+  $('#numan').val(numeroan);
+  $('#pesosol').val(peso);
+  $('#cajassol').val(numerocajas);
+  $('#sexsol').val(sexo);
+  $('#cepasol').val(cepa);
 }
 
 function confirmarAuth(){
