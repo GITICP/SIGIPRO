@@ -15,12 +15,12 @@ import org.json.JSONObject;
 public class LotesEntregasSolicitud {
     private Lote lote;
     private EntregasSolicitud entrega_solicitud;
-    private int cantidad;
+    private float cantidad;
 
     public LotesEntregasSolicitud() {
     }
 
-    public LotesEntregasSolicitud(Lote id_lote, EntregasSolicitud entrega_solicitud, int cantidad) {
+    public LotesEntregasSolicitud(Lote id_lote, EntregasSolicitud entrega_solicitud, float cantidad) {
         this.lote = id_lote;
         this.entrega_solicitud = entrega_solicitud;
         this.cantidad = cantidad;
@@ -42,11 +42,11 @@ public class LotesEntregasSolicitud {
         this.entrega_solicitud = entrega_solicitud;
     }
 
-    public int getCantidad() {
+    public float getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(float cantidad) {
         this.cantidad = cantidad;
     }
     

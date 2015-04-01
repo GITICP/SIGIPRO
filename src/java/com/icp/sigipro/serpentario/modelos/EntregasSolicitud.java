@@ -19,13 +19,13 @@ public class EntregasSolicitud {
     private Solicitud solicitud;
     private Usuario usuario_entrega;
     private Date fecha_entrega;
-    private int cantidad_entregada;
+    private float cantidad_entregada;
     private Usuario usuario_recibo;
 
     public EntregasSolicitud() {
     }
 
-    public EntregasSolicitud(int id_entrega, Solicitud solicitud, Usuario usuario_entrega, Date fecha_entrega, int cantidad_entregada, Usuario usuario_recibo) {
+    public EntregasSolicitud(int id_entrega, Solicitud solicitud, Usuario usuario_entrega, Date fecha_entrega, float cantidad_entregada, Usuario usuario_recibo) {
         this.id_entrega = id_entrega;
         this.solicitud = solicitud;
         this.usuario_entrega = usuario_entrega;
@@ -66,11 +66,11 @@ public class EntregasSolicitud {
         this.fecha_entrega = fecha_entrega;
     }
 
-    public int getCantidad_entregada() {
+    public float getCantidad_entregada() {
         return cantidad_entregada;
     }
 
-    public void setCantidad_entregada(int cantidad_entregada) {
+    public void setCantidad_entregada(float cantidad_entregada) {
         this.cantidad_entregada = cantidad_entregada;
     }
 

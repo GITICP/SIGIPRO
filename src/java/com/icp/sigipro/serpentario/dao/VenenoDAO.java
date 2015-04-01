@@ -86,8 +86,7 @@ public class VenenoDAO {
                 veneno.setId_veneno(rs.getInt("id_veneno"));
                 veneno.setCantidad_maxima(rs.getFloat("cantidad_maxima"));
                 veneno.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
-                System.out.println(rs.getBoolean("restriccion"));
-                
+                veneno.setCantidad(obtenerCantidad(veneno));
                 veneno.setRestriccion(rs.getBoolean("restriccion"));
             }
             rs.close();
@@ -112,6 +111,7 @@ public class VenenoDAO {
                 veneno.setCantidad_maxima(rs.getFloat("cantidad_maxima"));
                 veneno.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 veneno.setRestriccion(rs.getBoolean("restriccion"));
+                System.out.println(obtenerCantidad(veneno));
                 veneno.setCantidad(obtenerCantidad(veneno));
                 resultado.add(veneno);
             }
@@ -131,7 +131,9 @@ public class VenenoDAO {
             PreparedStatement consulta = getConexion().prepareStatement("SELECT extraccion.id_especie, sum(peso_recuperado) as cantidad "
                     + "FROM serpentario.extraccion as extraccion INNER JOIN serpentario.especies as especie ON especie.id_especie=extraccion.id_especie "
                     + "INNER JOIN serpentario.liofilizacion as liofilizacion ON liofilizacion.id_extraccion=extraccion.id_extraccion "
+                    + "WHERE extraccion.id_especie = ? "
                     + "GROUP BY extraccion.id_especie;");
+            consulta.setInt(1, v.getEspecie().getId_especie());
             ResultSet rs = consulta.executeQuery();
             while (rs.next()){
                 respuesta = rs.getFloat("cantidad");

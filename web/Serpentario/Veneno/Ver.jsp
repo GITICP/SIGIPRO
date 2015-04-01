@@ -72,6 +72,7 @@
                         <thead>
                           <tr>
                             <th>Lotes</th>
+                            <th>Cantidad Total</th>
                           </tr>
                         </thead>
                         <tbody>

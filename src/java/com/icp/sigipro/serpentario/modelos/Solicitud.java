@@ -18,15 +18,16 @@ public class Solicitud {
     private int id_solicitud;
     private Date fecha_solicitud;
     private Especie especie;
-    private int cantidad;
+    private float cantidad;
     private Usuario usuario;
     private String proyecto;
     private String estado;
+    private String observaciones;
 
     public Solicitud() {
     }
 
-    public Solicitud(int id_solicitud, Date fecha_solicitud, Especie especie, int cantidad, Usuario usuario, String proyecto, String estado) {
+    public Solicitud(int id_solicitud, Date fecha_solicitud, Especie especie, float cantidad, Usuario usuario, String proyecto, String estado) {
         this.id_solicitud = id_solicitud;
         this.fecha_solicitud = fecha_solicitud;
         this.especie = especie;
@@ -42,6 +43,14 @@ public class Solicitud {
 
     public void setId_solicitud(int id_solicitud) {
         this.id_solicitud = id_solicitud;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public Date getFecha_solicitud() {
@@ -60,11 +69,11 @@ public class Solicitud {
         this.especie = especie;
     }
 
-    public int getCantidad() {
+    public float getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(float cantidad) {
         this.cantidad = cantidad;
     }
 

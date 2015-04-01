@@ -92,7 +92,7 @@ public class SolicitudDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bodega.solicitudes"
-              + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
+              + " zSET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
               + " WHERE id_solicitud=? AND cantidad <= (Select cantidad from bodega.inventarios where id_inventario =? ) "
       );
 

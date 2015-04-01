@@ -176,13 +176,18 @@ public class LoteDAO {
     public List<Lote> obtenerLotes(Especie e){
         List<Lote> resultado = new ArrayList<Lote>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote FROM serpentario.lote WHERE id_especie=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+                    + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
+                    + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
+                    + "WHERE lote.id_especie = ? "
+                    + "GROUP BY lote.id_lote;");
             consulta.setInt(1, e.getId_especie());
             ResultSet rs = consulta.executeQuery();
             while(rs.next()){
                 Lote lote = new Lote();
                 lote.setId_lote(rs.getInt("id_lote"));
                 lote.setEspecie(e);
+                lote.setCantidad_total(rs.getFloat("cantidad_total"));
                 resultado.add(lote);
             }
             rs.close();
@@ -198,14 +203,18 @@ public class LoteDAO {
     public Lote obtenerLote(int id_lote){
         Lote resultado = new Lote();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * "
-                    + "FROM serpentario.lote WHERE id_lote = ?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+                    + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
+                    + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
+                    + "WHERE lote.id_lote = ? "
+                    + "GROUP BY lote.id_lote;");
             consulta.setInt(1, id_lote);
             ResultSet rs = consulta.executeQuery();
             EspecieDAO especiedao = new EspecieDAO();
             while(rs.next()){
                 resultado.setId_lote(rs.getInt("id_lote"));
                 resultado.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
+                resultado.setCantidad_total(rs.getFloat("cantidad_total"));
             }
             resultado.setExtracciones(obtenerExtracciones(resultado));
             rs.close();

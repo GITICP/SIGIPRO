@@ -162,7 +162,8 @@ CREATE TABLE serpentario.solicitudes(
     cantidad float NOT NULL,
     id_usuario integer NOT NULL,
     proyecto character varying(200),
-    estado character varying(15)
+    estado character varying(15),
+    observaciones character varying(200)
 );
 
 ALTER TABLE ONLY serpentario.solicitudes ADD CONSTRAINT pk_id_solicitud PRIMARY KEY (id_solicitud);

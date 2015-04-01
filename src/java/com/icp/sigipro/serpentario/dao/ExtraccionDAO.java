@@ -383,7 +383,7 @@ public class ExtraccionDAO {
     public boolean validarIsLiofilizacionFin(Extraccion e){
         try{
             Liofilizacion liofilizacion = this.obtenerLiofilizacion(e.getId_extraccion());
-            if (liofilizacion.getFecha_finAsString() !=""){
+            if (liofilizacion.getFecha_fin() !=null){
                 e.setIsLiofilizacionFin(true);
                 return true;
             }else{
