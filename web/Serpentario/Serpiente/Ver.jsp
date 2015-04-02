@@ -55,7 +55,20 @@
                             </c:when>
                             </c:choose>
                             <a class="btn btn-info btn-sm boton-accion evento-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento</a>
+                            <c:set var="contienePermisoEditar" value="false" />
+                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                              <c:if test="${permiso == 1 || permiso == 311}">
+                                <c:set var="contienePermisoEditar" value="true" />
+                              </c:if>
+                            </c:forEach>
+                            <c:if test="${contienePermisoEditar}">
+                              <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
+                            </c:if>
                         </c:when>
+                        <c:otherwise>
+                                
+                                
+                        </c:otherwise>
                     </c:choose>
                 
                 </c:if>
@@ -70,15 +83,7 @@
                   <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la especie" data-href="/SIGIPRO/Serpentario/Especie?accion=eliminar&id_especie=${especie.getId_especie()}">Eliminar</a>
                 </c:if>
                 -->
-                <c:set var="contienePermisoEditar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 311}">
-                    <c:set var="contienePermisoEditar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
-                </c:if>
+                
               </div>
             </div>
             ${mensaje}
@@ -209,6 +214,50 @@
                             </c:forEach>
                             
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <label for="observaciones" class="control-label">Observaciones</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" ></textarea>
+                    </div>
+                  </div>
+                </div>
+            
+        
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Evento</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    
+<t:modal idModal="modalAgregarColeccionHumeda" titulo="Agregar Serpiente a Colección Húmeda">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarColeccionHumeda" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="Coleccionhumeda">
+                <label for="especie" class="control-label">Serpiente</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="id_serpiente" name="id_serpiente" disabled="true">
+                        </div>
+                    </div>
+                </div>
+                <label for="especie" class="control-label">Colección Húmeda</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" value=${id_coleccion_humeda} disabled="true">
                         </div>
                     </div>
                 </div>

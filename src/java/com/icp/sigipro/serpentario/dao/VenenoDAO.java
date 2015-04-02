@@ -125,6 +125,7 @@ public class VenenoDAO {
         return resultado;
     }
     
+
     public float obtenerCantidad(Veneno v){
         float respuesta = 0;
         try{
@@ -135,14 +136,39 @@ public class VenenoDAO {
                     + "GROUP BY extraccion.id_especie;");
             consulta.setInt(1, v.getEspecie().getId_especie());
             ResultSet rs = consulta.executeQuery();
+            float cantidad_solicitada = this.obtenerCantidadSolicitada(v.getEspecie().getId_especie());
             while (rs.next()){
-                respuesta = rs.getFloat("cantidad");
+                float cantidad_actual = rs.getFloat("cantidad");
+                respuesta = cantidad_actual - cantidad_solicitada;
             }
         }catch (Exception ex){
                     
         }
         return respuesta;
     }
+    
+    public float obtenerCantidadSolicitada(int id_especie){
+         float resultado = 0;
+         try{
+             PreparedStatement consulta = getConexion().prepareStatement("SELECT lote.id_especie, sum(entrega.cantidad) as cantidad_actual " +
+                                    "FROM serpentario.lote as lote LEFT OUTER JOIN serpentario.lotes_entregas_solicitud as entrega ON lote.id_lote = entrega.id_lote " +
+                                    "WHERE lote.id_especie=? " +
+                                    "GROUP BY lote.id_especie");
+             
+             consulta.setInt(1, id_especie);
+             ResultSet resultadoConsulta = consulta.executeQuery();
+             if (resultadoConsulta.next()){
+                 resultado = resultadoConsulta.getFloat("cantidad_actual");
+             }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+         }catch (Exception e){
+             
+         }
+         
+         return resultado;
+     }
     
     private Connection getConexion(){
         try{     

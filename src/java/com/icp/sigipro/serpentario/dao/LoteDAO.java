@@ -75,6 +75,30 @@ public class LoteDAO {
         return nextval;
     }
     
+     public float obtenerCantidadSolicitada(int id_lote){
+         float resultado = 0;
+         try{
+             PreparedStatement consulta = getConexion().prepareStatement("SELECT lote.id_lote, sum(entrega.cantidad) as cantidad_actual " +
+                                "FROM serpentario.lote as lote LEFT OUTER JOIN serpentario.lotes_entregas_solicitud as entrega ON lote.id_lote = entrega.id_lote " +
+                                "WHERE lote.id_lote=? " +
+                                "GROUP BY lote.id_lote; ");
+             
+             consulta.setInt(1, id_lote);
+             ResultSet resultadoConsulta = consulta.executeQuery();
+             if (resultadoConsulta.next()){
+                 resultado = resultadoConsulta.getFloat("cantidad_actual");
+             }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+         }catch (Exception e){
+             
+         }
+         
+         return resultado;
+     }
+     
+     
     public boolean insertarExtracciones(Lote l, String[] extracciones){
         boolean resultado = false;
         try{
@@ -154,12 +178,18 @@ public class LoteDAO {
             EspecieDAO especiedao = new EspecieDAO();
             while(rs.next()){
                 Lote lote = new Lote();
-                lote.setId_lote(rs.getInt("id_lote"));
+                int id_lote = rs.getInt("id_lote");
+                lote.setId_lote(id_lote);
                 lote.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 try{
-                    lote.setCantidad_total(rs.getFloat("cantidad_total"));
+                    float cantidad_total = rs.getFloat("cantidad_total");
+                    lote.setCantidad_total(cantidad_total);
+                    float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
+                    float cantidad_actual = cantidad_total - cantidad_entregada;
+                    lote.setCantidad_actual(cantidad_actual);
                 }catch (Exception e){
                     lote.setCantidad_total(0);
+                    lote.setCantidad_actual(0);
                 }
                 resultado.add(lote);
             }
@@ -185,9 +215,14 @@ public class LoteDAO {
             ResultSet rs = consulta.executeQuery();
             while(rs.next()){
                 Lote lote = new Lote();
-                lote.setId_lote(rs.getInt("id_lote"));
+                int id_lote = rs.getInt("id_lote");
+                lote.setId_lote(id_lote);                
                 lote.setEspecie(e);
-                lote.setCantidad_total(rs.getFloat("cantidad_total"));
+                float cantidad_total = rs.getFloat("cantidad_total");
+                lote.setCantidad_total(cantidad_total);
+                float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
+                float cantidad_actual = cantidad_total - cantidad_entregada;
+                lote.setCantidad_actual(cantidad_actual);
                 resultado.add(lote);
             }
             rs.close();
@@ -212,9 +247,21 @@ public class LoteDAO {
             ResultSet rs = consulta.executeQuery();
             EspecieDAO especiedao = new EspecieDAO();
             while(rs.next()){
-                resultado.setId_lote(rs.getInt("id_lote"));
-                resultado.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
-                resultado.setCantidad_total(rs.getFloat("cantidad_total"));
+                Lote lote = new Lote();
+                lote.setId_lote(id_lote);
+                lote.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
+                try{
+                    float cantidad_total = rs.getFloat("cantidad_total");
+                    lote.setCantidad_total(cantidad_total);
+                    float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
+                    float cantidad_actual = cantidad_total - cantidad_entregada;
+                    lote.setCantidad_actual(cantidad_actual);
+                }catch (Exception e){
+                    System.out.println(e.getStackTrace());
+                    lote.setCantidad_total(0);
+                    lote.setCantidad_actual(0);
+                }
+                resultado = lote;
             }
             resultado.setExtracciones(obtenerExtracciones(resultado));
             rs.close();

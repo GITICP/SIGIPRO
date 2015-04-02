@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorSerpiente", urlPatterns = {"/Serpentario/Serpiente"})
 public class ControladorSerpiente extends SIGIPROServlet {
 
-    private final int[] permisos = {1, 310, 311, 312};
+    private final int[] permisos = {1, 310, 311, 312,313,314};
     private SerpienteDAO dao = new SerpienteDAO();
     private EventoDAO eventodao = new EventoDAO();
     private BitacoraDAO bitacora = new BitacoraDAO();
@@ -142,6 +142,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             }
             if (deceso.getId_evento() != 0){
                 request.setAttribute("deceso",deceso);
+                request.setAttribute("id_coleccion_humeda",)
             }else{
                  request.setAttribute("deceso",null);                               
             }

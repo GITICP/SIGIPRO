@@ -79,7 +79,7 @@
                           <c:forEach items="${lotes}" var="lote">
                             <tr>
                               <td><a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${lote.getId_lote()}">Lote ${lote.getId_lote()}</a></td>
-                              <td>${lote.getCantidad_total()}</td>
+                              <td>${lote.getCantidad_actual()}</td>
                             </tr>
                           </c:forEach>
                         </tbody>

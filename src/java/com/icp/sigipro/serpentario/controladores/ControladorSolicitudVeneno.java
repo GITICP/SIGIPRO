@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +37,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorSolicitudes", urlPatterns = {"/Serpentario/Solicitudes"})
-public class ControladorSolicitudes extends SIGIPROServlet {
+@WebServlet(name = "ControladorSolicitudVeneno", urlPatterns = {"/Serpentario/SolicitudVeneno"})
+public class ControladorSolicitudVeneno extends SIGIPROServlet {
 
     //Falta implementar
     private final int[] permisos = {1, 350, 351, 352, 353};
@@ -48,7 +49,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     private EspecieDAO especiedao = new EspecieDAO();
     private UsuarioDAO usuariodao = new UsuarioDAO();
 
-    protected final Class clase = ControladorSolicitudes.class;
+    protected final Class clase = ControladorSolicitudVeneno.class;
     protected final List<String> accionesGet = new ArrayList<String>()
     {
         {
@@ -78,8 +79,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(350, listaPermisos);
-
-        String redireccion = "Solicitudes/Agregar.jsp";
+        String redireccion = "SolicitudVeneno/Agregar.jsp";
         Solicitud s = new Solicitud();
         List<Veneno> venenos = venenodao.obtenerVenenos();
         request.setAttribute("solicitud", s);
@@ -93,7 +93,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(353, listaPermisos);
 
-        String redireccion = "Solicitudes/Entregar.jsp";
+        String redireccion = "SolicitudVeneno/Entregar.jsp";
         Solicitud s = new Solicitud();
         s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
         List <Lote> lotes = lotedao.obtenerLotes(s.getEspecie());
@@ -107,9 +107,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Solicitudes/index.jsp";
-        request.setAttribute("booladmin", true);
-
+        String redireccion = "SolicitudVeneno/index.jsp";
+        request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
         List<Solicitud> solicitudes = dao.obtenerSolicitudes();
         request.setAttribute("listaSolicitudes", solicitudes);
         redireccionar(request, response, redireccion);
@@ -119,7 +118,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Solicitudes/Ver.jsp";
+        String redireccion = "SolicitudVeneno/Ver.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         try {
             Solicitud s = dao.obtenerSolicitud(id_solicitud);
@@ -142,17 +141,20 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(351, listaPermisos);
-        String redireccion = "Solicitudes/Editar.jsp";
+        String redireccion = "SolicitudVeneno/Editar.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
         if(solicitud.getEstado().equals("Solicitado")){
             request.setAttribute("solicitud", solicitud);
+            List<Veneno> venenos = venenodao.obtenerVenenos();
+            request.setAttribute("venenos", venenos);
             request.setAttribute("accion", "Editar");
             redireccionar(request, response, redireccion);
         }else{
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeError("No puede editar una solicitud en proceso."));
-            redireccion = "Solicitudes/index.jsp";
+            redireccion = "SolicitudVeneno/index.jsp";
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             redireccionar(request, response, redireccion);
         }
     }
@@ -160,8 +162,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
        protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Solicitudes/index.jsp";
-        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        String redireccion = "SolicitudVeneno/index.jsp";
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        Solicitud s = dao.obtenerSolicitud(id_solicitud);
         
         if (s.getEstado().equals("Solicitado")){
             s.setEstado("Aprobado");
@@ -173,16 +176,18 @@ public class ControladorSolicitudes extends SIGIPROServlet {
                 BitacoraDAO bitacora = new BitacoraDAO();
                 bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
                 //*----------------------------*
-                redireccion = "Solicitudes/index.jsp";
+                redireccion = "SolicitudVeneno/index.jsp";
                 request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                 HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
                 request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada correctamente"));
             }
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             redireccionar(request, response, redireccion);
         }else{
-            redireccion = "Solicitudes/index.jsp";
+            redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser aprobada."));
             redireccionar(request, response, redireccion);
         }
@@ -194,7 +199,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Solicitudes/Agregar.jsp";
+        String redireccion = "SolicitudVeneno/Agregar.jsp";
         Solicitud s = construirObjeto(request);
         s.setEstado("Solicitado");
         Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
@@ -207,7 +212,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud registrada correctamente"));
         if (resultado){
-            redireccion = "Solicitudes/index.jsp";
+            redireccion = "SolicitudVeneno/index.jsp";
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
         }
         redireccionar(request, response, redireccion);
@@ -216,10 +222,12 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Solicitudes/Editar.jsp";
+        String redireccion = "SolicitudVeneno/Editar.jsp";
         Solicitud s = construirObjeto(request);
         s.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
-        if(s.getEstado().equals("Solicitado")){
+        String estado = request.getParameter("estado");
+        s.setEstado(estado);
+        if(estado.equals("Solicitado")){
             resultado = dao.editarSolicitud(s);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -228,7 +236,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada correctamente"));
             if (resultado){
-                redireccion = "Solicitudes/index.jsp";
+                redireccion = "SolicitudVeneno/index.jsp";
+                request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             }
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             redireccionar(request, response, redireccion);
@@ -236,7 +245,8 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeError("No se puede editar una solicitud en proceso."));
          
-            redireccion = "Solicitudes/index.jsp";
+            redireccion = "SolicitudVeneno/index.jsp";
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             redireccionar(request, response, redireccion);
@@ -246,7 +256,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Solicitudes/index.jsp";
+        String redireccion = "SolicitudVeneno/index.jsp";
         Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
         if (s.getEstado().equals("Solicitado")){
             s.setEstado("Rechazado");
@@ -258,16 +268,18 @@ public class ControladorSolicitudes extends SIGIPROServlet {
                 BitacoraDAO bitacora = new BitacoraDAO();
                 bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_RECHAZAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
                 //*----------------------------*
-                redireccion = "Solicitudes/index.jsp";
+                redireccion = "SolicitudVeneno/index.jsp";
+                request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
                 request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                 HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
                 request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada correctamente"));
             }
             redireccionar(request, response, redireccion);
         }else{
-            redireccion = "Solicitudes/index.jsp";
+            redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser rechazazda."));
             redireccionar(request, response, redireccion);
         }
@@ -276,52 +288,74 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     protected void postEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Solicitudes/index.jsp";
-        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        String redireccion = "SolicitudVeneno/index.jsp";
+        String usuario = request.getParameter("usuario_recibo");
+        String contrasenna = request.getParameter("passw");
         
-        if (s.getEstado().equals("Aprobado")){
-            s.setEstado("Entregado");
-            s.setObservaciones("La solicitud fue entregada.");
-            dao.editarSolicitud(s);
-            
-            EntregasSolicitud entrega = this.construirEntrega(request, s);
-            resultado = dao.insertarEntrega(entrega);
-            
-            if (resultado){
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+
+        boolean autenticacion = usuariodao.autorizarRecibo(usuario, contrasenna);
+        System.out.println(autenticacion);
+        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud_entregar")));
+        
+        if(autenticacion){
+            if (s.getEstado().equals("Aprobado")){
                 String requestLotes = request.getParameter("lotes");
                 List<Lote> lotes = dao.parsearLotes(requestLotes);
-                List<LotesEntregasSolicitud> lotesentrega = this.construirLotes(request, entrega, lotes);
+                
+                float cantidad_entregada = this.construirCantidadEntregada(request,lotes);
+                
+                s.setEstado("Entregado");
+                s.setObservaciones("La solicitud fue entregada.");
+                dao.editarSolicitud(s);
 
-                resultado = dao.insertarLotesEntrega(lotesentrega);
+                EntregasSolicitud entrega = this.construirEntrega(request, s);
+                resultado = dao.insertarEntrega(entrega);
 
                 if (resultado){
-                    //Funcion que genera la bitacora
-                    BitacoraDAO bitacora = new BitacoraDAO();
-                    bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_ENTREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
-                    bitacora.setBitacora(entrega.parseJSON(), Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ENTREGASSOLICITUD,request.getRemoteAddr());
                     
-                    for (LotesEntregasSolicitud i : lotesentrega){
-                        bitacora.setBitacora(i.parseJSON(), Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LOTESENTREGASSOLICITUD,request.getRemoteAddr());
+                    List<LotesEntregasSolicitud> lotesentrega = this.construirLotes(request, entrega, lotes);
+
+                    resultado = dao.insertarLotesEntrega(lotesentrega);
+
+                    if (resultado){
+                        //Funcion que genera la bitacora
+                        BitacoraDAO bitacora = new BitacoraDAO();
+                        bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_ENTREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
+                        bitacora.setBitacora(entrega.parseJSON(), Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ENTREGASSOLICITUD,request.getRemoteAddr());
+
+                        for (LotesEntregasSolicitud i : lotesentrega){
+                            bitacora.setBitacora(i.parseJSON(), Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LOTESENTREGASSOLICITUD,request.getRemoteAddr());
+                        }
+                        //*----------------------------*
+                        redireccion = "SolicitudVeneno/index.jsp";
+                        request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                        request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+                        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada correctamente"));
+                    }else{
+                        redireccion = "SolicitudVeneno/index.jsp";
+                        request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                        request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+                        request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser entregada"));
                     }
-                    //*----------------------------*
-                    redireccion = "Solicitudes/index.jsp";
-                    request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada correctamente"));
-                }else{
-                    redireccion = "Solicitudes/index.jsp";
-                    request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-                    request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser entregada"));
+                    redireccionar(request, response, redireccion);
                 }
+            }else{
+                redireccion = "SolicitudVeneno/index.jsp";
+                request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+                request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser entregada."));
                 redireccionar(request, response, redireccion);
             }
         }else{
-            redireccion = "Solicitudes/index.jsp";
-            request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-            request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser entregada."));
-            redireccionar(request, response, redireccion);
+            s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud_entregar")));
+            List <Lote> lotes = lotedao.obtenerLotes(s.getEspecie());
+            request.setAttribute("solicitud", s);
+            request.setAttribute("lotes", lotes);
+            request.setAttribute("accion", "Entregar");
+            redireccion = "SolicitudVeneno/Entregar.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeError("El usuario o contraseña son incorrectos, o el usuario no pertenece a la sección solicitante."));
+            redireccionar(request,response,redireccion);
         }
     }
     
@@ -329,6 +363,11 @@ public class ControladorSolicitudes extends SIGIPROServlet {
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   
+    private boolean verificarAdminSolicitud(HttpServletRequest request) throws AuthenticationException{
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        return verificarPermiso(352,listaPermisos)||verificarPermiso(353,listaPermisos);
+    }
+    
     private Solicitud construirObjeto(HttpServletRequest request) {
         Solicitud s = new Solicitud();
         s.setEspecie(especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie"))));
@@ -344,7 +383,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
     
     private EntregasSolicitud construirEntrega(HttpServletRequest request, Solicitud s) {
         EntregasSolicitud es = new EntregasSolicitud();
-        es.setCantidad_entregada(Float.parseFloat(request.getParameter("cantidad_entregad")));
+        es.setCantidad_entregada(Float.parseFloat(request.getParameter("cantidad_entregada")));
         es.setSolicitud(s);
         es.setUsuario_entrega(usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario")));
         es.setUsuario_recibo(usuariodao.obtenerUsuario(request.getParameter("usuario_recibo")));
@@ -364,12 +403,26 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             le.setEntrega_solicitud(es);
             le.setLote(i);
             String columna = "cantidad_"+Integer.toString(i.getId_lote());
+            System.out.println("cantidad_"+Integer.toString(i.getId_lote()));
             String cantidad = request.getParameter(columna);
             le.setCantidad(Float.parseFloat(cantidad));
             
             les.add(le);
         }
         return les;
+    }
+    
+    private float construirCantidadEntregada(HttpServletRequest request, List<Lote> lotes) {
+        float cantidad_entregada = 0;
+        for (Lote i : lotes){
+            String columna = "cantidad_"+Integer.toString(i.getId_lote());
+            String cantidad = request.getParameter(columna);
+            float cantidad_lote = Float.parseFloat(cantidad);
+            
+            cantidad_entregada += cantidad_lote;
+            
+        }
+        return cantidad_entregada;
     }
   
   // </editor-fold>

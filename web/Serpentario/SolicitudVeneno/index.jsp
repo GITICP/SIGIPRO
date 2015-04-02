@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Solicitudes?">Solicitudes de Veneno</a>
+              <a href="/SIGIPRO/Serpentario/SolicitudVeneno?">Solicitudes de Veneno</a>
             </li>
           </ul>
         </div>
@@ -45,7 +45,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Solicitudes?accion=agregar">Agregar Solicitud</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=agregar">Agregar Solicitud</a>
                 </div>
               </c:if>
             </div>
@@ -71,7 +71,7 @@
 
                     <tr id ="${solicitud.getId_solicitud()}">
                       <td>
-                        <a href="/SIGIPRO/Serpentario/Solicitudes?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
+                        <a href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
                           <div style="height:100%;width:100%">
                             ${solicitud.getId_solicitud()}
                           </div>
@@ -80,21 +80,21 @@
                       <td>${solicitud.getUsuario().getNombreCompleto()}</td>
                       <td>${solicitud.getEspecie().getGenero_especie()}</td>
                       <td>${solicitud.getCantidad()}</td>
-                      <td>${solicitud.getFecha_solicitud()}</td>
+                      <td>${solicitud.getFecha_solicitudAsString()}</td>
                       <td>${solicitud.getEstado()}</td>
                       <c:if test="${booladmin}">
                         <c:choose>
                           <c:when test="${solicitud.getEstado().equals('Solicitado')}">
                               <td>
-                                <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Serpentario/Solicitudes?accion=aprobar&id_solicitud=">Aprobar</a>
-                                <a class="btn btn-warning btn-sm boton-accion rechazar-Modal" data-id='${solicitud.getId_solicitud}' data-toggle="modal" data-target="#modalRechazarSolicitud">Rechazar</a>
+                                <a class="btn btn-primary btn-sm boton-accion confirmable" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=aprobar&id_solicitud=${solicitud.getId_solicitud()}">Aprobar</a>
+                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRechazarSolicitud">Rechazar</a>
                             </td>
                           </c:when>
                           <c:otherwise>
                             <c:choose>
                               <c:when test="${solicitud.getEstado().equals('Aprobado')}">
                                 <td>
-                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Solicitudes?accion=entregar">Entregar</a>                                
+                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}">Entregar</a>                                
                                 </td>
                               </c:when>
                               <c:otherwise>
@@ -122,7 +122,7 @@
 <t:modal idModal="modalRechazarSolicitud" titulo="Rechazar Solicitud">
     <jsp:attribute name="form">
         <div class="widget-content">
-            <form class="form-horizontal" id="rechazarSolicitud" autocomplete="off" method="post" action="Solicitudes">
+            <form class="form-horizontal" id="rechazarSolicitud" autocomplete="off" method="post" action="SolicitudVeneno">
                 <input hidden="true" name="accion" value="Rechazar">
                 <input hidden="true" id='id_solicitud' name='id_solicitud' value="">
                 <label for="observaciones" class="control-label">¿Razones por las cuales rechaza la solicitud?</label>

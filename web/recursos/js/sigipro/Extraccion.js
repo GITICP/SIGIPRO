@@ -76,7 +76,6 @@ function confirmacionAgregarSerpientes() {
     });
     $('#serpientes').val(serpientesCodificados.slice(0, -3));
     //alert("El valor del campo escondido de permisos es: "+ $('#permisosRol').val());
-    console.log($('#talla_cabeza_21'));
     if (!$('#modificarSerpiente')[0].checkValidity()) {
 
   }else{

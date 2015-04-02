@@ -8,6 +8,8 @@ package com.icp.sigipro.serpentario.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.serpentario.modelos.CatalogoTejido;
+import com.icp.sigipro.serpentario.modelos.ColeccionHumeda;
 import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import java.sql.Connection;
@@ -61,6 +63,58 @@ public class SerpienteDAO {
         return resultado;
     }
     
+    public boolean insertarSerpiente(ColeccionHumeda ch){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.coleccion_humeda (id_serpiente, proposito,observaciones,id_usuario) " +
+                                                             " VALUES (?,?,?,?) RETURNING id_coleccion_humeda");
+            consulta.setInt(1, ch.getSerpiente().getId_serpiente());
+            consulta.setString(2, ch.getProposito());
+            consulta.setString(3, ch.getObservaciones());
+            consulta.setInt(4,ch.getUsuario().getId_usuario());
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                ch.setId_coleccion_humeda(resultadoConsulta.getInt("id_coleccion_humeda"));
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public boolean insertarSerpiente(CatalogoTejido ct){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.catalogo_tejido (id_serpiente, numero_caja,posicion,observaciones,estado,id_usuario) " +
+                                                             " VALUES (?,?,?,?,?,?) RETURNING id_catalogo_tejido");
+            consulta.setInt(1, ct.getSerpiente().getId_serpiente());
+            consulta.setString(2, ct.getNumero_caja());
+            consulta.setString(3, ct.getPosicion());
+            consulta.setString(4, ct.getObservaciones());
+            consulta.setString(5, ct.getEstado());
+            consulta.setInt(6,ct.getUsuario().getId_usuario());
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+                ct.setId_catalogo_tejido(resultadoConsulta.getInt("id_catalogo_tejido"));
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public int obtenerProximoId(){
         boolean resultado = false;
         int nextval = 0;
@@ -70,7 +124,32 @@ public class SerpienteDAO {
             if (resultadoConsulta.next()){
                 resultado=true;
                 int currval = resultadoConsulta.getInt("last_value");
-                if (nextval==1){
+                if (currval==1){
+                    nextval = currval;
+                }else{
+                    nextval = currval + 1;
+                }
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }catch (Exception e){
+            
+        }
+        return nextval;
+    }
+    
+    public int obtenerProximoIdCH(){
+        boolean resultado = false;
+        int nextval = 0;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT last_value FROM serpentario.coleccion_humeda_id_coleccion_humeda_seq;");
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()){
+                resultado=true;
+                int currval = resultadoConsulta.getInt("last_value");
+                System.out.println(currval);
+                if (currval==1){
                     nextval = currval;
                 }else{
                     nextval = currval + 1;
