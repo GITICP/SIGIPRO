@@ -35,4 +35,14 @@ $(document).on("click", ".evento-Modal", function () {
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente").val(id_serpiente);                          
                             });
+
+$(document).on("click", ".ch-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_coleccion_humeda").val(id_serpiente);                          
+                            });
+
+$(document).on("click", ".ct-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_catalogo_tejido").val(id_serpiente);                          
+                            });
                             

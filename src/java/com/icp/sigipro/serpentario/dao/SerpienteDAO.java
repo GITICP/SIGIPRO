@@ -115,6 +115,57 @@ public class SerpienteDAO {
         return resultado;
     }
     
+    public boolean editarCatalogoTejido(CatalogoTejido ct){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE serpentario.catalogo_tejido " +
+                  " SET numero_caja=?, posicion=?, observaciones=?,estado=? " +
+                  " WHERE id_catalogo_tejido=?; ");
+
+            consulta.setString(1, ct.getNumero_caja());
+            consulta.setString(2, ct.getPosicion());
+            consulta.setString(3, ct.getObservaciones());
+            consulta.setString(4, ct.getEstado());
+            consulta.setInt(5, ct.getId_catalogo_tejido());
+
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+        
+    }
+    
+    public boolean editarColeccionHumeda(ColeccionHumeda ch){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE serpentario.coleccion_humeda " +
+                  " SET observaciones=? " +
+                  " WHERE id_coleccion_humeda=?; ");
+
+            consulta.setString(1, ch.getObservaciones());
+            consulta.setInt(5, ch.getId_coleccion_humeda());
+
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+        
+    }
+    
     public int obtenerProximoId(){
         boolean resultado = false;
         int nextval = 0;
@@ -144,6 +195,31 @@ public class SerpienteDAO {
         int nextval = 0;
         try{
             PreparedStatement consulta = getConexion().prepareStatement("SELECT last_value FROM serpentario.coleccion_humeda_id_coleccion_humeda_seq;");
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()){
+                resultado=true;
+                int currval = resultadoConsulta.getInt("last_value");
+                System.out.println(currval);
+                if (currval==1){
+                    nextval = currval;
+                }else{
+                    nextval = currval + 1;
+                }
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }catch (Exception e){
+            
+        }
+        return nextval;
+    }
+    
+    public int obtenerProximoIdCT(){
+        boolean resultado = false;
+        int nextval = 0;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT last_value FROM serpentario.catalogo_tejido_id_catalogo_tejido_seq;");
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()){
                 resultado=true;

@@ -51,10 +51,10 @@
                             <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="registrar el deceso de la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=deceso&id_serpiente=${serpiente.getId_serpiente()}">Deceso</a>
                             <c:choose>
                             <c:when test="${coleccionViva == null}">
-                                <a class="btn btn-info btn-sm boton-accion confirmable-form" data-form-id="form-pasoCV" data-texto-confirmacion="pasar la serpiente a Colección Viva">Paso a CV</a>
+                                <a class="btn btn-primary btn-sm boton-accion confirmable-form" data-form-id="form-pasoCV" data-texto-confirmacion="pasar la serpiente a Colección Viva">Paso a CV</a>
                             </c:when>
                             </c:choose>
-                            <a class="btn btn-info btn-sm boton-accion evento-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento</a>
+                            <a class="btn btn-primary btn-sm boton-accion evento-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento</a>
                             <c:set var="contienePermisoEditar" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                               <c:if test="${permiso == 1 || permiso == 311}">
@@ -66,8 +66,9 @@
                             </c:if>
                         </c:when>
                         <c:otherwise>
-                                
-                                
+                            <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
+                            <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
+
                         </c:otherwise>
                     </c:choose>
                 
@@ -245,14 +246,7 @@
         <div class="widget-content">
             <form class="form-horizontal" id="agregarColeccionHumeda" autocomplete="off" method="post" action="Serpiente">
                 <input hidden="true" name="accion" value="Coleccionhumeda">
-                <label for="especie" class="control-label">Serpiente</label>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input id="id_serpiente" name="id_serpiente" disabled="true">
-                        </div>
-                    </div>
-                </div>
+                <input hidden="true" name="id_serpiente_coleccion_humeda" id="id_serpiente_coleccion_humeda">
                 <label for="especie" class="control-label">Colección Húmeda</label>
                 <div class="form-group">
                     <div class="col-sm-12">
@@ -261,12 +255,24 @@
                         </div>
                     </div>
                 </div>
+                <label for="observaciones" class="control-label">*Propósito</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <input rows="5" cols="50" maxlength="200" placeholder="Propósito del paso a Colección Húmeda" class="form-control" name="proposito" required 
+                             oninvalid="setCustomValidity('Este campo es requerido')"
+                             oninput="setCustomValidity('')">
+                    </div>
+                  </div>
+                </div>
+                
                 <label for="observaciones" class="control-label">Observaciones</label>
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
                         <BR>
-                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" ></textarea>
+                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del paso a Colección Húmeda" class="form-control" name="observacionesCH" ></textarea>
                     </div>
                   </div>
                 </div>
@@ -275,7 +281,76 @@
         <div class="form-group">
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Evento</button>            </div>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar a Colección Húmeda</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    
+ <t:modal idModal="modalAgregarCatalogoTejido" titulo="Agregar Serpiente a Catálogo de Tejidos">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarCatalogoTejido" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="Catalogotejido">
+                <input hidden="true" name="id_serpiente_catalogo_tejido" id="id_serpiente_catalogo_tejido">
+                <label for="especie" class="control-label">Catálogo de Tejidos</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="id_catalogo_tejido" name="id_catalogo_tejido" value=${id_catalogo_tejido} disabled="true">
+                        </div>
+                    </div>
+                </div>
+                <label for="numero_caja" class="control-label">*Número de Caja</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <input rows="5" cols="50" maxlength="10" placeholder="Número de la Caja" class="form-control" name="numero_caja" required 
+                             oninvalid="setCustomValidity('Este campo es requerido')"
+                             oninput="setCustomValidity('')">
+                    </div>
+                  </div>
+                </div>
+                <label for="observaciones" class="control-label">*Posición</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <input rows="5" cols="50" maxlength="10" placeholder="Posición en el Catálogo" class="form-control" name="posicion" required 
+                             oninvalid="setCustomValidity('Este campo es requerido')"
+                             oninput="setCustomValidity('')">
+                    </div>
+                  </div>
+                </div>
+                <label for="estado" class="control-label">Estado</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <input rows="5" cols="50" maxlength="20" placeholder="Estado en el Catálogo de Tejidos" class="form-control" name="estado">
+                    </div>
+                  </div>
+                </div>
+                
+                <label for="observaciones" class="control-label">Observaciones</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <BR>
+                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del paso a Catálogo de Tejidos" class="form-control" name="observacionesCT" ></textarea>
+                    </div>
+                  </div>
+                </div>
+            
+        
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar a Catálogo de Tejidos</button>            </div>
         </div>
         </form>
         </div>
