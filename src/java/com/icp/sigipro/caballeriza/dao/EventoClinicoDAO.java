@@ -40,6 +40,8 @@ public class EventoClinicoDAO
         PreparedStatement consulta = null;
         ResultSet resultadoConsulta = null;
         try {
+            getConexion().setAutoCommit(false);
+            
             consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos (fecha, descripcion,responsable,id_tipo_evento) "
                                                       + " VALUES (?,?,?,?) RETURNING id_evento");
             consulta.setDate(1, c.getFecha());
@@ -109,7 +111,6 @@ public class EventoClinicoDAO
                 if (consulta_caballos != null) {
                     consulta_caballos.close();
                 }
-                
                 cerrarConexion();
             } catch(SQLException sql_ex) {
                 throw new SIGIPROException("Error de comunicación con la base de datos.");
