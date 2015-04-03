@@ -1,4 +1,4 @@
-﻿--Esquema bioterio
+--Esquema bioterio
 DROP SCHEMA IF EXISTS bioterio CASCADE;
 CREATE SCHEMA bioterio;
 --Tablas esquema bioterio
@@ -80,7 +80,7 @@ CREATE TABLE bioterio.machos(
 	identificacion character varying(45) NOT NULL,
 	fecha_ingreso date NOT NULL,
 	descripcion character varying(100) NOT NULL,
-	fecha_retiro date NOT NULL
+	fecha_retiro date NULL
 );
 
 CREATE TABLE bioterio.cruces(
