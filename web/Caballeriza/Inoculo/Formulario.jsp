@@ -7,12 +7,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
 <form class="form-horizontal" autocomplete="off" method="post" action="Inoculo">
     <div class="col-md-6">
         <input hidden="true" name="id_inoculo" value="${inoculo.getId_inoculo()}">
         <input hidden="true" name="accion" value="${accion}">
         <div>
-        <label for="formulainoculo" class="control-label">Fórmula de Inyección:</label>
+            <label for="formulainoculo" class="control-label">Fórmula de Inyección:</label>
         </div>
         <label for="mnn" class="control-label">M.n.n</label>
         <div class="form-group">
@@ -133,7 +134,7 @@
                 </div>
             </div>
         </div>         
-  </div>
+    </div>
     <div class="col-md-6">
 
         <br>
@@ -196,7 +197,67 @@
                     </c:choose>
                 </div>
             </div>
-        </div>        
+        </div>
+        <if></if>
+        <label for="inoculogrupo" class="control-label">*Grupo De Caballo</label>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <c:choose>
+                        <c:when test="${listacaballos.size()==0}">
+                            <select id="seleccionInoculoGrupo" class="select2" name="inoculogrupo" 
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Por favor seleccione el grupo de caballos')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${listagrupos}" var="grupo">
+                                    <option value ="${grupo.getId_grupo_caballo()}">${grupo.getNombre()}</option>
+                                </c:forEach>
+                            </select>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" disabled='true' class="form-control" name="inoculogrupo" value="${grupo.getNombre()}"> 
+                            <input hidden="true" name="inoculogrupo" value="${grupo.getNombre()}">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
+        <label for="inoculocaballo" class="control-label">*Caballos para el Inóculo</label>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <c:choose>
+                        <c:when test="${listacaballos.size()==0}">                    
+                            <select id="seleccionInoculoCaballo" class="select2" name="inoculocaballo" multiple="multiple" disabled
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${listagrupos}" var="grupo_caballo">
+                                    <optgroup label="${grupo_caballo.getNombre()}" id="${grupo_caballo.getId_grupo_caballo()}">
+                                        <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">
+                                            <option id="${grupo_caballo.getId_grupo_caballo()}" value ="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
+                                        </c:forEach>
+                                    <potgroup>
+                                    </c:forEach>                       
+                            </select>
+                        </c:when>
+                        <c:otherwise>
+                            <select id="seleccionInoculoCaballo" class="select2" name="inoculocaballo" multiple="multiple"
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${listacaballos}" var="caballo">
+                                    <option value ="${caballo.getId_caballo()}" selected="selected">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
+                                    </c:forEach>                       
+                            </select>
+                        </c:otherwise>                        
+                    </c:choose>
+                </div>
+            </div>
+        </div>                    
     </div>
 
     <div class="col-md-12">
@@ -205,19 +266,19 @@
             Los campos marcados con * son requeridos.
         </p>  
 
-    <div class="form-group">
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <c:choose>
-                <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                </c:when>
-                <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
-                </c:otherwise>
-            </c:choose>
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                <c:choose>
+                    <c:when test= "${accion.equals('Editar')}">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                    </c:when>
+                    <c:otherwise>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
 </form>

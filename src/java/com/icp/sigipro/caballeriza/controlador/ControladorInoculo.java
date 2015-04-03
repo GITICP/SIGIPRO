@@ -7,8 +7,10 @@ package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.dao.InoculoDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -59,9 +61,14 @@ public class ControladorInoculo extends SIGIPROServlet {
         validarPermiso(57, listaPermisos);
 
         String redireccion = "Inoculo/Agregar.jsp";
+        GrupoDeCaballosDAO gruposdao= new GrupoDeCaballosDAO();
+        List<GrupoDeCaballos> listagrupos = gruposdao.obtenerGruposDeCaballosConCaballos();
         Inoculo i = new Inoculo();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
+        List<Integer> listavacia = new ArrayList<Integer>();
         request.setAttribute("inoculo", i);
+        request.setAttribute("listacaballos", listavacia);
+        request.setAttribute("listagrupos", listagrupos);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -98,6 +105,11 @@ public class ControladorInoculo extends SIGIPROServlet {
         String redireccion = "Inoculo/Editar.jsp";
         int id_inoculo = Integer.parseInt(request.getParameter("id_inoculo"));
         Inoculo inoculo = dao.obtenerInoculo(id_inoculo);
+        List<Caballo> listacaballos = dao.obtenerCaballosInoculo(id_inoculo);
+        String nombregrupo = request.getParameter("inoculogrupo");
+        GrupoDeCaballos grupo = dao.obtenerGrupoInoculo(id_inoculo);
+        request.setAttribute("grupo", grupo);
+        request.setAttribute("listacaballos", listacaballos);
         request.setAttribute("inoculo", inoculo);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
@@ -108,7 +120,9 @@ public class ControladorInoculo extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "Inoculo/Agregar.jsp";
         Inoculo i = construirObjeto(request);
-        resultado = dao.insertarInoculo(i);
+        String[] ids_caballos = request.getParameterValues("inoculocaballo");
+        resultado = dao.insertarInoculo(i,ids_caballos);
+        
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(i.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INOCULO, request.getRemoteAddr());
@@ -123,17 +137,20 @@ public class ControladorInoculo extends SIGIPROServlet {
     }
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        boolean resultado = false;
+        boolean resultadoInoculo = false;
+        boolean resultadoInoculoCaballoD = false;
         String redireccion = "Inoculo/Editar.jsp";
         Inoculo i = construirObjeto(request);
         i.setId_inoculo(Integer.parseInt(request.getParameter("id_inoculo")));
-        resultado = dao.editarInoculo(i);
+        String[] ids_caballos = request.getParameterValues("inoculocaballo");
+        resultadoInoculo = dao.editarInoculo(i);
+        resultadoInoculoCaballoD= dao.actualizarInoculoCaballo(Integer.parseInt(request.getParameter("id_inoculo")),ids_caballos);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INOCULO, request.getRemoteAddr());
         //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        if (resultado) {
+        if (resultadoInoculo && resultadoInoculoCaballoD) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Inóculo editado correctamente"));
             redireccion = "Inoculo/index.jsp";
         }

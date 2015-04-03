@@ -178,6 +178,7 @@ public class GrupoDeCaballosDAO {
                   + " FROM caballeriza.grupos_de_caballos gc "
                   + "     LEFT JOIN caballeriza.caballos c " 
                   + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ?;");
+
             
             consulta.setString(1, Caballo.VIVO);
             

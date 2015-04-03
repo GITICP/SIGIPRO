@@ -59,7 +59,8 @@ CREATE TABLE caballeriza.inoculos (
     otro character varying(45) NOT NULL,
     encargado_preparacion character varying(100) NOT NULL,
     encargado_inyeccion character varying(100) NOT NULL,
-    fecha Date NOT NULL
+    fecha Date NOT NULL,
+    grupo_de_caballos INT NOT NULL
 );
 
 CREATE TABLE caballeriza.inoculos_caballos (
@@ -90,6 +91,7 @@ ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caba
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES caballeriza.tipos_eventos(id_tipo_evento);
 ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
 ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
+ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIGN KEY (grupo_de_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
 
 
 --Permisos

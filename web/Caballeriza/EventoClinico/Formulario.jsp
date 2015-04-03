@@ -25,10 +25,10 @@
                             <c:forEach items="${listatipos}" var="tipo">
                                 <c:choose>
                                     <c:when test="${tipo.getId_tipo_evento() == evento.getTipo_evento().getId_tipo_evento()}" >
-                                        <option value =${tipo.getId_tipo_evento()},${tipo.getDescripcion()}  selected> ${tipo.getNombre()}</option>
+                                        <option value ="${tipo.getId_tipo_evento()},${tipo.getDescripcion()}"  selected> ${tipo.getNombre()}</option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option value =${tipo.getId_tipo_evento()},${tipo.getDescripcion()}>${tipo.getNombre()}</option>
+                                        <option value ="${tipo.getId_tipo_evento()},${tipo.getDescripcion()}">${tipo.getNombre()}</option>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>

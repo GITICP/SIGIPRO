@@ -95,3 +95,47 @@ $(document).ready(function(){
         $("textarea ").val(split[1]);
 });
 });
+/*$(document).ready(function () {
+
+    $("select[name='inoculogrupo']").on('change', function () {
+        var split = $(this).val().split("|");
+        var caballos = split[1];
+        alert(caballos);
+        var cSelect = document.getElementById("inoculocaballo");
+        var id_grupo = split[0];
+        if (id_grupo == 3) {
+            newOption = document.createElement("option");
+            newOption.value = 1;  // assumes option string and value are the same 
+            newOption.text = "Robertico";
+            cSelect.add(newOption);
+        }
+    });
+});
+*/
+/*function seleccionar_todo(nombre){
+    alert("mierda");
+   for (i=0;i<document.nombre.elements.length;i++) 
+      if(document.nombre.elements[i].type == "checkbox")	
+         document.nombre.elements[i].checked=1; 
+}
+*/
+$(document).ready(function () {
+
+    $("select[name='inoculogrupo']").on('change', function () {
+        document.getElementById("seleccionInoculoCaballo").disabled = false;
+        id_grupo = this.value;
+        seleccion = document.getElementById("seleccionInoculoCaballo");
+        opciones = seleccion.getElementsByTagName("optgroup");
+        for (i = 0; i < opciones.length; i++) //recoremos todos los controles
+        {
+            id_opt = opciones[i].id;
+            if (opciones[i].id != id_grupo) //solo si es un checkbox entramos
+            {
+                $("select#seleccionInoculoCaballo option[id=" + id_opt + "]").remove();
+                //opciones[i].disable = true; //si es un checkbox le damos el valor del checkbox que lo llamó (Marcar/Desmarcar Todos)
+            }
+
+        }
+        document.getElementById("seleccionInoculoGrupo").disabled = true;
+    });
+});
