@@ -49,3 +49,20 @@
     margin: 0px;
     padding-left: 1em;
 }
+
+.tabla-ver td {
+    padding-right: 1em;
+}
+
+.tabla-modal {
+    width: 100%;
+}
+
+.tabla-modal td {
+    padding-bottom: 0.5em;
+}
+
+.tabla-modal > tbody > tr > td:first-child {
+    width: 35%;
+}
+

@@ -10,7 +10,7 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Bodegas" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Ratonera" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -21,11 +21,11 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bodegas</li>
+            <li>Bioterio-Ratonera</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Solicitudes?">Solicitudes </a>
+              <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?">SolicitudesRatonera</a>
             </li>
-            <li class="active"> Agregar Nueva Solicitud </li>
+            <li class="active"> Nueva Cara </li>
 
           </ul>
         </div>
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar Nueva Solicitud </h3>
+              <h3><i class="fa fa-barcode"></i> Agregar Nueva Solicitud de Ratonera </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -59,9 +59,6 @@
       </div>
 
 
-  </jsp:attribute>
-  <jsp:attribute name="scripts">
-    <script src="/SIGIPRO/recursos/js/sigipro/solicitudes.js"></script>
   </jsp:attribute>
 
 </t:plantilla_general>
