@@ -32,7 +32,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Lotes de Veneno </h3>
+              <h3><i class="fa fa-tint"></i> Lotes de Veneno </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -54,7 +54,7 @@
                   <tr>
                     <th>Lote</th>
                     <th>Especie</th>
-                    <th>Cantidad Total</th>
+                    <th>Cantidad Total (gramos)</th>
                   </tr>
                 </thead>
                 <tbody>

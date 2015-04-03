@@ -254,6 +254,11 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (340, '[S
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (341, '[Serpentario]VerVenenoExterno', 'Permite ver parte del catalogo de venenos.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (342, '[Serpentario]EditarVeneno', 'Permite editar los venenos.');
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (350, '[Serpentario]AgregarSolicitud', 'Permite agregar solicitudes.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (351, '[Serpentario]EditarSolicitud', 'Permite editar solicitudes que no esten en proceso.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (352, '[Serpentario]AdministrarSolicitud', 'Permite aprobar o rechazar solicitudes.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (353, '[Serpentario]EntregarSolicitud', 'Permite entregar una solicitud.');
+
 
 --Menu
 
@@ -265,6 +270,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (303, 300, 'Extraccion', '/Serpentario/Extraccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (304, 300, 'Lote', '/Serpentario/Lote');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (305, 300, 'Veneno', '/Serpentario/Veneno');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (306, 300, 'Solicitud Veneno', '/Serpentario/SolicitudVeneno');
 
 ------Permisos Menu Principal
 
@@ -279,4 +285,8 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (331, 304);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (340, 305);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (341, 305);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (350, 306);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (351, 306);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (352, 306);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (353, 306);
 

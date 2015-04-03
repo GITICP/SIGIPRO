@@ -48,6 +48,9 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
     private LoteDAO lotedao = new LoteDAO();
     private EspecieDAO especiedao = new EspecieDAO();
     private UsuarioDAO usuariodao = new UsuarioDAO();
+    
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+
 
     protected final Class clase = ControladorSolicitudVeneno.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -205,13 +208,13 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
         s.setUsuario(usuario);
         resultado = dao.insertarSolicitud(s);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        
         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud registrada correctamente"));
         if (resultado){
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
+            //*----------------------------*
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
@@ -229,20 +232,19 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         s.setEstado(estado);
         if(estado.equals("Solicitado")){
             resultado = dao.editarSolicitud(s);
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
-            //*----------------------------*
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            
             request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada correctamente"));
             if (resultado){
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
+                //*----------------------------*
                 redireccion = "SolicitudVeneno/index.jsp";
                 request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             }
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             redireccionar(request, response, redireccion);
         }else{
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeError("No se puede editar una solicitud en proceso."));
          
             redireccion = "SolicitudVeneno/index.jsp";
@@ -271,14 +273,12 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
                 redireccion = "SolicitudVeneno/index.jsp";
                 request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
                 request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-                HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
                 request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada correctamente"));
             }
             redireccionar(request, response, redireccion);
         }else{
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser rechazazda."));
             redireccionar(request, response, redireccion);
@@ -292,10 +292,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         String usuario = request.getParameter("usuario_recibo");
         String contrasenna = request.getParameter("passw");
         
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-
         boolean autenticacion = usuariodao.autorizarRecibo(usuario, contrasenna);
-        System.out.println(autenticacion);
         Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud_entregar")));
         
         if(autenticacion){

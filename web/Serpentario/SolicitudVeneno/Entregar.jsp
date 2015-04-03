@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Entregar Solicitud ${solicitud.getId_solicitud()} - Cantidad Solicitada ${solicitud.getCantidad()} gramos</h3>
+              <h3><i class="fa fa-flask"></i> Entregar Solicitud ${solicitud.getId_solicitud()} - Cantidad Solicitada ${solicitud.getCantidad()} gramos</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -46,11 +46,11 @@
                     <input hidden="true" name="accion" value="${accion}">
                     <input id="id_solicitud" hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
                     <div class="col-md-12">
-                    <label for="lotes" class="control-label">Cantidad Solicitada</label>
+                    <label for="lotes" class="control-label">Cantidad Solicitada (gramos)</label>
                     <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="input-group">
-                                    <input name="cantidad_solicitada" value="${solicitud.getCantidad()}" disabled="true">
+                                    <input name="cantidad_solicitada" class='form-control' value="${solicitud.getCantidad()}" disabled="true">
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                   <thead>
                                     <tr>
                                       <th>Lote</th>
-                                      <th>Cantidad a Entregar</th>
+                                      <th>Cantidad a Entregar (gramos)</th>
                                       <th>Eliminar</th>
                                     </tr>
                                   </thead>
@@ -142,12 +142,12 @@
                 <input type="text" id="esp"  name="esp" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="cnt" class="control-label"> Cantidad Solicitada </label>
+                <label for="cnt" class="control-label"> Cantidad Solicitada (gramos) </label>
                 <input type="text" id="cnt"  name="cnt" disabled>
               </div>
                 
               <div class="col-sm-12">
-                <label for="cnt" class="control-label"> Cantidad a Entregar </label>
+                <label for="cnt" class="control-label"> Cantidad a Entregar (gramos) </label>
                 <input type="text" id="cntEnt"  name="cnt" disabled>
               </div>
             </div>
@@ -204,7 +204,7 @@
             <h5> No puede entregar menos de lo solicitado. </h5>
             <table>
                 <tr><td> <strong>Cantidad solicitada:</strong> <td id="cantidad_solicitada_error"></td></tr>
-                <tr><td> <strong>Cantidad a entregar</strong> <td id="cantidad_entregada_error"></td></tr>
+                <tr><td> <strong>Cantidad a entregar:</strong> <td id="cantidad_entregada_error"></td></tr>
             </table>
     
             <div class="form-group">

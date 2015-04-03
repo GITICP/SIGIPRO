@@ -371,7 +371,6 @@ public class SerpienteDAO {
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
                 serpiente.setColectada(rs.getString("colectada"));
                 UsuarioDAO usuariodao = new UsuarioDAO();
-                
                 serpiente.setRecibida(usuariodao.obtenerUsuario(rs.getString("recibida")));
                 serpiente.setSexo(rs.getString("sexo"));
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));

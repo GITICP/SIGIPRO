@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> ${serpiente.getId_serpiente()} </h3>
+              <h3><i class="fa fa-bug"></i>Serpiente ${serpiente.getId_serpiente()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEvento" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -109,7 +109,7 @@
                     <c:when test="${coleccionViva != null}">
                         <tr><td><strong><div><br></div> </strong></td></tr>
                         <tr><td> <strong>Fecha de Paso a Colección Viva:</strong> <td>${coleccionViva.getFecha_eventoAsString()} </td></tr>
-                        <tr><td> <strong>Responsable de Paso a Colección Viva:</strong> <td>${coleccionViva.getUsuario().getNombre_usuario()} </td></tr>
+                        <tr><td> <strong>Responsable de Paso a Colección Viva:</strong> <td>${coleccionViva.getUsuario().getNombreCompleto()} </td></tr>
                         <tr><td><strong><div><br></div></strong></td></tr>
                     </c:when>
                 </c:choose>
@@ -125,7 +125,14 @@
                             </c:choose>
                         </c:when>
                     </c:choose>
-                <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio()} </td></tr>
+                                <c:choose>
+                                    <c:when test="${deceso!=null}">
+                                        <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio(deceso.getFecha_evento())} </td></tr>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio()} </td></tr>
+                                    </c:otherwise>
+                                </c:choose>
                 <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${serpiente.getImagen()} </td></tr>
                 <tr><td> <strong>Histórico de Eventos</strong> 
               </table>
@@ -153,7 +160,7 @@
                           </div>
                         </a>
                       </td>
-                      <td>${eventos.getUsuario().getNombre_usuario()}</td>
+                      <td>${eventos.getUsuario().getNombreCompleto()}</td>
                       <c:choose>
                           <c:when test="${!eventos.getValor_cambiado().equals('')}">
                               <td>${eventos.getValor_cambiado()}</td>

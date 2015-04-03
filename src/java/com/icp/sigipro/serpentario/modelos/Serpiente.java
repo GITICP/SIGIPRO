@@ -31,6 +31,15 @@ public class Serpiente {
     private float peso;
     private Blob imagen;
     private Especie especie;
+    private String estado;
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public Serpiente() {
     }
@@ -55,13 +64,30 @@ public class Serpiente {
         Date date_ingreso = this.fecha_ingreso;
         long diferencia = 0;
         long dias = 0;
+        
         try{
             SingletonBD parser = SingletonBD.getSingletonBD();
             
             Date date_hoy = new Date(fecha_hoy.getTime());
                         
-            System.out.println("DATE "+date_hoy.getTime());
             diferencia = date_hoy.getTime() - date_ingreso.getTime();
+            dias = diferencia / (1000 * 60 * 60 * 24);
+        }catch (Exception e){
+            System.out.println("Error "+ e);
+        }
+        return (int)dias;
+    }
+    
+    public int getDias_cautiverio(Date fecha_deceso){
+        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        Date date_ingreso = this.fecha_ingreso;
+        long diferencia = 0;
+        long dias = 0;
+        
+        try{
+            SingletonBD parser = SingletonBD.getSingletonBD();
+                                    
+            diferencia = fecha_deceso.getTime() - date_ingreso.getTime();
             dias = diferencia / (1000 * 60 * 60 * 24);
         }catch (Exception e){
             System.out.println("Error "+ e);

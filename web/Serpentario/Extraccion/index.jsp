@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Extracciones </h3>
+              <h3><i class="fa fa-tint"></i> Extracciones </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -127,6 +127,9 @@
                                                             <c:when test="${!extraccion.isIsLiofilizacionFin()}">
                                                                    <a class="btn btn-warning btn-sm boton-accion liofilizacion-fin-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarLiofilizacionFin">5- Fin Liofilizacion</a>
                                                             </c:when>
+                                                            <c:otherwise>
+                                                                <a class="btn btn-warning btn-sm boton-accion"disabled='true'>Extracción Finalizada</a>
+                                                            </c:otherwise>
                                                         </c:choose>
                                                     </c:otherwise>
                                                 </c:choose>

@@ -33,7 +33,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Veneno de ${veneno.getEspecie().getGenero_especie()}  </h3>
+              <h3><i class="fa fa-flask"></i> Veneno de ${veneno.getEspecie().getGenero_especie()}  </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -53,7 +53,7 @@
                 <c:choose>
                     <c:when test="${veneno.isRestriccion()}">
                         <tr><td> <strong>¿Es restringido?:</strong> <td>Si</td></tr>
-                        <tr><td> <strong>Cantidad Máxima:</strong> <td>${veneno.getCantidad_maxima()}</td></tr>
+                        <tr><td> <strong>Cantidad Máxima:</strong> <td>${veneno.getCantidad_maxima()} gramos</td></tr>
                     </c:when>
                     <c:otherwise>
                         <tr><td> <strong>¿Es restringido?:</strong> <td>No</td></tr>

@@ -33,7 +33,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Lote ${lote.getId_lote()} </h3>
+              <h3><i class="fa fa-tint"></i> Lote ${lote.getId_lote()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -51,8 +51,8 @@
               <table>
                 <tr><td> <strong>Número de Lote:</strong></td> <td>${lote.getId_lote()} </td></tr>
                 <tr><td> <strong>Nombre de la Especie:</strong> <td>${lote.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Cantidad Actual:</strong> <td>${lote.getCantidad_actual()} </td></tr>
-                <tr><td> <strong>Cantidad Total:</strong> <td>${lote.getCantidad_total()} </td></tr>
+                <tr><td> <strong>Cantidad Actual:</strong> <td>${lote.getCantidad_actual()} gramos </td></tr>
+                <tr><td> <strong>Cantidad Total:</strong> <td>${lote.getCantidad_total()} gramos</td></tr>
               </table>
               <br>
               <div class="col-md-12">

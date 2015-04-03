@@ -9,6 +9,7 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
+import com.icp.sigipro.serpentario.dao.ExtraccionDAO;
 import com.icp.sigipro.serpentario.dao.LoteDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
@@ -36,6 +37,7 @@ public class ControladorLote extends SIGIPROServlet {
     //-----------------
     private LoteDAO dao = new LoteDAO();
     private EspecieDAO especiedao = new EspecieDAO();
+    private ExtraccionDAO extracciondao = new ExtraccionDAO();
 
     protected final Class clase = ControladorLote.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -129,8 +131,8 @@ public class ControladorLote extends SIGIPROServlet {
         resultado = dao.insertarLote(l);
         
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Lote agregado correctamente"));
         if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Lote agregado correctamente"));
             redireccion = "Lote/index.jsp";
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -151,13 +153,16 @@ public class ControladorLote extends SIGIPROServlet {
         String[] extracciones = request.getParameterValues("extracciones");
         resultado = dao.insertarExtracciones(l, extracciones);
         
-        //Funcion que genera la bitacora
-        //BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
-        //*----------------------------*
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Lote editado correctamente"));
         if (resultado){
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            for (String i : extracciones){
+                Extraccion e = extracciondao.obtenerExtraccion(Integer.parseInt(i));
+                bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
+                //*----------------------------*
+            }
+            request.setAttribute("mensaje", helper.mensajeDeExito("Lote editado correctamente"));
             redireccion = "Lote/index.jsp";
         }
         request.setAttribute("listaLotes", dao.obtenerLotes());

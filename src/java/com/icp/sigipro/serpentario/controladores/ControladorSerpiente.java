@@ -47,6 +47,9 @@ public class ControladorSerpiente extends SIGIPROServlet {
     private SerpienteDAO dao = new SerpienteDAO();
     private EventoDAO eventodao = new EventoDAO();
     private BitacoraDAO bitacora = new BitacoraDAO();
+    
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+
 
     protected final Class clase = ControladorSerpiente.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -156,8 +159,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             request.setAttribute("serpiente", s);
             Evento coleccionviva = eventodao.validarPasoCV(id_serpiente);
-            Evento ch = eventodao.validarColeccionHumeda(id_serpiente);
-            Evento ct = eventodao.validarCatalogoTejido(id_serpiente);
             Evento deceso = eventodao.validarDeceso(id_serpiente);
             List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
             request.setAttribute("listaEventos",eventos);
@@ -171,14 +172,17 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 request.setAttribute("deceso",deceso);
                 request.setAttribute("id_coleccion_humeda",dao.obtenerProximoIdCH());
                 request.setAttribute("id_catalogo_tejido", dao.obtenerProximoIdCT());
+                Evento ch = eventodao.validarColeccionHumeda(id_serpiente);
+                Evento ct = eventodao.validarCatalogoTejido(id_serpiente);
+                if (ch.getId_evento() != 0 || ct.getId_evento() != 0){
+                    request.setAttribute("postDeceso",false);
+                    request.setAttribute("coleccionhumeda", ch);
+                    request.setAttribute("catalogotejido", ct);
+                }else{
+                    request.setAttribute("postDeceso",true);
+                }
             }else{
                  request.setAttribute("deceso",null);                               
-            }if (ch.getId_evento() != 0 || ct.getId_evento() != 0){
-                request.setAttribute("postDeceso",false);
-                request.setAttribute("coleccionhumeda", ch);
-                request.setAttribute("catalogotejido", ct);
-            }else{
-                request.setAttribute("postDeceso",true);
             }
             
             redireccionar(request, response, redireccion);
@@ -311,11 +315,11 @@ public class ControladorSerpiente extends SIGIPROServlet {
         Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
         s.setRecibida(usuario);
         resultado = dao.insertarSerpiente(s);
-        //Funcion que genera la bitacora
-        bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        
         if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente agregada correctamente"));
             redireccion = "Serpiente/index.jsp";
         }
@@ -362,12 +366,11 @@ public class ControladorSerpiente extends SIGIPROServlet {
                     eventodao.insertarCambio(e);
                 }
             }
-        //Funcion que genera la bitacora
-        
-        bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+       
         if (resultado){
+             //Funcion que genera la bitacora        
+            bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente editada correctamente"));
             redireccion = "Serpiente/index.jsp";
         }
@@ -401,7 +404,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             }
         }
         if (resultado){
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeExito("Evento de serpiente editado correctamente."));
             redireccion = "Serpiente/index.jsp";
         }
@@ -416,16 +418,16 @@ public class ControladorSerpiente extends SIGIPROServlet {
         String redireccion = "Serpiente/index.jsp";
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
         
-        Serpiente serpiente = dao.obtenerSerpiente(Integer.parseInt(request.getParameter("id_serpiente")));
+        Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
 
         Evento evento = this.setEvento(serpiente, request);
                 
         resultado = eventodao.insertarEvento(evento);
-        //Funcion que genera la bitacora
-        bitacora.setBitacora(evento.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+        
         if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(evento.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Evento agregado correctamente"));
         }
         this.getVer(request, response);
@@ -451,7 +453,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Evento e = this.setEvento(ct.getSerpiente(), "Catálogo Tejido", request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente agregada a Catálogo de Tejidos correctamente."));
             redireccion = "Serpiente/index.jsp";
         }
@@ -475,7 +476,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
              //Funcion que genera la bitacora
             bitacora.setBitacora(ch.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_COLECCIONHUMEDA,request.getRemoteAddr());
             //*----------------------------*
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             Evento e = this.setEvento(ch.getSerpiente(), "Colección Húmeda", request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());

@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Serpientes </h3>
+              <h3><i class="fa fa-bug"></i> Serpientes </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -56,9 +56,9 @@
                     <th>Fecha de Ingreso</th>
                     <th>Localidad de Origen</th>
                     <th>Sexo</th>
-                    <th>Talla Cabeza-Cloaca</th>
-                    <th>Talla Cola</th>
-                    <th>Peso</th>
+                    <th>Talla Cabeza-Cloaca (m)</th>
+                    <th>Talla Cola (m)</th>
+                    <th>Peso (g)</th>
                   </tr>
                 </thead>
                 <tbody>

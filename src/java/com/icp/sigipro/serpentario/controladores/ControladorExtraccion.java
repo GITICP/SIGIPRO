@@ -51,7 +51,8 @@ public class ControladorExtraccion extends SIGIPROServlet {
     private UsuarioDAO usuariodao = new UsuarioDAO();
     private SerpienteDAO serpientedao = new SerpienteDAO();
     private EventoDAO eventodao = new EventoDAO();
-
+    
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
     protected final Class clase = ControladorExtraccion.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -220,7 +221,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
         }
         
         this.actualizarSerpientes(request, serpientesextraccion);
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado){
             request.setAttribute("mensaje", helper.mensajeDeExito("Serpientes agregadas correctamente"));
             redireccion = "Extraccion/index.jsp";
@@ -243,14 +243,13 @@ public class ControladorExtraccion extends SIGIPROServlet {
             List<UsuariosExtraccion> usuariosextraccion = construirUsuarioExtraccion(request,e);
 
             dao.insertarUsuariosExtraccion(usuariosextraccion);
-                        
-            //Funcion que genera la bitacora
-            bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
-            for (UsuariosExtraccion i:usuariosextraccion){
-                bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIOSEXTRACCION,request.getRemoteAddr());
-            }
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                                    
             if (resultado){
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
+                for (UsuariosExtraccion i:usuariosextraccion){
+                    bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIOSEXTRACCION,request.getRemoteAddr());
+                }
                 request.setAttribute("mensaje", helper.mensajeDeExito("Extraccion agregada correctamente"));
                 redireccion = "Extraccion/index.jsp";
                 request.setAttribute("id_extraccion", e.getId_extraccion());
@@ -259,7 +258,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
             this.getEditarserpientes(request, response,e.getId_extraccion());
         
         }catch(Exception e){
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("mensaje", helper.mensajeDeError("Problemas con el numero de extraccion."));
             String redireccion = "Extraccion/index.jsp";
             List<Extraccion> extracciones = dao.obtenerExtracciones();
@@ -286,11 +284,10 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         resultado = dao.editarExtraccion(e);
         
-        //Funcion que genera la bitacora
-        bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Extraccion editada correctamente"));
             redireccion = "Extraccion/index.jsp";
         }
@@ -318,11 +315,10 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         resultado = dao.insertarCentrifugado(c);
         
-        //Funcion que genera la bitacora
-        bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CENTRIFUGADO,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CENTRIFUGADO,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Centrifugado registrado correctamente"));
             redireccion = "Extraccion/index.jsp";
         }
@@ -348,12 +344,11 @@ public class ControladorExtraccion extends SIGIPROServlet {
         l.setUsuario_inicio(usuario_registro);
         
         resultado = dao.insertarLiofilizacionInicio(l);
-        
-        //Funcion que genera la bitacora
-        bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+              
         if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Liofilización registrado correctamente"));
             redireccion = "Extraccion/index.jsp";
         }
@@ -379,12 +374,11 @@ public class ControladorExtraccion extends SIGIPROServlet {
         l.setUsuario_fin(usuario_registro);
         
         resultado = dao.insertarLiofilizacionFin(l);
-        
-        //Funcion que genera la bitacora
-        bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                
         if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
+            //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Liofilización finalizada correctamente"));
             redireccion = "Extraccion/index.jsp";
         }

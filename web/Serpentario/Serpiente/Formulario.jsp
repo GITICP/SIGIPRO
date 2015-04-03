@@ -159,7 +159,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="talla_cabeza" placeholder="Número mayor a uno" type="number" step="any" class="form-control" name="talla_cabeza" value="${serpiente.getTalla_cabeza()}" 
+          <input id="talla_cabeza" placeholder="Número mayor a uno" type="number" min="0" step="any" class="form-control" name="talla_cabeza" value="${serpiente.getTalla_cabeza()}" 
                   oninvalid="setCustomValidity('La Longitud de la serpiente debe ser mayor que uno. ')"
                   oninput="setCustomValidity('')"> 
         </div>
@@ -169,7 +169,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="talla_cola" placeholder="Número mayor a uno" type="number" step="any" class="form-control" name="talla_cola" value="${serpiente.getTalla_cola()}" 
+          <input id="talla_cola" placeholder="Número mayor a uno" type="number" min="0" step="any" class="form-control" name="talla_cola" value="${serpiente.getTalla_cola()}" 
                   oninvalid="setCustomValidity('La Longitud de la serpiente debe ser mayor que uno. ')"
                   oninput="setCustomValidity('')"> 
         </div>
@@ -179,7 +179,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="peso" placeholder="Número mayor a uno" type="number" step="any" class="form-control" name="peso" value="${serpiente.getPeso()}" 
+          <input id="peso" placeholder="Número mayor a uno" type="number" step="any" min="0" class="form-control" name="peso" value="${serpiente.getPeso()}" 
                   oninvalid="setCustomValidity('El peso de la serpiente debe ser mayor que uno. ')"
                   oninput="setCustomValidity('')"> 
         </div>

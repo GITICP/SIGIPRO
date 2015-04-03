@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-barcode"></i> Venenos de Serpiente </h3>
+                <h3><i class="fa fa-flask"></i> Venenos de Serpiente </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -41,7 +41,7 @@
                   <tr>
                     <th>Especie</th>
                     <th>Restricción</th>
-                    <th>Cantidad Máxima</th>
+                    <th>Cantidad Máxima (gramos)</th>
                   </tr>
                 </thead>
                 <tbody>

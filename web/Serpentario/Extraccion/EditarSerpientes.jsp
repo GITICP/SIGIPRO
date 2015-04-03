@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar Serpientes a la Extraccion ${numero_extraccion}</h3>
+              <h3><i class="fa fa-bug"></i> Agregar Serpientes a la Extraccion ${numero_extraccion}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -81,9 +81,9 @@
                                   <thead>
                                     <tr>
                                       <th>Serpiente</th>
-                                      <th>Talla Cabeza</th>
-                                      <th>Talla Cola</th>
-                                      <th>Peso</th>
+                                      <th>Talla Cabeza (metros)</th>
+                                      <th>Talla Cola (metros)</th>
+                                      <th>Peso (gramos)</th>
                                       <th>Sexo</th>
                                       <th>Eliminar</th>
                                     </tr>

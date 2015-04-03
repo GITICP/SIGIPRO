@@ -52,7 +52,7 @@
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
                             <c:forEach items="${usuarios}" var="usuario">
-                                <option value=${usuario.getId_usuario()}>${usuario.getNombre_usuario()}</option>
+                                <option value=${usuario.getId_usuario()}>${usuario.getNombreCompleto()}</option>
                             </c:forEach>
                     </select>
                 </div>

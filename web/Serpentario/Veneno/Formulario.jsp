@@ -45,7 +45,7 @@
             </div>
     </div>    
     <div class="col-md-6">
-        <label for="cantidad_maxima" class="control-label">*Cantidad Máxima</label>
+        <label for="cantidad_maxima" class="control-label">*Cantidad Máxima (gramos)</label>
         <div class="form-group">
           <div class="col-sm-12">
             <div class="input-group">

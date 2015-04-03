@@ -36,7 +36,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Solicitudes de Veneno </h3>
+              <h3><i class="fa fa-flask"></i> Solicitudes de Veneno </h3>
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                 <c:if test="${permiso == 1 || permiso == 350}">
@@ -58,7 +58,7 @@
                     <th>Número de Solicitud</th>
                     <th>Usuario Solicitante</th>
                     <th>Especie</th>
-                    <th>Cantidad</th>
+                    <th>Cantidad (gramos)</th>
                     <th>Fecha de Solicitud</th>
                     <th>Estado</th>
                     <c:if test="${booladmin}">

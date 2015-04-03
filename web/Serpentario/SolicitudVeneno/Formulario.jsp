@@ -54,7 +54,7 @@
     </div>
   </div>
   <div class="col-md-6">
-    <label for="cantidad" class="control-label">*Cantidad</label>
+    <label for="cantidad" class="control-label">*Cantidad (gramos)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">

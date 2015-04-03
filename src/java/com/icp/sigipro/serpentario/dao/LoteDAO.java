@@ -108,7 +108,6 @@ public class LoteDAO {
             consulta.setInt(1, l.getId_lote());
             for (String i:extracciones){
                 consulta.setInt(2,Integer.parseInt(i));
-                System.out.println(consulta);
                 resultado = consulta.executeUpdate() == 1;
             }
             consulta.close();

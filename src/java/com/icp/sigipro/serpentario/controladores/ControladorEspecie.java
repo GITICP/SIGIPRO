@@ -142,13 +142,10 @@ public class ControladorEspecie extends SIGIPROServlet {
         String redireccion = "Especie/Agregar.jsp";
         Especie e = construirObjeto(request);
         resultado = dao.insertarEspecie(e);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
-        //*----------------------------*
+        
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente agregada correctamente"));
         if (resultado){
+            request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente agregada correctamente"));        
             redireccion = "Especie/index.jsp";
             Veneno veneno = new Veneno();
             int id_veneno = venenodao.insertarVeneno(e);
@@ -156,6 +153,8 @@ public class ControladorEspecie extends SIGIPROServlet {
             veneno.setId_veneno(id_veneno);
             veneno.setRestriccion(false);
             //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
             bitacora.setBitacora(veneno.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_VENENO,request.getRemoteAddr());
             //*----------------------------*
         }
@@ -170,13 +169,14 @@ public class ControladorEspecie extends SIGIPROServlet {
         Especie e = construirObjeto(request);
         e.setId_especie(Integer.parseInt(request.getParameter("id_especie")));
         resultado = dao.editarEspecie(e);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
-        //*----------------------------*
+        
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente editada correctamente"));
         if (resultado){
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente editada correctamente"));
             redireccion = "Especie/index.jsp";
         }
         request.setAttribute("listaEspecies", dao.obtenerEspecies());
