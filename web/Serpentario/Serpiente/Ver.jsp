@@ -66,9 +66,13 @@
                             </c:if>
                         </c:when>
                         <c:otherwise>
-                            <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
-                            <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
-
+                            <c:choose>
+                                <c:when test="${postDeceso}">
+                                    <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
+                                    <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
+                                </c:when>
+                            </c:choose>
+                            
                         </c:otherwise>
                     </c:choose>
                 
@@ -109,6 +113,18 @@
                         <tr><td><strong><div><br></div></strong></td></tr>
                     </c:when>
                 </c:choose>
+                    <c:choose>
+                        <c:when test="${!postDeceso}">
+                            <c:choose>
+                                <c:when test="${coleccionhumeda.getId_evento() != 0}">
+                            <tr><td> <strong>Colección Húmeda:</strong> <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=verdeceso&deceso=coleccionhumeda&id_serpiente=${serpiente.getId_serpiente()}">Ver Colección Húmeda</a> </td></tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr><td> <strong>Catálogo de Tejidos:</strong> <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=verdeceso&deceso=catalogotejido&id_serpiente=${serpiente.getId_serpiente()}">Ver Catálogo de Tejido</a> </td></tr>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:when>
+                    </c:choose>
                 <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio()} </td></tr>
                 <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${serpiente.getImagen()} </td></tr>
                 <tr><td> <strong>Histórico de Eventos</strong> 
@@ -276,6 +292,8 @@
                     </div>
                   </div>
                 </div>
+                <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
+
             
         
         <div class="form-group">
@@ -345,6 +363,8 @@
                     </div>
                   </div>
                 </div>
+                <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
+
             
         
         <div class="form-group">

@@ -151,7 +151,7 @@ public class SerpienteDAO {
                   " WHERE id_coleccion_humeda=?; ");
 
             consulta.setString(1, ch.getObservaciones());
-            consulta.setInt(5, ch.getId_coleccion_humeda());
+            consulta.setInt(2, ch.getId_coleccion_humeda());
 
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
@@ -307,6 +307,56 @@ public class SerpienteDAO {
         
     }
   
+    public ColeccionHumeda obtenerColeccionHumeda(Serpiente serpiente){
+        ColeccionHumeda ch = new ColeccionHumeda();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM serpentario.coleccion_humeda where id_serpiente = ?");
+            consulta.setInt(1, serpiente.getId_serpiente());
+            ResultSet rs = consulta.executeQuery();
+            UsuarioDAO usuariodao = new UsuarioDAO();
+            if(rs.next()){
+                ch.setId_coleccion_humeda(rs.getInt("id_coleccion_humeda"));
+                ch.setSerpiente(serpiente);
+                ch.setProposito(rs.getString("proposito"));
+                ch.setObservaciones(rs.getString("observaciones"));
+                ch.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return ch;
+    }
+    
+    public CatalogoTejido obtenerCatalogoTejido(Serpiente serpiente){
+        CatalogoTejido ct = new CatalogoTejido();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM serpentario.catalogo_tejido where id_serpiente = ?");
+            consulta.setInt(1, serpiente.getId_serpiente());
+            ResultSet rs = consulta.executeQuery();
+            UsuarioDAO usuariodao = new UsuarioDAO();
+            if(rs.next()){
+                ct.setId_catalogo_tejido(rs.getInt("id_catalogo_tejido"));
+                ct.setSerpiente(serpiente);
+                ct.setNumero_caja(rs.getString("numero_caja"));
+                ct.setObservaciones(rs.getString("observaciones"));
+                ct.setEstado(rs.getString("estado"));
+                ct.setPosicion(rs.getString("posicion"));
+                ct.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return ct;
+    }
+    
     public Serpiente obtenerSerpiente(int id_serpiente){
         Serpiente serpiente = new Serpiente();
         try{

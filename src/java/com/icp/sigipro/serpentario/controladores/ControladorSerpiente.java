@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorSerpiente", urlPatterns = {"/Serpentario/Serpiente"})
 public class ControladorSerpiente extends SIGIPROServlet {
 
+    //Agregar, editar, eventos, decesos
     private final int[] permisos = {1, 310, 311, 312,313,314};
     private SerpienteDAO dao = new SerpienteDAO();
     private EventoDAO eventodao = new EventoDAO();
@@ -53,6 +54,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
         {
             add("index");
             add("ver");
+            add("verdeceso");
+            add("editardeceso");
             add("agregar");
             add("editar");
             add("coleccionviva");
@@ -68,6 +71,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             //Cuando esta muerta
             add("coleccionhumeda");
             add("catalogotejido");
+            add("editardeceso");
             
         }
     };
@@ -121,6 +125,27 @@ public class ControladorSerpiente extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
+    protected void getVerdeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Serpiente/VerDeceso.jsp";
+        String deceso = request.getParameter("deceso");
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
+        Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
+        request.setAttribute("serpiente", serpiente);
+        request.setAttribute("accion", "verdeceso");
+        if (deceso.equals("catalogotejido")){
+            request.setAttribute("deceso", "catalogotejido");
+            CatalogoTejido ct = dao.obtenerCatalogoTejido(serpiente);
+            request.setAttribute("catalogotejido", ct);
+        }else{
+            request.setAttribute("deceso", "coleccionhumeda");
+            ColeccionHumeda ch = dao.obtenerColeccionHumeda(serpiente);
+            request.setAttribute("coleccionhumeda", ch);
+        }
+        redireccionar(request, response, redireccion);
+    }
+    
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -131,6 +156,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             request.setAttribute("serpiente", s);
             Evento coleccionviva = eventodao.validarPasoCV(id_serpiente);
+            Evento ch = eventodao.validarColeccionHumeda(id_serpiente);
+            Evento ct = eventodao.validarCatalogoTejido(id_serpiente);
             Evento deceso = eventodao.validarDeceso(id_serpiente);
             List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
             request.setAttribute("listaEventos",eventos);
@@ -146,7 +173,14 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 request.setAttribute("id_catalogo_tejido", dao.obtenerProximoIdCT());
             }else{
                  request.setAttribute("deceso",null);                               
+            }if (ch.getId_evento() != 0 || ct.getId_evento() != 0){
+                request.setAttribute("postDeceso",false);
+                request.setAttribute("coleccionhumeda", ch);
+                request.setAttribute("catalogotejido", ct);
+            }else{
+                request.setAttribute("postDeceso",true);
             }
+            
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -206,7 +240,27 @@ public class ControladorSerpiente extends SIGIPROServlet {
 
     }
       
-
+    protected void getEditardeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(314, listaPermisos);
+        String redireccion = "Serpiente/EditarDeceso.jsp";
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
+        String deceso = request.getParameter("deceso");
+        Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
+        request.setAttribute("serpiente", serpiente);
+        request.setAttribute("accion", "editardeceso");
+        if (deceso.equals("catalogotejido")){
+            request.setAttribute("deceso", "catalogotejido");
+            CatalogoTejido ct = dao.obtenerCatalogoTejido(serpiente);
+            request.setAttribute("catalogotejido", ct);
+        }else{
+            request.setAttribute("deceso", "coleccionhumeda");
+            ColeccionHumeda ch = dao.obtenerColeccionHumeda(serpiente);
+            request.setAttribute("coleccionhumeda", ch);
+        }
+        redireccionar(request, response, redireccion);
+    }
+    
     protected void getDeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         EventoDAO eventodao = new EventoDAO();
@@ -319,6 +373,41 @@ public class ControladorSerpiente extends SIGIPROServlet {
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);
+    }
+    
+    protected void postEditardeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        boolean resultado = false;
+        String redireccion = "Serpiente/EditarDeceso.jsp";
+        String deceso = request.getParameter("deceso");
+        if (deceso.equals("catalogotejido")){
+            CatalogoTejido ct = this.construirCT(request);
+            int id_catalogo_tejido = Integer.parseInt(request.getParameter("id_ct"));
+            ct.setId_catalogo_tejido(id_catalogo_tejido);
+            resultado=dao.editarCatalogoTejido(ct);
+            if (resultado){
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(ct.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOTEJIDO,request.getRemoteAddr());
+                //*----------------------------*
+            }
+        }else{
+            ColeccionHumeda ch = this.construirCH(request);
+            int id_coleccion_humeda = Integer.parseInt(request.getParameter("id_ch"));
+            ch.setId_coleccion_humeda(id_coleccion_humeda);
+            resultado=dao.editarColeccionHumeda(ch);
+            if (resultado){
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(ch.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_COLECCIONHUMEDA,request.getRemoteAddr());
+                //*----------------------------*
+            }
+        }
+        if (resultado){
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            request.setAttribute("mensaje", helper.mensajeDeExito("Evento de serpiente editado correctamente."));
+            redireccion = "Serpiente/index.jsp";
+        }
+        request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
+        redireccionar(request, response, redireccion);
+        
     }
     
     protected void postEvento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -444,7 +533,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
         ch.setObservaciones(request.getParameter("observacionesCH"));
         ch.setProposito(request.getParameter("proposito"));
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente_coleccion_humeda"));
-        System.out.println(id_serpiente);
         ch.setSerpiente(dao.obtenerSerpiente(id_serpiente));
         
         return ch;
