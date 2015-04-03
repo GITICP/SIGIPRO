@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Machis?">Machos</a>
+              <a href="/SIGIPRO/Conejera/Machos?">Machos</a>
             </li>
           </ul>
         </div>
