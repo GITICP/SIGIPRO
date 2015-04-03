@@ -11,7 +11,6 @@
     <div class="col-md-6">
         <input hidden="true" name="id_serpiente" value="${serpiente.getId_serpiente()}">
         <input hidden="true" name="accion" value="${accion}">
-        <input hidden='true' id='imagenSubida2' value=''>
         <c:choose>
             <c:when test="${serpiente.getId_serpiente()!=0}">
                 <label for="numero_ingreso" class="control-label">*Numero de Ingreso</label>
@@ -193,29 +192,7 @@
     Los campos marcados con * son requeridos.
 </p>  
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="widget widget-table">
-                <div class="widget-header">
-                    <h3><i class="fa fa-map-marker"></i> Imagen (Sin Implementar)</h3>
-                </div>
-                <div class="widget-content">
-                    <label for="imagen" class="control-label">Imagen</label>
-                    <div class="form-group">
-                      <div class="col-sm-12">
-                        <div class="input-group">                
-                          <input type="file" value='' name="imagen" accept="image/*" onchange="previewFile()" />
-                          <input type='hidden' name='imagen2' id='imagen' value=''>
-                          <div><img name='imagenSubida' id="img_newjourney" src='' height="300" alt=""></div>
-                        </div>
-                      </div>
-                    </div>
-                    <img src="${serpiente.getImagen()}"
-                </div>
-            </div>
-        </div>
-    </div>
-        </div>
+
 <div class="form-group">
     <div class="modal-footer">
         <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>

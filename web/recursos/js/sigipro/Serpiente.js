@@ -1,7 +1,7 @@
 function previewFile(){
     if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
-       var preview = document.getElementById("img_newjourney"); //selects the query named img
+       var preview = document.getElementById("imagenSubida"); //selects the query named img
        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
        var imagen = document.getElementById("imagen");
        var reader  = new FileReader();
@@ -34,6 +34,11 @@ $(document).on("click", ".open-Modal", function () {
 $(document).on("click", ".evento-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente").val(id_serpiente);                          
+                            });
+                            
+$(document).on("click", ".imagen-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_imagen").val(id_serpiente);                          
                             });
 
 $(document).on("click", ".ch-Modal", function () {                            

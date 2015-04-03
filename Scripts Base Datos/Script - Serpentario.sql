@@ -243,6 +243,8 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (302, '[S
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (310, '[Serpentario]AgregarSerpiente', 'Permite agregar una serpiente al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (311, '[Serpentario]EditarSerpiente', 'Permite editar una serpiente al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (312, '[Serpentario]EventoSerpiente', 'Permite registrar eventos a una serpiente al catálogo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (313, '[Serpentario]RegistrarDeceso', 'Permite registrar el deceso de una serpiente.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (314, '[Serpentario]RegistrarCH-CT', 'Permite agregar la serpiente a Colección Húmeda o Catálogo de Tejidos');
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (320, '[Serpentario]AgregarExtraccion', 'Permite agregar una extraccion');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (321, '[Serpentario]EditarExtraccion', 'Permite editar una extraccion al catálogo');

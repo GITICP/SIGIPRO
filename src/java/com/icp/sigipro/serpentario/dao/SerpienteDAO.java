@@ -12,6 +12,7 @@ import com.icp.sigipro.serpentario.modelos.CatalogoTejido;
 import com.icp.sigipro.serpentario.modelos.ColeccionHumeda;
 import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -106,6 +107,30 @@ public class SerpienteDAO {
                 ct.setId_catalogo_tejido(resultadoConsulta.getInt("id_catalogo_tejido"));
             }
             resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public boolean insertarImagen(InputStream imagen, int id_serpiente,long size){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  "UPDATE serpentario.serpientes " +
+                  "SET imagen=? " +
+                  "WHERE id_serpiente=?; ");
+
+            consulta.setBinaryStream(1, imagen,size);
+            consulta.setInt(2, id_serpiente);
+
+            System.out.println(consulta);
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
             consulta.close();
             conexion.close();
         }
@@ -376,7 +401,9 @@ public class SerpienteDAO {
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));
                 serpiente.setPeso(rs.getFloat("peso"));
-                serpiente.setImagen(rs.getBlob("imagen"));
+                byte[] imagen = rs.getBytes("imagen");
+                
+                serpiente.setImagen(imagen);
             }
             rs.close();
             consulta.close();
@@ -408,7 +435,6 @@ public class SerpienteDAO {
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));
                 serpiente.setPeso(rs.getFloat("peso"));
-                serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
             }
             rs.close();
@@ -444,7 +470,6 @@ public class SerpienteDAO {
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));
                 serpiente.setPeso(rs.getFloat("peso"));
-                serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
             } 
             rs.close();
@@ -479,7 +504,6 @@ public class SerpienteDAO {
                 serpiente.setTalla_cabeza(rs.getFloat("talla_cabeza"));
                 serpiente.setTalla_cola(rs.getFloat("talla_cola"));
                 serpiente.setPeso(rs.getFloat("peso"));
-                serpiente.setImagen(rs.getBlob("imagen"));
                 resultado.add(serpiente);
             } 
             rs.close();

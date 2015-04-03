@@ -82,7 +82,33 @@ public class EventoDAO {
         return resultado;
     }
     
-    
+    public List<Evento> validarSerpiente(int id_serpiente) throws SIGIPROException{
+        List<Evento> resultado = new ArrayList<Evento>();
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento "
+                    + "FROM serpentario.serpientes AS serpientes "
+                    + "INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and (eventos.evento = 'Pase a Coleccion Viva' "
+                    + "or eventos.evento='Deceso' or eventos.evento='Catálogo Tejido' or eventos.evento='Colección Húmeda') "
+                    + "WHERE serpientes.id_serpiente=?;");
+            
+            consulta.setInt(1,id_serpiente);
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            while( resultadoConsulta.next() ){
+                Evento evento;
+                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
+                resultado.add(evento);
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+            
+        }catch (Exception e){
+            
+        }
+        return resultado;
+        
+        
+    }
     
     public Evento validarPasoCV(int id_serpiente) throws SIGIPROException{
         boolean resultado = false;

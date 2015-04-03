@@ -62,16 +62,26 @@
                               </c:if>
                             </c:forEach>
                             <c:if test="${contienePermisoEditar}">
+                              <a class="btn btn-primary btn-sm boton-accion imagen-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarImagen">Imagen</a>
                               <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
                             </c:if>
                         </c:when>
                         <c:otherwise>
-                            <c:choose>
-                                <c:when test="${postDeceso}">
-                                    <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
-                                    <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
-                                </c:when>
-                            </c:choose>
+                            <c:set var="contienePermisoDeceso" value="false" />
+                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                              <c:if test="${permiso == 1 || permiso == 314}">
+                                <c:set var="contienePermisoDeceso" value="true" />
+                              </c:if>
+                            </c:forEach>
+                            <c:if test="${contienePermisoDeceso}">
+                                <c:choose>
+                                    <c:when test="${postDeceso}">
+                                        <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
+                                        <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
+                                    </c:when>
+                                </c:choose>                            
+                            </c:if>
+                            
                             
                         </c:otherwise>
                     </c:choose>
@@ -115,14 +125,12 @@
                 </c:choose>
                     <c:choose>
                         <c:when test="${!postDeceso}">
-                            <c:choose>
-                                <c:when test="${coleccionhumeda.getId_evento() != 0}">
-                            <tr><td> <strong>Colección Húmeda:</strong> <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=verdeceso&deceso=coleccionhumeda&id_serpiente=${serpiente.getId_serpiente()}">Ver Colección Húmeda</a> </td></tr>
-                                </c:when>
-                                <c:otherwise>
-                                    <tr><td> <strong>Catálogo de Tejidos:</strong> <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=verdeceso&deceso=catalogotejido&id_serpiente=${serpiente.getId_serpiente()}">Ver Catálogo de Tejido</a> </td></tr>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:if test="${coleccionhumeda != null}">
+                                <tr><td> <strong>Colección Húmeda:</strong> <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=verdeceso&deceso=coleccionhumeda&id_serpiente=${serpiente.getId_serpiente()}">Ver Colección Húmeda</a> </td></tr>
+                            </c:if>
+                            <c:if test="${catalogotejido != null}">
+                                 <tr><td> <strong>Catálogo de Tejidos:</strong> <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=verdeceso&deceso=catalogotejido&id_serpiente=${serpiente.getId_serpiente()}">Ver Catálogo de Tejido</a> </td></tr>
+                            </c:if>
                         </c:when>
                     </c:choose>
                                 <c:choose>
@@ -133,7 +141,11 @@
                                         <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio()} </td></tr>
                                     </c:otherwise>
                                 </c:choose>
-                <tr><td> <strong>Imagen (Sin Implementar):</strong> <td>${serpiente.getImagen()} </td></tr>
+                <tr><td> <strong>Imagen:</strong> <td> 
+                        <c:if test="${!imagenSerpiente.equals('')}">
+                                    <img src="${imagenSerpiente}" height="200">
+                        </c:if>
+                    </td></tr>
                 <tr><td> <strong>Histórico de Eventos</strong> 
               </table>
             </div>
@@ -256,6 +268,51 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                 <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Evento</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    
+<t:modal idModal="modalAgregarImagen" titulo="Agregar Imagen">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarEventos" enctype='multipart/form-data' autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="agregarimagen">
+                <input hidden="true" id='id_serpiente_imagen' name='id_serpiente_imagen'>
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="widget widget-table">
+                            <div class="widget-header">
+                                <h3><i class="fa fa-photo"></i> Imagen</h3>
+                            </div>
+                            <div class="widget-content">
+                                <label for="imagen" class="control-label">Seleccione una imagen</label>
+                                <div class="form-group">
+                                  <div class="col-sm-12">
+                                    <div class="input-group">                
+                                      <input type="file" name="imagen" accept="image/*" required onchange="previewFile()" />
+                                      <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <c:if test="${!imagenSerpiente.equals('')}">
+                                    Imagen Actual: <img src="${imagenSerpiente}" height="100">
+                                </c:if>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+            
+        
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Imagen</button>            </div>
         </div>
         </form>
         </div>

@@ -9,7 +9,6 @@ import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.lang.reflect.Field;
-import java.sql.Blob;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,7 +28,7 @@ public class Serpiente {
     private float talla_cabeza;
     private float talla_cola;
     private float peso;
-    private Blob imagen;
+    private byte[] imagen;
     private Especie especie;
     private String estado;
 
@@ -44,7 +43,7 @@ public class Serpiente {
     public Serpiente() {
     }
 
-    public Serpiente(int id_serpiente, Date fecha_ingreso, String localidad_origen, String colectada, Usuario recibida, String sexo, float talla_cabeza, float talla_cola, float peso, Blob imagen, Especie especie) {
+    public Serpiente(int id_serpiente, Date fecha_ingreso, String localidad_origen, String colectada, Usuario recibida, String sexo, float talla_cabeza, float talla_cola, float peso, byte[] imagen, Especie especie) {
         this.id_serpiente = id_serpiente;
         this.fecha_ingreso = fecha_ingreso;
         this.localidad_origen = localidad_origen;
@@ -175,11 +174,11 @@ public class Serpiente {
         this.peso = peso;
     }
 
-    public Blob getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
 
-    public void setImagen(Blob imagen) {
+    public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
 

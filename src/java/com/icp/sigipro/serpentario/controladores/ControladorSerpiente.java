@@ -21,19 +21,30 @@ import com.icp.sigipro.serpentario.modelos.Evento;
 import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Blob;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import org.apache.commons.io.FilenameUtils;
+import org.postgresql.util.Base64;
 
 /**
  *
@@ -75,6 +86,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("coleccionhumeda");
             add("catalogotejido");
             add("editardeceso");
+            add("agregarimagen");
             
         }
     };
@@ -158,33 +170,37 @@ public class ControladorSerpiente extends SIGIPROServlet {
         try {
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             request.setAttribute("serpiente", s);
-            Evento coleccionviva = eventodao.validarPasoCV(id_serpiente);
-            Evento deceso = eventodao.validarDeceso(id_serpiente);
+            //Imagen de la Serpiente
+            request.setAttribute("imagenSerpiente", this.obtenerImagen(s));
+            //-----------------------
+            List<Evento> validarSerpiente = eventodao.validarSerpiente(id_serpiente);
             List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
             request.setAttribute("listaEventos",eventos);
             request.setAttribute("listaTipoEventos",tipo_Eventos);
-            if (coleccionviva.getId_evento() != 0){
-                request.setAttribute("coleccionViva",coleccionviva);
-            }else{
-                 request.setAttribute("coleccionViva",null);               
-            }
-            if (deceso.getId_evento() != 0){
-                request.setAttribute("deceso",deceso);
-                request.setAttribute("id_coleccion_humeda",dao.obtenerProximoIdCH());
-                request.setAttribute("id_catalogo_tejido", dao.obtenerProximoIdCT());
-                Evento ch = eventodao.validarColeccionHumeda(id_serpiente);
-                Evento ct = eventodao.validarCatalogoTejido(id_serpiente);
-                if (ch.getId_evento() != 0 || ct.getId_evento() != 0){
-                    request.setAttribute("postDeceso",false);
-                    request.setAttribute("coleccionhumeda", ch);
-                    request.setAttribute("catalogotejido", ct);
-                }else{
-                    request.setAttribute("postDeceso",true);
+            boolean postDeceso = true;
+            request.setAttribute("postDeceso",postDeceso);
+            for (Evento i : validarSerpiente){
+                if (i.getEvento().equals("Pase a Coleccion Viva")){
+                    request.setAttribute("coleccionViva",i);
                 }
-            }else{
-                 request.setAttribute("deceso",null);                               
+                if (i.getEvento().equals("Deceso")){
+                    request.setAttribute("deceso",i);
+                    request.setAttribute("id_coleccion_humeda",dao.obtenerProximoIdCH());
+                    request.setAttribute("id_catalogo_tejido", dao.obtenerProximoIdCT());
+                }
+                if (i.getEvento().equals("Colección Húmeda")){
+                    postDeceso = false;
+                    request.setAttribute("postDeceso",postDeceso);
+                    request.setAttribute("coleccionhumeda", i);
+                    request.setAttribute("catalogotejido", null);
+                }if (i.getEvento().equals("Catálogo Tejido")){
+                    postDeceso = false;
+                    request.setAttribute("postDeceso",postDeceso);
+                    request.setAttribute("coleccionhumeda", null);
+                    request.setAttribute("catalogotejido", i);
+                }
             }
-            
+                
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -267,6 +283,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
     
     protected void getDeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(313, listaPermisos);
         EventoDAO eventodao = new EventoDAO();
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
         Evento deceso = new Evento();
@@ -276,8 +294,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
         } catch (SIGIPROException ex) {
         }
         if (deceso.getId_evento() == 0){      
-            List<Integer> listaPermisos = getPermisosUsuario(request);
-            validarPermiso(312, listaPermisos);
             String redireccion = "Serpiente/index.jsp";
             Serpiente serpiente = dao.obtenerSerpiente(id_serpiente);
             Evento e = this.setEvento(serpiente, "Deceso", request);
@@ -325,6 +341,46 @@ public class ControladorSerpiente extends SIGIPROServlet {
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);
+    }
+    
+    protected void postAgregarimagen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String redireccion = "Serpiente/index.jsp";
+        try {
+            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            int id_serpiente = 0;
+            ByteArrayInputStream bais = null;
+            long size = 0;
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+                    String fieldName = item.getFieldName();
+                    if (fieldName.equals("id_serpiente_imagen")){
+                        String fieldValue = item.getString();
+                        id_serpiente = Integer.parseInt(fieldValue);
+                    }     
+                } else {
+                    // Process form file field (input type="file").
+                    byte[] data = item.get();
+                    bais = new ByteArrayInputStream(data);
+                    size = item.getSize();
+                }
+            }
+            boolean resultado = dao.insertarImagen(bais, id_serpiente,size);
+
+            if(resultado){
+                request.setAttribute("mensaje", helper.mensajeDeExito("Imagen a Serpiente "+id_serpiente+" agregada correctamente"));
+            }else{
+                request.setAttribute("mensaje", helper.mensajeDeError("No pudo ser agregada la imagen."));
+            }
+            request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
+            redireccionar(request, response, redireccion);
+
+        } catch (FileUploadException e) {
+            throw new ServletException("Cannot parse multipart request.", e);
+        }
+
+    // ...
     }
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -514,16 +570,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
         s.setTalla_cabeza(Float.parseFloat(request.getParameter("talla_cabeza")));
         s.setTalla_cola(Float.parseFloat(request.getParameter("talla_cola")));
         s.setPeso(Float.parseFloat(request.getParameter("peso")));
-        //No se si sirve   
-        try{
-            String imagen = request.getParameter("imagen");
-            Blob blob = s.getImagen();
-            blob.setBytes(1,imagen.getBytes());
-            s.setImagen(blob);
-        }catch (Exception e){
-            
-        }
-        //-------------
+
         return s;
     }
     
@@ -562,6 +609,15 @@ public class ControladorSerpiente extends SIGIPROServlet {
         e.setUsuario(usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString()));
         
         return e;
+    }
+    
+    private String obtenerImagen(Serpiente s){
+        if (s.getImagen() != null){
+            return "data:image/jpeg;base64," + Base64.encodeBytes(s.getImagen());
+        }else{
+            return "";
+        }
+
     }
     
     //Para Evento
