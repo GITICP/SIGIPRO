@@ -7,6 +7,7 @@ package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.caballeriza.dao.CaballoDAO;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.dao.InoculoDAO;
 import com.icp.sigipro.caballeriza.dao.SangriaPruebaDAO;
@@ -23,6 +24,8 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -64,8 +67,11 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
         SangriaPrueba sp = new SangriaPrueba();
         InoculoDAO inoculodao = new InoculoDAO();
         List<Inoculo> listainoculos = inoculodao.obtenerInoculos();
+        CaballoDAO caballodao = new CaballoDAO();
+        List<Caballo> listacaballos = caballodao.obtenerCaballos();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("sangriap", sp);
+        request.setAttribute("listacaballos", listacaballos);
         request.setAttribute("listainoculos", listainoculos);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
@@ -83,13 +89,13 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "EventoClinico/Ver.jsp";
-        int id_evento = Integer.parseInt(request.getParameter("id_evento"));
+        String redireccion = "SangriaPrueba/Ver.jsp";
+        int id_sangria_prueba = Integer.parseInt(request.getParameter("id_sangria_prueba"));
         try {
-            //EventoClinico g = dao.obtenerEventoClinico(id_evento);
-            List<Caballo> listacaballos = dao.obtenerCaballosEvento(id_evento);
+            SangriaPrueba sp = dao.obtenerSangriaPrueba(id_sangria_prueba);
+            List<Caballo> listacaballos = dao.obtenerCaballosSangriaP(id_sangria_prueba);
             request.setAttribute("caballos", listacaballos);
-            //request.setAttribute("eventoclinico", g);
+            request.setAttribute("sangriap", sp);
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -117,10 +123,15 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "SangriaPrueba/Agregar.jsp";
         SangriaPrueba sp = construirObjeto(request);
-        String[] ids_caballos = {};
+        String caballos = request.getParameter("caballos");
+        
+        //List<SerpientesExtraccion> serpientesextraccion = dao.parsearSerpientesExtraccion(caballos, id_extraccion);
+        String[] ids_caballos=caballos.split("#r#");
         int tam=ids_caballos.length;
                 //request.getParameterValues("caballos");
         resultado = dao.insertarSangriaPrueba(sp, ids_caballos);
+        int id_sangria_prueba = dao.obtenerIdSangriaPrueba(request.getParameter("muestra"));
+        this.datosExtrasSangriaPrueba(request, ids_caballos,id_sangria_prueba);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA_PRUEBA, request.getRemoteAddr());
@@ -178,7 +189,30 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
         sp.setInoculo(inoculodao.obtenerInoculo(Integer.parseInt(request.getParameter("inoculo"))));
         return sp;
     }
-
+    private boolean datosExtrasSangriaPrueba(HttpServletRequest request, String[] ids_caballos, int id_sangria_prueba) {
+        boolean resultado = true;
+        List<String> list = new LinkedList<String>(Arrays.asList(ids_caballos)); 
+        list.add(0, ids_caballos[0]); 
+        ids_caballos = list.toArray(new String[list.size()]);
+        
+        for (String id_caballo : ids_caballos) {
+            String hematrocito = request.getParameter("hematrocito_" + id_caballo);
+            String hemoglobina = request.getParameter("hemoglobina_" + id_caballo);
+            System.out.println(id_caballo);
+            float hematrocitop=0;
+            float hemoglobinap=0;
+            if (!hematrocito.equals("") || !hemoglobina.equals("")) {
+                if(!hematrocito.equals("")){
+                     hematrocitop = Float.parseFloat(hematrocito);
+                }
+                if(!hemoglobina.equals("")){
+                     hemoglobinap = Float.parseFloat(hemoglobina);
+                }
+            }
+            boolean editarSangriaPruebaCaballo = dao.editarSangriaPruebaCaballo(id_sangria_prueba,Integer.parseInt(id_caballo),hematrocitop,hemoglobinap);
+        }
+        return resultado;
+    }
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<String> lista_acciones;

@@ -67,6 +67,10 @@ function eliminarCaballo(id) {
 
     $("#seleccioncaballo").append(nuevaOpcion);
 }
+function eliminarCaballoSP(id_caballo) {
+  fila = $('#' + id_caballo);
+  fila.remove();
+}
 
 
 function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
@@ -95,30 +99,18 @@ $(document).ready(function(){
         $("textarea ").val(split[1]);
 });
 });
-/*$(document).ready(function () {
-
-    $("select[name='inoculogrupo']").on('change', function () {
-        var split = $(this).val().split("|");
-        var caballos = split[1];
-        alert(caballos);
-        var cSelect = document.getElementById("inoculocaballo");
-        var id_grupo = split[0];
-        if (id_grupo == 3) {
-            newOption = document.createElement("option");
-            newOption.value = 1;  // assumes option string and value are the same 
-            newOption.text = "Robertico";
-            cSelect.add(newOption);
-        }
+function confirmacionAgregarCaballos() {
+    serpientesCodificados = "";
+    $('#datatable-column-filter-permisos > tbody > tr').each(function ()
+    
+    {
+      fila = $(this);
+      serpientesCodificados += fila.attr('id');
+      serpientesCodificados += "#r#";
     });
-});
-*/
-/*function seleccionar_todo(nombre){
-    alert("mierda");
-   for (i=0;i<document.nombre.elements.length;i++) 
-      if(document.nombre.elements[i].type == "checkbox")	
-         document.nombre.elements[i].checked=1; 
+    $('#caballos').val(serpientesCodificados.slice(0, -3));
+    //alert("El valor del campo escondido de permisos es: "+ $('#permisosRol').val());
 }
-*/
 $(document).ready(function () {
 
     $("select[name='inoculogrupo']").on('change', function () {
@@ -139,3 +131,13 @@ $(document).ready(function () {
         document.getElementById("seleccionInoculoGrupo").disabled = true;
     });
 });
+//$(document).ready(function () {
+//
+//    $("select[name='inoculo']").on('change', function () {
+//        document.getElementById("sangriap_caballos").hidden = false;
+//        id_inoculo = this.value;
+//        tabla = document.getElementById("sangriap_caballos");
+//        filas = tabla.getElementsByTagName("tr");
+////        document.getElementById("seleccionInoculoGrupo").disabled = true;
+//    });
+//});

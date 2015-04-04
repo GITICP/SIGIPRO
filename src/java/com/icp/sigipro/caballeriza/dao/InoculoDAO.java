@@ -186,25 +186,6 @@ public class InoculoDAO {
         }
         return resultado_eliminar && resultado_asociacion_caballos;
     }      
-//    boolean resultado = false;
-//    try {
-//      PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM caballeriza.inoculos_caballos ic "
-//              + "WHERE  ic.id_inoculo = ? "
-//      );
-//      consulta.setInt(1, id_inoculo);
-//      int resultadoConsulta = consulta.executeUpdate();
-//      if (resultadoConsulta == 1) {
-//        resultado = true;
-//      }
-//      consulta.close();
-//      conexion.close();
-//
-//    } catch (SQLException ex) {
-//      System.out.println(ex);
-//    }
-//
-//    return resultado;
-//  }
     public boolean editarInoculo(Inoculo i) throws SIGIPROException {
         boolean resultado = false;
 

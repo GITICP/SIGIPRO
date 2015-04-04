@@ -144,41 +144,86 @@
                         </select>
                     </div>
                 </div>
-            </div>
-            <label for="perecedero" class="control-label">Asociación de Caballos</label>
-            <div class="form-group opciones">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="checkbox" name="perecedero" value="true" ${checkedCuarentena}><span> ¿Desea asociar caballos a este evento?</span>
-                        <br>
-                    </div>
-                </div>
-            </div>            
+            </div>           
         </div>
     </div>
     <br>
-
-
-    <!-- Esta parte es la de los permisos de un rol -->
-    <p class="campos-requeridos">
-        Los campos marcados con * son requeridos.
-    </p>
-
-    <div class="col-md-12">    
-        <div class="row">
-            <div class="form-group">
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <c:choose>
-                        <c:when test= "${accion.equals('Editar')}">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                        </c:when>
-                        <c:otherwise>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Sangría de Prueba</button>
-                        </c:otherwise>
-                    </c:choose>
+    <input hidden="true" name="accion" value="${accion}">
+    <input id="caballos" hidden="true" name="caballos" value="">
+    <div class="col-md-12" >
+        <!-- Esta parte es la de los interno del catalogo externo -->
+        <div class="widget widget-table">
+            <div class="widget-header">
+                <h3><i class="fa fa-check"></i> Caballos Asociados</h3>
+            </div>
+            <div class="widget-content">
+                <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                    <thead>
+                        <tr>
+                            <th>Caballo</th>
+                            <th>Numero Microchip</th>
+                            <th>Hematrocito</th>
+                            <th>Hemoglobina</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${listacaballos}" var="caballo">
+                            <tr id="${caballo.getId_caballo()}">
+                                <td>${caballo.getNombre()}</td>
+                                <td>${caballo.getNumero_microchip()}</td>
+                                <td width=150px>
+                                    <input type="number" step="any" placeholder="" class="form-control" name="hematrocito_${caballo.getId_caballo()}" value="" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                </td>
+                                <td width=150px>
+                                    <input type="number" step="any" placeholder="" class="form-control" name="hemoglobina_${caballo.getId_caballo()}" value="" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                </td>
+                                <td width=50px>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarCaballoSP(${caballo.getId_caballo()})" style="margin-left:7px;margin-right:5px;">Eliminar</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <button type="submit"  class="btn btn-primary" onclick="confirmacionAgregarCaballos()"><i class="fa fa-check-circle"></i> Confirmar Caballos</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-12">    
+            <div class="row">
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                        <c:choose>
+                            <c:when test= "${accion.equals('Editar')}">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Sangría de Prueba</button>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-</form>
+</form>                        

@@ -9,6 +9,7 @@ import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,10 +57,12 @@ public class SangriaPruebaDAO
                 sp.setId_sangria_prueba(resultadoConsulta.getInt("id_sangria_prueba"));
             }
            if (ids_caballos.length > 0) {
-                consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.sangrias_pruebas_caballos (id_inoculo, id_caballo) VALUES (?,?);");
+                consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.sangrias_pruebas_caballos (id_sangria_prueba, id_caballo) VALUES (?,?);");
 
                 for (String id_caballo : ids_caballos) {
                     consulta_caballos.setInt(1, sp.getId_sangria_prueba());
+                    int id= sp.getId_sangria_prueba();
+                    int id_caballop=Integer.parseInt(id_caballo);
                     consulta_caballos.setInt(2, Integer.parseInt(id_caballo));
                     consulta_caballos.addBatch();
                 }
@@ -143,13 +146,13 @@ public class SangriaPruebaDAO
     }
 
 
-    public List<Caballo> obtenerCaballosEvento(int id_evento) throws SIGIPROException
+    public List<Caballo> obtenerCaballosSangriaP(int id_sangria_prueba) throws SIGIPROException
     {
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" select nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.eventos_clinicos_caballos ecc on c.id_caballo = ecc.id_caballo where id_evento=?; ");
-            consulta.setInt(1, id_evento);
+            PreparedStatement consulta = getConexion().prepareStatement("  select nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.sangrias_pruebas_caballos ecc on c.id_caballo = ecc.id_caballo where id_sangria_prueba=?; ");
+            consulta.setInt(1, id_sangria_prueba);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
@@ -168,7 +171,80 @@ public class SangriaPruebaDAO
         }
         return resultado;
     }
+    public SangriaPrueba obtenerSangriaPrueba(int id_sangria_prueba) throws SIGIPROException {
+        InoculoDAO inoculodao = new InoculoDAO();
+        SangriaPrueba sangriap = new SangriaPrueba();
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.sangrias_pruebas"
+                    + " where id_sangria_prueba = ?");
+            consulta.setInt(1, id_sangria_prueba);
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                sangriap.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
+                sangriap.setMuestra(rs.getString("muestra"));
+                sangriap.setNum_solicitud(rs.getInt("num_solicitud"));
+                sangriap.setNum_informe(rs.getInt("num_informe"));
+                sangriap.setFecha_recepcion_muestra(rs.getDate("fecha_recepcion_muestra"));
+                sangriap.setFecha_informe(rs.getDate("fecha_informe"));
+                sangriap.setResponsable(rs.getString("responsable"));
+                sangriap.setInoculo(inoculodao.obtenerInoculo(rs.getInt("id_inoculo")));
+            }
+            consulta.close();
+            conexion.close();
+            rs.close();
+        } catch (SQLException ex) {
+            throw new SIGIPROException("La prueba de sangría no puede ser obtenida.");
+        }
+        return sangriap;    }    
+    public int obtenerIdSangriaPrueba(String muestra){
+       int id_sangriap = 0;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    "SELECT id_sangria_prueba "
+                    +" FROM caballeriza.sangrias_pruebas "
+                    +" WHERE muestra = ?;");
+            consulta.setString(1, muestra);
+            ResultSet rs = consulta.executeQuery();
+            while (rs.next()) {
+                id_sangriap=rs.getInt("id_sangria_prueba"); 
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return id_sangriap;
+    }
+    public boolean editarSangriaPruebaCaballo(int id_sangria_prueba, int id_caballo, float hematrocitop, float hemoglobinap) {
+        boolean resultado = false;
+        BigDecimal hematrocito = BigDecimal.valueOf(hematrocitop);
+        BigDecimal hemoglobina = BigDecimal.valueOf(hemoglobinap);
+    
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE caballeriza.sangrias_pruebas_caballos " +
+                  " SET hematrocito=?,  hemoglobina=?" +
+                  " WHERE id_caballo=? and id_sangria_prueba=?; "
+            );
+            consulta.setBigDecimal(1, hematrocito);
+            consulta.setBigDecimal(2, hemoglobina);            
+            consulta.setInt(3,id_caballo);
+            consulta.setInt(4,id_sangria_prueba);
 
+            if ( consulta.executeUpdate() >= 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+                
+    }    
     private Connection getConexion()
     {
         try {
@@ -196,5 +272,9 @@ public class SangriaPruebaDAO
             }
         }
     }
+
+
+
+
 
 }

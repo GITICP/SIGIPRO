@@ -82,8 +82,8 @@ CREATE TABLE caballeriza.sangrias_pruebas (
 CREATE TABLE caballeriza.sangrias_pruebas_caballos (
     id_sangria_prueba integer NOT NULL,
     id_caballo integer NOT NULL,
-    hematrocito float,
-    hemoglobina float 
+    hematrocito decimal,
+    hemoglobina decimal 
     
 );
 
@@ -102,6 +102,7 @@ ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangri
 --Indices unicos esquema caballeriza
 CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nombre);
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
+CREATE UNIQUE INDEX i_muestra ON caballeriza.sangrias_pruebas USING btree (muestra);
 
 
 --Llaves foraneas esquema caballeriza
