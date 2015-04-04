@@ -7,6 +7,7 @@ package com.icp.sigipro.bioterio.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bioterio.modelos.AnalisisParasitologico;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ public class AnalisisParasitologicoDAO {
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.analisis_parasitologicos (fecha, numero_informe, especie, resultados,"
-              + " tratamiento_dosis, recetado_por, fecha_tratamiento, fecha_tratamiento, responsable)"  
+              + " tratamiento_dosis, recetado_por, fecha_tratamiento, responsable)"  
               + " VALUES (?,?,?,?,?,?,?,?) RETURNING id_analisis");
       
       consulta.setDate(1, p.getFecha());
@@ -37,9 +38,9 @@ public class AnalisisParasitologicoDAO {
       consulta.setBoolean(3, p.isEspecie());
       consulta.setString(4, p.getResultados());
       consulta.setString(5, p.getTratamiento_dosis());
-      consulta.setString(6, p.getRecetado_por());
+      consulta.setInt(6, p.getRecetado_por().getID());
       consulta.setDate(7, p.getFecha_tratamiento());
-      consulta.setString(8, p.getResponsable());
+      consulta.setInt(8, p.getResponsable().getID());
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -61,19 +62,18 @@ public class AnalisisParasitologicoDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.analisis_parasitologicos "
-              + " SET  fecha=?, numero_informe=?, especie=?, resultados=?, tratamiento_dosis=?, recetado_por=?, fecha_tratamiento=?, resposable=?"
+              + " SET numero_informe=?, especie=?, resultados=?, tratamiento_dosis=?, recetado_por=?, fecha_tratamiento=?, responsable=?"
               + " WHERE id_analisis=?; "
       );
 
-      consulta.setDate(1, p.getFecha());
-      consulta.setString(2, p.getNumero_informe());
-      consulta.setBoolean(3, p.isEspecie());
-      consulta.setString(4, p.getResultados());
-      consulta.setString(5, p.getTratamiento_dosis());
-      consulta.setString(6, p.getRecetado_por());
-      consulta.setDate(7, p.getFecha_tratamiento());
-      consulta.setString(8, p.getResponsable());
-      consulta.setInt(9, p.getId_analisis());
+      consulta.setString(1, p.getNumero_informe());
+      consulta.setBoolean(2, p.isEspecie());
+      consulta.setString(3, p.getResultados());
+      consulta.setString(4, p.getTratamiento_dosis());
+      consulta.setInt(5, p.getRecetado_por().getID());
+      consulta.setDate(6, p.getFecha_tratamiento());
+      consulta.setInt(7, p.getResponsable().getID());
+      consulta.setInt(8, p.getId_analisis());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -114,7 +114,12 @@ public class AnalisisParasitologicoDAO {
     AnalisisParasitologico analisis_parasitologico = new AnalisisParasitologico();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.analisis_parasitologicos where id_analisis = ?");
+      PreparedStatement consulta = getConexion().prepareStatement(
+                                                " SELECT ap.*, res.nombre_completo as nombre_responsable, rec.nombre_completo as nombre_recetado_por "
+                                              + " FROM bioterio.analisis_parasitologicos ap "
+                                              + "	left join seguridad.usuarios res on res.id_usuario = responsable "
+                                              + "	left join seguridad.usuarios rec on rec.id_usuario  = recetado_por"
+                                              + " WHERE  id_analisis = ?;");
 
       consulta.setInt(1, id);
 
@@ -127,9 +132,18 @@ public class AnalisisParasitologicoDAO {
         analisis_parasitologico.setEspecie(rs.getBoolean("especie"));
         analisis_parasitologico.setResultados(rs.getString("resultados"));
         analisis_parasitologico.setTratamiento_dosis(rs.getString("tratamiento_dosis"));
-        analisis_parasitologico.setRecetado_por(rs.getString("recetado_por"));
         analisis_parasitologico.setFecha_tratamiento(rs.getDate("fecha_tratamiento"));
-        analisis_parasitologico.setResponsable(rs.getString("responsable"));
+        
+        Usuario recetador = new Usuario();
+        recetador.setId_usuario(rs.getInt("recetado_por"));
+        recetador.setNombreCompleto(rs.getString("nombre_recetado_por"));
+        analisis_parasitologico.setRecetado_por(recetador);
+        
+        Usuario responsable = new Usuario();
+        responsable.setIdUsuario(rs.getInt("responsable"));
+        responsable.setNombreCompleto(rs.getString("nombre_responsable"));
+        analisis_parasitologico.setResponsable(responsable);
+        
       }
       rs.close();
       consulta.close();
@@ -140,13 +154,19 @@ public class AnalisisParasitologicoDAO {
     return analisis_parasitologico;
   }
 
-  public List<AnalisisParasitologico> obtenerAnalisisParasitologicos() throws SIGIPROException {
+  public List<AnalisisParasitologico> obtenerAnalisisParasitologicos(boolean especie) throws SIGIPROException {
 
     List<AnalisisParasitologico> resultado = new ArrayList<AnalisisParasitologico>();
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.analisis_parasitologicos");
+      consulta = getConexion().prepareStatement(" SELECT ap.*, res.nombre_completo as nombre_responsable, rec.nombre_completo as nombre_recetado_por "
+                                              + " FROM bioterio.analisis_parasitologicos ap "
+                                              + "	left join seguridad.usuarios res on res.id_usuario = responsable "
+                                              + "	left join seguridad.usuarios rec on rec.id_usuario  = recetado_por"
+                                              + " WHERE especie = ?; ");
+      consulta.setBoolean(1, especie);
+      
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
@@ -157,9 +177,18 @@ public class AnalisisParasitologicoDAO {
         analisis_parasitologico.setEspecie(rs.getBoolean("especie"));
         analisis_parasitologico.setResultados(rs.getString("resultados"));
         analisis_parasitologico.setTratamiento_dosis(rs.getString("tratamiento_dosis"));
-        analisis_parasitologico.setRecetado_por(rs.getString("recetado_por"));
+
+        Usuario recetador = new Usuario();
+        recetador.setId_usuario(rs.getInt("recetado_por"));
+        recetador.setNombreCompleto(rs.getString("nombre_recetado_por"));
+        analisis_parasitologico.setRecetado_por(recetador);
+        
+        Usuario responsable = new Usuario();
+        responsable.setIdUsuario(rs.getInt("responsable"));
+        responsable.setNombreCompleto(rs.getString("nombre_responsable"));
+        analisis_parasitologico.setResponsable(responsable);
+        
         analisis_parasitologico.setFecha_tratamiento(rs.getDate("fecha_tratamiento"));
-        analisis_parasitologico.setResponsable(rs.getString("responsable"));  
         resultado.add(analisis_parasitologico);
       }
       rs.close();

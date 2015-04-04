@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bioterio.modelos;
 
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -23,9 +24,9 @@ public class AnalisisParasitologico {
   private boolean especie;
   private String resultados;
   private String tratamiento_dosis;
-  private String recetado_por;
+  private Usuario recetado_por;
   private Date fecha_tratamiento;
-  private String responsable;
+  private Usuario responsable;
 
   public int getId_analisis() {
     return id_analisis;
@@ -54,6 +55,14 @@ public class AnalisisParasitologico {
   public boolean isEspecie() {
     return especie;
   }
+  
+  public String getEspecie() {
+      if(especie) {
+          return "Ratones";
+      } else {
+          return "Conejos";
+      }
+  }
 
   public void setEspecie(boolean especie) {
     this.especie = especie;
@@ -75,11 +84,11 @@ public class AnalisisParasitologico {
     this.tratamiento_dosis = tratamiento_dosis;
   }
 
-  public String getRecetado_por() {
+  public Usuario getRecetado_por() {
     return recetado_por;
   }
 
-  public void setRecetado_por(String recetado_por) {
+  public void setRecetado_por(Usuario recetado_por) {
     this.recetado_por = recetado_por;
   }
 
@@ -91,11 +100,11 @@ public class AnalisisParasitologico {
     this.fecha_tratamiento = fecha_tratamiento;
   }
 
-  public String getResponsable() {
+  public Usuario getResponsable() {
     return responsable;
   }
 
-  public void setResponsable(String responsable) {
+  public void setResponsable(Usuario responsable) {
     this.responsable = responsable;
   }
 
@@ -133,6 +142,27 @@ public class AnalisisParasitologico {
 
     }
     return JSON.toString();
+  }
+  
+  public String getNombre_responsable() {
+      String resultado = resultado = responsable.getNombre_completo();
+      
+      if (resultado == null) {
+          resultado = "Sin responsable";
+          
+      }
+      
+      return resultado;
+  }
+  
+  public String getNombre_recetador() {
+      String resultado = recetado_por.getNombre_completo();
+      
+      if (resultado == null) {
+          resultado = "Sin recetador";
+      } 
+      
+      return resultado;
   }
 
   private String formatearFecha(Date fecha) {

@@ -124,9 +124,9 @@ CREATE TABLE bioterio.solicitudes_conejera(
 	especie boolean NOT NULL, --conejo 1 ratón 0
 	resultados character varying(200) NOT NULL,
 	tratamiento_dosis character varying(200), 
-	recetado_por character varying(200),
+	recetado_por integer,
 	fecha_tratamiento date,
-	responsable character varying(200)
+	responsable integer
  );
  
 --Llaves primarias esquema de bioterio 
@@ -159,6 +159,8 @@ ALTER TABLE ONLY bioterio.cruces ADD CONSTRAINT fk_id_macho FOREIGN KEY (id_mach
 ALTER TABLE ONLY bioterio.entregas_solicitudes_conejera ADD CONSTRAINT fk_id_usr_recipiente FOREIGN KEY (usuario_recipiente) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
 ALTER TABLE ONLY bioterio.entregas_solicitudes_conejera ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bioterio.solicitudes_conejera (id_solicitud) ON DELETE SET NULL;
 ALTER TABLE ONLY bioterio.solicitudes_conejera ADD CONSTRAINT fk_id_usr_solicitante FOREIGN KEY (usuario_solicitante) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
+ALTER TABLE ONLY bioterio.analisis_parasitologicos ADD CONSTRAINT fk_id_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
+ALTER TABLE ONLY bioterio.analisis_parasitologicos ADD CONSTRAINT fk_id_recetado_por FOREIGN KEY (recetado_por) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
 
 
 --Indices unicos esquema bioterio
