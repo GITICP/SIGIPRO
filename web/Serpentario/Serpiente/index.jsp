@@ -51,7 +51,7 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Numero de Ingreso</th>
+                    <th>Número de Ingreso</th>
                     <th>Especie</th>
                     <th>Fecha de Ingreso</th>
                     <th>Localidad de Origen</th>

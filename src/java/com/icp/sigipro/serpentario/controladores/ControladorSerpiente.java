@@ -22,9 +22,7 @@ import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -32,8 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +39,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import org.apache.commons.io.FilenameUtils;
 import org.postgresql.util.Base64;
 
 /**
@@ -438,10 +433,13 @@ public class ControladorSerpiente extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "Serpiente/EditarDeceso.jsp";
         String deceso = request.getParameter("deceso");
+        int id_serpiente=0;
+        System.out.println(deceso);
         if (deceso.equals("catalogotejido")){
             CatalogoTejido ct = this.construirCT(request);
             int id_catalogo_tejido = Integer.parseInt(request.getParameter("id_ct"));
             ct.setId_catalogo_tejido(id_catalogo_tejido);
+            id_serpiente = ct.getSerpiente().getId_serpiente();
             resultado=dao.editarCatalogoTejido(ct);
             if (resultado){
                 //Funcion que genera la bitacora
@@ -452,6 +450,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             ColeccionHumeda ch = this.construirCH(request);
             int id_coleccion_humeda = Integer.parseInt(request.getParameter("id_ch"));
             ch.setId_coleccion_humeda(id_coleccion_humeda);
+            id_serpiente = ch.getSerpiente().getId_serpiente();
             resultado=dao.editarColeccionHumeda(ch);
             if (resultado){
                 //Funcion que genera la bitacora
@@ -460,7 +459,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             }
         }
         if (resultado){
-            request.setAttribute("mensaje", helper.mensajeDeExito("Evento de serpiente editado correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Evento de serpiente "+id_serpiente+" editado correctamente."));
             redireccion = "Serpiente/index.jsp";
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
@@ -509,7 +508,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Evento e = this.setEvento(ct.getSerpiente(), "Catálogo Tejido", request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente agregada a Catálogo de Tejidos correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ct.getSerpiente().getId_serpiente()+" agregada a Catálogo de Tejidos correctamente."));
             redireccion = "Serpiente/index.jsp";
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
@@ -535,7 +534,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Evento e = this.setEvento(ch.getSerpiente(), "Colección Húmeda", request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente agregada a Colección Húmeda correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ch.getSerpiente().getId_serpiente()+" agregada a Colección Húmeda correctamente."));
             redireccion = "Serpiente/index.jsp";
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());

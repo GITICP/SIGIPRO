@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Serpentario/Extraccion?">Extracciones</a>
             </li>
-            <li class="active"> Agregar Serpientes a Extraccion </li>
+            <li class="active"> Agregar Serpientes a Extracción </li>
 
           </ul>
         </div>
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-bug"></i> Agregar Serpientes a la Extraccion ${numero_extraccion}</h3>
+              <h3><i class="fa fa-bug"></i> Agregar Serpientes a la Extracción ${numero_extraccion}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">

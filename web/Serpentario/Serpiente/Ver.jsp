@@ -105,7 +105,7 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre de la Especie:</strong> <td>${serpiente.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Numero de Ingreso:</strong> <td>${serpiente.getId_serpiente()} </td></tr>
+                <tr><td> <strong>Número de Ingreso:</strong> <td>${serpiente.getId_serpiente()} </td></tr>
                 <tr><td> <strong>Fecha de Ingreso:</strong> <td>${serpiente.getFecha_ingresoAsString()} </td></tr>
                 <tr><td> <strong>Localidad de Origen:</strong> <td>${serpiente.getLocalidad_origen()} </td></tr>
                 <tr><td> <strong>Colectada por:</strong> <td>${serpiente.getColectada()} </td></tr>
@@ -331,7 +331,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" value=${id_coleccion_humeda} disabled="true">
+                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" class="form-control" value=${id_coleccion_humeda} disabled="true">
                         </div>
                     </div>
                 </div>
@@ -382,7 +382,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input id="id_catalogo_tejido" name="id_catalogo_tejido" value=${id_catalogo_tejido} disabled="true">
+                            <input id="id_catalogo_tejido" name="id_catalogo_tejido" class="form-control" value=${id_catalogo_tejido} disabled="true">
                         </div>
                     </div>
                 </div>

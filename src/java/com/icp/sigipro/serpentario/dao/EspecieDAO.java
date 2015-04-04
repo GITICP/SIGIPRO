@@ -55,13 +55,21 @@ public class EspecieDAO {
     public boolean eliminarEspecie(int id_especie) throws SIGIPROException{
         boolean resultado = false;
         try{
+            PreparedStatement consultaVeneno = getConexion().prepareStatement(
+                    " DELETE FROM serpentario.venenos " +
+                    " WHERE id_especie=?; "
+            );
             PreparedStatement consulta = getConexion().prepareStatement(
                     " DELETE FROM serpentario.especies " +
                     " WHERE id_especie=?; "
             );
+            consultaVeneno.setInt(1, id_especie);
             consulta.setInt(1, id_especie);
-            if ( consulta.executeUpdate() == 1){
-                resultado = true;
+            if ( consultaVeneno.executeUpdate() == 1){
+                if(consulta.executeUpdate() == 1){
+                    resultado = true;
+                }
+                
             }
             consulta.close();
             conexion.close();

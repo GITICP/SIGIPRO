@@ -82,6 +82,7 @@
                               <td>${lote.getCantidad_actual()} gramos</td>
                             </tr>
                           </c:forEach>
+                            
                         </tbody>
                       </table>
                     </div>

@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div class="input-group">
-                                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" value="${coleccionhumeda.getId_coleccion_humeda()}" disabled="true">
+                                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" class="form-control" value="${coleccionhumeda.getId_coleccion_humeda()}" disabled="true">
                                         </div>
                                     </div>
                                 </div>

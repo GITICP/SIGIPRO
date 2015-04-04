@@ -41,7 +41,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Extraccion?accion=agregar">Agregar Extraccion</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Extraccion?accion=agregar">Agregar Extracción</a>
                 </div>
               </c:if>
             </div>
@@ -51,10 +51,10 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Numero de Extraccion</th>
+                    <th>Número de Extracción</th>
                     <th>Especie</th>
                     <th>Es de Colección Viva</th>
-                    <th>Fecha de Extraccion</th>
+                    <th>Fecha de Extracción</th>
                     <th>Volumen Extraído (mL)</th>
                     <th>Usuario de Registro</th>
                     <th>Fecha de Registro</th>

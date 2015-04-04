@@ -21,9 +21,9 @@ CREATE TABLE serpentario.serpientes(
     colectada character varying (45) NOT NULL,
     recibida character varying (45) NOT NULL,
     sexo character varying(10) NOT NULL,
-    talla_cabeza float,
-    talla_cola float,
-    peso float,
+    talla_cabeza decimal,
+    talla_cola decimal,
+    peso decimal,
     imagen bytea
 );
     
@@ -58,7 +58,7 @@ CREATE TABLE serpentario.extraccion(
     id_especie integer NOT NULL,
     ingreso_CV boolean NOT NULL,
     fecha_extraccion date NOT NULL,
-    volumen_extraido float,
+    volumen_extraido decimal,
     id_usuario_registro integer,
     fecha_registro date,
     id_lote integer
@@ -92,7 +92,7 @@ ALTER TABLE ONLY serpentario.eventos ADD CONSTRAINT fk_id_extraccion FOREIGN KEY
 
 CREATE TABLE serpentario.centrifugado(
     id_extraccion integer NOT NULL,
-    volumen_recuperado float NOT NULL,
+    volumen_recuperado decimal NOT NULL,
     id_usuario integer NOT NULL,
     fecha_volumen_recuperado date NOT NULL
 );
@@ -101,7 +101,7 @@ CREATE TABLE serpentario.liofilizacion(
     id_extraccion integer NOT NULL,
     id_usuario_inicio integer NOT NULL,
     fecha_inicio date NOT NULL,
-    peso_recuperado float,
+    peso_recuperado decimal,
     id_usuario_fin integer,
     fecha_fin date
 );
@@ -141,7 +141,7 @@ CREATE TABLE serpentario.venenos(
     id_veneno serial NOT NULL,
     id_especie integer NOT NULL,
     restriccion boolean NOT NULL,
-    cantidad_maxima float
+    cantidad_maxima decimal
 );
 
 ALTER TABLE ONLY serpentario.venenos ADD CONSTRAINT pk_id_veneno PRIMARY KEY (id_veneno);
@@ -159,7 +159,7 @@ CREATE TABLE serpentario.solicitudes(
     id_solicitud serial NOT NULL,
     fecha_solicitud date NOT NULL,
     id_especie integer NOT NULL,
-    cantidad float NOT NULL,
+    cantidad decimal NOT NULL,
     id_usuario integer NOT NULL,
     proyecto character varying(200),
     estado character varying(15),
@@ -178,7 +178,7 @@ CREATE TABLE serpentario.entregas_solicitud(
     id_solicitud integer NOT NULL,
     id_usuario_entrega integer NOT NULL,
     fecha_entrega date NOT NULL,
-    cantidad_entregada float NOT NULL,
+    cantidad_entregada decimal NOT NULL,
     id_usuario_recibo integer
 );
 
@@ -193,7 +193,7 @@ ALTER TABLE ONLY serpentario.entregas_solicitud ADD CONSTRAINT fk_id_usuario_rec
 CREATE TABLE serpentario.lotes_entregas_solicitud(
     id_entrega integer NOT NULL,
     id_lote integer NOT NULL,
-    cantidad float NOT NULL
+    cantidad decimal NOT NULL
 );
 
 ALTER TABLE ONLY serpentario.lotes_entregas_solicitud ADD CONSTRAINT pk_lotes_entregas_solicitud PRIMARY KEY (id_entrega,id_lote);
@@ -269,7 +269,7 @@ UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' W
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 300, 'Especie', '/Serpentario/Especie');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (302, 300, 'Serpiente', '/Serpentario/Serpiente');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (303, 300, 'Extraccion', '/Serpentario/Extraccion');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (303, 300, 'Extracción', '/Serpentario/Extraccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (304, 300, 'Lote', '/Serpentario/Lote');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (305, 300, 'Veneno', '/Serpentario/Veneno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (306, 300, 'Solicitud Veneno', '/Serpentario/SolicitudVeneno');
@@ -281,6 +281,7 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (301, 301);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (310, 302);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (311, 302);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (312, 302);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (320, 303);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (321, 303);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (330, 304);

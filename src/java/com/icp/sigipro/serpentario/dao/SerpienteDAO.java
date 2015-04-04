@@ -172,11 +172,12 @@ public class SerpienteDAO {
         try{
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE serpentario.coleccion_humeda " +
-                  " SET observaciones=? " +
+                  " SET proposito=?, observaciones=? " +
                   " WHERE id_coleccion_humeda=?; ");
 
-            consulta.setString(1, ch.getObservaciones());
-            consulta.setInt(2, ch.getId_coleccion_humeda());
+            consulta.setString(2, ch.getObservaciones());
+            consulta.setString(1, ch.getProposito());
+            consulta.setInt(3, ch.getId_coleccion_humeda());
 
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
@@ -201,7 +202,12 @@ public class SerpienteDAO {
                 resultado=true;
                 int currval = resultadoConsulta.getInt("last_value");
                 if (currval==1){
-                    nextval = currval;
+                    List<Serpiente> serpientes = this.obtenerSerpientes();
+                    if (serpientes == null){
+                        nextval = currval;
+                    }else{
+                        nextval = currval + 1;
+                    }
                 }else{
                     nextval = currval + 1;
                 }

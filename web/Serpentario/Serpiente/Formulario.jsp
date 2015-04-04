@@ -13,7 +13,7 @@
         <input hidden="true" name="accion" value="${accion}">
         <c:choose>
             <c:when test="${serpiente.getId_serpiente()!=0}">
-                <label for="numero_ingreso" class="control-label">*Numero de Ingreso</label>
+                <label for="numero_ingreso" class="control-label">*Número de Ingreso</label>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">

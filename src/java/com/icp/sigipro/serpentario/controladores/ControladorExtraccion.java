@@ -250,7 +250,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
                 for (UsuariosExtraccion i:usuariosextraccion){
                     bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_USUARIOSEXTRACCION,request.getRemoteAddr());
                 }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Extraccion agregada correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Extracción agregada correctamente"));
                 redireccion = "Extraccion/index.jsp";
                 request.setAttribute("id_extraccion", e.getId_extraccion());
             }
@@ -258,7 +258,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
             this.getEditarserpientes(request, response,e.getId_extraccion());
         
         }catch(Exception e){
-            request.setAttribute("mensaje", helper.mensajeDeError("Problemas con el numero de extraccion."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Problemas con el numero de extracción."));
             String redireccion = "Extraccion/index.jsp";
             List<Extraccion> extracciones = dao.obtenerExtracciones();
             request.setAttribute("listaExtracciones", extracciones);
@@ -288,7 +288,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
             //Funcion que genera la bitacora
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
             //*----------------------------*
-            request.setAttribute("mensaje", helper.mensajeDeExito("Extraccion editada correctamente"));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Extracción editada correctamente"));
             redireccion = "Extraccion/index.jsp";
         }
         request.setAttribute("listaExtracciones", dao.obtenerExtracciones());

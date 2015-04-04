@@ -35,6 +35,8 @@ public class ControladorEspecie extends SIGIPROServlet {
     //-----------------
     private EspecieDAO dao = new EspecieDAO();
     private VenenoDAO venenodao = new VenenoDAO();
+    
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
     protected final Class clase = ControladorEspecie.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -124,6 +126,7 @@ public class ControladorEspecie extends SIGIPROServlet {
             //----------------------------
             
             List<Especie> especies = dao.obtenerEspecies();
+            request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente eliminada correctamente"));        
             request.setAttribute("listaEspecies", especies);
             redireccionar(request, response, redireccion);
         }
@@ -143,7 +146,6 @@ public class ControladorEspecie extends SIGIPROServlet {
         Especie e = construirObjeto(request);
         resultado = dao.insertarEspecie(e);
         
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado){
             request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente agregada correctamente"));        
             redireccion = "Especie/index.jsp";

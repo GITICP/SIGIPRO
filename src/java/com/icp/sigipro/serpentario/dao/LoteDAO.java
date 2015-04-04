@@ -10,6 +10,7 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.serpentario.modelos.Lote;
+import com.icp.sigipro.serpentario.modelos.Serpiente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,7 +62,12 @@ public class LoteDAO {
                 resultado=true;
                 int currval = resultadoConsulta.getInt("last_value");
                 if (currval==1){
-                    nextval = currval;
+                    List<Lote> lotes = this.obtenerLotes();
+                    if (lotes == null){
+                        nextval = currval;
+                    }else{
+                        nextval = currval + 1;
+                    }
                 }else{
                     nextval = currval + 1;
                 }
