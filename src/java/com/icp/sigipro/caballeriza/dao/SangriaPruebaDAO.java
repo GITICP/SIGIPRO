@@ -151,7 +151,7 @@ public class SangriaPruebaDAO
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("  select nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.sangrias_pruebas_caballos ecc on c.id_caballo = ecc.id_caballo where id_sangria_prueba=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement("select nombre, numero_microchip,hematrocito, hemoglobina from caballeriza.caballos c left outer join caballeriza.sangrias_pruebas_caballos ecc on c.id_caballo = ecc.id_caballo where id_sangria_prueba=?; ");
             consulta.setInt(1, id_sangria_prueba);
             ResultSet rs = consulta.executeQuery();
 
@@ -159,6 +159,8 @@ public class SangriaPruebaDAO
                 Caballo caballo = new Caballo();
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setHematrocito(rs.getBigDecimal("hematrocito"));
+                caballo.setHemoglibina(rs.getBigDecimal("hemoglobina"));
                 resultado.add(caballo);
             }
             rs.close();

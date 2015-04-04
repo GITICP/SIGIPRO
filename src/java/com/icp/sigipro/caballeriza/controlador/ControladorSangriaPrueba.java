@@ -107,14 +107,6 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
         validarPermiso(60, listaPermisos);
         String redireccion = "EventoClinico/Editar.jsp";
         int id_evento = Integer.parseInt(request.getParameter("id_evento"));
-        //EventoClinico eventoclinico = dao.obtenerEventoClinico(id_evento);
-        //TipoEventoDAO tipodao = new TipoEventoDAO();
-        //UsuarioDAO usrDAO = new UsuarioDAO();
-        //List<TipoEvento> listatipos = tipodao.obtenerTiposEventos();
-        //List<Usuario> listaresponsables = usrDAO.obtenerUsuarios();
-        //request.setAttribute("listatipos", listatipos);
-        //request.setAttribute("evento", eventoclinico);
-        //request.setAttribute("listaresponsables", listaresponsables);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
     }

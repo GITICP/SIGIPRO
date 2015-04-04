@@ -79,12 +79,44 @@ CREATE TABLE caballeriza.sangrias_pruebas (
     id_inoculo integer not null
 );
 
+
 CREATE TABLE caballeriza.sangrias_pruebas_caballos (
     id_sangria_prueba integer NOT NULL,
     id_caballo integer NOT NULL,
     hematrocito decimal,
     hemoglobina decimal 
     
+);
+
+CREATE TABLE caballeriza.sangrias (
+    id_sangria integer not null,
+    id_sangria_prueba integer not null,
+    fecha_dia1 date,
+    fecha_dia2 date,
+    fecha_dia3 date,
+    hematrocito_promedio decimal,
+    num_inf_cc integer,
+    responsable character varying(45) NOT NULL,
+    cantidad_de_caballos integer,
+    sangre_total decimal,
+    peso_plasma_total decimal,
+    volumen_plasma_total decimal,
+    plasma_por_caballo decimal,
+    potencia decimal
+    
+);
+CREATE TABLE caballeriza.sangrias_caballos (
+    id_sangria integer NOT NULL,
+    id_caballo integer NOT NULL,
+    sangre_dia1 decimal,
+    plasma_dia1 decimal,
+    LAL_dia1 decimal,
+    sangre_dia2 decimal,
+    plasma_dia2 decimal,
+    LAL_dia2 decimal,
+    sangre_dia3 decimal,
+    plasma_dia3 decimal,
+    LAL_dia3 decimal 
 );
 
 --Llaves primarias esquema caballeriza
@@ -97,6 +129,8 @@ ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos  ADD CONSTRAINT pk_evento
 ALTER TABLE ONLY caballeriza.tipos_eventos  ADD CONSTRAINT pk_tipos_eventos PRIMARY KEY (id_tipo_evento);
 ALTER TABLE ONLY caballeriza.sangrias_pruebas  ADD CONSTRAINT pk_sangrias_pruebas PRIMARY KEY (id_sangria_prueba);
 ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangrias_pruebas_caballos PRIMARY KEY (id_sangria_prueba,id_caballo);
+ALTER TABLE ONLY caballeriza.sangrias  ADD CONSTRAINT pk_sangrias PRIMARY KEY (id_sangria);
+ALTER TABLE ONLY caballeriza.sangrias_caballos  ADD CONSTRAINT pk_sangrias_caballos PRIMARY KEY (id_sangria,id_caballo);
 
 
 --Indices unicos esquema caballeriza
@@ -117,7 +151,9 @@ ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIG
 ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
 ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
 ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
-
+ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
+ALTER TABLE ONLY caballeriza.sangrias_caballos ADD CONSTRAINT fk_id_sangria FOREIGN KEY (id_sangria) REFERENCES caballeriza.sangrias(id_sangria);
+ALTER TABLE ONLY caballeriza.sangrias_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 
 --Permisos
 
@@ -138,8 +174,12 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (56, '[Ca
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (57, '[Caballeriza]AgregarInoculo', 'Permite agregar un Inóculo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (58, '[Caballeriza]EditarInoculo', 'Permite editar un Inóculo');
 
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (59, '[Caballeriza]AgregarSangriaPrueba', 'Permite agregar una Sangría');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (60, '[Caballeriza]EditarSangriaPrueba', 'Permite editar una Sangría');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (59, '[Caballeriza]AgregarSangriaPrueba', 'Permite agregar una Sangría de Prueba');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (60, '[Caballeriza]EditarSangriaPrueba', 'Permite editar una Sangría de Prueba');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (61, '[Caballeriza]AgregarSangria', 'Permite agregar una Sangría');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (62, '[Caballeriza]EditarSangria', 'Permite editar una Sangría');
+
 --Menu
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Caballeriza/TipoEvento' WHERE id_menu_principal = 400;
@@ -151,7 +191,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (404, 400, 'Eventos Clínicos', '/Caballeriza/EventoClinico');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (405, 400, 'Inóculos', '/Caballeriza/Inoculo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba');
-
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (407, 400, 'Sangría', '/Caballeriza/Sangria');
 ------Permisos Menu Principal
 
 --TipoEvento
@@ -169,3 +209,5 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (58, 405);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (59, 406);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (61, 407);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (62, 407);
