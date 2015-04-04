@@ -134,53 +134,46 @@
                         <input type="text" id="cepa1"  name="cepa1" hidden="true">
                         ${mensaje_auth}
 
-                        <label for="usr" class="control-label">Usuario</label>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="input-group" style="display:table;">
-                                    <input type="text" id="usr"  name="usr" required
+                        <table class="tabla-modal">
+                            <tr>
+                                <td><label for="usr" class="control-label">Usuario</label></td>
+                                <td><input class="form-control" type="text" id="usr"  name="usr" required
                                            oninvalid="setCustomValidity('Este campo es requerido ')"
                                            onchange="setCustomValidity('')">
-                                </div>
-                            </div>
-                        </div>
-                        <label for="passw" class="control-label">Contraseña</label>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="input-group" style="display:table;">
-                                    <input type="password" id="passw" name="passw" required
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="passw" class="control-label">Contraseña</label></td>
+                                <td><input class="form-control" type="password" id="passw" name="passw" required
                                            oninvalid="setCustomValidity('Este campo es requerido ')"
-                                           onchange="setCustomValidity('')">
-                                </div>
-                                <p id='mensajeValidación' style='color:red;'><p>
-                            </div>
-                        </div>
-
+                                           onchange="setCustomValidity('')"><p id='mensajeValidación' style='color:red;'> </p></td>
+                            </tr>
+                        </table>
                         <hr>
                         <h4> Información sobre la entrega </h4>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <label for="num-sol" class="control-label"> Número de Solicitud: </label>  
-                                <input type="text" id="num-sol"  name="num_sol" disabled>
-                            </div>
-                            <div class="col-sm-12">
-                                <label for="usr-sol" class="control-label"> Numero de animales: </label>
-                                <input type="text" id="usr-sol"  name="num_an" disabled>
-                            </div>
-                            <div class="col-sm-12">
-                                <label for="prd" class="control-label"> Peso:  </label>
-                                <input type="text" id="prd"  name="peso" disabled>
-                            </div>
-                            <div class="col-sm-12">
-                                <label for="cnt" class="control-label"> Numero Cajas: </label>
-                                <input type="text" id="cnt"  name="cajas" disabled>
-                            </div>
-                            <div class="col-sm-12">
-                                <label for="cnt" class="control-label"> Sexo: </label>
-                                <input type="text" id="sex"  name="sex" disabled>
-                            </div>
+                        <table class="tabla-modal">
+                            <tr>
+                                <td><label for="num-sol" class="control-label"> Número de Solicitud: </label></td>
+                                <td><input class="form-control" type="text" id="num-sol"  name="num_sol" disabled></td>
+                            </tr>
+                            <tr>
+                                <td><label for="usr-sol" class="control-label"> Numero de animales: </label></td>
+                                <td><input class="form-control" type="text" id="usr-sol"  name="num_an" disabled></td>
+                            </tr>
+                            <tr>
+                                <td><label for="prd" class="control-label"> Peso:  </label></td>
+                                <td><input class="form-control" type="text" id="prd"  name="peso" disabled></td>
+                            </tr>
+                            <tr>
+                                <td><label for="cnt" class="control-label"> Numero Cajas: </label></td>
+                                <td><input class="form-control" type="text" id="cnt"  name="cajas" disabled></td>
+                            </tr>
+                            <tr>
+                                <td><label for="cnt" class="control-label"> Sexo: </label></td>
+                                <td><input class="form-control" type="text" id="sex"  name="sex" disabled></td>
+                            </tr>
                             <input type="text" id="cepa"  name="cepa" disabled hidden="true">
-                        </div>
+                        </table>
 
                         <div class="form-group">
                             <div class="modal-footer">
