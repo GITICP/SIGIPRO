@@ -46,5 +46,11 @@ public class HelperFechas
         
         return fecha_sql;
     }
+    
+    public Date getFecha_hoy() {
+        java.util.Date hoy = new java.util.Date();
+        Date hoysql = new Date(hoy.getTime());
+        return hoysql;
+    }
 
 }
