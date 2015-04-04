@@ -20,24 +20,26 @@ import org.postgresql.util.PSQLException;
  *
  * @author Walter
  */
-
 //Cada DAO tiene su propia conexion a la Bitacora
-public class ActivoFijoDAO {
+public class ActivoFijoDAO
+{
 
     private Connection conexion;
 
-    public ActivoFijoDAO() {
+    public ActivoFijoDAO()
+    {
         SingletonBD s = SingletonBD.getSingletonBD();
         conexion = s.conectar();
     }
-    
-    public boolean insertarActivoFijo(ActivoFijo a) throws SIGIPROException {
+
+    public boolean insertarActivoFijo(ActivoFijo a) throws SIGIPROException
+    {
 
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.activos_fijos (placa, equipo, marca, fecha_movimiento, id_seccion, id_ubicacion, fecha_registro, estado, responsable, numero_serie) "
-                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
+                                                                        + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_activo_fijo");
 
             consulta.setString(1, a.getPlaca());
             consulta.setString(2, a.getEquipo());
@@ -46,13 +48,10 @@ public class ActivoFijoDAO {
             String strFecha = a.getFecha_movimiento();
             Date fecha = null;
             try {
-
                 fecha = formatoFecha.parse(strFecha);
-
-            } catch (Exception ex) {
-
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
-
             }
             java.sql.Date fMovimientoSQL = new java.sql.Date(fecha.getTime());
             consulta.setDate(4, fMovimientoSQL);
@@ -68,28 +67,31 @@ public class ActivoFijoDAO {
             if (resultadoConsulta.next()) {
                 resultado = true;
                 a.setId_activo_fijo(resultadoConsulta.getInt("id_activo_fijo"));
-                
             }
+            resultadoConsulta.close();
             consulta.close();
-            conexion.close();
-        } catch (PSQLException ex) {
-           throw new SIGIPROException("Esta placa ya existe en el sistema");
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (PSQLException ex) {
+            throw new SIGIPROException("Esta placa ya existe en el sistema");
+        }
+        catch (Exception ex) {
             Logger.getLogger(ActivoFijoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
     }
-  public boolean editarActivoFijo(ActivoFijo a){
-    
-    boolean resultado = false;
-    
-    try{
-      PreparedStatement consulta = getConexion().prepareStatement(
-              " UPDATE bodega.activos_fijos SET placa=?, equipo=?, marca=?, fecha_movimiento=?, " + 
-              " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=?, responsable=?, numero_serie=? " +
-              " WHERE id_activo_fijo=?; "
 
-      );
+    public boolean editarActivoFijo(ActivoFijo a)
+    {
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE bodega.activos_fijos SET placa=?, equipo=?, marca=?, fecha_movimiento=?, "
+                    + " id_seccion=?, id_ubicacion=?, fecha_registro=?, estado=?, responsable=?, numero_serie=? "
+                    + " WHERE id_activo_fijo=?; "
+            );
             consulta.setString(1, a.getPlaca());
             consulta.setString(2, a.getEquipo());
             consulta.setString(3, a.getMarca());
@@ -97,13 +99,10 @@ public class ActivoFijoDAO {
             String strFecha = a.getFecha_movimiento();
             Date fecha = null;
             try {
-
                 fecha = formatoFecha.parse(strFecha);
-
-            } catch (Exception ex) {
-
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
-
             }
             java.sql.Date fMovimientoSQL = new java.sql.Date(fecha.getTime());
             consulta.setDate(4, fMovimientoSQL);
@@ -112,23 +111,25 @@ public class ActivoFijoDAO {
             java.util.Date fRegistro = formatoFecha.parse(a.getFecha_registro());
             java.sql.Date fRegistroSQL = new java.sql.Date(fRegistro.getTime());
             consulta.setDate(7, fRegistroSQL);
-            consulta.setString(8, a.getEstado()); 
-            consulta.setString(9, a.getResponsable()); 
-            consulta.setString(10, a.getSerie()); 
+            consulta.setString(8, a.getEstado());
+            consulta.setString(9, a.getResponsable());
+            consulta.setString(10, a.getSerie());
             consulta.setInt(11, a.getId_activo_fijo());
-      
-      if ( consulta.executeUpdate() == 1){
-        resultado = true;
-      }
-      consulta.close();
-      conexion.close();
+
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
     }
-    catch(Exception ex){
-      ex.printStackTrace();
-    }
-    return resultado;
-  }
-    public boolean eliminarActivoFijo(int id_activo_fijo) throws SIGIPROException{
+
+    public boolean eliminarActivoFijo(int id_activo_fijo) throws SIGIPROException
+    {
 
         boolean resultado = false;
 
@@ -142,18 +143,21 @@ public class ActivoFijoDAO {
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
-            } else {
+            }
+            else {
                 throw new SIGIPROException("El activo que está intentando eliminar no existe.");
             }
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public ActivoFijo obtenerActivoFijo(int id_activo_fijo) {
+    public ActivoFijo obtenerActivoFijo(int id_activo_fijo)
+    {
 
         ActivoFijo activo = new ActivoFijo();
 
@@ -175,16 +179,16 @@ public class ActivoFijoDAO {
                 activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
                 PreparedStatement consultaSeccion = conexion.prepareStatement(" Select nombre_seccion "
-                        + " From seguridad.secciones"
-                        + " Where id_seccion = ? ");
+                                                                              + " From seguridad.secciones"
+                                                                              + " Where id_seccion = ? ");
                 consultaSeccion.setInt(1, rs.getInt("id_seccion"));
                 ResultSet resultadoConsultaSeccion = consultaSeccion.executeQuery();
                 resultadoConsultaSeccion.next();
                 String seccion = resultadoConsultaSeccion.getString("nombre_seccion");
                 activo.setNombre_seccion(seccion);
                 PreparedStatement consultaUbicacion = conexion.prepareStatement(" Select nombre "
-                        + " From bodega.ubicaciones"
-                        + " Where id_ubicacion = ? ");
+                                                                                + " From bodega.ubicaciones"
+                                                                                + " Where id_ubicacion = ? ");
                 consultaUbicacion.setInt(1, rs.getInt("id_ubicacion"));
                 ResultSet resultadoConsultaUbicacion = consultaUbicacion.executeQuery();
                 resultadoConsultaUbicacion.next();
@@ -193,13 +197,18 @@ public class ActivoFijoDAO {
                 activo.setResponsable(rs.getString("responsable"));
                 activo.setSerie(rs.getString("numero_serie"));
             }
-        } catch (Exception ex) {
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return activo;
     }
 
-    public List<ActivoFijo> obtenerActivosFijos() {
+    public List<ActivoFijo> obtenerActivosFijos()
+    {
 
         List<ActivoFijo> resultado = new ArrayList<ActivoFijo>();
 
@@ -223,33 +232,36 @@ public class ActivoFijoDAO {
 
                 resultado.add(activo);
             }
-
+            rs.close();
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-        public boolean eliminarMasivo(String ids) throws SIGIPROException {
+
+    public boolean eliminarMasivo(String ids) throws SIGIPROException
+    {
         boolean resultado = false;
         try {
             getConexion().setAutoCommit(false);
-            
+
             PreparedStatement consulta_eliminar = getConexion().prepareStatement("DELETE FROM bodega.activos_fijos WHERE id_activo_fijo = ?;");
-            
+
             String[] ids_parseados = parsearAsociacion("#af#", ids);
-            
+
             for (int i = 0; i < ids_parseados.length; i++) {
                 consulta_eliminar.setInt(1, Integer.parseInt(ids_parseados[i]));
                 consulta_eliminar.addBatch();
             }
-            
+
             int[] resultados = consulta_eliminar.executeBatch();
-            
+            consulta_eliminar.close();
+
             boolean ciclo_break = false;
-            
+
             for (int i = 0; i < resultados.length; i++) {
                 if (resultados[i] != 1) {
                     ciclo_break = true;
@@ -257,56 +269,78 @@ public class ActivoFijoDAO {
                 }
             }
             
-            if(ciclo_break) {
+
+            if (ciclo_break) {
                 resultado = false;
-            } else {
+            }
+            else {
                 resultado = true;
             }
-            
-        } catch(SQLException ex) {
+
+        }
+        catch (SQLException ex) {
             try {
                 getConexion().rollback();
-                
+
                 // Mapear mensaje.
                 throw new SIGIPROException("No se pudo eliminar debido a que el activo fijo se referencia con otros registros.");
-            } catch(SQLException roll_ex) {
+            }
+            catch (SQLException roll_ex) {
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
-        } finally {
+        }
+        finally {
             try {
-                if(resultado) {
+                if (resultado) {
                     getConexion().commit();
                     getConexion().close();
-                } else {
+                }
+                else {
                     getConexion().rollback();
                     getConexion().close();
                     throw new SIGIPROException("Ocurrió un error a la hora de eliminar los activos fijos. Inténtelo nuevamente.");
                 }
-            } catch (SQLException roll_ex) {
+            }
+            catch (SQLException roll_ex) {
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
         }
         return resultado;
     }
-    
-    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas){
+
+    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas)
+    {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
     }
 
-    private Connection getConexion() {
+    private Connection getConexion()
+    {
         try {
 
             if (conexion.isClosed()) {
                 SingletonBD s = SingletonBD.getSingletonBD();
                 conexion = s.conectar();
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             conexion = null;
         }
 
         return conexion;
     }
 
-
+    private void cerrarConexion()
+    {
+        if (conexion != null) {
+            try {
+                if (conexion.isClosed()) {
+                    conexion.close();
+                }
+            }
+            catch (Exception ex) {
+                conexion = null;
+            }
+        }
+    }
 }
