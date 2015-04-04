@@ -22,7 +22,6 @@ public class EntregaConejera {
   private int numero_animales;
   private String peso;
   private String sexo;
-  private String cepa;
   private Usuario usuario_recipiente;
 
   public String parseJSON(){
@@ -103,14 +102,6 @@ public class EntregaConejera {
 
   public void setSexo(String sexo) {
     this.sexo = sexo;
-  }
-
-  public String getCepa() {
-    return cepa;
-  }
-
-  public void setCepa(String cepa) {
-    this.cepa = cepa;
   }
 
   public Usuario getUsuario_recipiente() {

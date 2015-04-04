@@ -98,8 +98,7 @@ CREATE TABLE bioterio.solicitudes_conejera(
 	fecha_solicitud date NOT NULL,
 	numero_animales integer NOT NULL,
 	peso_requerido integer NOT NULL,
-	sexo character varying(10) NOT NULL,
-	cepa character varying(30) NOT NULL, 
+	sexo character varying(10) NOT NULL, 
 	usuario_solicitante integer NOT NULL,
 	observaciones character varying(200),
 	observaciones_rechazo character varying(200),
@@ -113,7 +112,6 @@ CREATE TABLE bioterio.solicitudes_conejera(
 	numero_animales integer NOT NULL,
 	peso integer NOT NULL,
 	sexo character varying(10) NOT NULL,
-	cepa character varying(30) NOT NULL, 
 	usuario_recipiente integer NOT NULL
  );
 
@@ -198,7 +196,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (206, 200, 'Análisis', '/Bioterio/AnalisisParasitologico?especie=True'); --análisis de los ratones
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (251, 250, 'Cajas', '/Conejera/Cajas');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (252, 250, 'Machos', '/Conejera/Machos');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (253, 250, 'Solicitudes', '/Conejera/Solicitudes');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (253, 250, 'Solicitudes', '/Conejera/SolicitudesConejera');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (255, 250, 'Análisis', '/Bioterio/AnalisisParasitologico?especie=False'); --análisis de los conejos
 
 --Permisos del menu principal de Bioterio
