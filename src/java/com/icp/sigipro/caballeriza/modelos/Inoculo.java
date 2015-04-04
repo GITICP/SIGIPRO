@@ -9,6 +9,8 @@ import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -27,11 +29,13 @@ public class Inoculo {
     private String encargado_preparacion;
     private String encargado_inyeccion;
     private Date fecha;
+    private GrupoDeCaballos grupo_de_caballos;
+    private List<Caballo> caballos;
 
     public Inoculo() {
     }
 
-    public Inoculo(int id_inoculo, String mnn, String baa, String bap, String cdd, String lms, String tetox, String otro, String encargado_preparacion, String encargado_inyeccion, Date fecha) {
+    public Inoculo(int id_inoculo, String mnn, String baa, String bap, String cdd, String lms, String tetox, String otro, String encargado_preparacion, String encargado_inyeccion, Date fecha, GrupoDeCaballos grupo_de_caballos) {
         this.id_inoculo = id_inoculo;
         this.mnn = mnn;
         this.baa = baa;
@@ -43,6 +47,7 @@ public class Inoculo {
         this.encargado_preparacion = encargado_preparacion;
         this.encargado_inyeccion = encargado_inyeccion;
         this.fecha = fecha;
+        this.grupo_de_caballos = grupo_de_caballos;
     }
 
 
@@ -139,7 +144,31 @@ public class Inoculo {
         this.fecha = fecha;
     }
 
+    public GrupoDeCaballos getGrupo_de_caballos() {
+        return grupo_de_caballos;
+    }
 
+    public void setGrupo_de_caballos(GrupoDeCaballos grupo_de_caballos) {
+        this.grupo_de_caballos = grupo_de_caballos;
+    }
+
+    public List<Caballo> getCaballos()
+    {
+        return caballos;
+    }
+
+    public void setCaballos(List<Caballo> caballos)
+    {
+        this.caballos = caballos;
+    }
+    
+    public void agregarCaballo(Caballo c) {
+        if (this.caballos == null){
+            this.caballos = new ArrayList<Caballo>();
+        }
+        this.caballos.add(c);
+        
+    }
     
 
 //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
@@ -155,7 +184,9 @@ public class Inoculo {
                 }else{
                     JSON.put("id_objeto", field.get(this));
                 }
-            }          
+            }
+            JSON.put("id_grupo_de_caballos",this.grupo_de_caballos.getId_grupo_caballo());
+
         }catch (Exception e){
             
         }

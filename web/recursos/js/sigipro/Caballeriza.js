@@ -67,6 +67,10 @@ function eliminarCaballo(id) {
 
     $("#seleccioncaballo").append(nuevaOpcion);
 }
+function eliminarCaballoSP(id_caballo) {
+  fila = $('#' + id_caballo);
+  fila.remove();
+}
 
 
 function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
@@ -95,3 +99,45 @@ $(document).ready(function(){
         $("textarea ").val(split[1]);
 });
 });
+function confirmacionAgregarCaballos() {
+    serpientesCodificados = "";
+    $('#datatable-column-filter-permisos > tbody > tr').each(function ()
+    
+    {
+      fila = $(this);
+      serpientesCodificados += fila.attr('id');
+      serpientesCodificados += "#r#";
+    });
+    $('#caballos').val(serpientesCodificados.slice(0, -3));
+    //alert("El valor del campo escondido de permisos es: "+ $('#permisosRol').val());
+}
+$(document).ready(function () {
+
+    $("select[name='inoculogrupo']").on('change', function () {
+        document.getElementById("seleccionInoculoCaballo").disabled = false;
+        id_grupo = this.value;
+        seleccion = document.getElementById("seleccionInoculoCaballo");
+        opciones = seleccion.getElementsByTagName("optgroup");
+        for (i = 0; i < opciones.length; i++) //recoremos todos los controles
+        {
+            id_opt = opciones[i].id;
+            if (opciones[i].id != id_grupo) //solo si es un checkbox entramos
+            {
+                $("select#seleccionInoculoCaballo option[id=" + id_opt + "]").remove();
+                //opciones[i].disable = true; //si es un checkbox le damos el valor del checkbox que lo llamó (Marcar/Desmarcar Todos)
+            }
+
+        }
+        document.getElementById("seleccionInoculoGrupo").disabled = true;
+    });
+});
+//$(document).ready(function () {
+//
+//    $("select[name='inoculo']").on('change', function () {
+//        document.getElementById("sangriap_caballos").hidden = false;
+//        id_inoculo = this.value;
+//        tabla = document.getElementById("sangriap_caballos");
+//        filas = tabla.getElementsByTagName("tr");
+////        document.getElementById("seleccionInoculoGrupo").disabled = true;
+//    });
+//});

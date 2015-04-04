@@ -34,7 +34,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> ${inoculo.getId_inoculo()} </h3>
+                            <h3><i class="fa fa-book"></i> ${inoculo.getId_inoculo()} </h3>
                             <div class="btn-group widget-header-toolbar">
 
                                 <c:set var="contienePermisoEditar" value="false" />
@@ -66,7 +66,7 @@
                             <br>
                             <div class="widget widget-table">
                                 <div class="widget-header">
-                                    <h3><i class="fa fa-check"></i> Caballos del Evento Clínico </h3>
+                                    <h3><i class="fa fa-check"></i> Caballos del Inóculo </h3>
                                 </div>
                                 <div class="widget-content">
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">

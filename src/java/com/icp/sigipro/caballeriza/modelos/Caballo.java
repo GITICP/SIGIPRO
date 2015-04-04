@@ -6,6 +6,7 @@
 package com.icp.sigipro.caballeriza.modelos;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -55,6 +56,17 @@ public class Caballo {
     private Blob fotografia;
     private String estado;
     private GrupoDeCaballos grupo_de_caballos;
+    private BigDecimal hematrocito;
+    private BigDecimal hemoglibina;
+    private BigDecimal sangre_dia1;
+    private BigDecimal plasma_dia1;
+    private BigDecimal LAL_dia1;
+    private BigDecimal sangre_dia2;
+    private BigDecimal plasma_dia2;
+    private BigDecimal LAL_dia2;
+    private BigDecimal sangre_dia3;
+    private BigDecimal plasma_dia3;
+    private BigDecimal LAL_dia3;
 
     public Caballo() {
     }
@@ -192,5 +204,94 @@ public class Caballo {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
     }
+
+    public BigDecimal getHematrocito() {
+        return hematrocito;
+    }
+
+    public void setHematrocito(BigDecimal hematrocito) {
+        this.hematrocito = hematrocito;
+    }
+
+    public BigDecimal getHemoglibina() {
+        return hemoglibina;
+    }
+
+    public void setHemoglibina(BigDecimal hemoglibina) {
+        this.hemoglibina = hemoglibina;
+    }
+
+    public BigDecimal getSangre_dia1() {
+        return sangre_dia1;
+    }
+
+    public void setSangre_dia1(BigDecimal sangre_dia1) {
+        this.sangre_dia1 = sangre_dia1;
+    }
+
+    public BigDecimal getPlasma_dia1() {
+        return plasma_dia1;
+    }
+
+    public void setPlasma_dia1(BigDecimal plasma_dia1) {
+        this.plasma_dia1 = plasma_dia1;
+    }
+
+    public BigDecimal getLAL_dia1() {
+        return LAL_dia1;
+    }
+
+    public void setLAL_dia1(BigDecimal LAL_dia1) {
+        this.LAL_dia1 = LAL_dia1;
+    }
+
+    public BigDecimal getSangre_dia2() {
+        return sangre_dia2;
+    }
+
+    public void setSangre_dia2(BigDecimal sangre_dia2) {
+        this.sangre_dia2 = sangre_dia2;
+    }
+
+    public BigDecimal getPlasma_dia2() {
+        return plasma_dia2;
+    }
+
+    public void setPlasma_dia2(BigDecimal plasma_dia2) {
+        this.plasma_dia2 = plasma_dia2;
+    }
+
+    public BigDecimal getLAL_dia2() {
+        return LAL_dia2;
+    }
+
+    public void setLAL_dia2(BigDecimal LAL_dia2) {
+        this.LAL_dia2 = LAL_dia2;
+    }
+
+    public BigDecimal getSangre_dia3() {
+        return sangre_dia3;
+    }
+
+    public void setSangre_dia3(BigDecimal sangre_dia3) {
+        this.sangre_dia3 = sangre_dia3;
+    }
+
+    public BigDecimal getPlasma_dia3() {
+        return plasma_dia3;
+    }
+
+    public void setPlasma_dia3(BigDecimal plasma_dia3) {
+        this.plasma_dia3 = plasma_dia3;
+    }
+
+    public BigDecimal getLAL_dia3() {
+        return LAL_dia3;
+    }
+
+    public void setLAL_dia3(BigDecimal LAL_dia3) {
+        this.LAL_dia3 = LAL_dia3;
+    }
+    
 
 }

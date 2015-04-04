@@ -22,9 +22,9 @@
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/GrupoDeCaballos?">Grupos de Caballos</a>
+                            <a href="/SIGIPRO/Caballeriza/SangriaPrueba?">Sangría de Prueba</a>
                         </li>
-                        <li class="active"> ${grupodecaballos.getNombre()} </li>
+                        <li class="active"> ${sangriap.getId_sangria_prueba()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,51 +34,41 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${grupodecaballos.getNombre()} </h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoEliminar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 54}">
-                                        <c:set var="contienePermisoEliminar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEliminar}">
-                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el grupo" data-href="/SIGIPRO/Caballeriza/GrupoDeCaballos?accion=eliminar&id_grupo_de_caballo=${grupodecaballos.getId_grupo_caballo()}">Eliminar</a>
-                                </c:if>
-
-                                <c:set var="contienePermisoEditar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 53}">
-                                        <c:set var="contienePermisoEditar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/GrupoDeCaballos?accion=editar&id_grupo_de_caballo=${grupodecaballos.getId_grupo_caballo()}">Editar</a>
-                                </c:if>
-                            </div>
+                            <h3><i class="fa fa-book"></i> ${sangriap.getId_sangria_prueba()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <table>
-                                <tr><td> <strong>Nombre del Grupo:</strong></td> <td>${grupodecaballos.getNombre()} </td></tr>
-                                <tr><td> <strong>Descripción:</strong> <td>${grupodecaballos.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Muestra:</strong></td> <td>${sangriap.getMuestra()} </td></tr>
+                                <tr><td> <strong>Solicitud N°:</strong></td> <td>${sangriap.getNum_solicitud()} </td></tr>
+                                <tr><td> <strong>Informe N°:</strong></td> <td>${sangriap.getNum_informe()} </td></tr>
+                                <tr><td> <strong>Fecha de recepción de la muestra:</strong></td> <td>${sangriap.getFecha_recepcion_muestraAsString()} </td></tr>
+                                <tr><td> <strong>Fecha del informe:</strong></td> <td>${sangriap.getFecha_informeAsString()} </td></tr>
+                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getResponsable()} </td></tr>
+                                <tr><td> <strong>Inóculo:</strong></td> <td>${sangriap.getInoculo().getId_inoculo()} </td></tr>                                
                             </table>
                             <br>
                             <div class="widget widget-table">
                                 <div class="widget-header">
-                                    <h3><i class="fa fa-check"></i> Caballos del Grupo de Caballos Asociados</h3>
+                                    <h3><i class="fa fa-check"></i> Caballos de la Sangría de Prueba </h3>
                                 </div>
                                 <div class="widget-content">
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Numero de Microchip</th>
+                                                <th>Nombre</th>
+                                                <th>Número de Microchip</th>
+                                                <th>Hemtrocito</th>
+                                                <th>Hemoglobina</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${caballos}" var="caballo">
                                                 <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                                                    <td>${caballo.getNombre()}</td> 
+                                                    <td>${caballo.getNumero_microchip()}</td>
+                                                    <td>${caballo.getHematrocito()}</td>
+                                                    <td>${caballo.getHemoglibina()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

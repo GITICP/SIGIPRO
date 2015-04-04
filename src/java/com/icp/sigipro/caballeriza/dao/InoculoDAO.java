@@ -7,6 +7,7 @@ package com.icp.sigipro.caballeriza.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
@@ -29,10 +30,15 @@ public class InoculoDAO {
         conexion = s.conectar();
     }
 
-    public boolean insertarInoculo(Inoculo i) throws SIGIPROException {
-        boolean resultado = false;
+    public boolean insertarInoculo(Inoculo i, String[] ids_caballos) throws SIGIPROException {
+        boolean resultado_insert_inoculo = false;
+        boolean resultado_asociacion_caballos = false;
+        PreparedStatement consulta_caballos = null;
+        PreparedStatement consulta = null;
+        ResultSet resultadoConsulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos (mnn, baa, bap, cdd, lms, tetox, otro, encargado_preparacion, encargado_inyeccion, fecha) "
+            getConexion().setAutoCommit(false);
+            consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos (mnn, baa, bap, cdd, lms, tetox, otro, encargado_preparacion, encargado_inyeccion, fecha) "
                     + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_inoculo");
             consulta.setString(1,i.getMnn());
             consulta.setString(2,i.getBaa());
@@ -45,20 +51,141 @@ public class InoculoDAO {
             consulta.setString(9,i.getEncargado_inyeccion());
             consulta.setDate(10, i.getFecha());
 
-            ResultSet resultadoConsulta = consulta.executeQuery();
+            resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
-                resultado = true;
+                resultado_insert_inoculo = true;
                 i.setId_inoculo(resultadoConsulta.getInt("id_inoculo"));
             }
-            resultadoConsulta.close();
-            consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
-            throw new SIGIPROException("No se pudo registrar el Inóculo.");
-        }
-        return resultado;
-    }
+           if (ids_caballos.length > 0) {
+                consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos_caballos (id_inoculo, id_caballo) VALUES (?,?);");
 
+                for (String id_caballo : ids_caballos) {
+                    consulta_caballos.setInt(1, i.getId_inoculo());
+                    consulta_caballos.setInt(2, Integer.parseInt(id_caballo));
+                    consulta_caballos.addBatch();
+                }
+
+                int[] asociacion_caballos = consulta_caballos.executeBatch();
+
+                boolean iteracion_completa = true;
+
+                for (int asociacion : asociacion_caballos) {
+                    if (asociacion != 1) {
+                        iteracion_completa = false;
+                        break;
+                    }
+                }
+
+                if (iteracion_completa) {
+                    resultado_asociacion_caballos = true;
+                }
+                
+                consulta_caballos.close();
+            }
+            else {
+                resultado_asociacion_caballos = true;
+            }
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
+        }
+        finally {
+            try {
+                if (resultado_insert_inoculo && resultado_asociacion_caballos) {
+                    getConexion().commit();
+                }
+                else {
+                    getConexion().rollback();
+                }
+                if (resultadoConsulta != null){
+                    resultadoConsulta.close();
+                }
+                if (consulta != null) {
+                    consulta.close();
+                }
+                if (consulta_caballos != null) {
+                    consulta_caballos.close();
+                }
+                cerrarConexion();
+            } catch(SQLException sql_ex) {
+                throw new SIGIPROException("Error de comunicación con la base de datos.");
+            }
+        }
+        return resultado_insert_inoculo && resultado_asociacion_caballos;
+    }
+            
+  public boolean actualizarInoculoCaballo(int id_inoculo,String[] ids_caballos ) throws SIGIPROException {
+        boolean resultado_eliminar = false;
+        boolean resultado_asociacion_caballos = false;
+        PreparedStatement consulta_caballos = null;
+        PreparedStatement consulta = null;
+        int resultadoConsulta;
+        //ResultSet resultadoConsulta = null;
+        try {
+            getConexion().setAutoCommit(false);
+            consulta = getConexion().prepareStatement("DELETE FROM caballeriza.inoculos_caballos ic "
+              + "WHERE  ic.id_inoculo = ? "
+            );
+            consulta.setInt(1, id_inoculo);
+            //resultadoConsulta = consulta.executeQuery();
+            resultadoConsulta = consulta.executeUpdate();
+            if (resultadoConsulta >= 1) {
+              resultado_eliminar = true;
+            }
+           if (ids_caballos.length > 0) {
+                consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos_caballos (id_inoculo, id_caballo) VALUES (?,?);");
+
+                for (String id_caballo : ids_caballos) {
+                    consulta_caballos.setInt(1, id_inoculo);
+                    consulta_caballos.setInt(2, Integer.parseInt(id_caballo));
+                    consulta_caballos.addBatch();
+                }
+
+                int[] asociacion_caballos = consulta_caballos.executeBatch();
+
+                boolean iteracion_completa = true;
+
+                for (int asociacion : asociacion_caballos) {
+                    if (asociacion != 1) {
+                        iteracion_completa = false;
+                        break;
+                    }
+                }
+
+                if (iteracion_completa) {
+                    resultado_asociacion_caballos = true;
+                }
+                
+                consulta_caballos.close();
+            }
+            else {
+                resultado_asociacion_caballos = true;
+            }
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
+        }
+        finally {
+            try {
+                if (resultado_eliminar && resultado_asociacion_caballos) {
+                    getConexion().commit();
+                }
+                else {
+                    getConexion().rollback();
+                }
+                if (consulta != null) {
+                    consulta.close();
+                }
+                if (consulta_caballos != null) {
+                    consulta_caballos.close();
+                }
+                cerrarConexion();
+            } catch(SQLException sql_ex) {
+                throw new SIGIPROException("Error de comunicación con la base de datos.");
+            }
+        }
+        return resultado_eliminar && resultado_asociacion_caballos;
+    }      
     public boolean editarInoculo(Inoculo i) throws SIGIPROException {
         boolean resultado = false;
 
@@ -154,12 +281,13 @@ public class InoculoDAO {
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" select nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.inoculos_caballos ecc on c.id_caballo = ecc.id_caballo where id_inoculo=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" select c.id_caballo, nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.inoculos_caballos ecc on c.id_caballo = ecc.id_caballo where id_inoculo=?; ");
             consulta.setInt(1, id_inoculo);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Caballo caballo = new Caballo();
+                caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getInt("numero_microchip"));
                 resultado.add(caballo);
@@ -172,7 +300,33 @@ public class InoculoDAO {
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;        
+    }
+    
+    public GrupoDeCaballos obtenerGrupoInoculo(int id_inoculo) throws SIGIPROException {
+        GrupoDeCaballos grupo = new GrupoDeCaballos();
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    "Select Distinct(gc.nombre) nombre "
+                    + " from caballeriza.inoculos_caballos ic "
+                    + " Join caballeriza.caballos c "
+                    + " On ic.id_caballo=c.id_caballo "
+                    + " Join caballeriza.grupos_de_caballos  gc "
+                    + " On c.id_grupo_de_caballo= gc.id_grupo_de_caballo "
+                    + " where ic.id_inoculo=?;");
+            consulta.setInt(1, id_inoculo);
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                grupo.setNombre(rs.getString("nombre"));
+            }
+            consulta.close();
+            conexion.close();
+            rs.close();
+        } catch (SQLException ex) {
+            throw new SIGIPROException("El Inóculo no puede ser obtenido.");
+        }
+        return grupo;
     }    
+    
     private Connection getConexion() {
         try {
             if (conexion.isClosed()) {
