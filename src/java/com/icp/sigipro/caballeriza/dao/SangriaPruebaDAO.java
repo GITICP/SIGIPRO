@@ -93,8 +93,7 @@ public class SangriaPruebaDAO
             }
         }
         catch (SQLException ex) {
-            Exception a = ex.getNextException();
-            throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
+            throw new SIGIPROException("No se pudo registrar la sangría de prueba.");
         }
         finally {
             try {
@@ -260,6 +259,55 @@ public class SangriaPruebaDAO
         }
         return resultado;
 
+    }
+    
+    public List<SangriaPrueba> obtenerSangriasPruebasLimitadoConCaballos() {
+        List<SangriaPrueba> resultado = new ArrayList<SangriaPrueba>();
+        
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT sp.id_sangria_prueba, c.id_caballo, c.nombre, c.numero_microchip "
+                  + " FROM ( "
+                  + "   SELECT id_sangria_prueba "
+                  + "   FROM caballeriza.sangrias_pruebas sp"  
+                  + "   WHERE id_sangria_prueba NOT IN (SELECT id_sangria_prueba FROM caballeriza.sangrias)"
+                  + "      ) AS sp "
+                  + " INNER JOIN caballeriza.sangrias_pruebas_caballos spc "
+                  + "   ON spc.id_sangria_prueba = sp.id_sangria_prueba "
+                  + " INNER JOIN caballeriza.caballos c "
+                  + "   ON spc.id_caballo = c.id_caballo"
+            );
+            
+            ResultSet rs = consulta.executeQuery();
+            
+            SangriaPrueba sp = null;
+            
+            while(rs.next()) {
+                
+                int id_sangria_prueba = rs.getInt("id_sangria_prueba");
+                
+                if (sp == null || sp.getId_sangria_prueba() != id_sangria_prueba) {
+                    sp = new SangriaPrueba();
+                    sp.setId_sangria_prueba(id_sangria_prueba);
+                    resultado.add(sp);
+                }
+                
+                Caballo c = new Caballo();
+                c.setId_caballo(rs.getInt("id_caballo"));
+                c.setNombre(rs.getString("nombre"));
+                c.setNumero_microchip(rs.getInt("numero_microchip"));
+                sp.agregarCaballo(c);
+            }
+            
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+                    
+        } catch(SQLException ex) {
+            
+        }
+        
+        return resultado;
     }
 
     private Connection getConexion()

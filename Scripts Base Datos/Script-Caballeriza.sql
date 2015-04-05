@@ -89,7 +89,7 @@ CREATE TABLE caballeriza.sangrias_pruebas_caballos (
 );
 
 CREATE TABLE caballeriza.sangrias (
-    id_sangria integer not null,
+    id_sangria serial not null,
     id_sangria_prueba integer not null,
     fecha_dia1 date,
     fecha_dia2 date,
@@ -110,13 +110,13 @@ CREATE TABLE caballeriza.sangrias_caballos (
     id_caballo integer NOT NULL,
     sangre_dia1 decimal,
     plasma_dia1 decimal,
-    LAL_dia1 decimal,
+    lal_dia1 decimal,
     sangre_dia2 decimal,
     plasma_dia2 decimal,
-    LAL_dia2 decimal,
+    lal_dia2 decimal,
     sangre_dia3 decimal,
     plasma_dia3 decimal,
-    LAL_dia3 decimal 
+    lal_dia3 decimal 
 );
 
 --Llaves primarias esquema caballeriza

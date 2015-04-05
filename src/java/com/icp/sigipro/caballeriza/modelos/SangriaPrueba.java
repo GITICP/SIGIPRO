@@ -9,6 +9,8 @@ import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -24,6 +26,7 @@ public class SangriaPrueba {
     private Date fecha_informe;
     private String responsable;
     private Inoculo inoculo;
+    List<Caballo> caballos;
 
     public SangriaPrueba() {
     }
@@ -105,6 +108,23 @@ public class SangriaPrueba {
 
     public void setInoculo(Inoculo inoculo) {
         this.inoculo = inoculo;
+    }
+
+    public List<Caballo> getCaballos()
+    {
+        return caballos;
+    }
+
+    public void setCaballos(List<Caballo> caballos)
+    {
+        this.caballos = caballos;
+    }
+    
+    public void agregarCaballo(Caballo c) {
+        if (caballos == null) {
+            caballos = new ArrayList<Caballo>();
+        }
+        caballos.add(c);
     }
 
 

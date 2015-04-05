@@ -118,6 +118,22 @@ $(document).ready(function () {
         $("#inoculo-" + id_inoculo).show();
     });
     
+    $("#seleccion-sangria-prueba").change( function() {
+        var id_sangria_prueba = $(this).val();
+        
+        $(".caballos-prueba").each( function() {
+            $(this).find("input").each( function() {
+                $(this).attr('checked', false);
+            });
+        });
+        
+        var contenedor_caballos = $("#prueba-" + id_sangria_prueba);
+        $(contenedor_caballos).find("input").each( function() {
+            $(this).attr('checked', true);
+        });
+        contenedor_caballos.show();
+    });
+    
     $("#form-prueba-sangria").submit( function() {
         llenar_campo_caballos();
     });

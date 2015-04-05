@@ -115,7 +115,7 @@ public class InoculoDAO {
         return resultado_insert_inoculo && resultado_asociacion_caballos;
     }
             
-  public boolean actualizarInoculoCaballo(int id_inoculo,String[] ids_caballos ) throws SIGIPROException {
+    public boolean actualizarInoculoCaballo(int id_inoculo,String[] ids_caballos ) throws SIGIPROException {
         boolean resultado_eliminar = false;
         boolean resultado_asociacion_caballos = false;
         PreparedStatement consulta_caballos = null;
@@ -187,6 +187,7 @@ public class InoculoDAO {
         }
         return resultado_eliminar && resultado_asociacion_caballos;
     }      
+    
     public boolean editarInoculo(Inoculo i) throws SIGIPROException {
         boolean resultado = false;
 
@@ -276,7 +277,6 @@ public class InoculoDAO {
         }
         return resultado;
     }
-
 
     public List<Caballo> obtenerCaballosInoculo(int id_inoculo) throws SIGIPROException {
         List<Caballo> resultado = new ArrayList<Caballo>();
