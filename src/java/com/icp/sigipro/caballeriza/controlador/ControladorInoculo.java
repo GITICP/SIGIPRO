@@ -52,7 +52,6 @@ public class ControladorInoculo extends SIGIPROServlet {
         {
             add("agregar");
             add("editar");
-
         }
     };
 
@@ -67,8 +66,8 @@ public class ControladorInoculo extends SIGIPROServlet {
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         List<Integer> listavacia = new ArrayList<Integer>();
         request.setAttribute("inoculo", i);
-        request.setAttribute("listacaballos", listavacia);
-        request.setAttribute("listagrupos", listagrupos);
+        request.setAttribute("lista_caballos", listavacia);
+        request.setAttribute("lista_grupos", listagrupos);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -120,7 +119,7 @@ public class ControladorInoculo extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "Inoculo/Agregar.jsp";
         Inoculo i = construirObjeto(request);
-        String[] ids_caballos = request.getParameterValues("inoculocaballo");
+        String[] ids_caballos = request.getParameterValues("caballos");
         resultado = dao.insertarInoculo(i,ids_caballos);
         
         //Funcion que genera la bitacora
@@ -214,6 +213,12 @@ public class ControladorInoculo extends SIGIPROServlet {
         }
         i.setEncargado_preparacion(request.getParameter("encargado_preparacion"));
         i.setEncargado_inyeccion(request.getParameter("encargado_inyeccion"));
+        
+        GrupoDeCaballos grupo_caballos = new GrupoDeCaballos();
+        grupo_caballos.setId_grupo_caballo(Integer.parseInt(request.getParameter("grupo_caballos")));
+        
+        i.setGrupo_de_caballos(grupo_caballos);
+        
         return i;
     }
 

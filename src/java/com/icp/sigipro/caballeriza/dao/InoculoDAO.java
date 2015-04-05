@@ -38,8 +38,8 @@ public class InoculoDAO {
         ResultSet resultadoConsulta = null;
         try {
             getConexion().setAutoCommit(false);
-            consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos (mnn, baa, bap, cdd, lms, tetox, otro, encargado_preparacion, encargado_inyeccion, fecha) "
-                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_inoculo");
+            consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.inoculos (mnn, baa, bap, cdd, lms, tetox, otro, encargado_preparacion, encargado_inyeccion, fecha, grupo_de_caballos) "
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?, ?) RETURNING id_inoculo");
             consulta.setString(1,i.getMnn());
             consulta.setString(2,i.getBaa());
             consulta.setString(3,i.getBap());
@@ -50,6 +50,7 @@ public class InoculoDAO {
             consulta.setString(8,i.getEncargado_preparacion());
             consulta.setString(9,i.getEncargado_inyeccion());
             consulta.setDate(10, i.getFecha());
+            consulta.setInt(11, i.getGrupo_de_caballos().getId_grupo_caballo());
 
             resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -325,7 +326,54 @@ public class InoculoDAO {
             throw new SIGIPROException("El Inóculo no puede ser obtenido.");
         }
         return grupo;
-    }    
+    }
+    
+    public List<Inoculo> obtenerInoculosConCaballos() throws SIGIPROException {
+        
+        List<Inoculo> resultado = new ArrayList<Inoculo>();
+        
+        try {
+            
+            PreparedStatement consulta = getConexion().prepareStatement(
+                                      " SELECT i.id_inoculo, c.id_caballo, c.nombre, c.numero_microchip "
+                                    + " FROM caballeriza.inoculos i "
+                                    + "     INNER JOIN caballeriza.inoculos_caballos ic ON ic.id_inoculo = i.id_inoculo "
+                                    + "     INNER JOIN caballeriza.caballos c ON c.id_caballo = ic.id_caballo "
+                                    + " WHERE i.id_inoculo NOT IN (SELECT id_inoculo FROM caballeriza.sangrias_pruebas);");
+            
+            ResultSet rs = consulta.executeQuery();
+            
+            Inoculo inoculo = null;
+            
+            while(rs.next()) {
+                
+                int id_inoculo = rs.getInt("id_inoculo");
+                
+                if ( inoculo == null || inoculo.getId_inoculo() != id_inoculo ) {
+                    inoculo = new Inoculo();
+                    inoculo.setId_inoculo(id_inoculo);;
+                    resultado.add(inoculo);
+                }
+                
+                Caballo c = new Caballo();
+                c.setId_caballo(rs.getInt("id_caballo"));
+                c.setNombre(rs.getString("nombre"));
+                c.setNumero_microchip(rs.getInt("numero_microchip"));
+                
+                inoculo.agregarCaballo(c);
+            }
+            
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+            
+        } catch (SQLException ex) {
+            throw new SIGIPROException("Ourrió un error al realizar la solicitud.");
+        }
+        
+        return resultado;
+        
+    }
     
     private Connection getConexion() {
         try {

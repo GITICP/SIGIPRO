@@ -4,6 +4,7 @@
     Author     : Walter
 --%>
 
+<%@page import="com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -199,18 +200,18 @@
             </div>
         </div>
         <if></if>
-        <label for="inoculogrupo" class="control-label">*Grupo De Caballo</label>
+        <label for="inoculogrupo" class="control-label">*Grupo De Caballos</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
                     <c:choose>
-                        <c:when test="${listacaballos.size()==0}">
-                            <select id="seleccionInoculoGrupo" class="select2" name="inoculogrupo" 
+                        <c:when test="${lista_caballos.size()==0}">
+                            <select id="seleccionInoculoGrupo" class="select2" name="grupo_caballos" 
                                     style='background-color: #fff;' required
                                     oninvalid="setCustomValidity('Por favor seleccione el grupo de caballos')"
                                     onchange="setCustomValidity('')">
                                 <option value=''></option>
-                                <c:forEach items="${listagrupos}" var="grupo">
+                                <c:forEach items="${lista_grupos}" var="grupo">
                                     <option value ="${grupo.getId_grupo_caballo()}">${grupo.getNombre()}</option>
                                 </c:forEach>
                             </select>
@@ -223,62 +224,60 @@
                 </div>
             </div>
         </div>
-        <label for="inoculocaballo" class="control-label">*Caballos para el Inóculo</label>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div class="input-group">
-                    <c:choose>
-                        <c:when test="${listacaballos.size()==0}">                    
-                            <select id="seleccionInoculoCaballo" class="select2" name="inoculocaballo" multiple="multiple" disabled
-                                    style='background-color: #fff;' required
-                                    oninvalid="setCustomValidity('Este campo es requerido')"
-                                    onchange="setCustomValidity('')">
-                                <option value=''></option>
-                                <c:forEach items="${listagrupos}" var="grupo_caballo">
-                                    <optgroup label="${grupo_caballo.getNombre()}" id="${grupo_caballo.getId_grupo_caballo()}">
-                                        <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">
-                                            <option id="${grupo_caballo.getId_grupo_caballo()}" value ="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
-                                        </c:forEach>
-                                    <potgroup>
-                                    </c:forEach>                       
-                            </select>
-                        </c:when>
-                        <c:otherwise>
-                            <select id="seleccionInoculoCaballo" class="select2" name="inoculocaballo" multiple="multiple"
-                                    style='background-color: #fff;' required
-                                    oninvalid="setCustomValidity('Este campo es requerido')"
-                                    onchange="setCustomValidity('')">
-                                <option value=''></option>
-                                <c:forEach items="${listacaballos}" var="caballo">
-                                    <option value ="${caballo.getId_caballo()}" selected="selected">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
-                                    </c:forEach>                       
-                            </select>
-                        </c:otherwise>                        
-                    </c:choose>
-                </div>
-            </div>
-        </div>                    
+        <br>
+        <c:choose>
+            <c:when test="${lista_caballos.size()==0}">                    
+                <c:forEach items="${lista_grupos}" var="grupo_caballo">
+                    <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${grupo_caballo.getId_grupo_caballo()}" hidden>
+                        <div class="widget-header">
+                            <h3><i class="fa fa-flask"></i> Caballos del Grupo ${grupo_caballo.getNombre()} para el inóculo</h3>
+                        </div>
+                        <div class="widget-content">
+                            <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">
+                                <div class="col-md-4">
+                                    <label class="fancy-checkbox">
+                                        <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
+                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                    </label>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <select id="seleccionInoculoCaballo" class="select2" name="inoculocaballo" multiple="multiple"
+                        style='background-color: #fff;' required
+                        oninvalid="setCustomValidity('Este campo es requerido')"
+                        onchange="setCustomValidity('')">
+                    <option value=''></option>
+                    <c:forEach items="${lista_caballos}" var="caballo">
+                        <option value ="${caballo.getId_caballo()}" selected="selected">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
+                    </c:forEach>                       
+                </select>
+            </c:otherwise>
+        </c:choose>       
     </div>
 
     <div class="col-md-12">
-        <!-- Esta parte es la de los permisos de un rol -->
         <p class="campos-requeridos">
             Los campos marcados con * son requeridos.
         </p>  
 
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                <c:choose>
-                    <c:when test= "${accion.equals('Editar')}">
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
-                    </c:otherwise>
-                </c:choose>
+        <div class="row">
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <c:choose>
+                        <c:when test= "${accion.equals('Editar')}">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
-        </div>
-
+        </div> 
     </div>
 </form>

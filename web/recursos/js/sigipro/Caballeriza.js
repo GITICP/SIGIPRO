@@ -1,7 +1,7 @@
 // Variables globales de tablas
 tEventos = null;
 tCaballos = null;
-T_EVENTOS_SELECTOR= "#caballos-evento";
+T_EVENTOS_SELECTOR = "#caballos-evento";
 T_CABALLOS_SELECTOR = "#caballos-grupo";
 
 $(document).ready(function () {
@@ -19,7 +19,7 @@ $(document).ready(function () {
     });
     $("#grupodecaballosForm").submit(function () {
         llenarCampoAsociacion('c', T_CABALLOS_SELECTOR, $("#ids-caballos"));
-    });    
+    });
 });
 
 // -- Caballos -- //
@@ -30,7 +30,7 @@ function agregarEventoCaballo() {
     var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm boton-accion' style='margin-left:7px;margin-right:5px;' onclick=eliminarEventoDeCaballo(" + spliter[0] + ")>");
     botonEliminar.text("Eliminar");
 
-    var nuevaFila = tEventos.row.add([spliter[2],spliter[3],spliter[4], botonEliminar[0].outerHTML]).draw().node();
+    var nuevaFila = tEventos.row.add([spliter[2], spliter[3], spliter[4], botonEliminar[0].outerHTML]).draw().node();
 
     $(nuevaFila).attr("id", "evento-" + spliter[0]);
 }
@@ -68,10 +68,9 @@ function eliminarCaballo(id) {
     $("#seleccioncaballo").append(nuevaOpcion);
 }
 function eliminarCaballoSP(id_caballo) {
-  fila = $('#' + id_caballo);
-  fila.remove();
+    var fila = $('#' + id_caballo);
+    fila.remove();
 }
-
 
 function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
     var asociacionCodificada = "";
@@ -83,61 +82,54 @@ function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
     campo_escondido.val(asociacionCodificada);
 }
 
-$(document).ready(function(){
-     
-    $("select[name='tipoevento']").on('change', function() {
-        var split = $(this).val().split(",");
-    
-        $("textarea ").val(split[1]);
-});
-});
-$(document).ready(function(){
-     
-    $("select[name='eventoModal']").on('change', function() {
-        var split = $(this).val().split("|");
-    
-        $("textarea ").val(split[1]);
-});
-});
-function confirmacionAgregarCaballos() {
-    serpientesCodificados = "";
-    $('#datatable-column-filter-permisos > tbody > tr').each(function ()
-    
-    {
-      fila = $(this);
-      serpientesCodificados += fila.attr('id');
-      serpientesCodificados += "#r#";
-    });
-    $('#caballos').val(serpientesCodificados.slice(0, -3));
-    //alert("El valor del campo escondido de permisos es: "+ $('#permisosRol').val());
-}
 $(document).ready(function () {
 
-    $("select[name='inoculogrupo']").on('change', function () {
-        document.getElementById("seleccionInoculoCaballo").disabled = false;
-        id_grupo = this.value;
-        seleccion = document.getElementById("seleccionInoculoCaballo");
-        opciones = seleccion.getElementsByTagName("optgroup");
-        for (i = 0; i < opciones.length; i++) //recoremos todos los controles
-        {
-            id_opt = opciones[i].id;
-            if (opciones[i].id != id_grupo) //solo si es un checkbox entramos
-            {
-                $("select#seleccionInoculoCaballo option[id=" + id_opt + "]").remove();
-                //opciones[i].disable = true; //si es un checkbox le damos el valor del checkbox que lo llamó (Marcar/Desmarcar Todos)
-            }
+    $("select[name='tipoevento']").on('change', function () {
+        var split = $(this).val().split(",");
 
-        }
-        document.getElementById("seleccionInoculoGrupo").disabled = true;
+        $("textarea ").val(split[1]);
+    });
+    
+    $("select[name='eventoModal']").on('change', function () {
+        var split = $(this).val().split("|");
+
+        $("textarea ").val(split[1]);
+    });
+    
+    $("#seleccionInoculoGrupo").change(function(){
+        var id_grupo = $(this).val();
+        
+        $(".caballos-grupo").each( function() {
+            $(this).find("input").each( function() {
+                $(this).attr('checked', false);
+            });
+            $(this).hide();
+        });
+        $("#grupo-" + id_grupo).show();
+    });
+    
+    $("#seleccionInoculo").change( function() {
+        var id_inoculo = $(this).val();
+
+        $(".tabla-caballos").each( function() {
+            $(this).hide();
+        });
+        
+        $("#inoculo-" + id_inoculo).show();
+    });
+    
+    $("#form-prueba-sangria").submit( function() {
+        llenar_campo_caballos();
     });
 });
-//$(document).ready(function () {
-//
-//    $("select[name='inoculo']").on('change', function () {
-//        document.getElementById("sangriap_caballos").hidden = false;
-//        id_inoculo = this.value;
-//        tabla = document.getElementById("sangriap_caballos");
-//        filas = tabla.getElementsByTagName("tr");
-////        document.getElementById("seleccionInoculoGrupo").disabled = true;
-//    });
-//});
+
+function llenar_campo_caballos() {
+    var caballos_codificados = "";
+    $('#datatable-column-filter-permisos > tbody > tr').each(function ()
+    {
+        var fila = $(this);
+        caballos_codificados += fila.attr('id');
+        caballos_codificados += "#c#";
+    });
+    $('#caballos').val(caballos_codificados.slice(0, -3));
+}

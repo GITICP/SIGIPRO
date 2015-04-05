@@ -50,8 +50,6 @@ public class Inoculo {
         this.grupo_de_caballos = grupo_de_caballos;
     }
 
-
-
     public int getId_inoculo() {
         return id_inoculo;
     }
@@ -166,8 +164,7 @@ public class Inoculo {
         if (this.caballos == null){
             this.caballos = new ArrayList<Caballo>();
         }
-        this.caballos.add(c);
-        
+        this.caballos.add(c);    
     }
     
 

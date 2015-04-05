@@ -58,7 +58,7 @@
                                             <tr>
                                                 <th>Nombre</th>
                                                 <th>Número de Microchip</th>
-                                                <th>Hemtrocito</th>
+                                                <th>Hematrocito</th>
                                                 <th>Hemoglobina</th>
                                             </tr>
                                         </thead>
