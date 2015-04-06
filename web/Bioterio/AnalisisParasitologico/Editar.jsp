@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="ActivosFijos" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Bioterio" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
