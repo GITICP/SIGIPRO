@@ -282,14 +282,13 @@ public class RolDAO
         }
         ResConsulta.close();
         consulta.close();
-        conexion.close();
       } catch (SQLException ex) {
         System.out.println(ex);
         resultado = null;
       }
-
       resultado.add(ru);
     }
+    conexion.close();
     return resultado;
   }
      
