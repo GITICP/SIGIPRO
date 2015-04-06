@@ -254,7 +254,7 @@
                   <div class="col-sm-12">
                     <div class="input-group">
                         <BR>
-                      <input name="volumen_recuperado" id="volumen_recuperado" type="number" step="any" placeholder="Número de mL recuperados" class="form-control" value="" required
+                      <input name="volumen_recuperado" id="volumen_recuperado" type="number" max="${extraccion.getVolumen_extraido()}" step="any" placeholder="Número de mL recuperados" class="form-control" value="" required
                              oninput="setCustomValidity(\'\')" 
                              oninvalid="setCustomValidity(\'Ingrese solo números\')">
                     </div>

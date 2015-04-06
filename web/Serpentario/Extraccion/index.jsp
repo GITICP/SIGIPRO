@@ -91,7 +91,7 @@
                           </c:when>
                           <c:otherwise>
                               <td>${extraccion.getVolumen_extraido()}</td>
-                            <td>${extraccion.getUsuario_registro().getNombre_usuario()}</td>
+                            <td>${extraccion.getUsuario_registro().getNombreCompleto()}</td>
                             <td>${extraccion.getFecha_registroAsString()}</td>
                           </c:otherwise>
                       </c:choose>
@@ -115,7 +115,7 @@
                                      <c:otherwise>
                                          <c:choose>
                                              <c:when test="${!extraccion.isIsCentrifugado()}">
-                                                    <a class="btn btn-warning btn-sm boton-accion centrifugado-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarCentrifugado">3- Registrar Centrifugado</a>
+                                                    <a class="btn btn-warning btn-sm boton-accion centrifugado-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}/-/${extraccion.getVolumen_extraido()}' data-toggle="modal" data-target="#modalRegistrarCentrifugado">3- Registrar Centrifugado</a>
                                              </c:when>
                                              <c:otherwise>
                                                 <c:choose>

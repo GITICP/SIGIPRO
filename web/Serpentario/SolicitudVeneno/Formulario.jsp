@@ -58,7 +58,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="cantidad" placeholder="Número mayor a 1" type="number" min="1" class="form-control" name="cantidad" value="${solicitud.getCantidad()}"required 
+            <input id="cantidad" placeholder="Número mayor a 1" type="number" step="any" min="1" class="form-control" name="cantidad" value="${solicitud.getCantidad()}"required 
                   oninvalid="setCustomValidity('No hay suficientes existencias para realizar la solicitud. ')"
                   oninput="setCustomValidity('')"> 
         </div>

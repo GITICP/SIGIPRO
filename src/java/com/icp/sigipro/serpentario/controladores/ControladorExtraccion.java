@@ -86,12 +86,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
         String redireccion = "Extraccion/index.jsp";
         List<Extraccion> extracciones = dao.obtenerExtracciones();
         
-        for (Extraccion e : extracciones){
-            System.out.println(e.getNumero_extraccion());
-            System.out.println(e.isIsSerpiente());
-            System.out.println(e.isIsRegistro());
-            System.out.println(e.isIsCentrifugado());
-        }
         request.setAttribute("listaExtracciones", extracciones);
         redireccionar(request, response, redireccion);
     }
@@ -113,7 +107,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
             request.setAttribute("listaUsuarios", usuariosextraccion);
             request.setAttribute("ejemplares",serpientesextraccion.size());
             request.setAttribute("centrifugado", centrifugado);
-            System.out.println(centrifugado);
             request.setAttribute("liofilizacion", liofilizacion);
 
             redireccionar(request, response, redireccion);

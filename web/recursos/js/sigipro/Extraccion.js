@@ -96,10 +96,10 @@ $(document).on("click", ".registrar-Modal", function () {
 
 $(document).on("click", ".centrifugado-Modal", function () {                            
                             var numero_extraccion = $(this).data('id');
-                            console.log(numero_extraccion);
                             var arr = numero_extraccion.split("/-/");
                             $('#class-centrifugado #numero_extraccion').text("Extraccion - "+arr[1]);
                             $("#class-centrifugado #id_extraccion").val(arr[0]); 
+                            $('#volumen_recuperado').attr("max", arr[2]);
                             });
                             
 $(document).on("click", ".liofilizacion-inicio-Modal", function () {                            
