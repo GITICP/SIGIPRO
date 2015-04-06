@@ -69,7 +69,7 @@
                       <td>${cara.getMacho_as()}</td>
                       <td>${cara.getHembra_as()}</td>
                       <td>${cara.getCepa().getNombre()}</td>
-                      <td>${cara.getFecha_vigencia()}</td>
+                      <td>${cara.getFecha_vigencia_S()}</td>
                     </tr>
 
                   </c:forEach>

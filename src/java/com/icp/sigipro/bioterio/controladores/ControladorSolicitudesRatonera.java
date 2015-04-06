@@ -474,7 +474,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
       //*----------------------------* 
 
       if (resultado && resultado2) {
-        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
+        request.setAttribute("mensaje", helper.mensajeDeExito("Entrega registrada."));
       } else {
         request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
       }

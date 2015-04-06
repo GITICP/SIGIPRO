@@ -60,7 +60,7 @@
                       <td>
                         <a href="/SIGIPRO/Ratonera/Destetes?accion=ver&id_destete=${destete.getId_destete()}">
                           <div style="height:100%;width:100%">
-                            ${destete.getFecha_destete()}
+                            ${destete.getFecha_destete_S()}
                           </div>
                         </a>
                       </td>

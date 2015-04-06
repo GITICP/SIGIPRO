@@ -23,7 +23,7 @@
             <li> 
               <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?">Entrega Ratonera</a>
             </li>
-            <li class="active"> Entrega ${entrega.getFecha_entrega()} </li>
+            <li class="active"> Entrega ${entrega.getFecha_entrega_S()} </li>
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Entrega del ${entrega.getFecha_entrega()}  de la solicitud número ${entrega.getSolicitud().getId_solicitud()}</h3>
+              <h3><i class="fa fa-barcode"></i> Entrega del ${entrega.getFecha_entrega_S()}  de la solicitud número ${entrega.getSolicitud().getId_solicitud()}</h3>
               <div class="btn-group widget-header-toolbar">
               </div>
             </div>
@@ -53,7 +53,6 @@
                 <tr><td> <strong>Sexo:</strong> <td>  ${entrega.getSexo()}</td></tr>
                 <tr><td> <strong>Cepa:</strong> <td>  ${entrega.getCepa().getNombre()}</td></tr>
                 <tr><td> <strong>Usuario Recipiente:</strong> <td>  ${entrega.getUsuario_recipiente().getNombreCompleto()}</td></tr>
-              <br>
             </div>
             <!-- END WIDGET TICKET TABLE -->
           </div>
@@ -61,6 +60,8 @@
         </div>
         <!-- /main -->
       </div>
+   </div>
+              
 
     </jsp:attribute>
 
