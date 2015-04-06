@@ -20,6 +20,7 @@ import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -38,6 +39,7 @@ public class ControladorSangria extends SIGIPROServlet
     private final int[] permisos = {1, 59, 60};
     private final SangriaDAO dao = new SangriaDAO();
     private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     
     protected final Class clase = ControladorSangria.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -47,6 +49,7 @@ public class ControladorSangria extends SIGIPROServlet
             add("ver");
             add("agregar");
             add("editar");
+            add("extraccion");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -54,7 +57,7 @@ public class ControladorSangria extends SIGIPROServlet
         {
             add("agregar");
             add("editar");
-
+            add("extraccion");
         }
     };
 
@@ -91,13 +94,37 @@ public class ControladorSangria extends SIGIPROServlet
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Sangria/Ver.jsp";
+        int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
         try {
-            
-            redireccionar(request, response, redireccion);
+            Sangria sangria = dao.obtenerSangria(id_sangria);
+            request.setAttribute("sangria", sangria);
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
         }
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(60, listaPermisos);
+        String redireccion = "Sangria/Extraccion.jsp";
+        
+        int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
+        int dia = Integer.parseInt(request.getParameter("dia"));
+        
+        try {
+            Sangria sangria = dao.obtenerSangria(id_sangria);
+            request.setAttribute("sangria", sangria);
+            request.setAttribute("dia", dia);
+            request.setAttribute("accion", "Extraccion");
+        } catch(SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+            redireccion = "Sangria/index.jsp";
+        }
+        
+        redireccionar(request, response, redireccion);
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
@@ -143,6 +170,52 @@ public class ControladorSangria extends SIGIPROServlet
         //bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO_CLINICO,request.getRemoteAddr());
               
         redireccionar(request, response, redireccion);
+    }
+    
+    protected void postExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        int dia = Integer.parseInt(request.getParameter("dia"));
+        Sangria sangria = new Sangria();
+        sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
+        
+        String[] ids_caballos = request.getParameterValues("caballos");
+        String fecha = request.getParameter("fecha_extraccion");
+        
+        try {
+            Method set_plasma = SangriaCaballo.class.getDeclaredMethod("setPlasma_dia" + dia, float.class);
+            Method set_sangre = SangriaCaballo.class.getDeclaredMethod("setSangre_dia" + dia, float.class);
+            Method set_lal    = SangriaCaballo.class.getDeclaredMethod("setLal_dia"    + dia, float.class);
+            Method set_fecha  = Sangria.class.getDeclaredMethod("setFecha_dia" + dia, Date.class);
+            set_fecha.invoke(sangria, helper_fechas.formatearFecha(fecha));
+            
+            for(String id_caballo : ids_caballos) {
+                
+                SangriaCaballo sangria_caballo = new SangriaCaballo();
+                
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(Integer.parseInt(id_caballo));
+                
+                sangria_caballo.setCaballo(caballo);
+                
+                float sangre = Float.parseFloat(request.getParameter("sangre_"+id_caballo));
+                float plasma = Float.parseFloat(request.getParameter("plasma_"+id_caballo));
+                float lal = Float.parseFloat(request.getParameter("lal_"+id_caballo));
+                
+                set_plasma.invoke(sangria_caballo, plasma);
+                set_sangre.invoke(sangria_caballo, sangre);
+                set_lal.invoke(sangria_caballo, lal);
+                
+                sangria.agregarSangriaCaballo(sangria_caballo);
+            }
+        } catch (Exception ex){
+            
+        }
+        
+        try {
+            dao.registrarExtraccion(sangria, dia);
+        } catch(SIGIPROException sig_ex) {
+            
+        }
     }
 
     private Sangria construirObjeto(HttpServletRequest request) throws SIGIPROException

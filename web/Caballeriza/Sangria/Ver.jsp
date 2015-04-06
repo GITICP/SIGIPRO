@@ -34,9 +34,8 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${sangria.getId_sangria()} </h3>
+                            <h3><i class="fa fa-book"></i> Sangría ${sangria.getId_sangria()} </h3>
                             <div class="btn-group widget-header-toolbar">
-
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                                     <c:if test="${permiso == 1 || permiso == 58}">
@@ -44,60 +43,85 @@
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editar&id_sangria=${sangria.getId_sangria()}">Editar</a>
+                                    <!--<a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editar&id_sangria=${sangria.getId_sangria()}">Editar</a>-->
                                 </c:if>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <table>
-                                <tr><td> <strong>Campo:</strong></td> <td>${sangria.funcion()} </td></tr>
+                                <tr><td> <strong>Identificador:</strong></td> <td>${sangria.getId_sangria()} </td></tr>
+                                <tr><td> <strong>Responsable:</strong></td> <td>${sangria.getResponsable()} </td></tr>
+                                <tr><td> <strong>Sangría de PRueba:</strong></td> <td>${sangria.getSangria_prueba().getId_sangria_prueba()}</td></tr>
+                                <tr><td> <strong>Número de Informe de Control de Calidad:</strong></td> <td>${sangria.getNum_inf_cc()} </td></tr>
+                                <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>
+                                <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} </td></tr>
+                                <tr><td> <strong>Hematocrito Promedio:</strong></td> <td>${sangria.getHematrocito_promedio()} </td></tr>
+                                <tr><td> <strong>Peso de Plasma Total:</strong></td> <td>${sangria.getPeso_plasma_total()} </td></tr>
+                                <tr><td> <strong>Volumen de Plasma Total:</strong></td> <td>${sangria.getVolumen_plasma_total()} </td></tr>
+                                <tr><td> <strong>Plasma por Caballo:</strong></td> <td>${sangria.getPlasma_por_caballo()} </td></tr>
+                                <tr><td> <strong>Potencia:</strong></td> <td>${sangria.getPotencia()} </td></tr>
                             </table>
                             <br>
                             <div class="widget widget-table">
                                 <div class="widget-header">
-                                    <h3><i class="fa fa-check"></i> Caballos del Inóculo </h3>
+                                    <h3><i class="fa fa-check"></i> Información de la Sangría </h3>
+                                    <div class="btn-group widget-header-toolbar">
+                                        <c:set var="contienePermisoAgregarInfoDia" value="false" />
+                                        <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                            <c:if test="${permiso == 1 || permiso == 58}">
+                                                <c:set var="contienePermisoEditar" value="true" />
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${contienePermisoEditar}">
+                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Registrar Extracción Día 1</a>
+                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Registrar Extracción Día 2</a>
+                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Registrar Extracción Día 3</a>
+                                        </c:if>
+                                    </div>
                                 </div>
                                 <div class="widget-content">
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Número de Microchip</th>
+                                                <th rowspan="2">Nombre y Número de Microchip</th>
+                                                <!--<th rowspan="2">Hematocrito</th>-->
+                                                <th colspan="3">Día 1</th>
+                                                <th colspan="3">Día 2</th>
+                                                <th colspan="3">Día 3</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Sangre</th>
+                                                <th>Plasma</th>
+                                                <th>LAL</th>
+                                                <th>Sangre</th>
+                                                <th>Plasma</th>
+                                                <th>LAL</th>
+                                                <th>Sangre</th>
+                                                <th>Plasma</th>
+                                                <th>LAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${caballos}" var="caballo">
+                                            <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
                                                 <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                                                    <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero_microchip()})</td>
+                                                    <td>${(sangria_caballo.getSangre_dia1() == 0) ? 'N/A' : sangria_caballo.getSangre_dia1()}</td>
+                                                    <td>${(sangria_caballo.getPlasma_dia1() == 0) ? 'N/A' : sangria_caballo.getPlasma_dia1()}</td>
+                                                    <td>${(sangria_caballo.getLal_dia1() == 0) ? 'N/A' : sangria_caballo.getLal_dia1()}</td>
+                                                    <td>${(sangria_caballo.getSangre_dia2() == 0) ? 'N/A' : sangria_caballo.getSangre_dia2()}</td>
+                                                    <td>${(sangria_caballo.getPlasma_dia2() == 0) ? 'N/A' : sangria_caballo.getPlasma_dia2()}</td>
+                                                    <td>${(sangria_caballo.getLal_dia2() == 0) ? 'N/A' : sangria_caballo.getLal_dia2()}</td>
+                                                    <td>${(sangria_caballo.getSangre_dia3() == 0) ? 'N/A' : sangria_caballo.getSangre_dia3()}</td>
+                                                    <td>${(sangria_caballo.getPlasma_dia3() == 0) ? 'N/A' : sangria_caballo.getPlasma_dia3()}</td>
+                                                    <td>${(sangria_caballo.getLal_dia3() == 0) ? 'N/A' : sangria_caballo.getLal_dia3()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
-                            <c:forEach items="${[1,2,3]}" var="dia">
-                                <div class="widget widget-table">
-                                    <div class="widget-header">
-                                        <h3><i class="fa fa-check"></i> Día ${dia} </h3>
-                                    </div>
-                                    <div class="widget-content">
-                                        <table>
-                                            <thead>
-                                            <th>Caballo (Número Microchip)</th>
-                                            </thead>
-                                            <c:forEach items="${lista_caballos}" var="caballo">
-                                                <tbody>
-
-                                                </tbody>
-                                            </c:forEach>
-                                        </table>
-                                    </div>
-                                </div>
-                            </c:forEach>
                         </div>
-
-
                     </div>
                     <!-- END WIDGET TICKET TABLE -->
                 </div>

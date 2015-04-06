@@ -14,6 +14,7 @@ public class SangriaCaballo
 
     Sangria sangria;
     Caballo caballo;
+    float hematocrito; //Este campo no está en la BD. Se creó por conveniencia para evitar anidación extra para las sangrías.
     float sangre_dia1;
     float plasma_dia1;
     float lal_dia1;
