@@ -1,4 +1,4 @@
---Esquema bioterio
+﻿--Esquema bioterio
 DROP SCHEMA IF EXISTS bioterio CASCADE;
 CREATE SCHEMA bioterio;
 --Tablas esquema bioterio
@@ -134,14 +134,14 @@ ALTER TABLE ONLY bioterio.cepas ADD CONSTRAINT pk_cepas PRIMARY KEY (id_cepa);
 ALTER TABLE ONLY bioterio.caras ADD CONSTRAINT pk_caras PRIMARY KEY (id_cara);
 ALTER TABLE ONLY bioterio.destetes ADD CONSTRAINT pk_destetes PRIMARY KEY (id_destete);
 ALTER TABLE ONLY bioterio.solicitudes_ratonera ADD CONSTRAINT pk_solicitudes PRIMARY KEY (id_solicitud);
-ALTER TABLE ONLY bioterio.entregas_solicitudes_ratonera ADD CONSTRAINT pk_entregas PRIMARY KEY (id_entrega);
+ALTER TABLE ONLY bioterio.entregas_solicitudes_ratonera ADD CONSTRAINT pk_entregas_ratonera PRIMARY KEY (id_entrega);
 
 ALTER TABLE ONLY bioterio.cajas ADD CONSTRAINT pk_cejas PRIMARY KEY (id_caja);
 ALTER TABLE ONLY bioterio.conejas ADD CONSTRAINT pk_conejas PRIMARY KEY (id_coneja);
 ALTER TABLE ONLY bioterio.machos ADD CONSTRAINT pk_conejoss PRIMARY KEY (id_macho);
 ALTER TABLE ONLY bioterio.cruces ADD CONSTRAINT pk_cruces PRIMARY KEY (id_cruce);
 ALTER TABLE ONLY bioterio.solicitudes_conejera ADD CONSTRAINT pk_solicitudes_conejos PRIMARY KEY (id_solicitud);
-ALTER TABLE ONLY bioterio.entregas_solicitudes_conejera ADD CONSTRAINT pk_entregas PRIMARY KEY (id_entrega);
+ALTER TABLE ONLY bioterio.entregas_solicitudes_conejera ADD CONSTRAINT pk_entregas_conejera PRIMARY KEY (id_entrega);
 ALTER TABLE ONLY bioterio.analisis_parasitologicos ADD CONSTRAINT pk_analisis PRIMARY KEY (id_analisis);
 
 --Llaves foraneas esquema bioterio
@@ -158,7 +158,7 @@ ALTER TABLE ONLY bioterio.conejas ADD CONSTRAINT fk_cajas FOREIGN KEY (id_caja) 
 ALTER TABLE ONLY bioterio.cruces ADD CONSTRAINT fk_id_coneja FOREIGN KEY (id_coneja) REFERENCES bioterio.conejas(id_coneja) ON DELETE SET NULL;
 ALTER TABLE ONLY bioterio.cruces ADD CONSTRAINT fk_id_macho FOREIGN KEY (id_macho) REFERENCES bioterio.machos(id_macho) ON DELETE SET NULL;
 ALTER TABLE ONLY bioterio.entregas_solicitudes_conejera ADD CONSTRAINT fk_id_usr_recipiente FOREIGN KEY (usuario_recipiente) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
-ALTER TABLE ONLY bioterio.entregas_solicitudes_conejeraADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bioterio.solicitudes_conejera (id_solicitud) ON DELETE SET NULL;
+ALTER TABLE ONLY bioterio.entregas_solicitudes_conejera ADD CONSTRAINT fk_id_solicitud FOREIGN KEY (id_solicitud) REFERENCES bioterio.solicitudes_conejera (id_solicitud) ON DELETE SET NULL;
 ALTER TABLE ONLY bioterio.solicitudes_conejera ADD CONSTRAINT fk_id_usr_solicitante FOREIGN KEY (usuario_solicitante) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
 
 
@@ -174,15 +174,15 @@ DROP INDEX seguridad.i_tag_emp;
 --Permisos asociados a Bioterio
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (201, '[Bioterio]AdministrarCaras', 'Permite agregar/editar/eliminar caras');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (202, '[Bioterio]AdministrarCepas', 'Permite agregar/editar/eliminar Cepas');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (203, '[Bioterio]AdministrarSolicitudes', 'Permite agregar/editar/eliminar cajas');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (203, '[Bioterio]AdministrarSolicitudesRatonera', 'Permite agregar/editar/eliminar cajas');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (204, '[Bioterio]AdministrarDestetes', 'Permite agregar/editar/eliminar Destetes');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (205, '[Bioterio]RealizarSolicitudes', 'Permite realizar solicitudes de ratones');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (205, '[Bioterio]RealizarSolicitudesRatonera', 'Permite realizar solicitudes de ratones');
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (206, '[Bioterio]AdministrarAnalisisRatones', 'Permite agregar/editar/eliminar Analisis Parasitologicos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (251, '[Bioterio]AdministrarCajas', 'Permite agregar/editar/eliminar cajas');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (252, '[Bioterio]AdministrarConejos', 'Permite agregar/editar/eliminar conejos');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (253, '[Bioterio]RealizarSolicitudes', 'Permite realizar solicitudes de conejos');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (254, '[Bioterio]AdministrarSolicitudes', 'Permite agregar/editar/eliminar solicitudes');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (253, '[Bioterio]RealizarSolicitudesConejos', 'Permite realizar solicitudes de conejos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (254, '[Bioterio]AdministrarSolicitudesConejos', 'Permite agregar/editar/eliminar solicitudes');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (255, '[Bioterio]AdministrarAnalisisConejos', 'Permite agregar/editar/eliminar Analisis Parasitologicos');
 
 
@@ -195,9 +195,9 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (204, 200, 'Destetes', '/Ratonera/Destetes');
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (206, 200, 'Análisis', '/Ratonera/AnalisisParasitologico');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (251, 250, 'Conejera', '/Conejera/Cajas');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (252, 250, 'Conejera', '/Conejera/Conejos');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (253, 250, 'Conejera', '/Conejera/Solicitudes');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (251, 250, 'Cajas', '/Conejera/Cajas');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (252, 250, 'Conejos', '/Conejera/Conejos');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (253, 250, 'Solicitudes', '/Conejera/Solicitudes');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (255, 250, 'Análisis', '/Conejera/AnalisisParasitologico');
 
 --Permisos del menu principal de Bioterio
