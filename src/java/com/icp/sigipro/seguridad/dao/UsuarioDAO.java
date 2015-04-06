@@ -230,6 +230,38 @@ public class UsuarioDAO
         return resultado;
     }
 
+    public Usuario obtenerUsuario(String nombre_usuario)
+    {
+        Usuario resultado = null;
+        try {
+            SingletonBD s = SingletonBD.getSingletonBD();
+            Connection conexion = s.conectar();
+
+            PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario "
+                                                                   + " From seguridad.usuarios"
+                                                                   + " Where nombre_usuario = ? ");
+
+            consulta.setString(1, nombre_usuario);
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+
+            if (resultadoConsulta.next()) {
+                resultado = new Usuario();
+
+                int id_usuario = resultadoConsulta.getInt("id_usuario");
+
+                resultado.setId_usuario(id_usuario);
+                resultado.setNombre_usuario(nombre_usuario);
+
+            }
+        }
+        catch (SQLException ex) {
+
+        }
+
+        return resultado;
+    }
+
     public int obtenerIDUsuario(String nombre)
     {
         int resultado = 0;
@@ -919,6 +951,36 @@ public class UsuarioDAO
                 catch (SQLException sql_ex) {
                     throw new SIGIPROException("Rrror al comunicarse con la base de datos. Comunique al administrador del sistema.");
                 }
+            }
+        }
+        return resultado;
+    }
+
+    public boolean autorizarRecibo(String usuario, String contrasenna)
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+        boolean resultado = false;
+
+        if (conexion != null) {
+            try {
+                PreparedStatement consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena "
+                                                                                 + "FROM seguridad.usuarios us "
+                                                                                 + "WHERE us.nombre_usuario = ? and us.contrasena = ?");
+
+                consultaContrasena.setString(1, usuario);
+                String hash = md5(contrasenna);
+                consultaContrasena.setString(2, hash);
+                ResultSet resultadoConsulta = consultaContrasena.executeQuery();
+                if (resultadoConsulta.next()) {
+                    resultado = true;
+                }
+                resultadoConsulta.close();
+                consultaContrasena.close();
+                conexion.close();
+            }
+            catch (SQLException ex) {
+                System.out.println(ex);
             }
         }
         return resultado;

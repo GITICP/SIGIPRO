@@ -8,7 +8,6 @@ package com.icp.sigipro.core;
 import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -49,6 +49,8 @@ public abstract class SIGIPROServlet extends HttpServlet
     String accion = request.getParameter("accion");
     if (accion == null) {
         accion = "index";
+    }if (ServletFileUpload.isMultipartContent(request)){
+        accion = "agregarimagen";
     }
     try {
       ejecutarAccion(request, response, accion, accionHTTP);

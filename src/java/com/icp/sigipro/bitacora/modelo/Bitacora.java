@@ -50,6 +50,22 @@ public class Bitacora {
     public static final String TABLA_ROL = "SEGURIDAD.ROLES";
     public static final String TABLA_ROLUSUARIO = "SEGURIDAD.ROLES_USUARIOS";
     public static final String TABLA_USUARIO = "SEGURIDAD.USUARIOS";
+    public static final String TABLA_ESPECIE = "SERPENTARIO.ESPECIES";
+    public static final String TABLA_SERPIENTE = "SERPENTARIO.SERPIENTES";
+    public static final String TABLA_EVENTO = "SERPENTARIO.EVENTOS";
+    public static final String TABLA_EXTRACCION = "SERPENTARIO.EXTRACCION";
+    public static final String TABLA_USUARIOSEXTRACCION = "SERPENTARIO.USUARIOS_EXTRACCION";
+    public static final String TABLA_SERPIENTESEXTRACCION = "SERPENTARIO.SERPIENTES_EXTRACCION";
+    public static final String TABLA_CENTRIFUGADO = "SERPENTARIO.CENTRIFUGADO";
+    public static final String TABLA_LIOFILIZACION = "SERPENTARIO.LIOFILIZACION";
+    public static final String TABLA_LOTE = "SERPENTARIO.LOTE";
+    public static final String TABLA_VENENO = "SERPENTARIO.VENENOS";
+    public static final String TABLA_SOLICITUDS = "SERPENTARIO.SOLICITUDES";
+    public static final String TABLA_ENTREGASSOLICITUD = "SERPENTARIO.ENTREGAS_SOLICITUD";
+    public static final String TABLA_LOTESENTREGASSOLICITUD = "SERPENTARIO.LOTES_ENTREGAS_SOLICITUD";
+    public static final String TABLA_CATALOGOTEJIDO = "SERPENTARIO.CATALOGO_TEJIDO";
+    public static final String TABLA_COLECCIONHUMEDA = "SERPENTARIO.COLECCION_HUMEDA";
+    
     
     
     //Variables de Accion
