@@ -7,6 +7,7 @@ package com.icp.sigipro.utilidades;
 
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -35,5 +36,15 @@ public class HelperFechas
     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     return df.format(fecha);
   }
+  
+  public Date formatearFecha(String fecha) throws ParseException
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        
+        java.util.Date fecha_date = df.parse(fecha);
+        Date fecha_sql = new Date(fecha_date.getTime());
+        
+        return fecha_sql;
+    }
 
 }
