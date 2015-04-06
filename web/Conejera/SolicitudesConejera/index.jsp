@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Ratonera" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Conejera" direccion_contexto="/SIGIPRO">
 
     <jsp:attribute name="contenido">
 
@@ -19,9 +19,9 @@
             <div class="row">
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
-                        <li>Bioterio - Ratonera</li>
+                        <li>Bioterio - Conejera</li>
                         <li> 
-                            <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?">Solicitudes Ratonera</a>
+                            <a href="/SIGIPRO/Conejera/SolicitudesConejera?">Solicitudes Conejera</a>
                         </li>
                     </ul>
                 </div>
@@ -37,9 +37,9 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Solicitudes Ratonera </h3>
+                            <h3><i class="fa fa-barcode"></i> Solicitudes Conejera </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=agregar">Realizar Solicitud</a>
+                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Conejera/SolicitudesConejera?accion=agregar">Realizar Solicitud</a>
                             </div>
                         </div>
                         ${mensaje}
@@ -53,7 +53,6 @@
                                         <th>Usuario Solicitante</th>
                                         <th>Número de Animales</th>
                                         <th>Peso</th>
-                                        <th>Número de Cajas</th>
                                         <th>Estado</th>
                                             <c:if test="${admin}">
                                             <th> Cambio Estado</th>
@@ -61,11 +60,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${listaSolicitudesRatonera}" var="solicitud">
+                                    <c:forEach items="${listaSolicitudesConejera}" var="solicitud">
 
                                         <tr id ="${solicitud.getId_solicitud()}">
                                             <td>
-                                                <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
+                                                <a href="/SIGIPRO/Conejera/SolicitudesConejera?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
                                                     <div style="height:100%;width:100%">
                                                         Número ${solicitud.getId_solicitud()}
                                                     </div>
@@ -75,13 +74,12 @@
                                             <td>${solicitud.getUsuario_solicitante().getNombreCompleto()}</td>
                                             <td>${solicitud.getNumero_animales()}</td>
                                             <td>${solicitud.getPeso_requerido()}</td>
-                                            <td>${solicitud.getNumero_cajas()}</td>
                                             <td>${solicitud.getEstado()}</td>
                                             <c:if test="${admin}">
                                                 <c:choose>
                                                     <c:when test="${solicitud.getEstado().equals('Pendiente')}">
                                                         <td>
-                                                            <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=aprobar&id_solicitud=" onclick="AprobarSolicitud(${solicitud.getId_solicitud()})">Aprobar</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=aprobar&id_solicitud=" onclick="AprobarSolicitud(${solicitud.getId_solicitud()})">Aprobar</a>
                                                             <a class="btn btn-danger btn-sm boton-accion" onclick="RechazarSolicitud(${solicitud.getId_solicitud()})">Rechazar</a>
                                                         </td>
                                                     </c:when>
@@ -89,12 +87,13 @@
                                                         <c:choose>
                                                             <c:when test="${solicitud.getEstado().equals('Aprobada') || solicitud.getEstado().equals('Abierta')}">
                                                                 <td>
-                                                                    <a class="btn btn-primary btn-sm boton-accion "  onclick="entregarSolicitud(${solicitud.getId_solicitud()},
+                                                                    <a class="btn btn-primary btn-sm boton-accion "  onclick="
+                                                                            entregarSolicitud(${solicitud.getId_solicitud()},
                                                                        ${solicitud.getNumero_animales()},
                                                                                     '${solicitud.getPeso_requerido()}',
-                                                                       ${solicitud.getNumero_cajas()},
+                                                                                    null,
                                                                                     '${solicitud.getSexo()}',
-                                                                                    '${solicitud.getCepa().getNombre()}')" >Entregar</a>
+                                                                                    null)" >Entregar</a>
                                                                 </td>
                                                             </c:when>
                                                             <c:otherwise>
@@ -123,7 +122,7 @@
 
                 <jsp:attribute name="form">
                     <h5> Para validar la entrega, el usuario recipiente debe iniciar sesión. </h5>
-                    <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="SolicitudesRatonera">
+                    <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="SolicitudesConejera">
                         <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
                         <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
                         <input hidden="true" name="accion" value="Entregar" id="accion" >
@@ -131,7 +130,6 @@
                         <input type="text" id="prd1"  name="peso1" hidden="true">
                         <input type="text" id="cnt1"  name="cajas1" hidden="true">
                         <input type="text" id="sex1"  name="sex1" hidden="true">
-                        <input type="text" id="cepa1"  name="cepa1" hidden="true">
                         ${mensaje_auth}
 
                         <table class="tabla-modal">
@@ -139,16 +137,16 @@
                                 <td><label for="usr" class="control-label">Usuario</label></td>
                                 <td><input class="form-control" type="text" id="usr"  name="usr" required
                                            oninvalid="setCustomValidity('Este campo es requerido ')"
-                                           onchange="setCustomValidity('')">
-                                </td>
+                                           onchange="setCustomValidity('')"></td>
                             </tr>
                             <tr>
                                 <td><label for="passw" class="control-label">Contraseña</label></td>
                                 <td><input class="form-control" type="password" id="passw" name="passw" required
                                            oninvalid="setCustomValidity('Este campo es requerido ')"
-                                           onchange="setCustomValidity('')"><p id='mensajeValidación' style='color:red;'> </p></td>
+                                           onchange="setCustomValidity('')"></td>
                             </tr>
                         </table>
+
                         <hr>
                         <h4> Información sobre la entrega </h4>
                         <table class="tabla-modal">
@@ -157,7 +155,7 @@
                                 <td><input class="form-control" type="text" id="num-sol"  name="num_sol" disabled></td>
                             </tr>
                             <tr>
-                                <td><label for="usr-sol" class="control-label"> Numero de animales: </label></td>
+                                <td><label for="usr-sol" class="control-label"> Número de Animales: </label></td>
                                 <td><input class="form-control" type="text" id="usr-sol"  name="num_an" disabled></td>
                             </tr>
                             <tr>
@@ -165,14 +163,9 @@
                                 <td><input class="form-control" type="text" id="prd"  name="peso" disabled></td>
                             </tr>
                             <tr>
-                                <td><label for="cnt" class="control-label"> Numero Cajas: </label></td>
-                                <td><input class="form-control" type="text" id="cnt"  name="cajas" disabled></td>
-                            </tr>
-                            <tr>
                                 <td><label for="cnt" class="control-label"> Sexo: </label></td>
-                                <td><input class="form-control" type="text" id="sex"  name="sex" disabled></td>
+                                <td><input class="form-control" type="text" id="sex" name="sex" disabled></td>
                             </tr>
-                            <input type="text" id="cepa"  name="cepa" disabled hidden="true">
                         </table>
 
                         <div class="form-group">
@@ -193,7 +186,7 @@
                 <jsp:attribute name="form">
                     <h4> Por favor introduzca la información de la entrega: </h4>
                     <hr>
-                    <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="SolicitudesRatonera">
+                    <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="SolicitudesConejera">
                         <table class="tabla-modal">
                             <input hidden="true" name="id_solicitud_ent" id="id_solicitud_ent">
                             <tr>
@@ -219,10 +212,6 @@
                                 </td>    
                             </tr>
                             <tr>
-                                <td><label for="cnt" class="control-label"> Numero Cajas: </label></td>
-                                <td><input type="text" class="form-control" id="numero_cajas"  name="numero_cajas"><td>
-                                </td>
-                            <tr>
                                 <td><label for="cnt" class="control-label"> Sexo: </label></td>
                                 <td>
                                     <select id="sexo" class="select2" name="sexo" required
@@ -234,24 +223,6 @@
                                                 </c:when>
                                                 <c:otherwise>
                                                     <option value=${sexo}> ${sexo}</option>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="cnt" class="control-label"> Cepa: </label></td>
-                                <td>
-                                    <select id="id_cepa" class="select2" name="id_cepa" required
-                                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                        <c:forEach items="${cepas}" var="cepa">
-                                            <c:choose>
-                                                <c:when test="${solicitud.getCepa().getId_cepa() == cepa.getId_cepa()}" >
-                                                    <option value=${cepa.getId_cepa()} selected> ${cepa.getNombre()}</option>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <option value=${cepa.getId_cepa()}> ${cepa.getNombre()}</option>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:forEach>
@@ -276,16 +247,8 @@
                                 <td><input class="form-control" type="text" id="pesosol"  name="pesosol" disabled></td>
                             </tr>
                             <tr>
-                                <td><label for="cnt" class="control-label"> Numero Cajas: </label></td>
-                                <td><input class="form-control" type="text" id="cajassol"  name="cajassol" disabled></td>
-                            </tr>
-                            <tr>
                                 <td><label for="cnt" class="control-label"> Sexo: </label></td>
                                 <td><input class="form-control" type="text" id="sexsol"  name="sexsol" disabled></td>
-                            </tr>
-                            <tr>
-                                <td><label for="cnt" class="control-label"> Cepa: </label></td>
-                                <td><input class="form-control" type="text" id="cepasol"  name="cepasol" disabled></td>
                             </tr>
                         </table>
                         <div class="form-group">
@@ -305,9 +268,9 @@
 
                 <jsp:attribute name="form">
                     <h5> ¿Está seguro que desea rechazar esta solicitud? De ser así por favor indique las observaciones: </h5>
-                    <form class="form-horizontal" id="form_modalrechazar" data-show-auth="${show_modal_auth}" method="post" action="SolicitudesRatonera">
-                        <input hidden="true" name="id_solicitud_rech" id="id_solicitud_rech" >
-                        <input hidden="true" name="accion" value="Rechazar" id="accion" >
+                    <form class="form-horizontal" id="form_modalrechazar" data-show-auth="${show_modal_auth}" method="post" action="SolicitudesConejera">
+                        <input hidden="true" name="id_solicitud_rech" id="id_solicitud_rech">
+                        <input hidden="true" name="accion" value="Rechazar" id="accion">
                         ${mensaje_auth}
                         <label for="observaciones" class="control-label">Observaciones</label>
                         <div class="form-group">

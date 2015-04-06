@@ -107,7 +107,6 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                           <select id="seleccionSeccion" class="select2" name="seccion" required
                                   oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
               
@@ -129,7 +128,6 @@
                     <div class="form-group">
                       <div class="col-sm-12">
                         <div class="input-group">
-                          <%--<span class="input-group-addon"><i class="fa fa-at"></i></span>           SE ELIMINA EL ICONO --%>
                           <select id="seleccionPuesto" class="select2" name="puesto" required
                                   oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                             <c:forEach items="${puestos}" var="puesto">

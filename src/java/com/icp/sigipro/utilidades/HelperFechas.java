@@ -17,27 +17,27 @@ import java.text.SimpleDateFormat;
 public class HelperFechas
 {
 
-  private static HelperFechas theSingleton = null;
+    private static HelperFechas theSingleton = null;
 
-  private HelperFechas()
-  {
-  }
-
-  public static HelperFechas getSingletonHelperFechas()
-  {
-    if (theSingleton == null) {
-      theSingleton = new HelperFechas();
+    private HelperFechas()
+    {
     }
-    return theSingleton;
-  }
 
-  public String formatearFecha(Date fecha)
-  {
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    return df.format(fecha);
-  }
-  
-  public Date formatearFecha(String fecha) throws ParseException
+    public static HelperFechas getSingletonHelperFechas()
+    {
+        if (theSingleton == null) {
+            theSingleton = new HelperFechas();
+        }
+        return theSingleton;
+    }
+
+    public String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }
+
+    public Date formatearFecha(String fecha) throws ParseException
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         
@@ -45,6 +45,12 @@ public class HelperFechas
         Date fecha_sql = new Date(fecha_date.getTime());
         
         return fecha_sql;
+    }
+    
+    public Date getFecha_hoy() {
+        java.util.Date hoy = new java.util.Date();
+        Date hoysql = new Date(hoy.getTime());
+        return hoysql;
     }
 
 }
