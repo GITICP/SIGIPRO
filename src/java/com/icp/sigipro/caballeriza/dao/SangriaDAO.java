@@ -288,7 +288,7 @@ public class SangriaDAO
             consulta_preparacion.setInt(1, sangria.getId_sangria());
             
             int filas_actualizadas_preparacion = consulta_preparacion.executeUpdate();
-            if (filas_actualizadas_preparacion > 1) {
+            if (filas_actualizadas_preparacion >= 1) {
                 resultado_preparacion = true;
             }
             

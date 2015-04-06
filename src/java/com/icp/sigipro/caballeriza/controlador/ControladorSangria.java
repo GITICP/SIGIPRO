@@ -140,7 +140,7 @@ public class ControladorSangria extends SIGIPROServlet
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         boolean resultado = false;
-        String redireccion = "SangriaPrueba/Agregar.jsp";
+        String redireccion = "Sangria/Agregar.jsp";
         Sangria sangria = construirObjeto(request);
 
         try {
@@ -177,6 +177,7 @@ public class ControladorSangria extends SIGIPROServlet
         int dia = Integer.parseInt(request.getParameter("dia"));
         Sangria sangria = new Sangria();
         sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
+        String redireccion = "Sangria/Agregar.jsp";
         
         String[] ids_caballos = request.getParameterValues("caballos");
         String fecha = request.getParameter("fecha_extraccion");
@@ -197,9 +198,13 @@ public class ControladorSangria extends SIGIPROServlet
                 
                 sangria_caballo.setCaballo(caballo);
                 
-                float sangre = Float.parseFloat(request.getParameter("sangre_"+id_caballo));
-                float plasma = Float.parseFloat(request.getParameter("plasma_"+id_caballo));
-                float lal = Float.parseFloat(request.getParameter("lal_"+id_caballo));
+                String sangre_str = request.getParameter("sangre_"+id_caballo);
+                String plasma_str = request.getParameter("plasma_"+id_caballo);
+                String lal_str = request.getParameter("lal_"+id_caballo);
+                
+                float sangre = (sangre_str.isEmpty()) ? 0.0f : Float.parseFloat(sangre_str);
+                float plasma = (plasma_str.isEmpty()) ? 0.0f :Float.parseFloat(plasma_str);
+                float lal = (lal_str.isEmpty()) ? 0.0f :Float.parseFloat(lal_str);
                 
                 set_plasma.invoke(sangria_caballo, plasma);
                 set_sangre.invoke(sangria_caballo, sangre);
@@ -213,9 +218,14 @@ public class ControladorSangria extends SIGIPROServlet
         
         try {
             dao.registrarExtraccion(sangria, dia);
-        } catch(SIGIPROException sig_ex) {
             
+            request.setAttribute("mensaje", helper.mensajeDeExito("Extracción registrada correctamente."));
+            request.setAttribute("lista_sangrias", dao.obtenerSangrias());
+            redireccion = "Sangria/index.jsp";
+        } catch(SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeExito("Extracción no se registró correctamente."));
         }
+        redireccionar(request, response, redireccion);
     }
 
     private Sangria construirObjeto(HttpServletRequest request) throws SIGIPROException
