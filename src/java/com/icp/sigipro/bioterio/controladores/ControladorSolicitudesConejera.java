@@ -71,10 +71,10 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     protected final List<String> pesos = new ArrayList<String>()
     {
         {
-            add("16-18");
-            add("18-20");
-            add("20-22");
-            add("+22");
+            add("2200");
+            add("2300");
+            add("3000");
+            add("3600");
             add("Otro");
 
         }
@@ -85,7 +85,6 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             add("Mixto");
             add("Hembras");
             add("Machos");
-
         }
     };
 

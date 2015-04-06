@@ -97,7 +97,7 @@ CREATE TABLE bioterio.solicitudes_conejera(
 	id_solicitud serial NOT NULL,
 	fecha_solicitud date NOT NULL,
 	numero_animales integer NOT NULL,
-	peso_requerido integer NOT NULL,
+	peso_requerido character varying(20) NOT NULL,
 	sexo character varying(10) NOT NULL, 
 	usuario_solicitante integer NOT NULL,
 	observaciones character varying(200),
@@ -110,7 +110,7 @@ CREATE TABLE bioterio.solicitudes_conejera(
 	id_solicitud integer NOT NULL,
 	fecha_entrega date NOT NULL,
 	numero_animales integer NOT NULL,
-	peso integer NOT NULL,
+	peso character varying(20) NOT NULL,
 	sexo character varying(10) NOT NULL,
 	usuario_recipiente integer NOT NULL
  );
