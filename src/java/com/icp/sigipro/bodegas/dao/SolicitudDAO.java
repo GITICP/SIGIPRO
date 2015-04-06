@@ -6,9 +6,11 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.Prestamo;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -179,10 +181,12 @@ public class SolicitudDAO
                 try {
                     UsuarioDAO usr = new UsuarioDAO();
                     InventarioDAO pr = new InventarioDAO();
-                    solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-                    solicitud.setInventario(pr.obtenerInventario(rs.getInt("id_inventario")));
-                    solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
-
+                    Usuario u = usr.obtenerUsuario(rs.getInt("id_usuario"));
+                    Usuario u_receptor = usr.obtenerUsuario(rs.getInt("id_usuario_recibo"));
+                    Inventario i = pr.obtenerInventario(rs.getInt("id_inventario"));
+                    solicitud.setUsuario(u);
+                    solicitud.setInventario(i);
+                    solicitud.setUsuarioReceptor(u_receptor);
                 }
                 catch (Exception ex) {
                     ex.printStackTrace();
