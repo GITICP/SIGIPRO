@@ -50,7 +50,7 @@
             <div class="widget-content">
               <table class="tabla-ver">
                 <tr><td> <strong>Numero de Solicitud:</strong> <td>${solicitud.getId_solicitud()} </td></tr>
-                <tr><td> <strong>Fecha Solicitud:</strong> <td>${solicitud.getFecha_solicitud()} </td></tr>
+                <tr><td> <strong>Fecha Solicitud:</strong> <td>${solicitud.getFecha_solicitud_S()} </td></tr>
                 <tr><td> <strong>Numero de Animales:</strong> <td>${solicitud.getNumero_animales()} </td></tr>
                 <tr><td> <strong>Peso Requerido:</strong> <td>${solicitud.getPeso_requerido()} </td></tr>
                 <tr><td> <strong>Numero de Cajas:</strong> <td>  ${solicitud.getNumero_cajas()}</td></tr>
@@ -85,7 +85,7 @@
                         <td>
                           <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=verentrega&id_entrega=${entrega.getId_entrega()}">
                             <div style="height:100%;width:100%">
-                               ${entrega.getFecha_entrega()}
+                               ${entrega.getFecha_entrega_S()}
                             </div>
                           </a>
                         </td>

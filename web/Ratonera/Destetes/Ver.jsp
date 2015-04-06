@@ -47,7 +47,7 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Fecha Destete:</strong> <td>${destete.getFecha_destete()} </td></tr>
+                <tr><td> <strong>Fecha Destete:</strong> <td>${destete.getFecha_destete_S()} </td></tr>
                 <tr><td> <strong>Numero de Hembras:</strong> <td>${destete.getNumero_hembras()} </td></tr>
                 <tr><td> <strong>Numero de Machos:</strong> <td>${destete.getNumero_machos()} </td></tr>
               </table>

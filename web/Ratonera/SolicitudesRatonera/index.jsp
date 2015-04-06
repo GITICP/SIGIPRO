@@ -71,7 +71,7 @@
                                                     </div>
                                                 </a>
                                             </td>
-                                            <td>${solicitud.getFecha_solicitud()}</td>
+                                            <td>${solicitud.getFecha_solicitud_S()}</td>
                                             <td>${solicitud.getUsuario_solicitante().getNombreCompleto()}</td>
                                             <td>${solicitud.getNumero_animales()}</td>
                                             <td>${solicitud.getPeso_requerido()}</td>
