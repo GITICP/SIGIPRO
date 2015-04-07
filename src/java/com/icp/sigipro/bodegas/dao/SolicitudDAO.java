@@ -11,7 +11,6 @@ import com.icp.sigipro.bodegas.modelos.Prestamo;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.configuracion.modelos.Seccion;
-import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -170,6 +169,7 @@ public class SolicitudDAO
                   + "         u_rec.nombre_completo AS nombre_recibe, "
                   + "         s.nombre_seccion AS nombre_seccion, "
                   + "         u.id_seccion AS id_seccion, "
+                  + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
                   + "         ci.nombre AS nombre_producto, "
                   + "         ci.codigo_icp AS cod_icp "
                   + " FROM ( "
@@ -179,6 +179,7 @@ public class SolicitudDAO
                   + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
                   + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
                   + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
+                  + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
                   + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario "
             );
 
@@ -200,6 +201,7 @@ public class SolicitudDAO
                 Usuario u = new Usuario();
                     u.setNombreCompleto(rs.getString("nombre_solicitante"));
                     u.setIdSeccion(rs.getInt("id_seccion"));
+                    u.setNombreSeccion(rs.getString("nombre_seccion_usuario"));
 
                 Usuario u_receptor = new Usuario();
                     u_receptor.setNombreCompleto(rs.getString("nombre_recibe"));
