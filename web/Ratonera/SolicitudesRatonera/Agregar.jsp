@@ -19,20 +19,14 @@
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
-        <div class="col-md-4 ">
+        <div class="col-md-12 ">
           <ul class="breadcrumb">
             <li>Bioterio-Ratonera</li>
             <li> 
               <a href="/SIGIPRO/Ratonera/SolicitudesRatonera?">SolicitudesRatonera</a>
             </li>
             <li class="active"> Nueva Cara </li>
-
           </ul>
-        </div>
-        <div class="col-md-8 ">
-          <div class="top-content">
-
-          </div>
         </div>
       </div>
 

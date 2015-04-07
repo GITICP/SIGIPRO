@@ -38,9 +38,19 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-barcode"></i> Solicitudes Ratonera </h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=agregar">Realizar Solicitud</a>
-                            </div>
+                            <c:set var="contienePermisoAgregar" value="false" />
+                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                <c:if test="${permiso == 1 || permiso == 205}">
+                                    <c:set var="contienePermisoEliminar" value="true" />
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${contienePermisoEliminar}">
+
+                                <div class="btn-group widget-header-toolbar">
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=agregar">Realizar Solicitud</a>
+                                </div>
+
+                            </c:if>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

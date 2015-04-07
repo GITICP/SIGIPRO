@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorAnalisisParasitologicos extends SIGIPROServlet
 {
 
-    private final int[] permisos = {251, 1, 1};
+    private int[] permisos = {206, 255, 0};
+    private int permiso_por_buscar;
     private final AnalisisParasitologicoDAO dao = new AnalisisParasitologicoDAO();
     private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     private final String contexto = "/Bioterio/";
@@ -63,9 +65,9 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(251, listaPermisos);
+        validarPermiso(permiso_por_buscar, listaPermisos);
         String redireccion = contexto + "AnalisisParasitologico/index.jsp";
-        
+
         try {
             List<AnalisisParasitologico> analisis = dao.obtenerAnalisisParasitologicos(especie_consultada);
             request.setAttribute("lista_analisis", analisis);
@@ -73,23 +75,24 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
         catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
-        
+
         redireccionar(request, response, redireccion);
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(251, listaPermisos);
+        validarPermiso(permiso_por_buscar, listaPermisos);
         String redireccion = contexto + "AnalisisParasitologico/Agregar.jsp";
         UsuarioDAO usuarios_dao = new UsuarioDAO();
         try {
             List<Usuario> usuarios = usuarios_dao.obtenerUsuariosSeccion(4);
             request.setAttribute("usuarios", usuarios);
-        } catch(SIGIPROException sig_ex) {
+        }
+        catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", sig_ex.getMessage());
         }
-        
+
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
@@ -168,7 +171,7 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
         boolean resultado = false;
         String redireccion = contexto + "AnalisisParasitologico/Editar.jsp";
         try {
-            AnalisisParasitologico analisis  = construirObjeto(request);
+            AnalisisParasitologico analisis = construirObjeto(request);
             dao.editarAnalisisParasitologico(analisis);
 
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -194,7 +197,7 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermiso(permiso_por_buscar, listaPermisos);
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         String redireccion = contexto + "AnalisisParasitologico/index.jsp";
         try {
@@ -231,20 +234,21 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
     private AnalisisParasitologico construirObjeto(HttpServletRequest request) throws SIGIPROException
     {
         AnalisisParasitologico analisis = new AnalisisParasitologico();
-        
+
         HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
-        
+
         analisis.setEspecie(especie_consultada);
-        
+
         String id_analisis = request.getParameter("id_analisis");
         if (!id_analisis.isEmpty()) {
             analisis.setId_analisis(Integer.parseInt(id_analisis));
-        } else {
+        }
+        else {
             analisis.setFecha(helper_fechas.getFecha_hoy());
         }
-        
+
         analisis.setNumero_informe(request.getParameter("numero_informe"));
-        
+
         analisis.setRecetado_por(request.getParameter("recetado_por"));
         analisis.setResponsable(request.getParameter("responsable"));
         analisis.setResultados(request.getParameter("resultados"));
@@ -268,6 +272,8 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
     {
         List<String> lista_acciones;
         especie_consultada = Boolean.parseBoolean(request.getParameter("especie"));
+        permisos = (especie_consultada) ? new int[]{206,0,0} : new int[]{255,0,0};
+        permiso_por_buscar = (especie_consultada) ? 206 : 255;
         request.setAttribute("especie", especie_consultada);
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
@@ -283,6 +289,19 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
         else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
+        }
+    }
+
+    @Override
+    protected void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException, NullPointerException
+    {
+        try {
+            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
+                throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
+            }
+        }
+        catch (NullPointerException e) {
+            throw new AuthenticationException("Expiró la sesión.");
         }
     }
 
