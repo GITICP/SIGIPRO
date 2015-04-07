@@ -245,13 +245,8 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
         
         analisis.setNumero_informe(request.getParameter("numero_informe"));
         
-        Usuario usuario_responsable = new Usuario();
-        Usuario usuario_recetador = new Usuario();
-        
-        usuario_responsable.setIdUsuario(Integer.parseInt(request.getParameter("responsable")));
-        usuario_recetador.setId_usuario(Integer.parseInt(request.getParameter("recetado_por")));
-        analisis.setRecetado_por(usuario_recetador);
-        analisis.setResponsable(usuario_responsable);
+        analisis.setRecetado_por(request.getParameter("recetado_por"));
+        analisis.setResponsable(request.getParameter("responsable"));
         analisis.setResultados(request.getParameter("resultados"));
         analisis.setTratamiento_dosis(request.getParameter("tratamiento"));
 

@@ -47,21 +47,9 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <div class="input-group">
-                        <select id="select-responsable" class="select2" style='background-color: #fff;' value= ' ' name="responsable" required
-                                oninvalid="setCustomValidity('Este campo es requerido')"
+                        <input  type="text" id="num-informe" value="${analisis.getRecetado_por()}" name="responsable" required class="form-control"
+                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                 onchange="setCustomValidity('')">
-                            <option value=""></option>
-                            <c:forEach items="${usuarios}" var="usuario">
-                                <c:choose>
-                                    <c:when test="${usuario.getId_usuario() != analisis.getResponsable().getId_usuario()}">
-                                        <option value="${usuario.getId_usuario()}">${usuario.getNombre_completo()}</option>
-                                    </c:when>
-                                    <c:when test="${usuario.getId_usuario() == analisis.getResponsable().getId_usuario()}">
-                                        <option value="${usuario.getId_usuario()}" selected>${usuario.getNombre_completo()}</option>
-                                    </c:when>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -97,21 +85,9 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <div class="input-group">
-                        <select id="select-recetado-por" class="select2" style='background-color: #fff;' value= ' ' name="recetado_por" required
-                                oninvalid="setCustomValidity('Este campo es requerido')"
+                        <input  type="text" id="num-informe" value="${analisis.getRecetado_por()}" name="recetado_por" required class="form-control"
+                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                 onchange="setCustomValidity('')">
-                            <option value=""></option>
-                            <c:forEach items="${usuarios}" var="usuario">
-                                <c:choose>
-                                    <c:when test="${usuario.getId_usuario() != analisis.getRecetado_por().getId_usuario()}">
-                                        <option value="${usuario.getId_usuario()}">${usuario.getNombre_completo()}</option>
-                                    </c:when>
-                                    <c:when test="${usuario.getId_usuario() == analisis.getRecetado_por().getId_usuario()}">
-                                        <option value="${usuario.getId_usuario()}" selected>${usuario.getNombre_completo()}</option>
-                                    </c:when>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
                     </div>
                 </div>
             </div>

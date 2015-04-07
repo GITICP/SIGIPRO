@@ -48,12 +48,12 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Número de informe: </strong> <td>${analisis.getNumero_informe()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong> <td>${analisis.getFecha_S()} </td></tr>
-                                <tr><td> <strong>Responsable</strong> <td>${analisis.getNombre_responsable()} </td></tr>
+                                <tr><td> <strong>Responsable</strong> <td>${analisis.getResponsable()} </td></tr>
                                 <tr><td> <strong>Especie:</strong> <td>${analisis.getEspecie()} </td></tr>
                                 <tr><td> <strong>Resultados:</strong> <td>${analisis.getResultados()} </td></tr>
                                 <tr><td> <strong>Tratamiento y Dosis:</strong> <td>${analisis.getTratamiento_dosis()} </td></tr>
                                 <tr><td> <strong>Fecha de Tratamiento:</strong> <td>${analisis.getFecha_tratamiento_S()} </td></tr>
-                                <tr><td> <strong>Recetado por:</strong> <td>${analisis.getNombre_recetador()} </td></tr>
+                                <tr><td> <strong>Recetado por:</strong> <td>${analisis.getRecetado_por()} </td></tr>
                             </table>
                         </div>
                     </div>

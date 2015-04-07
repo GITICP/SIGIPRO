@@ -24,9 +24,9 @@ public class AnalisisParasitologico {
   private boolean especie;
   private String resultados;
   private String tratamiento_dosis;
-  private Usuario recetado_por;
+  private String recetado_por;
   private Date fecha_tratamiento;
-  private Usuario responsable;
+  private String responsable;
 
   public int getId_analisis() {
     return id_analisis;
@@ -84,11 +84,11 @@ public class AnalisisParasitologico {
     this.tratamiento_dosis = tratamiento_dosis;
   }
 
-  public Usuario getRecetado_por() {
+  public String getRecetado_por() {
     return recetado_por;
   }
 
-  public void setRecetado_por(Usuario recetado_por) {
+  public void setRecetado_por(String recetado_por) {
     this.recetado_por = recetado_por;
   }
 
@@ -100,11 +100,11 @@ public class AnalisisParasitologico {
     this.fecha_tratamiento = fecha_tratamiento;
   }
 
-  public Usuario getResponsable() {
+  public String getResponsable() {
     return responsable;
   }
 
-  public void setResponsable(Usuario responsable) {
+  public void setResponsable(String responsable) {
     this.responsable = responsable;
   }
 
@@ -142,27 +142,6 @@ public class AnalisisParasitologico {
 
     }
     return JSON.toString();
-  }
-  
-  public String getNombre_responsable() {
-      String resultado = resultado = responsable.getNombre_completo();
-      
-      if (resultado == null) {
-          resultado = "Sin responsable";
-          
-      }
-      
-      return resultado;
-  }
-  
-  public String getNombre_recetador() {
-      String resultado = recetado_por.getNombre_completo();
-      
-      if (resultado == null) {
-          resultado = "Sin recetador";
-      } 
-      
-      return resultado;
   }
 
   private String formatearFecha(Date fecha) {

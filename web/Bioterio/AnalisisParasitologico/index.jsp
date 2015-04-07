@@ -74,8 +74,8 @@
                         </a>
                       </td>
                       <td>${analisis.getFecha_tratamiento_S()}</td>
-                      <td>${analisis.getNombre_responsable()}</td>
-                      <td>${analisis.getNombre_recetador()}</td>
+                      <td>${analisis.getResponsable()}</td>
+                      <td>${analisis.getRecetado_por()}</td>
                     </tr>
 
                   </c:forEach>
