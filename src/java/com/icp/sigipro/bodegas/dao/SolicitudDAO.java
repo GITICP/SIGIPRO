@@ -167,11 +167,14 @@ public class SolicitudDAO
                     " SELECT solicitud.*, "
                   + "         u.nombre_completo AS nombre_solicitante, "
                   + "         u_rec.nombre_completo AS nombre_recibe, "
+                  + "         s.id_seccion AS seccion_inventario, "
                   + "         s.nombre_seccion AS nombre_seccion, "
                   + "         u.id_seccion AS id_seccion, "
                   + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
                   + "         ci.nombre AS nombre_producto, "
-                  + "         ci.codigo_icp AS cod_icp "
+                  + "         ci.codigo_icp AS cod_icp ,"
+                  + "         ci.id_producto, "
+                  + "         i.stock_actual "
                   + " FROM ( "
                   + "         SELECT * FROM bodega.solicitudes where id_solicitud = ? "
                   + "         ) AS solicitud "
@@ -208,14 +211,22 @@ public class SolicitudDAO
 
                 Inventario i = new Inventario();
                     ProductoInterno p = new ProductoInterno();
+                    p.setId_producto(rs.getInt("id_producto"));
                     p.setCodigo_icp(rs.getString("cod_icp"));
                     p.setNombre(rs.getString("nombre_producto"));
+                    
+                    i.setId_producto(rs.getInt("id_producto"));
 
                     Seccion s = new Seccion();
                     s.setNombre_seccion(rs.getString("nombre_seccion"));
+                    s.setId_seccion(rs.getInt("seccion_inventario"));
+                    
+                    i.setId_seccion(rs.getInt("seccion_inventario"));
                     
                     i.setProducto(p);
                     i.setSeccion(s);
+                    
+                    i.setStock_actual(rs.getInt("stock_actual"));
 
                 solicitud.setUsuario(u);
                 solicitud.setInventario(i);
@@ -239,10 +250,14 @@ public class SolicitudDAO
         String parte_1 = " SELECT solicitud.*, "
                   + "         u.nombre_completo AS nombre_solicitante, "
                   + "         u_rec.nombre_completo AS nombre_recibe, "
+                  + "         s.id_seccion AS seccion_inventario, "
                   + "         s.nombre_seccion AS nombre_seccion, "
+                  + "         u.id_seccion AS id_seccion, "
                   + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
                   + "         ci.nombre AS nombre_producto, "
-                  + "         ci.codigo_icp AS cod_icp "
+                  + "         ci.codigo_icp AS cod_icp ,"
+                  + "         ci.id_producto, "
+                  + "         i.stock_actual "
                   + " FROM ( ";
 
         String codigo_consulta;
@@ -284,7 +299,8 @@ public class SolicitudDAO
                 solicitud.setObservaciones(rs.getString("observaciones"));
                 
                 Usuario u = new Usuario();
-                    u.setNombreCompleto(rs.getString("nombre_solicitante"));                    
+                    u.setNombreCompleto(rs.getString("nombre_solicitante"));
+                    u.setIdSeccion(rs.getInt("id_seccion"));
                     u.setNombreSeccion(rs.getString("nombre_seccion_usuario"));
 
                 Usuario u_receptor = new Usuario();
@@ -292,14 +308,22 @@ public class SolicitudDAO
 
                 Inventario i = new Inventario();
                     ProductoInterno p = new ProductoInterno();
+                    p.setId_producto(rs.getInt("id_producto"));
                     p.setCodigo_icp(rs.getString("cod_icp"));
                     p.setNombre(rs.getString("nombre_producto"));
+                    
+                    i.setId_producto(rs.getInt("id_producto"));
 
                     Seccion s = new Seccion();
                     s.setNombre_seccion(rs.getString("nombre_seccion"));
+                    s.setId_seccion(rs.getInt("seccion_inventario"));
+                    
+                    i.setId_seccion(rs.getInt("seccion_inventario"));
                     
                     i.setProducto(p);
                     i.setSeccion(s);
+                    
+                    i.setStock_actual(rs.getInt("stock_actual"));
                     
                 solicitud.setUsuario(u);
                 solicitud.setInventario(i);
