@@ -125,49 +125,43 @@
             <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
             <input hidden="true" name="accionindex" id="accionindex" value="accionindex">
             ${mensaje_auth}
-        
-            <label for="usr" class="control-label">Usuario</label>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <div class="input-group" style="display:table;">
-                  <input type="text" id="usr"  name="usr" required
+            <table class="tabla-modal">
+                <tr>
+                    <td><label for="usr" class="control-label">Usuario</label></td>
+                    <td><input class="form-control" type="text" id="usr"  name="usr" required
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')"></td>
+                </tr>
+                <tr>
+                    <td><label for="passw" class="control-label">Contraseña</label></td>
+                    <td>
+                        <input type="password" class="form-control" id="passw" name="passw" required
                          oninvalid="setCustomValidity('Este campo es requerido ')"
                          onchange="setCustomValidity('')">
-                </div>
-              </div>
-            </div>
-            <label for="passw" class="control-label">Contraseña</label>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <div class="input-group" style="display:table;">
-                  <input type="password" id="passw" name="passw" required
-                         oninvalid="setCustomValidity('Este campo es requerido ')"
-                         onchange="setCustomValidity('')">
-                </div>
-                <p id='mensajeValidación' style='color:red;'><p>
-              </div>
-            </div>
-            
+                        <p id='mensajeValidación' style='color:red;'><p>
+                    </td>
+                </tr>
+            </table>
             <hr>
             <h4> Información sobre la solicitud </h4>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <label for="num-sol" class="control-label"> Número de Solicitud: </label>  
-                <input type="text" id="num-sol"  name="num-sol" disabled>
-              </div>
-              <div class="col-sm-12">
-                <label for="usr-sol" class="control-label"> Usuario Solicitante: </label>
-                <input type="text" id="usr-sol"  name="usr-sol" disabled>
-              </div>
-              <div class="col-sm-12">
-                <label for="prd" class="control-label"> Producto:  </label>
-                <input type="text" id="prd"  name="prd" disabled>
-              </div>
-              <div class="col-sm-12">
-                <label for="cnt" class="control-label"> Cantidad: </label>
-                <input type="text" id="cnt"  name="cnt" disabled>
-              </div>
-            </div>
+            <table class="tabla-modal">
+              <tr>
+                  <td><label for="num-sol" class="control-label"> Número de Solicitud: </label></td>
+                  <td><input class="form-control" type="text" id="num-sol"  name="num-sol" disabled></td>
+              </tr>
+              <tr>
+                <td><label for="usr-sol" class="control-label"> Usuario Solicitante: </label></td>
+                <td><input class="form-control" type="text" id="usr-sol"  name="usr-sol" disabled></td>
+              </tr>
+              <tr>
+                <td><label for="prd" class="control-label"> Producto:  </label></td>
+                <td><input class="form-control" type="text" id="prd"  name="prd" disabled></td></td>
+              </tr>
+              <tr>
+                <td><label for="cnt" class="control-label"> Cantidad: </label></td>
+                <td><input class="form-control" type="text" id="cnt"  name="cnt" disabled></td>
+              </tr>
+            </table>
             
             <div class="form-group">
               <div class="modal-footer">
