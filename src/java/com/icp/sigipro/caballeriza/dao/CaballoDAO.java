@@ -9,7 +9,6 @@ import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.core.SIGIPROException;
-import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -249,7 +248,6 @@ public class CaballoDAO {
     public List<EventoClinico> ObtenerEventosCaballo(int id_caballo) throws SIGIPROException {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
         TipoEventoDAO dao = new TipoEventoDAO();
-        UsuarioDAO daoUsr = new UsuarioDAO();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement("select ec.id_evento,fecha,id_tipo_evento,responsable,descripcion from caballeriza.eventos_clinicos ec left outer join caballeriza.eventos_clinicos_caballos ecc on ec.id_evento = ecc.id_evento where id_caballo=?; ");
@@ -261,7 +259,7 @@ public class CaballoDAO {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
-                evento.setResponsable(daoUsr.obtenerUsuario(rs.getInt("responsable")));                
+                evento.setResponsable(rs.getString("responsable"));                
                 evento.setDescripcion(rs.getString("descripcion"));
                 resultado.add(evento);
             }          
@@ -277,7 +275,6 @@ public class CaballoDAO {
     public List<EventoClinico> ObtenerEventosCaballoRestantes(int id_caballo) throws SIGIPROException {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
         TipoEventoDAO dao = new TipoEventoDAO();
-        UsuarioDAO daousr = new UsuarioDAO();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement("SELECT  ec.id_evento, ec.id_tipo_evento, ec.fecha, ec.descripcion, ec.responsable FROM caballeriza.eventos_clinicos ec LEFT OUTER JOIN caballeriza.tipos_eventos tp ON ec.id_tipo_evento = tp.id_tipo_evento WHERE id_evento NOT IN (SELECT id_evento FROM caballeriza.eventos_clinicos_caballos ecc where id_caballo =?) order by ec.id_tipo_evento;");
@@ -289,7 +286,7 @@ public class CaballoDAO {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));              
                 evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
-                evento.setResponsable(daousr.obtenerUsuario(rs.getInt("responsable")));
+                evento.setResponsable(rs.getString("responsable"));
                 evento.setDescripcion(rs.getString("descripcion"));
                 resultado.add(evento);
             }          

@@ -59,23 +59,19 @@
             <label for="responsable" class="control-label">Responsable</label>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="seleccionResponsable" class="select2" name="responsable"
-                                style='background-color: #fff;'
-                                onchange="setCustomValidity('')">
-                            <option value=''></option>
-                            <c:forEach items="${listaresponsables}" var="respon">
-                                <c:choose>
-                                    <c:when test="${respon.getID() == evento.getResponsable().getID()}" >
-                                        <option value=${respon.getID()} selected> ${respon.getNombreUsuario()}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value=${respon.getID()}>${respon.getNombreUsuario()}</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
-                    </div>
+                <div class="input-group">
+                    <c:choose>
+                        <c:when test="${evento.getResponsable()==null}">
+                            <input type="text" placeholder="Persona responsable del evento clínico" class="form-control" name="responsable"
+                                   onchange="setCustomValidity('')">
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="form-control" name="responsable" value="${evento.getResponsable()}" 
+                                   onchange="setCustomValidity('')"> 
+                            <input hidden="true" name="responsable" value="${evento.getResponsable()}">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
                 </div>
             </div>  
         </div>

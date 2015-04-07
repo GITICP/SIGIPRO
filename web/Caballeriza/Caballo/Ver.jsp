@@ -88,8 +88,8 @@
                                             <td>${eventos.getFechaAsString()}</td>
                                             <td>${eventos.getTipo_evento().getNombre()}</td>
                                             <c:choose>
-                                                <c:when test="${eventos.getResponsable().getNombre_usuario()!= null}">
-                                                    <td>${eventos.getResponsable().getNombre_usuario()}</td>
+                                                <c:when test="${eventos.getResponsable()!= null}">
+                                                    <td>${eventos.getResponsable()}</td>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <td>No Tiene Usuario Responsable</td>

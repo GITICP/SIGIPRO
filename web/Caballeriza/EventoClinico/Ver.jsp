@@ -58,11 +58,11 @@
                                 <tr><td> <strong>Reespondable:</strong> <td>
                                         <c:set var="val" value=""/>
                                         <c:choose> 
-                                            <c:when test="${eventoclinico.getResponsable().getNombreUsuario() == null}">
+                                            <c:when test="${eventoclinico.getResponsable() == null || eventoclinico.getResponsable() ==''}">
                                                 No Tiene Usuario Responsable
                                             </c:when>
                                             <c:otherwise>
-                                                ${eventoclinico.getResponsable().getNombreUsuario()}
+                                                ${eventoclinico.getResponsable()}
                                             </c:otherwise>
                                         </c:choose>
                                     </td></tr>                                         
