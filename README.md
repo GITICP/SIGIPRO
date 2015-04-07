@@ -56,3 +56,9 @@ Scripts Base Datos/ScriptBD - Creacion de Esquemas y Tablas.
 ##Despliegue
 
 Ir a NetBeans, abrir el proyecto SIGIPRO, y darle Run. Revisar la Consola para ver cual puerto está asignado (8084). Abrirlo con el localhost.
+
+#Versiones de Producción
+
+##Bodegas
+
+Bodegas fue puesta a producción de manera completa el 7 de abril de 2015.

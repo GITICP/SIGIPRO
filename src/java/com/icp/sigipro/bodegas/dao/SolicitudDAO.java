@@ -6,9 +6,12 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.Prestamo;
+import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
-import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -160,7 +163,28 @@ public class SolicitudDAO
         Solicitud solicitud = new Solicitud();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bodega.solicitudes where id_solicitud = ?");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT solicitud.*, "
+                  + "         u.nombre_completo AS nombre_solicitante, "
+                  + "         u_rec.nombre_completo AS nombre_recibe, "
+                  + "         s.id_seccion AS seccion_inventario, "
+                  + "         s.nombre_seccion AS nombre_seccion, "
+                  + "         u.id_seccion AS id_seccion, "
+                  + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
+                  + "         ci.nombre AS nombre_producto, "
+                  + "         ci.codigo_icp AS cod_icp ,"
+                  + "         ci.id_producto, "
+                  + "         i.stock_actual "
+                  + " FROM ( "
+                  + "         SELECT * FROM bodega.solicitudes where id_solicitud = ? "
+                  + "         ) AS solicitud "
+                  + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
+                  + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
+                  + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
+                  + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
+                  + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
+                  + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario "
+            );
 
             consulta.setInt(1, id);
 
@@ -176,17 +200,38 @@ public class SolicitudDAO
                 solicitud.setFecha_entrega(rs.getDate("fecha_entrega"));
                 solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
                 solicitud.setObservaciones(rs.getString("observaciones"));
-                try {
-                    UsuarioDAO usr = new UsuarioDAO();
-                    InventarioDAO pr = new InventarioDAO();
-                    solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-                    solicitud.setInventario(pr.obtenerInventario(rs.getInt("id_inventario")));
-                    solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
+                
+                Usuario u = new Usuario();
+                    u.setNombreCompleto(rs.getString("nombre_solicitante"));
+                    u.setIdSeccion(rs.getInt("id_seccion"));
+                    u.setNombreSeccion(rs.getString("nombre_seccion_usuario"));
 
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                Usuario u_receptor = new Usuario();
+                    u_receptor.setNombreCompleto(rs.getString("nombre_recibe"));
+
+                Inventario i = new Inventario();
+                    ProductoInterno p = new ProductoInterno();
+                    p.setId_producto(rs.getInt("id_producto"));
+                    p.setCodigo_icp(rs.getString("cod_icp"));
+                    p.setNombre(rs.getString("nombre_producto"));
+                    
+                    i.setId_producto(rs.getInt("id_producto"));
+
+                    Seccion s = new Seccion();
+                    s.setNombre_seccion(rs.getString("nombre_seccion"));
+                    s.setId_seccion(rs.getInt("seccion_inventario"));
+                    
+                    i.setId_seccion(rs.getInt("seccion_inventario"));
+                    
+                    i.setProducto(p);
+                    i.setSeccion(s);
+                    
+                    i.setStock_actual(rs.getInt("stock_actual"));
+
+                solicitud.setUsuario(u);
+                solicitud.setInventario(i);
+                solicitud.setUsuarioReceptor(u_receptor);
+                rs.next();
             }
             rs.close();
             consulta.close();
@@ -202,14 +247,40 @@ public class SolicitudDAO
     {
 
         List<Solicitud> resultado = new ArrayList<Solicitud>();
+        String parte_1 = " SELECT solicitud.*, "
+                  + "         u.nombre_completo AS nombre_solicitante, "
+                  + "         u_rec.nombre_completo AS nombre_recibe, "
+                  + "         s.id_seccion AS seccion_inventario, "
+                  + "         s.nombre_seccion AS nombre_seccion, "
+                  + "         u.id_seccion AS id_seccion, "
+                  + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
+                  + "         ci.nombre AS nombre_producto, "
+                  + "         ci.codigo_icp AS cod_icp ,"
+                  + "         ci.id_producto, "
+                  + "         i.stock_actual "
+                  + " FROM ( ";
+
+        String codigo_consulta;
+        
+        String parte_2 = "         ) AS solicitud "
+                  + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
+                  + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
+                  + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
+                  + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
+                  + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
+                  + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
 
         try {
             PreparedStatement consulta;
             if (id_usuario == 0) {
-                consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes Where estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC");
+                codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC " + parte_2;
+                consulta = getConexion().prepareStatement(codigo_consulta);
             }
             else {
-                consulta = getConexion().prepareStatement(" SELECT * FROM bodega.solicitudes s inner join seguridad.usuarios u on s.id_usuario = u.id_usuario Where u.id_seccion = ? AND s.estado != 'Pendiente Prestamo' ORDER BY s.id_solicitud DESC");
+                codigo_consulta = parte_1 + " SELECT s.* FROM bodega.solicitudes s "
+                        + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
+                        + " WHERE u.id_seccion = ? AND s.estado != 'Pendiente Prestamo' ORDER BY s.id_solicitud DESC " + parte_2;
+                consulta = getConexion().prepareStatement(codigo_consulta);
                 consulta.setInt(1, id_usuario);
             }
 
@@ -226,16 +297,38 @@ public class SolicitudDAO
                 solicitud.setFecha_entrega(rs.getDate("fecha_entrega"));
                 solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
                 solicitud.setObservaciones(rs.getString("observaciones"));
-                try {
-                    UsuarioDAO usr = new UsuarioDAO();
-                    InventarioDAO pr = new InventarioDAO();
-                    solicitud.setUsuario(usr.obtenerUsuario(rs.getInt("id_usuario")));
-                    solicitud.setInventario(pr.obtenerInventario(rs.getInt("id_inventario")));
-                    solicitud.setUsuarioReceptor(usr.obtenerUsuario(rs.getInt("id_usuario_recibo")));
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                
+                Usuario u = new Usuario();
+                    u.setNombreCompleto(rs.getString("nombre_solicitante"));
+                    u.setIdSeccion(rs.getInt("id_seccion"));
+                    u.setNombreSeccion(rs.getString("nombre_seccion_usuario"));
+
+                Usuario u_receptor = new Usuario();
+                    u_receptor.setNombreCompleto(rs.getString("nombre_recibe"));
+
+                Inventario i = new Inventario();
+                    ProductoInterno p = new ProductoInterno();
+                    p.setId_producto(rs.getInt("id_producto"));
+                    p.setCodigo_icp(rs.getString("cod_icp"));
+                    p.setNombre(rs.getString("nombre_producto"));
+                    
+                    i.setId_producto(rs.getInt("id_producto"));
+
+                    Seccion s = new Seccion();
+                    s.setNombre_seccion(rs.getString("nombre_seccion"));
+                    s.setId_seccion(rs.getInt("seccion_inventario"));
+                    
+                    i.setId_seccion(rs.getInt("seccion_inventario"));
+                    
+                    i.setProducto(p);
+                    i.setSeccion(s);
+                    
+                    i.setStock_actual(rs.getInt("stock_actual"));
+                    
+                solicitud.setUsuario(u);
+                solicitud.setInventario(i);
+                solicitud.setUsuarioReceptor(u_receptor);
+
                 resultado.add(solicitud);
             }
             rs.close();

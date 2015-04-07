@@ -186,15 +186,16 @@ public class UsuarioDAO
 
                 resultadoconsultaPuesto.close();
                 resultadoConsultaSeccion.close();
-                consulta.close();
                 consultaPuesto.close();
                 consultaSeccion.close();
-                conexion.close();
-
             }
+
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
         }
         catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
 
         return resultado;
