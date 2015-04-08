@@ -219,7 +219,13 @@ public class Sangria {
     }
     
     private String formatearFecha(Date fecha) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(fecha);
+        String resultado;
+        if (fecha != null){
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            resultado = df.format(fecha);
+        } else {
+            resultado = "Pendiente";
+        }
+        return resultado;
     }    
 }

@@ -52,5 +52,8 @@ public class HelperFechas
         Date hoysql = new Date(hoy.getTime());
         return hoysql;
     }
-
+    
+    public String getFecha_hoyAsString() {
+        return formatearFecha(getFecha_hoy());
+    }
 }

@@ -15,6 +15,7 @@ import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class ControladorSangria extends SIGIPROServlet
             add("agregar");
             add("editar");
             add("extraccion");
+            add("editarextraccion");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -126,6 +128,35 @@ public class ControladorSangria extends SIGIPROServlet
         
         redireccionar(request, response, redireccion);
     }
+    
+    protected void getEditarextraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(60, listaPermisos);
+        String redireccion = "Sangria/Extraccion.jsp";
+        
+        int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
+        int dia = Integer.parseInt(request.getParameter("dia"));
+        
+        try {
+            Sangria sangria = dao.obtenerSangria(id_sangria);
+            
+            Method get_fecha = Sangria.class.getDeclaredMethod("getFecha_dia" + dia + "AsString", (Class<?>[]) null);
+            
+            request.setAttribute("sangria", sangria);
+            request.setAttribute("editar", true);
+            request.setAttribute("fecha_sangria", get_fecha.invoke(sangria, (Object[]) null));
+            request.setAttribute("dia", dia);
+            request.setAttribute("accion", "Extraccion");
+        } catch(SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+            redireccion = "Sangria/index.jsp";
+        } catch(Exception ex_inesperada) {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Inténtelo nuevamente y de persistir, favor notificar al administrador del sistema."));
+            redireccion = "Sangria/index.jsp";
+        }
+        redireccionar(request, response, redireccion);
+    }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
@@ -183,9 +214,6 @@ public class ControladorSangria extends SIGIPROServlet
         String fecha = request.getParameter("fecha_extraccion");
         
         try {
-            Method set_plasma = SangriaCaballo.class.getDeclaredMethod("setPlasma_dia" + dia, float.class);
-            Method set_sangre = SangriaCaballo.class.getDeclaredMethod("setSangre_dia" + dia, float.class);
-            Method set_lal    = SangriaCaballo.class.getDeclaredMethod("setLal_dia"    + dia, float.class);
             Method set_fecha  = Sangria.class.getDeclaredMethod("setFecha_dia" + dia, Date.class);
             set_fecha.invoke(sangria, helper_fechas.formatearFecha(fecha));
             
@@ -203,12 +231,12 @@ public class ControladorSangria extends SIGIPROServlet
                 String lal_str = request.getParameter("lal_"+id_caballo);
                 
                 float sangre = (sangre_str.isEmpty()) ? 0.0f : Float.parseFloat(sangre_str);
-                float plasma = (plasma_str.isEmpty()) ? 0.0f :Float.parseFloat(plasma_str);
-                float lal = (lal_str.isEmpty()) ? 0.0f :Float.parseFloat(lal_str);
+                float plasma = (plasma_str.isEmpty()) ? 0.0f : Float.parseFloat(plasma_str);
+                float lal = (lal_str.isEmpty()) ? 0.0f : Float.parseFloat(lal_str);
                 
-                set_plasma.invoke(sangria_caballo, plasma);
-                set_sangre.invoke(sangria_caballo, sangre);
-                set_lal.invoke(sangria_caballo, lal);
+                sangria_caballo.setPlasma(dia, plasma);
+                sangria_caballo.setSangre(dia, sangre);
+                sangria_caballo.setLal(dia, lal);
                 
                 sangria.agregarSangriaCaballo(sangria_caballo);
             }

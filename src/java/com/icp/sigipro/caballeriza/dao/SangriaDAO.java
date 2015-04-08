@@ -254,9 +254,6 @@ public class SangriaDAO
         boolean resultado_preparacion = false;
         boolean resultado_sangrias_caballos = false;
 
-        Method get_plasma;
-        Method get_sangre;
-        Method get_lal;
         Method get_fecha;
         
         PreparedStatement consulta_preparacion = null;
@@ -265,9 +262,6 @@ public class SangriaDAO
         
 
         try {
-            get_plasma = SangriaCaballo.class.getDeclaredMethod("getPlasma_dia" + dia, (Class<?>[]) null);
-            get_sangre = SangriaCaballo.class.getDeclaredMethod("getSangre_dia" + dia, (Class<?>[]) null);
-            get_lal = SangriaCaballo.class.getDeclaredMethod("getLal_dia" + dia, (Class<?>[]) null);
             get_fecha = Sangria.class.getDeclaredMethod("getFecha_dia" + dia, (Class<?>[]) null);
         } catch(Exception ex) {
             throw new SIGIPROException("Error inesperado. Contacte al administrador del sistema.");
@@ -301,9 +295,9 @@ public class SangriaDAO
             );
             
             for (SangriaCaballo sangria_caballo : sangria.getSangrias_caballos()) {
-                consulta_sangrias_caballos.setFloat(1, (float) get_sangre.invoke(sangria_caballo, (Object[]) null));
-                consulta_sangrias_caballos.setFloat(2, (float) get_plasma.invoke(sangria_caballo, (Object[]) null));
-                consulta_sangrias_caballos.setFloat(3, (float) get_lal.invoke(sangria_caballo, (Object[]) null));
+                consulta_sangrias_caballos.setFloat(1, sangria_caballo.getSangre(dia));
+                consulta_sangrias_caballos.setFloat(2, sangria_caballo.getPlasma(dia));
+                consulta_sangrias_caballos.setFloat(3, sangria_caballo.getLal(dia));
                 consulta_sangrias_caballos.setInt(4, sangria.getId_sangria());
                 consulta_sangrias_caballos.setInt(5, sangria_caballo.getCaballo().getId_caballo());
                 consulta_sangrias_caballos.addBatch();
