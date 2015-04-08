@@ -49,6 +49,10 @@ public class ControladorCaballo extends SIGIPROServlet {
             add("ver");
             add("agregar");           
             add("editar");
+            add("evento");
+            add("inoculo");
+            add("sangriap");
+            add("sangria");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -92,16 +96,84 @@ public class ControladorCaballo extends SIGIPROServlet {
         int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
         try {
             Caballo g = dao.obtenerCaballo(id_caballo);
-            List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
-            List<Inoculo> listainoculos= dao.ObtenerInoculosCaballo(id_caballo);
-            List<SangriaPruebaCaballo> listasangriaspruebas = dao.ObtenerSangriasPruebaCaballo(id_caballo);
-            List<SangriaCaballo> listasangrias = dao.ObtenerSangriasCaballo(id_caballo);
             request.setAttribute("grupo", g.getGrupo_de_caballos());
             request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
             request.setAttribute("caballo", g);
+            
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getEvento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerEC.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
+            request.setAttribute("caballo", g);
             request.setAttribute("listaEventos", listaeventos);
+
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getInoculo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerI.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<Inoculo> listainoculos= dao.ObtenerInoculosCaballo(id_caballo);
+            request.setAttribute("caballo", g);
             request.setAttribute("listaInoculos", listainoculos);
+
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getSangriap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerSp.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<SangriaPruebaCaballo> listasangriaspruebas = dao.ObtenerSangriasPruebaCaballo(id_caballo);
+            request.setAttribute("caballo", g);
             request.setAttribute("listaSangriasPruebas", listasangriaspruebas);
+
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getSangria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerS.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<SangriaCaballo> listasangrias = dao.ObtenerSangriasCaballo(id_caballo);
+            request.setAttribute("caballo", g);
             request.setAttribute("listaSangrias", listasangrias);
 
             redireccionar(request, response, redireccion);
@@ -110,7 +182,7 @@ public class ControladorCaballo extends SIGIPROServlet {
             ex.printStackTrace();
         }
         
-    }    
+    }        
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
