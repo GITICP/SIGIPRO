@@ -186,25 +186,6 @@
                         </tbody>
                     </c:forEach>
                 </table>
-                <div class="row">
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <button type="submit"  class="btn btn-primary" onclick="confirmacionAgregarCaballos()"><i class="fa fa-check-circle"></i> Confirmar Caballos</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -218,7 +199,7 @@
                             <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                         </c:when>
                         <c:otherwise>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Sangría de Prueba</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle" onclick="confirmacionAgregarCaballos()"></i> ${accion} Sangría de Prueba</button>
                         </c:otherwise>
                     </c:choose>
                 </div>

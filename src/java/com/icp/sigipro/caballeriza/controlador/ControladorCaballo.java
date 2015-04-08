@@ -12,6 +12,9 @@ import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
+import com.icp.sigipro.caballeriza.modelos.Inoculo;
+import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
+import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
@@ -90,11 +93,16 @@ public class ControladorCaballo extends SIGIPROServlet {
         try {
             Caballo g = dao.obtenerCaballo(id_caballo);
             List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
-            
+            List<Inoculo> listainoculos= dao.ObtenerInoculosCaballo(id_caballo);
+            List<SangriaPruebaCaballo> listasangriaspruebas = dao.ObtenerSangriasPruebaCaballo(id_caballo);
+            List<SangriaCaballo> listasangrias = dao.ObtenerSangriasCaballo(id_caballo);
             request.setAttribute("grupo", g.getGrupo_de_caballos());
             request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
             request.setAttribute("caballo", g);
             request.setAttribute("listaEventos", listaeventos);
+            request.setAttribute("listaInoculos", listainoculos);
+            request.setAttribute("listaSangriasPruebas", listasangriaspruebas);
+            request.setAttribute("listaSangrias", listasangrias);
 
             redireccionar(request, response, redireccion);
         }
