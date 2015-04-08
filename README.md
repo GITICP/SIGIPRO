@@ -65,5 +65,5 @@ Bodegas fue puesta a producción de manera completa el 7 de abril de 2015.
 
 ###Arreglos
     8 de abril:
-        Commit: Fix arreglo agregar permisos
+        Commit: Fix de agregar producto interno
         Justificación: Para arreglar un problema de que no se podía aprobar o rechazar una solicitud, el arreglo provocó errores a la hora de agregar un nuevo producto por un asunto de NullPointerException. La solución había sido hacer un .replace de comillas por comillas simples de forma que ya no hiciera conflicto. La situación provocó que tirara un NullPointerException cuando el atributo no estaba inicializado. La solución fue validar si el atributo era nulo antes de ejecutar la función.
