@@ -13,6 +13,7 @@ import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -134,7 +135,30 @@ public class CaballoDAO {
         }
         return resultado;
         
-    }        
+    }
+    
+    public boolean insertarImagen(InputStream imagen, int id_caballo,long size){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  "UPDATE caballeriza.caballos " +
+                  "SET fotografia=? " +
+                  "WHERE id_caballo=?; ");
+
+            consulta.setBinaryStream(1, imagen,size);
+            consulta.setInt(2, id_caballo);
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+        
     public List<Caballo> obtenerCaballosGrupo(int id_grupo_de_caballo){
         List<Caballo> resultado = new ArrayList<Caballo>();
         try{
@@ -153,8 +177,7 @@ public class CaballoDAO {
                 caballo.setSexo(rs.getString("sexo"));
                 caballo.setColor(rs.getString("color"));
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
-                caballo.setEstado(rs.getString("estado"));
-                caballo.setFotografia(rs.getBlob("fotografia"));
+                caballo.setEstado(rs.getString("estado"));              
                 resultado.add(caballo);
             }
             rs.close();
@@ -211,7 +234,8 @@ public class CaballoDAO {
                 caballo.setColor(rs.getString("color"));
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
-                caballo.setFotografia(rs.getBlob("fotografia"));
+                byte[] imagen = rs.getBytes("fotografia");
+                caballo.setFotografia(imagen);  
             }      
         }
         catch(Exception ex){
@@ -237,7 +261,6 @@ public class CaballoDAO {
                 caballo.setColor(rs.getString("color"));
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
-                caballo.setFotografia(rs.getBlob("fotografia"));
                 resultado.add(caballo);
             }      
             consulta.close();
