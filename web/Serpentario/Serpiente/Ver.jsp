@@ -45,16 +45,27 @@
                     <c:set var="contienePermisoEvento" value="true" />
                   </c:if>
                 </c:forEach>
-                <c:if test="${contienePermisoEvento}">
+                <c:set var="contienePermisoDeceso" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 313}">
+                    <c:set var="contienePermisoDeceso" value="true" />
+                  </c:if>
+                </c:forEach>
                     <c:choose>
                         <c:when test="${deceso==null}">
-                            <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="registrar el deceso de la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=deceso&id_serpiente=${serpiente.getId_serpiente()}">Deceso</a>
+                            <c:if test="${contienePermisoDeceso}">
+                                <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="registrar el deceso de la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=deceso&id_serpiente=${serpiente.getId_serpiente()}">Deceso</a>
+                            </c:if>
                             <c:choose>
                             <c:when test="${coleccionViva == null}">
-                                <a class="btn btn-primary btn-sm boton-accion confirmable-form" data-form-id="form-pasoCV" data-texto-confirmacion="pasar la serpiente a Colección Viva">Paso a CV</a>
+                                <c:if test="${contienePermisoEvento}">
+                                    <a class="btn btn-primary btn-sm boton-accion confirmable-form" data-form-id="form-pasoCV" data-texto-confirmacion="pasar la serpiente a Colección Viva">Paso a CV</a>
+                                </c:if>
                             </c:when>
                             </c:choose>
-                            <a class="btn btn-primary btn-sm boton-accion evento-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento</a>
+                               <c:if test="${contienePermisoEvento}">
+                                    <a class="btn btn-primary btn-sm boton-accion evento-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarEvento">Evento</a>
+                               </c:if>
                             <c:set var="contienePermisoEditar" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                               <c:if test="${permiso == 1 || permiso == 311}">
@@ -67,13 +78,13 @@
                             </c:if>
                         </c:when>
                         <c:otherwise>
-                            <c:set var="contienePermisoDeceso" value="false" />
+                            <c:set var="contienePermisoCH-CT" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                               <c:if test="${permiso == 1 || permiso == 314}">
-                                <c:set var="contienePermisoDeceso" value="true" />
+                                <c:set var="contienePermisoCH-CT" value="true" />
                               </c:if>
                             </c:forEach>
-                            <c:if test="${contienePermisoDeceso}">
+                            <c:if test="${contienePermisoCH-CT}">
                                 <c:choose>
                                     <c:when test="${postDeceso}">
                                         <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
@@ -85,9 +96,7 @@
                             
                         </c:otherwise>
                     </c:choose>
-                
-                </c:if>
-                  <!--
+                <!--
                 <c:set var="contienePermisoEliminar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 311}">

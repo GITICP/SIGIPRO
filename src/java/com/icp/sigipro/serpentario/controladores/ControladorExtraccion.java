@@ -141,7 +141,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
     protected void getEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(320, listaPermisos);
+        validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Extraccion/EditarSerpientes.jsp";
         
@@ -165,7 +165,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
     protected void getEditarserpientes(HttpServletRequest request, HttpServletResponse response,int id_extraccion) throws ServletException, IOException{
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(320, listaPermisos);
+        validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Extraccion/EditarSerpientes.jsp";
         

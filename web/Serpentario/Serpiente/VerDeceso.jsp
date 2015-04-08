@@ -38,7 +38,7 @@
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 313}">
+                  <c:if test="${permiso == 1 || permiso == 314}">
                     <c:set var="contienePermisoEditar" value="true" />
                   </c:if>
                 </c:forEach>

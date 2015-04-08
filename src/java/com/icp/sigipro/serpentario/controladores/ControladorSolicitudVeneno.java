@@ -112,6 +112,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         String redireccion = "SolicitudVeneno/index.jsp";
         request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+        request.setAttribute("boolentrega",this.verificarEntregaSolicitud(request));
         List<Solicitud> solicitudes = dao.obtenerSolicitudes();
         request.setAttribute("listaSolicitudes", solicitudes);
         redireccionar(request, response, redireccion);
@@ -158,12 +159,15 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             request.setAttribute("mensaje", helper.mensajeDeError("No puede editar una solicitud en proceso."));
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             redireccionar(request, response, redireccion);
         }
     }
 
        protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(352, listaPermisos);
         boolean resultado = false;
         String redireccion = "SolicitudVeneno/index.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -185,12 +189,14 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
                 request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada correctamente"));
             }
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             redireccionar(request, response, redireccion);
         }else{
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser aprobada."));
             redireccionar(request, response, redireccion);
         }
@@ -217,6 +223,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             //*----------------------------*
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
         }
         redireccionar(request, response, redireccion);
@@ -241,6 +248,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
                 //*----------------------------*
                 redireccion = "SolicitudVeneno/index.jsp";
                 request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             }
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             redireccionar(request, response, redireccion);
@@ -249,7 +257,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
          
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
-            
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             redireccionar(request, response, redireccion);
         }
@@ -272,6 +280,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
                 //*----------------------------*
                 redireccion = "SolicitudVeneno/index.jsp";
                 request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
                 request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                 request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada correctamente"));
             }
@@ -280,6 +289,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             redireccion = "SolicitudVeneno/index.jsp";
             request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser rechazazda."));
             redireccionar(request, response, redireccion);
         }
@@ -327,11 +337,13 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
                         //*----------------------------*
                         redireccion = "SolicitudVeneno/index.jsp";
                         request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                        request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
                         request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada correctamente"));
                     }else{
                         redireccion = "SolicitudVeneno/index.jsp";
                         request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                        request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
                         request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                         request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser entregada"));
                     }
@@ -340,6 +352,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             }else{
                 redireccion = "SolicitudVeneno/index.jsp";
                 request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
                 request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                 request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser entregada."));
                 redireccionar(request, response, redireccion);
@@ -362,7 +375,12 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
   
     private boolean verificarAdminSolicitud(HttpServletRequest request) throws AuthenticationException{
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        return verificarPermiso(352,listaPermisos)||verificarPermiso(353,listaPermisos);
+        return verificarPermiso(352,listaPermisos);
+    }
+    
+    private boolean verificarEntregaSolicitud(HttpServletRequest request) throws AuthenticationException{
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        return verificarPermiso(353,listaPermisos);
     }
     
     private Solicitud construirObjeto(HttpServletRequest request) {

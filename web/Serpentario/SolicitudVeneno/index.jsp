@@ -82,20 +82,24 @@
                       <td>${solicitud.getCantidad()}</td>
                       <td>${solicitud.getFecha_solicitudAsString()}</td>
                       <td>${solicitud.getEstado()}</td>
-                      <c:if test="${booladmin}">
+                      
                         <c:choose>
                           <c:when test="${solicitud.getEstado().equals('Solicitado')}">
-                              <td>
-                                <a class="btn btn-primary btn-sm boton-accion confirmable" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=aprobar&id_solicitud=${solicitud.getId_solicitud()}">Aprobar</a>
-                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRechazarSolicitud">Rechazar</a>
-                            </td>
+                              <c:if test="${booladmin}">
+                                <td>
+                                  <a class="btn btn-primary btn-sm boton-accion confirmable" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=aprobar&id_solicitud=${solicitud.getId_solicitud()}">Aprobar</a>
+                                  <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRechazarSolicitud">Rechazar</a>
+                                </td>
+                            </c:if>
                           </c:when>
                           <c:otherwise>
                             <c:choose>
                               <c:when test="${solicitud.getEstado().equals('Aprobado')}">
-                                <td>
-                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}">Entregar</a>                                
-                                </td>
+                                  <c:if test="${boolentrega}">
+                                    <td>
+                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}">Entregar</a>                                
+                                    </td>
+                                  </c:if>
                               </c:when>
                               <c:otherwise>
                                 <td>
@@ -105,7 +109,7 @@
                             </c:choose>
                           </c:otherwise>
                         </c:choose>
-                      </c:if>
+                      
                     </tr>
 
                   </c:forEach>
