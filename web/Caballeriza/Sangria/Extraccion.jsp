@@ -57,7 +57,7 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <div class="input-group">
-                                                <input type="text" value="${fecha_sangria}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_extraccion" data-date-format="dd/mm/yyyy" required
+                                                <input type="text" value="${(fecha_sangria != null) ? fecha_sangria : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_extraccion" data-date-format="dd/mm/yyyy" required
                                                        oninvalid="setCustomValidity('Este campo es requerido ')"
                                                        onchange="setCustomValidity('')">
                                             </div>

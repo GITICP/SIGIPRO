@@ -11,13 +11,14 @@
 <form class="form-horizontal" autocomplete="off" method="post" action="Sangria">
     <div class="col-md-12">
         <input hidden="true" name="id_sangria" value="${sangria.getId_sangria()}">
+        <input hidden="true" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}">
         <input hidden="true" name="accion" value="${accion}">
         <label for="responsable" class="control-label">*Responsable</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
                     <input type="text" placeholder="Responsable Sangría" class="form-control" name="responsable" required
-                           oninvalid="setCustomValidity('Este campo es requerido ')"
+                           value="${sangria.getResponsable()}" oninvalid="setCustomValidity('Este campo es requerido ')"
                            onchange="setCustomValidity('')">
                 </div>
             </div>
@@ -27,7 +28,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <input type="number" step="any" placeholder="" class="form-control" name="potencia" 
-                           value="" oninput="setCustomValidity(\'\')" 
+                           value="${sangria.getPotencia()}" oninput="setCustomValidity(\'\')" 
                            oninvalid="setCustomValidity(\'Ingrese solo números\')">
                 </div>
             </div>
@@ -37,7 +38,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <input type="number" step="any" placeholder="" class="form-control" name="num_inf_cc" 
-                           value="" oninput="setCustomValidity(\'\')" 
+                           value="${sangria.getNum_inf_cc()}" oninput="setCustomValidity(\'\')" 
                            oninvalid="setCustomValidity(\'Ingrese solo números\')">
                 </div>
             </div>
@@ -46,35 +47,86 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <select id="seleccion-sangria-prueba" class="select2" name="sangria_prueba"
-                            style="background-color: #fff" required
-                            oninvalid="setCustomValidity('Por favor seleccione la sangría de prueba.')"
-                            onchange="setCustomValidity('')">
-                        <option value=""></option>
-                        <c:forEach items="${sangrias_prueba}" var="sangria_prueba">
-                            <option value="${sangria_prueba.getId_sangria_prueba()}">${sangria_prueba.getId_sangria_prueba()}</option>
-                        </c:forEach>
-                    </select>
+                    <c:choose >
+                        <c:when test="${accion == 'Agregar'}">
+                            <select id="seleccion-sangria-prueba" class="select2" name="sangria_prueba"
+                                    style="background-color: #fff" required
+                                    oninvalid="setCustomValidity('Por favor seleccione la sangría de prueba.')"
+                                    onchange="setCustomValidity('')">
+                                <option value=""></option>
+                                <c:forEach items="${sangrias_prueba}" var="sangria_prueba">
+                                    <option value="${sangria_prueba.getId_sangria_prueba()}">${sangria_prueba.getId_sangria_prueba()}</option>
+                                </c:forEach>
+                            </select>
+                        </c:when>
+                        <c:otherwise>
+                            <input class="form-control" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}" disabled>
+                        </c:otherwise>
+                    </c:choose>
+
                 </div>
             </div>
         </div>
-        <c:forEach items="${sangrias_prueba}" var="sangria_prueba">
-            <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria_prueba.getId_sangria_prueba()}" hidden>
-                <div class="widget-header">
-                    <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba </h3>
-                </div>
-                <div class="widget-content">
-                    <c:forEach items="${sangria_prueba.getCaballos()}" var="caballo">
-                        <div class="col-md-4">
-                            <label class="fancy-checkbox">
-                                <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
-                                <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
-                            </label>
+        <c:choose >
+            <c:when test="${accion == 'Agregar'}">
+                <c:forEach items="${sangrias_prueba}" var="sangria_prueba">
+                    <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria_prueba.getId_sangria_prueba()}" hidden>
+                        <div class="widget-header">
+                            <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba </h3>
                         </div>
-                    </c:forEach>
-                </div>
-            </div>
-        </c:forEach>
+                        <div class="widget-content">
+                            <c:forEach items="${sangria_prueba.getCaballos()}" var="caballo">
+                                <div class="col-md-4">
+                                    <label class="fancy-checkbox">
+                                        <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
+                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                    </label>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <c:choose >
+                    <c:when test="${sangria.getFecha_dia1() == null}">
+                        <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria.getSangria_prueba().getId_sangria_prueba()}">
+                            <div class="widget-header">
+                                <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba </h3>
+                            </div>
+                            <div class="widget-content">
+                                <c:forEach items="${sangria.getSangria_prueba().getCaballos()}" var="caballo">
+                                    <div class="col-md-4">
+                                        <label class="fancy-checkbox">
+                                            <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(sangria.valididarCaballoEnSangria(caballo) == true) ? "checked" : ""}>
+                                            <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        </label>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria.getSangria_prueba().getId_sangria_prueba()}">
+                            <div class="widget-header">
+                                <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba (No modificable debido a que la sangría ya comenzó)</h3>
+                            </div>
+                            <div class="widget-content">
+                                <c:forEach items="${sangria.getSangria_prueba().getCaballos()}" var="caballo">
+                                    <div class="col-md-4">
+                                        <label class="fancy-checkbox">
+                                            <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" readonly ${(sangria.valididarCaballoEnSangria(caballo) == true) ? "checked" : ""}>
+                                            <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        </label>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </c:otherwise>
+        </c:choose>
+
     </div>
 
     <div class="col-md-12">

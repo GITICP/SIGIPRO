@@ -33,6 +33,8 @@ public class Sangria {
     private float plasma_por_caballo;
     private float potencia;
     List<SangriaCaballo> sangrias_caballos;
+    
+    List<Caballo> caballos; //Este atributo es para ayudar y no se encuentra en la base de datos
 
     public Sangria() {
     }
@@ -194,6 +196,16 @@ public class Sangria {
             sangrias_caballos = new ArrayList<SangriaCaballo>();
         }
         sangrias_caballos.add(sangria_caballo);
+    }
+    
+    public boolean valididarCaballoEnSangria(Caballo c){
+        if (caballos == null) {
+            caballos = new ArrayList<Caballo>();
+            for (SangriaCaballo sangria_caballo : sangrias_caballos){
+                caballos.add(sangria_caballo.getCaballo());
+            }
+        }
+        return caballos.contains(c);
     }
 
 //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases

@@ -12,18 +12,18 @@ package com.icp.sigipro.caballeriza.modelos;
 public class SangriaCaballo
 {
 
-    Sangria sangria;
-    Caballo caballo;
-    float hematocrito; //Este campo no está en la BD. Se creó por conveniencia para evitar anidación extra para las sangrías.
-    float sangre_dia1;
-    float plasma_dia1;
-    float lal_dia1;
-    float sangre_dia2;
-    float plasma_dia2;
-    float lal_dia2;
-    float sangre_dia3;
-    float plasma_dia3;
-    float lal_dia3;
+    private Sangria sangria;
+    private Caballo caballo;
+    private float hematocrito; //Este campo no está en la BD. Se creó por conveniencia para evitar anidación extra para las sangrías.
+    private float sangre_dia1;
+    private float plasma_dia1;
+    private float lal_dia1;
+    private float sangre_dia2;
+    private float plasma_dia2;
+    private float lal_dia2;
+    private float sangre_dia3;
+    private float plasma_dia3;
+    private float lal_dia3;
 
     public SangriaCaballo()
     {
@@ -138,6 +138,16 @@ public class SangriaCaballo
     public void setLal_dia3(float lal_dia3)
     {
         this.lal_dia3 = lal_dia3;
+    }
+
+    public float getHematocrito()
+    {
+        return hematocrito;
+    }
+
+    public void setHematocrito(float hematocrito)
+    {
+        this.hematocrito = hematocrito;
     }
     
     public float getSangre(int dia) {
