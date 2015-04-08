@@ -251,7 +251,7 @@
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         onchange="setCustomValidity('')">
                     <option value=''></option>
-                    <c:forEach items="${lista_caballos}" var="caballo">
+                    <c:forEach items="${listacaballos}" var="caballo">
                         <option value ="${caballo.getId_caballo()}" selected="selected">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
                     </c:forEach>                       
                 </select>

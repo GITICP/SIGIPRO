@@ -29,12 +29,85 @@ public class GrupoDeCaballosDAO {
         SingletonBD s = SingletonBD.getSingletonBD();
         conexion = s.conectar();
     }
-
-    public boolean insertarGrupoDeCaballos(GrupoDeCaballos g) {
+    public boolean insertarGrupoDeCaballos(GrupoDeCaballos g, String[] ids_caballos) throws SIGIPROException {
         boolean resultado = false;
+        boolean resultado_insert_grupo = false;
+        String caballos = pasar_id_caballos(ids_caballos);
+        int cant_caballos = ids_caballos.length;
+        PreparedStatement consulta_caballos = null;
+        PreparedStatement consulta = null;
+        ResultSet resultadoConsulta = null;
+        try {
+            getConexion().setAutoCommit(false);
+
+            consulta = getConexion().prepareStatement("INSERT INTO caballeriza.grupos_de_caballos (nombre, descripcion) "
+                    + " VALUES (?,?) RETURNING id_grupo_de_caballo");
+            consulta.setString(1, g.getNombre());
+            consulta.setString(2, g.getDescripcion());
+
+            resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado_insert_grupo = true;
+                g.setId_grupo_caballo(resultadoConsulta.getInt("id_grupo_de_caballo"));
+            }
+
+            consulta_caballos = getConexion().prepareStatement("UPDATE caballeriza.caballos "
+                    + " SET id_grupo_de_caballo = (CASE "
+                    + " WHEN id_caballo in " + caballos + " THEN ? "
+                    + " ELSE Null END) "
+                    + " WHERE id_grupo_de_caballo = ? or id_caballo in " + caballos + ";");
+
+            consulta_caballos.setInt(1, g.getId_grupo_caballo());
+            consulta_caballos.setInt(2, g.getId_grupo_caballo());
+
+            int filas_caballos = consulta_caballos.executeUpdate();
+
+            if (resultado_insert_grupo == true && filas_caballos >= cant_caballos) {
+                resultado = true;
+            } else {
+                resultado = false;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (resultado) {
+                    getConexion().commit();
+                } else {
+                    getConexion().rollback();
+                }
+                if (consulta != null) {
+                    consulta.close();
+                }
+                if (consulta_caballos != null) {
+                    consulta_caballos.close();
+                }
+                getConexion().close();
+            } catch (SQLException ex_operaciones) {
+                throw new SIGIPROException("El Grupo de caballos no pudo ser guardado.");
+            }
+        }
+        return resultado;
+    }
+    /*public boolean insertarGrupoDeCaballos(GrupoDeCaballos g, String[] ids_caballos) {
+        boolean resultado = false;
+        String caballos= pasar_id_caballos(ids_caballos);
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.grupos_de_caballos (nombre, descripcion) "
                     + " VALUES (?,?) RETURNING id_grupo_de_caballo");
+            consulta_caballos = getConexion().prepareStatement(
+              "UPDATE caballeriza.caballos "
+              + " SET id_grupo_de_caballo = (CASE "
+              + " WHEN id_caballo in "+caballos+ " THEN ? "
+              + " ELSE Null END) "
+              + " WHERE id_grupo_de_caballo = ? or id_caballo in "+caballos +";");
+
+            consulta.setString(1, g.getNombre());
+            consulta.setString(2, g.getDescripcion());
+            consulta.setInt(3, g.getId_grupo_caballo());
+            consulta_caballos.setInt(1,g.getId_grupo_caballo());
+            consulta_caballos.setInt(2,g.getId_grupo_caballo());
             consulta.setString(1, g.getNombre());
             consulta.setString(2, g.getDescripcion());
 
@@ -49,7 +122,7 @@ public class GrupoDeCaballosDAO {
             ex.printStackTrace();
         }
         return resultado;
-    }
+    }*/
 
     public boolean eliminarGrupoDeCaballos(int id_grupo_de_caballo) throws SIGIPROException {
         boolean resultado = false;
@@ -58,6 +131,7 @@ public class GrupoDeCaballosDAO {
                     " DELETE FROM caballeriza.grupos_de_caballos "
                     + " WHERE id_grupo_de_caballo=?; "
             );
+            
             consulta.setInt(1, id_grupo_de_caballo);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

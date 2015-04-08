@@ -131,13 +131,14 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         
     }    
 
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "GrupoDeCaballos/Agregar.jsp";
         GrupoDeCaballos g = construirObjeto(request);
         String lista = request.getParameter("listaCaballos");
-        String ids_caballos = request.getParameter("ids-caballos");
-        resultado = dao.insertarGrupoDeCaballos(g);
+        String ids_caballos = request.getParameter("ids_caballos");
+        String[] ids_caballos_parseados = dao.parsearAsociacion("#c#", ids_caballos);
+        resultado = dao.insertarGrupoDeCaballos(g,ids_caballos_parseados);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(g.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO_DE_CABALLOS, request.getRemoteAddr());
