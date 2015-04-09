@@ -9,9 +9,9 @@
 
 
 <form class="form-horizontal" autocomplete="off" method="post" action="Sangria">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <input hidden="true" name="id_sangria" value="${sangria.getId_sangria()}">
-        <input hidden="true" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}">
+        <!--<input hidden="true" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}">-->
         <input hidden="true" name="accion" value="${accion}">
         <label for="responsable" class="control-label">*Responsable</label>
         <div class="form-group">
@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <label for="responsable" class="control-label">*Potencia</label>
+        <label for="responsable" class="control-label">Potencia</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
@@ -33,7 +33,17 @@
                 </div>
             </div>
         </div>
-        <label for="potencia" class="control-label">*Número de Informe de Control de Calidad</label>
+        <label for="responsable" class="control-label">Volumen Plasma Total</label>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <input type="number" step="any" placeholder="" class="form-control" name="volumen_plasma" 
+                           value="${sangria.getVolumen_plasma_total()}" oninput="setCustomValidity(\'\')" 
+                           oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                </div>
+            </div>
+        </div>
+        <label for="potencia" class="control-label">Número de Informe de Control de Calidad</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
@@ -43,6 +53,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
         <label for="sangria_prueba" class="control-label">*Sangría de Prueba</label>
         <div class="form-group">
             <div class="col-sm-12">
@@ -60,7 +72,7 @@
                             </select>
                         </c:when>
                         <c:otherwise>
-                            <input class="form-control" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}" disabled>
+                            <input class="form-control" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}" readonly>
                         </c:otherwise>
                     </c:choose>
 
@@ -126,7 +138,6 @@
                 </c:choose>
             </c:otherwise>
         </c:choose>
-
     </div>
 
     <div class="col-md-12">

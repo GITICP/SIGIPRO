@@ -49,8 +49,8 @@ public class SangriaDAO
             getConexion().setAutoCommit(false);
 
             consulta_sangria = getConexion().prepareStatement(
-                    " INSERT INTO caballeriza.sangrias(id_sangria_prueba, responsable, cantidad_de_caballos, num_inf_cc, potencia) "
-                    + " VALUES (?,?,?,?,?) RETURNING id_sangria;"
+                    " INSERT INTO caballeriza.sangrias(id_sangria_prueba, responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total) "
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_sangria;"
             );
 
             consulta_sangria.setInt(1, s.getSangria_prueba().getId_sangria_prueba());
@@ -68,6 +68,12 @@ public class SangriaDAO
             }
             else {
                 consulta_sangria.setFloat(5, s.getPotencia());
+            }
+            if (s.getVolumen_plasma_total()== 0.0f) {
+                consulta_sangria.setNull(6, java.sql.Types.FLOAT);
+            }
+            else {
+                consulta_sangria.setFloat(6, s.getVolumen_plasma_total());
             }
 
             rs_sangria = consulta_sangria.executeQuery();
@@ -109,7 +115,7 @@ public class SangriaDAO
 
         }
         catch (SQLException ex) {
-            throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
+            throw new SIGIPROException("No se pudo la sangría correctamente.");
         }
         finally {
             try {
@@ -220,7 +226,7 @@ public class SangriaDAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, "
+                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, "
                     + "        s.responsable, s.potencia, sp.id_sangria_prueba, "
                     + "        c.id_caballo, c.nombre, c.numero_microchip, "
                     + "        CASE "
@@ -245,6 +251,7 @@ public class SangriaDAO
                 sangria.setNum_inf_cc(rs.getInt("num_inf_cc"));
                 sangria.setPotencia(rs.getFloat("potencia"));
                 sangria.setResponsable(rs.getString("responsable"));
+                sangria.setVolumen_plasma_total(rs.getFloat("volumen_plasma_total"));
                 SangriaPrueba sangria_prueba = new SangriaPrueba();
                 sangria_prueba.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
 
@@ -454,7 +461,7 @@ public class SangriaDAO
 
             consulta_sangria = getConexion().prepareStatement(
                     " UPDATE caballeriza.sangrias"
-                    + " SET responsable = ?, cantidad_de_caballos = ?, num_inf_cc = ?, potencia = ? "
+                    + " SET responsable = ?, cantidad_de_caballos = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? "
                     + " WHERE id_sangria = ? RETURNING fecha_dia1;"
             );
 
@@ -473,8 +480,14 @@ public class SangriaDAO
             else {
                 consulta_sangria.setFloat(4, s.getPotencia());
             }
+            if (s.getVolumen_plasma_total()== 0.0f) {
+                consulta_sangria.setNull(5, java.sql.Types.FLOAT);
+            }
+            else {
+                consulta_sangria.setFloat(5, s.getVolumen_plasma_total());
+            }
             
-            consulta_sangria.setInt(5, s.getId_sangria());
+            consulta_sangria.setInt(6, s.getId_sangria());
             rs_sangria = consulta_sangria.executeQuery();
 
             boolean realizar_insercion_caballos;

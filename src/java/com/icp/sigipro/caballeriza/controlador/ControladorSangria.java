@@ -196,23 +196,32 @@ public class ControladorSangria extends SIGIPROServlet
             redireccionar(request, response, redireccion);
         }
         catch (SIGIPROException sig_ex) {
-            request.setAttribute("lista_sangrias", dao.obtenerSangrias());
+            request.setAttribute("sangria", sangria);
             redireccionar(request, response, redireccion);
         }
     }
 
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Sangria/Editar.jsp";
+        String redireccion = "Sangria/index.jsp";
 
-        Sangria sangria = construirObjeto(request);
-        sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
+        try {
+            Sangria sangria = construirObjeto(request);
+            sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
 
-        dao.editarSangria(sangria);
+            dao.editarSangria(sangria);
 
-        BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO_CLINICO,request.getRemoteAddr());
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());
+
+            request.setAttribute("mensaje", helper.mensajeDeExito("Sangría editada correctamente."));
+            List<Sangria> lista = dao.obtenerSangrias();
+            request.setAttribute("lista_sangrias", lista);
+        }
+        catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        }
 
         redireccionar(request, response, redireccion);
     }
@@ -272,7 +281,7 @@ public class ControladorSangria extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    private Sangria construirObjeto(HttpServletRequest request) throws SIGIPROException
+    private Sangria construirObjeto(HttpServletRequest request)
     {
         Sangria sangria = new Sangria();
 
@@ -280,6 +289,7 @@ public class ControladorSangria extends SIGIPROServlet
 
         String numero_informe_calidad = request.getParameter("num_inf_cc");
         String potencia = request.getParameter("potencia");
+        String volumen_plasma_total = request.getParameter("volumen_plasma");
 
         if (!numero_informe_calidad.isEmpty()) {
             sangria.setNum_inf_cc(Integer.parseInt(numero_informe_calidad));
@@ -287,9 +297,13 @@ public class ControladorSangria extends SIGIPROServlet
         if (!potencia.isEmpty()) {
             sangria.setPotencia(Float.parseFloat(potencia));
         }
+        if (!volumen_plasma_total.isEmpty()) {
+            sangria.setVolumen_plasma_total(Float.parseFloat(volumen_plasma_total));
+        }
 
         SangriaPrueba sangria_prueba = new SangriaPrueba();
-        sangria_prueba.setId_sangria_prueba(Integer.parseInt(request.getParameter("sangria_prueba")));
+        String sang_prueba = request.getParameter("sangria_prueba");
+        sangria_prueba.setId_sangria_prueba(Integer.parseInt(sang_prueba));
         sangria.setSangria_prueba(sangria_prueba);
 
         String[] ids_caballos = request.getParameterValues("caballos");
