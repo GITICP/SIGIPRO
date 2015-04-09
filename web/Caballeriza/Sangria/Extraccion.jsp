@@ -57,14 +57,14 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <div class="input-group">
-                                                <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_extraccion" data-date-format="dd/mm/yyyy" required
+                                                <input type="text" value="${(fecha_sangria != null) ? fecha_sangria : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_extraccion" data-date-format="dd/mm/yyyy" required
                                                        oninvalid="setCustomValidity('Este campo es requerido ')"
                                                        onchange="setCustomValidity('')">
                                             </div>
                                         </div>
                                     </div>
+                                    <br>
                                 </div>
-
                                 <div class="widget widget-table">
                                     <div class="widget-header">
                                         <h3><i class="fa fa-check"></i> Información de la Sangría </h3>                                        
@@ -89,21 +89,29 @@
                                                         <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero_microchip()})</td>
                                                         <td>
                                                             <label class="fancy-checkbox" style="text-align:center">
-                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
+                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" ${(editar && sangria_caballo.sumatoria(dia) == 0) ? "" : "checked"}>
                                                                 <span></span>
                                                             </label>
                                                         </td>
+                                                        <c:set var="sangre" value=""></c:set>
+                                                        <c:set var="plasma" value=""></c:set>
+                                                        <c:set var="lal" value=""></c:set>
+                                                        <c:if test="${editar}">
+                                                            <c:set var="sangre" value="${(sangria_caballo.getSangre(dia) == 0) ? '' : sangria_caballo.getSangre(dia)}"></c:set>
+                                                            <c:set var="plasma" value="${(sangria_caballo.getPlasma(dia) == 0) ? '' : sangria_caballo.getPlasma(dia)}"></c:set>
+                                                            <c:set var="lal" value="${(sangria_caballo.getLal(dia) == 0) ? '' : sangria_caballo.getLal(dia)}"></c:set>
+                                                        </c:if>
                                                         <td>
-                                                            <input type="number" step="any" placeholder="" class="form-control" name="sangre_${sangria_caballo.getCaballo().getId_caballo()}" value=""
-                                                                   oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                                            <input type="number" step="any" placeholder="" class="form-control" name="sangre_${sangria_caballo.getCaballo().getId_caballo()}"
+                                                                   value="${(sangre == 0) ? "" : sangre}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
                                                         </td>
                                                         <td>
-                                                            <input type="number" step="any" placeholder="" class="form-control" name="plasma_${sangria_caballo.getCaballo().getId_caballo()}" value=""
-                                                                   oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                                            <input type="number" step="any" placeholder="" class="form-control" name="plasma_${sangria_caballo.getCaballo().getId_caballo()}"
+                                                                   value="${(plasma == 0) ? "" : plasma}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
                                                         </td>
                                                         <td>
-                                                            <input type="number" step="any" placeholder="" class="form-control" name="lal_${sangria_caballo.getCaballo().getId_caballo()}" value=""
-                                                                   oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                                            <input type="number" step="any" placeholder="" class="form-control" name="lal_${sangria_caballo.getCaballo().getId_caballo()}"
+                                                                   value="${(lal == 0) ? "" : lal}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -122,11 +130,11 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
                                                 <c:choose>
-                                                    <c:when test= "${accion.equals('Editar')}">
+                                                    <c:when test="${editar}">
                                                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Sangría</button>
+                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Extracción</button>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </div>
