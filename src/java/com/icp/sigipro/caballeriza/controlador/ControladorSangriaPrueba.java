@@ -47,15 +47,12 @@ public class ControladorSangriaPrueba extends SIGIPROServlet
             add("index");
             add("ver");
             add("agregar");
-            add("editar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
     {
         {
             add("agregar");
-            add("editar");
-
         }
     };
 
@@ -103,16 +100,6 @@ public class ControladorSangriaPrueba extends SIGIPROServlet
         }
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
-    {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(60, listaPermisos);
-        String redireccion = "EventoClinico/Editar.jsp";
-        int id_evento = Integer.parseInt(request.getParameter("id_evento"));
-        request.setAttribute("accion", "Editar");
-        redireccionar(request, response, redireccion);
-    }
-
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         boolean resultado = false;
@@ -158,7 +145,7 @@ public class ControladorSangriaPrueba extends SIGIPROServlet
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA_PRUEBA, request.getRemoteAddr());
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Evento Clínico agregado correctamente"));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Sangría de prueba agregada correctamente."));
             redireccion = "SangriaPrueba/index.jsp";
             
             request.setAttribute("listaSangriasPrueba", dao.obtenerSangriasPruebas());
@@ -169,25 +156,6 @@ public class ControladorSangriaPrueba extends SIGIPROServlet
         }
 
         
-    }
-
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
-    {
-        boolean resultado = false;
-        String redireccion = "EventoClinico/Editar.jsp";
-        //EventoClinico c = construirObjeto(request);
-        //c.setId_evento(Integer.parseInt(request.getParameter("id_evento")));
-        //resultado = dao.editarEventoClinico(c);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        //bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO_CLINICO,request.getRemoteAddr());
-        //*----------------------------*
-        if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Evento Clínico editado correctamente"));
-            redireccion = "EventoClinico/index.jsp";
-        }
-        //request.setAttribute("listaEventosClinicos", dao.obtenerEventosClinicos());
-        redireccionar(request, response, redireccion);
     }
 
     private SangriaPrueba construirObjeto(HttpServletRequest request) throws SIGIPROException
@@ -242,7 +210,7 @@ public class ControladorSangriaPrueba extends SIGIPROServlet
     @Override
     protected int getPermiso()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
