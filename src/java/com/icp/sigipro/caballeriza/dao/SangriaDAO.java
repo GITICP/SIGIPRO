@@ -12,6 +12,7 @@ import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
 import java.lang.reflect.Method;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -143,10 +144,11 @@ public class SangriaDAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip "
+                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, spc.hematrocito "
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
-                    + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo; "
+                    + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
+                    + "   INNER JOIN caballeriza.sangrias_pruebas_caballos spc ON sc.id_caballo = spc.id_caballo AND spc.id_sangria_prueba = s.id_sangria_prueba; "
             );
 
             consulta.setInt(1, id_sangria);
@@ -190,6 +192,7 @@ public class SangriaDAO
                     sangria_caballo.setSangre_dia1(rs.getFloat("sangre_dia1"));
                     sangria_caballo.setSangre_dia2(rs.getFloat("sangre_dia2"));
                     sangria_caballo.setSangre_dia3(rs.getFloat("sangre_dia3"));
+                    sangria_caballo.setHematocrito(rs.getFloat("hematrocito"));
 
                     sangria.agregarSangriaCaballo(sangria_caballo);
 
@@ -304,7 +307,7 @@ public class SangriaDAO
                 resultado.add(sangria);
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
             rs.close();
         }
         catch (SQLException ex) {
@@ -395,6 +398,12 @@ public class SangriaDAO
             if (update_sangria.executeUpdate() == 1) {
                 resultado_sangria = true;
             }
+            
+            CallableStatement actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
+            
+            actualizar_estadisticas.setInt(1, sangria.getId_sangria());
+            actualizar_estadisticas.execute();
+            actualizar_estadisticas.close();
 
             resultado = resultado_sangrias_caballos && resultado_preparacion && resultado_sangria;
         }

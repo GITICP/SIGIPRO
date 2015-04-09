@@ -9,11 +9,6 @@ CREATE TABLE caballeriza.grupos_de_caballos (
     descripcion character varying(500)
 );
 
---CREATE TABLE caballeriza.grupos_caballos (
---    id_grupo_de_caballo integer NOT NULL,
---    id_caballo integer NOT NULL
---);
-
 CREATE TABLE caballeriza.caballos (
     id_caballo serial NOT NULL,
     nombre character varying(100) NOT NULL,
@@ -40,10 +35,7 @@ CREATE TABLE caballeriza.tipos_eventos (
     nombre character varying(45),
     descripcion character varying(200)
 );
--- CREATE TABLE caballeriza.eventos_grupos_caballos (
---    id_evento integer NOT NULL,
---    id_grupo_de_caballo integer NOT NULL
---);
+
 CREATE TABLE caballeriza.eventos_clinicos_caballos (
     id_evento integer NOT NULL,
     id_caballo integer NOT NULL
@@ -211,3 +203,36 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (61, 407);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (62, 407);
+
+--Función para actualizar las estadísticas de caballeriza
+CREATE OR REPLACE FUNCTION caballeriza.actualizar_estadisticas_sangria(param_id_sangria int) RETURNS VOID AS $$
+	DECLARE v_hematocrito_promedio float;
+	DECLARE v_sangre_total float;
+	DECLARE v_plasma_total float;
+	DECLARE v_id_sangria_prueba int;
+	BEGIN
+		v_id_sangria_prueba := (SELECT id_sangria_prueba FROM caballeriza.sangrias WHERE id_sangria = param_id_sangria);
+		v_hematocrito_promedio := (SELECT AVG(hematrocito) FROM caballeriza.sangrias_pruebas_caballos WHERE id_sangria_prueba = v_id_sangria_prueba);
+		v_sangre_total := (SELECT SUM(
+					CASE WHEN sangre_dia1 IS NULL THEN 0 ELSE sangre_dia1 END +
+					CASE WHEN sangre_dia2 IS NULL THEN 0 ELSE sangre_dia2 END +
+					CASE WHEN sangre_dia3 IS NULL THEN 0 ELSE sangre_dia3 END
+					) FROM caballeriza.sangrias_caballos WHERE id_sangria = param_id_sangria);
+		v_plasma_total := (SELECT SUM(
+					CASE WHEN plasma_dia1 IS NULL THEN 0 ELSE plasma_dia1 END +
+					CASE WHEN plasma_dia2 IS NULL THEN 0 ELSE plasma_dia2 END +
+					CASE WHEN plasma_dia3 IS NULL THEN 0 ELSE plasma_dia3 END
+					) FROM caballeriza.sangrias_caballos WHERE id_sangria = param_id_sangria);
+
+		RAISE NOTICE 'v_hematocrito_promedio: %', v_hematocrito_promedio;
+		RAISE NOTICE 'v_sangre_total: %', v_sangre_total;
+		RAISE NOTICE 'v_plasma_total: %', v_plasma_total;
+
+		UPDATE caballeriza.sangrias
+		SET hematrocito_promedio = v_hematocrito_promedio,
+		    sangre_total = v_sangre_total,
+		    peso_plasma_total = v_plasma_total,
+		    plasma_por_caballo = v_plasma_total / cantidad_de_caballos
+		WHERE id_sangria = param_id_sangria;
+	END 
+$$ LANGUAGE plpgsql;
