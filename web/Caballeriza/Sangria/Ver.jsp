@@ -4,7 +4,6 @@
     Author     : Walter
 --%>
 
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
@@ -43,7 +42,7 @@
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
-                                    <!--<a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editar&id_sangria=${sangria.getId_sangria()}">Editar</a>-->
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editar&id_sangria=${sangria.getId_sangria()}">Editar</a>
                                 </c:if>
                             </div>
                         </div>
@@ -52,7 +51,7 @@
                             <table>
                                 <tr><td> <strong>Identificador:</strong></td> <td>${sangria.getId_sangria()} </td></tr>
                                 <tr><td> <strong>Responsable:</strong></td> <td>${sangria.getResponsable()} </td></tr>
-                                <tr><td> <strong>Sangría de PRueba:</strong></td> <td>${sangria.getSangria_prueba().getId_sangria_prueba()}</td></tr>
+                                <tr><td> <strong>Sangría de Prueba:</strong></td> <td>${sangria.getSangria_prueba().getId_sangria_prueba()}</td></tr>
                                 <tr><td> <strong>Número de Informe de Control de Calidad:</strong></td> <td>${sangria.getNum_inf_cc()} </td></tr>
                                 <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>
                                 <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} </td></tr>
@@ -67,17 +66,30 @@
                                 <div class="widget-header">
                                     <h3><i class="fa fa-check"></i> Información de la Sangría </h3>
                                     <div class="btn-group widget-header-toolbar">
-                                        <c:set var="contienePermisoAgregarInfoDia" value="false" />
-                                        <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                            <c:if test="${permiso == 1 || permiso == 58}">
-                                                <c:set var="contienePermisoEditar" value="true" />
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${contienePermisoEditar}">
-                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Registrar Extracción Día 1</a>
-                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Registrar Extracción Día 2</a>
-                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Registrar Extracción Día 3</a>
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${sangria.getFecha_dia1() == null}">
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Registrar Extracción Día 1</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Editar Extracción Día 1</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:choose>
+                                            <c:when test="${sangria.getFecha_dia2() == null}">
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Registrar Extracción Día 2</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Editar Extracción Día 2</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:choose>
+                                            <c:when test="${sangria.getFecha_dia3() == null}">
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Registrar Extracción Día 3</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Editar Extracción Día 3</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                                 <div class="widget-content">
@@ -85,36 +97,38 @@
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">Nombre y Número de Microchip</th>
-                                                <!--<th rowspan="2">Hematocrito</th>-->
-                                                <th colspan="3">Día 1</th>
-                                                <th colspan="3">Día 2</th>
-                                                <th colspan="3">Día 3</th>
+                                                <th rowspan="2" class="campo-tabla-centrado">Hematocrito</th>
+                                                <th colspan="3">Día 1 - ${sangria.getFecha_dia1AsString()}</th>
+                                                <th colspan="3">Día 2 - ${sangria.getFecha_dia2AsString()}</th>
+                                                <th colspan="3">Día 3 - ${sangria.getFecha_dia3AsString()}</th>
                                             </tr>
                                             <tr>
-                                                <th>Sangre</th>
-                                                <th>Plasma</th>
-                                                <th>LAL</th>
-                                                <th>Sangre</th>
-                                                <th>Plasma</th>
-                                                <th>LAL</th>
-                                                <th>Sangre</th>
-                                                <th>Plasma</th>
-                                                <th>LAL</th>
+                                                <th class="campo-tabla-centrado">Sangre</th>
+                                                <th class="campo-tabla-centrado">Plasma</th>
+                                                <th class="campo-tabla-centrado">LAL</th>
+                                                <th class="campo-tabla-centrado">Sangre</th>
+                                                <th class="campo-tabla-centrado">Plasma</th>
+                                                <th class="campo-tabla-centrado">LAL</th>
+                                                <th class="campo-tabla-centrado">Sangre</th>
+                                                <th class="campo-tabla-centrado">Plasma</th>
+                                                <th class="campo-tabla-centrado">LAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <c:set var="sin_datos" value="-"></c:set>
                                             <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
                                                 <tr id="${caballo.getId_caballo()}">
                                                     <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero_microchip()})</td>
-                                                    <td>${(sangria_caballo.getSangre_dia1() == 0) ? 'N/A' : sangria_caballo.getSangre_dia1()}</td>
-                                                    <td>${(sangria_caballo.getPlasma_dia1() == 0) ? 'N/A' : sangria_caballo.getPlasma_dia1()}</td>
-                                                    <td>${(sangria_caballo.getLal_dia1() == 0) ? 'N/A' : sangria_caballo.getLal_dia1()}</td>
-                                                    <td>${(sangria_caballo.getSangre_dia2() == 0) ? 'N/A' : sangria_caballo.getSangre_dia2()}</td>
-                                                    <td>${(sangria_caballo.getPlasma_dia2() == 0) ? 'N/A' : sangria_caballo.getPlasma_dia2()}</td>
-                                                    <td>${(sangria_caballo.getLal_dia2() == 0) ? 'N/A' : sangria_caballo.getLal_dia2()}</td>
-                                                    <td>${(sangria_caballo.getSangre_dia3() == 0) ? 'N/A' : sangria_caballo.getSangre_dia3()}</td>
-                                                    <td>${(sangria_caballo.getPlasma_dia3() == 0) ? 'N/A' : sangria_caballo.getPlasma_dia3()}</td>
-                                                    <td>${(sangria_caballo.getLal_dia3() == 0) ? 'N/A' : sangria_caballo.getLal_dia3()}</td>
+                                                    <td class="campo-tabla-centrado">${sangria_caballo.getHematocrito()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia1() == 0) ? sin_datos : sangria_caballo.getPlasma_dia1()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia1() == 0)    ? sin_datos : sangria_caballo.getLal_dia1()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia2() == 0) ? sin_datos : sangria_caballo.getSangre_dia2()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia2() == 0) ? sin_datos : sangria_caballo.getPlasma_dia2()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia2() == 0)    ? sin_datos : sangria_caballo.getLal_dia2()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia3() == 0) ? sin_datos : sangria_caballo.getSangre_dia3()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia3() == 0) ? sin_datos : sangria_caballo.getPlasma_dia3()}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia3() == 0)    ? sin_datos : sangria_caballo.getLal_dia3()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

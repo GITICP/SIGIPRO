@@ -12,18 +12,18 @@ package com.icp.sigipro.caballeriza.modelos;
 public class SangriaCaballo
 {
 
-    Sangria sangria;
-    Caballo caballo;
-    float hematocrito; //Este campo no está en la BD. Se creó por conveniencia para evitar anidación extra para las sangrías.
-    float sangre_dia1;
-    float plasma_dia1;
-    float lal_dia1;
-    float sangre_dia2;
-    float plasma_dia2;
-    float lal_dia2;
-    float sangre_dia3;
-    float plasma_dia3;
-    float lal_dia3;
+    private Sangria sangria;
+    private Caballo caballo;
+    private float hematocrito; //Este campo no está en la BD. Se creó por conveniencia para evitar anidación extra para las sangrías.
+    private float sangre_dia1;
+    private float plasma_dia1;
+    private float lal_dia1;
+    private float sangre_dia2;
+    private float plasma_dia2;
+    private float lal_dia2;
+    private float sangre_dia3;
+    private float plasma_dia3;
+    private float lal_dia3;
 
     public SangriaCaballo()
     {
@@ -140,4 +140,91 @@ public class SangriaCaballo
         this.lal_dia3 = lal_dia3;
     }
 
+    public float getHematocrito()
+    {
+        return hematocrito;
+    }
+
+    public void setHematocrito(float hematocrito)
+    {
+        this.hematocrito = hematocrito;
+    }
+    
+    public float getSangre(int dia) {
+        float resultado = 0;
+        if (dia == 1) {
+            resultado = sangre_dia1;
+        } else if (dia == 2) {
+            resultado = sangre_dia2;
+        } else if (dia == 3) {
+            resultado = sangre_dia3;
+        }
+        return resultado;
+    }
+    
+    public float getPlasma(int dia) {
+        float resultado = 0;
+        if (dia == 1) {
+            resultado = plasma_dia1;
+        } else if (dia == 2) {
+            resultado = plasma_dia2;
+        } else if (dia == 3) {
+            resultado = plasma_dia3;
+        }
+        return resultado;
+    }
+    
+    public float getLal(int dia) {
+        float resultado = 0;
+        if (dia == 1) {
+            resultado = lal_dia1;
+        } else if (dia == 2) {
+            resultado = lal_dia2;
+        } else if (dia == 3) {
+            resultado = lal_dia3;
+        }
+        return resultado;
+    }
+    
+    public void setSangre(int dia, float valor) {
+        if (dia == 1) {
+            sangre_dia1 = valor;
+        } else if (dia == 2) {
+            sangre_dia2 = valor;
+        } else if (dia == 3) {
+            sangre_dia3 = valor;
+        }
+    }
+    
+    public void setPlasma(int dia, float valor) {
+        if (dia == 1) {
+            plasma_dia1 = valor;
+        } else if (dia == 2) {
+            plasma_dia2 = valor;
+        } else if (dia == 3) {
+            plasma_dia3 = valor;
+        }
+    }
+    
+    public void setLal(int dia, float valor) {
+        if (dia == 1) {
+            lal_dia1 = valor;
+        } else if (dia == 2) {
+            lal_dia2 = valor;
+        } else if (dia == 3) {
+            lal_dia3 = valor;
+        }
+    }
+    
+    public float sumatoria(int dia) {
+        float resultado = 0;
+        if (dia == 1) {
+            resultado = lal_dia1 + plasma_dia1 + sangre_dia1;
+        } else if (dia == 2) {
+            resultado = lal_dia2 + plasma_dia2 + sangre_dia3;
+        } else if (dia == 3) {
+            resultado = lal_dia3 + plasma_dia3 + sangre_dia3;
+        }
+        return resultado;
+    }
 }

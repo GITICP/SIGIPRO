@@ -66,3 +66,7 @@
 .tabla-modal > tbody > tr > td:first-child {
     width: 35%;
 }
+
+.campo-tabla-centrado {
+    text-align:center;
+}
