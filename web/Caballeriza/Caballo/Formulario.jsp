@@ -192,30 +192,7 @@
                 </div>
             </div>
         </div>  
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="widget widget-table">
-                <div class="widget-header">
-                    <h3><i class="fa fa-map-marker"></i> Fotografía (Sin Implementar)</h3>
-                </div>
-                <div class="widget-content">
-                    <label for="fotografia" class="control-label">Fotografía</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">                
-                                <input type="file" value='' name="fotografia" accept="image/*" onchange="previewFile()" />
-                                <input type='hidden' name='fotografia' id='fotografia' value=''>
-                                <div><img name='imagenSubida' id="img_newjourney" src='' height="300" alt=""></div>
-                            </div>
-                        </div>
-                    </div>
-                    <img src="${caballo.getFotografia()}"
-                </div>
-            </div>
-        </div>
-    </div>
-</div>                           
+    </div>                           
 
 <p class="campos-requeridos">
     Los campos marcados con * son requeridos.

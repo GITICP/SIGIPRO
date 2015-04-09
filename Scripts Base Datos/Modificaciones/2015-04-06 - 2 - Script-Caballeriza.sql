@@ -128,7 +128,7 @@ ALTER TABLE ONLY caballeriza.sangrias_caballos  ADD CONSTRAINT pk_sangrias_cabal
 --Indices unicos esquema caballeriza
 CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nombre);
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
-CREATE UNIQUE INDEX i_muestra ON caballeriza.sangrias_pruebas USING btree (muestra);
+--CREATE UNIQUE INDEX i_muestra ON caballeriza.sangrias_pruebas USING btree (muestra);
 
 
 --Llaves foraneas esquema caballeriza
