@@ -16,8 +16,6 @@ import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.seguridad.dao.UsuarioDAO;
-import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -65,16 +63,13 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         String redireccion = "EventoClinico/Agregar.jsp";
         EventoClinico c = new EventoClinico();
         TipoEventoDAO tipoeventodao = new TipoEventoDAO();
-        UsuarioDAO usrDAO = new UsuarioDAO();
         GrupoDeCaballosDAO gdcDAO = new GrupoDeCaballosDAO();
         List<GrupoDeCaballos> grupos_caballos = gdcDAO.obtenerGruposDeCaballosConCaballos();
         List<TipoEvento> listatipos = tipoeventodao.obtenerTiposEventos();
-        List<Usuario> listaresponsables = usrDAO.obtenerUsuarios();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("evento", c);
         request.setAttribute("grupos_caballos", grupos_caballos);
         request.setAttribute("listatipos", listatipos);
-        request.setAttribute("listaresponsables", listaresponsables);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -111,12 +106,9 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         int id_evento = Integer.parseInt(request.getParameter("id_evento"));
         EventoClinico eventoclinico = dao.obtenerEventoClinico(id_evento);
         TipoEventoDAO tipodao = new TipoEventoDAO();
-        UsuarioDAO usrDAO = new UsuarioDAO();
         List<TipoEvento> listatipos = tipodao.obtenerTiposEventos();
-        List<Usuario> listaresponsables = usrDAO.obtenerUsuarios();
         request.setAttribute("listatipos", listatipos);
         request.setAttribute("evento", eventoclinico);
-        request.setAttribute("listaresponsables", listaresponsables);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
     }
@@ -162,7 +154,6 @@ public class ControladorEventoClinico extends SIGIPROServlet {
     private EventoClinico construirObjeto(HttpServletRequest request) throws SIGIPROException {
         EventoClinico e = new EventoClinico();
         TipoEventoDAO tipoeventodao = new TipoEventoDAO();
-        UsuarioDAO usuariodao = new UsuarioDAO();
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha;
         java.sql.Date fechaSQL;
@@ -173,21 +164,13 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         } catch (ParseException ex) {
 
         }
-        String respon=request.getParameter("responsable");
-        
-        Usuario responsable;
-        if(respon == ""){
-            responsable = null;
-        }
-        else{
-            responsable = usuariodao.obtenerUsuario(Integer.parseInt(request.getParameter("responsable")));
-        }
         e.setDescripcion(request.getParameter("descripcion"));
         String tipodeevento= request.getParameter("tipoevento");
         String[] tiposeleccionado;
         tiposeleccionado=tipodeevento.split(",");
         e.setTipo_evento(tipoeventodao.obtenerTipoEvento(Integer.parseInt(tiposeleccionado[0])));
-        e.setResponsable(responsable);
+        e.setResponsable(request.getParameter("responsable"));
+        
         return e;
     }
 

@@ -12,9 +12,14 @@ import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
+import com.icp.sigipro.caballeriza.modelos.Inoculo;
+import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
+import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,6 +32,11 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.postgresql.util.Base64;
 
 /**
  *
@@ -46,12 +56,17 @@ public class ControladorCaballo extends SIGIPROServlet {
             add("ver");
             add("agregar");           
             add("editar");
+            add("evento");
+            add("inoculo");
+            add("sangriap");
+            add("sangria");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
             add("editar");
+            add("agregarimagen");
 
         }
     };
@@ -89,10 +104,29 @@ public class ControladorCaballo extends SIGIPROServlet {
         int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
         try {
             Caballo g = dao.obtenerCaballo(id_caballo);
-            List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
-            
+            //Imagen del Caballo
+            request.setAttribute("imagenCaballo", this.obtenerImagen(g));
+            //-----------------------
             request.setAttribute("grupo", g.getGrupo_de_caballos());
             request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
+            request.setAttribute("caballo", g);
+            
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getEvento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerEC.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
             request.setAttribute("caballo", g);
             request.setAttribute("listaEventos", listaeventos);
 
@@ -102,7 +136,64 @@ public class ControladorCaballo extends SIGIPROServlet {
             ex.printStackTrace();
         }
         
-    }    
+    }
+        protected void getInoculo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerI.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<Inoculo> listainoculos= dao.ObtenerInoculosCaballo(id_caballo);
+            request.setAttribute("caballo", g);
+            request.setAttribute("listaInoculos", listainoculos);
+
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getSangriap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerSp.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<SangriaPruebaCaballo> listasangriaspruebas = dao.ObtenerSangriasPruebaCaballo(id_caballo);
+            request.setAttribute("caballo", g);
+            request.setAttribute("listaSangriasPruebas", listasangriaspruebas);
+
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+        protected void getSangria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        String redireccion = "Caballo/VerS.jsp";
+        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            List<SangriaCaballo> listasangrias = dao.ObtenerSangriasCaballo(id_caballo);
+            request.setAttribute("caballo", g);
+            request.setAttribute("listaSangrias", listasangrias);
+
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }        
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -164,6 +255,48 @@ public class ControladorCaballo extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }    
 
+    protected void postAgregarimagen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String redireccion = "Caballo/index.jsp";
+        try {
+            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            int id_caballo = 0;
+            ByteArrayInputStream bais = null;
+            long size = 0;
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+                    String fieldName = item.getFieldName();
+                    if (fieldName.equals("id_caballo_imagen")){
+                        String fieldValue = item.getString();
+                        id_caballo = Integer.parseInt(fieldValue);
+                    }     
+                } else {
+                    // Process form file field (input type="file").
+                    byte[] data = item.get();
+                    bais = new ByteArrayInputStream(data);
+                    size = item.getSize();
+                }
+            }
+            boolean resultado = dao.insertarImagen(bais, id_caballo,size);
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            if(resultado){
+                request.setAttribute("mensaje", helper.mensajeDeExito("Imagen a Caballo "+id_caballo+" agregada correctamente"));
+            }else{
+                request.setAttribute("mensaje", helper.mensajeDeError("No pudo ser agregada la imagen."));
+            }
+            List<Caballo> caballos = dao.obtenerCaballos();
+            request.setAttribute("listaCaballos", caballos);
+            redireccionar(request, response, redireccion);
+
+        } catch (FileUploadException e) {
+            throw new ServletException("Cannot parse multipart request.", e);
+        }
+
+    // ...
+    }
+    
+    
     private Caballo construirObjeto(HttpServletRequest request) {
         Caballo c = new Caballo();
         
@@ -202,18 +335,17 @@ public class ControladorCaballo extends SIGIPROServlet {
         c.setColor(request.getParameter("color"));
         c.setOtras_sennas(request.getParameter("otras_sennas"));
         c.setEstado(request.getParameter("estado"));
-        //No se si sirve   
-        try{
-            String imagen = request.getParameter("fotografia");
-            Blob blob = c.getFotografia();
-            blob.setBytes(1,imagen.getBytes());
-            c.setFotografia(blob);
-        }catch (Exception e){
-            
-        }
-        //-------------
         return c;
     } 
+    
+    private String obtenerImagen(Caballo c){
+        if (c.getFotografia() != null){
+            return "data:image/jpeg;base64," + Base64.encodeBytes(c.getFotografia());
+        }else{
+            return "";
+        }
+
+    }
 
   @Override
   protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
@@ -234,6 +366,7 @@ public class ControladorCaballo extends SIGIPROServlet {
       metodo.invoke(this, request, response);
     }
   }
+  
     
     @Override
     protected int getPermiso() {

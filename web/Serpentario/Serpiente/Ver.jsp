@@ -314,9 +314,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                    </div>
-            
+                </div>            
         
         <div class="form-group">
             <div class="modal-footer">

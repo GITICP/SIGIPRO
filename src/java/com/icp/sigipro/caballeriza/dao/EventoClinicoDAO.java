@@ -8,7 +8,6 @@ package com.icp.sigipro.caballeriza.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
-import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,12 +45,7 @@ public class EventoClinicoDAO
                                                       + " VALUES (?,?,?,?) RETURNING id_evento");
             consulta.setDate(1, c.getFecha());
             consulta.setString(2, c.getDescripcion());
-            if (c.getResponsable() == null) {
-                consulta.setNull(3, java.sql.Types.INTEGER);
-            }
-            else {
-                consulta.setInt(3, c.getResponsable().getID());
-            }
+            consulta.setString(3, c.getResponsable());
             consulta.setInt(4, c.getTipo_evento().getId_tipo_evento());
 
             resultadoConsulta = consulta.executeQuery();
@@ -131,12 +125,7 @@ public class EventoClinicoDAO
             );
             consulta.setDate(1, c.getFecha());
             consulta.setString(2, c.getDescripcion());
-            if (c.getResponsable() == null) {
-                consulta.setNull(3, java.sql.Types.INTEGER);
-            }
-            else {
-                consulta.setInt(3, c.getResponsable().getID());
-            }
+            consulta.setString(3, c.getResponsable());
             consulta.setInt(4, c.getTipo_evento().getId_tipo_evento());
             consulta.setInt(5, c.getId_evento());
             if (consulta.executeUpdate() == 1) {
@@ -161,12 +150,11 @@ public class EventoClinicoDAO
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
             TipoEventoDAO dao = new TipoEventoDAO();
-            UsuarioDAO daoU = new UsuarioDAO();
             if (rs.next()) {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setDescripcion(rs.getString("descripcion"));
-                evento.setResponsable(daoU.obtenerUsuario(rs.getInt("responsable")));
+                evento.setResponsable(rs.getString("responsable"));
                 evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
             }
             consulta.close();
@@ -186,15 +174,13 @@ public class EventoClinicoDAO
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.eventos_clinicos");
             ResultSet rs = consulta.executeQuery();
             TipoEventoDAO dao = new TipoEventoDAO();
-            UsuarioDAO daoU = new UsuarioDAO();
             while (rs.next()) {
                 EventoClinico evento = new EventoClinico();
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setDescripcion(rs.getString("descripcion"));
-                int reponsable = rs.getInt("responsable");
                 int tipo = rs.getInt("id_tipo_evento");
-                evento.setResponsable(daoU.obtenerUsuario(rs.getInt("responsable")));
+                evento.setResponsable(rs.getString("responsable"));
                 evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
                 resultado.add(evento);
             }
@@ -220,7 +206,6 @@ public class EventoClinicoDAO
             while (rs.next()) {
                 EventoClinico evento_clinico = new EventoClinico();
                 evento_clinico.setId_evento(rs.getInt("id_evento_clinico"));
-                // CAMBIAR POR NOMBRE 
                 evento_clinico.setDescripcion(rs.getString("descripcion"));
 
                 resultado.add(evento_clinico);
@@ -244,13 +229,12 @@ public class EventoClinicoDAO
             consulta.setInt(1, id_tipo_evento);
             ResultSet rs = consulta.executeQuery();
             TipoEventoDAO daoTipo = new TipoEventoDAO();
-            UsuarioDAO daoUsuario = new UsuarioDAO();
             while (rs.next()) {
                 EventoClinico eventoclinico = new EventoClinico();
                 eventoclinico.setId_evento(rs.getInt("id_evento"));
                 eventoclinico.setFecha(rs.getDate("fecha"));
                 eventoclinico.setDescripcion(rs.getString("descripcion"));
-                eventoclinico.setResponsable(daoUsuario.obtenerUsuario(rs.getInt("responsable")));
+                eventoclinico.setResponsable(rs.getString("responsable"));
                 eventoclinico.setTipo_evento(daoTipo.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
                 resultado.add(eventoclinico);
             }

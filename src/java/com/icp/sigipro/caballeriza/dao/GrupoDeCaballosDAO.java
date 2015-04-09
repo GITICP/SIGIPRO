@@ -41,7 +41,7 @@ public class GrupoDeCaballosDAO {
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
                 resultado = true;
-                g.setId_grupo_caballo(resultadoConsulta.getInt("id_grupo_caballo"));
+                g.setId_grupo_caballo(resultadoConsulta.getInt("id_grupo_de_caballo"));
             }
             consulta.close();
             conexion.close();

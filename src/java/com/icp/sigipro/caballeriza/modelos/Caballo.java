@@ -53,7 +53,7 @@ public class Caballo {
     private String sexo;
     private String color;
     private String otras_sennas;
-    private Blob fotografia;
+    private byte[] fotografia;
     private String estado;
     private GrupoDeCaballos grupo_de_caballos;
     private BigDecimal hematrocito;
@@ -71,7 +71,7 @@ public class Caballo {
     public Caballo() {
     }
 
-    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, Blob fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
+    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, byte[] fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
         this.id_caballo = id_caballo;
         this.nombre = nombre;
         this.numero_microchip = numero_microchip;
@@ -176,11 +176,11 @@ public class Caballo {
         this.otras_sennas = otras_sennas;
     }
 
-    public Blob getFotografia() {
+    public byte[] getFotografia() {
         return fotografia;
     }
 
-    public void setFotografia(Blob fotografia) {
+    public void setFotografia(byte[] fotografia) {
         this.fotografia = fotografia;
     }
 
