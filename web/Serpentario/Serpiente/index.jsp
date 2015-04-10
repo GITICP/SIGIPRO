@@ -56,8 +56,8 @@
                     <th>Fecha de Ingreso</th>
                     <th>Localidad de Origen</th>
                     <th>Sexo</th>
-                    <th>Talla Cabeza-Cloaca (m)</th>
-                    <th>Talla Cola (m)</th>
+                    <th>Talla Cabeza-Cloaca (cm)</th>
+                    <th>Talla Cola (cm)</th>
                     <th>Peso (g)</th>
                   </tr>
                 </thead>
@@ -68,7 +68,7 @@
                       <td>
                         <a href="/SIGIPRO/Serpentario/Serpiente?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">
                           <div style="height:100%;width:100%">
-                            ${serpiente.getId_serpiente()}
+                            ${serpiente.getNumero_serpiente()}
                           </div>
                         </a>
                       </td>

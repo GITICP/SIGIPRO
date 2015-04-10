@@ -123,11 +123,15 @@ public class ControladorExtraccion extends SIGIPROServlet {
         validarPermiso(320, listaPermisos);
 
         String redireccion = "Extraccion/Agregar.jsp";
+        
+        Usuario usuario = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+
         Extraccion e = new Extraccion();
         EspecieDAO especiedao = new EspecieDAO();
         List<Especie> especies = especiedao.obtenerEspecies();
         UsuarioDAO usuariodao = new UsuarioDAO();
-        List<Usuario> usuarios = usuariodao.obtenerUsuarios();
+        //Obtiene los Usuarios que tienen la misma sección del Usuario autenticado en el Sistema.
+        List<Usuario> usuarios = usuariodao.obtenerUsuarios(usuario);
         SerpienteDAO serpientedao = new SerpienteDAO();
         List<Serpiente> serpientes = serpientedao.obtenerSerpientes();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());

@@ -6,11 +6,9 @@
 package com.icp.sigipro.serpentario.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.serpentario.modelos.Lote;
-import com.icp.sigipro.serpentario.modelos.Serpiente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,9 +32,10 @@ public class LoteDAO {
     public boolean insertarLote(Lote l){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.lote (id_especie) " +
-                                                             " VALUES (?) RETURNING id_lote");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.lote (id_especie,numero_lote) " +
+                                                             " VALUES (?,?) RETURNING id_lote");
             consulta.setInt(1, l.getEspecie().getId_especie());
+            consulta.setString(2, l.getNumero_lote());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
@@ -51,7 +50,7 @@ public class LoteDAO {
         }
         return resultado;
     }
-    
+    /* No se usa por ahora
      public int obtenerProximoId(){
         boolean resultado = false;
         int nextval = 0;
@@ -80,7 +79,7 @@ public class LoteDAO {
         }
         return nextval;
     }
-    
+    */
      public float obtenerCantidadSolicitada(int id_lote){
          float resultado = 0;
          try{
@@ -175,7 +174,7 @@ public class LoteDAO {
     public List<Lote> obtenerLotes(){
         List<Lote> resultado = new ArrayList<Lote>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
                     + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                     + "GROUP BY lote.id_lote;");
@@ -185,6 +184,7 @@ public class LoteDAO {
                 Lote lote = new Lote();
                 int id_lote = rs.getInt("id_lote");
                 lote.setId_lote(id_lote);
+                lote.setNumero_lote(rs.getString("numero_lote"));
                 lote.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 try{
                     float cantidad_total = rs.getFloat("cantidad_total");
@@ -211,7 +211,7 @@ public class LoteDAO {
     public List<Lote> obtenerLotes(Especie e){
         List<Lote> resultado = new ArrayList<Lote>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
                     + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                     + "WHERE lote.id_especie = ? "
@@ -221,14 +221,18 @@ public class LoteDAO {
             while(rs.next()){
                 Lote lote = new Lote();
                 int id_lote = rs.getInt("id_lote");
-                lote.setId_lote(id_lote);                
+                lote.setId_lote(id_lote);          
+                lote.setNumero_lote(rs.getString("numero_lote"));
                 lote.setEspecie(e);
                 float cantidad_total = rs.getFloat("cantidad_total");
                 lote.setCantidad_total(cantidad_total);
                 float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
                 float cantidad_actual = cantidad_total - cantidad_entregada;
-                lote.setCantidad_actual(cantidad_actual);
-                resultado.add(lote);
+                if (cantidad_actual != 0.0){
+                    lote.setCantidad_actual(cantidad_actual);
+                    resultado.add(lote);
+                }
+                
             }
             rs.close();
             consulta.close();
@@ -243,7 +247,7 @@ public class LoteDAO {
     public Lote obtenerLote(int id_lote){
         Lote resultado = new Lote();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
                     + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                     + "WHERE lote.id_lote = ? "
@@ -254,6 +258,7 @@ public class LoteDAO {
             while(rs.next()){
                 Lote lote = new Lote();
                 lote.setId_lote(id_lote);
+                lote.setNumero_lote(rs.getString("numero_lote"));
                 lote.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 try{
                     float cantidad_total = rs.getFloat("cantidad_total");

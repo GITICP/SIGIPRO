@@ -26,7 +26,7 @@
             <li> 
               <a href="/SIGIPRO/Serpentario/Serpiente?">Serpientes</a>
             </li>
-            <li class="active">Serpiente ${serpiente.getId_serpiente()}</li>
+            <li class="active">Serpiente ${serpiente.getNumero_serpiente()}</li>
 
           </ul>
         </div>

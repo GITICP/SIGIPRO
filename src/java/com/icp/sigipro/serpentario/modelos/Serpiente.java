@@ -20,6 +20,7 @@ import org.json.JSONObject;
  */
 public class Serpiente {
     private int id_serpiente;
+    private int numero_serpiente;
     private Date fecha_ingreso;
     private String localidad_origen;
     private String colectada;
@@ -106,6 +107,14 @@ public class Serpiente {
         this.id_serpiente = id_serpiente;
     }
 
+    public int getNumero_serpiente() {
+        return numero_serpiente;
+    }
+
+    public void setNumero_serpiente(int numero_serpiente) {
+        this.numero_serpiente = numero_serpiente;
+    }
+    
     public Date getFecha_ingreso() {
         return fecha_ingreso;
     }

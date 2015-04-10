@@ -15,6 +15,7 @@ import org.json.JSONObject;
  */
 public class Lote {
     private int id_lote;
+    private String numero_lote;
     private Especie especie;
     private Veneno veneno;
     private List<Extraccion> extracciones;
@@ -35,6 +36,14 @@ public class Lote {
 
     public void setId_lote(int id_lote) {
         this.id_lote = id_lote;
+    }
+
+    public String getNumero_lote() {
+        return numero_lote;
+    }
+
+    public void setNumero_lote(String numero_lote) {
+        this.numero_lote = numero_lote;
     }
 
     public float getCantidad_actual() {

@@ -64,7 +64,7 @@
                                                 onchange="setCustomValidity('')">
                                             <option value=''></option>
                                             <c:forEach items="${lotes}" var="lote">
-                                                <option value=${lote.getId_lote()}>Lote ${lote.getId_lote()} (Cantidad - ${lote.getCantidad_actual()} gramos)</option>
+                                                <option value=${lote.getId_lote()}>Lote ${lote.getNumero_lote()} (Cantidad - ${lote.getCantidad_actual()} gramos)</option>
                                             </c:forEach>
                                     </select>
                                     <div><br></div>

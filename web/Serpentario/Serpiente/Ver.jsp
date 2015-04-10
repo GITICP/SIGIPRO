@@ -27,7 +27,7 @@
             <li> 
               <a href="/SIGIPRO/Serpentario/Serpiente?">Serpientes</a>
             </li>
-            <li class="active"> ${serpiente.getId_serpiente()} </li>
+            <li class="active"> ${serpiente.getNumero_serpiente()} </li>
           </ul>
         </div>
       </div>
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-bug"></i>Serpiente ${serpiente.getId_serpiente()} </h3>
+              <h3><i class="fa fa-bug"></i>Serpiente ${serpiente.getNumero_serpiente()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEvento" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -78,13 +78,13 @@
                             </c:if>
                         </c:when>
                         <c:otherwise>
-                            <c:set var="contienePermisoCH-CT" value="false" />
+                            <c:set var="contienePermisoCHCT" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                               <c:if test="${permiso == 1 || permiso == 314}">
-                                <c:set var="contienePermisoCH-CT" value="true" />
+                                <c:set var="contienePermisoCHCT" value="true" />
                               </c:if>
                             </c:forEach>
-                            <c:if test="${contienePermisoCH-CT}">
+                            <c:if test="${contienePermisoCHCT}">
                                 <c:choose>
                                     <c:when test="${postDeceso}">
                                         <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
@@ -114,15 +114,15 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre de la Especie:</strong> <td>${serpiente.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Número de Ingreso:</strong> <td>${serpiente.getId_serpiente()} </td></tr>
+                <tr><td> <strong>Número de Ingreso:</strong> <td>${serpiente.getNumero_serpiente()} </td></tr>
                 <tr><td> <strong>Fecha de Ingreso:</strong> <td>${serpiente.getFecha_ingresoAsString()} </td></tr>
                 <tr><td> <strong>Localidad de Origen:</strong> <td>${serpiente.getLocalidad_origen()} </td></tr>
                 <tr><td> <strong>Colectada por:</strong> <td>${serpiente.getColectada()} </td></tr>
                 <tr><td> <strong>Recibida por:</strong> <td>${serpiente.getRecibida().getNombre_usuario()} </td></tr>
                 <tr><td> <strong>Sexo:</strong> <td>${serpiente.getSexo()} </td></tr>
-                <tr><td> <strong>Talla (Longitud Cabeza-Cloaca):</strong> <td>${serpiente.getTalla_cabeza()} Metros </td></tr>
-                <tr><td> <strong>Talla (Longitud Cola):</strong> <td>${serpiente.getTalla_cola()} Metros</td></tr>
-                <tr><td> <strong>Talla (Longitud Total):</strong> <td>${serpiente.getTalla_total()} Metros</td></tr>
+                <tr><td> <strong>Talla (Longitud Cabeza-Cloaca):</strong> <td>${serpiente.getTalla_cabeza()} Centímetros </td></tr>
+                <tr><td> <strong>Talla (Longitud Cola):</strong> <td>${serpiente.getTalla_cola()} Centímetros</td></tr>
+                <tr><td> <strong>Talla (Longitud Total):</strong> <td>${serpiente.getTalla_total()} Centímetros</td></tr>
                 <tr><td> <strong>Peso:</strong> <td>${serpiente.getPeso()} Gramos</td></tr>
                 <c:choose>
                     <c:when test="${coleccionViva != null}">
@@ -338,7 +338,9 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" class="form-control" value=${id_coleccion_humeda} disabled="true">
+                            <input type="number" min="0" id="id_coleccion_humeda" name="numero_coleccion_humeda" class="form-control" required
+                                oninvalid="setCustomValidity('Este campo es requerido y debe ser número.')"
+                                oninput="setCustomValidity('')">
                         </div>
                     </div>
                 </div>
@@ -389,7 +391,9 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input id="id_catalogo_tejido" name="id_catalogo_tejido" class="form-control" value=${id_catalogo_tejido} disabled="true">
+                            <input type="number" min="0" id="id_catalogo_tejido" name="numero_catalogo_tejido" class="form-control" required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                oninput="setCustomValidity('')">
                         </div>
                     </div>
                 </div>
