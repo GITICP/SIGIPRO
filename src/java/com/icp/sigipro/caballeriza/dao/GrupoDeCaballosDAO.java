@@ -148,6 +148,9 @@ public class GrupoDeCaballosDAO {
         boolean resultado = false;
         int cant_caballos= ids_caballos.length;
         String caballos= pasar_id_caballos(ids_caballos);
+        if (")".equals(caballos)){
+            caballos= "(0)";
+        }
         PreparedStatement consulta = null;
         PreparedStatement consulta_caballos = null;
         try {

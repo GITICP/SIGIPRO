@@ -27,9 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorGrupoDeCaballos", urlPatterns = {"/Caballeriza/GrupoDeCaballos"})
 public class ControladorGrupoDeCaballos extends SIGIPROServlet {
 
-    private final int[] permisos = {52, 53, 54};
+    private final int[] permisos = {1, 52, 53, 54};
     private GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
-    private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
     protected final Class clase = ControladorGrupoDeCaballos.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -45,6 +44,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
         {
             add("agregar");
             add("editar");
+
         }
     };
 
@@ -123,11 +123,16 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet {
             
             List<GrupoDeCaballos> gruposdecaballos = dao.obtenerGruposDeCaballos();
             request.setAttribute("listaGrupos", gruposdecaballos);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Grupo eliminado correctamente."));
             redireccionar(request, response, redireccion);
         }
         catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+            String redireccion = "GrupoDeCaballos/index.jsp";
+            List<GrupoDeCaballos> gruposdecaballos = dao.obtenerGruposDeCaballos();
+            request.setAttribute("listaGrupos", gruposdecaballos);
+            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+            request.setAttribute("mensaje", helper.mensajeDeError("El Grupo de Caballos esta asociado a un inóculo y no se puede eliminar"));
+            redireccionar(request, response, redireccion);
+//request.setAttribute("mensaje", ex.getMessage());
         }
         
     }    
