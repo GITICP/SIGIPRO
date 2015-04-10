@@ -128,10 +128,9 @@ ALTER TABLE ONLY caballeriza.sangrias_caballos  ADD CONSTRAINT pk_sangrias_cabal
 --Indices unicos esquema caballeriza
 CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nombre);
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
---CREATE UNIQUE INDEX i_muestra ON caballeriza.sangrias_pruebas USING btree (muestra);
 
 
---Llaves foraneas esquema caballeriza
+--Llaves foráneas esquema caballeriza
 ALTER TABLE ONLY caballeriza.caballos ADD CONSTRAINT fk_id_grupo_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo) ON DELETE SET NULL;
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_evento FOREIGN KEY (id_evento) REFERENCES caballeriza.eventos_clinicos(id_evento);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
