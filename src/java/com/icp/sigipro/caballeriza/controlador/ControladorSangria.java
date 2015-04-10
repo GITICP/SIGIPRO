@@ -15,7 +15,6 @@ import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -37,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorSangria extends SIGIPROServlet
 {
 
-    private final int[] permisos = {1, 59, 60};
+    private final int[] permisos = {1, 61, 62};
     private final SangriaDAO dao = new SangriaDAO();
     private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
@@ -66,7 +65,7 @@ public class ControladorSangria extends SIGIPROServlet
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(59, listaPermisos);
+        validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Agregar.jsp";
 
         SangriaPruebaDAO sangria_pruebas_dao = new SangriaPruebaDAO();
@@ -110,7 +109,7 @@ public class ControladorSangria extends SIGIPROServlet
     protected void getExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(60, listaPermisos);
+        validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Extraccion.jsp";
 
         int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
@@ -134,7 +133,7 @@ public class ControladorSangria extends SIGIPROServlet
     protected void getEditarextraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(60, listaPermisos);
+        validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Extraccion.jsp";
 
         int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
@@ -165,7 +164,7 @@ public class ControladorSangria extends SIGIPROServlet
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(60, listaPermisos);
+        validarPermiso(62, listaPermisos);
         String redireccion = "Sangria/Editar.jsp";
 
         int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
@@ -179,7 +178,6 @@ public class ControladorSangria extends SIGIPROServlet
 
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
-        boolean resultado = false;
         String redireccion = "Sangria/Agregar.jsp";
         Sangria sangria = construirObjeto(request);
 
@@ -203,7 +201,6 @@ public class ControladorSangria extends SIGIPROServlet
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        boolean resultado = false;
         String redireccion = "Sangria/index.jsp";
 
         try {

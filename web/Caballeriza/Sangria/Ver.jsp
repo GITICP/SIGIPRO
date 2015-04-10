@@ -34,17 +34,17 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-book"></i> Sangría ${sangria.getId_sangria()} </h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoEditar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 58}">
-                                        <c:set var="contienePermisoEditar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editar&id_sangria=${sangria.getId_sangria()}">Editar</a>
+                            <c:set var="contienePermisoEditar" value="false" />
+                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                <c:if test="${permiso == 1 || permiso == 62}">
+                                    <c:set var="contienePermisoEditar" value="true" />
                                 </c:if>
-                            </div>
+                            </c:forEach>
+                            <c:if test="${contienePermisoEditar}">
+                                <div class="btn-group widget-header-toolbar">
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editar&id_sangria=${sangria.getId_sangria()}">Editar</a>
+                                </div>
+                            </c:if>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

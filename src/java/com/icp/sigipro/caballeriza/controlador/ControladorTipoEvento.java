@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorTipoEvento extends SIGIPROServlet {
 
 
-    private final int[] permisos = {1, 46, 47, 48};
+    private final int[] permisos = {46, 47, 48};
 
     private TipoEventoDAO dao = new TipoEventoDAO();
 

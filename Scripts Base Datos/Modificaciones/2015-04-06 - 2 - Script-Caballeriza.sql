@@ -223,10 +223,6 @@ CREATE OR REPLACE FUNCTION caballeriza.actualizar_estadisticas_sangria(param_id_
 					CASE WHEN plasma_dia3 IS NULL THEN 0 ELSE plasma_dia3 END
 					) FROM caballeriza.sangrias_caballos WHERE id_sangria = param_id_sangria);
 
-		RAISE NOTICE 'v_hematocrito_promedio: %', v_hematocrito_promedio;
-		RAISE NOTICE 'v_sangre_total: %', v_sangre_total;
-		RAISE NOTICE 'v_plasma_total: %', v_plasma_total;
-
 		UPDATE caballeriza.sangrias
 		SET hematrocito_promedio = v_hematocrito_promedio,
 		    sangre_total = v_sangre_total,

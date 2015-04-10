@@ -112,6 +112,12 @@ public class SangriaDAO
             if (iteracion_completa) {
                 resultado_caballos = true;
             }
+            
+            CallableStatement actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
+            
+            actualizar_estadisticas.setInt(1, s.getId_sangria());
+            actualizar_estadisticas.execute();
+            actualizar_estadisticas.close();
 
         }
         catch (SQLException ex) {

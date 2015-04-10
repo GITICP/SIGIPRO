@@ -273,7 +273,7 @@
                             <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                         </c:when>
                         <c:otherwise>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Inóculo</button>
                         </c:otherwise>
                     </c:choose>
                 </div>
