@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
+import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.modelos.Seccion;
@@ -46,6 +47,102 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
             consulta.setInt(1, id_usuario);
             consulta.setInt(2, id_sub_bodega);
+
+            ResultSet resultado_consulta = consulta.executeQuery();
+
+            if (resultado_consulta.next()) {
+                resultado = true;
+            }
+            else {
+                throw new AuthenticationException();
+            }
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
+        }
+        return resultado;
+    }
+    
+    public PermisoSubBodegas obtenerPermisos(int id_usuario, int id_sub_bodega) throws AuthenticationException, SIGIPROException
+    {
+        PermisoSubBodegas resultado = null;
+                
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                      "	  SELECT 'ingresos' as permiso " 
+                    + "	  FROM bodega.usuarios_sub_bodegas_ingresos " 
+                    + "	  where id_usuario = ? and id_sub_bodega = ? " 
+                    + "	  UNION " 
+                    + "	  SELECT 'egresos' as permiso " 
+                    + "	  FROM bodega.usuarios_sub_bodegas_egresos "
+                    + "	  where id_usuario = ? and id_sub_bodega = ? " 
+                    + "	  UNION " 
+                    + "	  SELECT 'ver' as permiso " 
+                    + "	  FROM bodega.usuarios_sub_bodegas_ver " 
+                    + "	  where id_usuario = ? and id_sub_bodega = ? " 
+                    + "	  UNION " 
+                    + "	  SELECT 'encargado' as permiso " 
+                    + "	  FROM bodega.sub_bodegas " 
+                    + "	  WHERE id_usuario = ? and id_sub_bodega = ?; " 
+            );
+
+            consulta.setInt(1, id_usuario);
+            consulta.setInt(2, id_sub_bodega);
+            consulta.setInt(3, id_usuario);
+            consulta.setInt(4, id_sub_bodega);
+            consulta.setInt(5, id_usuario);
+            consulta.setInt(6, id_sub_bodega);
+            consulta.setInt(7, id_usuario);
+            consulta.setInt(8, id_sub_bodega);
+
+            ResultSet resultado_consulta = consulta.executeQuery();
+             resultado = new PermisoSubBodegas();
+            
+            if (resultado_consulta.next()) {
+                do {
+                    resultado.asignarPermiso(resultado_consulta.getString("permiso"));
+                } while(resultado_consulta.next());
+            }
+            else {
+                throw new AuthenticationException();
+            }
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
+        }
+        return resultado;
+    }
+    
+    public boolean validarAcceso(int id_usuario) throws AuthenticationException, SIGIPROException
+    {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                      " SELECT 1 FROM " 
+                    + "	( "
+                    + "	  SELECT id_usuario " 
+                    + "	  FROM bodega.usuarios_sub_bodegas_ingresos " 
+                    + "	  where id_usuario = ? " 
+                    + "	  UNION " 
+                    + "	  SELECT id_usuario " 
+                    + "	  FROM bodega.usuarios_sub_bodegas_egresos "
+                    + "	  where id_usuario = ?" 
+                    + "	  UNION " 
+                    + "	  SELECT id_usuario " 
+                    + "	  FROM bodega.usuarios_sub_bodegas_ver " 
+                    + "	  where id_usuario = ?" 
+                    + "	  UNION " 
+                    + "	  SELECT id_usuario " 
+                    + "	  FROM bodega.sub_bodegas " 
+                    + "	  WHERE id_usuario = ?" 
+                    + "	 ) as permisos;" 
+            );
+
+            consulta.setInt(1, id_usuario);
+            consulta.setInt(2, id_usuario);
+            consulta.setInt(3, id_usuario);
+            consulta.setInt(4, id_usuario);
 
             ResultSet resultado_consulta = consulta.executeQuery();
 

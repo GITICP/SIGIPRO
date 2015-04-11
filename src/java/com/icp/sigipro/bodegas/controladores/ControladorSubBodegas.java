@@ -11,6 +11,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
+import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
@@ -41,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorSubBodegas extends SIGIPROServlet
 {
 
-    private final int[] permisos = {1, 1, 2};
+    private final int[] permisos = {70, 0, 0};
     private SubBodegaDAO dao = new SubBodegaDAO();
     private SeccionDAO daoSecciones = new SeccionDAO();
     private UsuarioDAO daoUsuarios = new UsuarioDAO();
@@ -74,7 +75,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
 
-        validarPermiso(11, listaPermisos);
+        validarPermiso(70, listaPermisos);
         String redireccion = "SubBodegas/Agregar.jsp";
 
         SubBodega sb = new SubBodega();
@@ -94,7 +95,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
-        validarPermiso(11, listaPermisos);
         String redireccion = "SubBodegas/Ingresar.jsp";
         
         try {
@@ -129,7 +129,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
     protected void getConsumir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(11, listaPermisos);
         String redireccion = "SubBodegas/Consumir.jsp";
         
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
@@ -166,10 +165,11 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         List<Integer> lista_permisos = getPermisosUsuario(request);
         int id_usuario = getIdUsuario(request);
-        validarPermisos(permisos, lista_permisos);
 
         try {
-            if (lista_permisos.contains(0)) {
+            validarPermisosSubBodega(id_usuario, lista_permisos);
+            
+            if (lista_permisos.contains(1) || lista_permisos.contains(70)) {
                 request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
             } else {
                 request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
@@ -189,11 +189,12 @@ public class ControladorSubBodegas extends SIGIPROServlet
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        //validarPermisos(permisos, listaPermisos);
+        PermisoSubBodegas permisos_sub_bodega;
+        
         String redireccion = "SubBodegas/Ver.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
         try {
-            validarAcceso(SubBodegaDAO.VER, getIdUsuario(request), id_sub_bodega, listaPermisos);
+            permisos_sub_bodega = dao.obtenerPermisos(getIdUsuario(request), id_sub_bodega);
         } catch(SIGIPROException ex) {
             throw new SIGIPROException(ex.getMessage(), "/index.jsp");
         }
@@ -208,6 +209,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             List<Usuario> usuarios_egresos = dao.usuariosPermisos(SubBodegaDAO.EGRESAR, sb.getId_sub_bodega());
             List<Usuario> usuarios_ver = dao.usuariosPermisos(SubBodegaDAO.VER, sb.getId_sub_bodega());
 
+            request.setAttribute("permisos_usuario", permisos_sub_bodega);
             request.setAttribute("usuarios_ingresos", usuarios_ingresos);
             request.setAttribute("usuarios_egresos", usuarios_egresos);
             request.setAttribute("usuarios_ver", usuarios_ver);
@@ -549,6 +551,21 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         if(!listaPermisos.contains(1)) {
             dao.validarAcceso(tabla, id_usuario, id_sub_bodega);
+        }
+    }
+    
+    protected void validarPermisosSubBodega(int id_usuario, List<Integer> permisosUsuario) throws AuthenticationException, SIGIPROException
+    {
+        try {
+            boolean acceso_sub_bodega = dao.validarAcceso(id_usuario);
+            boolean tiene_permisos = permisosUsuario.contains(permisos[0]);
+            
+            if (!(acceso_sub_bodega || tiene_permisos)) {
+                throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
+            }
+        }
+        catch (NullPointerException e) {
+            throw new AuthenticationException("Expiró la sesión.");
         }
     }
 

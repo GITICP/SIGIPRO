@@ -52,23 +52,10 @@
                                 <div class="widget-header">
                                     <h3><i class="fa fa-th-large"></i> ${sub_bodega.getNombre()} </h3>
                                     <div class="btn-group widget-header-toolbar">
-                                        <c:set var="contiene_permiso_ingresar" value="false" />
-                                        <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                            <c:if test="${permiso == 1 || permiso == 12}">
-                                                <c:set var="contiene_permiso_ingresar" value="true" />
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${contiene_permiso_ingresar}">
+                                        <c:if test="${permisos_usuario.isEncargado() || permisos_usuario.isIngresar() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
                                             <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ingresar&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Ingresar</a>
                                         </c:if>
-
-                                        <c:set var="contiene_permiso_consumir" value="false" />
-                                        <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                            <c:if test="${permiso == 1 || permiso == 12}">
-                                                <c:set var="contiene_permiso_consumir" value="true" />
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${contiene_permiso_consumir}">
+                                        <c:if test="${permisos_usuario.isEncargado() || permisos_usuario.isConsumir() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
                                             <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=consumir&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Consumir</a>
                                         </c:if>
                                     </div>
@@ -109,13 +96,7 @@
                                 <div class="widget-header">
                                     <h3><i class="fa fa-th-large"></i> ${sub_bodega.getNombre()} </h3>
                                     <div class="btn-group widget-header-toolbar">
-                                        <c:set var="contienePermisoEditar" value="false" />
-                                        <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                            <c:if test="${permiso == 1 || permiso == 12}">
-                                                <c:set var="contienePermisoEditar" value="true" />
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${contienePermisoEditar}">
+                                        <c:if test="${permisos_usuario.isEncargado() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
                                             <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=editar&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Editar</a>
                                         </c:if>
                                     </div>

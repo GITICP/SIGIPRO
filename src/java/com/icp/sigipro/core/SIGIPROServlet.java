@@ -28,30 +28,14 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
  */
 @WebServlet(name = "SIGIPROServlet", urlPatterns = {"/SIGIPROServlet"})
 public abstract class SIGIPROServlet extends HttpServlet
-{
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
-  {
-    procesarSolicitud(request, response, "get");
-  }
-  
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
-  {
-    request.setCharacterEncoding("UTF-8");
-    procesarSolicitud(request, response, "post");
-  }
-  
-  protected void procesarSolicitud(HttpServletRequest request, HttpServletResponse response, String accionHTTP)
-          throws ServletException, IOException
-  {
-    String accion = request.getParameter("accion");
-    if (accion == null) {
-        accion = "index";
-    }if (ServletFileUpload.isMultipartContent(request)){
-        accion = "agregarimagen";
+{   
+    protected final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException
+    {
+        procesarSolicitud(request, response, "get");
     }
 
     @Override
@@ -68,6 +52,9 @@ public abstract class SIGIPROServlet extends HttpServlet
         String accion = request.getParameter("accion");
         if (accion == null) {
             accion = "index";
+        }
+        if (ServletFileUpload.isMultipartContent(request)) {
+            accion = "agregarimagen";
         }
         try {
             ejecutarAccion(request, response, accion, accionHTTP);
@@ -163,7 +150,8 @@ public abstract class SIGIPROServlet extends HttpServlet
         try {
             HttpSession sesion = request.getSession();
             return (int) sesion.getAttribute("idusuario");
-        } catch(NullPointerException ex){
+        }
+        catch (NullPointerException ex) {
             throw new AuthenticationException("Expiró la sesión");
         }
 
