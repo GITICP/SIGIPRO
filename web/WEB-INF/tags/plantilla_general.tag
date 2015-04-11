@@ -109,6 +109,9 @@
     <script src="${direccion_contexto}/recursos/js/sigipro/CatalogoExterno.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/confirmacion-eliminar.js"></script>
+     <script src="${direccion_contexto}/recursos/js/sigipro/Serpiente.js"></script>
+     <script src="${direccion_contexto}/recursos/js/sigipro/Extraccion.js"></script>
+     <script src="${direccion_contexto}/recursos/js/sigipro/Veneno.js"></script>
 
     
 

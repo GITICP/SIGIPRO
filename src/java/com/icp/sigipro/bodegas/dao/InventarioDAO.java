@@ -159,8 +159,10 @@ public class InventarioDAO extends DAO<Inventario> {
         try {
           ProductoInternoDAO pr = new ProductoInternoDAO();
           SeccionDAO sc = new SeccionDAO();
-          inventario.setProducto(pr.obtenerProductoInterno(rs.getInt("id_producto")));
-          inventario.setSeccion(sc.obtenerSeccion(rs.getInt("id_seccion")));
+          ProductoInterno p = pr.obtenerProductoInterno(rs.getInt("id_producto"));
+          Seccion s = sc.obtenerSeccion(rs.getInt("id_seccion"));
+          inventario.setProducto(p);
+          inventario.setSeccion(s);
         } catch (Exception ex) {
           ex.printStackTrace();
         }

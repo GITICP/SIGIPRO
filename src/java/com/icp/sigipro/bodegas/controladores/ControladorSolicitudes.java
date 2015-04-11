@@ -90,7 +90,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           redireccion = "Solicitudes/Agregar.jsp";
           Solicitud solicitud = new Solicitud();
           InventarioDAO inventarioDAO = new InventarioDAO();
-          Usuario usr = usrDAO.obtenerUsuario(usrDAO.obtenerIDUsuario((String) sesion.getAttribute("usuario")));
+          Usuario usr = usrDAO.obtenerUsuario((int)sesion.getAttribute("idusuario"));
           List<Inventario> inventarios = inventarioDAO.obtenerInventarios(usr.getIdSeccion(),1);
           request.setAttribute("inventarios", inventarios);
           request.setAttribute("solicitud", solicitud);
@@ -202,7 +202,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
       }
     else
       {   String nombre_usr = (String) sesion.getAttribute("usuario");
-          usuario_solicitante = usrDAO.obtenerIDUsuario(nombre_usr);
+          int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+          Usuario us = usrDAO.obtenerUsuario(id_usuario);
+          usuario_solicitante = us.getIdSeccion();
       }
     String accionindex = request.getParameter("accionindex");
     if (accionindex.equals("")){      

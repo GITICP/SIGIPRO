@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -28,14 +29,29 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "SIGIPROServlet", urlPatterns = {"/SIGIPROServlet"})
 public abstract class SIGIPROServlet extends HttpServlet
 {
-
-    protected HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        procesarSolicitud(request, response, "get");
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    procesarSolicitud(request, response, "get");
+  }
+  
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    request.setCharacterEncoding("UTF-8");
+    procesarSolicitud(request, response, "post");
+  }
+  
+  protected void procesarSolicitud(HttpServletRequest request, HttpServletResponse response, String accionHTTP)
+          throws ServletException, IOException
+  {
+    String accion = request.getParameter("accion");
+    if (accion == null) {
+        accion = "index";
+    }if (ServletFileUpload.isMultipartContent(request)){
+        accion = "agregarimagen";
     }
 
     @Override

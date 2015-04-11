@@ -42,6 +42,7 @@
 
 .cuadro-opciones {
     margin-right: 1em;
+    padding-bottom: 1em;
 }
 
 .opciones {
@@ -50,6 +51,25 @@
     padding-left: 1em;
 }
 
+.tabla-ver td {
+    padding-right: 1em;
+}
+
+.tabla-modal {
+    width: 100%;
+}
+
+.tabla-modal td {
+    padding-bottom: 0.5em;
+}
+
+.tabla-modal > tbody > tr > td:first-child {
+    width: 35%;
+}
+
+.campo-tabla-centrado {
+    text-align:center;
+}
 .sigipro-tab-content {
   padding: 0px;
 }

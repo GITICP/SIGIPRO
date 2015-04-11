@@ -128,7 +128,6 @@ public class BitacoraDAO
                 bitacora.setTabla(rs.getString("tabla"));
                 bitacora.setEstado(rs.getString("estado"));
 
-                System.out.println(bitacora.getId_bitacora());
                 resultado.add(bitacora);
             }
             rs.close();
