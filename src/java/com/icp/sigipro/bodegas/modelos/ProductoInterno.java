@@ -61,7 +61,11 @@ public class ProductoInterno extends IModelo
 
   public String getNombre()
   {
-    return nombre.replaceAll("\"", "");
+      if (nombre == null){
+          return nombre;
+      } else {
+          return nombre.replaceAll("\"", "");
+      }
   }
 
   public void setNombre(String nombre)
