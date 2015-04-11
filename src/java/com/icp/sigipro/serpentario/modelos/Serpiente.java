@@ -9,6 +9,7 @@ import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,6 +97,9 @@ public class Serpiente {
     }
     
     public float getTalla_total(){
+        System.out.println(this.talla_cabeza);
+        System.out.println(this.talla_cola);
+        
         return this.talla_cabeza+this.talla_cola;
     }
     

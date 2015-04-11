@@ -50,11 +50,11 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Especie:</strong></td> <td>${veneno.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Cantidad:</strong> <td>${veneno.getCantidad()} gramos </td></tr>
+                <tr><td> <strong>Cantidad:</strong> <td>${veneno.getCantidad()} Miligramos </td></tr>
                 <c:choose>
                     <c:when test="${veneno.isRestriccion()}">
                         <tr><td> <strong>¿Es restringido?:</strong> <td>Si</td></tr>
-                        <tr><td> <strong>Cantidad Máxima:</strong> <td>${veneno.getCantidad_maxima()} gramos</td></tr>
+                        <tr><td> <strong>Cantidad Máxima:</strong> <td>${veneno.getCantidad_maxima()} Miligramos</td></tr>
                     </c:when>
                     <c:otherwise>
                         <tr><td> <strong>¿Es restringido?:</strong> <td>No</td></tr>

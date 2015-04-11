@@ -58,7 +58,7 @@
                     <th>Número de Solicitud</th>
                     <th>Usuario Solicitante</th>
                     <th>Especie</th>
-                    <th>Cantidad (gramos)</th>
+                    <th>Cantidad (mg)</th>
                     <th>Fecha de Solicitud</th>
                     <th>Estado</th>
                     <c:if test="${booladmin}">

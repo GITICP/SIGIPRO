@@ -41,7 +41,7 @@
                   <tr>
                     <th>Especie</th>
                     <th>Restricción</th>
-                    <th>Cantidad Máxima (gramos)</th>
+                    <th>Cantidad Máxima (mg)</th>
                   </tr>
                 </thead>
                 <tbody>

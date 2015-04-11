@@ -250,12 +250,12 @@
                 <input hidden="true" name="accion" value="Liofilizacionfin">
                 <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
                 <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="peso_recuperado" class="control-label">*Peso recuperado (g)</label>
+                <label for="peso_recuperado" class="control-label">*Peso recuperado (mg)</label>
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
                         <BR>
-                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" placeholder="Número de g recuperados" class="form-control" value="" required
+                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" placeholder="Número de mg recuperados" class="form-control" value="" required
                              oninput="setCustomValidity(\'\')" 
                              oninvalid="setCustomValidity(\'Ingrese solo números\')">
                     </div>
