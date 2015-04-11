@@ -38,7 +38,7 @@ import javax.servlet.http.HttpSession;
 public class ControladorSolicitudesConejera extends SIGIPROServlet
 {
 
-    private final int[] permisos = {205, 203, 1};
+    private final int[] permisos = {253, 254, 1};
     private final SolicitudConejeraDAO dao = new SolicitudConejeraDAO();
     private final EntregaConejeraDAO dao_en = new EntregaConejeraDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
@@ -92,7 +92,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(205, listaPermisos);
+        validarPermisos(permisos, listaPermisos);
 
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
@@ -108,7 +108,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         String redireccion = "SolicitudesConejera/index.jsp";
         List<SolicitudConejera> solicitudes_conejera;
@@ -142,7 +142,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         String redireccion = "SolicitudesConejera/Ver.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -162,7 +162,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         String redireccion = "SolicitudesConejera/VerEntrega.jsp";
         int id_entrega = Integer.parseInt(request.getParameter("id_entrega"));
@@ -200,7 +200,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
@@ -247,7 +247,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         validarPermisos(permisos, listaPermisos);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         boolean resultado = false;
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
@@ -304,7 +304,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         boolean resultado = false;
         String redireccion = "SolicitudesConejera/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
@@ -357,7 +357,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         boolean resultado = false;
         String redireccion = "SolicitudesConejera/Editar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
@@ -413,7 +413,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
         String obs = request.getParameter("observaciones_rechazo");
         boolean resultado = false;
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
@@ -470,7 +470,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_auth2"));
         boolean resultado = false;
         boolean resultado2 = false;
-        admin = verificarPermiso(203, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
         request.setAttribute("admin", admin);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);

@@ -209,4 +209,4 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (252, 252);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (253, 253);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (254, 253);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (255, 253);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (255, 255);
