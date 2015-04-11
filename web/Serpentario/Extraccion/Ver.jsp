@@ -110,7 +110,7 @@
                         <tbody>
                           <c:forEach items="${listaSerpientes}" var="serpiente">
                             <tr>
-                              <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">${serpiente.getId_serpiente()}</a></td>
+                              <td><a href="/SIGIPRO/Serpentario/Serpiente?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">${serpiente.getNumero_serpiente()}</a></td>
                             </tr>
                           </c:forEach>
                         </tbody>

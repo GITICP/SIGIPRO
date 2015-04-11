@@ -53,14 +53,14 @@
                   <c:choose>
                       <c:when test="${deceso.equals('coleccionhumeda')}">
                         <tr><td> <strong>Colección Húmeda:</strong></td> <td>${coleccionhumeda.getId_coleccion_humeda()} </td></tr>
-                        <tr><td> <strong>Serpiente:</strong> <td>${coleccionhumeda.getSerpiente().getId_serpiente()} </td></tr> 
+                        <tr><td> <strong>Serpiente:</strong> <td>${coleccionhumeda.getSerpiente().getNumero_serpiente()} </td></tr> 
                         <tr><td> <strong>Propósito:</strong> <td>${coleccionhumeda.getProposito()} </td></tr> 
                         <tr><td> <strong>Observaciones:</strong> <td>${coleccionhumeda.getObservaciones()} </td></tr> 
                         <tr><td> <strong>Usuario Responsable:</strong> <td>${coleccionhumeda.getUsuario().getNombreCompleto()} </td></tr> 
                      </c:when>
                      <c:otherwise>
                         <tr><td> <strong>Catálogo de Tejidos:</strong></td> <td>${catalogotejido.getId_catalogo_tejido()} </td></tr>
-                        <tr><td> <strong>Serpiente:</strong> <td>${catalogotejido.getSerpiente().getId_serpiente()} </td></tr> 
+                        <tr><td> <strong>Serpiente:</strong> <td>${catalogotejido.getSerpiente().getNumero_serpiente()} </td></tr> 
                         <tr><td> <strong>Número de Caja:</strong> <td>${catalogotejido.getNumero_caja()} </td></tr> 
                         <tr><td> <strong>Posición:</strong> <td>${catalogotejido.getPosicion()} </td></tr> 
                         <tr><td> <strong>Observaciones:</strong> <td>${catalogotejido.getObservaciones()} </td></tr> 

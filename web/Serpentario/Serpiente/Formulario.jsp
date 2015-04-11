@@ -17,13 +17,22 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="text" class="form-control" disabled='true' name="numero_ingreso" value="${serpiente.getId_serpiente()}"> 
+                            <input type="text" class="form-control" disabled='true' name="numero_ingreso" value="${serpiente.getNumero_serpiente()}"> 
                         </div>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-
+                <label for="numero_ingreso" class="control-label">*Número de Ingreso</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="number" min="0" class="form-control" name="numero_serpiente" value="${serpiente.getNumero_serpiente()}" required
+                                oninvalid="setCustomValidity('Este campo es requerido y debe ser número entero.')"
+                                oninput="setCustomValidity('')"> 
+                        </div>
+                    </div>
+                </div>
             </c:otherwise>
         </c:choose>
         <label for="especie" class="control-label">*Especie</label>
@@ -154,7 +163,7 @@
             </div>
         </div>
     </div>                 
-    <label for="talla_cabeza" class="control-label">Longitud de la Cabeza a la Cloaca (Metros)</label>
+    <label for="talla_cabeza" class="control-label">Longitud de la Cabeza a la Cloaca (cm)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
@@ -164,7 +173,7 @@
         </div>
       </div>
     </div>
-    <label for="talla_cola" class="control-label">Longitud de la Cola (Metros)</label>
+    <label for="talla_cola" class="control-label">Longitud de la Cola (cm)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
@@ -174,7 +183,7 @@
         </div>
       </div>
     </div>
-    <label for="peso" class="control-label">Peso (Gramos)</label>
+    <label for="peso" class="control-label">Peso (g)</label>
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">

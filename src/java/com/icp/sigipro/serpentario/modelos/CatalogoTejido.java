@@ -14,7 +14,8 @@ import org.json.JSONObject;
  * @author ld.conejo
  */
 public class CatalogoTejido {
-    private int id_catalogo_tejido;
+    private int id_catalogo_tejido; 
+    private int numero_catalogo_tejido;
     private Serpiente serpiente;
     private String numero_caja;
     private String posicion;
@@ -41,6 +42,14 @@ public class CatalogoTejido {
 
     public void setId_catalogo_tejido(int id_catalogo_tejido) {
         this.id_catalogo_tejido = id_catalogo_tejido;
+    }
+
+    public int getNumero_catalogo_tejido() {
+        return numero_catalogo_tejido;
+    }
+
+    public void setNumero_catalogo_tejido(int numero_catalogo_tejido) {
+        this.numero_catalogo_tejido = numero_catalogo_tejido;
     }
 
     public Serpiente getSerpiente() {

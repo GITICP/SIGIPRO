@@ -14,13 +14,31 @@
       <input hidden="true" name="id_lote" value="${lote.getId_lote()}">
       <input hidden="true" name="accion" value="${accion}">
       <label for="lote" class="control-label"> Número de Lote</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" class="form-control" disabled='true' name="id_lote" value="${lote.getId_lote()}"> 
-          </div>
-        </div>
-      </div>
+      <c:choose>
+          <c:when test="${lote.getId_lote()!=0}">
+                <div class="form-group">
+                <div class="col-sm-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="numero_lote" disabled="true" value="${lote.getNumero_lote()}" required
+                            oninvalid="setCustomValidity('Este campo es requerido ')"
+                            oninput="setCustomValidity('')"> 
+                  </div>
+                </div>
+              </div>
+          </c:when>
+          <c:otherwise>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="numero_lote" value="${lote.getNumero_lote()}" required
+                            oninvalid="setCustomValidity('Este campo es requerido ')"
+                            oninput="setCustomValidity('')"> 
+                  </div>
+                </div>
+              </div>
+          </c:otherwise>
+      </c:choose>
+      
     </div>    
     <div class="col-md-6">
       <label for="especie" class="control-label"> *Especie</label>

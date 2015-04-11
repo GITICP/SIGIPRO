@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Serpentario/Serpiente?"> Serpientes</a>
             </li>
-            <li class="active">Serpiente ${serpiente.getId_serpiente()}</li>
+            <li class="active">Serpiente ${serpiente.getNumero_serpiente()}</li>
 
           </ul>
         </div>
@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <div class="input-group">
-                                            <input id="id_coleccion_humeda" name="id_coleccion_humeda" class="form-control" value="${coleccionhumeda.getId_coleccion_humeda()}" disabled="true">
+                                            <input id="id_coleccion_humeda" name="numero_coleccion_humeda" class="form-control" value="${coleccionhumeda.getNumero_coleccion_humeda()}" disabled="true">
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +105,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input id="id_catalogo_tejido" name="id_catalogo_tejido" class="form-control" value="${catalogotejido.getId_catalogo_tejido()}" disabled="true">
+                                                    <input id="id_catalogo_tejido" name="numero_catalogo_tejido" class="form-control" value="${catalogotejido.getNumero_catalogo_tejido()}" disabled="true">
                                                 </div>
                                             </div>
                                         </div>

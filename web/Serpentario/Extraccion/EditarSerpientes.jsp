@@ -56,7 +56,7 @@
                                                 onchange="setCustomValidity('')">
                                             <option value=''></option>
                                             <c:forEach items="${serpientes}" var="serpiente">
-                                                <option value=${serpiente.getId_serpiente()}>${serpiente.getId_serpiente()}</option>
+                                                <option value=${serpiente.getId_serpiente()}>${serpiente.getNumero_serpiente()}</option>
                                             </c:forEach>
                                     </select>
                                     <div><br></div>
@@ -81,9 +81,9 @@
                                   <thead>
                                     <tr>
                                       <th>Serpiente</th>
-                                      <th>Talla Cabeza (metros)</th>
-                                      <th>Talla Cola (metros)</th>
-                                      <th>Peso (gramos)</th>
+                                      <th>Talla Cabeza (cm)</th>
+                                      <th>Talla Cola (cm)</th>
+                                      <th>Peso (g)</th>
                                       <th>Sexo</th>
                                       <th>Eliminar</th>
                                     </tr>

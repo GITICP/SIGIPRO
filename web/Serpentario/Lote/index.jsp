@@ -64,7 +64,7 @@
                       <td>
                         <a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${lote.getId_lote()}">
                           <div style="height:100%;width:100%">
-                            ${lote.getId_lote()}
+                            ${lote.getNumero_lote()}
                           </div>
                         </a>
                       </td>

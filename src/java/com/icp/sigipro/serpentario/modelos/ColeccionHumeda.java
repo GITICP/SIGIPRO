@@ -15,6 +15,7 @@ import org.json.JSONObject;
  */
 public class ColeccionHumeda {
     private int id_coleccion_humeda;
+    private int numero_coleccion_humeda;
     private Serpiente serpiente;
     private String proposito;
     private String observaciones;
@@ -37,6 +38,14 @@ public class ColeccionHumeda {
 
     public void setId_coleccion_humeda(int id_coleccion_humeda) {
         this.id_coleccion_humeda = id_coleccion_humeda;
+    }
+
+    public int getNumero_coleccion_humeda() {
+        return numero_coleccion_humeda;
+    }
+
+    public void setNumero_coleccion_humeda(int numero_coleccion_humeda) {
+        this.numero_coleccion_humeda = numero_coleccion_humeda;
     }
 
     public Serpiente getSerpiente() {

@@ -114,7 +114,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
 
         String redireccion = "Serpiente/Agregar.jsp";
         Serpiente s = new Serpiente();
-        s.setId_serpiente(dao.obtenerProximoId());
         EspecieDAO especiedao = new EspecieDAO();
         List<Especie> especies = especiedao.obtenerEspecies();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
@@ -180,8 +179,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 }
                 if (i.getEvento().equals("Deceso")){
                     request.setAttribute("deceso",i);
-                    request.setAttribute("id_coleccion_humeda",dao.obtenerProximoIdCH());
-                    request.setAttribute("id_catalogo_tejido", dao.obtenerProximoIdCT());
                 }
                 if (i.getEvento().equals("Colección Húmeda")){
                     postDeceso = false;
@@ -318,7 +315,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Serpiente/Agregar.jsp";
+        String redireccion = "Serpiente/index.jsp";
         Serpiente s = construirObjeto(request);
         
         UsuarioDAO usuariodao = new UsuarioDAO();
@@ -333,6 +330,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente agregada correctamente"));
             redireccion = "Serpiente/index.jsp";
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada por problemas con el Número de Ingreso. Este debe ser único."));
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);
@@ -434,7 +433,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
         String redireccion = "Serpiente/EditarDeceso.jsp";
         String deceso = request.getParameter("deceso");
         int id_serpiente=0;
-        System.out.println(deceso);
         if (deceso.equals("catalogotejido")){
             CatalogoTejido ct = this.construirCT(request);
             int id_catalogo_tejido = Integer.parseInt(request.getParameter("id_ct"));
@@ -491,7 +489,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     protected void postCatalogotejido(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Serpiente/Ver.jsp";
+        String redireccion = "Serpiente/index.jsp";
         CatalogoTejido ct = construirCT(request);
         
         UsuarioDAO usuariodao = new UsuarioDAO();
@@ -508,8 +506,10 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Evento e = this.setEvento(ct.getSerpiente(), "Catálogo Tejido", request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ct.getSerpiente().getId_serpiente()+" agregada a Catálogo de Tejidos correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ct.getSerpiente().getNumero_serpiente()+" agregada a Catálogo de Tejidos correctamente."));
             redireccion = "Serpiente/index.jsp";
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Catálogo de Tejidos por problemas con el Número de Ingreso. Este debe ser único."));
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);    }
@@ -517,7 +517,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     protected void postColeccionhumeda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Serpiente/Ver.jsp";
+        String redireccion = "Serpiente/index.jsp";
         ColeccionHumeda ch = construirCH(request);
         
         UsuarioDAO usuariodao = new UsuarioDAO();
@@ -534,8 +534,10 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Evento e = this.setEvento(ch.getSerpiente(), "Colección Húmeda", request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ch.getSerpiente().getId_serpiente()+" agregada a Colección Húmeda correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ch.getSerpiente().getNumero_serpiente()+" agregada a Colección Húmeda correctamente."));
             redireccion = "Serpiente/index.jsp";
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Colección Húmeda por problemas con el Número de Ingreso. Este debe ser único."));
         }
         request.setAttribute("listaSerpientes", dao.obtenerSerpientes());
         redireccionar(request, response, redireccion);
@@ -548,22 +550,23 @@ public class ControladorSerpiente extends SIGIPROServlet {
         Serpiente s = new Serpiente();
         
         if (!request.getParameter("accion").equals("Editar")){
-        EspecieDAO especiedao = new EspecieDAO();
-        Especie especie = especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie")));
-        s.setEspecie(especie);
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        
-            java.util.Date fecha_ingreso;
-            java.sql.Date fecha_ingresoSQL;
-            try {
-              fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
-              fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
-              s.setFecha_ingreso(fecha_ingresoSQL);
-            } catch (ParseException ex) {
+            s.setNumero_serpiente(Integer.parseInt(request.getParameter("numero_serpiente")));
+            EspecieDAO especiedao = new EspecieDAO();
+            Especie especie = especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie")));
+            s.setEspecie(especie);
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
-            }
-            s.setLocalidad_origen(request.getParameter("localidad_origen"));
-            s.setColectada(request.getParameter("colectada"));
+                java.util.Date fecha_ingreso;
+                java.sql.Date fecha_ingresoSQL;
+                try {
+                  fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
+                  fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
+                  s.setFecha_ingreso(fecha_ingresoSQL);
+                } catch (ParseException ex) {
+
+                }
+                s.setLocalidad_origen(request.getParameter("localidad_origen"));
+                s.setColectada(request.getParameter("colectada"));
         }
         s.setSexo(request.getParameter("sexo"));
         s.setTalla_cabeza(Float.parseFloat(request.getParameter("talla_cabeza")));
@@ -575,7 +578,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     
     private ColeccionHumeda construirCH(HttpServletRequest request){
         ColeccionHumeda ch = new ColeccionHumeda();
-        
+        ch.setNumero_coleccion_humeda(Integer.parseInt(request.getParameter("numero_coleccion_humeda")));
         ch.setObservaciones(request.getParameter("observacionesCH"));
         ch.setProposito(request.getParameter("proposito"));
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente_coleccion_humeda"));
@@ -586,7 +589,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
     
     private CatalogoTejido construirCT(HttpServletRequest request){
         CatalogoTejido ct = new CatalogoTejido();
-        
+        ct.setNumero_catalogo_tejido(Integer.parseInt(request.getParameter("numero_catalogo_tejido")));
         ct.setObservaciones(request.getParameter("observacionesCT"));
         ct.setNumero_caja(request.getParameter("numero_caja"));
         ct.setEstado(request.getParameter("estado"));

@@ -238,7 +238,7 @@ public class UsuarioDAO
             SingletonBD s = SingletonBD.getSingletonBD();
             Connection conexion = s.conectar();
 
-            PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario "
+            PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario,id_seccion "
                                                                    + " From seguridad.usuarios"
                                                                    + " Where nombre_usuario = ? ");
 
@@ -248,11 +248,12 @@ public class UsuarioDAO
 
             if (resultadoConsulta.next()) {
                 resultado = new Usuario();
-
                 int id_usuario = resultadoConsulta.getInt("id_usuario");
+                int id_seccion = resultadoConsulta.getInt("id_seccion");
 
                 resultado.setId_usuario(id_usuario);
                 resultado.setNombre_usuario(nombre_usuario);
+                resultado.setId_seccion(id_seccion);
 
             }
         }
@@ -578,6 +579,35 @@ public class UsuarioDAO
                 consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
                                                      + "us.id_seccion, us.id_puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
                                                      + "FROM seguridad.usuarios us");
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarUsuarios(resultadoConsulta);
+                resultadoConsulta.close();
+                consulta.close();
+                conexion.close();
+            }
+            catch (SQLException ex) {
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+    
+        public List<Usuario> obtenerUsuarios(Usuario u)
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+
+        List<Usuario> resultado = null;
+
+        if (conexion != null) {
+            try {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
+                                                    + "us.id_seccion, us.id_puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                                                    + "FROM seguridad.usuarios us "
+                                                    + "WHERE us.id_seccion = ?; ");
+                consulta.setInt(1, u.getId_seccion());
+                System.out.println(consulta);
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarUsuarios(resultadoConsulta);
                 resultadoConsulta.close();

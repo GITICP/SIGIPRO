@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Serpentario/Lote?">Lotes de Veneno</a>
             </li>
-            <li class="active">Lote ${lote.getId_lote()}</li>
+            <li class="active">Lote ${lote.getNumero_lote()}</li>
 
           </ul>
         </div>

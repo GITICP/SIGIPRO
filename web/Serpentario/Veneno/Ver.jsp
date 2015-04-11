@@ -78,7 +78,7 @@
                         <tbody>
                           <c:forEach items="${lotes}" var="lote">
                             <tr>
-                              <td><a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${lote.getId_lote()}">Lote ${lote.getId_lote()}</a></td>
+                              <td><a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${lote.getId_lote()}">Lote ${lote.getNumero_lote()}</a></td>
                               <td>${lote.getCantidad_actual()} gramos</td>
                             </tr>
                           </c:forEach>

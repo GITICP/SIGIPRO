@@ -66,7 +66,6 @@ public class ControladorLote extends SIGIPROServlet {
 
         String redireccion = "Lote/Agregar.jsp";
         Lote l = new Lote();
-        l.setId_lote(dao.obtenerProximoId());
         List<Especie> especies = especiedao.obtenerEspecies();
         request.setAttribute("lote", l);
         request.setAttribute("especies",especies);
@@ -118,6 +117,20 @@ public class ControladorLote extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
 
     }
+    //Agrega mas Extracciones al Lote, pero no elimina
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response,int id_lote) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(331, listaPermisos);
+        String redireccion = "Lote/Editar.jsp";
+        Lote lote = dao.obtenerLote(id_lote);
+        List<Extraccion> extracciones = dao.obtenerExtracciones(lote.getEspecie());
+        request.setAttribute("lote", lote);
+        request.setAttribute("extracciones", extracciones);
+        request.setAttribute("accion", "Editar");
+        redireccionar(request, response, redireccion);
+
+    }
 
     // </editor-fold>
   
@@ -126,21 +139,21 @@ public class ControladorLote extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "Lote/Agregar.jsp";
+        String redireccion = "Lote/index.jsp";
         Lote l = construirObjeto(request);
         resultado = dao.insertarLote(l);
         
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado){
             request.setAttribute("mensaje", helper.mensajeDeExito("Lote agregado correctamente"));
-            redireccion = "Lote/index.jsp";
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(l.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LOTE,request.getRemoteAddr());
             //*----------------------------*
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Lote no pudo ser agregado por problemas con el Número de Lote. Este debe ser único."));
         }
-        request.setAttribute("id_lote", l.getId_lote());
-        this.getEditar(request, response);
+        this.getEditar(request, response, l.getId_lote());
     }
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -174,6 +187,7 @@ public class ControladorLote extends SIGIPROServlet {
   
     private Lote construirObjeto(HttpServletRequest request) {
         Lote l = new Lote();
+        l.setNumero_lote(request.getParameter("numero_lote"));
         Especie e = especiedao.obtenerEspecie(Integer.parseInt(request.getParameter("especie")));
         l.setEspecie(e);
 

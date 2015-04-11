@@ -37,8 +37,8 @@ public class SerpienteDAO {
     public boolean insertarSerpiente(Serpiente s){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes (id_especie, fecha_ingreso,localidad_origen,colectada,recibida,sexo,talla_cabeza,talla_cola,peso) " +
-                                                             " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_serpiente");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes (id_especie, fecha_ingreso,localidad_origen,colectada,recibida,sexo,talla_cabeza,talla_cola,peso,numero_serpiente) " +
+                                                             " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_serpiente");
             consulta.setInt(1, s.getEspecie().getId_especie());
             consulta.setDate(2, s.getFecha_ingreso());
             consulta.setString(3, s.getLocalidad_origen());
@@ -48,6 +48,7 @@ public class SerpienteDAO {
             consulta.setFloat(7, s.getTalla_cabeza());
             consulta.setFloat(8, s.getTalla_cola());
             consulta.setFloat(9, s.getPeso());
+            consulta.setInt(10,s.getNumero_serpiente());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -59,7 +60,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(Exception ex){
-            ex.printStackTrace();
+            return false;
         }
         return resultado;
     }
@@ -67,12 +68,13 @@ public class SerpienteDAO {
     public boolean insertarSerpiente(ColeccionHumeda ch){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.coleccion_humeda (id_serpiente, proposito,observaciones,id_usuario) " +
-                                                             " VALUES (?,?,?,?) RETURNING id_coleccion_humeda");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.coleccion_humeda (id_serpiente, proposito,observaciones,id_usuario,numero_coleccion_humeda) " +
+                                                             " VALUES (?,?,?,?,?) RETURNING id_coleccion_humeda");
             consulta.setInt(1, ch.getSerpiente().getId_serpiente());
             consulta.setString(2, ch.getProposito());
             consulta.setString(3, ch.getObservaciones());
             consulta.setInt(4,ch.getUsuario().getId_usuario());
+            consulta.setInt(5,ch.getNumero_coleccion_humeda());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -84,7 +86,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(Exception ex){
-            ex.printStackTrace();
+            return false;
         }
         return resultado;
     }
@@ -92,14 +94,15 @@ public class SerpienteDAO {
     public boolean insertarSerpiente(CatalogoTejido ct){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.catalogo_tejido (id_serpiente, numero_caja,posicion,observaciones,estado,id_usuario) " +
-                                                             " VALUES (?,?,?,?,?,?) RETURNING id_catalogo_tejido");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.catalogo_tejido (id_serpiente, numero_caja,posicion,observaciones,estado,id_usuario,numero_catalogo_tejido) " +
+                                                             " VALUES (?,?,?,?,?,?,?) RETURNING id_catalogo_tejido");
             consulta.setInt(1, ct.getSerpiente().getId_serpiente());
             consulta.setString(2, ct.getNumero_caja());
             consulta.setString(3, ct.getPosicion());
             consulta.setString(4, ct.getObservaciones());
             consulta.setString(5, ct.getEstado());
             consulta.setInt(6,ct.getUsuario().getId_usuario());
+            consulta.setInt(7,ct.getNumero_catalogo_tejido());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -111,7 +114,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(Exception ex){
-            ex.printStackTrace();
+            return false;
         }
         return resultado;
     }
@@ -191,15 +194,14 @@ public class SerpienteDAO {
         return resultado;
         
     }
+/*  No usados por ahora
     
     public int obtenerProximoId(){
-        boolean resultado = false;
         int nextval = 0;
         try{
             PreparedStatement consulta = getConexion().prepareStatement("SELECT last_value FROM serpentario.serpientes_id_serpiente_seq;");
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()){
-                resultado=true;
                 int currval = resultadoConsulta.getInt("last_value");
                 if (currval==1){
                     List<Serpiente> serpientes = this.obtenerSerpientes();
@@ -270,7 +272,7 @@ public class SerpienteDAO {
         }
         return nextval;
     }
-    
+*/
     public boolean eliminarSerpiente(int id_serpiente) throws SIGIPROException{
         boolean resultado = false;
         try{
@@ -322,7 +324,6 @@ public class SerpienteDAO {
             consulta.setFloat(2, s.getTalla_cabeza());
             consulta.setFloat(3, s.getTalla_cola());
             consulta.setFloat(4, s.getPeso());
-            //consulta.setBlob(5,s.getImagen());
             consulta.setInt(5, s.getId_serpiente());
 
             if ( consulta.executeUpdate() == 1){
@@ -347,6 +348,7 @@ public class SerpienteDAO {
             UsuarioDAO usuariodao = new UsuarioDAO();
             if(rs.next()){
                 ch.setId_coleccion_humeda(rs.getInt("id_coleccion_humeda"));
+                ch.setNumero_coleccion_humeda(rs.getInt("numero_coleccion_humeda"));
                 ch.setSerpiente(serpiente);
                 ch.setProposito(rs.getString("proposito"));
                 ch.setObservaciones(rs.getString("observaciones"));
@@ -371,6 +373,7 @@ public class SerpienteDAO {
             UsuarioDAO usuariodao = new UsuarioDAO();
             if(rs.next()){
                 ct.setId_catalogo_tejido(rs.getInt("id_catalogo_tejido"));
+                ct.setNumero_catalogo_tejido(rs.getInt("numero_catalogo_tejido"));
                 ct.setSerpiente(serpiente);
                 ct.setNumero_caja(rs.getString("numero_caja"));
                 ct.setObservaciones(rs.getString("observaciones"));
@@ -397,6 +400,7 @@ public class SerpienteDAO {
             EspecieDAO dao = new EspecieDAO();
             if(rs.next()){
                 serpiente.setId_serpiente(rs.getInt("id_serpiente"));
+                serpiente.setNumero_serpiente(rs.getInt("numero_serpiente"));
                 serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
                 serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
@@ -430,6 +434,7 @@ public class SerpienteDAO {
             while(rs.next()){
                 Serpiente serpiente = new Serpiente();
                 serpiente.setId_serpiente(rs.getInt("id_serpiente"));
+                serpiente.setNumero_serpiente(rs.getInt("numero_serpiente"));
                 serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
                 serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
@@ -465,6 +470,7 @@ public class SerpienteDAO {
             while(rs.next()){
                 Serpiente serpiente = new Serpiente();
                 serpiente.setId_serpiente(rs.getInt("id_serpiente"));
+                serpiente.setNumero_serpiente(rs.getInt("numero_serpiente"));
                 serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
                 serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
@@ -499,6 +505,7 @@ public class SerpienteDAO {
             while(rs.next()){
                 Serpiente serpiente = new Serpiente();
                 serpiente.setId_serpiente(rs.getInt("id_serpiente"));
+                serpiente.setNumero_serpiente(rs.getInt("numero_serpiente"));
                 serpiente.setEspecie(dao.obtenerEspecie(rs.getInt("id_especie")));
                 serpiente.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 serpiente.setLocalidad_origen(rs.getString("localidad_origen"));
