@@ -12,8 +12,12 @@ ADD COLUMN NUMERO_COLECCION_HUMEDA integer NOT NULL UNIQUE;
 ALTER TABLE SERPENTARIO.CATALOGO_TEJIDO
 ADD COLUMN NUMERO_CATALOGO_TEJIDO integer NOT NULL UNIQUE;
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (307, 300, 'Colección Húmeda', '/Serpentario/ColeccionHumeda');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (308, 300, 'Catálogo Tejidos', '/Serpentario/CatalogoTejido');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (307, 300, 'ColecciónHúmeda', '/Serpentario/ColeccionHumeda');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (308, 300, 'CatálogoTejido', '/Serpentario/CatalogoTejido');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (314, 307);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (314, 308);
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (322, '[Serpentario]RegistrarExtraccion', 'Permite registrar todos los pasos de una extraccion');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (322, 303);

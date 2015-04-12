@@ -57,7 +57,13 @@
                           </div>
                         </a>
                       </td>
-                      <td>${ch.getSerpiente().getNumero_serpiente()}</td>
+                      <td>
+                        <a href="/SIGIPRO/Serpentario/Serpiente?accion=ver&id_serpiente=${ch.getSerpiente().getId_serpiente()}">
+                          <div style="height:100%;width:100%">
+                            ${ch.getSerpiente().getNumero_serpiente()}
+                          </div>
+                        </a>
+                      </td>
                       <td>${ch.getProposito()}</td>
                       <td>${ch.getUsuario().getNombre_completo()}</td>
                     </tr>

@@ -95,19 +95,25 @@
                             <td>${extraccion.getFecha_registroAsString()}</td>
                           </c:otherwise>
                       </c:choose>
-                            <c:set var="contienePermiso" value="false" />
+                            <c:set var="contienePermisoAgregar" value="false" />
+                            <c:set var="contienePermisoRegistrar" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                               <c:if test="${permiso == 1 || permiso==320 || permiso == 321}">
-                                <c:set var="contienePermiso" value="true" />
+                                <c:set var="contienePermisoAgregar" value="true" />
+                              </c:if>
+                              <c:if test="${permiso == 1 || permiso==322}">
+                                <c:set var="contienePermisoRegistrar" value="true" />
                               </c:if>
                             </c:forEach>
-                            <c:if test="${contienePermiso}">
+                            
+                      <c:if test="${contienePermisoAgregar || contienePermisoRegistrar}">
                       <td align="center">
                           <c:choose>
                               <c:when test="${!extraccion.isIsSerpiente()}">
                                     <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Serpentario/Extraccion?accion=editarserpientes&id_extraccion=${extraccion.getId_extraccion()}">1- Agregar Serpientes</a></td>
                               </c:when>
                               <c:otherwise>
+                                  <c:if test="${contienePermisoRegistrar}">
                                   <c:choose>
                                     <c:when test="${!extraccion.isIsRegistro()}">
                                         <a class="btn btn-warning btn-sm boton-accion registrar-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarExtraccion">2- Registrar Extracción</a>
@@ -137,6 +143,7 @@
                                          </c:choose>
                                      </c:otherwise>
                                   </c:choose>
+                                  </c:if>
                               </c:otherwise>
                               
                           </c:choose>

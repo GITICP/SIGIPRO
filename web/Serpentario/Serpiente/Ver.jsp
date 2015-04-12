@@ -85,12 +85,12 @@
                               </c:if>
                             </c:forEach>
                             <c:if test="${contienePermisoCHCT}">
-                                <c:choose>
-                                    <c:when test="${postDeceso}">
-                                        <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
-                                        <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
-                                    </c:when>
-                                </c:choose>                            
+                                <c:if test="${coleccionhumeda == null}">
+                                    <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
+                                </c:if>
+                                <c:if test="${catalogotejido == null}">
+                                    <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
+                                </c:if>
                             </c:if>
                             
                             
@@ -132,16 +132,12 @@
                         <tr><td><strong><div><br></div></strong></td></tr>
                     </c:when>
                 </c:choose>
-                    <c:choose>
-                        <c:when test="${!postDeceso}">
-                            <c:if test="${coleccionhumeda != null}">
-                                <tr><td> <strong>Colección Húmeda:</strong> <td><a href="/SIGIPRO/Serpentario/ColeccionHumeda?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">Ver Colección Húmeda</a> </td></tr>
-                            </c:if>
-                            <c:if test="${catalogotejido != null}">
-                                 <tr><td> <strong>Catálogo de Tejidos:</strong> <td><a href="/SIGIPRO/Serpentario/CatalogoTejido?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">Ver Catálogo de Tejido</a> </td></tr>
-                            </c:if>
-                        </c:when>
-                    </c:choose>
+                <c:if test="${coleccionhumeda != null}">
+                    <tr><td> <strong>Colección Húmeda:</strong> <td><a href="/SIGIPRO/Serpentario/ColeccionHumeda?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">Ver Colección Húmeda</a> </td></tr>
+                </c:if>
+                <c:if test="${catalogotejido != null}">
+                     <tr><td> <strong>Catálogo de Tejidos:</strong> <td><a href="/SIGIPRO/Serpentario/CatalogoTejido?accion=ver&id_serpiente=${serpiente.getId_serpiente()}">Ver Catálogo de Tejido</a> </td></tr>
+                </c:if>
                                 <c:choose>
                                     <c:when test="${deceso!=null}">
                                         <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio(deceso.getFecha_evento())} </td></tr>

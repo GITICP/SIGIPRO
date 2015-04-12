@@ -14,8 +14,6 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
 import com.icp.sigipro.serpentario.dao.EventoDAO;
 import com.icp.sigipro.serpentario.dao.SerpienteDAO;
-import com.icp.sigipro.serpentario.modelos.CatalogoTejido;
-import com.icp.sigipro.serpentario.modelos.ColeccionHumeda;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Evento;
 import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
@@ -63,8 +61,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
         {
             add("index");
             add("ver");
-            add("verdeceso");
-            add("editardeceso");
             add("agregar");
             add("editar");
             add("coleccionviva");
@@ -77,10 +73,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("evento");
-            //Cuando esta muerta
-            add("coleccionhumeda");
-            add("catalogotejido");
-            add("editardeceso");
             add("agregarimagen");
             
         }
@@ -146,13 +138,13 @@ public class ControladorSerpiente extends SIGIPROServlet {
             //Imagen de la Serpiente
             request.setAttribute("imagenSerpiente", this.obtenerImagen(s));
             //-----------------------
-            List<Evento> validarSerpiente = eventodao.validarSerpiente(id_serpiente);
+            //List<Evento> validarSerpiente = eventodao.validarSerpiente(id_serpiente);
             List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
             request.setAttribute("listaEventos",eventos);
             request.setAttribute("listaTipoEventos",tipo_Eventos);
-            boolean postDeceso = true;
-            request.setAttribute("postDeceso",postDeceso);
-            for (Evento i : validarSerpiente){
+            request.setAttribute("coleccionhumeda", null);
+            request.setAttribute("catalogotejido", null);
+            for (Evento i : eventos){
                 if (i.getEvento().equals("Pase a Coleccion Viva")){
                     request.setAttribute("coleccionViva",i);
                 }
@@ -160,14 +152,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
                     request.setAttribute("deceso",i);
                 }
                 if (i.getEvento().equals("Colección Húmeda")){
-                    postDeceso = false;
-                    request.setAttribute("postDeceso",postDeceso);
                     request.setAttribute("coleccionhumeda", i);
-                    request.setAttribute("catalogotejido", null);
                 }if (i.getEvento().equals("Catálogo Tejido")){
-                    postDeceso = false;
-                    request.setAttribute("postDeceso",postDeceso);
-                    request.setAttribute("coleccionhumeda", null);
                     request.setAttribute("catalogotejido", i);
                 }
             }
