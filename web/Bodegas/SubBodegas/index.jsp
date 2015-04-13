@@ -39,7 +39,7 @@
 
                             <c:set var="contienePermiso" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                <c:if test="${permiso == 1 || permiso == 11}">
+                                <c:if test="${permiso == 1 || permiso == 70}">
                                     <c:set var="contienePermiso" value="true" />
                                 </c:if>
                             </c:forEach>

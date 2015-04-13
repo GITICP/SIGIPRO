@@ -32,6 +32,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
     public static final String INGRESAR = "bodega.usuarios_sub_bodegas_ingresos";
     public static final String EGRESAR = "bodega.usuarios_sub_bodegas_egresos";
     public static final String VER = "bodega.usuarios_sub_bodegas_ver";
+    public static final String ENCARGADO = "bodega.sub_bodegas";
 
     public SubBodegaDAO()
     {

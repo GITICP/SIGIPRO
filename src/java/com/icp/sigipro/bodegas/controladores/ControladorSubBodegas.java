@@ -233,12 +233,13 @@ public class ControladorSubBodegas extends SIGIPROServlet
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(12, listaPermisos);
         String redireccion = "SubBodegas/Editar.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
         
         SubBodega sb;
         try {
+            validarAcceso(SubBodegaDAO.ENCARGADO, getIdUsuario(request), id_sub_bodega, listaPermisos);
+            
             sb = dao.buscarSubBodega(id_sub_bodega);
 
             List<Usuario> usuarios_ingresos;
@@ -291,7 +292,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        boolean resultado = false;
         String redireccion = "SubBodegas/Agregar.jsp";
 
         SubBodega sb = construirObjeto(request);
@@ -387,14 +387,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
 
-        validarPermiso(11, listaPermisos);
         String redireccion = "SubBodegas/Ingresar.jsp";
-        
-        try {
-            validarAcceso(SubBodegaDAO.INGRESAR, getIdUsuario(request), id_sub_bodega, listaPermisos);
-        } catch(SIGIPROException ex) {
-            throw new SIGIPROException(ex.getMessage(), "/index.jsp");
-        }
         
         SubBodega sub_bodega;
 
@@ -465,15 +458,8 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         int inventario = Integer.parseInt(request.getParameter("id-inventario-sub-bodega"));
         int cantidad   = Integer.parseInt(request.getParameter("cantidad"));
-        int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
         
         String redireccion = "SubBodegas/index.jsp";
-        
-        try {
-            validarAcceso(SubBodegaDAO.VER, getIdUsuario(request), id_sub_bodega, getPermisosUsuario(request));
-        } catch(SIGIPROException ex) {
-            throw new SIGIPROException(ex.getMessage(), "/index.jsp");
-        }
     
         try {
             dao.consumirArticulo(inventario, cantidad);

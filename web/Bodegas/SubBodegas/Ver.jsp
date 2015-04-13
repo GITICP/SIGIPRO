@@ -75,11 +75,7 @@
                                         <tbody>
                                             <c:forEach items="${inventarios}" var="inventario">
                                                 <tr id="${subBodega.getId_sub_bodega()}">
-                                                    <td>
-                                                        <a href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&id_producto=${inventario.getProducto().getId_producto()}">
-                                                            <div style="height:100%;width:100%">${inventario.getProducto().getNombre()}</div>
-                                                        </a>
-                                                    </td>
+                                                    <td>${inventario.getProducto().getNombre()}</td>
                                                     <td>${inventario.getProducto().getCodigo_icp()}</td>
                                                     <td>${inventario.getFecha_vencimiento() != null ? " Vencimiento: ".concat(inventario.getFecha_vencimientoAsString()) : "Producto no perecedero"}</td>
                                                     <td>${inventario.getCantidad()}</td>
