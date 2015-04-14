@@ -202,7 +202,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-ingreso" class="form-control" style='background-color: #fff;' name="id-usuario" required
+                        <select id="seleccion-usuario-ingreso" class="select2" style='background-color: #fff;' name="id-usuario" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
@@ -233,7 +233,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-egreso" class="form-control" style='background-color: #fff;' name="id-usuario" required
+                        <select id="seleccion-usuario-egreso" class="select2" style='background-color: #fff;' name="id-usuario" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
@@ -264,7 +264,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-ver" class="form-control" style='background-color: #fff;' name="id-usuario" required
+                        <select id="seleccion-usuario-ver" class="select2" style='background-color: #fff;' name="id-usuario" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
