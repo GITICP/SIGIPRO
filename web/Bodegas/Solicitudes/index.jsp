@@ -123,10 +123,9 @@
             <!-- /main -->
         </div>
 
-        <t:modal idModal="ModalAutorizar" titulo="Autenticación">
+        <t:modal idModal="ModalAutorizar" titulo="Firma de Retiro">
 
             <jsp:attribute name="form">
-                <h5> Para validar la entrega, el usuario recipiente debe iniciar sesión. </h5>
                 <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
                     <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
                     <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
@@ -150,7 +149,7 @@
                         </tr>
                     </table>
                     <hr>
-                    <h4> Información sobre la solicitud </h4>
+                    <h4> Detalle de Despacho</h4>
                     <table class="tabla-modal">
                         <tr>
                             <td><label for="num-sol" class="control-label"> Número de Solicitud: </label></td>

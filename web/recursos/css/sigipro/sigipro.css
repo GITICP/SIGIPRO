@@ -70,3 +70,10 @@
 .campo-tabla-centrado {
     text-align:center;
 }
+.sigipro-tab-content {
+  padding: 0px;
+}
+
+.sigipro-nav-tabs li {
+  float: right;
+}

@@ -19,9 +19,9 @@
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/SubBodegas?">Sub Bodegas</a>
+              <a href="/SIGIPRO/Bodegas/SubBodegas?">SubBodegas</a>
             </li>
-            <li class="active"> Agregar Sub Bodega </li>
+            <li class="active"> Editar Sub Bodega </li>
           </ul>
         </div>
         <div class="col-md-8 ">
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-th-large"></i> Registrar Sub Bodega </h3>
+              <h3><i class="fa fa-th-large"></i> Editar Sub Bodega </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
