@@ -1,9 +1,8 @@
 <%-- 
     Document   : index
-    Created on : Mar 16, 2015, 6:11:43 PM
+    Created on : Apr 11, 2015, 12:27:40 AM
     Author     : ld.conejo
 --%>
-
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
@@ -21,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Lote?">Lotes de Veneno</a>
+              <a href="/SIGIPRO/Serpentario/ColeccionHumeda?">Colección Húmeda</a>
             </li>
           </ul>
         </div>
@@ -32,19 +31,8 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-tint"></i> Lotes de Veneno </h3>
+              <h3><i class="fa fa-bug"></i> Colección Húmeda </h3>
 
-              <c:set var="contienePermiso" value="false" />
-              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 330}">
-                  <c:set var="contienePermiso" value="true" />
-                </c:if>
-              </c:forEach>
-              <c:if test="${contienePermiso}">
-                <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/Lote?accion=agregar">Agregar Lote</a>
-                </div>
-              </c:if>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -52,26 +40,32 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Lote</th>
-                    <th>Especie</th>
-                    <th>Cantidad Actual (mg)</th>
-                    <th>Cantidad Original (mg)</th>
+                    <th>Número de CH</th>
+                    <th>Número de Serpiente</th>
+                    <th>Propósito</th>
+                    <th>Usuario Responsable</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaLotes}" var="lote">
+                  <c:forEach items="${listaCH}" var="ch">
 
-                    <tr id ="${lote.getId_lote()}">
+                    <tr id ="${ch.getId_coleccion_humeda()}">
                       <td>
-                        <a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${lote.getId_lote()}">
+                        <a href="/SIGIPRO/Serpentario/ColeccionHumeda?accion=ver&id_serpiente=${ch.getSerpiente().getId_serpiente()}">
                           <div style="height:100%;width:100%">
-                            ${lote.getNumero_lote()}
+                            ${ch.getNumero_coleccion_humeda()}
                           </div>
                         </a>
                       </td>
-                      <td>${lote.getEspecie().getGenero_especie()}</td>
-                      <td>${lote.getCantidad_actual()}</td>
-                      <td>${lote.getCantidad_original()}</td>
+                      <td>
+                        <a href="/SIGIPRO/Serpentario/Serpiente?accion=ver&id_serpiente=${ch.getSerpiente().getId_serpiente()}">
+                          <div style="height:100%;width:100%">
+                            ${ch.getSerpiente().getNumero_serpiente()}
+                          </div>
+                        </a>
+                      </td>
+                      <td>${ch.getProposito()}</td>
+                      <td>${ch.getUsuario().getNombre_completo()}</td>
                     </tr>
 
                   </c:forEach>
@@ -88,3 +82,4 @@
     </jsp:attribute>
 
   </t:plantilla_general>
+

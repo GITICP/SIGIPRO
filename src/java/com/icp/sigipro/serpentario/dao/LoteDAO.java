@@ -174,7 +174,7 @@ public class LoteDAO {
     public List<Lote> obtenerLotes(){
         List<Lote> resultado = new ArrayList<Lote>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_original "
                     + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                     + "GROUP BY lote.id_lote;");
@@ -187,13 +187,13 @@ public class LoteDAO {
                 lote.setNumero_lote(rs.getString("numero_lote"));
                 lote.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 try{
-                    float cantidad_total = rs.getFloat("cantidad_total");
-                    lote.setCantidad_total(cantidad_total);
+                    float cantidad_original = rs.getFloat("cantidad_original");
+                    lote.setCantidad_original(cantidad_original);
                     float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
-                    float cantidad_actual = cantidad_total - cantidad_entregada;
+                    float cantidad_actual = cantidad_original - cantidad_entregada;
                     lote.setCantidad_actual(cantidad_actual);
                 }catch (Exception e){
-                    lote.setCantidad_total(0);
+                    lote.setCantidad_original(0);
                     lote.setCantidad_actual(0);
                 }
                 resultado.add(lote);
@@ -211,7 +211,7 @@ public class LoteDAO {
     public List<Lote> obtenerLotes(Especie e){
         List<Lote> resultado = new ArrayList<Lote>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_original "
                     + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                     + "WHERE lote.id_especie = ? "
@@ -224,10 +224,10 @@ public class LoteDAO {
                 lote.setId_lote(id_lote);          
                 lote.setNumero_lote(rs.getString("numero_lote"));
                 lote.setEspecie(e);
-                float cantidad_total = rs.getFloat("cantidad_total");
-                lote.setCantidad_total(cantidad_total);
+                float cantidad_original = rs.getFloat("cantidad_original");
+                lote.setCantidad_original(cantidad_original);
                 float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
-                float cantidad_actual = cantidad_total - cantidad_entregada;
+                float cantidad_actual = cantidad_original - cantidad_entregada;
                 if (cantidad_actual != 0.0){
                     lote.setCantidad_actual(cantidad_actual);
                     resultado.add(lote);
@@ -247,7 +247,7 @@ public class LoteDAO {
     public Lote obtenerLote(int id_lote){
         Lote resultado = new Lote();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_total "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT lote.id_lote,lote.numero_lote, lote.id_especie, sum(peso_recuperado) as cantidad_original "
                     + "FROM (serpentario.lote as lote LEFT OUTER JOIN serpentario.extraccion as extraccion ON lote.id_lote = extraccion.id_lote) "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                     + "WHERE lote.id_lote = ? "
@@ -261,14 +261,14 @@ public class LoteDAO {
                 lote.setNumero_lote(rs.getString("numero_lote"));
                 lote.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 try{
-                    float cantidad_total = rs.getFloat("cantidad_total");
-                    lote.setCantidad_total(cantidad_total);
+                    float cantidad_original = rs.getFloat("cantidad_original");
+                    lote.setCantidad_original(cantidad_original);
                     float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
-                    float cantidad_actual = cantidad_total - cantidad_entregada;
+                    float cantidad_actual = cantidad_original - cantidad_entregada;
                     lote.setCantidad_actual(cantidad_actual);
                 }catch (Exception e){
                     System.out.println(e.getStackTrace());
-                    lote.setCantidad_total(0);
+                    lote.setCantidad_original(0);
                     lote.setCantidad_actual(0);
                 }
                 resultado = lote;

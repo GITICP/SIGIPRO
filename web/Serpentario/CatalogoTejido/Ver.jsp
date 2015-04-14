@@ -1,9 +1,8 @@
 <%-- 
-    Document   : VerDeceso
-    Created on : Apr 2, 2015, 4:56:34 PM
+    Document   : Ver
+    Created on : Apr 11, 2015, 12:30:11 AM
     Author     : ld.conejo
 --%>
-
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -22,9 +21,9 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Serpiente?">Serpientes</a>
+              <a href="/SIGIPRO/Serpentario/CatalogoTejido?">Catálogo de Tejidos</a>
             </li>
-            <li class="active"> ${serpiente.getId_serpiente()} </li>
+            <li class="active"> Catálogo de Tejidos de Serpiente ${serpiente.getNumero_serpiente()} </li>
           </ul>
         </div>
       </div>
@@ -34,7 +33,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-bug"></i> Ver Catálogo Tejido - Colección Húmeda de Serpiente ${serpiente.getId_serpiente()} </h3>
+              <h3><i class="fa fa-bug"></i> Ver Catálogo Tejido de Serpiente ${serpiente.getNumero_serpiente()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -43,32 +42,20 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editardeceso&deceso=${deceso}&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/CatalogoTejido?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
                 </c:if>
               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
               <table>
-                  <c:choose>
-                      <c:when test="${deceso.equals('coleccionhumeda')}">
-                        <tr><td> <strong>Colección Húmeda:</strong></td> <td>${coleccionhumeda.getId_coleccion_humeda()} </td></tr>
-                        <tr><td> <strong>Serpiente:</strong> <td>${coleccionhumeda.getSerpiente().getNumero_serpiente()} </td></tr> 
-                        <tr><td> <strong>Propósito:</strong> <td>${coleccionhumeda.getProposito()} </td></tr> 
-                        <tr><td> <strong>Observaciones:</strong> <td>${coleccionhumeda.getObservaciones()} </td></tr> 
-                        <tr><td> <strong>Usuario Responsable:</strong> <td>${coleccionhumeda.getUsuario().getNombreCompleto()} </td></tr> 
-                     </c:when>
-                     <c:otherwise>
-                        <tr><td> <strong>Catálogo de Tejidos:</strong></td> <td>${catalogotejido.getId_catalogo_tejido()} </td></tr>
+                        <tr><td> <strong>Catálogo de Tejidos:</strong></td> <td>${catalogotejido.getNumero_catalogo_tejido()} </td></tr>
                         <tr><td> <strong>Serpiente:</strong> <td>${catalogotejido.getSerpiente().getNumero_serpiente()} </td></tr> 
                         <tr><td> <strong>Número de Caja:</strong> <td>${catalogotejido.getNumero_caja()} </td></tr> 
                         <tr><td> <strong>Posición:</strong> <td>${catalogotejido.getPosicion()} </td></tr> 
                         <tr><td> <strong>Observaciones:</strong> <td>${catalogotejido.getObservaciones()} </td></tr> 
                         <tr><td> <strong>Estado:</strong> <td>${catalogotejido.getEstado()} </td></tr> 
-                        <tr><td> <strong>Usuario Responsable:</strong> <td>${catalogotejido.getUsuario().getNombreCompleto()} </td></tr> 
-                     </c:otherwise>
-                  </c:choose>
-                
+                        <tr><td> <strong>Usuario Responsable:</strong> <td>${catalogotejido.getUsuario().getNombre_completo()} </td></tr> 
               </table>
               <br>
             </div>

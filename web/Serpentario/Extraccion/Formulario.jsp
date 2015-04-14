@@ -17,7 +17,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Número de la Extracción" class="form-control" name="numero_extraccion" value="${extraccion.getNumero_extraccion()}"
+            <input type="text" maxlength="45" placeholder="Número de la Extracción. Ex: 01-2015-Coral" class="form-control" name="numero_extraccion" value="${extraccion.getNumero_extraccion()}"
                    required
                    oninvalid="setCustomValidity('Este campo es requerido')"
                    oninput="setCustomValidity('')" > 

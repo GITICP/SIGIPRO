@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-flask"></i> Entregar Solicitud ${solicitud.getId_solicitud()} - Cantidad Solicitada ${solicitud.getCantidad()} gramos</h3>
+              <h3><i class="fa fa-flask"></i> Entregar Solicitud ${solicitud.getId_solicitud()} - Cantidad Solicitada ${solicitud.getCantidad()} Miligramos</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -46,7 +46,7 @@
                     <input hidden="true" name="accion" value="${accion}">
                     <input id="id_solicitud" hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
                     <div class="col-md-12">
-                    <label for="lotes" class="control-label">Cantidad Solicitada (gramos)</label>
+                    <label for="lotes" class="control-label">Cantidad Solicitada (mg)</label>
                     <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="input-group">
@@ -64,7 +64,7 @@
                                                 onchange="setCustomValidity('')">
                                             <option value=''></option>
                                             <c:forEach items="${lotes}" var="lote">
-                                                <option value=${lote.getId_lote()}>Lote ${lote.getNumero_lote()} (Cantidad - ${lote.getCantidad_actual()} gramos)</option>
+                                                <option value=${lote.getId_lote()}>Lote ${lote.getNumero_lote()} (Cantidad - ${lote.getCantidad_actual()} Miligramos)</option>
                                             </c:forEach>
                                     </select>
                                     <div><br></div>
@@ -87,7 +87,7 @@
                                   <thead>
                                     <tr>
                                       <th>Lote</th>
-                                      <th>Cantidad a Entregar (gramos)</th>
+                                      <th>Cantidad a Entregar (mg)</th>
                                       <th>Eliminar</th>
                                     </tr>
                                   </thead>
@@ -130,24 +130,24 @@
             <h4> Información sobre la solicitud </h4>
             <div class="form-group">
               <div class="col-sm-12">
-                <label for="num-sol" class="control-label"> Número de Solicitud </label>  
+                <label for="num-sol" class='form-control'> Número de Solicitud </label>  
                 <input type="text" id="num-sol"  name="num-sol" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="usr-sol" class="control-label"> Usuario Solicitante </label>
+                <label for="usr-sol" class='form-control'> Usuario Solicitante </label>
                 <input type="text" id="usr-sol"  name="usr-sol" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="prd" class="control-label"> Especie  </label>
+                <label for="prd" class='form-control'> Especie  </label>
                 <input type="text" id="esp"  name="esp" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="cnt" class="control-label"> Cantidad Solicitada (gramos) </label>
+                <label for="cnt" class='form-control'> Cantidad Solicitada (mg) </label>
                 <input type="text" id="cnt"  name="cnt" disabled>
               </div>
                 
               <div class="col-sm-12">
-                <label for="cnt" class="control-label"> Cantidad a Entregar (gramos) </label>
+                <label for="cnt" class='form-control'> Cantidad a Entregar (mg) </label>
                 <input type="text" id="cntEnt"  name="cnt" disabled>
               </div>
             </div>

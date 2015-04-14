@@ -11,6 +11,7 @@ import com.icp.sigipro.utilidades.HelpersHTML;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
@@ -96,7 +97,11 @@ public class Serpiente {
     }
     
     public float getTalla_total(){
-        return this.talla_cabeza+this.talla_cola;
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        float talla_total = Float.parseFloat(df.format(this.talla_cabeza+this.talla_cola));
+        
+        return talla_total;
     }
     
     public int getId_serpiente() {

@@ -1,6 +1,6 @@
 <%-- 
-    Document   : VerExterno
-    Created on : Mar 28, 2015, 11:36:10 PM
+    Document   : Ver
+    Created on : Apr 11, 2015, 12:32:28 AM
     Author     : ld.conejo
 --%>
 
@@ -21,9 +21,9 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Veneno?">Venenos de Serpiente</a>
+              <a href="/SIGIPRO/Serpentario/ColeccionHumeda?">Colección Húmeda</a>
             </li>
-            <li class="active">Veneno de ${veneno.getEspecie().getGenero_especie()} </li>
+            <li class="active"> Colección Húmeda de Serpiente ${serpiente.getNumero_serpiente()} </li>
           </ul>
         </div>
       </div>
@@ -33,32 +33,28 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-flask"></i> Veneno de ${veneno.getEspecie().getGenero_especie()}  </h3>
+              <h3><i class="fa fa-bug"></i> Ver Colección Húmeda de Serpiente ${serpiente.getNumero_serpiente()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEditar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 342}">
+                  <c:if test="${permiso == 1 || permiso == 314}">
                     <c:set var="contienePermisoEditar" value="true" />
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Veneno?accion=editar&id_veneno=${veneno.getId_veneno()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/ColeccionHumeda?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
                 </c:if>
               </div>
             </div>
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Especie:</strong></td> <td>${veneno.getEspecie().getGenero_especie()} </td></tr>
-                <c:choose>
-                    <c:when test="${veneno.isRestriccion()}">
-                        <tr><td> <strong>¿Es restringido?:</strong> <td>Si</td></tr>
-                        <tr><td> <strong>Cantidad Máxima:</strong> <td>${veneno.getCantidad_maxima()} Miligramos</td></tr>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td> <strong>¿Es restringido?:</strong> <td>No</td></tr>
-                    </c:otherwise>
-                </c:choose>
+                        <tr><td> <strong>Colección Húmeda:</strong></td> <td>${coleccionhumeda.getNumero_coleccion_humeda()} </td></tr>
+                        <tr><td> <strong>Serpiente:</strong> <td>${coleccionhumeda.getSerpiente().getNumero_serpiente()} </td></tr> 
+                        <tr><td> <strong>Propósito:</strong> <td>${coleccionhumeda.getProposito()} </td></tr> 
+                        <tr><td> <strong>Observaciones:</strong> <td>${coleccionhumeda.getObservaciones()} </td></tr> 
+                        <tr><td> <strong>Usuario Responsable:</strong> <td>${coleccionhumeda.getUsuario().getNombre_completo()} </td></tr> 
+                
               </table>
               <br>
             </div>
@@ -73,4 +69,3 @@
   </jsp:attribute>
 
 </t:plantilla_general>
-

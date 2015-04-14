@@ -59,7 +59,7 @@
               <table>
                 <tr><td> <strong>Usuario Solicitante:</strong></td> <td>${solicitud.getUsuario().getNombreCompleto()} </td></tr>
                 <tr><td> <strong>Especie</strong> <td>${solicitud.getEspecie().getGenero_especie()}</td></tr>
-                <tr><td> <strong>Cantidad:</strong> <td>${solicitud.getCantidad()} gramos</td></tr>
+                <tr><td> <strong>Cantidad:</strong> <td>${solicitud.getCantidad()} Miligramos</td></tr>
                 <tr><td> <strong>Fecha Solicitud:</strong> <td>${solicitud.getFecha_solicitudAsString()} </td></tr>
                 <tr><td> <strong>Estado:</strong> <td>${solicitud.getEstado()} </td></tr>
                 <tr><td> <strong>Proyecto:</strong> <td>${solicitud.getProyecto()} </td></tr>
@@ -68,7 +68,7 @@
                     <tr><td> <strong>Fecha Entrega:</strong> <td>${entrega.getFecha_entregaAsString()} </td></tr>
                     <tr><td> <strong>Usuario que Entrega:</strong></td> <td>${entrega.getUsuario_entrega().getNombreCompleto()} </td></tr>
                     <tr><td> <strong>Usuario que Recibe:</strong></td> <td>${entrega.getUsuario_recibo().getNombreCompleto()} </td></tr>
-                    <tr><td> <strong>Cantidad Entregada:</strong></td> <td>${entrega.getCantidad_entregada()} gramos </td></tr>
+                    <tr><td> <strong>Cantidad Entregada:</strong></td> <td>${entrega.getCantidad_entregada()} Miligramos </td></tr>
                 </c:if>
                 <tr><td> <strong>Observaciones:</strong></td> <td>${solicitud.getObservaciones()} </td></tr>
               </table>

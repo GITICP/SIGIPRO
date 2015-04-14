@@ -20,7 +20,7 @@ public class Lote {
     private Veneno veneno;
     private List<Extraccion> extracciones;
     private float cantidad_actual;
-    private float cantidad_total;
+    private float cantidad_original;
 
     public Lote() {
     }
@@ -54,12 +54,12 @@ public class Lote {
         this.cantidad_actual = cantidad_actual;
     }
 
-    public float getCantidad_total() {
-        return cantidad_total;
+    public float getCantidad_original() {
+        return cantidad_original;
     }
 
-    public void setCantidad_total(float cantidad_total) {
-        this.cantidad_total = cantidad_total;
+    public void setCantidad_original(float cantidad_original) {
+        this.cantidad_original = cantidad_original;
     }
 
     public List<Extraccion> getExtracciones() {

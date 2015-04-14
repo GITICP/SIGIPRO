@@ -40,19 +40,24 @@
             <div class="widget-header">
               <h3><i class="fa fa-tint"></i> ${extraccion.getNumero_extraccion()} </h3>
               <div class="btn-group widget-header-toolbar">
-              <c:set var="contienePermiso" value="false" />
-                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                              <c:if test="${permiso == 1 || permiso==320 || permiso == 321}">
-                                <c:set var="contienePermiso" value="true" />
-                              </c:if>
-                            </c:forEach>
-                      <c:if test="${contienePermiso}">
+                <c:set var="contienePermisoAgregar" value="false" />
+                <c:set var="contienePermisoRegistrar" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso==320 || permiso == 321}">
+                    <c:set var="contienePermisoAgregar" value="true" />
+                  </c:if>
+                  <c:if test="${permiso == 1 || permiso==322}">
+                    <c:set var="contienePermisoRegistrar" value="true" />
+                  </c:if>
+                </c:forEach>
+                      <c:if test="${contienePermisoAgregar||contienePermisoRegistrar}">
                       <td align="center">
                           <c:choose>
                               <c:when test="${!extraccion.isIsSerpiente()}">
                                     <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Serpentario/Extraccion?accion=editarserpientes&id_extraccion=${extraccion.getId_extraccion()}">1- Agregar Serpientes</a></td>
                               </c:when>
                               <c:otherwise>
+                                  <c:if test="${contienePermisoRegistrar}">
                                   <c:choose>
                                     <c:when test="${!extraccion.isIsRegistro()}">
                                         <a class="btn btn-warning btn-sm boton-accion registrar-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarExtraccion">2- Registrar Extracción</a>
@@ -79,6 +84,7 @@
                                          </c:choose>
                                      </c:otherwise>
                                   </c:choose>
+                                  </c:if>
                               </c:otherwise>
                               
                           </c:choose>
@@ -188,7 +194,7 @@
                       <tr><td> <strong>Usuario de Inicio:</strong></td> <td>${liofilizacion.getUsuario_inicio().getNombreCompleto()} </td></tr>
                       <tr><td> <strong>Fecha de Inicio:</strong> <td>${liofilizacion.getFecha_inicioAsString()} </td></tr>
               <c:if test="${liofilizacion.getFecha_fin() != null}" >
-                      <tr><td> <strong>Peso recuperado (g):</strong> <td>${liofilizacion.getPeso_recuperado()} </td></tr>
+                      <tr><td> <strong>Peso recuperado (mg):</strong> <td>${liofilizacion.getPeso_recuperado()} </td></tr>
                       <tr><td> <strong>Usuario de Fin:</strong></td> <td>${liofilizacion.getUsuario_fin().getNombreCompleto()} </td></tr>
                       <tr><td> <strong>Fecha de Fin:</strong> <td>${liofilizacion.getFecha_finAsString()} </td></tr>
                </c:if>       
@@ -302,12 +308,12 @@
                 <input hidden="true" name="accion" value="Liofilizacionfin">
                 <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
                 <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="peso_recuperado" class="control-label">*Peso recuperado (g)</label>
+                <label for="peso_recuperado" class="control-label">*Peso recuperado (mg)</label>
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
                         <BR>
-                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" placeholder="Número de g recuperados" class="form-control" value="" required
+                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" placeholder="Número de mg recuperados" class="form-control" value="" required
                              oninput="setCustomValidity(\'\')" 
                              oninvalid="setCustomValidity(\'Ingrese solo números\')">
                     </div>
