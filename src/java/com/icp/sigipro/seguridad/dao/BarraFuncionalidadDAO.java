@@ -6,11 +6,12 @@
 package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.BarraFuncionalidad;
+import com.icp.sigipro.seguridad.modelos.Funcionalidad;
+import com.icp.sigipro.seguridad.modelos.Modulo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,71 +23,71 @@ public class BarraFuncionalidadDAO
 
     public BarraFuncionalidadDAO() {    }
     
-    public List<BarraFuncionalidad> obtenerModulos(int usuario, List<Integer> permisos)
+    public BarraFuncionalidad obtenerModulos(int usuario, List<Integer> permisos)
     {
       if ( !(permisos.contains(1)) )
       {
         return consultarModulos(usuario,  " ;With sub_modulos as "
                                         + " ( "
-                                        + "    Select distinct emp.id_menu_principal, emp.id_padre, emp.tag, emp.redirect "
-                                        + "    From seguridad.entradas_menu_principal emp "
-                                        + "    inner join "
-                                        + "    ( "
-                                        + "      Select distinct permisos.id_permiso, pmp.id_menu_principal "
-                                        + "      From seguridad.permisos_menu_principal pmp "
-                                        + "      inner join "
-                                        + "      ( "
-                                        + "        Select id_permiso "
-                                        + "        From seguridad.permisos_roles "
-                                        + "        Where id_rol in "
-                                        + "        ( "
-                                        + "          Select id_rol "
-                                        + "          From seguridad.roles_usuarios "
-                                        + "          Where id_usuario = ? "
-                                        + "            And "
-                                        + "            ( "
-                                        + "              fecha_activacion = fecha_desactivacion "
-                                        + "              or "
-                                        + "              (fecha_activacion < current_date and fecha_desactivacion > current_date) "
-                                        + "            ) "
-                                        + "        ) "
-                                        + "      ) as permisos "
-                                        + "      on permisos.id_permiso = pmp.id_permiso "
-                                        + "    ) as permisos_menu "
-                                        + "    on permisos_menu.id_menu_principal = emp.id_menu_principal "
-                                        + "    UNION "
-                                        + "    Select * "
-                                        + "    from seguridad.entradas_menu_principal "
-                                        + "    Where id_menu_principal = 109 and exists "
-                                        + "    ( "
-                                        + "        SELECT 1 FROM "
-                                        + "        ( "
-                                        + "          SELECT id_usuario "
-                                        + "          FROM bodega.usuarios_sub_bodegas_ingresos "
-                                        + "          where id_usuario = ? "
-                                        + "          UNION "
-                                        + "          SELECT id_usuario "
-                                        + "          FROM bodega.usuarios_sub_bodegas_egresos "
-                                        + "          where id_usuario = ? "
-                                        + "          UNION "
-                                        + "          SELECT id_usuario "
-                                        + "          FROM bodega.usuarios_sub_bodegas_ver "
-                                        + "          where id_usuario = ? "
-                                        + "          UNION "
-                                        + "          SELECT id_usuario "
-                                        + "          FROM bodega.sub_bodegas "
-                                        + "          WHERE id_usuario = ? "
-                                        + "         ) as sub_bodegas "
-                                        + "    ) "
-                                        + "  ) "
-                                        + "  Select * "
-                                        + "  from seguridad.entradas_menu_principal "
-                                        + "  Where id_menu_principal in (select id_padre from sub_modulos) and redirect is not null "
-                                        + "  UNION "
-                                        + "  Select * "
-                                        + "  From seguridad.entradas_menu_principal "
-                                        + "  Where id_menu_principal in (select id_menu_principal from sub_modulos) and redirect is not null "
-                                        + "  order by id_menu_principal asc;", false);
+                                        + "Select distinct emp.id_menu_principal, emp.id_padre, emp.tag, emp.redirect "
+                                        + "From seguridad.entradas_menu_principal emp "
+                                        + "inner join "
+                                        + "( "
+                                        + "Select distinct permisos.id_permiso, pmp.id_menu_principal "
+                                        + "From seguridad.permisos_menu_principal pmp "
+                                        + "inner join "
+                                        + "( "
+                                        + " Select id_permiso "
+                                        + " From seguridad.permisos_roles "
+                                        + " Where id_rol in "
+                                        + " ( "
+                                        + "   Select id_rol "
+                                        + "   From seguridad.roles_usuarios "
+                                        + "   Where id_usuario = ? "
+                                        + "     And "
+                                        + "     ( "
+                                        + "       fecha_activacion = fecha_desactivacion "
+                                        + "       or "
+                                        + "       (fecha_activacion < current_date and fecha_desactivacion > current_date) "
+                                        + "     ) "
+                                        + " ) "
+                                        + ") as permisos "
+                                        + "on permisos.id_permiso = pmp.id_permiso "
+                                        + ") as permisos_menu "
+                                        + "on permisos_menu.id_menu_principal = emp.id_menu_principal "
+                                        + "UNION "
+                                        + "Select * "
+                                        + "from seguridad.entradas_menu_principal "
+                                        + "Where id_menu_principal = 109 and exists "
+                                        + "( "
+                                        + " SELECT 1 FROM "
+                                        + " ( "
+                                        + "   SELECT id_usuario "
+                                        + "   FROM bodega.usuarios_sub_bodegas_ingresos "
+                                        + "   where id_usuario = ? "
+                                        + "   UNION "
+                                        + "   SELECT id_usuario "
+                                        + "   FROM bodega.usuarios_sub_bodegas_egresos "
+                                        + "   where id_usuario = ? "
+                                        + "   UNION "
+                                        + "   SELECT id_usuario "
+                                        + "   FROM bodega.usuarios_sub_bodegas_ver "
+                                        + "   where id_usuario = ? "
+                                        + "   UNION "
+                                        + "   SELECT id_usuario "
+                                        + "   FROM bodega.sub_bodegas "
+                                        + "   WHERE id_usuario = ? "
+                                        + "  ) as sub_bodegas "
+                                        + ")  "
+                                        + ") "
+                                        + "Select * "
+                                        + "from seguridad.entradas_menu_principal "
+                                        + "Where redirect is null "
+                                        + "UNION "
+                                        + "Select * "
+                                        + "From seguridad.entradas_menu_principal "
+                                        + "Where id_menu_principal in (select id_menu_principal from sub_modulos) "
+                                        + "order by redirect desc, id_padre asc", false);
       }
       else
       {
@@ -94,11 +95,11 @@ public class BarraFuncionalidadDAO
       }
     }
     
-    public List<BarraFuncionalidad> consultarModulos(int usuario, String consultaSQL, boolean admin)
+    public BarraFuncionalidad consultarModulos(int usuario, String consultaSQL, boolean admin)
     {
         SingletonBD s = SingletonBD.getSingletonBD();
         Connection conexion = s.conectar();
-        List<BarraFuncionalidad> resultado = null;
+        BarraFuncionalidad resultado = null;
         
         if (conexion!=null)
         {
@@ -116,6 +117,7 @@ public class BarraFuncionalidadDAO
                 }
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarBarraFuncionalidad(resultadoConsulta);
+                resultado.eliminarModulosVacios();
                 resultadoConsulta.close();
                 conexion.close();
             }
@@ -128,26 +130,36 @@ public class BarraFuncionalidadDAO
     }
     
     @SuppressWarnings("Convert2Diamond")
-    private List<BarraFuncionalidad> llenarBarraFuncionalidad(ResultSet resultadoConsulta) throws SQLException
+    private BarraFuncionalidad llenarBarraFuncionalidad(ResultSet resultadoConsulta) throws SQLException
     {
-        List<BarraFuncionalidad> resultado = new ArrayList<BarraFuncionalidad>();
-        BarraFuncionalidad temp = new BarraFuncionalidad();
-        String modulo;
+        BarraFuncionalidad resultado = new BarraFuncionalidad();
         
         while(resultadoConsulta.next())
         {
-            if (resultadoConsulta.getInt("id_padre") == 0)
+            int id_menu  = resultadoConsulta.getInt("id_menu_principal");
+            int id_padre = resultadoConsulta.getInt("id_padre");
+            String tag = resultadoConsulta.getString("tag");
+            if (id_menu % 10 == 0)
             {
-                modulo = resultadoConsulta.getString("tag");
-                temp = new BarraFuncionalidad(resultadoConsulta.getString("tag"));
-                resultado.add(temp);
+                Modulo m = new Modulo();
+                m.setId_modulo(id_menu);
+                m.setNombre(tag);
+                if (id_padre == 0) {
+                    resultado.agregarModulo(m);
+                } else {
+                    m.setId_padre(id_padre);
+                    resultado.agregarSubModulo(m);
+                }
             }
             else
             {
-                String[] funcionalidad = new String[2];
-                funcionalidad[0] = resultadoConsulta.getString("tag");
-                funcionalidad[1] = resultadoConsulta.getString("redirect");
-                temp.agregarFuncionalidad(funcionalidad);
+                Funcionalidad f = new Funcionalidad();
+                f.setId_funcionalidad(id_menu);
+                f.setId_padre(id_padre);
+                f.setTag(tag);
+                f.setRedirect(resultadoConsulta.getString("redirect"));
+                
+                resultado.agregarFuncionalidad(f);
             }
         }
         return resultado;
