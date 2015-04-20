@@ -11,6 +11,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<form id="cerrar-sesion" action="<%= request.getContextPath()%>/Cuenta/CerrarSesion" method="post"></form>
+
 <div class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
