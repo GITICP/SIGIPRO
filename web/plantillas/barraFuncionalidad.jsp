@@ -13,6 +13,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <% 
+    /*
     List<BarraFuncionalidad> modulos;
     List<Integer> permisos = (List<Integer>)session.getAttribute("listaPermisos");
     request.setAttribute("permisos", permisos);
@@ -23,7 +24,7 @@
     if(modulos!=null)
     {
         request.setAttribute("modulos", modulos);
-    }  
+    }  */
 %>
 <%--
 <div class="container"> 

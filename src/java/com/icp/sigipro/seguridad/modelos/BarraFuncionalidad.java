@@ -18,6 +18,11 @@ public class BarraFuncionalidad
     List<Modulo> modulos = new ArrayList<Modulo>();
     
     public BarraFuncionalidad(){}
+
+    public List<Modulo> getModulos()
+    {
+        return modulos;
+    }
     
     public void agregarModulo(Modulo modulo) {
         modulos.add(modulo);

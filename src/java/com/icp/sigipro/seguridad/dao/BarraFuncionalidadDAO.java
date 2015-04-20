@@ -91,7 +91,7 @@ public class BarraFuncionalidadDAO
       }
       else
       {
-        return consultarModulos(usuario, "Select * from seguridad.entradas_menu_principal where redirect is not null order by id_menu_principal asc;", true);
+        return consultarModulos(usuario, "Select * from seguridad.entradas_menu_principal order by redirect desc, id_padre asc;", true);
       }
     }
     
