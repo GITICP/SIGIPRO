@@ -88,7 +88,7 @@
             <div class="form-group opciones">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="checkbox" name="perecedero" value="true" ${checkedCuarentena}><span> ¿Desea asociar caballos a este evento?</span>
+                        <input id="checkbox-asociar-caballos" type="checkbox" name="perecedero" value="true" ${(accion=='Agregar') ? "checked" : (evento.)}><span> ¿Desea asociar caballos a este evento?</span>
                         <br>
                     </div>
                 </div>
