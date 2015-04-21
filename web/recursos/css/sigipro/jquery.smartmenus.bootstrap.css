@@ -107,3 +107,16 @@
 .cerrar-sesion :hover{
     cursor: pointer;
 }
+
+.navbar-default .navbar-nav>li>a {
+  color: #000;
+}
+
+.navbar-default {
+  border-color: #e7e7e7;
+  background-color: #3C730D;
+}
+
+.navbar-default .navbar-brand {
+  color: #000;
+}
