@@ -104,11 +104,14 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         validarPermiso(56, listaPermisos);
         String redireccion = "EventoClinico/Editar.jsp";
         int id_evento = Integer.parseInt(request.getParameter("id_evento"));
-        EventoClinico eventoclinico = dao.obtenerEventoClinico(id_evento);
+        EventoClinico eventoclinico = dao.obtenerEventoClinicoConCaballos(id_evento);
+        GrupoDeCaballosDAO gdcDAO = new GrupoDeCaballosDAO();
+        List<GrupoDeCaballos> grupos_caballos = gdcDAO.obtenerGruposDeCaballosConCaballos();
         TipoEventoDAO tipodao = new TipoEventoDAO();
         List<TipoEvento> listatipos = tipodao.obtenerTiposEventos();
         request.setAttribute("listatipos", listatipos);
         request.setAttribute("evento", eventoclinico);
+        request.setAttribute("grupos_caballos", grupos_caballos);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
     }
@@ -118,6 +121,7 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         String redireccion = "EventoClinico/Agregar.jsp";
         EventoClinico c = construirObjeto(request);
         String[] ids_caballos = request.getParameterValues("caballos");
+        if(ids_caballos == null) ids_caballos = new String[]{};
         resultado = dao.insertarEventoClinico(c, ids_caballos);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
@@ -137,7 +141,9 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         String redireccion = "EventoClinico/Editar.jsp";
         EventoClinico c = construirObjeto(request);
         c.setId_evento(Integer.parseInt(request.getParameter("id_evento")));
-        resultado = dao.editarEventoClinico(c);
+        String[] ids_caballos = request.getParameterValues("caballos");
+        if(ids_caballos == null) ids_caballos = new String[]{};
+        resultado = dao.editarEventoClinico(c, ids_caballos);
         //Funcion que genera la bitacora
         BitacoraDAO bitacora = new BitacoraDAO();
         bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO_CLINICO,request.getRemoteAddr());

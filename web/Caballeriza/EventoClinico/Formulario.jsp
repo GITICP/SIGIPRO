@@ -88,7 +88,7 @@
             <div class="form-group opciones">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="checkbox-asociar-caballos" type="checkbox" name="perecedero" value="true" ${(accion=='Agregar') ? "checked" : (evento.)}><span> ¿Desea asociar caballos a este evento?</span>
+                        <input id="checkbox-asociar-caballos" type="checkbox" name="perecedero" value="true" checked><span> ¿Desea asociar caballos a este evento?</span>
                         <br>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                             <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
-                                        <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
+                                        <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(accion == 'Editar' && evento.valididarCaballoEnEvento(caballo)) ? "checked" : ""}>
                                         <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
                                     </label>
                                 </div>
@@ -130,7 +130,7 @@
                             <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
-                                        <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
+                                        <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(accion == 'Editar' && evento.valididarCaballoEnEvento(caballo)) ? "checked" : ""}>
                                         <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
                                     </label>
                                 </div>
