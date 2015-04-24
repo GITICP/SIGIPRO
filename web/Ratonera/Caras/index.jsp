@@ -52,7 +52,6 @@
                     <th>Ascendencia Macho</th>
                     <th>Ascendencia Hembra</th>
                     <th>Cepa</th>
-                    <th>Fecha de Vigencia</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -69,7 +68,6 @@
                       <td>${cara.getMacho_as()}</td>
                       <td>${cara.getHembra_as()}</td>
                       <td>${cara.getCepa().getNombre()}</td>
-                      <td>${cara.getFecha_vigencia_S()}</td>
                     </tr>
 
                   </c:forEach>

@@ -18,6 +18,7 @@ public class Destete {
   private Date fecha_destete;
   private int numero_hembras;
   private int numero_machos;
+  private Cepa cepa;
   
   public String parseJSON(){
         Class _class = this.getClass();
@@ -79,7 +80,13 @@ public class Destete {
   public void setNumero_machos(int numero_machos) {
     this.numero_machos = numero_machos;
   }
-  
+   public Cepa getCepa() {
+    return cepa;
+  }
+
+  public void setCepa(Cepa cepa) {
+    this.cepa = cepa;
+  }
   
 }
 

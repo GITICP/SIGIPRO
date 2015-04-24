@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bioterio.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bioterio.modelos.Cepa;
 import com.icp.sigipro.bioterio.modelos.Destete;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
@@ -28,12 +29,13 @@ public class DesteteDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.destetes (fecha_destete, numero_hembras, numero_machos)"  
-              + " VALUES (?,?,?) RETURNING id_destete");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.destetes (fecha_destete, numero_hembras, numero_machos, id_cepa)"  
+              + " VALUES (?,?,?,?) RETURNING id_destete");
       
       consulta.setDate(1, p.getFecha_destete());
       consulta.setInt(2, p.getNumero_hembras());
       consulta.setInt(3, p.getNumero_machos());
+      consulta.setInt(4,p.getCepa().getId_cepa());
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -55,14 +57,15 @@ public class DesteteDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.destetes "
-              + " SET  fecha_destete=?, numero_hembras=?, numero_machos=?"
+              + " SET  fecha_destete=?, numero_hembras=?, numero_machos=?, id_cepa=?"
               + " WHERE id_destete=?; "
       );
 
       consulta.setDate(1, p.getFecha_destete());
       consulta.setInt(2, p.getNumero_hembras());
       consulta.setInt(3, p.getNumero_machos());
-      consulta.setInt(4, p.getId_destete());
+      consulta.setInt(4,p.getCepa().getId_cepa());
+      consulta.setInt(5, p.getId_destete());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -103,7 +106,7 @@ public class DesteteDAO {
     Destete destete = new Destete();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.destetes where id_destete = ?");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.destetes de INNER JOIN bioterio.cepas ce ON de.id_cepa = ce.id_cepa where de.id_destete = ?");
 
       consulta.setInt(1, id);
 
@@ -114,6 +117,11 @@ public class DesteteDAO {
         destete.setFecha_destete(rs.getDate("fecha_destete"));
         destete.setNumero_hembras(rs.getInt("numero_hembras"));
         destete.setNumero_machos(rs.getInt("numero_machos"));
+        Cepa cep = new Cepa();
+        cep.setId_cepa(rs.getInt("id_cepa"));
+        cep.setNombre(rs.getString("nombre"));
+        
+        destete.setCepa(cep);
       }
       rs.close();
       consulta.close();
@@ -130,7 +138,7 @@ public class DesteteDAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.destetes");
+      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.destetes de INNER JOIN bioterio.cepas ce ON de.id_cepa = ce.id_cepa ");
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
@@ -138,7 +146,12 @@ public class DesteteDAO {
         destete.setId_destete(rs.getInt("id_destete"));
         destete.setFecha_destete(rs.getDate("fecha_destete"));
         destete.setNumero_hembras(rs.getInt("numero_hembras"));
-        destete.setNumero_machos(rs.getInt("numero_machos"));  
+        destete.setNumero_machos(rs.getInt("numero_machos")); 
+        Cepa cep = new Cepa();
+        cep.setId_cepa(rs.getInt("id_cepa"));
+        cep.setNombre(rs.getString("nombre"));
+        
+        destete.setCepa(cep);
         resultado.add(destete);
       }
       rs.close();

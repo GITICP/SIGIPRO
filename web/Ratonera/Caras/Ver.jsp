@@ -56,7 +56,6 @@
                 <tr><td> <strong>Fechas de Eliminación Hembra:</strong> <td>  ${cara.getFecha_eliminacionhembra_i_S()} - ${cara.getFecha_eliminacionhembra_f_S()}</td></tr>
                 <tr><td> <strong>Fechas de Selección Machos y Hembras:</strong> <td>  ${cara.getFecha_seleccionnuevos_i_S()} - ${cara.getFecha_seleccionnuevos_f_S()}</td></tr>
                 <tr><td> <strong>Fechas de Reposición Nuevo Ciclo:</strong> <td>  ${cara.getFecha_reposicionciclo_i_S()} - ${cara.getFecha_reposicionciclo_f_S()}</td></tr>
-                <tr><td> <strong>Vigente Hasta:</strong> <td> ${cara.getFecha_vigencia_S()}</td></tr>
               </table>
               <br>
             </div>

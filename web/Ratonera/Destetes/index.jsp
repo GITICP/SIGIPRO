@@ -51,6 +51,7 @@
                     <th>Fecha del Destete</th>
                     <th>Número de Hembras</th>
                     <th>Número de Machos</th>
+                    <th>Cepa</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -66,6 +67,7 @@
                       </td>
                       <td>${destete.getNumero_hembras()}</td>
                       <td>${destete.getNumero_machos()}</td>
+                      <td>${destete.getCepa().getNombre()}</td>
                     </tr>
 
                   </c:forEach>
