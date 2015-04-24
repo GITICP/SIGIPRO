@@ -181,20 +181,6 @@
                     </div>
                 </div>  
             </div>
-
-            <div class="col-md-6">
-                <label for="cantidad" class="control-label"><strong>*Fecha Límite de Vigencia</strong></label>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <label for="cantidad" class="control-label">Vigente Hasta:</label>
-                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vigencia" value="${cara.getFecha_vigencia_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_vigencia" data-date-format="dd/mm/yyyy" required
-                                    oninvalid="setCustomValidity('Este campo es requerido ')"
-                                    onchange="setCustomValidity('')">   
-                        </div>
-                    </div>
-                </div>
-            </div>
             <p id='mensajeFechas1' style='color:red;'><p>
             <p id='mensajeFechas2' style='color:red;'><p> 
             <p id='mensajeFechas3' style='color:red;'><p> 

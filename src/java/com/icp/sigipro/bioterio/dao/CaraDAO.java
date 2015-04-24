@@ -31,8 +31,8 @@ public class CaraDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.caras (numero_cara, id_cepa, macho_as, hembra_as,fecha_apareamiento_i,fecha_apareamiento_f,"
               + "fecha_eliminacionmacho_i,fecha_eliminacionmacho_f,fecha_eliminacionhembra_i,fecha_eliminacionhembra_f,fecha_seleccionnuevos_i,fecha_seleccionnuevos_f,"
-              + "fecha_reposicionciclo_i,fecha_reposicionciclo_f,fecha_vigencia) "
-              + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id_cara");
+              + "fecha_reposicionciclo_i,fecha_reposicionciclo_f) "
+              + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id_cara");
       
 
       consulta.setInt(1, p.getNumero_cara());
@@ -49,7 +49,6 @@ public class CaraDAO {
       consulta.setDate(12, p.getFecha_seleccionnuevos_f());
       consulta.setDate(13, p.getFecha_reposicionciclo_i());
       consulta.setDate(14, p.getFecha_reposicionciclo_f());
-      consulta.setDate(15, p.getFecha_vigencia());
 
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -73,7 +72,7 @@ public class CaraDAO {
               " UPDATE bioterio.caras "
               + " SET  numero_cara=?, id_cepa=?, macho_as=?, hembra_as=?,fecha_apareamiento_i=?,fecha_apareamiento_f=?,"
               + "fecha_eliminacionmacho_i=?,fecha_eliminacionmacho_f=?,fecha_eliminacionhembra_i=?,fecha_eliminacionhembra_f=?,fecha_seleccionnuevos_i=?,fecha_seleccionnuevos_f=?,"
-              + "fecha_reposicionciclo_i=?,fecha_reposicionciclo_f=?,fecha_vigencia=? "
+              + "fecha_reposicionciclo_i=?,fecha_reposicionciclo_f=? "
               + " WHERE id_cara=?; "
       );
 
@@ -91,8 +90,7 @@ public class CaraDAO {
       consulta.setDate(12, p.getFecha_seleccionnuevos_f());
       consulta.setDate(13, p.getFecha_reposicionciclo_i());
       consulta.setDate(14, p.getFecha_reposicionciclo_f());
-      consulta.setDate(15, p.getFecha_vigencia());
-      consulta.setInt(16, p.getId_cara());
+      consulta.setInt(15, p.getId_cara());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -154,7 +152,6 @@ public class CaraDAO {
         cepa.setFecha_seleccionnuevos_f(rs.getDate("fecha_seleccionnuevos_f"));
         cepa.setFecha_reposicionciclo_i(rs.getDate("fecha_reposicionciclo_i"));
         cepa.setFecha_reposicionciclo_f(rs.getDate("fecha_reposicionciclo_f"));
-        cepa.setFecha_vigencia(rs.getDate("fecha_vigencia"));
         
         Cepa cep = new Cepa();
         cep.setId_cepa(rs.getInt("id_cepa"));
@@ -196,7 +193,7 @@ public class CaraDAO {
         cepa.setFecha_seleccionnuevos_f(rs.getDate("fecha_seleccionnuevos_f"));
         cepa.setFecha_reposicionciclo_i(rs.getDate("fecha_reposicionciclo_i"));
         cepa.setFecha_reposicionciclo_f(rs.getDate("fecha_reposicionciclo_f"));
-        cepa.setFecha_vigencia(rs.getDate("fecha_vigencia"));
+
         
         Cepa cep = new Cepa();
         cep.setId_cepa(rs.getInt("id_cepa"));
