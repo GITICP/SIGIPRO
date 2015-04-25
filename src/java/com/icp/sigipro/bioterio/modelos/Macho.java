@@ -19,6 +19,24 @@ public class Macho {
   private Date fecha_ingreso;
   private String descripcion;
   private Date fecha_retiro;
+  private String id_padre;
+  private String id_madre;
+
+  public String getId_padre() {
+    return id_padre;
+  }
+
+  public void setId_padre(String id_padre) {
+    this.id_padre = id_padre;
+  }
+
+  public String getId_madre() {
+    return id_madre;
+  }
+
+  public void setId_madre(String id_madre) {
+    this.id_madre = id_madre;
+  }
 
   public int getId_macho() {
     return id_macho;

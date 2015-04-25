@@ -21,7 +21,10 @@
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+              <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupo ${grupo.getIdentificador()}</a>
+            </li>
+            <li> 
+              <a href="/SIGIPRO/Conejera/Cajas?">Espacios</a>
             </li>
           </ul>
         </div>
@@ -37,18 +40,15 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cajas </h3>
-                <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Conejera/Cajas?accion=agregar">Agregar Caja</a>
-                </div>
+              <h3><i class="fa fa-barcode"></i> Espacios del grupo ${grupo.getIdentificador()}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
               <c:forEach items="${listaCajas}" var="caja">
 
-                        <a class="btn btn-default btn-lg" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+                        <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
                           <div style="height:100%;width:100%">
-                            Caja #${caja.getNumero()}
+                            Espacio #${caja.getNumero()}
                           </div>
                         </a>
 

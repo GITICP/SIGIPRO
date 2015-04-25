@@ -20,8 +20,11 @@
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
                         <li>Bioterio - Conejera</li>
+                         <li> 
+                            <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupo ${caja.getGrupo().getIdentificador()}</a>
+                        </li>
                         <li> 
-                            <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+                            <a href="/SIGIPRO/Conejera/Cajas?">Espacios</a>
                         </li>
                         <li class="active"> ${caja.getNumero()} </li>
                     </ul>
@@ -38,11 +41,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Caja  ${caja.getNumero()} </h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/Cajas?accion=editar&id_caja=${caja.getId_caja()}">Editar Número de Caja</a>
-                                <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la caja" data-href="/SIGIPRO/Conejera/Cajas?accion=eliminar&id_caja=${caja.getId_caja()}">Eliminar Caja</a>
-                            </div>
+                            <h3><i class="fa fa-barcode"></i> Espacio  ${caja.getNumero()} del Grupo ${caja.getGrupo().getIdentificador()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

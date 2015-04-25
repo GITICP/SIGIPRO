@@ -8,9 +8,11 @@ package com.icp.sigipro.bioterio.controladores;
 import com.icp.sigipro.bioterio.dao.CajaDAO;
 import com.icp.sigipro.bioterio.dao.ConejaDAO;
 import com.icp.sigipro.bioterio.dao.CruceDAO;
+import com.icp.sigipro.bioterio.dao.GrupohembrasDAO;
 import com.icp.sigipro.bioterio.modelos.Caja;
 import com.icp.sigipro.bioterio.modelos.Coneja;
 import com.icp.sigipro.bioterio.modelos.Cruce;
+import com.icp.sigipro.bioterio.modelos.Grupohembras;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
@@ -37,6 +39,7 @@ public class ControladorCajas extends SIGIPROServlet {
   private final CajaDAO dao = new CajaDAO();
   private final ConejaDAO coneja_dao = new ConejaDAO();
   private final CruceDAO cruce_dao = new CruceDAO();
+  private final GrupohembrasDAO grupoDAO = new GrupohembrasDAO();
   private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
   protected final Class clase = ControladorCajas.class;
@@ -45,42 +48,31 @@ public class ControladorCajas extends SIGIPROServlet {
     {
       add("index");
       add("ver");
-      add("agregar");
-      add("editar");
-      add("eliminar");
     }
   };
   protected final List<String> accionesPost = new ArrayList<String>()
   {
     {
-      add("agregar");
-      add("editar");
+//      add("agregar");
+//      add("editar");
     }
   };
   
    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-  
-  protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    List<Integer> listaPermisos = getPermisosUsuario(request);
-    validarPermiso(251, listaPermisos);
-    String redireccion = "Cajas/Agregar.jsp";
-    Caja ds = new Caja();
-    request.setAttribute("caja", ds);
-    request.setAttribute("accion", "Agregar");
 
-    redireccionar(request, response, redireccion);
-  }
 
   protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     String redireccion = "Cajas/index.jsp";
+    int id_grupo = Integer.parseInt(request.getParameter("id_grupo"));
     List<Caja> cajas;
     try {
-      cajas = dao.obtenerCajas();
+      cajas = dao.obtenerCajas(id_grupo);
       request.setAttribute("listaCajas", cajas);
+      Grupohembras grupo = grupoDAO.obtenerGrupohembras(id_grupo);
+      request.setAttribute("grupo", grupo);
     } catch (SIGIPROException ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
     }
@@ -112,122 +104,13 @@ public class ControladorCajas extends SIGIPROServlet {
     redireccionar(request, response, redireccion);
   }
 
-  protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    List<Integer> listaPermisos = getPermisosUsuario(request);
-    validarPermisos(permisos, listaPermisos);
-    String redireccion = "Cajas/Editar.jsp";
-    int id_caja = Integer.parseInt(request.getParameter("id_caja"));
-    request.setAttribute("accion", "Editar");
-    try {
-      Caja s = dao.obtenerCaja(id_caja);
-      request.setAttribute("caja", s);
-    } catch (SIGIPROException ex) {
-       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-    }
-    redireccionar(request, response, redireccion);
-  }
-
-  protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    List<Integer> listaPermisos = getPermisosUsuario(request);
-    validarPermisos(permisos, listaPermisos);
-    int id_caja = Integer.parseInt(request.getParameter("id_caja"));
-    try {
-      dao.eliminarCaja(id_caja);
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(id_caja, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-      //*----------------------------* 
-      request.setAttribute("mensaje", helper.mensajeDeExito("Caja eliminada correctamente."));
-    } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-    }
-    try {
-      List<Caja> cajas;
-      cajas = dao.obtenerCajas();
-      request.setAttribute("listaCajas", cajas);
-    } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-    }
-    String redireccion = "Cajas/index.jsp";
-    redireccionar(request, response, redireccion);
-  }
-  
-  // </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="Métodos Post">
-  
-  protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    boolean resultado = false;
-    String redireccion = "Cajas/Agregar.jsp";
-    try {
-      Caja caja = construirObjeto(request);
-      resultado = dao.insertarCaja(caja);
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(caja.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-      //*----------------------------*
-    } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", ex.getMessage() );
-    }
-    if (resultado){
-        redireccion = "Cajas/index.jsp";
-        List<Caja> cajas;
-      try {
-        cajas = dao.obtenerCajas();
-        request.setAttribute("listaCajas", cajas);
-        request.setAttribute("mensaje", helper.mensajeDeExito("Caja agregada con éxito"));
-      } catch (SIGIPROException ex) {
-        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-      }
-    }
-    else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-    }
-    redireccionar(request, response, redireccion);
-  }
-  
-  protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    boolean resultado = false;
-    String redireccion = "Cajas/Editar.jsp";
-    try {
-      Caja caja = construirObjeto(request);
-      resultado = dao.editarCaja(caja);
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(caja.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-      //*----------------------------*
-    } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", ex.getMessage() );
-    }
-    if (resultado){
-        redireccion = "Cajas/index.jsp";
-        List<Caja> cajas;
-      try {
-        cajas = dao.obtenerCajas();
-        request.setAttribute("listaCajas", cajas);
-        request.setAttribute("mensaje", helper.mensajeDeExito("Caja editada con éxito"));
-
-      } catch (SIGIPROException ex) {
-        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-      }
-    }
-    else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-    }
-    redireccionar(request, response, redireccion);
-  }
-  
-  // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
    private Caja construirObjeto(HttpServletRequest request) throws SIGIPROException {
     Caja caja = new Caja();
     
-    caja.setId_caja(Integer.parseInt(request.getParameter("id_caja")));
-    caja.setNumero(Integer.parseInt(request.getParameter("numero")));
-    
+//    caja.setId_caja(Integer.parseInt(request.getParameter("id_caja")));
+//    caja.setNumero(Integer.parseInt(request.getParameter("numero")));
+//    
     return caja;
   }
   

@@ -1,6 +1,6 @@
 <%-- 
     Document   : Agregar
-    Created on : Feb 19, 2015, 7:59:26 PM
+    Created on : Apr 25, 2015, 3:20:00 PM
     Author     : Amed
 --%>
 
@@ -23,9 +23,9 @@
           <ul class="breadcrumb">
             <li>Bioterio-Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+              <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupos</a>
             </li>
-            <li class="active"> Nueva Caja </li>
+            <li class="active"> Nuevo Grupo de Hembras </li>
 
           </ul>
         </div>
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar  Caja </h3>
+              <h3><i class="fa fa-barcode"></i> Agregar Grupo de Hembras </h3>
             </div>
             ${mensaje}
             <div class="widget-content">

@@ -1,8 +1,9 @@
 <%-- 
     Document   : Editar
-    Created on : Feb 19, 2015, 7:59:33 PM
+    Created on : Apr 25, 2015, 3:20:08 PM
     Author     : Amed
 --%>
+
 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -24,9 +25,9 @@
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+              <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupos</a>
             </li>
-            <li class="active">Caja ${caja.getNumero()}</li>
+            <li class="active">Grupo ${grupo.getIdentificador()}</li>
 
           </ul>
         </div>
@@ -43,7 +44,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Editar Caja </h3>
+              <h3><i class="fa fa-barcode"></i> Editar Grupo de Hembras</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
