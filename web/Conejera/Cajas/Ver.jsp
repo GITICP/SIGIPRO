@@ -68,7 +68,10 @@
                                         <tr><td> <strong>Fecha de nacimiento:</strong> <td>${coneja.getFecha_nacimiento()} </td></tr>
                                         <tr><td> <strong>Identificación del padre:</strong> <td>${coneja.getId_padre()} </td></tr>
                                         <tr><td> <strong>Identificación de la madre:</strong> <td>${coneja.getId_madre()} </td></tr>
-                                        <tr><td> <strong>Fecha de Retiro:</strong> <td>${coneja.getFecha_retiro()} </td></tr>
+                                        <tr><td> <strong>Fecha de Retiro:</strong> <td>${coneja.getFecha_retiro_S()} </td></tr>
+                                        <tr><td> <strong>Fecha de Ingreso</strong> <td>${coneja.getFecha_ingreso_S()} </td></tr>
+                                        <tr><td> <strong>Fecha de Cambio</strong> <td>${coneja.getFecha_cambio_S()} </td></tr>
+                                        <tr><td> <strong>Fecha de Selección</strong> <td>${coneja.getFecha_seleccion_S()} </td></tr>
                                     </table>
                                     <br>
                                 </div>
