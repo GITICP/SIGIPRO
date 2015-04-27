@@ -127,7 +127,7 @@ public class ControladorColeccionHumeda extends SIGIPROServlet {
              //Funcion que genera la bitacora
             bitacora.setBitacora(ch.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_COLECCIONHUMEDA,request.getRemoteAddr());
             //*----------------------------*
-            Evento e = this.setEvento(ch.getSerpiente(), "Colección Húmeda", request);
+            Evento e = this.setEvento(ch.getSerpiente(), 7, request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
             request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ch.getSerpiente().getNumero_serpiente()+" agregada a Colección Húmeda correctamente."));
@@ -182,9 +182,9 @@ public class ControladorColeccionHumeda extends SIGIPROServlet {
     }
   
     //Para Coleccion Viva, Deceso
-    private Evento setEvento(Serpiente serpiente,String evento,HttpServletRequest request){
+    private Evento setEvento(Serpiente serpiente,int evento,HttpServletRequest request){
         Evento e = new Evento();
-        e.setEvento(evento);
+        e.setId_categoria(evento);
         java.sql.Date date = new java.sql.Date(new Date().getTime());
         e.setFecha_evento(date);
         e.setSerpiente(serpiente);

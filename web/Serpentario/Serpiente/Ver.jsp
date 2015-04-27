@@ -54,7 +54,7 @@
                     <c:choose>
                         <c:when test="${deceso==null}">
                             <c:if test="${contienePermisoDeceso}">
-                                <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="registrar el deceso de la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=deceso&id_serpiente=${serpiente.getId_serpiente()}">Deceso</a>
+                                <a class="btn btn-danger btn-sm boton-accion deceso-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalDeceso">Deceso</a>
                             </c:if>
                             <c:choose>
                             <c:when test="${coleccionViva == null}">
@@ -68,12 +68,11 @@
                                </c:if>
                             <c:set var="contienePermisoEditar" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                              <c:if test="${permiso == 1 || permiso == 311}">
+                              <c:if test="${permiso == 1 || permiso == 311 || permiso == 315}">
                                 <c:set var="contienePermisoEditar" value="true" />
                               </c:if>
                             </c:forEach>
                             <c:if test="${contienePermisoEditar}">
-                              <a class="btn btn-primary btn-sm boton-accion imagen-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarImagen">Imagen</a>
                               <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editar&id_serpiente=${serpiente.getId_serpiente()}">Editar</a>
                             </c:if>
                         </c:when>
@@ -85,32 +84,41 @@
                               </c:if>
                             </c:forEach>
                             <c:if test="${contienePermisoCHCT}">
-                                <c:if test="${coleccionhumeda == null}">
-                                    <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
-                                </c:if>
-                                <c:if test="${catalogotejido == null}">
-                                    <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
-                                </c:if>
+                                <c:choose>
+                                    <c:when test="${!descarte}">
+                                        <c:if test="${coleccionhumeda == null}">
+                                            <a class="btn btn-primary btn-sm boton-accion ch-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarColeccionHumeda">Colección Húmeda</a>
+                                        </c:if>
+                                        <c:if test="${catalogotejido == null}">
+                                            <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
+                                        </c:if>
+                                        <c:if test="${coleccionhumeda==null && catalogotejido==null}">
+                                            <a class="btn btn-danger btn-sm boton-accion confirmable"  data-texto-confirmacion="descartar la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=descartar&id_serpiente=${serpiente.getId_serpiente()}">Descartar</a>
+                                        </c:if>
+                                    </c:when>
+                                    <c:otherwise>
+                                    </c:otherwise>
+                                </c:choose>
+                                
                             </c:if>
                             
                             
                         </c:otherwise>
                     </c:choose>
                 <!--
-                <c:set var="contienePermisoEliminar" value="false" />
+                <c:set var="contienePermisoReversar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 311}">
-                    <c:set var="contienePermisoEliminar" value="true" />
+                  <c:if test="${permiso == 1 || permiso == 316}">
+                    <c:set var="contienePermisoReversar" value="true" />
                   </c:if>
                 </c:forEach>
-                <c:if test="${contienePermisoEliminar}">
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la especie" data-href="/SIGIPRO/Serpentario/Especie?accion=eliminar&id_especie=${especie.getId_especie()}">Eliminar</a>
-                </c:if>
                 -->
                 
               </div>
             </div>
             ${mensaje}
+            <div class="row">
+            <div class="col-md-6">
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre de la Especie:</strong> <td>${serpiente.getEspecie().getGenero_especie()} </td></tr>
@@ -118,7 +126,7 @@
                 <tr><td> <strong>Fecha de Ingreso:</strong> <td>${serpiente.getFecha_ingresoAsString()} </td></tr>
                 <tr><td> <strong>Localidad de Origen:</strong> <td>${serpiente.getLocalidad_origen()} </td></tr>
                 <tr><td> <strong>Colectada por:</strong> <td>${serpiente.getColectada()} </td></tr>
-                <tr><td> <strong>Recibida por:</strong> <td>${serpiente.getRecibida().getNombre_usuario()} </td></tr>
+                <tr><td> <strong>Recibida por:</strong> <td>${serpiente.getRecibida().getNombre_completo()} </td></tr>
                 <tr><td> <strong>Sexo:</strong> <td>${serpiente.getSexo()} </td></tr>
                 <tr><td> <strong>Talla (Longitud Cabeza-Cloaca):</strong> <td>${serpiente.getTalla_cabeza()} Centímetros </td></tr>
                 <tr><td> <strong>Talla (Longitud Cola):</strong> <td>${serpiente.getTalla_cola()} Centímetros</td></tr>
@@ -146,13 +154,23 @@
                                         <tr><td> <strong>Días en Cautiverio:</strong> <td>${serpiente.getDias_cautiverio()} </td></tr>
                                     </c:otherwise>
                                 </c:choose>
-                <tr><td> <strong>Imagen:</strong> <td> 
-                        <c:if test="${!imagenSerpiente.equals('')}">
-                                    <img src="${imagenSerpiente}" height="200">
-                        </c:if>
-                    </td></tr>
-                <tr><td> <strong>Histórico de Eventos</strong> 
               </table>
+            </div>
+            </div>
+                <div class="col-md-6" align="right">
+                    <div class="widget-content">
+                        <c:if test="${!imagenSerpiente.equals('')}">
+                                    <img src="${imagenSerpiente}" height="250" width="250">
+                        </c:if>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+                <div class="col-md-12">
+           <div class="widget widget-table">
+            <div class="widget-header">
+              <h3><i class="fa fa-users"></i> Eventos</h3>
             </div>
             <div class="widget-content">
               <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
@@ -164,6 +182,7 @@
                     <th>Usuario responsable</th>
                     <th>Valor Cambiado</th>
                     <th>Extraccion</th>
+                    <th>Accion</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -200,11 +219,20 @@
                               <td></td>
                           </c:otherwise>
                       </c:choose>
+                              <td>
+                          <c:if test="${eventos.getId_categoria()==5}">
+                              <c:if test="${contienePermisoReversar}">
+                                    <a class="btn btn-danger btn-sm boton-accion rPV-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalReversarCV">Reversar</a>
+                              </c:if>
+                          </c:if>
+                              </td>
                     </tr>
                   </c:forEach>
                 </tbody>
               </table>
             </div>
+           </div>
+                </div>
           </div>
           <!-- END WIDGET TICKET TABLE -->
         </div>
@@ -281,41 +309,39 @@
 
 </t:modal>
     
-<t:modal idModal="modalAgregarImagen" titulo="Agregar Imagen">
+<t:modal idModal="modalDeceso" titulo="Registrar Deceso">
     <jsp:attribute name="form">
         <div class="widget-content">
-            <form class="form-horizontal" id="agregarEventos" enctype='multipart/form-data' autocomplete="off" method="post" action="Serpiente">
-                <input hidden="true" name="accion" value="agregarimagen">
-                <input hidden="true" id='id_serpiente_imagen' name='id_serpiente_imagen'>
-                    <div class="row">
-                    <div class="col-md-12">
-                        <div class="widget widget-table">
-                            <div class="widget-header">
-                                <h3><i class="fa fa-photo"></i> Imagen</h3>
-                            </div>
-                            <div class="widget-content">
-                                <label for="imagen" class="control-label">Seleccione una imagen</label>
-                                <div class="form-group">
-                                  <div class="col-sm-12">
-                                    <div class="input-group">                
-                                      <input type="file" name="imagen" accept="image/*" required onchange="previewFile()" />
-                                      <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <c:if test="${!imagenSerpiente.equals('')}">
-                                    Imagen Actual: <img src="${imagenSerpiente}" height="100">
-                                </c:if>
-                                
-                            </div>
+            <form class="form-horizontal" id="agregarEventos" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="Deceso">
+                <input hidden="true" id='id_serpiente_deceso' name='id_serpiente_deceso'>
+                <label for="especie" class="control-label">*Fecha de Deceso</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePickerSerpiente" name="fecha_deceso" data-date-format="dd/mm/yyyy" required
+                                oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                onchange="setCustomValidity('')">
+                            </select>
                         </div>
                     </div>
-                </div>            
+                </div>
+                <label for="observaciones" class="control-label">*Observaciones</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                                oninvalid="setCustomValidity('Este campo es requerido. ')"
+                                oninput="setCustomValidity('')"></textarea>
+                    </div>
+                  </div>
+                </div>
+            
         
         <div class="form-group">
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Imagen</button>            </div>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Deceso</button>            </div>
         </div>
         </form>
         </div>
@@ -323,7 +349,7 @@
     </jsp:attribute>
 
 </t:modal>
-    
+
 <t:modal idModal="modalAgregarColeccionHumeda" titulo="Agregar Serpiente a Colección Húmeda">
     <jsp:attribute name="form">
         <div class="widget-content">
@@ -334,7 +360,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="number" min="0" id="id_coleccion_humeda" name="numero_coleccion_humeda" class="form-control" required
+                            <input type="number" min="0" id="id_coleccion_humeda" name="numero_coleccion_humeda" value="${siguienteCH}" class="form-control" required
                                 oninvalid="setCustomValidity('Este campo es requerido y debe ser número.')"
                                 oninput="setCustomValidity('')">
                         </div>
@@ -344,10 +370,16 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                        <BR>
-                      <input rows="5" cols="50" maxlength="200" placeholder="Propósito del paso a Colección Húmeda" class="form-control" name="proposito" required 
-                             oninvalid="setCustomValidity('Este campo es requerido')"
-                             oninput="setCustomValidity('')">
+                      <select id="seleccionEvento" class="select2" name="proposito"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <option value='Docencia'>Docencia</option>
+                            <option value='Investigación'>Investigación</option>
+                            
+                            
+                            </select>
                     </div>
                   </div>
                 </div>
@@ -387,7 +419,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="number" min="0" id="id_catalogo_tejido" name="numero_catalogo_tejido" class="form-control" required
+                            <input type="number" min="0" id="id_catalogo_tejido" value="${siguienteCT}" name="numero_catalogo_tejido" class="form-control" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                         </div>
@@ -420,7 +452,7 @@
                   <div class="col-sm-12">
                     <div class="input-group">
                         <BR>
-                      <input rows="5" cols="50" maxlength="20" placeholder="Estado en el Catálogo de Tejidos" class="form-control" name="estado">
+                      <input rows="5" cols="50" maxlength="100" placeholder="Estado en el Catálogo de Tejidos" class="form-control" name="estado">
                     </div>
                   </div>
                 </div>
@@ -442,6 +474,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                 <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar a Catálogo de Tejidos</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    
+ <t:modal idModal="modalReversarCV" titulo="Reversar paso a Colección Viva">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarCatalogoTejido" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="reversar">
+                <input hidden="true" name="id_serpiente_reversar" id="id_serpiente_reversar">
+                <label for="especie" class="control-label">¿Está seguro que desea reversar el paso a Colección Viva?</label>
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Reversar</button>            </div>
         </div>
         </form>
         </div>

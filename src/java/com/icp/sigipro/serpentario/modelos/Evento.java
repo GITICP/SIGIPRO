@@ -21,6 +21,7 @@ public class Evento {
     private Serpiente serpiente;
     private Usuario usuario;
     private Date fecha_evento;
+    private int id_categoria;
     private String evento;
     private String observaciones;
     private Extraccion extraccion;
@@ -37,6 +38,14 @@ public class Evento {
         this.evento = evento;
         this.observaciones = observaciones;
         this.extraccion = extraccion;
+    }
+
+    public int getId_categoria() {
+        return id_categoria;
+    }
+
+    public void setId_categoria(int id_categoria) {
+        this.id_categoria = id_categoria;
     }
 
     public String getValor_cambiado() {

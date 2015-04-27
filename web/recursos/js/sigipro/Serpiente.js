@@ -3,25 +3,29 @@ function previewFile(){
   // Great success! All the File APIs are supported.
        var preview = document.getElementById("imagenSubida"); //selects the query named img
        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var size  = file.size;
        var imagen = document.getElementById("imagen");
        var reader  = new FileReader();
-       
-       reader.onload = function (e) {
-           preview.src = reader.result;
-           imagen.value = reader.toString();
-        };
-
-
-
-       if (file) {
-           reader.readAsDataURL(file); //reads the data as a URL
-       } else {
-           preview.src = "";
-       }
+       if (size<= 102400){
+            reader.onload = function (e) {
+                preview.src = reader.result;
+                imagen.value = reader.toString();
+             };
+            if (file) {
+                reader.readAsDataURL(file); //reads the data as a URL
+            } else {
+                preview.src = "";
+            }    
+        }else{
+            document.getElementById("imagen_Serpiente").value = null;
+            alert("La imagen debe ser de 100KB o menos. ");
+        }
     }else {
         alert('The File APIs are not fully supported in this browser.');
   }
 }
+
+
 
 $(document).on("click", ".open-Modal", function () {
                             
@@ -36,11 +40,6 @@ $(document).on("click", ".evento-Modal", function () {
                             $("#id_serpiente").val(id_serpiente);                          
                             });
                             
-$(document).on("click", ".imagen-Modal", function () {                            
-                            var id_serpiente = $(this).data('id');
-                            $("#id_serpiente_imagen").val(id_serpiente);                          
-                            });
-
 $(document).on("click", ".ch-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente_coleccion_humeda").val(id_serpiente);                          
@@ -49,5 +48,15 @@ $(document).on("click", ".ch-Modal", function () {
 $(document).on("click", ".ct-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente_catalogo_tejido").val(id_serpiente);                          
+                            });
+                            
+$(document).on("click", ".rPV-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_reversar").val(id_serpiente);                          
+                            });
+
+$(document).on("click", ".deceso-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_deceso").val(id_serpiente);                          
                             });
                             
