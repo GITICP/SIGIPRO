@@ -126,7 +126,7 @@ public class SerpienteDAO {
     public int obtenerProximoIdCT(){
         int nextval = 0;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT MAX(NUMERO_CATALOGO_TEJIDO) AS LAST VALUE FROM SERPENTARIO.CATALOGO_TEJIDO;");
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT MAX(NUMERO_CATALOGO_TEJIDO) AS LAST_VALUE FROM SERPENTARIO.CATALOGO_TEJIDO;");
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()){
                 int currval = resultadoConsulta.getInt("last_value");
