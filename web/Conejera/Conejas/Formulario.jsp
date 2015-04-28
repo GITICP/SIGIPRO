@@ -46,6 +46,42 @@
       </div>
     </div>
     <div class="col-md-6">
+      <label for="fecha_ingreso" class="control-label">*Fecha de Ingreso</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_ingreso" value="${coneja.getFecha_ingreso_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                    onchange="setCustomValidity('')">      
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="fecha_cambio" class="control-label">*Fecha de Cambio</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_cambio" value="${coneja.getFecha_cambio_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_cambio" data-date-format="dd/mm/yyyy" required
+                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                    onchange="setCustomValidity('')">      
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="fecha_seleccion" class="control-label">*Fecha de Selección</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_seleccion" value="${coneja.getFecha_seleccion_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_seleccion" data-date-format="dd/mm/yyyy" required
+                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                    onchange="setCustomValidity('')">      
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
       <label for="id_padre" class="control-label">*Identificación del Padre</label>
       <div class="form-group">
         <div class="col-md-12">

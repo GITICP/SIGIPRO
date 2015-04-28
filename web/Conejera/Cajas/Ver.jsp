@@ -20,8 +20,11 @@
                 <div class="col-md-4 ">
                     <ul class="breadcrumb">
                         <li>Bioterio - Conejera</li>
+                         <li> 
+                            <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupo ${caja.getGrupo().getIdentificador()}</a>
+                        </li>
                         <li> 
-                            <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+                            <a href="/SIGIPRO/Conejera/Cajas?">Espacios</a>
                         </li>
                         <li class="active"> ${caja.getNumero()} </li>
                     </ul>
@@ -38,11 +41,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Caja  ${caja.getNumero()} </h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/Cajas?accion=editar&id_caja=${caja.getId_caja()}">Editar Número de Caja</a>
-                                <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la caja" data-href="/SIGIPRO/Conejera/Cajas?accion=eliminar&id_caja=${caja.getId_caja()}">Eliminar Caja</a>
-                            </div>
+                            <h3><i class="fa fa-barcode"></i> Espacio  ${caja.getNumero()} del Grupo ${caja.getGrupo().getIdentificador()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
@@ -68,7 +67,10 @@
                                         <tr><td> <strong>Fecha de nacimiento:</strong> <td>${coneja.getFecha_nacimiento()} </td></tr>
                                         <tr><td> <strong>Identificación del padre:</strong> <td>${coneja.getId_padre()} </td></tr>
                                         <tr><td> <strong>Identificación de la madre:</strong> <td>${coneja.getId_madre()} </td></tr>
-                                        <tr><td> <strong>Fecha de Retiro:</strong> <td>${coneja.getFecha_retiro()} </td></tr>
+                                        <tr><td> <strong>Fecha de Retiro:</strong> <td>${coneja.getFecha_retiro_S()} </td></tr>
+                                        <tr><td> <strong>Fecha de Ingreso</strong> <td>${coneja.getFecha_ingreso_S()} </td></tr>
+                                        <tr><td> <strong>Fecha de Cambio</strong> <td>${coneja.getFecha_cambio_S()} </td></tr>
+                                        <tr><td> <strong>Fecha de Selección</strong> <td>${coneja.getFecha_seleccion_S()} </td></tr>
                                     </table>
                                     <br>
                                 </div>

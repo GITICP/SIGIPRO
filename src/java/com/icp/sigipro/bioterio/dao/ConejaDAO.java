@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.bioterio.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.bioterio.modelos.Caja;
 import com.icp.sigipro.bioterio.modelos.Coneja;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
@@ -29,8 +28,8 @@ public class ConejaDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.conejas (id_caja, fecha_nacimiento, id_padre, id_madre, fecha_retiro, bool_activa)"  
-              + " VALUES (?,?,?,?,?,?) RETURNING id_coneja");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.conejas (id_caja, fecha_nacimiento, id_padre, id_madre, fecha_retiro, bool_activa, fecha_ingreso, fecha_cambio, fecha_seleccion)"  
+              + " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_coneja");
       
       consulta.setDate(2, p.getFecha_nacimiento());
       consulta.setInt(1, p.getCaja().getId_caja());
@@ -38,6 +37,9 @@ public class ConejaDAO {
       consulta.setString(4, p.getId_madre());
       consulta.setDate(5, p.getFecha_retiro());
       consulta.setBoolean(6, true);
+      consulta.setDate(7, p.getFecha_ingreso());
+      consulta.setDate(8, p.getFecha_cambio());
+      consulta.setDate(9, p.getFecha_seleccion());
      
 
       ResultSet resultadoConsulta = consulta.executeQuery();
@@ -60,7 +62,7 @@ public class ConejaDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.conejas "
-              + " SET  fecha_nacimiento=?, id_padre=?, id_madre=?, fecha_retiro=?"
+              + " SET  fecha_nacimiento=?, id_padre=?, id_madre=?, fecha_retiro=?, fecha_ingreso=?, fecha_cambio=?, fecha_seleccion=?"
               + " WHERE id_coneja=?; "
       );
 
@@ -68,7 +70,10 @@ public class ConejaDAO {
       consulta.setString(2, p.getId_padre());
       consulta.setString(3, p.getId_madre());
        consulta.setDate(4, p.getFecha_retiro());
-      consulta.setInt(5, p.getId_coneja());
+       consulta.setDate(5, p.getFecha_ingreso());
+       consulta.setDate(6, p.getFecha_cambio());
+       consulta.setDate(7, p.getFecha_seleccion());
+      consulta.setInt(8, p.getId_coneja());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -123,6 +128,9 @@ public class ConejaDAO {
         coneja.setId_padre(rs.getString("id_padre"));
         coneja.setId_madre(rs.getString("id_madre"));
         coneja.setFecha_retiro(rs.getDate("fecha_retiro"));
+        coneja.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+        coneja.setFecha_cambio(rs.getDate("fecha_cambio"));
+        coneja.setFecha_seleccion(rs.getDate("fecha_seleccion"));
       }
       rs.close();
       consulta.close();
@@ -151,6 +159,9 @@ public class ConejaDAO {
         coneja.setId_padre(rs.getString("id_padre"));
         coneja.setId_madre(rs.getString("id_madre"));
         coneja.setFecha_retiro(rs.getDate("fecha_retiro"));
+        coneja.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+        coneja.setFecha_cambio(rs.getDate("fecha_cambio"));
+        coneja.setFecha_seleccion(rs.getDate("fecha_seleccion"));
       }
       rs.close();
       consulta.close();
@@ -176,6 +187,9 @@ public class ConejaDAO {
         coneja.setId_padre(rs.getString("id_padre"));
         coneja.setId_madre(rs.getString("id_madre"));
         coneja.setFecha_retiro(rs.getDate("fecha_retiro"));
+        coneja.setFecha_ingreso(rs.getDate("fecha_ingreso"));
+        coneja.setFecha_cambio(rs.getDate("fecha_cambio"));
+        coneja.setFecha_seleccion(rs.getDate("fecha_seleccion"));
         resultado.add(coneja);
       }
       rs.close();

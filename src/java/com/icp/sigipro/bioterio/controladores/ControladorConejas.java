@@ -8,7 +8,6 @@ package com.icp.sigipro.bioterio.controladores;
 import com.icp.sigipro.bioterio.dao.ConejaDAO;
 import com.icp.sigipro.bioterio.dao.CajaDAO;
 import com.icp.sigipro.bioterio.modelos.Coneja;
-import com.icp.sigipro.bioterio.modelos.Coneja;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
@@ -190,18 +189,36 @@ public class ControladorConejas extends SIGIPROServlet
         coneja.setId_madre(request.getParameter("id_madre"));
         String fecha_nac = request.getParameter("fecha_nacimiento");
         String fecha_ret = request.getParameter("fecha_retiro");
+        String fecha_ingr = request.getParameter("fecha_ingreso");
+        String fecha_cam = request.getParameter("fecha_cambio");
+        String fecha_sel = request.getParameter("fecha_seleccion");
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha_nacimiento;
         java.sql.Date fecha_nacimientoSQL;
         java.util.Date fecha_retiro;
         java.sql.Date fecha_retiroSQL;
+        java.util.Date fecha_ingreso;
+        java.sql.Date fecha_ingresoSQL;
+        java.util.Date fecha_cambio;
+        java.sql.Date fecha_cambioSQL;
+        java.util.Date fecha_seleccion;
+        java.sql.Date fecha_seleccionSQL;
         try {
             fecha_nacimiento = formatoFecha.parse(fecha_nac);
             fecha_nacimientoSQL = new java.sql.Date(fecha_nacimiento.getTime());
             fecha_retiro = formatoFecha.parse(fecha_ret);
             fecha_retiroSQL = new java.sql.Date(fecha_retiro.getTime());
+            fecha_ingreso = formatoFecha.parse(fecha_ingr);
+            fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
+            fecha_cambio = formatoFecha.parse(fecha_cam);
+            fecha_cambioSQL = new java.sql.Date(fecha_cambio.getTime());
+            fecha_seleccion = formatoFecha.parse(fecha_sel);
+            fecha_seleccionSQL = new java.sql.Date(fecha_seleccion.getTime());
             coneja.setFecha_nacimiento(fecha_nacimientoSQL);
             coneja.setFecha_retiro(fecha_retiroSQL);
+            coneja.setFecha_ingreso(fecha_ingresoSQL);
+            coneja.setFecha_cambio(fecha_cambioSQL);
+            coneja.setFecha_seleccion(fecha_seleccionSQL);
         }
         catch (ParseException ex) {
             Logger.getLogger(ControladorDestetes.class.getName()).log(Level.SEVERE, null, ex);
