@@ -1,4 +1,4 @@
-﻿ CREATE TABLE bioterio.gruposhembras(
+CREATE TABLE bioterio.gruposhembras(
 	id_grupo serial NOT NULL,
 	identificador character varying(20) NOT NULL,
 	cantidad_espacios integer NOT NULL
