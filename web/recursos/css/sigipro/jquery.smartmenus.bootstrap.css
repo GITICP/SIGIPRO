@@ -6,94 +6,94 @@
 */
 /* sub menus arrows */
 .navbar-nav .sub-arrow, .navbar-nav .collapsible .sub-arrow {
-	position:static;
-	margin-top:0;
-	margin-right:0;
-	margin-left:6px;
-	display:inline-block;
-	width:0;
-	height:0;
-	overflow:hidden;
-	vertical-align:middle;
-	border-top:4px solid;
-	border-right:4px dashed transparent;
-	border-bottom:4px dashed transparent;
-	border-left:4px dashed transparent;
+    position:static;
+    margin-top:0;
+    margin-right:0;
+    margin-left:6px;
+    display:inline-block;
+    width:0;
+    height:0;
+    overflow:hidden;
+    vertical-align:middle;
+    border-top:4px solid;
+    border-right:4px dashed transparent;
+    border-bottom:4px dashed transparent;
+    border-left:4px dashed transparent;
 }
 .navbar-fixed-bottom .sub-arrow {
-	margin-top:-5px;
-	border-top:4px dashed transparent;
-	border-bottom:4px solid;
+    margin-top:-5px;
+    border-top:4px dashed transparent;
+    border-bottom:4px solid;
 }
 .navbar-nav ul .sub-arrow {
-	position:absolute;
-	right:0;
-	margin-top:6px;
-	margin-right:15px;
-	border-top:4px dashed transparent;
-	border-bottom:4px dashed transparent;
-	border-left:4px solid;
+    position:absolute;
+    right:0;
+    margin-top:6px;
+    margin-right:15px;
+    border-top:4px dashed transparent;
+    border-bottom:4px dashed transparent;
+    border-left:4px solid;
 }
 .navbar-nav ul a.has-submenu {
-	padding-right:30px;
+    padding-right:30px;
 }
 /* scrolling arrows for tall menus */
 .navbar-nav span.scroll-up, .navbar-nav span.scroll-down {
-	position:absolute;
-	display:none;
-	visibility:hidden;
-	height:20px;
-	overflow:hidden;
-	text-align:center;
+    position:absolute;
+    display:none;
+    visibility:hidden;
+    height:20px;
+    overflow:hidden;
+    text-align:center;
 }
 .navbar-nav span.scroll-up-arrow, .navbar-nav span.scroll-down-arrow {
-	position:absolute;
-	top:-2px;
-	left:50%;
-	margin-left:-8px;
-	width:0;
-	height:0;
-	overflow:hidden;
-	border-top:7px dashed transparent;
-	border-right:7px dashed transparent;
-	border-bottom:7px solid;
-	border-left:7px dashed transparent;
+    position:absolute;
+    top:-2px;
+    left:50%;
+    margin-left:-8px;
+    width:0;
+    height:0;
+    overflow:hidden;
+    border-top:7px dashed transparent;
+    border-right:7px dashed transparent;
+    border-bottom:7px solid;
+    border-left:7px dashed transparent;
 }
 .navbar-nav span.scroll-down-arrow {
-	top:6px;
-	border-top:7px solid;
-	border-right:7px dashed transparent;
-	border-bottom:7px dashed transparent;
-	border-left:7px dashed transparent;
+    top:6px;
+    border-top:7px solid;
+    border-right:7px dashed transparent;
+    border-bottom:7px dashed transparent;
+    border-left:7px dashed transparent;
 }
 /* add more indentation for 2+ level sub in collapsible mode - Bootstrap normally supports just 1 level sub menus */
 .navbar-nav .collapsible ul .dropdown-menu > li > a,
 .navbar-nav .collapsible ul .dropdown-menu .dropdown-header {
-	padding-left:35px;
+    padding-left:35px;
 }
 .navbar-nav .collapsible ul ul .dropdown-menu > li > a,
 .navbar-nav .collapsible ul ul .dropdown-menu .dropdown-header {
-	padding-left:45px;
+    padding-left:45px;
 }
 .navbar-nav .collapsible ul ul ul .dropdown-menu > li > a,
 .navbar-nav .collapsible ul ul ul .dropdown-menu .dropdown-header {
-	padding-left:55px;
+    padding-left:55px;
 }
 .navbar-nav .collapsible ul ul ul ul .dropdown-menu > li > a,
 .navbar-nav .collapsible ul ul ul ul .dropdown-menu .dropdown-header {
-	padding-left:65px;
+    padding-left:65px;
 }
 /* fix SmartMenus sub menus auto width (subMenusMinWidth and subMenusMaxWidth options) */
 .navbar-nav .dropdown-menu > li > a {
-	white-space:normal;
+    white-space:normal;
 }
 .navbar-nav ul.sm-nowrap > li > a {
-	white-space:nowrap;
+    white-space:nowrap;
 }
 /* fix .navbar-right subs alignment */
 .navbar-right ul.dropdown-menu {
-	left:0;
-	right:auto;
+    left:0;
+    right:auto;
 }
 /* The following will make the sub menus collapsible for small screen devices (it's not recommended editing these) */
 .navbar-nav .collapsible ul {display:none;position:static !important;top:auto !important;left:auto !important;margin-left:0 !important;margin-top:0 !important;width:auto !important;min-width:0 !important;max-width:none !important;}
@@ -109,23 +109,30 @@
 }
 
 .navbar-default .navbar-nav>li>a {
-  color: #E7E7E7;
+    color: #E7E7E7;
 }
 
 .navbar-default .navbar-nav>li>a:hover {
-  color: #E7E7E7;
+    color: #E7E7E7;
 }
 
 .navbar-default {
-  border-color: #e7e7e7;
-  background-color: #3C730D;
+    border-color: #E7E7E7;
+    background-color: #3C730D;
 }
 
 .navbar-default .navbar-brand {
-  color: #E7E7E7;
+    color: #E7E7E7;
 }
 
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+.navbar-default .navbar-brand:hover {
+    color: #E7E7E7;
+    background-color: #1E4B22;
+}
+
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:hover,
+.navbar-default .navbar-nav>.open>a:focus {
     color: #E7E7E7;
     background-color: #1E4B22;
 }
@@ -147,4 +154,22 @@
 .dropdown-menu > li > a:hover{
     color: #E7E7E7;
     background-color: #1E4B22;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #E7E7E7;
+}
+
+.navbar-default .navbar-toggle:hover {
+    background-color: #1E4B22;
+}
+
+.navbar-default .navbar-toggle .icon-bar:hover {
+    background-color: #E7E7E7;
+}
+
+@media (max-width: 767px){
+    .navbar-default .navbar-nav .open .dropdown-menu>li>a {
+        color: #E7E7E7;
+    }
 }
