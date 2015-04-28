@@ -305,14 +305,16 @@ public class ControladorSangria extends SIGIPROServlet
 
         String[] ids_caballos = request.getParameterValues("caballos");
 
-        for (String id_caballo : ids_caballos) {
-            SangriaCaballo sangria_caballo = new SangriaCaballo();
+        if (ids_caballos != null) {
+            for (String id_caballo : ids_caballos) {
+                SangriaCaballo sangria_caballo = new SangriaCaballo();
 
-            Caballo c = new Caballo();
-            c.setId_caballo(Integer.parseInt(id_caballo));
-            sangria_caballo.setCaballo(c);
+                Caballo c = new Caballo();
+                c.setId_caballo(Integer.parseInt(id_caballo));
+                sangria_caballo.setCaballo(c);
 
-            sangria.agregarSangriaCaballo(sangria_caballo);
+                sangria.agregarSangriaCaballo(sangria_caballo);
+            }
         }
 
         return sangria;

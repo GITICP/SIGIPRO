@@ -51,7 +51,7 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Numero de Microchip</th>
+                    <th>Número de Microchip</th>
                     <th>Nombre</th>
                     <th>Grupo de Caballos</th>
                     <th>Sexo</th>

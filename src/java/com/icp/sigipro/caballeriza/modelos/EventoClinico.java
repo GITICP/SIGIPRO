@@ -5,11 +5,12 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
-import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -22,6 +23,7 @@ public class EventoClinico {
     private String descripcion;
     private String responsable;
     private TipoEvento tipo_evento;
+    private List<Caballo> caballos;
 
     public EventoClinico() {
     }
@@ -34,8 +36,6 @@ public class EventoClinico {
         this.tipo_evento = tipo_evento;
     }
 
-  
-
     public int getId_evento() {
         return id_evento;
     }
@@ -47,9 +47,11 @@ public class EventoClinico {
     public Date getFecha() {
         return fecha;
     }
+    
     public String getFechaAsString() {
         return formatearFecha(fecha);
     }
+    
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
@@ -70,8 +72,6 @@ public class EventoClinico {
         this.responsable = responsable;
     }
 
-
-
     public TipoEvento getTipo_evento() {
         return tipo_evento;
     }
@@ -80,8 +80,33 @@ public class EventoClinico {
         this.tipo_evento = tipo_evento;
     }
 
+    public List<Caballo> getCaballos()
+    {
+        return caballos;
+    }
 
+    public void setCaballos(List<Caballo> caballos)
+    {
+        this.caballos = caballos;
+    }
     
+    public void agregarCaballo(Caballo c) {
+        if(caballos == null) caballos = new ArrayList<Caballo>();
+        caballos.add(c);
+    }
+    
+    public boolean valididarCaballoEnEvento(Caballo c){
+        boolean resultado = false;
+        if (caballos != null) {
+            for(Caballo caballo : caballos){
+                if (caballo.getId_caballo() == c.getId_caballo()){
+                    resultado = true;
+                    break;
+                }
+            }
+        }
+        return resultado;
+    }
 
 //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
