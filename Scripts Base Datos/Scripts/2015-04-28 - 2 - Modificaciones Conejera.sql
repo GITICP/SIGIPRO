@@ -15,3 +15,5 @@ ALTER TABLE bioterio.machos ADD  id_madre character varying(50) NOT NULL;
 	cantidad integer NOT NULL,
 	detalle_procedencia character varying(250) NOT NULL
 );
+
+UPDATE seguridad.entradas_menu_principal SET redirect = '/Conejera/Gruposhembras', tag = 'Grupos Hembras' WHERE id_menu_principal = 251;
