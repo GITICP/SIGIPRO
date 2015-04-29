@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Boga
  */
-public class BarraFuncionalidad
+public class BarraFuncionalidad implements java.io.Serializable
 {
     
     List<Modulo> modulos = new ArrayList<Modulo>();

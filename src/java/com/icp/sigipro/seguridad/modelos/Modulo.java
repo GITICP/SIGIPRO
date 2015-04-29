@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Boga
  */
-public class Modulo
+public class Modulo implements java.io.Serializable
 {
 
     private int id_modulo;

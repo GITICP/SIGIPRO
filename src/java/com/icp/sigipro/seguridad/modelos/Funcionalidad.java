@@ -9,7 +9,7 @@ package com.icp.sigipro.seguridad.modelos;
  *
  * @author Boga
  */
-public class Funcionalidad
+public class Funcionalidad implements java.io.Serializable
 {
     private int id_funcionalidad;
     private int id_padre;
