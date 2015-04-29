@@ -44,10 +44,17 @@ public class SubBodegaDAO extends DAO<SubBodega>
         boolean resultado = false;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT 1 FROM " + tabla + " WHERE id_usuario = ? and id_sub_bodega = ?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT 1 " +
+                    " FROM bodega.sub_bodegas " +
+                    " WHERE (id_usuario = ? and id_sub_bodega = ?) " +
+                    "	or  exists " +
+                    "      (select 1 from " + tabla + " WHERE id_usuario = ? and id_sub_bodega = ?); ");
 
             consulta.setInt(1, id_usuario);
+            consulta.setInt(3, id_usuario);
             consulta.setInt(2, id_sub_bodega);
+            consulta.setInt(4, id_sub_bodega);
 
             ResultSet resultado_consulta = consulta.executeQuery();
 
