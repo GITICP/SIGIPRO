@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.seguridad.modelos;
 
-import com.icp.sigipro.core.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,35 +15,40 @@ import java.util.List;
 public class BarraFuncionalidad
 {
     
-    String Modulo = null;
-    List<String[]> Funcionalidades = new ArrayList<String[]>();
+    List<Modulo> modulos = new ArrayList<Modulo>();
     
-    @SuppressWarnings("Convert2Diamond")
-    public BarraFuncionalidad(String modulo)
-    {
-        Modulo = modulo;
-    }
-    public BarraFuncionalidad() 
-    {      }
-    
-    public void agregarModulo(String modulo)
-    {
-        Modulo = modulo;
-    }
-    
-    public void agregarFuncionalidad(String[] funcionalidad)
-    {
-        Funcionalidades.add(funcionalidad);
-    }
-    
-    public List<String[]> getFuncionalidades()
-    {
-        return Funcionalidades;
-    }
-    
-    public String getModulo()
-    {
-        return Modulo;
-    }
+    public BarraFuncionalidad(){}
 
+    public List<Modulo> getModulos()
+    {
+        return modulos;
+    }
+    
+    public void agregarModulo(Modulo modulo) {
+        modulos.add(modulo);
+    }
+    
+    public void eliminarModulosVacios() {
+        List<Modulo> arreglo = new ArrayList<Modulo>();
+        for (Modulo m : modulos) {
+            if ((m.getFuncionalidades().size() + m.getSub_modulos().size()) != 0) arreglo.add(m);
+        }
+        modulos = arreglo;
+    }
+    
+    public void agregarSubModulo(Modulo nuevo_modulo) {
+        for (Modulo modulo : modulos) {
+            if (modulo.agregarSubModulo(nuevo_modulo)) {
+                break;
+            }
+        }
+    }
+    
+    public void agregarFuncionalidad(Funcionalidad funcionalidad) {        
+        for (Modulo modulo : modulos) {
+            if (modulo.agregarFuncionalidad(funcionalidad)) {
+                break;
+            }
+        }
+    }
 }
