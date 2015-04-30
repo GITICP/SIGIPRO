@@ -60,12 +60,12 @@
                                   <c:if test="${contienePermisoRegistrar}">
                                   <c:choose>
                                     <c:when test="${!extraccion.isIsRegistro()}">
-                                        <a class="btn btn-warning btn-sm boton-accion registrar-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarExtraccion">2- Registrar Extracción</a>
+                                        <a class="btn btn-warning btn-sm boton-accion registrar-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarExtraccion">2- Registrar Vol. Extraído</a>
                                      </c:when>
                                      <c:otherwise>
                                          <c:choose>
                                              <c:when test="${!extraccion.isIsCentrifugado()}">
-                                                    <a class="btn btn-warning btn-sm boton-accion centrifugado-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarCentrifugado">3- Registrar Centrifugado</a>
+                                                    <a class="btn btn-warning btn-sm boton-accion centrifugado-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarCentrifugado">3- Registrar Vol. Recuperado</a>
                                              </c:when>
                                              <c:otherwise>
                                                 <c:choose>
@@ -149,54 +149,46 @@
                 </div>
               </div>
               <div class="row">
-              <c:if test="${extraccion.getVolumen_extraido() != 0.0}" >
-                  <div class="col-md-4">
+              <c:if test="${extraccion.isIsRegistro() || extraccion.isIsCentrifugado()}" >
+                  <div class="col-md-6">
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-flask"></i> Registro</h3>
+                    <h3><i class="fa fa-flask"></i> Volúmenes</h3>
                   </div>
                   <div class="widget-content">
                     <table>
+                        <c:if test="${extraccion.isIsRegistro()}">
                       <tr><td> <strong>Volumen Extraído (mL):</strong></td> <td>${extraccion.getVolumen_extraido()} </td></tr>
                       <tr><td> <strong>Usuario de Registro:</strong> <td>${extraccion.getUsuario_registro().getNombreCompleto()} </td></tr>
                       <tr><td> <strong>Fecha Volumen extraído:</strong> <td>${extraccion.getFecha_registroAsString()} </td></tr>
+                    </c:if>
+                      <tr><td></td></tr>
+                      <c:if test="${extraccion.isIsCentrifugado()}">
+                        <tr><td> <strong>Volumen Recuperado (mL):</strong></td> <td>${extraccion.getCentrifugado().getVolumen_recuperado()} </td></tr>
+                        <tr><td> <strong>Usuario de Centrifugado:</strong> <td>${extraccion.getCentrifugado().getUsuario().getNombreCompleto()} </td></tr>
+                        <tr><td> <strong>Fecha Volumen Recuperado:</strong> <td>${extraccion.getCentrifugado().getFecha_volumen_recuperadoAsString()} </td></tr>
+                      </c:if>
                     </table>
                   </div>
                 </div>
                     </div>
               </c:if>
-              
-              <c:if test="${centrifugado.getVolumen_recuperado() != 0.0}" >
-                  <div class="col-md-4">
-                <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-flask"></i> Centrifugado</h3>
-                  </div>
-                  <div class="widget-content">
-                    <table>
-                      <tr><td> <strong>Volumen Recuperado (mL):</strong></td> <td>${centrifugado.getVolumen_recuperado()} </td></tr>
-                      <tr><td> <strong>Usuario de Centrifugado:</strong> <td>${centrifugado.getUsuario().getNombreCompleto()} </td></tr>
-                      <tr><td> <strong>Fecha Volumen Recuperado:</strong> <td>${centrifugado.getFecha_volumen_recuperadoAsString()} </td></tr>
-                    </table>
-                  </div>
-                </div>
-                    </div>
-              </c:if>
-              
-              <c:if test="${liofilizacion.getFecha_inicio() != null}" >
-                  <div class="col-md-4">
+
+              <c:if test="${extraccion.isIsLiofilizacionInicio()}" >
+                  <div class="col-md-6">
                 <div class="widget widget-table">
                   <div class="widget-header">
                     <h3><i class="fa fa-flask"></i> Liofilización</h3>
                   </div>
                   <div class="widget-content">
                     <table>
-                      <tr><td> <strong>Usuario de Inicio:</strong></td> <td>${liofilizacion.getUsuario_inicio().getNombreCompleto()} </td></tr>
-                      <tr><td> <strong>Fecha de Inicio:</strong> <td>${liofilizacion.getFecha_inicioAsString()} </td></tr>
-              <c:if test="${liofilizacion.getFecha_fin() != null}" >
-                      <tr><td> <strong>Peso recuperado (mg):</strong> <td>${liofilizacion.getPeso_recuperado()} </td></tr>
-                      <tr><td> <strong>Usuario de Fin:</strong></td> <td>${liofilizacion.getUsuario_fin().getNombreCompleto()} </td></tr>
-                      <tr><td> <strong>Fecha de Fin:</strong> <td>${liofilizacion.getFecha_finAsString()} </td></tr>
+                      <tr><td> <strong>Usuario de Inicio:</strong></td> <td>${extraccion.getLiofilizacion().getUsuario_inicio().getNombreCompleto()} </td></tr>
+                      <tr><td> <strong>Fecha de Inicio:</strong> <td>${extraccion.getLiofilizacion().getFecha_inicioAsString()} </td></tr>
+              <c:if test="${extraccion.isIsLiofilizacionFin()}" >
+                      <tr><td> <strong>Usuario de Fin:</strong></td> <td>${extraccion.getLiofilizacion().getUsuario_fin().getNombreCompleto()} </td></tr>
+                      <tr><td> <strong>Fecha de Fin:</strong> <td>${extraccion.getLiofilizacion().getFecha_finAsString()} </td></tr>
+                      <tr><td> <strong>Peso recuperado (G):</strong> <td>${extraccion.getLiofilizacion().getPeso_recuperado()} </td></tr>
+
                </c:if>       
                     </table>
                   </div>
@@ -216,119 +208,4 @@
 
   </t:plantilla_general>
 
-<t:modal idModal="modalRegistrarExtraccion" titulo="Registrar Extraccion">
-    <jsp:attribute name="form">
-        <div class="widget-content" id="class-registrar">
-            <form class="form-horizontal" id="registrarExtraccion" autocomplete="off" method="post" action="Extraccion">
-                <input hidden="true" name="accion" value="Registrar">
-                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
-                <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="observaciones" class="control-label">*Volumen Extraído (mL)</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                        <BR>
-                      <input name="volumen_extraido" id="volumen_extraido" type="number" step="any" placeholder="Número de mL extraídos" class="form-control" value="" required
-                             oninput="setCustomValidity(\'\')" 
-                             oninvalid="setCustomValidity(\'Ingrese solo números\')">
-                    </div>
-                  </div>
-                </div>
-            
-        
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Extracción</button>            </div>
-        </div>
-        </form>
-        </div>
-
-    </jsp:attribute>
-
-</t:modal>
-      
-<t:modal idModal="modalRegistrarCentrifugado" titulo="Registrar Centrifugado">
-    <jsp:attribute name="form">
-        <div class="widget-content" id="class-centrifugado">
-            <form class="form-horizontal" id="registrarCentrifugado" autocomplete="off" method="post" action="Extraccion">
-                <input hidden="true" name="accion" value="Centrifugado">
-                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
-                <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="observaciones" class="control-label">*Volumen Recuperado (mL)</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                        <BR>
-                      <input name="volumen_recuperado" id="volumen_recuperado" type="number" max="${extraccion.getVolumen_extraido()}" step="any" placeholder="Número de mL recuperados" class="form-control" value="" required
-                             oninput="setCustomValidity(\'\')" 
-                             oninvalid="setCustomValidity(\'Ingrese solo números\')">
-                    </div>
-                  </div>
-                </div>
-            
-        
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Centrifugado</button>            </div>
-        </div>
-        </form>
-        </div>
-
-    </jsp:attribute>
-
-</t:modal>
-      
-<t:modal idModal="modalRegistrarLiofilizacionInicio" titulo="Registrar Inicio de Liofilización">
-    <jsp:attribute name="form">
-        <div class="widget-content" id="class-liofilizacion-inicio">
-            <form class="form-horizontal" id="registrarLiofilizacionInicio" autocomplete="off" method="post" action="Extraccion">
-                <input hidden="true" name="accion" value="Liofilizacioninicio">
-                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
-                <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="label" class="control-label">¿Está seguro que desea registrar el inicio de la Liofilización?</label>
-        
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Iniciar Liofilización</button>            </div>
-        </div>
-        </form>
-        </div>
-
-    </jsp:attribute>
-
-</t:modal>
-      
-      <t:modal idModal="modalRegistrarLiofilizacionFin" titulo="Registrar Fin de Liofilización">
-    <jsp:attribute name="form">
-        <div class="widget-content" id="class-liofilizacion-fin">
-            <form class="form-horizontal" id="registrarLiofilizacionFin" autocomplete="off" method="post" action="Extraccion">
-                <input hidden="true" name="accion" value="Liofilizacionfin">
-                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
-                <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="peso_recuperado" class="control-label">*Peso recuperado (mg)</label>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <div class="input-group">
-                        <BR>
-                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" placeholder="Número de mg recuperados" class="form-control" value="" required
-                             oninput="setCustomValidity(\'\')" 
-                             oninvalid="setCustomValidity(\'Ingrese solo números\')">
-                    </div>
-                  </div>
-                </div>
-            
-        
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Finalizar Liofilización</button>            </div>
-        </div>
-        </form>
-        </div>
-
-    </jsp:attribute>
-
-</t:modal>
+<jsp:include page="Modales.jsp" />

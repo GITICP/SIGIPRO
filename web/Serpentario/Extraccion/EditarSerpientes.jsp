@@ -102,7 +102,7 @@
                   <div class="form-group">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarSerpientes()"><i class="fa fa-check-circle"></i> Actualizar Serpientes</button>
+                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarSerpientes()"><i class="fa fa-check-circle"></i> Guardar Serpientes</button>
                     </div>
                   </div>
 

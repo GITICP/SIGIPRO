@@ -25,20 +25,20 @@
                           <c:when test="${veneno.isRestriccion()}">
                                 <c:choose>
                                     <c:when test="${veneno.getEspecie().getId_especie() == solicitud.getEspecie().getId_especie()}">
-                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} gramos) (Restricción - ${veneno.getCantidad_maxima()} gramos) </option>
+                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos) </option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} gramos) (Restricción - ${veneno.getCantidad_maxima()} gramos)  </option>
+                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos)  </option>
                                     </c:otherwise>
                                 </c:choose> 
                           </c:when>
                           <c:otherwise>
                               <c:choose>
                                     <c:when test="${veneno.getEspecie().getId_especie() == solicitud.getEspecie().getId_especie()}">
-                                        <option data-stock="${veneno.getCantidad()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} gramos) </option>
+                                        <option data-stock="${veneno.getCantidad()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos) </option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option data-stock="${veneno.getCantidad()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} gramos)  </option>
+                                        <option data-stock="${veneno.getCantidad()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos)  </option>
                                     </c:otherwise>
                                 </c:choose> 
                           </c:otherwise>
@@ -58,9 +58,8 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-            <input id="cantidad" placeholder="Número mayor a 1" type="number" step="any" min="1" class="form-control" name="cantidad" value="${solicitud.getCantidad()}"required 
-                  oninvalid="setCustomValidity('No hay suficientes existencias para realizar la solicitud. ')"
-                  oninput="setCustomValidity('')"> 
+            <input id="cantidad" placeholder="Número mayor a 0" type="number" step="any" min="0" class="form-control" name="cantidad" value="${solicitud.getCantidad()}" required 
+                  oninput="validarSolicitud()"> 
         </div>
       </div>
     </div>

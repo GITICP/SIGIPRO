@@ -28,6 +28,9 @@ public class Extraccion {
     private Date fecha_registro;
     private Lote lote;
     
+    private Centrifugado centrifugado;
+    private Liofilizacion liofilizacion;
+    
     private boolean isSerpiente;
     private boolean isRegistro;
     private boolean isCentrifugado;
@@ -35,6 +38,11 @@ public class Extraccion {
     private boolean isLiofilizacionFin;
 
     public Extraccion() {
+        isSerpiente=false;
+        isRegistro=false;
+        isCentrifugado=false;
+        isLiofilizacionInicio=false;
+        isLiofilizacionFin=false;
     }
 
     public Extraccion(int id_extraccion, String numero_extraccion, Especie especie, boolean ingreso_cv, Date fecha_extraccion, float volumen_extraido, Usuario usuario_registro, Date fecha_registro, Lote lote) {
@@ -49,7 +57,26 @@ public class Extraccion {
         this.lote = lote;
     }
 
-        public boolean isIsSerpiente() {
+    public Centrifugado getCentrifugado() {
+        return centrifugado;
+    }
+
+    public void setCentrifugado(Centrifugado centrifugado) {
+        this.centrifugado = centrifugado;
+    }
+
+    public Liofilizacion getLiofilizacion() {
+        return liofilizacion;
+    }
+
+    public void setLiofilizacion(Liofilizacion liofilizacion) {
+        this.liofilizacion = liofilizacion;
+    }
+
+    
+    
+    
+    public boolean isIsSerpiente() {
         return isSerpiente;
     }
 

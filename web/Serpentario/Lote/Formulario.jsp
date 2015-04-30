@@ -13,7 +13,7 @@
     <div class="col-md-6">
       <input hidden="true" name="id_lote" value="${lote.getId_lote()}">
       <input hidden="true" name="accion" value="${accion}">
-      <label for="lote" class="control-label"> Número de Lote</label>
+      <label for="lote" class="control-label"> *Identificación del Lote</label>
       <c:choose>
           <c:when test="${lote.getId_lote()!=0}">
                 <div class="form-group">

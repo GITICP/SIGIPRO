@@ -209,7 +209,8 @@ public class SolicitudDAO {
   {
         List<Solicitud> solicitudes = new ArrayList<Solicitud>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM serpentario.solicitudes; ");
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT solicitud.id_solicitud, solicitud.fecha_solicitud, solicitud.id_especie, solicitud.cantidad, solicitud.id_usuario, solicitud.estado, entrega.fecha_entrega, entrega.cantidad_entregada "
+                    + "FROM serpentario.solicitudes AS solicitud LEFT OUTER JOIN serpentario.entregas_solicitud as entrega ON solicitud.id_solicitud=entrega.id_solicitud; ");
             ResultSet rs = consulta.executeQuery();
             EspecieDAO especiedao=new EspecieDAO();
             UsuarioDAO usuariodao = new UsuarioDAO();
@@ -221,7 +222,12 @@ public class SolicitudDAO {
                 solicitud.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
                 solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 solicitud.setEstado(rs.getString("estado"));
-                solicitud.setProyecto(rs.getString("proyecto"));
+                
+                EntregasSolicitud entrega = new EntregasSolicitud();
+                entrega.setCantidad_entregada(rs.getFloat("cantidad_entregada"));
+                entrega.setFecha_entrega(rs.getDate("fecha_entrega"));
+                
+                solicitud.setEntrega(entrega);
                 
                 solicitudes.add(solicitud);
             }

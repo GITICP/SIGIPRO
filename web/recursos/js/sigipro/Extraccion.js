@@ -86,7 +86,6 @@ function confirmacionAgregarSerpientes() {
 
 $(document).on("click", ".registrar-Modal", function () {                            
                             var numero_extraccion = $(this).data('id');
-                            console.log(numero_extraccion);
                             var arr = numero_extraccion.split("/-/");
                             $('#class-registrar #numero_extraccion').text("Extraccion - "+arr[1]);
                             $("#class-registrar #id_extraccion").val(arr[0]); 

@@ -26,6 +26,8 @@ public class Solicitud {
     private String estado;
     private String observaciones;
 
+    private EntregasSolicitud entrega;
+    
     public Solicitud() {
     }
 
@@ -37,6 +39,14 @@ public class Solicitud {
         this.usuario = usuario;
         this.proyecto = proyecto;
         this.estado = estado;
+    }
+
+    public EntregasSolicitud getEntrega() {
+        return entrega;
+    }
+
+    public void setEntrega(EntregasSolicitud entrega) {
+        this.entrega = entrega;
     }
 
     public int getId_solicitud() {

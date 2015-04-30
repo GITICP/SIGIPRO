@@ -23,7 +23,7 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Veneno?">Venenos de Serpiente</a>
+              <a href="/SIGIPRO/Serpentario/Veneno?">Catálogo de Venenos</a>
             </li>
             <li class="active">Veneno de ${veneno.getEspecie().getGenero_especie()}</li>
 

@@ -64,7 +64,7 @@
                                                 onchange="setCustomValidity('')">
                                             <option value=''></option>
                                             <c:forEach items="${lotes}" var="lote">
-                                                <option value=${lote.getId_lote()}>Lote ${lote.getNumero_lote()} (Cantidad - ${lote.getCantidad_actual()} Miligramos)</option>
+                                                <option value=${lote.getId_lote()}>Lote ${lote.getNumero_lote()} (Cantidad - ${lote.getCantidad_actualAsMiligramos()} Miligramos)</option>
                                             </c:forEach>
                                     </select>
                                     <div><br></div>
@@ -130,25 +130,25 @@
             <h4> Información sobre la solicitud </h4>
             <div class="form-group">
               <div class="col-sm-12">
-                <label for="num-sol" class='form-control'> Número de Solicitud </label>  
-                <input type="text" id="num-sol"  name="num-sol" disabled>
+                <label for="num-sol"> Número de Solicitud </label>  
+                <input type="text"  class='form-control' id="num-sol"  name="num-sol" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="usr-sol" class='form-control'> Usuario Solicitante </label>
-                <input type="text" id="usr-sol"  name="usr-sol" disabled>
+                <label for="usr-sol"> Usuario Solicitante </label>
+                <input type="text"  class='form-control' id="usr-sol"  name="usr-sol" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="prd" class='form-control'> Especie  </label>
-                <input type="text" id="esp"  name="esp" disabled>
+                <label for="prd"> Especie  </label>
+                <input type="text"  class='form-control' id="esp"  name="esp" disabled>
               </div>
               <div class="col-sm-12">
-                <label for="cnt" class='form-control'> Cantidad Solicitada (mg) </label>
-                <input type="text" id="cnt"  name="cnt" disabled>
+                <label for="cnt"> Cantidad Solicitada (mg) </label>
+                <input type="text"  class='form-control' id="cnt"  name="cnt" disabled>
               </div>
                 
               <div class="col-sm-12">
-                <label for="cnt" class='form-control'> Cantidad a Entregar (mg) </label>
-                <input type="text" id="cntEnt"  name="cnt" disabled>
+                <label for="cnt"> Cantidad a Entregar (mg) </label>
+                <input type="text"  class='form-control' id="cntEnt"  name="cnt" disabled>
               </div>
             </div>
             <hr>

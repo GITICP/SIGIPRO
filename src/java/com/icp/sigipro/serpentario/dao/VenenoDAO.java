@@ -111,7 +111,6 @@ public class VenenoDAO {
                 veneno.setCantidad_maxima(rs.getFloat("cantidad_maxima"));
                 veneno.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 veneno.setRestriccion(rs.getBoolean("restriccion"));
-                System.out.println(obtenerCantidad(veneno));
                 veneno.setCantidad(obtenerCantidad(veneno));
                 resultado.add(veneno);
             }
@@ -136,10 +135,10 @@ public class VenenoDAO {
                     + "GROUP BY extraccion.id_especie;");
             consulta.setInt(1, v.getEspecie().getId_especie());
             ResultSet rs = consulta.executeQuery();
-            float cantidad_solicitada = this.obtenerCantidadSolicitada(v.getEspecie().getId_especie());
+            float cantidad_entregada = this.obtenerCantidadEntregada(v.getEspecie().getId_especie());
             while (rs.next()){
-                float cantidad_actual = rs.getFloat("cantidad");
-                respuesta = cantidad_actual - cantidad_solicitada;
+                float cantidad_original = rs.getFloat("cantidad");
+                respuesta = (float) (cantidad_original - (cantidad_entregada*0.001));
             }
         }catch (Exception ex){
                     
@@ -147,10 +146,10 @@ public class VenenoDAO {
         return respuesta;
     }
     
-    public float obtenerCantidadSolicitada(int id_especie){
+    public float obtenerCantidadEntregada(int id_especie){
          float resultado = 0;
          try{
-             PreparedStatement consulta = getConexion().prepareStatement("SELECT lote.id_especie, sum(entrega.cantidad) as cantidad_actual " +
+             PreparedStatement consulta = getConexion().prepareStatement("SELECT lote.id_especie, sum(entrega.cantidad) as cantidad_entregada " +
                                     "FROM serpentario.lote as lote LEFT OUTER JOIN serpentario.lotes_entregas_solicitud as entrega ON lote.id_lote = entrega.id_lote " +
                                     "WHERE lote.id_especie=? " +
                                     "GROUP BY lote.id_especie");
@@ -158,7 +157,7 @@ public class VenenoDAO {
              consulta.setInt(1, id_especie);
              ResultSet resultadoConsulta = consulta.executeQuery();
              if (resultadoConsulta.next()){
-                 resultado = resultadoConsulta.getFloat("cantidad_actual");
+                 resultado = resultadoConsulta.getFloat("cantidad_entregada");
              }
             resultadoConsulta.close();
             consulta.close();

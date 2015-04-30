@@ -100,15 +100,11 @@ public class ControladorExtraccion extends SIGIPROServlet {
             Extraccion e = dao.obtenerExtraccion(id_extraccion);
             List<Serpiente> serpientesextraccion = dao.obtenerSerpientesExtraccion(id_extraccion);
             List<Usuario> usuariosextraccion = dao.obtenerUsuariosExtraccion(id_extraccion);
-            Centrifugado centrifugado = dao.obtenerCentrifugado(id_extraccion);
-            Liofilizacion liofilizacion = dao.obtenerLiofilizacion(id_extraccion);
             request.setAttribute("extraccion", e);
             request.setAttribute("listaSerpientes", serpientesextraccion);
             request.setAttribute("listaUsuarios", usuariosextraccion);
             request.setAttribute("ejemplares",serpientesextraccion.size());
-            request.setAttribute("centrifugado", centrifugado);
-            request.setAttribute("liofilizacion", liofilizacion);
-
+            
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -202,25 +198,27 @@ public class ControladorExtraccion extends SIGIPROServlet {
                 
         List<SerpientesExtraccion> serpientesextraccion = dao.parsearSerpientesExtraccion(serpientes, id_extraccion);
         Extraccion extraccion = dao.obtenerExtraccion(id_extraccion);
-        resultado = dao.insertarSerpientesExtraccion(serpientesextraccion);
         
-        //Funcion que genera la bitacora
-        for (SerpientesExtraccion i:serpientesextraccion){
-            Evento evento = new Evento();
-            evento.setEvento("Extraccion");
-            evento.setExtraccion(extraccion);
-            evento.setSerpiente(i.getSerpiente());
-            evento.setFecha_evento(extraccion.getFecha_extraccion());
-            Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
-            evento.setUsuario(usuario_evento);
-            eventodao.insertarExtraccion(evento);
-            bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTESEXTRACCION,request.getRemoteAddr());
-        }
-        
-        this.actualizarSerpientes(request, serpientesextraccion);
-        if (resultado){
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpientes agregadas correctamente"));
-            redireccion = "Extraccion/index.jsp";
+        if (!extraccion.isIsSerpiente()){
+            resultado = dao.insertarSerpientesExtraccion(serpientesextraccion);
+            //Funcion que genera la bitacora
+            for (SerpientesExtraccion i:serpientesextraccion){
+                Evento evento = new Evento();
+                evento.setEvento("Extraccion");
+                evento.setExtraccion(extraccion);
+                evento.setSerpiente(i.getSerpiente());
+                evento.setId_categoria(13);
+                evento.setFecha_evento(extraccion.getFecha_extraccion());
+                Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+                evento.setUsuario(usuario_evento);
+                eventodao.insertarExtraccion(evento);
+                bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTESEXTRACCION,request.getRemoteAddr());
+            }
+            this.actualizarSerpientes(request, serpientesextraccion);
+            if (resultado){
+                request.setAttribute("mensaje", helper.mensajeDeExito("Serpientes agregadas correctamente"));
+                redireccion = "Extraccion/index.jsp";
+            }
         }
         List<Extraccion> extracciones = dao.obtenerExtracciones();
         request.setAttribute("listaExtracciones", extracciones);
@@ -403,7 +401,9 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         e.setNumero_extraccion(request.getParameter("numero_extraccion"));
         
-        if (request.getParameter("ingreso_cv") != null){
+        String coleccionviva = request.getParameter("ingreso_cv");
+        
+        if (coleccionviva.equals("1")){
             e.setIngreso_cv(true);
         }else{
             e.setIngreso_cv(false);

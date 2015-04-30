@@ -190,7 +190,7 @@ public class LoteDAO {
                     float cantidad_original = rs.getFloat("cantidad_original");
                     lote.setCantidad_original(cantidad_original);
                     float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
-                    float cantidad_actual = cantidad_original - cantidad_entregada;
+                    float cantidad_actual = (float) (cantidad_original - (cantidad_entregada*0.001));
                     lote.setCantidad_actual(cantidad_actual);
                 }catch (Exception e){
                     lote.setCantidad_original(0);
@@ -227,7 +227,7 @@ public class LoteDAO {
                 float cantidad_original = rs.getFloat("cantidad_original");
                 lote.setCantidad_original(cantidad_original);
                 float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
-                float cantidad_actual = cantidad_original - cantidad_entregada;
+                float cantidad_actual =(float) (cantidad_original - (cantidad_entregada*0.001));
                 if (cantidad_actual != 0.0){
                     lote.setCantidad_actual(cantidad_actual);
                     resultado.add(lote);
@@ -264,7 +264,7 @@ public class LoteDAO {
                     float cantidad_original = rs.getFloat("cantidad_original");
                     lote.setCantidad_original(cantidad_original);
                     float cantidad_entregada = this.obtenerCantidadSolicitada(id_lote);
-                    float cantidad_actual = cantidad_original - cantidad_entregada;
+                    float cantidad_actual = (float) (cantidad_original - (cantidad_entregada*0.001));
                     lote.setCantidad_actual(cantidad_actual);
                 }catch (Exception e){
                     System.out.println(e.getStackTrace());
