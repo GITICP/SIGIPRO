@@ -108,7 +108,7 @@ public class SerpienteDAO {
     public int obtenerProximoIdCH(){
         int nextval = 0;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT MAX(NUMERO_COLECCION_HUMEDA) AS LAST VALUE FROM SERPENTARIO.COLECCION_HUMEDA;");
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT MAX(NUMERO_COLECCION_HUMEDA) AS LAST_VALUE FROM SERPENTARIO.COLECCION_HUMEDA;");
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()){
                 int currval = resultadoConsulta.getInt("last_value");
@@ -234,6 +234,26 @@ public class SerpienteDAO {
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE serpentario.serpientes " +
                   " SET coleccionviva=false" +
+                  " WHERE id_serpiente=?; "
+            );
+            consulta.setInt(1, id_serpiente);
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+        
+    public boolean reversarEstado(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " UPDATE serpentario.serpientes " +
+                  " SET estado=true" +
                   " WHERE id_serpiente=?; "
             );
             consulta.setInt(1, id_serpiente);

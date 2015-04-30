@@ -94,9 +94,10 @@ public class EventoDAO {
             consulta.setInt(4, e.getId_categoria());
             consulta.setString(5, e.getObservaciones());
             consulta.setInt(6, e.getExtraccion().getId_extraccion());
-            consulta.setInt(7, e.getExtraccion().getId_extraccion());
-            consulta.setInt(8, e.getSerpiente().getId_serpiente());
+            consulta.setInt(7, e.getSerpiente().getId_serpiente());
+            consulta.setInt(8, e.getExtraccion().getId_extraccion());
             ResultSet resultadoConsulta = consulta.executeQuery();
+            System.out.println(consulta);
             if ( resultadoConsulta.next() ){
                 resultado = true;
                 e.setId_evento(resultadoConsulta.getInt("id_evento"));
@@ -135,6 +136,23 @@ public class EventoDAO {
         boolean resultado = false;
         try{
             PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_CATEGORIA=5; ");
+            consulta.setInt(1, id_serpiente);
+            if (consulta.executeUpdate() == 1 ){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+        public boolean reversarDeceso(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_CATEGORIA=6; ");
             consulta.setInt(1, id_serpiente);
             if (consulta.executeUpdate() == 1 ){
                 resultado = true;

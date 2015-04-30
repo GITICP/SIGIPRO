@@ -74,7 +74,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
         {
             add("evento");
             add("agregareditar");
-            add("reversar");   
+            add("reversarcv");
+            add("reversardeceso");
             add("deceso");
         }
     };
@@ -247,11 +248,11 @@ public class ControladorSerpiente extends SIGIPROServlet {
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
   
-    protected void postReversar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void postReversarcv(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(316, listaPermisos);
-        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente_reversar"));
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente_reversar_cv"));
         boolean pasoCV = eventodao.validarPasoCV(id_serpiente);
         if (pasoCV){      
             boolean resultado = eventodao.reversarPasoCV(id_serpiente);
@@ -268,6 +269,39 @@ public class ControladorSerpiente extends SIGIPROServlet {
             this.getIndex(request, response);
         }else{
             request.setAttribute("mensaje", helper.mensajeDeError("Error en el Sistema. La serpiente no ha sido pasada a Colección Viva."));
+            this.getIndex(request, response);
+        }
+
+    }
+    
+        protected void postReversardeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(317, listaPermisos);
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente_reversar_deceso"));
+        boolean deceso = eventodao.validarDeceso(id_serpiente);
+        List<Evento> eventos = eventodao.obtenerEventos(id_serpiente);
+        for (Evento i : eventos){
+            if (i.getId_categoria() == 7 || i.getId_categoria() == 8){
+                deceso=false;
+                break;
+            }
+        }
+        if (deceso){      
+            boolean resultado = eventodao.reversarDeceso(id_serpiente);
+            if (resultado){
+                dao.reversarEstado(id_serpiente);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Evento de Serpiente reversado correctamente."));
+                Serpiente s = dao.obtenerSerpiente(id_serpiente);
+                 //Funcion que genera la bitacora
+                bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTE,request.getRemoteAddr());
+                //*----------------------------*
+            }else{
+                request.setAttribute("mensaje", helper.mensajeDeError("Error en la Base de Datos. Evento de Serpiente no pudo ser reversado."));
+            }
+            this.getIndex(request, response);
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Error en Lógica del Sistema. No se puede reversar el deceso a la Serpiente."));
             this.getIndex(request, response);
         }
 

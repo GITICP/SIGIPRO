@@ -94,8 +94,7 @@
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                        <BR>
-                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" min="0" placeholder="Número de mg recuperados" class="form-control" value="" required
+                      <input name="peso_recuperado" id="peso_recuperado" type="number" step="any" min="0" placeholder="Número de G recuperados" class="form-control" value="" required
                              oninvalid="setCustomValidity('El peso recuperado debe ser un número mayor a 0. ')"
                             oninput="setCustomValidity('')">
                     </div>

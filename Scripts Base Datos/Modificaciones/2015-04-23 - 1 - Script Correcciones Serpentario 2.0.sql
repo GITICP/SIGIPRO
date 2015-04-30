@@ -1,8 +1,10 @@
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (315, '[Serpentario]EditarSerpienteAdmin', 'Permite editar elementos de la serpiente como Localidad de Origen y Colectada por');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (316, '[Serpentario]ReversarPasoCV', 'Permite reversar las decisiones de paso a Colección Viva.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (317, '[Serpentario]ReversarDeceso', 'Permite reversar las decisiones de deceso de la Serpiente.');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (315, 302);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (316, 302);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (317, 302);
 
 CREATE TABLE serpentario.categorias(
     id_categoria serial NOT NULL,
