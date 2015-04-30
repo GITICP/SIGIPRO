@@ -338,13 +338,15 @@ public class SerpienteDAO {
         return resultado;
     }
     
-    public List<Serpiente> obtenerSerpientes(int id_especie){
+    public List<Serpiente> obtenerSerpientes(int id_especie, int id_extraccion){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=? AND ID_SERPIENTE NOT IN(SELECT ID_SERPIENTE "
                     + "FROM SERPENTARIO.EVENTOS AS evento WHERE evento.id_categoria=6) "
-                    + "AND ID_SERPIENTE IN (SELECT ID_SERPIENTE FROM SERPENTARIO.EVENTOS AS evento WHERE evento.ID_CATEGORIA = 5)");
+                    + "AND ID_SERPIENTE IN (SELECT ID_SERPIENTE FROM SERPENTARIO.EVENTOS AS evento WHERE evento.ID_CATEGORIA = 5) "
+                    + "AND ID_SERPIENTE NOT IN (SELECT SE.ID_SERPIENTE FROM SERPENTARIO.SERPIENTES_EXTRACCION AS SE WHERE ID_EXTRACCION=?)");
             consulta.setInt(1, id_especie);
+            consulta.setInt(2,id_extraccion);
             ResultSet rs = consulta.executeQuery();
             EspecieDAO dao = new EspecieDAO();
             while(rs.next()){
@@ -376,12 +378,14 @@ public class SerpienteDAO {
         return resultado;
     }
     
-    public List<Serpiente> obtenerSerpientesCuarentena(int id_especie){
+    public List<Serpiente> obtenerSerpientesCuarentena(int id_especie,int id_extraccion){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=? AND ID_SERPIENTE NOT IN(SELECT ID_SERPIENTE "
-                    + "FROM SERPENTARIO.EVENTOS AS evento WHERE evento.id_categoria=6);");
+                    + "FROM SERPENTARIO.EVENTOS AS evento WHERE evento.id_categoria=6) "
+                    + "AND ID_SERPIENTE NOT IN (SELECT SE.ID_SERPIENTE FROM SERPENTARIO.SERPIENTES_EXTRACCION AS SE WHERE ID_EXTRACCION=?);");
             consulta.setInt(1, id_especie);
+            consulta.setInt(2, id_extraccion);
             ResultSet rs = consulta.executeQuery();
             EspecieDAO dao = new EspecieDAO();
             while(rs.next()){

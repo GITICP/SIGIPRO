@@ -40,12 +40,13 @@ public class ExtraccionDAO {
     public boolean insertarExtraccion(Extraccion e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.extraccion (numero_extraccion, id_especie,ingreso_cv,fecha_extraccion) " +
-                                                             " VALUES (?,?,?,?) RETURNING id_extraccion");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.extraccion (numero_extraccion, id_especie,ingreso_cv,fecha_extraccion,estado_serpientes) " +
+                                                             " VALUES (?,?,?,?,?) RETURNING id_extraccion");
             consulta.setString(1, e.getNumero_extraccion());
             consulta.setInt(2, e.getEspecie().getId_especie());
             consulta.setBoolean(3, e.isIngreso_cv());
             consulta.setDate(4, e.getFecha_extraccion());
+            consulta.setBoolean(5, false);
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -154,6 +155,27 @@ public class ExtraccionDAO {
         return resultado;
     }
     
+    public boolean terminarEdicion(int id_extraccion){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("UPDATE serpentario.extraccion "
+                    + "SET estado_serpientes=true "
+                    + "WHERE id_extraccion=?");
+
+            consulta.setInt(1,id_extraccion);
+           
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public boolean insertarUsuariosExtraccion(List<UsuariosExtraccion> usuariosextraccion){
         boolean resultado = false;
         try{
@@ -183,13 +205,15 @@ public class ExtraccionDAO {
         boolean resultado = false;
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes_extraccion (id_extraccion,id_serpiente) " +
-                                                             " VALUES (?,?);");
+                                                             " SELECT ?,? WHERE NOT EXISTS (SELECT 1 FROM serpentario.serpientes_extraccion WHERE id_extraccion=? and id_serpiente=?)");
             
             if (serpientesextraccion != null){
                 
                 for (SerpientesExtraccion serpienteextraccion : serpientesextraccion){
                     consulta.setInt(1, serpienteextraccion.getExtraccion().getId_extraccion());
                     consulta.setInt(2, serpienteextraccion.getSerpiente().getId_serpiente());
+                    consulta.setInt(3, serpienteextraccion.getExtraccion().getId_extraccion());
+                    consulta.setInt(4, serpienteextraccion.getSerpiente().getId_serpiente());
                     consulta.executeUpdate();
                 }
                 resultado = true;
@@ -280,7 +304,7 @@ public class ExtraccionDAO {
     public List<Extraccion> obtenerExtracciones(){
         List<Extraccion> resultado = new ArrayList<Extraccion>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT extraccion.id_extraccion, extraccion.numero_extraccion, extraccion.id_especie, extraccion.volumen_extraido, centrifugado.volumen_recuperado,liofilizacion.id_usuario_inicio, liofilizacion.peso_recuperado " +
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT extraccion.estado_serpientes, extraccion.id_extraccion, extraccion.numero_extraccion, extraccion.id_especie, extraccion.volumen_extraido, centrifugado.volumen_recuperado,liofilizacion.id_usuario_inicio, liofilizacion.peso_recuperado " +
                         "FROM serpentario.extraccion as extraccion LEFT OUTER JOIN serpentario.centrifugado as centrifugado ON extraccion.id_extraccion = centrifugado.id_extraccion " +
                         "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion; ");
             ResultSet rs = consulta.executeQuery();
@@ -298,7 +322,9 @@ public class ExtraccionDAO {
                 int id_usuario_inicio=rs.getInt("id_usuario_inicio");
                 float peso_recuperado=rs.getFloat("peso_recuperado");
                 
-                validarIsSerpiente(extraccion);
+                //validarIsSerpiente(extraccion);
+                
+                extraccion.setIsSerpiente(rs.getBoolean("estado_serpientes"));
                 
                 if (volumen_extraido!=0){
                     extraccion.setIsRegistro(true);
@@ -352,7 +378,7 @@ public class ExtraccionDAO {
     public Extraccion obtenerExtraccion(int id_extraccion){
         Extraccion extraccion = new Extraccion();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT extraccion.id_extraccion, extraccion.numero_extraccion, extraccion.id_especie, extraccion.fecha_extraccion, extraccion.fecha_registro, extraccion.ingreso_cv, extraccion.id_usuario_registro, extraccion.volumen_extraido, centrifugado.volumen_recuperado, centrifugado.id_usuario, centrifugado.fecha_volumen_recuperado, liofilizacion.id_usuario_inicio,liofilizacion.fecha_inicio, liofilizacion.peso_recuperado, liofilizacion.id_usuario_fin, liofilizacion.fecha_fin  " +
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT extraccion.estado_serpientes, extraccion.id_extraccion, extraccion.numero_extraccion, extraccion.id_especie, extraccion.fecha_extraccion, extraccion.fecha_registro, extraccion.ingreso_cv, extraccion.id_usuario_registro, extraccion.volumen_extraido, centrifugado.volumen_recuperado, centrifugado.id_usuario, centrifugado.fecha_volumen_recuperado, liofilizacion.id_usuario_inicio,liofilizacion.fecha_inicio, liofilizacion.peso_recuperado, liofilizacion.id_usuario_fin, liofilizacion.fecha_fin  " +
                         "FROM serpentario.extraccion as extraccion LEFT OUTER JOIN serpentario.centrifugado as centrifugado ON extraccion.id_extraccion = centrifugado.id_extraccion " +
                         "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
                         + "WHERE extraccion.id_extraccion=?; ");
@@ -372,8 +398,8 @@ public class ExtraccionDAO {
                 int id_usuario_inicio=rs.getInt("id_usuario_inicio");
                 float peso_recuperado=rs.getFloat("peso_recuperado");
                 Liofilizacion liofilizacion = new Liofilizacion();
-                validarIsSerpiente(extraccion);
-                
+                //validarIsSerpiente(extraccion);
+                extraccion.setIsSerpiente(rs.getBoolean("estado_serpientes"));
                 if (volumen_extraido!=0){
                     extraccion.setIsRegistro(true);
                     extraccion.setVolumen_extraido(volumen_extraido);

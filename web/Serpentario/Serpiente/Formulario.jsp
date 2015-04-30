@@ -233,8 +233,8 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <div class="input-group">                
-                      <input type="file" id="imagen_Serpiente" name="imagen" accept="image/*" 
-                           oninvalid="setCustomValidity('El tamaño debe ser de 1MB. ')" 
+                      <input class='clearable' type="file" id="imagen_Serpiente" name="imagen" accept="image/*" 
+                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
                            onchange="previewFile()" />
                     <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
                   </div>
