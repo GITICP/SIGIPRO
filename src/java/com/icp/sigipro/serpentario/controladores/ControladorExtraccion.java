@@ -218,7 +218,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
   protected void postEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         boolean resultado = false;
-        //String redireccion = "Extraccion/EditarSerpientes.jsp";
         
         int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
         String serpientes = request.getParameter("serpientes");
@@ -227,7 +226,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         if (!extraccion.isIsSerpiente()){
             resultado = dao.insertarSerpientesExtraccion(serpientesextraccion);
-            //Funcion que genera la bitacora
             for (SerpientesExtraccion i:serpientesextraccion){
                 Evento evento = new Evento();
                 evento.setEvento("Extraccion");
@@ -241,15 +239,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
                 bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTESEXTRACCION,request.getRemoteAddr());
             }
             this.actualizarSerpientes(request, serpientesextraccion);
-            //if (resultado){
-            //    request.setAttribute("mensaje", helper.mensajeDeExito("Serpientes agregadas correctamente"));
-            //    redireccion = "Extraccion/index.jsp";
-            //}
-        }
-        //List<Extraccion> extracciones = dao.obtenerExtracciones();
-        //request.setAttribute("listaExtracciones", extracciones);
-        //redireccionar(request, response, redireccion);
-        
+        }   
     }
     
   protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -445,52 +435,57 @@ public class ControladorExtraccion extends SIGIPROServlet {
             String tcola = request.getParameter("talla_cola_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             String tpeso = request.getParameter("peso_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             String tsexo = request.getParameter("sexo_"+Integer.toString(i.getSerpiente().getId_serpiente()));
-            Serpiente serpiente = i.getSerpiente();
-            if (!tcabeza.equals("")){
-                float talla_cabeza = Float.parseFloat(tcabeza);
-                serpiente.setTalla_cabeza(talla_cabeza);
+            if (tcabeza.equals("")&&tcola.equals("")&&tpeso.equals("")&&tsexo.equals("")){
+                
             }
-            if (!tcola.equals("")){
-                float talla_cola = Float.parseFloat(tcola);
-                serpiente.setTalla_cola(talla_cola);
-            }
-            if (!tpeso.equals("")){
-                float peso = Float.parseFloat(tpeso);
-                serpiente.setPeso(peso);
-            }
-            if (!tsexo.equals("")){
-                String sexo = tsexo;
-                serpiente.setSexo(sexo);
-            }
-            List<HelperSerpiente> cambios = serpientedao.editarSerpiente(serpiente);
-            
-            for (HelperSerpiente j : cambios){
-                Evento e = new Evento();
-                java.sql.Date fecha_evento = new java.sql.Date(new Date().getTime());
-                e.setSerpiente(i.getSerpiente());
-                e.setFecha_evento(fecha_evento);
-                Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
-                e.setUsuario(usuario_evento);
-                if (j.getCampo_cambiado()=="sexo"){
-                    e.setEvento("Sexo");
-                    e.setId_categoria(9);
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
-                }if (j.getCampo_cambiado()=="talla_cabeza"){
-                    e.setEvento("Talla CabezaCloaca");
-                    e.setId_categoria(10);
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
-                }if (j.getCampo_cambiado()=="talla_cola"){
-                    e.setEvento("Talla Cola");
-                    e.setId_categoria(11);
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
-                }if (j.getCampo_cambiado()=="peso"){
-                    e.setEvento("Peso");
-                    e.setId_categoria(12);
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
+            else{
+                Serpiente serpiente = i.getSerpiente();
+                if (!tcabeza.equals("")){
+                    float talla_cabeza = Float.parseFloat(tcabeza);
+                    serpiente.setTalla_cabeza(talla_cabeza);
+                }
+                if (!tcola.equals("")){
+                    float talla_cola = Float.parseFloat(tcola);
+                    serpiente.setTalla_cola(talla_cola);
+                }
+                if (!tpeso.equals("")){
+                    float peso = Float.parseFloat(tpeso);
+                    serpiente.setPeso(peso);
+                }
+                if (!tsexo.equals("")){
+                    String sexo = tsexo;
+                    serpiente.setSexo(sexo);
+                }
+                List<HelperSerpiente> cambios = serpientedao.editarSerpiente(serpiente);
+
+                for (HelperSerpiente j : cambios){
+                    Evento e = new Evento();
+                    java.sql.Date fecha_evento = new java.sql.Date(new Date().getTime());
+                    e.setSerpiente(i.getSerpiente());
+                    e.setFecha_evento(fecha_evento);
+                    Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+                    e.setUsuario(usuario_evento);
+                    if (j.getCampo_cambiado()=="sexo"){
+                        e.setEvento("Sexo");
+                        e.setId_categoria(9);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }if (j.getCampo_cambiado()=="talla_cabeza"){
+                        e.setEvento("Talla CabezaCloaca");
+                        e.setId_categoria(10);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }if (j.getCampo_cambiado()=="talla_cola"){
+                        e.setEvento("Talla Cola");
+                        e.setId_categoria(11);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }if (j.getCampo_cambiado()=="peso"){
+                        e.setEvento("Peso");
+                        e.setId_categoria(12);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }
                 }
             }
         }

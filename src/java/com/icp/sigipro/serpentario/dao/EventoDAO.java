@@ -85,14 +85,17 @@ public class EventoDAO {
     public boolean insertarExtraccion(Evento e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,id_categoria,observaciones,id_extraccion) " +
-                                                             " VALUES (?,?,?,?,?,?) RETURNING id_evento");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,id_categoria,observaciones,id_extraccion) "
+                    + "SELECT ?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_EXTRACCION=?) "
+                    + "RETURNING id_evento");
             consulta.setInt(1, e.getSerpiente().getId_serpiente());
             consulta.setInt(2, e.getUsuario().getId_usuario());
             consulta.setDate(3, e.getFecha_evento());
             consulta.setInt(4, e.getId_categoria());
             consulta.setString(5, e.getObservaciones());
             consulta.setInt(6, e.getExtraccion().getId_extraccion());
+            consulta.setInt(7, e.getExtraccion().getId_extraccion());
+            consulta.setInt(8, e.getSerpiente().getId_serpiente());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
@@ -131,7 +134,7 @@ public class EventoDAO {
     public boolean reversarPasoCV(int id_serpiente){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_CATEGORIA=5; ");
             consulta.setInt(1, id_serpiente);
             if (consulta.executeUpdate() == 1 ){
                 resultado = true;

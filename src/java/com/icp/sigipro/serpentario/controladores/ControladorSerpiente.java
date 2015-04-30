@@ -532,7 +532,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
         Evento e = new Evento();
         String evento = request.getParameter("eventoModal");
         switch (evento){
-            case "Defecacion":
+            case "Defecación":
                 e.setId_categoria(1);
                 break;
             case "CambioPiel":
