@@ -60,7 +60,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="id_padre" value="${macho.getId_padre()}"  name="id_padre" required
+            <input  type="text" id="id_padre" value="${conejo.getId_padre()}"  name="id_padre" required
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">      
           </div>
@@ -72,7 +72,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="id_madre" value="${macho.getId_madre()}"  name="id_madre" required
+            <input  type="text" id="id_madre" value="${conejo.getId_madre()}"  name="id_madre" required
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">  
           </div>
