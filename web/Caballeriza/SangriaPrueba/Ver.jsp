@@ -57,7 +57,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
-                                                <th>Número de Microchip</th>
+                                                <th>Número de Caballo</th>
                                                 <th>Hematrocito</th>
                                                 <th>Hemoglobina</th>
                                             </tr>
@@ -66,7 +66,7 @@
                                             <c:forEach items="${caballos}" var="caballo">
                                                 <tr id="${caballo.getId_caballo()}">
                                                     <td>${caballo.getNombre()}</td> 
-                                                    <td>${caballo.getNumero_microchip()}</td>
+                                                    <td>${caballo.getNumero()}</td>
                                                     <td>${caballo.getHematrocito()}</td>
                                                     <td>${caballo.getHemoglibina()}</td>
                                                 </tr>

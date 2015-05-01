@@ -20,7 +20,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="AF-1" class="form-control" name="nombre" value="${grupodecaballos.getNombre()}"
+                        <input type="text" maxlength="45" placeholder="Ej; AF-1" class="form-control" name="nombre" value="${grupodecaballos.getNombre()}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                oninput="setCustomValidity('')" > 

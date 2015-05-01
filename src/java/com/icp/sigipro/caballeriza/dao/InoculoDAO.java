@@ -352,7 +352,7 @@ public class InoculoDAO {
                 
                 if ( inoculo == null || inoculo.getId_inoculo() != id_inoculo ) {
                     inoculo = new Inoculo();
-                    inoculo.setId_inoculo(id_inoculo);;
+                    inoculo.setId_inoculo(id_inoculo);
                     resultado.add(inoculo);
                 }
                 
@@ -360,7 +360,7 @@ public class InoculoDAO {
                 c.setId_caballo(rs.getInt("id_caballo"));
                 c.setNombre(rs.getString("nombre"));
                 c.setNumero_microchip(rs.getString("numero_microchip"));
-                c.setNumero(rs.getInt(rs.getInt("numero")));
+                c.setNumero(rs.getInt("numero"));
                 
                 inoculo.agregarCaballo(c);
             }

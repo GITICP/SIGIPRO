@@ -22,7 +22,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getMnn()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="mnn"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="mnn"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
@@ -39,7 +39,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getBaa()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="baa"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="baa"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
@@ -56,7 +56,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getBap()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="bap"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="bap"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
@@ -73,7 +73,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getCdd()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="cdd"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="cdd"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
@@ -90,7 +90,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getLms()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="lms"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="lms"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
@@ -107,7 +107,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getTetox()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="tetox"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="tetox"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
@@ -124,7 +124,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${inoculo.getOtro()==null}">
-                            <input type="text" placeholder="2mg" class="form-control" name="otro"
+                            <input type="text" placeholder="Ej: 2mg" class="form-control" name="otro"
                                    oninput="setCustomValidity('')"> 
                         </c:when>
                         <c:otherwise>
