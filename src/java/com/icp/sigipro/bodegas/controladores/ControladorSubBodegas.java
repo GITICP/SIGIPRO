@@ -44,8 +44,8 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
     private final int[] permisos = {70, 0, 0};
     private SubBodegaDAO dao = new SubBodegaDAO();
-    private SeccionDAO daoSecciones = new SeccionDAO();
-    private UsuarioDAO daoUsuarios = new UsuarioDAO();
+    private final SeccionDAO daoSecciones = new SeccionDAO();
+    private final UsuarioDAO daoUsuarios = new UsuarioDAO();
 
     protected final Class clase = ControladorSubBodegas.class;
     protected final List<String> accionesGet = new ArrayList<String>()
