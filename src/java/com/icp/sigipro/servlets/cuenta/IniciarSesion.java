@@ -118,14 +118,14 @@ public class IniciarSesion extends HttpServlet
             
             // ¡¡Terminar la barra de funcionalidad!!
             BarraFuncionalidadDAO b = new BarraFuncionalidadDAO();
-            List<BarraFuncionalidad> barra = b.obtenerModulos(idUsuario, l);
+            BarraFuncionalidad barra = b.obtenerModulos(idUsuario, l);
             session.setAttribute("barraFuncionalidad", barra);
             
             session.setMaxInactiveInterval(30*60);      // Asignación de máximo 30 minutos de inactividad de la sesión.
             response.sendRedirect(request.getContextPath());
           }
           catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
           }
         }
         else

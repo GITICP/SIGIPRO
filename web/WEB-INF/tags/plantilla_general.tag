@@ -35,7 +35,7 @@
     <link href="${direccion_contexto}/recursos/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/main.css" rel="stylesheet" type="text/css" media="screen">
     <link href="${direccion_contexto}/recursos/css/sigipro/sigipro.css" rel="stylesheet" type="text/css" media="screen">
-    <link href="${direccion_contexto}/recursos/css/sigipro/barra-navegacion.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="${direccion_contexto}/recursos/css/sigipro/jquery.smartmenus.bootstrap.css" rel="stylesheet" type="text/css" media="screen">
     
     <jsp:invoke fragment="css" />
 
@@ -104,7 +104,8 @@
 
     <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
 
-    <script src="${direccion_contexto}/recursos/js/sigipro/barra-navegacion.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/jquery.smartmenus.js"></script>
+    <script src="${direccion_contexto}/recursos/js/sigipro/jquery.smartmenus.bootstrap.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/CatalogoExterno.js"></script>
     <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
