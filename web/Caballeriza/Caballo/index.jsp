@@ -51,12 +51,10 @@
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
-                                        <th>Número de Caballo</th>
-                                        <th>Número de Microchip</th>
+                                        <th>Número de Caballo</th>                                        
                                         <th>Nombre</th>
                                         <th>Grupo de Caballos</th>
-                                        <th>Sexo</th>
-                                        <th>Estado</th>
+                                        <th>Número de Microchip</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,7 +68,6 @@
                                                     </div>
                                                 </a>
                                             </td>
-                                            <td>${caballo.getNumero_microchip()}</td>
                                             <td>${caballo.getNombre()}</td>
                                             <td>
                                                 <c:set var="val" value=""/>
@@ -83,10 +80,8 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td>${caballo.getSexo()}</td>
-                                            <td>${caballo.getEstado()}</td>
+                                            <td>${caballo.getNumero_microchip()}</td>
                                         </tr>
-
                                     </c:forEach>
                                 </tbody>
                             </table>
