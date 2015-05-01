@@ -58,9 +58,10 @@
                     <th>Número de Solicitud</th>
                     <th>Usuario Solicitante</th>
                     <th>Especie</th>
-                    <th>Cantidad (mg)</th>
+                    <th>Cantidad Solicitada (mg)</th>
                     <th>Fecha de Solicitud</th>
-                    <th>Estado</th>
+                    <th>Cantidad Entregada (mg)</th>
+                    <th>Fecha de Entrega</th>
                     <c:if test="${booladmin}">
                       <th> Cambio Estado</th>
                     </c:if>
@@ -81,8 +82,18 @@
                       <td>${solicitud.getEspecie().getGenero_especie()}</td>
                       <td>${solicitud.getCantidad()}</td>
                       <td>${solicitud.getFecha_solicitudAsString()}</td>
-                      <td>${solicitud.getEstado()}</td>
+                      <c:choose>
+                          <c:when test="${solicitud.getEntrega().getCantidad_entregada()!=0}">
+                              <td>${solicitud.getEntrega().getCantidad_entregada()}</td>
+                              <td>${solicitud.getEntrega().getFecha_entregaAsString()}</td>
+                          </c:when>
+                          <c:otherwise>
+                              <td></td>
+                              <td></td>
+                          </c:otherwise>
+                      </c:choose>
                       
+                      <c:if test="${booladmin}">
                         <c:choose>
                           <c:when test="${solicitud.getEstado().equals('Solicitado')}">
                               <c:if test="${booladmin}">
@@ -109,7 +120,7 @@
                             </c:choose>
                           </c:otherwise>
                         </c:choose>
-                      
+                      </c:if>
                     </tr>
 
                   </c:forEach>

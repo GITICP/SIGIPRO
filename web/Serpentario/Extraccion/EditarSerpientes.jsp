@@ -13,7 +13,10 @@
 <t:plantilla_general title="Serpentario" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
-
+    <form method="POST" action="Extraccion" id="form-terminarEdicion">
+                                    <input hidden="true" name="accion" value="terminar">
+                                    <input hidden="true" name="id_extraccion" value="${id_extraccion}">
+    </form>
 
 
     <!-- content-wrapper -->
@@ -86,13 +89,32 @@
                                       <th>Peso (g)</th>
                                       <th>Sexo</th>
                                       <th>Eliminar</th>
+                                      <th>Estado</th>
                                     </tr>
                                   </thead>
                                   <tbody>
+                                      <c:forEach items="${serpientesextraccion}" var="serpiente">
+                                          <tr id="${serpiente.getId_serpiente()}">
+                                              <td width=50px>${serpiente.getNumero_serpiente()}</td> 
+                                              <td width=150px><input type="number" step="any" placeholder="" min="0" class="form-control" name="talla_cabeza_${serpiente.getId_serpiente()}" value="" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Ingrese solo números mayores a 0')"></td>
+                                              <td width=150px><input type="number" step="any" placeholder="" min="0" class="form-control" name="talla_cola_${serpiente.getId_serpiente()}" value="" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Ingrese solo números mayores a 0')"></td>
+                                              <td width=150px><input type="number" step="any" placeholder="" min="0" class="form-control" name="peso_${serpiente.getId_serpiente()}" value="" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Ingrese solo números mayores a 0')"></td>
+                                              <td width=150px><select id="seleccionSexo" name="sexo_${serpiente.getId_serpiente()}" style="background-color: #fff;">
+                                                    <option value=''></option>
+                                                    <option value='Macho'>Macho</option>
+                                                    <option value='Hembra'>Hembra</option>
+                                                    <option value='Indefinido'>Indefinido</option> 
+                                                  </select>
+                                              </td>
+                                              <td width=50px><button type="button" id="boton_eliminar" disabled="true" class="btn btn-danger btn-sm" onclick="eliminarSerpiente(' + id_serpiente + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button></td>
+                                              <td width=50px><div class="estado">Guardado</div></td>
+                                          </tr>
+                                      </c:forEach>
 
                                   </tbody>
                                 </table>
                               </div>
+                                <button style='float:right;' type="button" class="btn btn-primary" onclick="confirmacionAgregarSerpientes()"><i class="fa fa-check-circle"></i> Guardar Serpientes</button>
                             </div>
                             <p>
                               Los campos marcados con * son requeridos.
@@ -102,7 +124,7 @@
                   <div class="form-group">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                        <button type="submit" class="btn btn-primary" onclick="confirmacionAgregarSerpientes()"><i class="fa fa-check-circle"></i> Actualizar Serpientes</button>
+                        <a class="btn btn-primary confirmable-form" data-form-id="form-terminarEdicion" data-texto-confirmacion="terminar la edición de Serpientes a la Extracción"><i class="fa fa-check-circle"></i> Terminar Edición</a>
                     </div>
                   </div>
 

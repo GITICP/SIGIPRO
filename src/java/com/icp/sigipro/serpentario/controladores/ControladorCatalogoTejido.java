@@ -127,7 +127,7 @@ public class ControladorCatalogoTejido extends SIGIPROServlet {
              //Funcion que genera la bitacora
             bitacora.setBitacora(ct.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOTEJIDO,request.getRemoteAddr());
             //*----------------------------*
-            Evento e = this.setEvento(ct.getSerpiente(), "Catálogo Tejido", request);
+            Evento e = this.setEvento(ct.getSerpiente(), 8, request);
             eventodao.insertarEvento(e);
             bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
             request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ct.getSerpiente().getNumero_serpiente()+" agregada a Catálogo de Tejidos correctamente."));
@@ -182,9 +182,9 @@ public class ControladorCatalogoTejido extends SIGIPROServlet {
     }
   
         //Para Coleccion Viva, Deceso
-    private Evento setEvento(Serpiente serpiente,String evento,HttpServletRequest request){
+    private Evento setEvento(Serpiente serpiente,int evento,HttpServletRequest request){
         Evento e = new Evento();
-        e.setEvento(evento);
+        e.setId_categoria(evento);
         java.sql.Date date = new java.sql.Date(new Date().getTime());
         e.setFecha_evento(date);
         e.setSerpiente(serpiente);

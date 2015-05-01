@@ -11,7 +11,7 @@
 <%@attribute name="titulo"  required="true"%>
 <%@attribute name="form"    required="true" fragment="true"%>
 
-<div class="modal fade"  id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div lang="es" class="modal fade"  id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

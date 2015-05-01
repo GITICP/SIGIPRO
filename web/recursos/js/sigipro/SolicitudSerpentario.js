@@ -1,14 +1,24 @@
+$(function() {
+    var max = $('option:selected').data('stock');
+    $("input[name='cantidad']").attr("max", max);
+    validarSolicitud()
+});
+
+
 $(document).on("click", ".rechazar-Modal", function () {                            
                             var id_solicitud = $(this).data('id');
                             $("#id_solicitud").val(id_solicitud);                          
                             });
-                            
+            
+
 $('#seleccionEspecie').change( function() {
   var max = $('option:selected').data('stock');
   $("#cantidad").val(0.0);
   $("input[name='cantidad']").attr("max", max);
+  validarSolicitud()
 });
                             
+
 
 function setLote(){
     if (!$('#entregarSolicitud')[0].checkValidity()) {
@@ -23,8 +33,8 @@ function setLote(){
         }
         else {
             textoLote = loteSeleccionado.text();
-
-            var cantidad = textoLote.split("-")[1].split(" ")[1];
+            
+            var cantidad = textoLote.split("(")[1].split(" ")[2];
             loteSeleccionado.remove();
 
             fila = '<tr ' + 'id=' + id_lote + '>';
@@ -33,7 +43,7 @@ function setLote(){
             //fila += '</div>';
             //fila += '<div class="col-md-1 ">';
             fila += '<td width=150px>';
-            fila += '<input type="number" step="any" placeholder="" min="1" id="cantidadInput" max="'+cantidad+'" class="form-control" name="cantidad_'+id_lote+'" value="" required oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Cantidad se excede de la actual.\')">';
+            fila += '<input type="number" step="any" placeholder="" min="0" id="cantidadInput" max="'+cantidad+'" class="form-control" name="cantidad_'+id_lote+'" value="" required oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Cantidad se excede de la actual.\')">';
             fila += '</td>';
             fila += '<td width=50px>';
             fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarLote(' + id_lote + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
@@ -77,7 +87,7 @@ function confirmacionAgregarLotes(id_solicitud,usuario,especie,cantidad) {
     if (!$('#agregarLote')[0].checkValidity()) {
 
   }else{
-      if(cantidad_entregada>=cantidad){
+        //if(cantidad_entregada>=cantidad){
         $('#form_modalautorizar').append(inputs);
           $('#id_solicitud_entregar').val(id_solicitud);
           $('#cantidad_entregada').val(cantidad_entregada);
@@ -88,11 +98,25 @@ function confirmacionAgregarLotes(id_solicitud,usuario,especie,cantidad) {
           $('#cntEnt').val(cantidad_entregada);
           $('.alert-dismissible').remove();
           $('#modalEntregar').modal('show');
+    //}else{
+       //. $('#cantidad_entregada_error').text(cantidad_entregada+" gramos");
+       // $('#cantidad_solicitada_error').text(cantidad+" gramos");
+       // $('#modalError').modal('show');
+    //}
+  }
+  }
+}
+
+function validarSolicitud(){
+    var cantidad = parseFloat($("#cantidad").val());
+    var max = parseFloat($("#cantidad").attr("max"));
+    if (isNaN(cantidad)){
+        $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser un número.');
+    }else if (cantidad>max){
+        $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser menor o igual a la cantidad restringida.');
+    }else if (cantidad<0){
+        $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser mayor que 0.');
     }else{
-        $('#cantidad_entregada_error').text(cantidad_entregada+" gramos");
-        $('#cantidad_solicitada_error').text(cantidad+" gramos");
-        $('#modalError').modal('show');
+        $("#cantidad")[0].setCustomValidity('');
     }
-  }
-  }
 }

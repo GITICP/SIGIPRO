@@ -7,10 +7,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form class="form-horizontal" autocomplete="off" method="post" action="Serpiente">
+<form class="form-horizontal" autocomplete="off" enctype='multipart/form-data' method="post" action="Serpiente">
     <div class="col-md-6">
         <input hidden="true" name="id_serpiente" value="${serpiente.getId_serpiente()}">
         <input hidden="true" name="accion" value="${accion}">
+        <c:set var="contienePermisoEditarAdmin" value="false" />
+            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+              <c:if test="${permiso == 1 || permiso == 315}">
+                <c:set var="contienePermisoEditarAdmin" value="true" />
+              </c:if>
+            </c:forEach>
+        
+        
         <c:choose>
             <c:when test="${serpiente.getId_serpiente()!=0}">
                 <label for="numero_ingreso" class="control-label">*Número de Ingreso</label>
@@ -27,7 +35,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="number" min="0" class="form-control" name="numero_serpiente" value="${serpiente.getNumero_serpiente()}" required
+                            <input type="number" min="0" class="form-control" name="numero_serpiente" value="${siguiente}" required
                                 oninvalid="setCustomValidity('Este campo es requerido y debe ser número entero.')"
                                 oninput="setCustomValidity('')"> 
                         </div>
@@ -75,8 +83,8 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${serpiente.getFecha_ingreso()==null}">
-                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
-                                oninvalid="setCustomValidity('Este campo es requerido ')"
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePickerSerpiente" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                                oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
                                 onchange="setCustomValidity('')">
                         </c:when>
                         <c:otherwise>
@@ -100,7 +108,17 @@
                                 oninput="setCustomValidity('')"> 
                     </c:when>
                     <c:otherwise>
-                        <input type="text" disabled='true' class="form-control" name="localidad_origen" value="${serpiente.getLocalidad_origen()}"> 
+                        <c:choose>
+                            <c:when test="${contienePermisoEditarAdmin}">
+                                <input type="text" placeholder="Nombre de la Localidad" value="${serpiente.getLocalidad_origen()}" class="form-control" name="localidad_origen" required
+                                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                                    oninput="setCustomValidity('')"> 
+                            </c:when>
+                            <c:otherwise>
+                                <input type="text" hidden="true" value="${serpiente.getLocalidad_origen()}" name="localidad_origen">
+                                <input type="text" disabled='true' class="form-control" value="${serpiente.getLocalidad_origen()}"> 
+                            </c:otherwise>
+                        </c:choose>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -117,7 +135,18 @@
                                 oninput="setCustomValidity('')"> 
                     </c:when>
                     <c:otherwise>
-                        <input type="text" disabled='true' class="form-control" name="colectada" value="${serpiente.getColectada()}"> 
+                        <c:choose>
+                            <c:when test="${contienePermisoEditarAdmin}">
+                                <input type="text" placeholder="Nombre de la persona" value="${serpiente.getColectada()}" class="form-control" name="colectada" required
+                                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                                    oninput="setCustomValidity('')"> 
+                            </c:when>
+                            <c:otherwise>
+                                <input type="text" hidden="true" value="${serpiente.getColectada()}" name="colectada">
+                                <input type="text" disabled='true' class="form-control" value="${serpiente.getColectada()}"> 
+                            </c:otherwise>
+                        </c:choose>
+                        
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -193,9 +222,30 @@
         </div>
       </div>
     </div>
-</div>
-       
+</div>        
         <div class="col-md-12">
+            <div class="widget widget-table">
+ <div class="widget-header">
+   <h3><i class="fa fa-bug"></i> Imagen</h3>
+ </div>
+    <div class="widget-content">
+<label for="imagen" class="control-label">Seleccione una imagen</label>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <div class="input-group">                
+                      <input class='clearable' type="file" id="imagen_Serpiente" name="imagen" accept="image/*" 
+                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                           onchange="previewFile()" />
+                    <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
+                  </div>
+                </div>
+              </div>
+              <c:if test="${!imagenSerpiente.equals('')}">
+                  Imagen Actual: <img src="${imagenSerpiente}" height="100">
+              </c:if>
+</div>
+</div>
+    
 <!-- Esta parte es la de los permisos de un rol -->
 <p class="campos-requeridos">
     Los campos marcados con * son requeridos.

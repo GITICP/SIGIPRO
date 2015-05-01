@@ -116,22 +116,30 @@ public class ControladorEspecie extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(301, listaPermisos);
         int id_especie = Integer.parseInt(request.getParameter("id_especie"));
+        String redireccion = "Especie/index.jsp";
+        boolean resultado = false;
         try{
-            dao.eliminarEspecie(id_especie);
-            String redireccion = "Especie/index.jsp";
-            
-            //Funcion que genera la bitacora 
-            BitacoraDAO bitacora = new BitacoraDAO(); 
-            bitacora.setBitacora(id_especie,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr()); 
-            //----------------------------
-            
+            resultado = dao.eliminarEspecie(id_especie);
+            if (resultado){
+                //Funcion que genera la bitacora 
+                BitacoraDAO bitacora = new BitacoraDAO(); 
+                bitacora.setBitacora(id_especie,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_ESPECIE,request.getRemoteAddr()); 
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente eliminada correctamente")); 
+            }
+            else{
+               request.setAttribute("mensaje", helper.mensajeDeError("Especie de Serpiente no pudo ser eliminada ya que tiene serpientes asociadas."));  
+            }
             List<Especie> especies = dao.obtenerEspecies();
-            request.setAttribute("mensaje", helper.mensajeDeExito("Especie de Serpiente eliminada correctamente"));        
             request.setAttribute("listaEspecies", especies);
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Especie de Serpiente no pudo ser eliminada ya que tiene serpientes asociadas."));  
+            List<Especie> especies = dao.obtenerEspecies();
+            request.setAttribute("listaEspecies", especies);
+            redireccionar(request, response, redireccion);
         }
         
     }

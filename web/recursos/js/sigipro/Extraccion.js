@@ -35,7 +35,7 @@ function setSerpiente(){
             //fila += '</div>';
             //fila += '<div class="col-md-1 ">';
             fila += '<td width=150px>';
-            fila += '<select id="seleccionSexo" class="select2" name="sexo_'+id_serpiente+'" style=\'background-color: #fff;\'>';
+            fila += '<select id="seleccionSexo" class="select2" name="sexo_'+id_serpiente+'" style="background-color: #fff;">';
             fila += '<option value=\'\'></option>';
             fila += '<option value=\'Macho\'>Macho</option>';
             fila += '<option value=\'Hembra\'>Hembra</option>';
@@ -44,8 +44,9 @@ function setSerpiente(){
             fila += '</td>';
             //fila += '</div>';
             fila += '<td width=50px>';
-            fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarSerpiente(' + id_serpiente + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+            fila += '<button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarSerpiente(' + id_serpiente + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
             fila += '</td>';
+            fila += '<td width=50px><div class="estado"></div></td>';
             fila += '</tr>';
 
             $('#datatable-column-filter-permisos > tbody:last').append(fila);
@@ -79,14 +80,32 @@ function confirmacionAgregarSerpientes() {
     if (!$('#modificarSerpiente')[0].checkValidity()) {
 
   }else{
-    $('#modificarSerpiente').submit();
+    //$('#modificarSerpiente').submit();
+    $(".estado").text("Guardando...");
+    var formData = $("#modificarSerpiente").serializeArray();
+    var URL = $("#modificarSerpiente").attr("action");
+    $.ajax(
+            {
+                url : URL,
+                type : "POST",
+                data : formData,
+                success: function(data,textStatus,jqXHR)
+                {
+                    $(".estado").text("Guardado");
+                    $(".eliminar").prop("disabled",true);
+                },
+                error:function(jqXHR,textStatus,errorThrown)
+                {
+                    $(".estado").text("Error");
+                }
+                
+            });
   }
 }
 
 
 $(document).on("click", ".registrar-Modal", function () {                            
                             var numero_extraccion = $(this).data('id');
-                            console.log(numero_extraccion);
                             var arr = numero_extraccion.split("/-/");
                             $('#class-registrar #numero_extraccion').text("Extraccion - "+arr[1]);
                             $("#class-registrar #id_extraccion").val(arr[0]); 

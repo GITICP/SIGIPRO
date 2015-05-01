@@ -31,15 +31,35 @@ public class Serpiente {
     private float talla_cola;
     private float peso;
     private byte[] imagen;
+    private long imagenTamano;
     private Especie especie;
-    private String estado;
+    private boolean estado;
+    private boolean coleccionviva;
 
-    public String getEstado() {
+    public boolean isEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public boolean isColeccionviva() {
+        return coleccionviva;
+    }
+
+    public void setColeccionviva(boolean coleccionviva) {
+        this.coleccionviva = coleccionviva;
+    }
+
+    
+
+    public long getImagenTamano() {
+        return imagenTamano;
+    }
+
+    public void setImagenTamano(long imagenTamano) {
+        this.imagenTamano = imagenTamano;
     }
 
     public Serpiente() {
@@ -99,7 +119,7 @@ public class Serpiente {
     public float getTalla_total(){
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
-        float talla_total = Float.parseFloat(df.format(this.talla_cabeza+this.talla_cola));
+        float talla_total = this.talla_cabeza+this.talla_cola;
         
         return talla_total;
     }

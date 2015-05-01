@@ -20,7 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -54,7 +57,7 @@ public abstract class SIGIPROServlet extends HttpServlet
             accion = "index";
         }
         if (ServletFileUpload.isMultipartContent(request)) {
-            accion = "agregarimagen";
+            accion = "agregareditar";
         }
         try {
             ejecutarAccion(request, response, accion, accionHTTP);

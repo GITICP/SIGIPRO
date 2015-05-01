@@ -58,14 +58,21 @@
                 </div>
             </div>
         </div>
-    <div class="form-group opciones">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <c:set var="checkedIngresoCV" value="true" />
-                                <input type="checkbox" name="ingreso_cv" value="true" checked='true' ${checkedIngresoCV}><span>  Serpientes de Colección Viva.</span>
-                            </div>
-                        </div>
-                    </div>
+      <label for="cv" class="control-label">*Colección Viva</label>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <select id="seleccionEspecie" class="select2" name="ingreso_cv"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <option value=1>De Colección Viva</option>
+                            <option value=2>De Ingreso</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     
     </div>
     <div class="col-md-12">

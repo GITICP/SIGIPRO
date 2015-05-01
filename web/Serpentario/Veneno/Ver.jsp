@@ -21,7 +21,7 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Veneno?">Venenos de Serpiente</a>
+              <a href="/SIGIPRO/Serpentario/Veneno?">Catálogo de Venenos</a>
             </li>
             <li class="active">Veneno de ${veneno.getEspecie().getGenero_especie()} </li>
           </ul>
@@ -50,7 +50,7 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Especie:</strong></td> <td>${veneno.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Cantidad:</strong> <td>${veneno.getCantidad()} Miligramos </td></tr>
+                <tr><td> <strong>Cantidad:</strong> <td>${veneno.getCantidad()} Gramos </td></tr>
                 <c:choose>
                     <c:when test="${veneno.isRestriccion()}">
                         <tr><td> <strong>¿Es restringido?:</strong> <td>Si</td></tr>
@@ -79,7 +79,7 @@
                           <c:forEach items="${lotes}" var="lote">
                             <tr>
                               <td><a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${lote.getId_lote()}">Lote ${lote.getNumero_lote()}</a></td>
-                              <td>${lote.getCantidad_actual()} gramos</td>
+                              <td>${lote.getCantidad_actual()} Gramos</td>
                             </tr>
                           </c:forEach>
                             
