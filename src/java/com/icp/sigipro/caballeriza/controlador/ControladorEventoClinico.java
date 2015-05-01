@@ -16,6 +16,8 @@ import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -64,11 +66,14 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         EventoClinico c = new EventoClinico();
         TipoEventoDAO tipoeventodao = new TipoEventoDAO();
         GrupoDeCaballosDAO gdcDAO = new GrupoDeCaballosDAO();
+        UsuarioDAO usr_dao = new UsuarioDAO();
         List<GrupoDeCaballos> grupos_caballos = gdcDAO.obtenerGruposDeCaballosConCaballos();
         List<TipoEvento> listatipos = tipoeventodao.obtenerTiposEventos();
+        List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6, 1);
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("evento", c);
         request.setAttribute("grupos_caballos", grupos_caballos);
+        request.setAttribute("usuarios_cab_prod", lista_usuarios);
         request.setAttribute("listatipos", listatipos);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
@@ -109,6 +114,9 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         List<GrupoDeCaballos> grupos_caballos = gdcDAO.obtenerGruposDeCaballosConCaballos();
         TipoEventoDAO tipodao = new TipoEventoDAO();
         List<TipoEvento> listatipos = tipodao.obtenerTiposEventos();
+        UsuarioDAO usr_dao = new UsuarioDAO();
+        List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6, 1);
+        request.setAttribute("usuarios_cab_prod", lista_usuarios);
         request.setAttribute("listatipos", listatipos);
         request.setAttribute("evento", eventoclinico);
         request.setAttribute("grupos_caballos", grupos_caballos);
@@ -175,7 +183,9 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         String[] tiposeleccionado;
         tiposeleccionado=tipodeevento.split(",");
         e.setTipo_evento(tipoeventodao.obtenerTipoEvento(Integer.parseInt(tiposeleccionado[0])));
-        e.setResponsable(request.getParameter("responsable"));
+        Usuario responsable = new Usuario();
+        responsable.setId_usuario(Integer.parseInt(request.getParameter("responsable")));
+        e.setResponsable(responsable);
         
         return e;
     }

@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -21,14 +22,14 @@ public class EventoClinico {
     private int id_evento;
     private Date fecha;
     private String descripcion;
-    private String responsable;
+    private Usuario responsable;
     private TipoEvento tipo_evento;
     private List<Caballo> caballos;
 
     public EventoClinico() {
     }
 
-    public EventoClinico(int id_evento, Date fecha, String descripcion, String responsable, TipoEvento tipo_evento) {
+    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable, TipoEvento tipo_evento) {
         this.id_evento = id_evento;
         this.fecha = fecha;
         this.descripcion = descripcion;
@@ -64,11 +65,11 @@ public class EventoClinico {
         this.descripcion = descripcion;
     }
 
-    public String getResponsable() {
+    public Usuario getResponsable() {
         return responsable;
     }
 
-    public void setResponsable(String responsable) {
+    public void setResponsable(Usuario responsable) {
         this.responsable = responsable;
     }
 

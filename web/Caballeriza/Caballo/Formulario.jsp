@@ -124,8 +124,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="otras_sennas" placeholder="Otras señas del caballo" type="text" step="any" class="form-control" name="otras_sennas" value="${caballo.getOtras_sennas()}" 
-                               oninput="setCustomValidity('')"> 
+                        <textarea id="otras_sennas" rows="5" cols="50" maxlength="500" placeholder="Otras señas del caballo" class="form-control" name="otras_sennas">${caballo.getOtras_sennas()}</textarea>
                     </div>
                 </div>
             </div>
@@ -144,7 +143,7 @@
                                         <option value="${estado}" selected> ${estado}</option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option value="${estado}" selected>${estado}</option>
+                                        <option value="${estado}">${estado}</option>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>

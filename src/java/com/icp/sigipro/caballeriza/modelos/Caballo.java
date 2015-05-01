@@ -178,7 +178,13 @@ public class Caballo {
     }
 
     public void setColor(String color) {
-        this.color = color;
+        String valor_final = "Sin Color";
+        if (color != null) {
+            if (!color.equals("")){
+                valor_final = color;
+            }
+        }
+        this.color = valor_final;
     }
 
     public String getOtras_sennas() {
@@ -186,7 +192,13 @@ public class Caballo {
     }
 
     public void setOtras_sennas(String otras_sennas) {
-        this.otras_sennas = otras_sennas;
+        String valor_final = "Sin Otras Señas";
+        if (otras_sennas != null) {
+            if (!otras_sennas.equals("")){
+                valor_final = otras_sennas;
+            }
+        }
+        this.otras_sennas = valor_final;
     }
 
     public byte[] getFotografia() {

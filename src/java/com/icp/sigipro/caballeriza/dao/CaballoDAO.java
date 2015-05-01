@@ -11,7 +11,9 @@ import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
+import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,30 +72,29 @@ public class CaballoDAO {
         boolean resultado = false;
     
         try{
-            //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
-            //Caballo caballo = this.obtenerCaballo(c.getId_caballo());
-            //------------------------------------------------------------
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE caballeriza.caballos " +
-                  " SET otras_sennas=?,  estado=?, id_grupo_de_caballo=?" +
+                  " SET otras_sennas=?,  estado=?, id_grupo_de_caballo=?, color=?, " + 
+                  "     nombre=?, numero_microchip=?, sexo=?, " +
+                  "     fecha_nacimiento=?, fecha_ingreso=? " +        
                   " WHERE id_caballo=?; "
             );
-//            int gC=c.getGrupo_de_caballos().getId_grupo_caballo();
-//            String sennas=c.getOtras_sennas();
-//            Blob foto=c.getFotografia();
-//            String ESTADO = c.getEstado();
-//            int id=c.getId_caballo();
             consulta.setString(1, c.getOtras_sennas());
-            //consulta.setBlob(2, c.getFotografia());
             consulta.setString(2, c.getEstado());
             if (c.getGrupo_de_caballos()== null){
                 consulta.setNull(3, java.sql.Types.INTEGER);
             }
             else{
                 consulta.setInt(3, c.getGrupo_de_caballos().getId_grupo_caballo()); 
-            }            
-            consulta.setInt(4,c.getId_caballo());
-
+            }
+            consulta.setString(4, c.getColor());
+            consulta.setString(5, c.getNombre());
+            consulta.setString(6, c.getNumero_microchip());
+            consulta.setString(7, c.getSexo());
+            consulta.setDate(8, c.getFecha_nacimiento());
+            consulta.setDate(9, c.getFecha_ingreso());
+            consulta.setInt(10,c.getId_caballo());
+            
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
             }
@@ -278,7 +279,14 @@ public class CaballoDAO {
         TipoEventoDAO dao = new TipoEventoDAO();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("select ec.id_evento,fecha,id_tipo_evento,responsable,descripcion from caballeriza.eventos_clinicos ec left outer join caballeriza.eventos_clinicos_caballos ecc on ec.id_evento = ecc.id_evento where id_caballo=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " select ec.id_evento,ec.fecha,ec.responsable,ec.descripcion, u.id_usuario, u.nombre_completo, te.id_tipo_evento, te.nombre "
+                  + " from caballeriza.eventos_clinicos ec "
+                  + "   INNER JOIN seguridad.usuarios u ON u.id_usuario = ec.responsable "
+                  + "   INNER JOIN caballeriza.tipos_eventos te ON te.id_tipo_evento = ec.id_tipo_evento "
+                  + " left outer join caballeriza.eventos_clinicos_caballos ecc on ec.id_evento = ecc.id_evento "
+                  + " where id_caballo=?; "
+            );
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
 
@@ -287,8 +295,19 @@ public class CaballoDAO {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
-                evento.setResponsable(rs.getString("responsable"));                
                 evento.setDescripcion(rs.getString("descripcion"));
+                
+                Usuario responsable = new Usuario();
+                responsable.setId_usuario(rs.getInt("id_usuario"));
+                responsable.setNombre_completo(rs.getString("nombre_completo"));
+                evento.setResponsable(responsable);
+                
+                TipoEvento tipo_evento = new TipoEvento();
+                
+                tipo_evento.setId_tipo_evento(rs.getInt("id_tipo_evento"));
+                tipo_evento.setNombre(rs.getString("nombre"));
+                evento.setTipo_evento(tipo_evento);
+                
                 resultado.add(evento);
             }          
             rs.close();
@@ -296,6 +315,7 @@ public class CaballoDAO {
             conexion.close();
             
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;         
@@ -404,7 +424,12 @@ public class CaballoDAO {
         TipoEventoDAO dao = new TipoEventoDAO();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT  ec.id_evento, ec.id_tipo_evento, ec.fecha, ec.descripcion, ec.responsable FROM caballeriza.eventos_clinicos ec LEFT OUTER JOIN caballeriza.tipos_eventos tp ON ec.id_tipo_evento = tp.id_tipo_evento WHERE id_evento NOT IN (SELECT id_evento FROM caballeriza.eventos_clinicos_caballos ecc where id_caballo =?) order by ec.id_tipo_evento;");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT  ec.id_evento, ec.id_tipo_evento, ec.fecha, ec.descripcion, u.id_usuario, u.nombre_completo "
+                  + " FROM caballeriza.eventos_clinicos ec "
+                  + "      INNER JOIN seguridad.usuarios u ON u.id_usuario = ec.responsable "
+                  + "      LEFT OUTER JOIN caballeriza.tipos_eventos tp ON ec.id_tipo_evento = tp.id_tipo_evento "
+                  + " WHERE id_evento NOT IN (SELECT id_evento FROM caballeriza.eventos_clinicos_caballos ecc where id_caballo =?) order by ec.id_tipo_evento;");
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
 
@@ -413,8 +438,13 @@ public class CaballoDAO {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));              
                 evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
-                evento.setResponsable(rs.getString("responsable"));
                 evento.setDescripcion(rs.getString("descripcion"));
+                
+                Usuario responsable = new Usuario();
+                responsable.setId_usuario(rs.getInt("id_usuario"));
+                responsable.setNombre_completo(rs.getString("nombre_completo"));
+                evento.setResponsable(responsable);
+                
                 resultado.add(evento);
             }          
             rs.close();
