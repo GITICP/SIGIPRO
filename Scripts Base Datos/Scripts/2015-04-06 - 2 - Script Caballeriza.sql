@@ -1,7 +1,8 @@
 --########ESQUEMA DE CABALLERIZA########
 DROP SCHEMA IF EXISTS caballeriza CASCADE;
 CREATE SCHEMA caballeriza;
---Tablas de esquema de caballeriza
+
+--Tablas
 
 CREATE TABLE caballeriza.grupos_de_caballos (
     id_grupo_de_caballo serial NOT NULL,
@@ -11,8 +12,9 @@ CREATE TABLE caballeriza.grupos_de_caballos (
 
 CREATE TABLE caballeriza.caballos (
     id_caballo serial NOT NULL,
+    numero_caballo integer NOT NULL,
     nombre character varying(100) NOT NULL,
-    numero_microchip integer NOT NULL,
+    numero_microchip character varying(20) NOT NULL,
     fecha_nacimiento Date NOT NULL,
     fecha_ingreso Date NOT NULL,
     sexo character varying(45) NOT NULL,
@@ -23,12 +25,19 @@ CREATE TABLE caballeriza.caballos (
     id_grupo_de_caballo int
 );
 
+CREATE TABLE caballeriza.pesos_caballos (
+    id_caballo integer NOT NULL,
+    fecha date NOT NULL,
+    peso decimal NOT NULL 
+);
+
 CREATE TABLE caballeriza.eventos_clinicos(
     id_evento serial NOT NULL,
     fecha Date NOT NULL,
     descripcion character varying(500) NOT NULL,
-    responsable character varying(45),
-    id_tipo_evento int NOT NULL
+    responsable integer NOT NULL,
+    id_tipo_evento int NOT NULL,
+    observaciones character varying(500)
 );
 CREATE TABLE caballeriza.tipos_eventos (
     id_tipo_evento serial NOT NULL,
@@ -114,6 +123,7 @@ CREATE TABLE caballeriza.sangrias_caballos (
 --Llaves primarias esquema caballeriza
 ALTER TABLE ONLY caballeriza.grupos_de_caballos  ADD CONSTRAINT pk_grupos_de_caballos PRIMARY KEY (id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.caballos  ADD CONSTRAINT pk_caballos PRIMARY KEY (id_caballo);
+ALTER TABLE ONLY caballeriza.pesos_caballos  ADD CONSTRAINT pk_pesos_caballos PRIMARY KEY (id_caballo, fecha);
 ALTER TABLE ONLY caballeriza.inoculos  ADD CONSTRAINT pk_inoculos PRIMARY KEY (id_inoculo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos  ADD CONSTRAINT pk_eventos_clinicos PRIMARY KEY (id_evento);
 ALTER TABLE ONLY caballeriza.inoculos_caballos  ADD CONSTRAINT pk_inoculos_caballos PRIMARY KEY (id_caballo,id_inoculo);
@@ -124,17 +134,17 @@ ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangri
 ALTER TABLE ONLY caballeriza.sangrias  ADD CONSTRAINT pk_sangrias PRIMARY KEY (id_sangria);
 ALTER TABLE ONLY caballeriza.sangrias_caballos  ADD CONSTRAINT pk_sangrias_caballos PRIMARY KEY (id_sangria,id_caballo);
 
-
---Indices unicos esquema caballeriza
+--Índices únicos esquema caballeriza
 CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nombre);
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
 
-
 --Llaves foráneas esquema caballeriza
 ALTER TABLE ONLY caballeriza.caballos ADD CONSTRAINT fk_id_grupo_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo) ON DELETE SET NULL;
+ALTER TABLE ONLY caballeriza.pesos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo) ON DELETE CASCADE;
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_evento FOREIGN KEY (id_evento) REFERENCES caballeriza.eventos_clinicos(id_evento);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES caballeriza.tipos_eventos(id_tipo_evento);
+ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_usuario_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
 ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIGN KEY (grupo_de_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
@@ -170,10 +180,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (60, '[Ca
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (61, '[Caballeriza]AgregarSangria', 'Permite agregar una Sangría');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (62, '[Caballeriza]EditarSangria', 'Permite editar una Sangría');
 
---Menu
+--Menú
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Caballeriza/TipoEvento' WHERE id_menu_principal = 400;
-
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (401, 400, 'Tipo de Evento', '/Caballeriza/TipoEvento');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (402, 400, 'Caballos', '/Caballeriza/Caballo');
@@ -182,9 +191,9 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (405, 400, 'Inóculos', '/Caballeriza/Inoculo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (407, 400, 'Sangría', '/Caballeriza/Sangria');
-------Permisos Menu Principal
 
---TipoEvento
+--Permisos Menu Principal
+
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (46, 401);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (47, 401);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (48, 401);
