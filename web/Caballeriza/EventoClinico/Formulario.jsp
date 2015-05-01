@@ -59,19 +59,24 @@
             <label for="responsable" class="control-label">Responsable</label>
             <div class="form-group">
                 <div class="col-sm-12">
-                <div class="input-group">
-                    <c:choose>
-                        <c:when test="${evento.getResponsable()==null}">
-                            <input type="text" placeholder="Persona responsable del evento clínico" class="form-control" name="responsable"
-                                   onchange="setCustomValidity('')">
-                        </c:when>
-                        <c:otherwise>
-                            <input type="text" class="form-control" name="responsable" value="${evento.getResponsable()}" 
-                                   onchange="setCustomValidity('')"> 
-                            <input hidden="true" name="responsable" value="${evento.getResponsable()}">
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                    <div class="input-group">
+                        <select id="seleccionResponsable" class="select2" name="responsable" 
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Por favor seleccione el responsable del evento')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${usuarios_cab_prod}" var="usuario">
+                                <c:choose>
+                                    <c:when test="${usuario.getId_usuario() == evento.getResponsable().getId_usuario()}" >
+                                        <option value="${usuario.getId_usuario()}" selected> ${usuario.getNombre_completo()}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${usuario.getId_usuario()}"> ${usuario.getNombre_completo()}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
+                    </div>
                 </div>
             </div>  
         </div>
@@ -112,7 +117,7 @@
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
                                         <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(accion == 'Editar' && evento.valididarCaballoEnEvento(caballo)) ? "checked" : ""}>
-                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                     </label>
                                 </div>
                             </c:forEach>
@@ -131,7 +136,7 @@
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
                                         <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(accion == 'Editar' && evento.valididarCaballoEnEvento(caballo)) ? "checked" : ""}>
-                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                     </label>
                                 </div>
                             </c:forEach>

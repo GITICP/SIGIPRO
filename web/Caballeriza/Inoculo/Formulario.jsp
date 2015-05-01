@@ -237,7 +237,7 @@
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
                                         <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
-                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                     </label>
                                 </div>
                             </c:forEach>
@@ -252,7 +252,7 @@
                         onchange="setCustomValidity('')">
                     <option value=''></option>
                     <c:forEach items="${listacaballos}" var="caballo">
-                        <option value ="${caballo.getId_caballo()}" selected="selected">${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
+                        <option value ="${caballo.getId_caballo()}" selected="selected">${caballo.getNombre()} (${caballo.getNumero()})</option>
                     </c:forEach>                       
                 </select>
             </c:otherwise>

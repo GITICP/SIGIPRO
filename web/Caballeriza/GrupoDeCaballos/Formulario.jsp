@@ -52,14 +52,14 @@
                 <table id="caballos-grupo" class="table table-sorting table-striped table-hover datatable">
                     <thead>
                         <tr>
-                            <th>Nombre y Número de Microchip</th>
+                            <th>Nombre y Número de Caballo</th>
                             <th>Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${caballos}" var="caballo">
                             <tr id="caballo-${caballo.getId_caballo()}">
-                                <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                                <td>${caballo.getNombre()} (${caballo.getNumero()})</td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarCaballo(${caballo.getId_caballo()})">Eliminar</button>
                                 </td>
@@ -104,7 +104,7 @@
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
                             <c:forEach items="${caballos_restantes}" var="caballo">
-                                <option value=${caballo.getId_caballo()}>${caballo.getNombre()} (${caballo.getNumero_microchip()})</option>
+                                <option value=${caballo.getId_caballo()}>${caballo.getNombre()} (${caballo.getNumero()})</option>
                             </c:forEach>
                         </select>
                     </div>

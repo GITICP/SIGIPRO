@@ -23,7 +23,7 @@
                             <a href="/SIGIPRO/Caballeriza/Caballo?">Caballos</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/Caballo?accion=ver&id_caballo=${caballo.getId_caballo()}">${caballo.getNumero_microchip()}</a>
+                            <a href="/SIGIPRO/Caballeriza/Caballo?accion=ver&id_caballo=${caballo.getId_caballo()}">Caballo número ${caballo.getNumero()}</a>
                         </li>
               
                     </ul>
@@ -35,13 +35,13 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${caballo.getNumero_microchip()} </h3>
+                            <h3><i class="fa fa-book"></i> Caballo número ${caballo.getNumero()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <table>
                                 <tr><td> <strong>Nombre del Caballo:</strong> <td> ${caballo.getNombre()} </td></tr>
-                                 
+                                <tr><td> <strong>Número de Caballo</strong> <td>${caballo.getNumero()} </td></tr>
                             </table>
                         </div>
                         <div class="widget widget-table">
@@ -73,7 +73,7 @@
                                             <td>${eventos.getTipo_evento().getNombre()}</td>
                                             <c:choose>
                                                 <c:when test="${eventos.getResponsable()!= null}">
-                                                    <td>${eventos.getResponsable()}</td>
+                                                    <td>${eventos.getResponsable().getNombre_completo()}</td>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <td>No Tiene Usuario Responsable</td>

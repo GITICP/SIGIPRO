@@ -38,7 +38,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="number" placeholder="Ej: 3413 4112" class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}" required
+                        <input type="text" placeholder="Ej: 3413 4112" class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                oninput="setCustomValidity('')">
                     </div>

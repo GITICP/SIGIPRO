@@ -160,7 +160,7 @@
                     <thead>
                         <tr>
                             <th>Caballo</th>
-                            <th>Número Microchip</th>
+                            <th>Número de Caballo</th>
                             <th>Hematrocito</th>
                             <th>Hemoglobina</th>
                             <th>Eliminar</th>
@@ -171,7 +171,7 @@
                             <c:forEach items="${inoculo.getCaballos()}" var="caballo">
                                 <tr id="${caballo.getId_caballo()}">
                                     <td>${caballo.getNombre()}</td>
-                                    <td>${caballo.getNumero_microchip()}</td>
+                                    <td>${caballo.getNumero()}</td>
                                     <td width=150px>
                                         <input type="number" step="any" placeholder="" class="form-control" name="hematrocito_${caballo.getId_caballo()}" value="" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
                                     </td>

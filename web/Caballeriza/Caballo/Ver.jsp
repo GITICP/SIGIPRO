@@ -22,7 +22,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Caballo?">Caballos</a>
                         </li>
-                        <li class="active"> ${caballo.getNumero_microchip()} </li>
+                        <li class="active"> Caballo número ${caballo.getNumero()} </li>
                     </ul>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${caballo.getNumero_microchip()} </h3>
+                            <h3><i class="fa fa-book"></i> Caballo número ${caballo.getNumero()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=evento&id_caballo=${caballo.getId_caballo()}">Eventos Clínicos</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=inoculo&id_caballo=${caballo.getId_caballo()}">Inóculos</a>
@@ -54,7 +54,8 @@
                         <div class="widget-content">
                             <table>
                                 <tr><td> <strong>Nombre:</strong> <td>${caballo.getNombre()} </td></tr>
-                                <tr><td> <strong>Numero de Microchip:</strong> <td>${caballo.getNumero_microchip()} </td></tr>
+                                <tr><td> <strong>Número de Caballo</strong> <td>${caballo.getNumero()} </td></tr>
+                                <tr><td> <strong>Número de Microchip:</strong> <td>${caballo.getNumero_microchip()} </td></tr>
                                 <tr><td> <strong>Grupo del Caballo:</strong> <td>
                                         <c:set var="val" value=""/>
                                         <c:choose> 

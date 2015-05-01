@@ -90,7 +90,7 @@
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
                                         <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
-                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                     </label>
                                 </div>
                             </c:forEach>
@@ -110,7 +110,7 @@
                                     <div class="col-md-4">
                                         <label class="fancy-checkbox">
                                             <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(sangria.valididarCaballoEnSangria(caballo)) ? "checked" : ""}>
-                                            <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                            <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                         </label>
                                     </div>
                                 </c:forEach>
@@ -127,7 +127,7 @@
                                     <div class="col-md-4">
                                         <label class="fancy-checkbox">
                                             <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" disabled ${(sangria.valididarCaballoEnSangria(caballo)) ? "checked" : ""}>
-                                            <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                            <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                         </label>
                                     </div>
                                 </c:forEach>
