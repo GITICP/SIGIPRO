@@ -55,7 +55,7 @@ public class GrupoDeCaballosDAO
                 g.setId_grupo_caballo(resultadoConsulta.getInt("id_grupo_de_caballo"));
             }
 
-            if (!caballos.equals("()")) {
+            if (!caballos.equals(")")) {
                 consulta_caballos = getConexion().prepareStatement("UPDATE caballeriza.caballos "
                                                                    + " SET id_grupo_de_caballo = (CASE "
                                                                    + " WHEN id_caballo in " + caballos + " THEN ? "

@@ -61,7 +61,7 @@ CREATE TABLE caballeriza.inoculos (
     encargado_preparacion character varying(100) NOT NULL,
     encargado_inyeccion character varying(100) NOT NULL,
     fecha Date NOT NULL,
-    grupo_de_caballos INT NOT NULL
+    grupo_de_caballos INT
 );
 
 CREATE TABLE caballeriza.inoculos_caballos (
@@ -139,7 +139,7 @@ CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nomb
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
 
 --Llaves foráneas esquema caballeriza
-ALTER TABLE ONLY caballeriza.caballos ADD CONSTRAINT fk_id_grupo_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo) ON DELETE SET NULL;
+ALTER TABLE ONLY caballeriza.caballos ADD CONSTRAINT fk_id_grupo_caballo FOREIGN KEY (id_grupo_de_caballo) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.pesos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo) ON DELETE CASCADE;
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_evento FOREIGN KEY (id_evento) REFERENCES caballeriza.eventos_clinicos(id_evento);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
@@ -147,7 +147,7 @@ ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento F
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_usuario_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
 ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
-ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIGN KEY (grupo_de_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
+ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIGN KEY (grupo_de_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo) ON DELETE SET NULL;
 ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
 ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
 ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
