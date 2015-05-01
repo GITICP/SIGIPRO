@@ -40,12 +40,13 @@ public class ExtraccionDAO {
     public boolean insertarExtraccion(Extraccion e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.extraccion (numero_extraccion, id_especie,ingreso_cv,fecha_extraccion) " +
-                                                             " VALUES (?,?,?,?) RETURNING id_extraccion");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.extraccion (numero_extraccion, id_especie,ingreso_cv,fecha_extraccion,estado_serpientes) " +
+                                                             " VALUES (?,?,?,?,?) RETURNING id_extraccion");
             consulta.setString(1, e.getNumero_extraccion());
             consulta.setInt(2, e.getEspecie().getId_especie());
             consulta.setBoolean(3, e.isIngreso_cv());
             consulta.setDate(4, e.getFecha_extraccion());
+            consulta.setBoolean(5, false);
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -154,6 +155,27 @@ public class ExtraccionDAO {
         return resultado;
     }
     
+    public boolean terminarEdicion(int id_extraccion){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("UPDATE serpentario.extraccion "
+                    + "SET estado_serpientes=true "
+                    + "WHERE id_extraccion=?");
+
+            consulta.setInt(1,id_extraccion);
+           
+            if ( consulta.executeUpdate() == 1){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public boolean insertarUsuariosExtraccion(List<UsuariosExtraccion> usuariosextraccion){
         boolean resultado = false;
         try{
@@ -183,13 +205,15 @@ public class ExtraccionDAO {
         boolean resultado = false;
         try{
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.serpientes_extraccion (id_extraccion,id_serpiente) " +
-                                                             " VALUES (?,?);");
+                                                             " SELECT ?,? WHERE NOT EXISTS (SELECT 1 FROM serpentario.serpientes_extraccion WHERE id_extraccion=? and id_serpiente=?)");
             
             if (serpientesextraccion != null){
                 
                 for (SerpientesExtraccion serpienteextraccion : serpientesextraccion){
                     consulta.setInt(1, serpienteextraccion.getExtraccion().getId_extraccion());
                     consulta.setInt(2, serpienteextraccion.getSerpiente().getId_serpiente());
+                    consulta.setInt(3, serpienteextraccion.getExtraccion().getId_extraccion());
+                    consulta.setInt(4, serpienteextraccion.getSerpiente().getId_serpiente());
                     consulta.executeUpdate();
                 }
                 resultado = true;
@@ -230,7 +254,9 @@ public class ExtraccionDAO {
     public List<Serpiente> obtenerSerpientesExtraccion(int id_extraccion){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT serpientes.id_serpiente FROM serpentario.serpientes_extraccion as extraccion INNER JOIN serpentario.serpientes as serpientes ON extraccion.id_serpiente = serpientes.id_serpiente WHERE id_extraccion=?;");
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT serpientes.id_serpiente "
+                    + "FROM serpentario.serpientes_extraccion as extraccion INNER JOIN serpentario.serpientes as serpientes ON extraccion.id_serpiente = serpientes.id_serpiente "
+                    + "WHERE id_extraccion=?;");
             
             consulta.setInt(1, id_extraccion);
             ResultSet rs = consulta.executeQuery();
@@ -278,21 +304,48 @@ public class ExtraccionDAO {
     public List<Extraccion> obtenerExtracciones(){
         List<Extraccion> resultado = new ArrayList<Extraccion>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.extraccion ");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT extraccion.estado_serpientes, extraccion.id_extraccion, extraccion.numero_extraccion, extraccion.id_especie, extraccion.volumen_extraido, centrifugado.volumen_recuperado,liofilizacion.id_usuario_inicio, liofilizacion.peso_recuperado " +
+                        "FROM serpentario.extraccion as extraccion LEFT OUTER JOIN serpentario.centrifugado as centrifugado ON extraccion.id_extraccion = centrifugado.id_extraccion " +
+                        "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion; ");
             ResultSet rs = consulta.executeQuery();
             EspecieDAO especiedao = new EspecieDAO();
             UsuarioDAO usuariodao = new UsuarioDAO();
             while(rs.next()){
                 Extraccion extraccion = new Extraccion();
-                extraccion.setId_extraccion(rs.getInt("id_extraccion"));
-                extraccion.setFecha_extraccion(rs.getDate("fecha_extraccion"));
-                extraccion.setFecha_registro(rs.getDate("fecha_registro"));
-                extraccion.setIngreso_cv(rs.getBoolean("ingreso_cv"));
+                int id_extraccion = rs.getInt("id_extraccion");
+                extraccion.setId_extraccion(id_extraccion);
                 extraccion.setNumero_extraccion(rs.getString("numero_extraccion"));
-                extraccion.setVolumen_extraido(rs.getFloat("volumen_extraido"));
                 extraccion.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
-                extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
-                validarExtraccion(extraccion);
+                
+                float volumen_extraido=rs.getFloat("volumen_extraido");
+                float volumen_recuperado=rs.getFloat("volumen_recuperado");
+                int id_usuario_inicio=rs.getInt("id_usuario_inicio");
+                float peso_recuperado=rs.getFloat("peso_recuperado");
+                
+                //validarIsSerpiente(extraccion);
+                
+                extraccion.setIsSerpiente(rs.getBoolean("estado_serpientes"));
+                
+                if (volumen_extraido!=0){
+                    extraccion.setIsRegistro(true);
+                    extraccion.setVolumen_extraido(volumen_extraido);
+                }if (volumen_recuperado!=0){
+                    extraccion.setIsCentrifugado(true);
+                    Centrifugado centrifugado = new Centrifugado();
+                    centrifugado.setId_extraccion(id_extraccion);
+                    centrifugado.setVolumen_recuperado(volumen_recuperado);
+                    extraccion.setCentrifugado(centrifugado);
+                }if(id_usuario_inicio!=0){
+                    extraccion.setIsLiofilizacionInicio(true);
+                }
+                if (peso_recuperado!=0){
+                    extraccion.setIsLiofilizacionInicio(true);
+                    extraccion.setIsLiofilizacionFin(true);
+                    Liofilizacion liofilizacion = new Liofilizacion();
+                    liofilizacion.setId_extraccion(id_extraccion);
+                    liofilizacion.setPeso_recuperado(peso_recuperado);
+                    extraccion.setLiofilizacion(liofilizacion);
+                }
                 resultado.add(extraccion);
             }
             rs.close();
@@ -303,20 +356,6 @@ public class ExtraccionDAO {
             ex.printStackTrace();
         }
         return resultado;
-    }
-    
-    public void validarExtraccion(Extraccion e){
-        if (validarIsSerpiente(e)){
-            if (validarIsRegistro(e)){
-                if (validarIsCentrifugado(e)){
-                    if (validarIsLiofilizacionInicio(e)){
-                        if (validarIsLiofilizacionFin(e)){
-                            
-                        }
-                    }
-                }
-            }
-        }
     }
     
     public boolean validarIsSerpiente(Extraccion e){
@@ -336,85 +375,58 @@ public class ExtraccionDAO {
         }
     }
     
-    public boolean validarIsRegistro(Extraccion e){
-            if (e.getVolumen_extraido() != 0.0){
-                e.setIsRegistro(true);
-                return true;
-            }else{
-                e.setIsRegistro(false);
-                return false;
-            }
-    }
-    
-    public boolean validarIsCentrifugado(Extraccion e){
-        try{
-            Centrifugado centrifugado = this.obtenerCentrifugado(e.getId_extraccion());
-            if (centrifugado.getVolumen_recuperado() !=0.0){
-                e.setIsCentrifugado(true);
-                return true;
-            }else{
-                e.setIsCentrifugado(false);
-                return false;
-            }
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-            return false;
-        }
-    }
-    
-    public boolean validarIsLiofilizacionInicio(Extraccion e){
-        try{
-            Liofilizacion liofilizacion = this.obtenerLiofilizacion(e.getId_extraccion());
-            if (liofilizacion.getFecha_inicio()!=null){
-                e.setIsLiofilizacionInicio(true);
-                return true;
-            }else{
-                e.setIsLiofilizacionInicio(false);
-                return false;
-            }
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-            return false;
-        }
-    }
-    
-    public boolean validarIsLiofilizacionFin(Extraccion e){
-        try{
-            Liofilizacion liofilizacion = this.obtenerLiofilizacion(e.getId_extraccion());
-            if (liofilizacion.getFecha_fin() !=null){
-                e.setIsLiofilizacionFin(true);
-                return true;
-            }else{
-                e.setIsLiofilizacionFin(false);
-                return false;
-            }
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-            return false;
-        }
-    }
-    
     public Extraccion obtenerExtraccion(int id_extraccion){
         Extraccion extraccion = new Extraccion();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.extraccion WHERE id_extraccion=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT extraccion.estado_serpientes, extraccion.id_extraccion, extraccion.numero_extraccion, extraccion.id_especie, extraccion.fecha_extraccion, extraccion.fecha_registro, extraccion.ingreso_cv, extraccion.id_usuario_registro, extraccion.volumen_extraido, centrifugado.volumen_recuperado, centrifugado.id_usuario, centrifugado.fecha_volumen_recuperado, liofilizacion.id_usuario_inicio,liofilizacion.fecha_inicio, liofilizacion.peso_recuperado, liofilizacion.id_usuario_fin, liofilizacion.fecha_fin  " +
+                        "FROM serpentario.extraccion as extraccion LEFT OUTER JOIN serpentario.centrifugado as centrifugado ON extraccion.id_extraccion = centrifugado.id_extraccion " +
+                        "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON extraccion.id_extraccion = liofilizacion.id_extraccion "
+                        + "WHERE extraccion.id_extraccion=?; ");
             consulta.setInt(1, id_extraccion);
             ResultSet rs = consulta.executeQuery();
             EspecieDAO especiedao = new EspecieDAO();
             UsuarioDAO usuariodao = new UsuarioDAO();
             while(rs.next()){
                 extraccion.setId_extraccion(rs.getInt("id_extraccion"));
-                extraccion.setFecha_extraccion(rs.getDate("fecha_extraccion"));
-                extraccion.setFecha_registro(rs.getDate("fecha_registro"));
+                extraccion.setFecha_extraccion(rs.getDate("fecha_extraccion"));               
                 extraccion.setIngreso_cv(rs.getBoolean("ingreso_cv"));
                 extraccion.setNumero_extraccion(rs.getString("numero_extraccion"));
-                extraccion.setVolumen_extraido(rs.getFloat("volumen_extraido"));
                 extraccion.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
-                extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
-                validarExtraccion(extraccion);
+                
+                float volumen_extraido=rs.getFloat("volumen_extraido");
+                float volumen_recuperado=rs.getFloat("volumen_recuperado");
+                int id_usuario_inicio=rs.getInt("id_usuario_inicio");
+                float peso_recuperado=rs.getFloat("peso_recuperado");
+                Liofilizacion liofilizacion = new Liofilizacion();
+                //validarIsSerpiente(extraccion);
+                extraccion.setIsSerpiente(rs.getBoolean("estado_serpientes"));
+                if (volumen_extraido!=0){
+                    extraccion.setIsRegistro(true);
+                    extraccion.setVolumen_extraido(volumen_extraido);
+                    extraccion.setUsuario_registro(usuariodao.obtenerUsuario(rs.getInt("id_usuario_registro")));
+                    extraccion.setFecha_registro(rs.getDate("fecha_registro"));
+                }if (volumen_recuperado!=0){
+                    extraccion.setIsCentrifugado(true);
+                    Centrifugado centrifugado = new Centrifugado();
+                    centrifugado.setId_extraccion(id_extraccion);
+                    centrifugado.setVolumen_recuperado(volumen_recuperado);
+                    centrifugado.setFecha_volumen_recuperado(rs.getDate("fecha_volumen_recuperado"));
+                    centrifugado.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
+                    extraccion.setCentrifugado(centrifugado);
+                }if(id_usuario_inicio!=0){
+                    liofilizacion.setId_extraccion(id_extraccion);
+                    liofilizacion.setFecha_inicio(rs.getDate("fecha_inicio"));
+                    liofilizacion.setUsuario_inicio(usuariodao.obtenerUsuario(rs.getInt("id_usuario_inicio")));
+                    extraccion.setIsLiofilizacionInicio(true);
+                    extraccion.setLiofilizacion(liofilizacion);
+                }
+                if (peso_recuperado!=0){
+                    extraccion.setIsLiofilizacionFin(true);
+                    liofilizacion.setUsuario_fin(usuariodao.obtenerUsuario(rs.getInt("id_usuario_fin")));
+                    liofilizacion.setFecha_fin(rs.getDate("fecha_fin"));
+                    liofilizacion.setPeso_recuperado(peso_recuperado);
+                    extraccion.setLiofilizacion(liofilizacion);
+                }
             }      
             rs.close();
             consulta.close();
@@ -425,7 +437,7 @@ public class ExtraccionDAO {
         }
         return extraccion;
     }
-    
+
     public Centrifugado obtenerCentrifugado(int id_extraccion){
         Centrifugado centrifugado = new Centrifugado();
         try{
@@ -472,6 +484,23 @@ public class ExtraccionDAO {
             ex.printStackTrace();
         }
         return liofilizacion;
+    }
+    
+        public boolean validarIsLiofilizacionFin(Extraccion e){
+        try{
+            Liofilizacion liofilizacion = this.obtenerLiofilizacion(e.getId_extraccion());
+            if (liofilizacion.getFecha_fin() !=null){
+                e.setIsLiofilizacionFin(true);
+                return true;
+            }else{
+                e.setIsLiofilizacionFin(false);
+                return false;
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
     }
     
     private Connection getConexion(){

@@ -51,8 +51,8 @@
               <table>
                 <tr><td> <strong>Número de Lote:</strong></td> <td>${lote.getNumero_lote()} </td></tr>
                 <tr><td> <strong>Nombre de la Especie:</strong> <td>${lote.getEspecie().getGenero_especie()} </td></tr>
-                <tr><td> <strong>Cantidad Actual:</strong> <td>${lote.getCantidad_actual()} Miligramos </td></tr>
-                <tr><td> <strong>Cantidad Original:</strong> <td>${lote.getCantidad_original()} Miligramos</td></tr>
+                <tr><td> <strong>Cantidad Actual:</strong> <td>${lote.getCantidad_actual()} Gramos </td></tr>
+                <tr><td> <strong>Cantidad Original:</strong> <td>${lote.getCantidad_original()} Gramos</td></tr>
               </table>
               <br>
               <div class="col-md-12">

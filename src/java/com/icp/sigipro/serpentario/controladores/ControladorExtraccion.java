@@ -70,6 +70,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
             add("agregar");
             add("registrar");
             add("centrifugado");
+            add("terminar");
             add("liofilizacioninicio");
             add("liofilizacionfin");
             add("editarserpientes");
@@ -100,15 +101,11 @@ public class ControladorExtraccion extends SIGIPROServlet {
             Extraccion e = dao.obtenerExtraccion(id_extraccion);
             List<Serpiente> serpientesextraccion = dao.obtenerSerpientesExtraccion(id_extraccion);
             List<Usuario> usuariosextraccion = dao.obtenerUsuariosExtraccion(id_extraccion);
-            Centrifugado centrifugado = dao.obtenerCentrifugado(id_extraccion);
-            Liofilizacion liofilizacion = dao.obtenerLiofilizacion(id_extraccion);
             request.setAttribute("extraccion", e);
             request.setAttribute("listaSerpientes", serpientesextraccion);
             request.setAttribute("listaUsuarios", usuariosextraccion);
             request.setAttribute("ejemplares",serpientesextraccion.size());
-            request.setAttribute("centrifugado", centrifugado);
-            request.setAttribute("liofilizacion", liofilizacion);
-
+            
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -149,7 +146,9 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         String redireccion = "Extraccion/EditarSerpientes.jsp";
         
-        Extraccion extraccion = dao.obtenerExtraccion(Integer.parseInt(request.getParameter("id_extraccion")));
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+        
+        Extraccion extraccion = dao.obtenerExtraccion(id_extraccion);
         
         request.setAttribute("id_extraccion", extraccion.getId_extraccion());
         request.setAttribute("numero_extraccion", extraccion.getNumero_extraccion());
@@ -157,11 +156,14 @@ public class ControladorExtraccion extends SIGIPROServlet {
         List<Serpiente> serpientes;
         
         if (extraccion.isIngreso_cv()){
-            serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie());
+            serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie(),extraccion.getId_extraccion());
         }else{
-            serpientes = serpientedao.obtenerSerpientesCuarentena(extraccion.getEspecie().getId_especie());
+            serpientes = serpientedao.obtenerSerpientesCuarentena(extraccion.getEspecie().getId_especie(),extraccion.getId_extraccion());
         }
+        
+        List<Serpiente> serpientesextraccion = dao.obtenerSerpientesExtraccion(id_extraccion);
         request.setAttribute("serpientes",serpientes);
+        request.setAttribute("serpientesextraccion", serpientesextraccion);
         request.setAttribute("accion", "Editarserpientes");
         redireccionar(request, response, redireccion);
         
@@ -180,9 +182,9 @@ public class ControladorExtraccion extends SIGIPROServlet {
         List<Serpiente> serpientes;
         
         if (extraccion.isIngreso_cv()){
-            serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie());
+            serpientes = serpientedao.obtenerSerpientes(extraccion.getEspecie().getId_especie(),extraccion.getId_extraccion());
         }else{
-            serpientes = serpientedao.obtenerSerpientesCuarentena(extraccion.getEspecie().getId_especie());
+            serpientes = serpientedao.obtenerSerpientesCuarentena(extraccion.getEspecie().getId_especie(),extraccion.getId_extraccion());
         }
         request.setAttribute("serpientes",serpientes);
         request.setAttribute("accion", "Editarserpientes");
@@ -193,39 +195,51 @@ public class ControladorExtraccion extends SIGIPROServlet {
     
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     
-  protected void postEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    protected void postTerminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         boolean resultado = false;
-        String redireccion = "Extraccion/EditarSerpientes.jsp";
-        
         int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
-        String serpientes = request.getParameter("serpientes");
-                
-        List<SerpientesExtraccion> serpientesextraccion = dao.parsearSerpientesExtraccion(serpientes, id_extraccion);
-        Extraccion extraccion = dao.obtenerExtraccion(id_extraccion);
-        resultado = dao.insertarSerpientesExtraccion(serpientesextraccion);
         
-        //Funcion que genera la bitacora
-        for (SerpientesExtraccion i:serpientesextraccion){
-            Evento evento = new Evento();
-            evento.setEvento("Extraccion");
-            evento.setExtraccion(extraccion);
-            evento.setSerpiente(i.getSerpiente());
-            evento.setFecha_evento(extraccion.getFecha_extraccion());
-            Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
-            evento.setUsuario(usuario_evento);
-            eventodao.insertarExtraccion(evento);
-            bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTESEXTRACCION,request.getRemoteAddr());
-        }
+        String redireccion = "Extraccion/index.jsp";
         
-        this.actualizarSerpientes(request, serpientesextraccion);
+        resultado = dao.terminarEdicion(id_extraccion);
+        
         if (resultado){
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpientes agregadas correctamente"));
-            redireccion = "Extraccion/index.jsp";
+            request.setAttribute("mensaje", helper.mensajeDeExito("Edición de Serpientes finalizada correctamente."));
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeExito("Error, no se pudo terminar la Edición de Serpientes."));
         }
+        
+        
         List<Extraccion> extracciones = dao.obtenerExtracciones();
         request.setAttribute("listaExtracciones", extracciones);
         redireccionar(request, response, redireccion);
         
+    }
+    
+  protected void postEditarserpientes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        boolean resultado = false;
+        
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+        String serpientes = request.getParameter("serpientes");
+        List<SerpientesExtraccion> serpientesextraccion = dao.parsearSerpientesExtraccion(serpientes, id_extraccion);
+        Extraccion extraccion = dao.obtenerExtraccion(id_extraccion);
+        
+        if (!extraccion.isIsSerpiente()){
+            resultado = dao.insertarSerpientesExtraccion(serpientesextraccion);
+            for (SerpientesExtraccion i:serpientesextraccion){
+                Evento evento = new Evento();
+                evento.setEvento("Extraccion");
+                evento.setExtraccion(extraccion);
+                evento.setSerpiente(i.getSerpiente());
+                evento.setId_categoria(13);
+                evento.setFecha_evento(extraccion.getFecha_extraccion());
+                Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+                evento.setUsuario(usuario_evento);
+                eventodao.insertarExtraccion(evento);
+                bitacora.setBitacora(i.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SERPIENTESEXTRACCION,request.getRemoteAddr());
+            }
+            this.actualizarSerpientes(request, serpientesextraccion);
+        }   
     }
     
   protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -234,7 +248,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
         try{
             String redireccion = "Extraccion/Agregar.jsp";
             Extraccion e = construirObjeto(request);
-
+            
             resultado = dao.insertarExtraccion(e);
 
             List<UsuariosExtraccion> usuariosextraccion = construirUsuarioExtraccion(request,e);
@@ -403,7 +417,9 @@ public class ControladorExtraccion extends SIGIPROServlet {
         
         e.setNumero_extraccion(request.getParameter("numero_extraccion"));
         
-        if (request.getParameter("ingreso_cv") != null){
+        String coleccionviva = request.getParameter("ingreso_cv");
+        
+        if (coleccionviva.equals("1")){
             e.setIngreso_cv(true);
         }else{
             e.setIngreso_cv(false);
@@ -419,48 +435,57 @@ public class ControladorExtraccion extends SIGIPROServlet {
             String tcola = request.getParameter("talla_cola_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             String tpeso = request.getParameter("peso_"+Integer.toString(i.getSerpiente().getId_serpiente()));
             String tsexo = request.getParameter("sexo_"+Integer.toString(i.getSerpiente().getId_serpiente()));
-            Serpiente serpiente = i.getSerpiente();
-            if (!tcabeza.equals("")){
-                float talla_cabeza = Float.parseFloat(tcabeza);
-                serpiente.setTalla_cabeza(talla_cabeza);
+            if (tcabeza.equals("")&&tcola.equals("")&&tpeso.equals("")&&tsexo.equals("")){
+                
             }
-            if (!tcola.equals("")){
-                float talla_cola = Float.parseFloat(tcola);
-                serpiente.setTalla_cola(talla_cola);
-            }
-            if (!tpeso.equals("")){
-                float peso = Float.parseFloat(tpeso);
-                serpiente.setPeso(peso);
-            }
-            if (!tsexo.equals("")){
-                String sexo = tsexo;
-                serpiente.setSexo(sexo);
-            }
-            List<HelperSerpiente> cambios = serpientedao.editarSerpiente(serpiente);
-            
-            for (HelperSerpiente j : cambios){
-                Evento e = new Evento();
-                java.sql.Date fecha_evento = new java.sql.Date(new Date().getTime());
-                e.setSerpiente(i.getSerpiente());
-                e.setFecha_evento(fecha_evento);
-                Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
-                e.setUsuario(usuario_evento);
-                if (j.getCampo_cambiado()=="sexo"){
-                    e.setEvento("Sexo");
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
-                }if (j.getCampo_cambiado()=="talla_cabeza"){
-                    e.setEvento("Talla CabezaCloaca");
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
-                }if (j.getCampo_cambiado()=="talla_cola"){
-                    e.setEvento("Talla Cola");
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
-                }if (j.getCampo_cambiado()=="peso"){
-                    e.setEvento("Peso");
-                    e.setValor_cambiado(j.getValor_cambiado());
-                    eventodao.insertarCambio(e);
+            else{
+                Serpiente serpiente = i.getSerpiente();
+                if (!tcabeza.equals("")){
+                    float talla_cabeza = Float.parseFloat(tcabeza);
+                    serpiente.setTalla_cabeza(talla_cabeza);
+                }
+                if (!tcola.equals("")){
+                    float talla_cola = Float.parseFloat(tcola);
+                    serpiente.setTalla_cola(talla_cola);
+                }
+                if (!tpeso.equals("")){
+                    float peso = Float.parseFloat(tpeso);
+                    serpiente.setPeso(peso);
+                }
+                if (!tsexo.equals("")){
+                    String sexo = tsexo;
+                    serpiente.setSexo(sexo);
+                }
+                List<HelperSerpiente> cambios = serpientedao.editarSerpiente(serpiente);
+
+                for (HelperSerpiente j : cambios){
+                    Evento e = new Evento();
+                    java.sql.Date fecha_evento = new java.sql.Date(new Date().getTime());
+                    e.setSerpiente(i.getSerpiente());
+                    e.setFecha_evento(fecha_evento);
+                    Usuario usuario_evento = usuariodao.obtenerUsuario(request.getSession().getAttribute("usuario").toString());
+                    e.setUsuario(usuario_evento);
+                    if (j.getCampo_cambiado()=="sexo"){
+                        e.setEvento("Sexo");
+                        e.setId_categoria(9);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }if (j.getCampo_cambiado()=="talla_cabeza"){
+                        e.setEvento("Talla CabezaCloaca");
+                        e.setId_categoria(10);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }if (j.getCampo_cambiado()=="talla_cola"){
+                        e.setEvento("Talla Cola");
+                        e.setId_categoria(11);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }if (j.getCampo_cambiado()=="peso"){
+                        e.setEvento("Peso");
+                        e.setId_categoria(12);
+                        e.setValor_cambiado(j.getValor_cambiado());
+                        eventodao.insertarCambio(e);
+                    }
                 }
             }
         }

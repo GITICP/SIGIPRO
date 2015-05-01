@@ -55,10 +55,9 @@
                     <th>Especie</th>
                     <th>Fecha de Ingreso</th>
                     <th>Localidad de Origen</th>
-                    <th>Sexo</th>
-                    <th>Talla Cabeza-Cloaca (cm)</th>
-                    <th>Talla Cola (cm)</th>
-                    <th>Peso (g)</th>
+                    <th>Colección Viva</th>
+                    <th>Estado</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -75,10 +74,23 @@
                       <td>${serpiente.getEspecie().getGenero_especie()}</td>
                       <td>${serpiente.getFecha_ingresoAsString()}</td>
                       <td>${serpiente.getLocalidad_origen()}</td>
-                      <td>${serpiente.getSexo()}</td>
-                      <td>${serpiente.getTalla_cabeza()}</td>
-                      <td>${serpiente.getTalla_cola()}</td>
-                      <td>${serpiente.getPeso()}</td>
+                      <c:choose>
+                          <c:when test="${serpiente.isColeccionviva()}">
+                              <td>Si</td>
+                          </c:when>
+                          <c:otherwise>
+                              <td>No</td>
+                          </c:otherwise>
+                      </c:choose>
+                      <c:choose>
+                          <c:when test="${serpiente.isEstado()}">
+                              <td>Vivo</td>
+                          </c:when>
+                          <c:otherwise>
+                              <td>Muerto</td>
+                          </c:otherwise>
+                      </c:choose>
+                      
                     </tr>
 
                   </c:forEach>

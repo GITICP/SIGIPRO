@@ -23,7 +23,7 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Solicitudes?">Solicitudes</a>
+              <a href="/SIGIPRO/Serpentario/SolicitudVeneno?">Solicitudes</a>
             </li>
             <li class="active"> Agregar Nueva Solicitud </li>
 

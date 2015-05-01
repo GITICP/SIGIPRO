@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Serpentario</li>
             <li> 
-              <a href="/SIGIPRO/Serpentario/Veneno?">Venenos de Serpiente</a>
+              <a href="/SIGIPRO/Serpentario/Veneno?">Catálogo de Venenos</a>
             </li>
           </ul>
         </div>
@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-flask"></i> Venenos de Serpiente </h3>
+                <h3><i class="fa fa-flask"></i> Catálogo de Venenos </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -40,6 +40,7 @@
                 <thead> 
                   <tr>
                     <th>Especie</th>
+                    <th>Cantidad Total (G)</th>
                     <th>Restricción</th>
                     <th>Cantidad Máxima (mg)</th>
                   </tr>
@@ -72,6 +73,7 @@
                               </c:otherwise>
                           </c:choose>
                       </td>
+                      <td>${veneno.getCantidad()}</td>
                       <c:choose>
                           <c:when test="${veneno.isRestriccion()}">
                               <td>Si</td>

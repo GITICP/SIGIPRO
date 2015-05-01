@@ -54,8 +54,8 @@
                   <tr>
                     <th>Lote</th>
                     <th>Especie</th>
-                    <th>Cantidad Actual (mg)</th>
-                    <th>Cantidad Original (mg)</th>
+                    <th>Cantidad Actual (G)</th>
+                    <th>Cantidad Original (G)</th>
                   </tr>
                 </thead>
                 <tbody>

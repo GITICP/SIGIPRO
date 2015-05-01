@@ -32,11 +32,11 @@
                         <c:choose>
                             <c:when test="${veneno.isRestriccion()}">
                                 <c:set var="checkedRestriccion" value="true" />
-                                <input id="restriccion" type="checkbox" name="restriccion" value="true" checked="true" ${checkedRestriccion}><span>  ¿Es restringido?</span>
+                                <input id="restriccion" type="checkbox" name="restriccion" value="true" style="width:20px; height:20px;" checked="true" ${checkedRestriccion}><span>  ¿Es restringido?</span>
                             </c:when>
                             <c:otherwise>
                                 <c:set var="checkedRestriccion" value="false" />
-                                <input id="restriccion" type="checkbox" name="restriccion" value="false" ${checkedRestriccion}><span>  ¿Es restringido?</span>
+                                <input id="restriccion" type="checkbox" name="restriccion" style="width:20px; height:20px;" value="false" ${checkedRestriccion}><span>  ¿Es restringido?</span>
                             </c:otherwise>
                         </c:choose>
                         

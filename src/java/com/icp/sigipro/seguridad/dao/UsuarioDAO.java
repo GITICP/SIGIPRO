@@ -238,7 +238,7 @@ public class UsuarioDAO
             SingletonBD s = SingletonBD.getSingletonBD();
             Connection conexion = s.conectar();
 
-            PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario,id_seccion "
+            PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario,id_seccion,nombre_completo "
                                                                    + " From seguridad.usuarios"
                                                                    + " Where nombre_usuario = ? ");
 
@@ -254,6 +254,7 @@ public class UsuarioDAO
                 resultado.setId_usuario(id_usuario);
                 resultado.setNombre_usuario(nombre_usuario);
                 resultado.setId_seccion(id_seccion);
+                resultado.setNombre_completo(resultadoConsulta.getString("nombre_completo"));
 
             }
         }

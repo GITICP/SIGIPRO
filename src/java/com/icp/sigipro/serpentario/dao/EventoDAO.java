@@ -35,12 +35,12 @@ public class EventoDAO {
     public boolean insertarEvento(Evento e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,observaciones) " +
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,id_categoria,observaciones) " +
                                                              " VALUES (?,?,?,?,?) RETURNING id_evento");
             consulta.setInt(1, e.getSerpiente().getId_serpiente());
             consulta.setInt(2, e.getUsuario().getId_usuario());
             consulta.setDate(3, e.getFecha_evento());
-            consulta.setString(4, e.getEvento());
+            consulta.setInt(4, e.getId_categoria());
             consulta.setString(5, e.getObservaciones());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -60,12 +60,12 @@ public class EventoDAO {
     public boolean insertarCambio(Evento e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,valor_cambiado) " +
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,id_categoria,valor_cambiado) " +
                                                              " VALUES (?,?,?,?,?) RETURNING id_evento");
             consulta.setInt(1, e.getSerpiente().getId_serpiente());
             consulta.setInt(2, e.getUsuario().getId_usuario());
             consulta.setDate(3, e.getFecha_evento());
-            consulta.setString(4, e.getEvento());
+            consulta.setInt(4, e.getId_categoria());
             consulta.setString(5, e.getValor_cambiado());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
@@ -81,145 +81,23 @@ public class EventoDAO {
         }
         return resultado;
     }
-    
-    public List<Evento> validarSerpiente(int id_serpiente) throws SIGIPROException{
-        List<Evento> resultado = new ArrayList<Evento>();
-        try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento "
-                    + "FROM serpentario.serpientes AS serpientes "
-                    + "INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and (eventos.evento = 'Pase a Coleccion Viva' "
-                    + "or eventos.evento='Deceso' or eventos.evento='Catálogo Tejido' or eventos.evento='Colección Húmeda') "
-                    + "WHERE serpientes.id_serpiente=?;");
-            
-            consulta.setInt(1,id_serpiente);
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            while( resultadoConsulta.next() ){
-                Evento evento;
-                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
-                resultado.add(evento);
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            conexion.close();
-            
-        }catch (Exception e){
-            
-        }
-        return resultado;
-        
-        
-    }
-    
-    public Evento validarPasoCV(int id_serpiente) throws SIGIPROException{
-        boolean resultado = false;
-        Evento evento = new Evento();
-        try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Pase a Coleccion Viva' WHERE serpientes.id_serpiente=?");
-            
-            consulta.setInt(1,id_serpiente);
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            evento = new Evento();
-            if ( resultadoConsulta.next() ){
-                resultado = true;
-                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            conexion.close();
-            
-        }catch (Exception e){
-            
-        }
-        return evento;
-        
-        
-    }
-    
-    public Evento validarCatalogoTejido(int id_serpiente) throws SIGIPROException{
-        boolean resultado = false;
-        Evento evento = new Evento();
-        try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Catálogo Tejido' WHERE serpientes.id_serpiente=?");
-            
-            consulta.setInt(1,id_serpiente);
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            evento = new Evento();
-            if ( resultadoConsulta.next() ){
-                resultado = true;
-                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            conexion.close();
-            
-        }catch (Exception e){
-            
-        }
-        return evento;
-        
-        
-    }
-    
-    public Evento validarColeccionHumeda(int id_serpiente) throws SIGIPROException{
-        boolean resultado = false;
-        Evento evento = new Evento();
-        try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Colección Húmeda' WHERE serpientes.id_serpiente=?");
-            
-            consulta.setInt(1,id_serpiente);
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            evento = new Evento();
-            if ( resultadoConsulta.next() ){
-                resultado = true;
-                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            conexion.close();
-            
-        }catch (Exception e){
-            
-        }
-        return evento;
-        
-        
-    }
-    
-    public Evento validarDeceso(int id_serpiente) throws SIGIPROException{
-        boolean resultado = false;
-        Evento evento = new Evento();
-        try{
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_evento FROM serpentario.serpientes AS serpientes INNER JOIN serpentario.eventos AS eventos ON serpientes.id_serpiente=eventos.id_serpiente and eventos.evento = 'Deceso' WHERE serpientes.id_serpiente=?");
-            
-            consulta.setInt(1,id_serpiente);
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            evento = new Evento();
-            if ( resultadoConsulta.next() ){
-                resultado = true;
-                evento = this.obtenerEvento(resultadoConsulta.getInt("id_evento"));
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            conexion.close();
-            
-        }catch (Exception e){
-            
-        }
-        return evento;
-    }
-    
+ 
     public boolean insertarExtraccion(Evento e){
         boolean resultado = false;
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,evento,observaciones,id_extraccion) " +
-                                                             " VALUES (?,?,?,?,?,?) RETURNING id_evento");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO serpentario.eventos (id_serpiente, id_usuario, fecha_evento,id_categoria,observaciones,id_extraccion) "
+                    + "SELECT ?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_EXTRACCION=?) "
+                    + "RETURNING id_evento");
             consulta.setInt(1, e.getSerpiente().getId_serpiente());
             consulta.setInt(2, e.getUsuario().getId_usuario());
             consulta.setDate(3, e.getFecha_evento());
-            consulta.setString(4, e.getEvento());
+            consulta.setInt(4, e.getId_categoria());
             consulta.setString(5, e.getObservaciones());
             consulta.setInt(6, e.getExtraccion().getId_extraccion());
+            consulta.setInt(7, e.getSerpiente().getId_serpiente());
+            consulta.setInt(8, e.getExtraccion().getId_extraccion());
             ResultSet resultadoConsulta = consulta.executeQuery();
+            System.out.println(consulta);
             if ( resultadoConsulta.next() ){
                 resultado = true;
                 e.setId_evento(resultadoConsulta.getInt("id_evento"));
@@ -234,10 +112,86 @@ public class EventoDAO {
         return resultado;
     }
     
+    public boolean validarPasoCV(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_categoria FROM serpentario.serpientes as serpiente INNER JOIN serpentario.eventos as evento ON serpiente.id_serpiente=evento.id_serpiente "
+                    + "WHERE serpiente.id_serpiente=? and evento.id_categoria=5;");
+            consulta.setInt(1, id_serpiente);
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public boolean reversarPasoCV(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_CATEGORIA=5; ");
+            consulta.setInt(1, id_serpiente);
+            if (consulta.executeUpdate() == 1 ){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+        public boolean reversarDeceso(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM SERPENTARIO.EVENTOS WHERE ID_SERPIENTE=? AND ID_CATEGORIA=6; ");
+            consulta.setInt(1, id_serpiente);
+            if (consulta.executeUpdate() == 1 ){
+                resultado = true;
+            }
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public boolean validarDeceso(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_categoria FROM serpentario.serpientes as serpiente INNER JOIN serpentario.eventos as evento ON serpiente.id_serpiente=evento.id_serpiente "
+                    + "WHERE serpiente.id_serpiente=? and evento.id_categoria=6;");
+            
+            consulta.setInt(1, id_serpiente);
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if ( resultadoConsulta.next() ){
+                resultado = true;
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public List<Evento> obtenerEventos(int id_serpiente){
         List<Evento> resultado = new ArrayList<Evento>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos WHERE id_serpiente=?;");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos as eventos INNER JOIN serpentario.categorias as categorias ON eventos.id_categoria = categorias.id_categoria "
+                    + "WHERE eventos.id_serpiente=?;");
             consulta.setInt(1, id_serpiente);
             ResultSet rs = consulta.executeQuery();
             SerpienteDAO serpienteDao = new SerpienteDAO();
@@ -249,8 +203,9 @@ public class EventoDAO {
                 e.setSerpiente(s);
                 Usuario u = usuarioDao.obtenerUsuario(rs.getInt("id_usuario"));
                 e.setUsuario(u);
+                e.setEvento(rs.getString("nombre_categoria"));
+                e.setId_categoria(rs.getInt("id_categoria"));
                 e.setFecha_evento(rs.getDate("fecha_evento"));
-                e.setEvento(rs.getString("evento"));
                 e.setObservaciones(rs.getString("observaciones"));
                 e.setValor_cambiado(rs.getString("valor_cambiado"));
                 try{
@@ -277,7 +232,8 @@ public class EventoDAO {
     public Evento obtenerEvento(int id_evento){
         Evento e = new Evento();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos WHERE id_evento=?;");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos as eventos INNER JOIN serpentario.cateogiras as categorias ON eventos.id_categoria = categorias.id_categoria "
+                    + "WHERE eventos.id_evento=?;");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
             SerpienteDAO serpienteDao = new SerpienteDAO();
@@ -289,7 +245,8 @@ public class EventoDAO {
                 Usuario u = usuarioDao.obtenerUsuario(rs.getInt("id_usuario"));
                 e.setUsuario(u);
                 e.setFecha_evento(rs.getDate("fecha_evento"));
-                e.setEvento(rs.getString("evento"));
+                e.setEvento(rs.getString("nombre_categoria"));
+                e.setId_categoria(rs.getInt("id_categoria"));
                 e.setObservaciones(rs.getString("observaciones"));
                 e.setValor_cambiado(rs.getString("valor_cambiado"));
                 try{

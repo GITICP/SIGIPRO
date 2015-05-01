@@ -49,6 +49,10 @@ public class Lote {
     public float getCantidad_actual() {
         return cantidad_actual;
     }
+    
+    public float getCantidad_actualAsMiligramos() {
+        return (float) (cantidad_actual*1000);
+    }
 
     public void setCantidad_actual(float cantidad_actual) {
         this.cantidad_actual = cantidad_actual;
@@ -57,7 +61,11 @@ public class Lote {
     public float getCantidad_original() {
         return cantidad_original;
     }
-
+    
+    public float getCantidad_originalAsMiligramos() {
+        return (float) (cantidad_original*1000);
+    }
+ 
     public void setCantidad_original(float cantidad_original) {
         this.cantidad_original = cantidad_original;
     }
