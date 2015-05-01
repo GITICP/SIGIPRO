@@ -107,7 +107,7 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(id_grupo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
       //*----------------------------* 
-      request.setAttribute("mensaje", helper.mensajeDeExito("Grupohembras eliminado correctamente."));
+      request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de hembras eliminado correctamente."));
     } catch (SIGIPROException ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
     }
@@ -145,7 +145,7 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       try {
         gruposhembras = dao.obtenerGruposhembras();
         request.setAttribute("listaGruposhembras", gruposhembras);
-        request.setAttribute("mensaje", helper.mensajeDeExito("Grupohembras agregado con éxito"));
+        request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de hembras agregado con éxito"));
       } catch (SIGIPROException ex) {
         request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
       }
@@ -176,7 +176,7 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       try {
         gruposhembras = dao.obtenerGruposhembras();
         request.setAttribute("listaGruposhembras", gruposhembras);
-        request.setAttribute("mensaje", helper.mensajeDeExito("Grupohembras editado con éxito"));
+        request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de hembras editado con éxito"));
 
       } catch (SIGIPROException ex) {
         request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
