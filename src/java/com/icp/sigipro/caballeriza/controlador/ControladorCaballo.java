@@ -13,10 +13,12 @@ import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
+import com.icp.sigipro.caballeriza.modelos.Peso;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,8 +45,9 @@ import org.postgresql.util.Base64;
 @WebServlet(name = "ControladorCaballo", urlPatterns = {"/Caballeriza/Caballo"})
 public class ControladorCaballo extends SIGIPROServlet
 {
+
     private final int[] permisos = {1, 49, 50};
-    private CaballoDAO dao = new CaballoDAO();
+    private final CaballoDAO dao = new CaballoDAO();
 
     protected final Class clase = ControladorCaballo.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -66,6 +69,7 @@ public class ControladorCaballo extends SIGIPROServlet
             add("agregar");
             add("editar");
             add("agregarimagen");
+            add("agregarpeso");
         }
     };
 
@@ -109,7 +113,7 @@ public class ControladorCaballo extends SIGIPROServlet
             request.setAttribute("grupo", g.getGrupo_de_caballos());
             request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
             request.setAttribute("caballo", g);
-
+            request.setAttribute("helper", helper);
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -221,15 +225,16 @@ public class ControladorCaballo extends SIGIPROServlet
         Caballo c = construirObjeto(request);
 
         resultado = dao.insertarCaballo(c);
-        
+
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (resultado) {
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
-            
+
             request.setAttribute("mensaje", helper.mensajeDeExito("Caballo agregado correctamente"));
             redireccion = "Caballo/index.jsp";
-        } else {
+        }
+        else {
             request.setAttribute("mensaje", helper.mensajeDeError("Caballo no pudo ser agregado. El número de caballo ya se encuentra en uso."));
             request.setAttribute("accion", "Agregar");
             request.setAttribute("caballo", c);
@@ -253,7 +258,8 @@ public class ControladorCaballo extends SIGIPROServlet
         if (resultado) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Caballo editado correctamente"));
             redireccion = "Caballo/index.jsp";
-        } else {
+        }
+        else {
             request.setAttribute("mensaje", helper.mensajeDeError("Caballo no pudo ser agregado. El número de caballo ya se encuentra en uso."));
             request.setAttribute("accion", "Editar");
             request.setAttribute("caballo", c);
@@ -303,6 +309,46 @@ public class ControladorCaballo extends SIGIPROServlet
         }
     }
 
+    protected void postAgregarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String redireccion = "Caballo/Ver.jsp";
+        HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+        Peso p = new Peso();
+        int id_caballo = 0;
+        
+        try {
+            id_caballo = Integer.parseInt(request.getParameter("id_caballo_peso"));
+            p.setId_caballo(id_caballo);
+            p.setFecha(helper_fechas.formatearFecha(request.getParameter("fecha_pesaje")));
+            p.setPeso(Float.parseFloat(request.getParameter("peso")));
+        } catch(ParseException p_ex) {
+            
+        }
+        
+        try {
+            if (dao.agregarPeso(p)) {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Peso registrado correctamente."));
+            } else {
+                throw new SIGIPROException("Error al registrar el peso.");
+            }
+        } catch(SIGIPROException sig_ex){
+            request.setAttribute("mensaje", helper.mensajeDeError(redireccion));
+        }
+        
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            request.setAttribute("imagenCaballo", this.obtenerImagen(g));
+            request.setAttribute("grupo", g.getGrupo_de_caballos());
+            request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
+            request.setAttribute("caballo", g);
+            request.setAttribute("helper", helper);
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private Caballo construirObjeto(HttpServletRequest request)
     {
         Caballo c = new Caballo();
@@ -311,7 +357,7 @@ public class ControladorCaballo extends SIGIPROServlet
         String grupo = request.getParameter("grupodecaballo");
 
         GrupoDeCaballos grupodecaballo;
-        if (grupo == "") {
+        if (grupo.equals("")) {
             grupodecaballo = null;
         }
         else {
@@ -334,10 +380,10 @@ public class ControladorCaballo extends SIGIPROServlet
         catch (ParseException ex) {
 
         }
-        if(request.getParameter("numero_caballo") != null){
+        if (request.getParameter("numero_caballo") != null) {
             c.setNumero(Integer.parseInt(request.getParameter("numero_caballo")));
         }
-        
+
         c.setNombre(request.getParameter("nombre"));
         c.setNumero_microchip(request.getParameter("numero_microchip"));
         c.setSexo(request.getParameter("sexo"));

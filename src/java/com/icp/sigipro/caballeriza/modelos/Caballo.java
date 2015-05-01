@@ -70,6 +70,8 @@ public class Caballo {
     private BigDecimal sangre_dia3;
     private BigDecimal plasma_dia3;
     private BigDecimal LAL_dia3;
+    
+    private List<Peso> pesos;
 
     public Caballo() {
     }
@@ -317,6 +319,19 @@ public class Caballo {
     public void setLAL_dia3(BigDecimal LAL_dia3) {
         this.LAL_dia3 = LAL_dia3;
     }
-    
 
+    public List<Peso> getPesos()
+    {
+        return pesos;
+    }
+
+    public void setPesos(List<Peso> pesos)
+    {
+        this.pesos = pesos;
+    }
+    
+    public void agregarPeso(Peso p) {
+        if(pesos == null) pesos = new ArrayList<Peso>();
+        pesos.add(p);
+    }
 }
