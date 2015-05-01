@@ -10,7 +10,7 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="ActivosFijos" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Conejos Produccion" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 

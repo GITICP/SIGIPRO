@@ -7,7 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Conejos Produccion" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="ConejosProduccion" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Machos?">Machos</a>
+              <a href="/SIGIPRO/Conejera/ConejosProduccion?">Grupos de Conejos de Produccion</a>
             </li>
           </ul>
         </div>
@@ -36,10 +36,10 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i>Machos</h3>
+              <h3><i class="fa fa-barcode"></i>Grupos de Conejos de Produccion</h3>
 
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Conejera/Machos?accion=agregar">Agregar Macho</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Conejera/ConejosProduccion?accion=agregar">Agregar Grupo</a>
                 </div>
             </div>
             ${mensaje}
@@ -48,10 +48,8 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Identificación</th>
-                    <th>Fecha Ingreso</th>
-                    <th>Fecha Retiro</th>
-                    <th>Descripción</th>
+                    <th>Identificador</th>
+                    <th>Cantidad</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -59,15 +57,13 @@
                       
                     <tr>
                       <td>
-                        <a href="/SIGIPRO/Conejera/Machos?accion=ver&id_macho=${conejo.getId_macho()}">
+                        <a href="/SIGIPRO/Conejera/ConejosProduccion?accion=ver&id_produccion=${conejo.getId_produccion()}">
                           <div style="height:100%;width:100%">
-                            ${conejo.getIdentificacion()}
+                            ${conejo.getIdentificador()}
                           </div>
                         </a>
                       </td>
-                      <td>${conejo.getFecha_ingreso_S()}</td>
-                      <td>${conejo.getFecha_retiro_S()}</td>
-                      <td>${conejo.getDescripcion()}</td>
+                      <td>${conejo.getCantidad()}</td>
                     </tr>
 
                   </c:forEach>

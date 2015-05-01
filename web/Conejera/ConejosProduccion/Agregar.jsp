@@ -23,9 +23,9 @@
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Machos?">Machos</a>
+              <a href="/SIGIPRO/Conejera/ConejosProduccion?">Grupos de Conejos Produccion</a>
             </li>
-            <li class="active"> Agregar Macho</li>
+            <li class="active"> Agregar Grupo</li>
 
           </ul>
         </div>
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar Nuevo Macho</h3>
+              <h3><i class="fa fa-barcode"></i> Agregar Nuevo Grupo</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
