@@ -157,11 +157,6 @@ function llenar_campo_caballos() {
     });
     $('#caballos').val(caballos_codificados.slice(0, -3));
 }
-
-$(document).on("click", ".imagen-Modal", function () {                            
-                            var id_caballo = $(this).data('id');
-                            $("#id_caballo_imagen").val(id_caballo);                          
-                            });
                             
 function previewFile(){
     if (window.File && window.FileReader && window.FileList && window.Blob) {

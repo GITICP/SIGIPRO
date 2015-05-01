@@ -122,7 +122,7 @@
 
     </t:plantilla_general>
 
-    <t:modal idModal="modalAgregarPeso" titulo="Agregar Imagen">
+    <t:modal idModal="modalAgregarPeso" titulo="Registrar Peso">
         <jsp:attribute name="form">
             <div class="widget-content">
                 <form class="form-horizontal" id="agregarEventos" id="agregarPeso" method="post" action="Caballo">
@@ -165,12 +165,12 @@
 
     </t:modal>
 
-    <t:modal idModal="modalRegistrarImagen" titulo="Registrar Peso">
+    <t:modal idModal="modalAgregarImagen" titulo="Agregar Imagen">
         <jsp:attribute name="form">
             <div class="widget-content">
                 <form class="form-horizontal" id="agregarEventos" enctype='multipart/form-data' autocomplete="off" method="post" action="Caballo">
                     <input hidden="true" name="accion" value="agregarimagen">
-                    <input hidden="true" id='id_caballo' name='id_caballo' ${caballo.getId_caballo()}>
+                    <input hidden="true" id='id_serpiente_imagen' name='id_caballo_imagen' value="${caballo.getId_caballo()}">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="widget widget-table">
@@ -199,12 +199,9 @@
                     <div class="form-group">
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Imagen</button>            
-                        </div>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Imagen</button>            </div>
                     </div>
                 </form>
             </div>
-
         </jsp:attribute>
-
     </t:modal>

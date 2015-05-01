@@ -68,7 +68,7 @@ public class ControladorCaballo extends SIGIPROServlet
         {
             add("agregar");
             add("editar");
-            add("agregarimagen");
+            add("agregareditar");
             add("agregarpeso");
         }
     };
@@ -268,7 +268,7 @@ public class ControladorCaballo extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void postAgregarimagen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String redireccion = "Caballo/index.jsp";
         try {
