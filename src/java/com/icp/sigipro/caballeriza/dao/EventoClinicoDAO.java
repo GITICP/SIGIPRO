@@ -360,14 +360,15 @@ public class EventoClinicoDAO
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" select nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.eventos_clinicos_caballos ecc on c.id_caballo = ecc.id_caballo where id_evento=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" select nombre, numero_microchip, numero from caballeriza.caballos c left outer join caballeriza.eventos_clinicos_caballos ecc on c.id_caballo = ecc.id_caballo where id_evento=?; ");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Caballo caballo = new Caballo();
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
+                caballo.setNumero(rs.getInt("numero"));
                 resultado.add(caballo);
             }
             rs.close();

@@ -155,14 +155,15 @@ public class SangriaPruebaDAO
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("select nombre, numero_microchip,hematrocito, hemoglobina from caballeriza.caballos c left outer join caballeriza.sangrias_pruebas_caballos ecc on c.id_caballo = ecc.id_caballo where id_sangria_prueba=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement("select nombre, numero_microchip, numero, hematrocito, hemoglobina from caballeriza.caballos c left outer join caballeriza.sangrias_pruebas_caballos ecc on c.id_caballo = ecc.id_caballo where id_sangria_prueba=?; ");
             consulta.setInt(1, id_sangria_prueba);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Caballo caballo = new Caballo();
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
+                caballo.setNumero(rs.getInt("numero"));
                 caballo.setHematrocito(rs.getBigDecimal("hematrocito"));
                 caballo.setHemoglibina(rs.getBigDecimal("hemoglobina"));
                 resultado.add(caballo);
@@ -266,7 +267,7 @@ public class SangriaPruebaDAO
         
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT sp.id_sangria_prueba, c.id_caballo, c.nombre, c.numero_microchip "
+                    " SELECT sp.id_sangria_prueba, c.id_caballo, c.nombre, c.numero_microchip, c.numero "
                   + " FROM ( "
                   + "   SELECT id_sangria_prueba "
                   + "   FROM caballeriza.sangrias_pruebas sp"  
@@ -295,7 +296,8 @@ public class SangriaPruebaDAO
                 Caballo c = new Caballo();
                 c.setId_caballo(rs.getInt("id_caballo"));
                 c.setNombre(rs.getString("nombre"));
-                c.setNumero_microchip(rs.getInt("numero_microchip"));
+                c.setNumero_microchip(rs.getString("numero_microchip"));
+                c.setNumero(rs.getInt("numero"));
                 sp.agregarCaballo(c);
             }
             

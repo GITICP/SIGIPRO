@@ -18,17 +18,19 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test="${caballo.getNombre()==null}">
-                                <input type="text" placeholder="Nombre del caballo" class="form-control" name="nombre" required
-                                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                                       oninput="setCustomValidity('')"> 
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" disabled='true' class="form-control" name="nombre" value="${caballo.getNombre()}"> 
-                                <input hidden="true" name="nombre" value="${caballo.getNombre()}">
-                            </c:otherwise>
-                        </c:choose>
+                        <input type="text" placeholder="Nombre del caballo" class="form-control" name="nombre" value="${caballo.getNombre()}" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               oninput="setCustomValidity('')"> 
+                    </div>
+                </div>
+            </div>
+            <label for="numero_microchip" class="control-label">*Número de Caballo</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="number" placeholder="Número de Caballo" class="form-control" name="numero_caballo" value=${(caballo.getNumero()!=0) ? caballo.getNumero() : ""} required
+                               oninvalid="setCustomValidity('Este campo es requerido ')" ${(caballo.getNumero()!=0) ? "disabled" : ""}
+                               oninput="setCustomValidity('')"> 
                     </div>
                 </div>
             </div>
@@ -36,20 +38,12 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test="${caballo.getNumero_microchip()==null||caballo.getNumero_microchip()==0}">
-                                <input type="number" placeholder="341341" class="form-control" name="numero_microchip" required
-                                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                                       oninput="setCustomValidity('')"> 
-                            </c:when>
-                            <c:otherwise>
-                                <input type="number" disabled='true' class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}"> 
-                                <input hidden="true" name="numero_microchip" value="${caballo.getNumero_microchip()}">
-                            </c:otherwise>
-                        </c:choose>
+                        <input type="number" placeholder="Ej: 3413 4112" class="form-control" name="numero_microchip" value="${caballo.getNumero_microchip()}" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               oninput="setCustomValidity('')">
                     </div>
                 </div>
-            </div>              
+            </div>
             <label for="grupodecaballo" class="control-label">Grupo del caballo</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -76,38 +70,19 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test="${caballo.getFecha_ingreso()==null}">
-                                <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
-                                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                                       onchange="setCustomValidity('')">
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" disabled='true' value="${caballo.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
-                                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                                       onchange="setCustomValidity('')">
-                                <input hidden="true" name="fecha_ingreso" value="${caballo.getFecha_ingresoAsString()}">
-                            </c:otherwise>
-                        </c:choose>
+                        <input type="text" value="${(caballo.getFecha_ingreso() != null) ? caballo.getFecha_ingresoAsString() : helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               onchange="setCustomValidity('')">
                     </div>
                 </div>
             </div>
-
             <label for="fecha_nacimiento" class="control-label">Fecha de Nacimiento</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test="${caballo.getFecha_nacimiento()==null}">
-                                <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_nacimiento" data-date-format="dd/mm/yyyy"
-                                       onchange="setCustomValidity('')">
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" disabled='true' value="${caballo.getFecha_nacimientoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_nacimiento" data-date-format="dd/mm/yyyy"
-                                       onchange="setCustomValidity('')">
-                                <input hidden="true" name="fecha_nacimiento" value="${caballo.getFecha_ingresoAsString()}">
-                            </c:otherwise>
-                        </c:choose>
+                        <input type="text" value="${(caballo.getFecha_nacimiento() != null) ? caballo.getFecha_nacimientoAsString() : helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_nacimiento" data-date-format="dd/mm/yyyy"
+                               oninvalid="setCustomValidity('Este campo es requerido ')" 
+                               onchange="setCustomValidity('')">
                     </div>
                 </div>
             </div>
@@ -117,30 +92,22 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test="${caballo.getColor()==null}">
-                                <select id="seleccionSexo" class="select2" name="sexo" 
-                                        style='background-color: #fff;' required
-                                        oninvalid="setCustomValidity('Por favor seleccione un sexo')"
-                                        onchange="setCustomValidity('')">
-                                    <option value=''></option>
-                                    <c:forEach items="${sexos}" var="sexo">
-                                        <c:choose>
-                                            <c:when test="${sexo.equals(caballo.getSexo())}" >
-                                                <option  value="${sexo}" selected> ${sexo}</option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <option value="${sexo}">${sexo}</option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </select>
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" disabled='true' class="form-control" name="sexo" value="${caballo.getSexo()}"> 
-                                <input hidden="true" name="sexo" value="${caballo.getSexo()}">
-                            </c:otherwise>
-                        </c:choose>
+                        <select id="seleccionSexo" class="select2" name="sexo" 
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Por favor seleccione un sexo')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${sexos}" var="sexo">
+                                <c:choose>
+                                    <c:when test="${sexo.equals(caballo.getSexo())}" >
+                                        <option  value="${sexo}" selected> ${sexo}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${sexo}">${sexo}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -148,16 +115,8 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test="${caballo.getColor()==null}">
-                                <input type="text" placeholder="Negro" class="form-control" name="color"
-                                       oninput="setCustomValidity('')"> 
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" disabled='true' class="form-control" name="color" value="${caballo.getColor()}"> 
-                                <input hidden="true" name="color" value="${caballo.getColor()}">
-                            </c:otherwise>
-                        </c:choose>
+                        <input type="text" placeholder="Ej: Negro" class="form-control" name="color"
+                               oninput="setCustomValidity('')"> 
                     </div>
                 </div>
             </div>         

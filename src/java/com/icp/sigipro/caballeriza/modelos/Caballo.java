@@ -23,6 +23,7 @@ public class Caballo {
     
     public static final String MUERTO = "Muerto";
     public static final String VIVO = "Vivo";
+    public static final String DESCARTADO = "Descartado";
     
     public static final String MACHO = "Macho";
     public static final String HEMBRA = "Hembra";
@@ -32,6 +33,7 @@ public class Caballo {
         {
             add(MUERTO);
             add(VIVO);
+            add(DESCARTADO);
         }
     };
     
@@ -46,8 +48,9 @@ public class Caballo {
     
     
     private int id_caballo;
+    private int numero;
     private String nombre;
-    private int numero_microchip;
+    private String numero_microchip;
     private Date fecha_nacimiento;
     private Date fecha_ingreso;
     private String sexo;
@@ -71,7 +74,7 @@ public class Caballo {
     public Caballo() {
     }
 
-    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, byte[] fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
+    public Caballo(int id_caballo, String nombre, String numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, byte[] fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
         this.id_caballo = id_caballo;
         this.nombre = nombre;
         this.numero_microchip = numero_microchip;
@@ -114,6 +117,16 @@ public class Caballo {
         this.id_caballo = id_caballo;
     }
 
+    public int getNumero()
+    {
+        return numero;
+    }
+
+    public void setNumero(int numero)
+    {
+        this.numero = numero;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -122,11 +135,11 @@ public class Caballo {
         this.nombre = nombre;
     }
 
-    public int getNumero_microchip() {
+    public String getNumero_microchip() {
         return numero_microchip;
     }
 
-    public void setNumero_microchip(int numero_microchip) {
+    public void setNumero_microchip(String numero_microchip) {
         this.numero_microchip = numero_microchip;
     }
 

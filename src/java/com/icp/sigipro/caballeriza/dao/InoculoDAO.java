@@ -282,7 +282,7 @@ public class InoculoDAO {
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" select c.id_caballo, nombre, numero_microchip from caballeriza.caballos c left outer join caballeriza.inoculos_caballos ecc on c.id_caballo = ecc.id_caballo where id_inoculo=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(" select c.id_caballo, nombre, numero_microchip, numero from caballeriza.caballos c left outer join caballeriza.inoculos_caballos ecc on c.id_caballo = ecc.id_caballo where id_inoculo=?; ");
             consulta.setInt(1, id_inoculo);
             ResultSet rs = consulta.executeQuery();
 
@@ -290,7 +290,8 @@ public class InoculoDAO {
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
+                caballo.setNumero(rs.getInt("numero"));
                 resultado.add(caballo);
             }          
             rs.close();
@@ -335,7 +336,7 @@ public class InoculoDAO {
         try {
             
             PreparedStatement consulta = getConexion().prepareStatement(
-                                      " SELECT i.id_inoculo, c.id_caballo, c.nombre, c.numero_microchip "
+                                      " SELECT i.id_inoculo, c.id_caballo, c.nombre, c.numero_microchip, c.numero "
                                     + " FROM caballeriza.inoculos i "
                                     + "     INNER JOIN caballeriza.inoculos_caballos ic ON ic.id_inoculo = i.id_inoculo "
                                     + "     INNER JOIN caballeriza.caballos c ON c.id_caballo = ic.id_caballo "
@@ -358,7 +359,8 @@ public class InoculoDAO {
                 Caballo c = new Caballo();
                 c.setId_caballo(rs.getInt("id_caballo"));
                 c.setNombre(rs.getString("nombre"));
-                c.setNumero_microchip(rs.getInt("numero_microchip"));
+                c.setNumero_microchip(rs.getString("numero_microchip"));
+                c.setNumero(rs.getInt(rs.getInt("numero")));
                 
                 inoculo.agregarCaballo(c);
             }

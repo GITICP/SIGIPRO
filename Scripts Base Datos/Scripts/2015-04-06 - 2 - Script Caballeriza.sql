@@ -12,7 +12,7 @@ CREATE TABLE caballeriza.grupos_de_caballos (
 
 CREATE TABLE caballeriza.caballos (
     id_caballo serial NOT NULL,
-    numero_caballo integer NOT NULL,
+    numero integer UNIQUE NOT NULL,
     nombre character varying(100) NOT NULL,
     numero_microchip character varying(20) NOT NULL,
     fecha_nacimiento Date NOT NULL,

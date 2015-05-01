@@ -10,11 +10,9 @@ import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
-import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,11 +35,11 @@ public class CaballoDAO {
     
     public boolean insertarCaballo(Caballo c){
         boolean resultado = false;
-        try{
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.caballos (nombre, numero_microchip,fecha_nacimiento,fecha_ingreso,sexo,color,otras_sennas,estado,id_grupo_de_caballo) " +
-                                                             " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_caballo");
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.caballos (nombre, numero_microchip,fecha_nacimiento,fecha_ingreso,sexo,color,otras_sennas,estado,id_grupo_de_caballo, numero) " +
+                                                             " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_caballo");
             consulta.setString(1, c.getNombre());
-            consulta.setInt(2, c.getNumero_microchip());
+            consulta.setString(2, c.getNumero_microchip());
             consulta.setDate(3, c.getFecha_nacimiento());
             consulta.setDate(4,c.getFecha_ingreso());
             consulta.setString(5,c.getSexo());
@@ -54,6 +52,7 @@ public class CaballoDAO {
             else{
                consulta.setInt(9, c.getGrupo_de_caballos().getId_grupo_caballo()); 
             }
+            consulta.setInt(10, c.getNumero());
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
@@ -91,11 +90,9 @@ public class CaballoDAO {
                 consulta.setNull(3, java.sql.Types.INTEGER);
             }
             else{
-               consulta.setInt(3, c.getGrupo_de_caballos().getId_grupo_caballo()); 
+                consulta.setInt(3, c.getGrupo_de_caballos().getId_grupo_caballo()); 
             }            
             consulta.setInt(4,c.getId_caballo());
-            
-            int xxx= consulta.executeUpdate();
 
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
@@ -170,14 +167,15 @@ public class CaballoDAO {
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
                 caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
                 caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 caballo.setSexo(rs.getString("sexo"));
                 caballo.setColor(rs.getString("color"));
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
-                caballo.setEstado(rs.getString("estado"));              
+                caballo.setEstado(rs.getString("estado"));
+                caballo.setNumero(rs.getInt("numero"));
                 resultado.add(caballo);
             }
             rs.close();
@@ -192,7 +190,7 @@ public class CaballoDAO {
     public List<Caballo> obtenerCaballosRestantes(){
         List<Caballo> resultado = new ArrayList<Caballo>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_caballo, nombre, numero_microchip FROM caballeriza.caballos where id_grupo_de_caballo is null AND estado = ?;");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_caballo, nombre, numero_microchip, numero FROM caballeriza.caballos where id_grupo_de_caballo is null AND estado = ?;");
             
             consulta.setString(1, Caballo.VIVO);
             
@@ -203,7 +201,8 @@ public class CaballoDAO {
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
+                caballo.setNumero(rs.getInt("numero"));
                 
                 resultado.add(caballo);
             }
@@ -226,7 +225,7 @@ public class CaballoDAO {
             if(rs.next()){
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
                 caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
                 caballo.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
@@ -234,6 +233,7 @@ public class CaballoDAO {
                 caballo.setColor(rs.getString("color"));
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
+                caballo.setNumero(rs.getInt("numero"));
                 byte[] imagen = rs.getBytes("fotografia");
                 caballo.setFotografia(imagen);  
             }      
@@ -253,7 +253,7 @@ public class CaballoDAO {
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                caballo.setNumero_microchip(rs.getString("numero_microchip"));
                 caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
                 caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
@@ -261,6 +261,7 @@ public class CaballoDAO {
                 caballo.setColor(rs.getString("color"));
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
+                caballo.setNumero(rs.getInt("numero"));
                 resultado.add(caballo);
             }      
             consulta.close();
