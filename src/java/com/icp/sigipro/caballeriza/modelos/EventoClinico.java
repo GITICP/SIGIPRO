@@ -23,6 +23,7 @@ public class EventoClinico {
     private Date fecha;
     private String descripcion;
     private Usuario responsable;
+    private String observaciones;
     private TipoEvento tipo_evento;
     private List<Caballo> caballos;
 
@@ -63,6 +64,16 @@ public class EventoClinico {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getObservaciones()
+    {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones)
+    {
+        this.observaciones = observaciones;
     }
 
     public Usuario getResponsable() {

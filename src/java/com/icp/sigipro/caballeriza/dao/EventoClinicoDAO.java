@@ -43,12 +43,13 @@ public class EventoClinicoDAO
         try {
             getConexion().setAutoCommit(false);
 
-            consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos (fecha, descripcion,responsable,id_tipo_evento) "
-                                                      + " VALUES (?,?,?,?) RETURNING id_evento");
+            consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos (fecha, descripcion,responsable,id_tipo_evento, observaciones) "
+                                                      + " VALUES (?,?,?,?,?) RETURNING id_evento");
             consulta.setDate(1, c.getFecha());
             consulta.setString(2, c.getDescripcion());
             consulta.setInt(3, c.getResponsable().getId_usuario());
             consulta.setInt(4, c.getTipo_evento().getId_tipo_evento());
+            consulta.setString(5, c.getObservaciones());
 
             resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -129,14 +130,15 @@ public class EventoClinicoDAO
             
             consulta = getConexion().prepareStatement(
                     " UPDATE caballeriza.eventos_clinicos "
-                    + " SET fecha=?, descripcion=?,responsable=?,id_tipo_evento=?"
+                    + " SET fecha=?, descripcion=?,responsable=?,id_tipo_evento=?, observaciones=?"
                     + " WHERE id_evento=?; "
             );
             consulta.setDate(1, evento.getFecha());
             consulta.setString(2, evento.getDescripcion());
             consulta.setInt(3, evento.getResponsable().getId_usuario());
             consulta.setInt(4, evento.getTipo_evento().getId_tipo_evento());
-            consulta.setInt(5, evento.getId_evento());
+            consulta.setString(5, evento.getObservaciones());
+            consulta.setInt(6, evento.getId_evento());
             if (consulta.executeUpdate() == 1) {
                 resultado_consulta = true;
             }
@@ -222,6 +224,7 @@ public class EventoClinicoDAO
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setDescripcion(rs.getString("descripcion"));
+                evento.setObservaciones(rs.getString("observaciones"));
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));
@@ -255,6 +258,7 @@ public class EventoClinicoDAO
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setDescripcion(rs.getString("descripcion"));
+                evento.setObservaciones(rs.getString("observaciones"));
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));

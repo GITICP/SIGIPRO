@@ -179,6 +179,7 @@ public class ControladorEventoClinico extends SIGIPROServlet {
 
         }
         e.setDescripcion(request.getParameter("descripcion"));
+        e.setObservaciones(request.getParameter("observaciones"));
         String tipodeevento= request.getParameter("tipoevento");
         String[] tiposeleccionado;
         tiposeleccionado=tipodeevento.split(",");

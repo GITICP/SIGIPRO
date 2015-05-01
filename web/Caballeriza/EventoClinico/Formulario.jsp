@@ -89,11 +89,19 @@
                     </div>
                 </div>
             </div>
-            <label for="perecedero" class="control-label">Asociación de Caballos</label>
+            <label for="observaciones" class="control-label">*Observaciones</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones del evento" class="form-control" name="observaciones" id="observaciones" required oninvalid="setCustomValidity('Este campo es requerido ')" oninput="setCustomValidity('')">${evento.getObservaciones()}</textarea>
+                    </div>
+                </div>
+            </div>
+            <label for="asociacion_caballos" class="control-label">Asociación de Caballos</label>
             <div class="form-group opciones">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="checkbox-asociar-caballos" type="checkbox" name="perecedero" value="true" checked><span> ¿Desea asociar caballos a este evento?</span>
+                        <input id="checkbox-asociar-caballos" type="checkbox" name="asociacion_caballos" value="true" checked><span> ¿Desea asociar caballos a este evento?</span>
                         <br>
                     </div>
                 </div>

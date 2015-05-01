@@ -54,8 +54,9 @@
                                 <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
                                 <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Observaciones:</strong> <td>${eventoclinico.getObservaciones()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                <tr><td> <strong>Reespondable:</strong> <td>
+                                <tr><td> <strong>Responsable:</strong> <td>
                                         <c:set var="val" value=""/>
                                         <c:choose> 
                                             <c:when test="${eventoclinico.getResponsable() == null}">
@@ -76,7 +77,7 @@
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Número de Microchip</th>
+                                                <th>Nombre y Número de Caballo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
