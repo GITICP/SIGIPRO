@@ -225,6 +225,8 @@ public class ControladorMachos extends SIGIPROServlet
         conejo.setDescripcion(request.getParameter("descripcion"));
         String fecha_ingreso_str = request.getParameter("fecha_ingreso");
         String fecha_retiro_str = request.getParameter("fecha_retiro");
+        conejo.setId_padre(request.getParameter("id_padre"));
+        conejo.setId_madre(request.getParameter("id_madre"));
 
         try {
             HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();

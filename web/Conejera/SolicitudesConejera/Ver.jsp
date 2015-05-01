@@ -74,7 +74,6 @@
                       <th>Usuario Recipiente</th>
                       <th>Número de Animales</th>
                       <th>Peso</th>
-                      <th>Número de Cajas</th>
                     </tr>
                   </thead>
                   <tbody>

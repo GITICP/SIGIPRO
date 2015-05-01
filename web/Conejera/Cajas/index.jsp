@@ -21,7 +21,10 @@
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+              <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupo ${grupo.getIdentificador()}</a>
+            </li>
+            <li> 
+              <a href="/SIGIPRO/Conejera/Cajas?">Espacios</a>
             </li>
           </ul>
         </div>
@@ -37,20 +40,30 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cajas </h3>
-                <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Conejera/Cajas?accion=agregar">Agregar Caja</a>
-                </div>
+              <h3><i class="fa fa-barcode"></i> Espacios del grupo ${grupo.getIdentificador()}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
               <c:forEach items="${listaCajas}" var="caja">
 
-                        <a class="btn btn-default btn-lg" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
-                          <div style="height:100%;width:100%">
-                            Caja #${caja.getNumero()}
-                          </div>
-                        </a>
+                <c:choose>
+                  <c:when test="${caja.getNumero() < 10}">
+                    <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+
+                      <div style="height:100%;width:100%">
+                        Espacio #0${caja.getNumero()}
+                      </div>
+                    </a>
+                  </c:when>
+                  <c:otherwise>
+                    <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+                      <div style="height:100%;width:100%">
+                        Espacio #${caja.getNumero()}
+                      </div>
+                    </a>
+                  </c:otherwise>
+                </c:choose>
+
 
 
               </c:forEach> 
@@ -61,23 +74,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaCajas}" var="caja">
+              <c:forEach items="${listaCajas}" var="caja">
 
-                    <tr id ="${caja.getId_caja()}">
-                      <td>
-                        <a href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
-                          <div style="height:100%;width:100%">
-                            ${caja.getNumero()}
-                          </div>
-                        </a>
-                      </td>
-                    </tr>
+                <tr id ="${caja.getId_caja()}">
+                  <td>
+                    <a href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+                      <div style="height:100%;width:100%">
+                ${caja.getNumero()}
+              </div>
+            </a>
+          </td>
+        </tr>
 
-                  </c:forEach>
-                </tbody>
-              </table> -->
+              </c:forEach>
+            </tbody>
+          </table> -->
             </div> 
-           
+
           </div>
           <!-- END COLUMN FILTER DATA TABLE -->
         </div>

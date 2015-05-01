@@ -21,7 +21,35 @@ public class Coneja {
   private String id_madre;
   private Date fecha_retiro;
   private boolean bool_activa;
+  private Date fecha_ingreso;
+  private Date fecha_cambio;
+  private Date fecha_seleccion;
 
+  public Date getFecha_ingreso() {
+    return fecha_ingreso;
+  }
+
+  public void setFecha_ingreso(Date fecha_ingreso) {
+    this.fecha_ingreso = fecha_ingreso;
+  }
+
+  public Date getFecha_cambio() {
+    return fecha_cambio;
+  }
+
+  public void setFecha_cambio(Date fecha_cambio) {
+    this.fecha_cambio = fecha_cambio;
+  }
+
+  public Date getFecha_seleccion() {
+    return fecha_seleccion;
+  }
+
+  public void setFecha_seleccion(Date fecha_seleccion) {
+    this.fecha_seleccion = fecha_seleccion;
+  }
+  
+  
   public boolean isBool_activa() {
     return bool_activa;
   }
@@ -87,6 +115,27 @@ public class Coneja {
   } public String getFecha_retiro_S() {
     if (this.fecha_retiro != null) {
       return formatearFecha(fecha_retiro);
+    } else {
+      return "";
+    }
+  }
+  public String getFecha_ingreso_S() {
+    if (this.fecha_ingreso != null) {
+      return formatearFecha(fecha_ingreso);
+    } else {
+      return "";
+    }
+  }
+  public String getFecha_cambio_S() {
+    if (this.fecha_cambio != null) {
+      return formatearFecha(fecha_cambio);
+    } else {
+      return "";
+    }
+  }
+  public String getFecha_seleccion_S() {
+    if (this.fecha_seleccion != null) {
+      return formatearFecha(fecha_seleccion);
     } else {
       return "";
     }

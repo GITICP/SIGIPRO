@@ -5,7 +5,9 @@
  */
 package com.icp.sigipro.bioterio.controladores;
 
+import com.icp.sigipro.bioterio.dao.CepaDAO;
 import com.icp.sigipro.bioterio.dao.DesteteDAO;
+import com.icp.sigipro.bioterio.modelos.Cepa;
 import com.icp.sigipro.bioterio.modelos.Destete;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
@@ -36,6 +38,7 @@ public class ControladorDestetes extends SIGIPROServlet {
  
   private final int[] permisos = {204, 1, 1};
   private DesteteDAO dao = new DesteteDAO();
+  private CepaDAO cepa_dao = new CepaDAO();
   private HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
   protected final Class clase = ControladorDestetes.class;
@@ -66,7 +69,13 @@ public class ControladorDestetes extends SIGIPROServlet {
     String redireccion = "Destetes/Agregar.jsp";
 
     Destete ds = new Destete();
-
+    try {
+      List<Cepa> cepas;
+      cepas = cepa_dao.obtenerCepas();
+      request.setAttribute("cepas", cepas);
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError("No se pudo cargar las cepas. " + ex.getMessage()));
+    }
     request.setAttribute("destete", ds);
     request.setAttribute("accion", "Agregar");
 
@@ -117,6 +126,13 @@ public class ControladorDestetes extends SIGIPROServlet {
     } catch (SIGIPROException ex) {
        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
     }
+    try {
+      List<Cepa> cepas;
+      cepas = cepa_dao.obtenerCepas();
+      request.setAttribute("cepas", cepas);
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError("No se pudo cargar las cepas. " + ex.getMessage()));
+    }
     redireccionar(request, response, redireccion);
   }
 
@@ -153,8 +169,8 @@ public class ControladorDestetes extends SIGIPROServlet {
   {
     boolean resultado = false;
     String redireccion = "Destetes/Agregar.jsp";
-    Destete destete = construirObjeto(request);
     try {
+      Destete destete = construirObjeto(request);
       resultado = dao.insertarDestete(destete);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
@@ -184,8 +200,8 @@ public class ControladorDestetes extends SIGIPROServlet {
   {
     boolean resultado = false;
     String redireccion = "Destetes/Editar.jsp";
-    Destete destete = construirObjeto(request);
     try {
+      Destete destete = construirObjeto(request);
       resultado = dao.editarDestete(destete);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
@@ -214,7 +230,7 @@ public class ControladorDestetes extends SIGIPROServlet {
   
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-   private Destete construirObjeto(HttpServletRequest request) {
+   private Destete construirObjeto(HttpServletRequest request) throws SIGIPROException {
     Destete destete = new Destete();
     String fch_sol = request.getParameter("fecha_destete");
     SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -230,6 +246,8 @@ public class ControladorDestetes extends SIGIPROServlet {
     destete.setId_destete(Integer.parseInt(request.getParameter("id_destete")));
     destete.setNumero_hembras(Integer.parseInt(request.getParameter("numero_hembras")));
     destete.setNumero_machos(Integer.parseInt(request.getParameter("numero_machos")));
+    Integer id_cepa = Integer.parseInt(request.getParameter("id_cepa"));
+    destete.setCepa(cepa_dao.obtenerCepa(id_cepa));
     return destete;
   }
   

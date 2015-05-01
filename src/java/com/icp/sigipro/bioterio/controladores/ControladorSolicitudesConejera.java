@@ -55,6 +55,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             add("editar");
             add("eliminar");
             add("aprobar");
+            add("cerrar");
             add("verentrega");
         }
     };
@@ -295,7 +296,59 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         String redireccion = "SolicitudesConejera/index.jsp";
         redireccionar(request, response, redireccion);
     }
+    protected void getCerrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+    boolean resultado = false;
+    admin = verificarPermiso(203, listaPermisos);
+    request.setAttribute("admin", admin);
+    request.setAttribute("pesos", pesos);
+    request.setAttribute("sexos", sexos);
+    try {
+            SolicitudConejera solicitud = dao.obtenerSolicitudConejera(id_solicitud);
+            solicitud.setEstado("Cerrada");
+            resultado = dao.editarSolicitudConejera(solicitud);
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_solicitud, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            //*----------------------------* 
 
+            if (resultado) {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada"));
+            }
+            else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        try {
+            List<SolicitudConejera> solicitudes_conejera;
+            if (admin) {
+                try {
+                    solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
+                    request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+                }
+                catch (SIGIPROException ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+                }
+            }
+            else {
+                HttpSession sesion = request.getSession();
+                String nombre_usr = (String) sesion.getAttribute("usuario");
+                int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+            }
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        String redireccion = "SolicitudesConejera/index.jsp";
+        redireccionar(request, response, redireccion);
+    }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">

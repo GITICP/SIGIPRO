@@ -11,7 +11,6 @@
 <form class="form-horizontal" autocomplete="off" method="post" action="Sangria">
     <div class="col-md-6">
         <input hidden="true" name="id_sangria" value="${sangria.getId_sangria()}">
-        <!--<input hidden="true" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}">-->
         <input hidden="true" name="accion" value="${accion}">
         <label for="responsable" class="control-label">*Responsable</label>
         <div class="form-group">
@@ -110,7 +109,7 @@
                                 <c:forEach items="${sangria.getSangria_prueba().getCaballos()}" var="caballo">
                                     <div class="col-md-4">
                                         <label class="fancy-checkbox">
-                                            <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(sangria.valididarCaballoEnSangria(caballo) == true) ? "checked" : ""}>
+                                            <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(sangria.valididarCaballoEnSangria(caballo)) ? "checked" : ""}>
                                             <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
                                         </label>
                                     </div>
@@ -127,7 +126,7 @@
                                 <c:forEach items="${sangria.getSangria_prueba().getCaballos()}" var="caballo">
                                     <div class="col-md-4">
                                         <label class="fancy-checkbox">
-                                            <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" readonly ${(sangria.valididarCaballoEnSangria(caballo) == true) ? "checked" : ""}>
+                                            <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" disabled ${(sangria.valididarCaballoEnSangria(caballo)) ? "checked" : ""}>
                                             <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
                                         </label>
                                     </div>

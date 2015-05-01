@@ -14,11 +14,19 @@ $(document).ready(function () {
     tEventos = $("#caballos-evento").DataTable(configuracion);
     tCaballos = $("#caballos-grupo").DataTable(configuracion);
 
-    $("#caballosform").submit(function () {
+    $("#caballosform").submit(function() {
         llenarCampoAsociacion('c', T_EVENTOS_SELECTOR, $("#ids-eventos"));
     });
-    $("#grupodecaballosForm").submit(function () {
+    
+    $("#grupodecaballosForm").submit(function() {
         llenarCampoAsociacion('c', T_CABALLOS_SELECTOR, $("#ids-caballos"));
+    });
+    
+    $("#checkbox-asociar-caballos").change(function() {
+        $(".cuadro-opciones").toggle();
+        $("input[name='caballos']").each(function(){
+            $(this).prop("checked", false);
+        });
     });
 });
 

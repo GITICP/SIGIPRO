@@ -14,7 +14,17 @@ public class Caja {
 
   private int id_caja;
   private int numero;
+  private Grupohembras grupo;
+
+  public Grupohembras getGrupo() {
+    return grupo;
+  }
+
+  public void setGrupo(Grupohembras grupo) {
+    this.grupo = grupo;
+  }
           
+  
   //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
         Class _class = this.getClass();
@@ -29,6 +39,7 @@ public class Caja {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
+            JSON.put("id_grupo",this.grupo.getId_grupo());
         }catch (Exception e){
             
         }

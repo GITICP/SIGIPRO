@@ -29,7 +29,6 @@ public class Cara {
   private Date fecha_seleccionnuevos_f;
   private Date fecha_reposicionciclo_i;
   private Date fecha_reposicionciclo_f;
-  private Date fecha_vigencia;
   private Cepa cepa;
           
   //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
@@ -148,14 +147,6 @@ public class Cara {
   public void setFecha_reposicionciclo_f(Date fecha_reposicionciclo_f) {
     this.fecha_reposicionciclo_f = fecha_reposicionciclo_f;
   }
-
-  public Date getFecha_vigencia() {
-    return fecha_vigencia;
-  }
-
-  public void setFecha_vigencia(Date fecha_vigencia) {
-    this.fecha_vigencia = fecha_vigencia;
-  }
   
    public String getFecha_apareamiento_i_S(){
     if (this.fecha_apareamiento_i != null)
@@ -207,11 +198,7 @@ public class Cara {
     {return formatearFecha(fecha_reposicionciclo_f);}
     else
     {return "";}}
-     public String getFecha_vigencia_S(){
-    if (this.fecha_vigencia != null)
-    {return formatearFecha(fecha_vigencia);}
-    else
-    {return "";}}
+
 
   public int getId_cara() {
     return id_cara;

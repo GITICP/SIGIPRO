@@ -57,6 +57,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
       add("editar");
       add("eliminar");
       add("aprobar");
+      add("cerrar");
       add("verentrega");
     }
   };
@@ -287,7 +288,56 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     String redireccion = "SolicitudesRatonera/index.jsp";
     redireccionar(request, response, redireccion);
   }
+  protected void getCerrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+    boolean resultado = false;
+    admin = verificarPermiso(203, listaPermisos);
+    request.setAttribute("admin", admin);
+    request.setAttribute("pesos", pesos);
+    request.setAttribute("sexos", sexos);
+    try {
+      List<Cepa> cepas = dao_ce.obtenerCepas();
+      request.setAttribute("cepas", cepas);
+      SolicitudRatonera solicitud = dao.obtenerSolicitudRatonera(id_solicitud);
+      solicitud.setEstado("Cerrada");
+      resultado = dao.editarSolicitudRatonera(solicitud);
+      //Funcion que genera la bitacora
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(id_solicitud, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+      //*----------------------------* 
 
+      if (resultado) {
+        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada"));
+      } else {
+        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      }
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+    try {
+      List<SolicitudRatonera> solicitudes_ratonera;
+      if (admin) {
+        try {
+          solicitudes_ratonera = dao.obtenerSolicitudesRatoneraAdm();
+          request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
+        } catch (SIGIPROException ex) {
+          request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+      } else {
+        HttpSession sesion = request.getSession();
+        String nombre_usr = (String) sesion.getAttribute("usuario");
+        int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
+        solicitudes_ratonera = dao.obtenerSolicitudesRatonera(id_usuario);
+        request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
+      }
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+    String redireccion = "SolicitudesRatonera/index.jsp";
+    redireccionar(request, response, redireccion);
+  }
   // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Métodos Post">
   protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

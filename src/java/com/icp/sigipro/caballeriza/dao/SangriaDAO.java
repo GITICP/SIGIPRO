@@ -464,36 +464,45 @@ public class SangriaDAO
 
         try {
             getConexion().setAutoCommit(false);
-
-            consulta_sangria = getConexion().prepareStatement(
-                    " UPDATE caballeriza.sangrias"
-                    + " SET responsable = ?, cantidad_de_caballos = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? "
-                    + " WHERE id_sangria = ? RETURNING fecha_dia1;"
-            );
+            boolean edicion_caballos = s.getSangrias_caballos() != null;
+            
+            String consulta = " UPDATE caballeriza.sangrias"
+                    + " SET responsable = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? ";
+            if (edicion_caballos) {
+                consulta += ", cantidad_de_caballos = ? ";
+            }           
+            consulta += " WHERE id_sangria = ? RETURNING fecha_dia1;";
+            
+            consulta_sangria = getConexion().prepareStatement(consulta);
 
             consulta_sangria.setString(1, s.getResponsable());
-            consulta_sangria.setInt(2, s.getSangrias_caballos().size());
 
             if (s.getNum_inf_cc() == 0) {
-                consulta_sangria.setNull(3, java.sql.Types.INTEGER);
+                consulta_sangria.setNull(2, java.sql.Types.INTEGER);
             }
             else {
-                consulta_sangria.setInt(3, s.getNum_inf_cc());
+                consulta_sangria.setInt(2, s.getNum_inf_cc());
             }
             if (s.getPotencia() == 0.0f) {
+                consulta_sangria.setNull(3, java.sql.Types.FLOAT);
+            }
+            else {
+                consulta_sangria.setFloat(3, s.getPotencia());
+            }
+            if (s.getVolumen_plasma_total()== 0.0f) {
                 consulta_sangria.setNull(4, java.sql.Types.FLOAT);
             }
             else {
-                consulta_sangria.setFloat(4, s.getPotencia());
+                consulta_sangria.setFloat(4, s.getVolumen_plasma_total());
             }
-            if (s.getVolumen_plasma_total()== 0.0f) {
-                consulta_sangria.setNull(5, java.sql.Types.FLOAT);
-            }
-            else {
-                consulta_sangria.setFloat(5, s.getVolumen_plasma_total());
+            if (edicion_caballos) {
+                consulta_sangria.setInt(5, s.getSangrias_caballos().size());
+                consulta_sangria.setInt(6, s.getId_sangria());
+            } else {
+                consulta_sangria.setInt(5, s.getId_sangria());
             }
             
-            consulta_sangria.setInt(6, s.getId_sangria());
+            
             rs_sangria = consulta_sangria.executeQuery();
 
             boolean realizar_insercion_caballos;
@@ -554,7 +563,7 @@ public class SangriaDAO
             }
         }
         catch (SQLException ex) {
-            throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
+            throw new SIGIPROException("No se pudo registrar la sangría.");
         }
         finally {
             try {

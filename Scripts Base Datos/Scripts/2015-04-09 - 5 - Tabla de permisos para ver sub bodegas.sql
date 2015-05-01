@@ -40,7 +40,7 @@ ALTER TABLE ONLY bodega.inventarios_sub_bodegas ADD CONSTRAINT unique_inventario
 ALTER TABLE ONLY bodega.inventarios_sub_bodegas ADD CONSTRAINT p_inventarios_sub_bodegas_permite_fecha_null PRIMARY KEY (id_inventario_sub_bodega);
 ALTER TABLE ONLY bodega.inventarios_sub_bodegas ADD CONSTRAINT fk_id_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (70, '[Bodegas]AdministrarSubBodegas', 'Permite Agregar/Editar una sub bodega');
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (70, 109);
-
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (109, 100,'Sub Bodegas', '/Bodegas/SubBodegas');
 

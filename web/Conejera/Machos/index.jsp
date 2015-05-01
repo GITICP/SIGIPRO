@@ -38,17 +38,9 @@
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i>Machos</h3>
 
-              <c:set var="contienePermiso" value="false" />
-              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 34}">
-                  <c:set var="contienePermiso" value="true" />
-                </c:if>
-              </c:forEach>
-              <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Conejera/Machos?accion=agregar">Agregar Macho</a>
                 </div>
-              </c:if>
             </div>
             ${mensaje}
             <div class="widget-content">

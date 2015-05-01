@@ -241,7 +241,6 @@ public class ControladorCaras extends SIGIPROServlet {
     String fecha_selnf = request.getParameter("fecha_selnf");
     String fecha_repoi = request.getParameter("fecha_repoi");
     String fecha_repof = request.getParameter("fecha_repof");
-    String fecha_vig = request.getParameter("fecha_vigencia");
     SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
     java.util.Date Dfecha_apai;
     java.sql.Date fecha_apaiSQL;
@@ -263,8 +262,8 @@ public class ControladorCaras extends SIGIPROServlet {
     java.sql.Date fecha_repoiSQL;
     java.util.Date Dfecha_repof;
     java.sql.Date fecha_repofSQL;
-    java.util.Date Dfecha_vig;
-    java.sql.Date fecha_vigSQL;
+
+
     try {
       Dfecha_apai = formatoFecha.parse(fecha_apai);
       Dfecha_apaf = formatoFecha.parse(fecha_apaf);
@@ -276,7 +275,7 @@ public class ControladorCaras extends SIGIPROServlet {
       Dfecha_selnf = formatoFecha.parse(fecha_selnf);
       Dfecha_repoi = formatoFecha.parse(fecha_repoi);
       Dfecha_repof = formatoFecha.parse(fecha_repof);
-      Dfecha_vig = formatoFecha.parse(fecha_vig);
+
       
       fecha_apaiSQL = new java.sql.Date(Dfecha_apai.getTime());
       fecha_apafSQL = new java.sql.Date(Dfecha_apaf.getTime());
@@ -288,7 +287,6 @@ public class ControladorCaras extends SIGIPROServlet {
       fecha_selnfSQL = new java.sql.Date(Dfecha_selnf.getTime());
       fecha_repoiSQL = new java.sql.Date(Dfecha_repoi.getTime());
       fecha_repofSQL = new java.sql.Date(Dfecha_repof.getTime());
-      fecha_vigSQL = new java.sql.Date(Dfecha_vig.getTime());
 
       
       cara.setFecha_apareamiento_i(fecha_apaiSQL);
@@ -301,7 +299,7 @@ public class ControladorCaras extends SIGIPROServlet {
       cara.setFecha_seleccionnuevos_f(fecha_selnfSQL);
       cara.setFecha_reposicionciclo_i(fecha_repoiSQL);
       cara.setFecha_reposicionciclo_f(fecha_repofSQL);
-      cara.setFecha_vigencia(fecha_vigSQL);
+
       
     } catch (ParseException ex) {
       Logger.getLogger(ControladorCaras.class.getName()).log(Level.SEVERE, null, ex);
