@@ -231,6 +231,9 @@
                     <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${grupo_caballo.getId_grupo_caballo()}" hidden>
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> Caballos del Grupo ${grupo_caballo.getNombre()} para el inóculo</h3>
+                            <div class="widget-header-toolbar">
+                                <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Marcar Todos</a>
+                            </div>
                         </div>
                         <div class="widget-content">
                             <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">

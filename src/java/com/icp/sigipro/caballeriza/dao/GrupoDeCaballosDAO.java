@@ -244,7 +244,7 @@ public class GrupoDeCaballosDAO
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
                     + " FROM caballeriza.grupos_de_caballos gc "
-                    + "     LEFT JOIN caballeriza.caballos c "
+                    + "     INNER JOIN caballeriza.caballos c "
                     + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ?;");
 
             consulta.setString(1, Caballo.VIVO);
