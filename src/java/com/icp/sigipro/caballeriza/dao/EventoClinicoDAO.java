@@ -8,6 +8,7 @@ package com.icp.sigipro.caballeriza.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -127,7 +128,7 @@ public class EventoClinicoDAO
 
         try {
             getConexion().setAutoCommit(false);
-            
+
             consulta = getConexion().prepareStatement(
                     " UPDATE caballeriza.eventos_clinicos "
                     + " SET fecha=?, descripcion=?,responsable=?,id_tipo_evento=?, observaciones=?"
@@ -142,16 +143,16 @@ public class EventoClinicoDAO
             if (consulta.executeUpdate() == 1) {
                 resultado_consulta = true;
             }
-            
+
             delete_caballos = getConexion().prepareStatement(
                     " DELETE FROM caballeriza.eventos_clinicos_caballos WHERE id_evento = ?"
             );
             delete_caballos.setInt(1, evento.getId_evento());
-            
-            if(delete_caballos.executeUpdate() >= 0) { //Pueden no haber caballos por eliminar
+
+            if (delete_caballos.executeUpdate() >= 0) { //Pueden no haber caballos por eliminar
                 resultado_delete_caballos = true;
             }
-            
+
             if (ids_caballos != null || ids_caballos.length > 0) {
                 consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos_caballos (id_evento, id_caballo) VALUES (?,?);");
 
@@ -215,8 +216,11 @@ public class EventoClinicoDAO
     {
         EventoClinico evento = new EventoClinico();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT ec.*, u.id_usuario, u.nombre_completo FROM caballeriza.eventos_clinicos ec INNER JOIN seguridad.usuarios u on ec.responsable = u.id_usuario "
-                                                                        + " where id_evento = ?");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT ec.*, u.id_usuario, u.nombre_completo "
+                    + " FROM caballeriza.eventos_clinicos ec "
+                    + "   INNER JOIN seguridad.usuarios u on ec.responsable = u.id_usuario "
+                    + " WHERE id_evento = ?");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
             TipoEventoDAO dao = new TipoEventoDAO();
@@ -291,31 +295,55 @@ public class EventoClinicoDAO
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT ec.*, te.*, u.nombre_completo, u.id_usuario "
-                  + " FROM caballeriza.eventos_clinicos ec "
-                  + "    INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
-                  + "    INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento");
+                    " SELECT distinct ec.*, te.*, u.nombre_completo, u.id_usuario, gc.id_grupo_de_caballo, gc.nombre as nombre_grupo "
+                  + " FROM caballeriza.eventos_clinicos ec  "
+                  + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario  "
+                  + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
+                  + "   INNER JOIN caballeriza.eventos_clinicos_caballos ecc ON ecc.id_evento = ec.id_evento "
+                  + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = ecc.id_caballo "
+                  + "   INNER JOIN caballeriza.grupos_de_caballos gc ON c.id_grupo_de_caballo = gc.id_grupo_de_caballo "
+                  + " ORDER BY id_evento "
+            );
+
             ResultSet rs = consulta.executeQuery();
-            TipoEventoDAO dao = new TipoEventoDAO();
+
+            EventoClinico evento = new EventoClinico();
+
             while (rs.next()) {
-                EventoClinico evento = new EventoClinico();
-                evento.setId_evento(rs.getInt("id_evento"));
-                evento.setFecha(rs.getDate("fecha"));
-                evento.setDescripcion(rs.getString("descripcion"));
-                
-                Usuario responsable = new Usuario();
-                
-                responsable.setId_usuario(rs.getInt("id_usuario"));
-                responsable.setNombreCompleto(rs.getString("nombre_completo"));
-                evento.setResponsable(responsable);
-                
-                TipoEvento tipo = new TipoEvento();
-                tipo.setId_tipo_evento(rs.getInt("id_tipo_evento"));
-                tipo.setNombre(rs.getString("nombre"));
-                
-                evento.setTipo_evento(tipo);
-                
-                resultado.add(evento);
+
+                int id_evento = rs.getInt("id_evento");
+
+                if (evento.getId_evento() != id_evento) {
+                    
+                    evento = new EventoClinico();
+                    
+                    evento.setId_evento(id_evento);
+                    evento.setFecha(rs.getDate("fecha"));
+                    evento.setDescripcion(rs.getString("descripcion"));
+
+                    Usuario responsable = new Usuario();
+
+                    responsable.setId_usuario(rs.getInt("id_usuario"));
+                    responsable.setNombreCompleto(rs.getString("nombre_completo"));
+                    evento.setResponsable(responsable);
+
+                    TipoEvento tipo = new TipoEvento();
+                    tipo.setId_tipo_evento(rs.getInt("id_tipo_evento"));
+                    tipo.setNombre(rs.getString("nombre"));
+
+                    evento.setTipo_evento(tipo);
+                    
+                    resultado.add(evento);
+                }
+
+                int id_grupo = rs.getInt("id_grupo_de_caballo");
+
+                if (id_grupo != 0) {
+                    GrupoDeCaballos g = new GrupoDeCaballos();
+                    g.setId_grupo_caballo(id_grupo);
+                    g.setNombre(rs.getString("nombre_grupo"));
+                    evento.agregarGrupo(g);
+                }
             }
             consulta.close();
             cerrarConexion();
@@ -360,11 +388,11 @@ public class EventoClinicoDAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT ec.*, te.*, u.nombre_completo, u.id_usuario FROM caballeriza.eventos_clinicos ec "
-                  + "    INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
-                  + "    INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento"
-                  + " where id_tipo_evento = ?;"
+                    + "    INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
+                    + "    INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento"
+                    + " where id_tipo_evento = ?;"
             );
-            
+
             consulta.setInt(1, id_tipo_evento);
             ResultSet rs = consulta.executeQuery();
             TipoEventoDAO daoTipo = new TipoEventoDAO();
@@ -373,14 +401,14 @@ public class EventoClinicoDAO
                 eventoclinico.setId_evento(rs.getInt("id_evento"));
                 eventoclinico.setFecha(rs.getDate("fecha"));
                 eventoclinico.setDescripcion(rs.getString("descripcion"));
-                
+
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));
                 eventoclinico.setResponsable(responsable);
-                
+
                 TipoEvento evento = new TipoEvento();
-                
+
                 evento.setId_tipo_evento(rs.getInt("id_tipo_evento"));
                 evento.setNombre(rs.getString("nombre"));
                 eventoclinico.setTipo_evento(evento);

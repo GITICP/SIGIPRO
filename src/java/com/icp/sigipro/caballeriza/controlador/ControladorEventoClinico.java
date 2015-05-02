@@ -54,7 +54,6 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         {
             add("agregar");
             add("editar");
-
         }
     };
 

@@ -1,10 +1,12 @@
 $(document).ready(function () {
+    $.fn.dataTable.moment('DD/MM/YYYY'); // Para el ordenamiento de las fehas
+
     var cantidadTablas = $('.sigipro-tabla-filter').length;
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-tabla-filter';
         $(selectorTabla).each(function () {
             var dtTable = $(this).DataTable({// use DataTable, not dataTable
-                sDom: // redefine sDom without lengthChange and default search box
+                sDom:
                         "t" +
                         "<'row'<'col-sm-6'i><'col-sm-6'p>>"
             });
@@ -32,8 +34,8 @@ $(document).ready(function () {
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-desc-filter';
         $(selectorTabla).each(function () {
-            var dtTable = $(this).DataTable({// use DataTable, not dataTable
-                sDom: // redefine sDom without lengthChange and default search box
+            var dtTable = $(this).DataTable({
+                sDom:
                         "t" +
                         "<'row'<'col-sm-6'i><'col-sm-6'p>>",
                 "order": [[0, "desc"]]
