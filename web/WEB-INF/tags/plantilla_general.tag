@@ -75,27 +75,20 @@
     <script src="${direccion_contexto}/recursos/js/bootstrap/bootstrap.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/modernizr/modernizr.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>
-    <script src="${direccion_contexto}/recursos/js/king-common.js"></script>
+    
     <script src="${direccion_contexto}/recursos/js/deliswitch.js"></script>
     <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 
-    <!-- <script src="${direccion_contexto}/recursos/js/plugins/stat/jquery.easypiechart.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/raphael/raphael-2.1.0.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.resize.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.time.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.pie.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/stat/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/jquery-mapael/jquery.mapael.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/raphael/maps/usa_states.js"></script>
-    <script src="${direccion_contexto}/recursos/js/king-chart-stat.js"></script>
-    -->
-    <script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
-    <script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
+    <!-- 
+    Estos se cambiaron a ver qué
+    
     <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
     <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
+    -->
+    <script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
+    <script src="${direccion_contexto}/recursos/js/king-common.js"></script>
 
     <!-- Esta se modificó -->
     <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
