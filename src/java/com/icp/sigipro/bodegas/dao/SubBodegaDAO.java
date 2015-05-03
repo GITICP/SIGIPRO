@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
+import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
@@ -560,12 +561,16 @@ public class SubBodegaDAO extends DAO<SubBodega>
         return resultado;
     }
 
-    public boolean registrarIngreso(InventarioSubBodega inventario_sub_bodega) throws SIGIPROException
+    public boolean registrarIngreso(InventarioSubBodega inventario_sub_bodega, BitacoraSubBodega bitacora) throws SIGIPROException
     {
 
         boolean resultado = false;
+        PreparedStatement upsert_inventario = null;
+        PreparedStatement insert_bitacora = null;
 
         try {
+            getConexion().setAutoCommit(false);
+
             String primera_parte_consulta = " WITH upsert AS "
                                             + " (UPDATE bodega.inventarios_sub_bodegas "
                                             + "  SET cantidad = cantidad + ? "
@@ -591,7 +596,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 consulta_final = primera_parte_consulta + " is null RETURNING *) " + segunda_parte_consulta;
             }
 
-            PreparedStatement upsert_inventario = getConexion().prepareStatement(consulta_final);
+            upsert_inventario = getConexion().prepareStatement(consulta_final);
 
             if (fechas_null) {
                 upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
@@ -621,11 +626,38 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
 
             upsert_inventario.executeUpdate();
-            resultado = true;
 
+            insert_bitacora = prepararInsertBitacora(bitacora);
+
+            if (insert_bitacora.executeUpdate() == 1) {
+                resultado = true;
+            }
+            else {
+                resultado = false;
+            }
         }
         catch (SQLException ex) {
             throw new SIGIPROException("Error al registrar ingreso. Inténtelo nuevamente.");
+        }
+        finally {
+            try {
+                if (resultado) {
+                    getConexion().commit();
+                }
+                else {
+                    getConexion().rollback();
+                }
+                if (upsert_inventario != null) {
+                    upsert_inventario.close();
+                }
+                if (insert_bitacora != null) {
+                    insert_bitacora.close();
+                }
+                getConexion().close();
+            }
+            catch (SQLException sql_ex) {
+                throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
+            }
         }
 
         return resultado;
@@ -664,25 +696,66 @@ public class SubBodegaDAO extends DAO<SubBodega>
         return usuarios;
     }
 
-    public boolean consumirArticulo(int id_inventario, int cantidad) throws SIGIPROException
+    public boolean consumirArticulo(int id_inventario, int cantidad, BitacoraSubBodega bitacora) throws SIGIPROException
     {
         boolean resultado = false;
+        ResultSet resultado_update = null;
+        PreparedStatement actualizar_inventario = null;
+        PreparedStatement insert_bitacora = null;
 
         try {
-            PreparedStatement actualizar_inventario = getConexion().prepareStatement(" UPDATE bodega.inventarios_sub_bodegas SET cantidad = cantidad - ? WHERE id_inventario_sub_bodega = ?; ");
+            getConexion().setAutoCommit(false);
+            
+            actualizar_inventario = getConexion().prepareStatement(" UPDATE bodega.inventarios_sub_bodegas SET cantidad = cantidad - ? WHERE id_inventario_sub_bodega = ? RETURNING id_producto; ");
 
             actualizar_inventario.setInt(1, cantidad);
             actualizar_inventario.setInt(2, id_inventario);
 
-            if (actualizar_inventario.executeUpdate() != 1) {
-                throw new SIGIPROException("Error al consumir de la sub bodega. Inténtelo nuevamente.");
+            resultado_update = actualizar_inventario.executeQuery();
+
+            if (resultado_update.next()) {
+                ProductoInterno producto = new ProductoInterno();
+                producto.setId_producto(resultado_update.getInt("id_producto"));
+                bitacora.setProducto(producto);
+
+                insert_bitacora = prepararInsertBitacora(bitacora);
+
+                if (insert_bitacora.executeUpdate() == 1) {
+                    resultado = true;
+                }
+                else {
+                    resultado = false;
+                }
             }
             else {
-                resultado = true;
+                throw new SIGIPROException("Error al consumir de la sub bodega. Inténtelo nuevamente.");
             }
         }
         catch (SQLException ex) {
             throw new SIGIPROException("Error de conexión con la base de datos. Contacte al administrador del sistema.");
+        }
+        finally {
+            try {
+                if (resultado) {
+                    getConexion().commit();
+                }
+                else {
+                    getConexion().rollback();
+                }
+                if (resultado_update != null) {
+                    resultado_update.close();
+                }
+                if (actualizar_inventario != null) {
+                    actualizar_inventario.close();
+                }
+                if (insert_bitacora != null) {
+                    insert_bitacora.close();
+                }
+                getConexion().close();
+            }
+            catch (SQLException sql_ex) {
+                throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
+            }
         }
 
         return resultado;
@@ -702,18 +775,18 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
             restar_inventario.setInt(1, cantidad);
             restar_inventario.setInt(2, id_inventario);
-            
+
             inventario_sub_bodega_origen = restar_inventario.executeQuery();
 
             if (inventario_sub_bodega_origen.next()) {
-                
+
                 InventarioSubBodega inventario_sub_bodega = new InventarioSubBodega();
                 ProductoInterno producto = new ProductoInterno();
                 producto.setId_producto(inventario_sub_bodega_origen.getInt("id_producto"));
-                
+
                 inventario_sub_bodega.setFecha_vencimiento(inventario_sub_bodega_origen.getDate("fecha_vencimiento"));
                 inventario_sub_bodega.setProducto(producto);
-                
+
                 String primera_parte_consulta = " WITH upsert AS "
                                                 + " (UPDATE bodega.inventarios_sub_bodegas "
                                                 + "  SET cantidad = cantidad + ? "
@@ -808,5 +881,20 @@ public class SubBodegaDAO extends DAO<SubBodega>
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+    }
+
+    private PreparedStatement prepararInsertBitacora(BitacoraSubBodega bitacora) throws SQLException
+    {
+        PreparedStatement insert_bitacora = getConexion().prepareStatement(
+                "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario) VALUES (?,?,?,?,?);"
+        );
+
+        insert_bitacora.setInt(1, bitacora.getSub_bodega().getId_sub_bodega());
+        insert_bitacora.setString(2, bitacora.getAccion());
+        insert_bitacora.setInt(3, bitacora.getProducto().getId_producto());
+        insert_bitacora.setInt(4, bitacora.getCantidad());
+        insert_bitacora.setInt(5, bitacora.getUsuario().getId_usuario());
+
+        return insert_bitacora;
     }
 }

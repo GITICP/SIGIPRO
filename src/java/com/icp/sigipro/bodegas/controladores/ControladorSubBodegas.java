@@ -5,11 +5,11 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
+import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
@@ -20,6 +20,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -399,6 +400,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
         try {
             InventarioSubBodega inventario_sub_bodega = new InventarioSubBodega();
+            BitacoraSubBodega bitacora = new BitacoraSubBodega();
 
             sub_bodega = dao.buscarSubBodega(id_sub_bodega);
             inventario_sub_bodega.setSub_bodega(sub_bodega);
@@ -407,13 +409,24 @@ public class ControladorSubBodegas extends SIGIPROServlet
             producto.setId_producto(Integer.parseInt(request.getParameter("producto")));
             inventario_sub_bodega.setProducto(producto);
 
-            inventario_sub_bodega.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+            int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+            inventario_sub_bodega.setCantidad(cantidad);
 
-            SingletonBD s = SingletonBD.getSingletonBD();
+            bitacora.setAccion(BitacoraSubBodega.INGRESAR);
+            bitacora.setSub_bodega(sub_bodega);
+            bitacora.setProducto(producto);
+            bitacora.setCantidad(cantidad);
+            
+            Usuario usuario = new Usuario();
+            usuario.setIdUsuario(this.getIdUsuario(request));
+            
+            bitacora.setUsuario(usuario);
+            
+            HelperFechas h = HelperFechas.getSingletonHelperFechas();
             String fecha_vencimiento = request.getParameter("fecha_vencimiento");
             if (fecha_vencimiento != null) {
                 try {
-                    inventario_sub_bodega.setFecha_vencimiento(s.parsearFecha(fecha_vencimiento));
+                    inventario_sub_bodega.setFecha_vencimiento(h.formatearFecha(fecha_vencimiento));
                 }
                 catch (ParseException ex) {
                     // mostrar mensaje de error con la fecha.
@@ -421,7 +434,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             }
 
             try {
-                if (dao.registrarIngreso(inventario_sub_bodega)) {
+                if (dao.registrarIngreso(inventario_sub_bodega, bitacora)) {
                     request.setAttribute("mensaje", helper.mensajeDeExito("Ingreso de artículos registrado en la sub bodega correctamente."));
                     try {
                         redireccion = "SubBodegas/Ver.jsp";
@@ -467,11 +480,21 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int inventario = Integer.parseInt(request.getParameter("id-inventario-sub-bodega"));
         int cantidad = Integer.parseInt(request.getParameter("cantidad"));
         int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
+        
+        BitacoraSubBodega bitacora = new BitacoraSubBodega();
+        Usuario u = new Usuario();
+        SubBodega s = new SubBodega();
+        u.setId_usuario(getIdUsuario(request));
+        s.setId_sub_bodega(id_sub_bodega);
+        bitacora.setUsuario(u);
+        bitacora.setCantidad(cantidad);
+        bitacora.setSub_bodega(s);
+        bitacora.setAccion(BitacoraSubBodega.EGRESAR);
 
         redireccion = "SubBodegas/index.jsp";
 
         try {
-            dao.consumirArticulo(inventario, cantidad);
+            dao.consumirArticulo(inventario, cantidad, bitacora);
             request.setAttribute("mensaje", helper.mensajeDeExito("Artículos descontados correctamente."));
             try {
                 redireccion = "SubBodegas/Ver.jsp";
