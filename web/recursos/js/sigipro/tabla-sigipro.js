@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    $.fn.dataTable.moment('DD/MM/YYYY'); // Para el ordenamiento de las fehas
-
+    $.fn.dataTable.moment('DD/MM/YYYY');
+    
     var cantidadTablas = $('.sigipro-tabla-filter').length;
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-tabla-filter';
@@ -34,11 +34,16 @@ $(document).ready(function () {
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-desc-filter';
         $(selectorTabla).each(function () {
+            var columna_filtro = 0;
+            if($(this).data("columna-filtro")){
+                columna_filtro = $(this).data("columna-filtro");
+            }
+            
             var dtTable = $(this).DataTable({
                 sDom:
                         "t" +
                         "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-                "order": [[0, "desc"]]
+                "order": [[columna_filtro, "desc"]]
             });
             var ths = '';
             var cantidadColumnas = $(this).find('thead th').length;

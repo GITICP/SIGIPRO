@@ -80,13 +80,13 @@
         <script src="${direccion_contexto}/recursos/js/plugins/datatable/jquery.dataTables.min.js"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/datatable/dataTables.bootstrap.js"></script>
         <script src="${direccion_contexto}/recursos/js/king-common.js"></script>
-        <script src="${direccion_contexto}/recursos/js/plugins/datatable/exts/dataTables.dateOrder.js" type="text/javascript"></script>
-        <script src="${direccion_contexto}/recursos/js/plugins/moment/moment-2.4.js" type="text/javascript"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/bootbox.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/jquery.smartmenus.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/jquery.smartmenus.bootstrap.js"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/select2/select2.min.js"></script>
-
+        
+        <script src="${direccion_contexto}/recursos/js/plugins/moment/moment-2.8.min.js" type="text/javascript"></script>
+        <script src="${direccion_contexto}/recursos/js/plugins/datatable/exts/dataTables.dateOrder.js" type="text/javascript"></script>
         <!-- 
             Se eliminaron estos scripts ya que no aportaban valor. Si algo no funciona, incluirlos.
         
@@ -96,10 +96,10 @@
         -->
 
         <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
+        <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/CatalogoExterno.js"></script>
-        <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/confirmacion-eliminar.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/Serpiente.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/Extraccion.js"></script>

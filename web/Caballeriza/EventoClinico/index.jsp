@@ -47,10 +47,11 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" data-columna-filtro="1">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
+                                        <th>Identificador</th>
                                         <th>Fecha</th>
                                         <th>Tipo de Evento</th>
                                         <th>Grupos de Caballos</th>
@@ -61,10 +62,11 @@
                                         <tr id ="${evento.getId_evento()}">
                                             <td><a href="/SIGIPRO/Caballeriza/EventoClinico?accion=ver&id_evento=${evento.getId_evento()}">
                                                     <div style="height:100%;width:100%">
-                                                        ${evento.getFechaAsString()}
+                                                        ${evento.getId_evento()}
                                                     </div>
                                                 </a>
                                             </td>
+                                            <td>${evento.getFechaAsString()}</td>
                                             <td>${evento.getTipo_evento().getNombre()}</td>
                                             <td>${evento.getGrupos_involucradosAsString()}</td>
                                         </tr>

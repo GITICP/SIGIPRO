@@ -43,48 +43,49 @@
                                 <tr><td> <strong>Nombre del Caballo:</strong> <td> ${caballo.getNombre()} </td></tr>
                                 <tr><td> <strong>Número de Caballo</strong> <td>${caballo.getNumero()} </td></tr>
                             </table>
-                        </div>
-                        <div class="widget widget-table">
-                            <div class="widget-header">
-                                <h3><i class="fa fa-check"></i> Eventos Clínicos del Caballo </h3>
-                            </div>
-                            <div class="widget-content">
-                                <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
-                                    <!-- Columnas -->
-                                    <thead> 
-                                        <tr>
-                                            <th>Identificador</th>
-                                            <th>Fecha del Evento</th>
-                                            <th>Tipo de Evento</th>
-                                            <th>Usuario responsable</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach items="${listaEventos}" var="eventos">
-                                            <tr id ="${eventos.getId_evento()}">
-                                                <td>
-                                                    <a href="/SIGIPRO/Caballeriza/EventoClinico?accion=ver&id_evento=${eventos.getId_evento()}">
-                                                        <div style="height:100%;width:100%">
-                                                            ${eventos.getId_evento()}
-                                                        </div>
-                                                    </a>
-                                                </td>
-                                                <td>${eventos.getFechaAsString()}</td>
-                                                <td>${eventos.getTipo_evento().getNombre()}</td>
-                                                <c:choose>
-                                                    <c:when test="${eventos.getResponsable()!= null}">
-                                                        <td>${eventos.getResponsable().getNombre_completo()}</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td>No Tiene Usuario Responsable</td>
-                                                    </c:otherwise>
-                                                </c:choose>
+                            <div class="widget widget-table">
+                                <div class="widget-header">
+                                    <h3><i class="fa fa-check"></i> Eventos Clínicos del Caballo </h3>
+                                </div>
+                                <div class="widget-content">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+                                        <!-- Columnas -->
+                                        <thead> 
+                                            <tr>
+                                                <th>Identificador</th>
+                                                <th>Fecha del Evento</th>
+                                                <th>Tipo de Evento</th>
+                                                <th>Usuario responsable</th>
                                             </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${listaEventos}" var="eventos">
+                                                <tr id ="${eventos.getId_evento()}">
+                                                    <td>
+                                                        <a href="/SIGIPRO/Caballeriza/EventoClinico?accion=ver&id_evento=${eventos.getId_evento()}">
+                                                            <div style="height:100%;width:100%">
+                                                                ${eventos.getId_evento()}
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td>${eventos.getFechaAsString()}</td>
+                                                    <td>${eventos.getTipo_evento().getNombre()}</td>
+                                                    <c:choose>
+                                                        <c:when test="${eventos.getResponsable()!= null}">
+                                                            <td>${eventos.getResponsable().getNombre_completo()}</td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <td>No Tiene Usuario Responsable</td>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                     <!-- END WIDGET TICKET TABLE -->
                 </div>
