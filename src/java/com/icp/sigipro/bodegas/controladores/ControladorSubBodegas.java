@@ -523,11 +523,25 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int sub_bodega_destino = Integer.parseInt(request.getParameter("id-sub-bodega-destino"));
         int cantidad = Integer.parseInt(request.getParameter("cantidad"));
         int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
+        
+        BitacoraSubBodega bitacora = new BitacoraSubBodega();
+        
+        Usuario u = new Usuario();
+        SubBodega s = new SubBodega();
+        SubBodega s_destino = new SubBodega();
+        u.setId_usuario(getIdUsuario(request));
+        s.setId_sub_bodega(id_sub_bodega);
+        s_destino.setId_sub_bodega(sub_bodega_destino);
+        bitacora.setUsuario(u);
+        bitacora.setCantidad(cantidad);
+        bitacora.setSub_bodega(s);
+        bitacora.setSub_bodega_destino(s_destino);
+        bitacora.setAccion(BitacoraSubBodega.MOVER);
 
         redireccion = "SubBodegas/index.jsp";
 
         try {
-            dao.moverArticulo(inventario, cantidad, sub_bodega_destino);
+            dao.moverArticulo(inventario, cantidad, sub_bodega_destino, bitacora);
             request.setAttribute("mensaje", helper.mensajeDeExito("Artículos trasladados correctamente."));
             try {
                 redireccion = "SubBodegas/Ver.jsp";

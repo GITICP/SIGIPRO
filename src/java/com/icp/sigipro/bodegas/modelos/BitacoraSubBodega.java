@@ -20,6 +20,7 @@ public class BitacoraSubBodega
     private int id_bitacora_sub_bodega;
     private ProductoInterno producto;
     private SubBodega sub_bodega;
+    private SubBodega sub_bodega_destino;
     private String accion;
     private Usuario usuario;
     private int cantidad;
@@ -54,6 +55,16 @@ public class BitacoraSubBodega
     public void setSub_bodega(SubBodega sub_bodega)
     {
         this.sub_bodega = sub_bodega;
+    }
+
+    public SubBodega getSub_bodega_destino()
+    {
+        return sub_bodega_destino;
+    }
+
+    public void setSub_bodega_destino(SubBodega sub_bodega_destino)
+    {
+        this.sub_bodega_destino = sub_bodega_destino;
     }
 
     public String getAccion()

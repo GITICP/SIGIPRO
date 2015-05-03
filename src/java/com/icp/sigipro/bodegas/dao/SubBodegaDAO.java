@@ -705,7 +705,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
         try {
             getConexion().setAutoCommit(false);
-            
+
             actualizar_inventario = getConexion().prepareStatement(" UPDATE bodega.inventarios_sub_bodegas SET cantidad = cantidad - ? WHERE id_inventario_sub_bodega = ? RETURNING id_producto; ");
 
             actualizar_inventario.setInt(1, cantidad);
@@ -761,12 +761,13 @@ public class SubBodegaDAO extends DAO<SubBodega>
         return resultado;
     }
 
-    public boolean moverArticulo(int id_inventario, int cantidad, int id_sub_bodega_destino) throws SIGIPROException
+    public boolean moverArticulo(int id_inventario, int cantidad, int id_sub_bodega_destino, BitacoraSubBodega bitacora) throws SIGIPROException
     {
         boolean resultado = false;
         PreparedStatement restar_inventario = null;
         ResultSet inventario_sub_bodega_origen = null;
         PreparedStatement upsert_inventario = null;
+        PreparedStatement insert_bitacora = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -783,6 +784,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 InventarioSubBodega inventario_sub_bodega = new InventarioSubBodega();
                 ProductoInterno producto = new ProductoInterno();
                 producto.setId_producto(inventario_sub_bodega_origen.getInt("id_producto"));
+                bitacora.setProducto(producto);
 
                 inventario_sub_bodega.setFecha_vencimiento(inventario_sub_bodega_origen.getDate("fecha_vencimiento"));
                 inventario_sub_bodega.setProducto(producto);
@@ -841,7 +843,16 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 }
 
                 upsert_inventario.executeUpdate();
-                resultado = true;
+
+                insert_bitacora = this.prepararInsertBitacora(bitacora);
+
+                if (insert_bitacora.executeUpdate() == 1) {
+                    resultado = true;
+                }
+                else {
+                    resultado = false;
+                }
+
             }
             else {
                 throw new SIGIPROException("Error al consumir de la sub bodega. Inténtelo nuevamente.");
@@ -867,6 +878,9 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 if (upsert_inventario != null) {
                     upsert_inventario.close();
                 }
+                if (insert_bitacora != null) {
+                    upsert_inventario.close();
+                }
                 getConexion().close();
             }
             catch (SQLException sql_ex) {
@@ -885,15 +899,28 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
     private PreparedStatement prepararInsertBitacora(BitacoraSubBodega bitacora) throws SQLException
     {
-        PreparedStatement insert_bitacora = getConexion().prepareStatement(
-                "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario) VALUES (?,?,?,?,?);"
-        );
+        String columnas_por_insertar = "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario";
+        String valores_por_insertar = "VALUES (?,?,?,?,?";
+
+        boolean accion_mover = bitacora.getAccion().equals(BitacoraSubBodega.MOVER);
+        if (accion_mover) {
+            columnas_por_insertar += ",id_sub_bodega_destino";
+            valores_por_insertar += ",?";
+        }
+
+        String consulta_final = columnas_por_insertar + ")" + valores_por_insertar + ");";
+
+        PreparedStatement insert_bitacora = getConexion().prepareStatement(consulta_final);
 
         insert_bitacora.setInt(1, bitacora.getSub_bodega().getId_sub_bodega());
         insert_bitacora.setString(2, bitacora.getAccion());
         insert_bitacora.setInt(3, bitacora.getProducto().getId_producto());
         insert_bitacora.setInt(4, bitacora.getCantidad());
         insert_bitacora.setInt(5, bitacora.getUsuario().getId_usuario());
+
+        if (accion_mover) {
+            insert_bitacora.setInt(6, bitacora.getSub_bodega_destino().getId_sub_bodega());
+        }
 
         return insert_bitacora;
     }
