@@ -339,7 +339,6 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
                         inventarios.add(inventario_sb);
                     }
-
                 }
                 while (resultado.next());
 
@@ -886,6 +885,80 @@ public class SubBodegaDAO extends DAO<SubBodega>
             catch (SQLException sql_ex) {
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
+        }
+
+        return resultado;
+    }
+
+    public SubBodega obtenerHistorial(int id_sub_bodega) throws SIGIPROException
+    {
+        SubBodega resultado = new SubBodega();
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT sb.id_sub_bodega as id_sb_buscada, sb.nombre as nombre_buscada, b.*, sb2.nombre as nombre_destino, ci.nombre as nombre_producto, u.nombre_completo as nombre_usuario "
+                  + " FROM bodega.sub_bodegas sb "
+                  + "   LEFT JOIN bodega.bitacora_sub_bodegas b ON b.id_sub_bodega = sb.id_sub_bodega "
+                  + "   LEFT JOIN bodega.sub_bodegas sb2 ON sb2.id_sub_bodega = b.id_sub_bodega_destino "
+                  + "   LEFT JOIN bodega.catalogo_interno ci ON b.id_producto = ci.id_producto "
+                  + "   LEFT JOIN seguridad.usuarios u ON b.id_usuario = u.id_usuario "
+                  + " WHERE b.id_sub_bodega = ? OR b.id_sub_bodega_destino = ? OR sb.id_sub_bodega = ? "
+            );
+
+            consulta.setInt(1, id_sub_bodega);
+            consulta.setInt(2, id_sub_bodega);
+            consulta.setInt(3, id_sub_bodega);
+
+            ResultSet rs = consulta.executeQuery();
+
+            if (rs.next()) {
+                resultado.setId_sub_bodega(id_sub_bodega);
+                resultado.setNombre(rs.getString("nombre_buscada"));
+
+                int id_bitacora = rs.getInt("id_bitacora_sub_bodegas");
+
+                if (id_bitacora != 0) {
+                    List<BitacoraSubBodega> historial = new ArrayList<BitacoraSubBodega>();
+                    do {
+                        BitacoraSubBodega bitacora = new BitacoraSubBodega();
+                        
+                        ProductoInterno producto = new ProductoInterno();
+                        Usuario usuario = new Usuario();
+                        
+                        bitacora.setSub_bodega(resultado);
+                        bitacora.setProducto(producto);
+                        bitacora.setUsuario(usuario);
+                        
+                        bitacora.setId_bitacora_sub_bodega(rs.getInt("id_bitacora_sub_bodegas"));
+                        bitacora.setFecha_accion(rs.getTimestamp("fecha_accion"));
+                        bitacora.setAccion(rs.getString("accion"));
+                        bitacora.getProducto().setId_producto(rs.getInt("id_producto"));
+                        bitacora.getProducto().setNombre(rs.getString("nombre_producto"));
+                        bitacora.setCantidad(rs.getInt("cantidad"));
+                        bitacora.getUsuario().setId_usuario(rs.getInt("id_usuario"));
+                        bitacora.getUsuario().setNombreCompleto(rs.getString("nombre_usuario"));
+                        
+                        if (rs.getInt("id_sub_bodega_destino") != 0) {
+                            SubBodega sb_destino = new SubBodega();
+                            sb_destino.setId_sub_bodega(rs.getInt("id_sub_bodega_destino"));
+                            sb_destino.setNombre(rs.getString("nombre_destino"));
+                            bitacora.setSub_bodega_destino(sb_destino);
+                        }
+                        historial.add(bitacora);
+                    }
+                    while (rs.next());
+                    
+                    resultado.setHistorial(historial);
+                }
+            }
+            
+            rs.close();
+            consulta.close();
+            getConexion().close();
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
 
         return resultado;

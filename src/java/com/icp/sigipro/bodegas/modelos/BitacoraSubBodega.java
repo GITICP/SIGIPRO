@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.modelos;
 
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import java.sql.Timestamp;
 
 /**
  *
@@ -24,6 +25,7 @@ public class BitacoraSubBodega
     private String accion;
     private Usuario usuario;
     private int cantidad;
+    private Timestamp fecha_accion;
     
     public BitacoraSubBodega(){}
 
@@ -95,5 +97,15 @@ public class BitacoraSubBodega
     public void setCantidad(int cantidad)
     {
         this.cantidad = cantidad;
+    }
+
+    public Timestamp getFecha_accion()
+    {
+        return fecha_accion;
+    }
+
+    public void setFecha_accion(Timestamp fecha_accion)
+    {
+        this.fecha_accion = fecha_accion;
     }
 }

@@ -61,6 +61,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             add("ingresar");
             add("consumir");
             add("mover");
+            add("historial");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -240,7 +241,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         redireccion = "SubBodegas/Editar.jsp";
@@ -295,6 +296,28 @@ public class ControladorSubBodegas extends SIGIPROServlet
         // Obtener todo
         // Setear
         // request.setAttribute("listaProductos", productos);
+    }
+
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    {
+        redireccion = "SubBodegas/VerHistorial.jsp";
+        int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
+
+        PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+
+        if (permisos_sub_bodega.isEncargado()) {
+            try {
+                SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
+                request.setAttribute("sub_bodega", sb);
+                request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
+            } catch(SIGIPROException sig_ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
+            }
+        }
+        else {
+            throw new SIGIPROException("", "/index.jsp");
+        }
+        redireccionar(request, response, redireccion);
     }
 
     // </editor-fold>
@@ -416,12 +439,12 @@ public class ControladorSubBodegas extends SIGIPROServlet
             bitacora.setSub_bodega(sub_bodega);
             bitacora.setProducto(producto);
             bitacora.setCantidad(cantidad);
-            
+
             Usuario usuario = new Usuario();
             usuario.setIdUsuario(this.getIdUsuario(request));
-            
+
             bitacora.setUsuario(usuario);
-            
+
             HelperFechas h = HelperFechas.getSingletonHelperFechas();
             String fecha_vencimiento = request.getParameter("fecha_vencimiento");
             if (fecha_vencimiento != null) {
@@ -480,7 +503,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int inventario = Integer.parseInt(request.getParameter("id-inventario-sub-bodega"));
         int cantidad = Integer.parseInt(request.getParameter("cantidad"));
         int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
-        
+
         BitacoraSubBodega bitacora = new BitacoraSubBodega();
         Usuario u = new Usuario();
         SubBodega s = new SubBodega();
@@ -523,9 +546,9 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int sub_bodega_destino = Integer.parseInt(request.getParameter("id-sub-bodega-destino"));
         int cantidad = Integer.parseInt(request.getParameter("cantidad"));
         int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
-        
+
         BitacoraSubBodega bitacora = new BitacoraSubBodega();
-        
+
         Usuario u = new Usuario();
         SubBodega s = new SubBodega();
         SubBodega s_destino = new SubBodega();
