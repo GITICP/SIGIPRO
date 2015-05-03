@@ -45,11 +45,11 @@ public class SubBodegaDAO extends DAO<SubBodega>
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT 1 " +
-                    " FROM bodega.sub_bodegas " +
-                    " WHERE (id_usuario = ? and id_sub_bodega = ?) " +
-                    "	or  exists " +
-                    "      (select 1 from " + tabla + " WHERE id_usuario = ? and id_sub_bodega = ?); ");
+                    " SELECT 1 "
+                    + " FROM bodega.sub_bodegas "
+                    + " WHERE (id_usuario = ? and id_sub_bodega = ?) "
+                    + "	or  exists "
+                    + "      (select 1 from " + tabla + " WHERE id_usuario = ? and id_sub_bodega = ?); ");
 
             consulta.setInt(1, id_usuario);
             consulta.setInt(3, id_usuario);
@@ -70,28 +70,28 @@ public class SubBodegaDAO extends DAO<SubBodega>
         }
         return resultado;
     }
-    
+
     public PermisoSubBodegas obtenerPermisos(int id_usuario, int id_sub_bodega) throws AuthenticationException, SIGIPROException
     {
         PermisoSubBodegas resultado = null;
-                
+
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      "	  SELECT 'ingresos' as permiso " 
-                    + "	  FROM bodega.usuarios_sub_bodegas_ingresos " 
-                    + "	  where id_usuario = ? and id_sub_bodega = ? " 
-                    + "	  UNION " 
-                    + "	  SELECT 'egresos' as permiso " 
+                    "	  SELECT 'ingresos' as permiso "
+                    + "	  FROM bodega.usuarios_sub_bodegas_ingresos "
+                    + "	  where id_usuario = ? and id_sub_bodega = ? "
+                    + "	  UNION "
+                    + "	  SELECT 'egresos' as permiso "
                     + "	  FROM bodega.usuarios_sub_bodegas_egresos "
-                    + "	  where id_usuario = ? and id_sub_bodega = ? " 
-                    + "	  UNION " 
-                    + "	  SELECT 'ver' as permiso " 
-                    + "	  FROM bodega.usuarios_sub_bodegas_ver " 
-                    + "	  where id_usuario = ? and id_sub_bodega = ? " 
-                    + "	  UNION " 
-                    + "	  SELECT 'encargado' as permiso " 
-                    + "	  FROM bodega.sub_bodegas " 
-                    + "	  WHERE id_usuario = ? and id_sub_bodega = ?; " 
+                    + "	  where id_usuario = ? and id_sub_bodega = ? "
+                    + "	  UNION "
+                    + "	  SELECT 'ver' as permiso "
+                    + "	  FROM bodega.usuarios_sub_bodegas_ver "
+                    + "	  where id_usuario = ? and id_sub_bodega = ? "
+                    + "	  UNION "
+                    + "	  SELECT 'encargado' as permiso "
+                    + "	  FROM bodega.sub_bodegas "
+                    + "	  WHERE id_usuario = ? and id_sub_bodega = ?; "
             );
 
             consulta.setInt(1, id_usuario);
@@ -104,12 +104,13 @@ public class SubBodegaDAO extends DAO<SubBodega>
             consulta.setInt(8, id_sub_bodega);
 
             ResultSet resultado_consulta = consulta.executeQuery();
-             resultado = new PermisoSubBodegas();
-            
+            resultado = new PermisoSubBodegas();
+
             if (resultado_consulta.next()) {
                 do {
                     resultado.asignarPermiso(resultado_consulta.getString("permiso"));
-                } while(resultado_consulta.next());
+                }
+                while (resultado_consulta.next());
             }
             else {
                 throw new AuthenticationException();
@@ -120,31 +121,31 @@ public class SubBodegaDAO extends DAO<SubBodega>
         }
         return resultado;
     }
-    
+
     public boolean validarAcceso(int id_usuario) throws AuthenticationException, SIGIPROException
     {
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT 1 FROM " 
+                    " SELECT 1 FROM "
                     + "	( "
-                    + "	  SELECT id_usuario " 
-                    + "	  FROM bodega.usuarios_sub_bodegas_ingresos " 
-                    + "	  where id_usuario = ? " 
-                    + "	  UNION " 
-                    + "	  SELECT id_usuario " 
+                    + "	  SELECT id_usuario "
+                    + "	  FROM bodega.usuarios_sub_bodegas_ingresos "
+                    + "	  where id_usuario = ? "
+                    + "	  UNION "
+                    + "	  SELECT id_usuario "
                     + "	  FROM bodega.usuarios_sub_bodegas_egresos "
-                    + "	  where id_usuario = ?" 
-                    + "	  UNION " 
-                    + "	  SELECT id_usuario " 
-                    + "	  FROM bodega.usuarios_sub_bodegas_ver " 
-                    + "	  where id_usuario = ?" 
-                    + "	  UNION " 
-                    + "	  SELECT id_usuario " 
-                    + "	  FROM bodega.sub_bodegas " 
-                    + "	  WHERE id_usuario = ?" 
-                    + "	 ) as permisos;" 
+                    + "	  where id_usuario = ?"
+                    + "	  UNION "
+                    + "	  SELECT id_usuario "
+                    + "	  FROM bodega.usuarios_sub_bodegas_ver "
+                    + "	  where id_usuario = ?"
+                    + "	  UNION "
+                    + "	  SELECT id_usuario "
+                    + "	  FROM bodega.sub_bodegas "
+                    + "	  WHERE id_usuario = ?"
+                    + "	 ) as permisos;"
             );
 
             consulta.setInt(1, id_usuario);
@@ -357,11 +358,19 @@ public class SubBodegaDAO extends DAO<SubBodega>
     {
 
         boolean resultado = false;
+        PreparedStatement consultaInsertar = null;
+        PreparedStatement consultaEliminarIngresos = null;
+        PreparedStatement consultaEliminarEgresos = null;
+        PreparedStatement consultaEliminarVer = null;
+        PreparedStatement insertarIngresos = null;
+        PreparedStatement insertarEgresos = null;
+        PreparedStatement insertarVer = null;
+
         try {
             getConexion().setAutoCommit(false);
 
-            PreparedStatement consultaInsertar = getConexion().prepareStatement(" INSERT INTO " + this.nombreModulo + "." + this.nombreTabla
-                                                                                + " (id_seccion, id_usuario, nombre) VALUES (?,?,?) RETURNING id_sub_bodega");
+            consultaInsertar = getConexion().prepareStatement(" INSERT INTO " + this.nombreModulo + "." + this.nombreTabla
+                                                              + " (id_seccion, id_usuario, nombre) VALUES (?,?,?) RETURNING id_sub_bodega");
 
             consultaInsertar.setInt(1, param.getSeccion().getId_seccion());
             consultaInsertar.setInt(2, param.getUsuario().getId_usuario());
@@ -380,9 +389,9 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 throw new SIGIPROException("Error al insertar sub bodega");
             }
 
-            PreparedStatement consultaEliminarIngresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = ?");
-            PreparedStatement consultaEliminarEgresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = ?");
-            PreparedStatement consultaEliminarVer = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = ?");
+            consultaEliminarIngresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = ?");
+            consultaEliminarEgresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = ?");
+            consultaEliminarVer = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = ?");
 
             consultaEliminarIngresos.setInt(1, param.getId_sub_bodega());
             consultaEliminarEgresos.setInt(1, param.getId_sub_bodega());
@@ -391,14 +400,10 @@ public class SubBodegaDAO extends DAO<SubBodega>
             consultaEliminarIngresos.executeUpdate();
             consultaEliminarEgresos.executeUpdate();
             consultaEliminarVer.executeUpdate();
-            
-            consultaEliminarIngresos.close();
-            consultaEliminarEgresos.close();
-            consultaEliminarVer.close();
 
-            PreparedStatement insertarIngresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ingresos (id_sub_bodega, id_usuario) VALUES (?,?)");
-            PreparedStatement insertarEgresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_egresos (id_sub_bodega, id_usuario) VALUES (?,?)");
-            PreparedStatement insertarVer = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ver (id_sub_bodega, id_usuario) VALUES (?,?)");
+            insertarIngresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ingresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            insertarEgresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_egresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            insertarVer = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ver (id_sub_bodega, id_usuario) VALUES (?,?)");
 
             for (String idIngreso : idsIngresos) {
                 insertarIngresos.setInt(1, param.getId_sub_bodega());
@@ -421,10 +426,6 @@ public class SubBodegaDAO extends DAO<SubBodega>
             insertarIngresos.executeBatch();
             insertarEgresos.executeBatch();
             insertarVer.executeBatch();
-            
-            insertarIngresos.close();
-            insertarEgresos.close();
-            insertarVer.close();
 
             resultado = true;
         }
@@ -439,8 +440,30 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 else {
                     getConexion().rollback();
                 }
+                if (consultaInsertar != null) {
+                    consultaInsertar.close();
+                }
+                if (consultaEliminarIngresos != null) {
+                    consultaEliminarIngresos.close();
+                }
+                if (consultaEliminarEgresos != null) {
+                    consultaEliminarEgresos.close();
+                }
+                if (consultaEliminarVer != null) {
+                    consultaEliminarVer.close();
+                }
+                if (insertarIngresos != null) {
+                    insertarIngresos.close();
+                }
+                if (insertarEgresos != null) {
+                    insertarEgresos.close();
+                }
+                if (insertarVer != null) {
+                    insertarVer.close();
+                }
                 getConexion().close();
-            } catch(SQLException sql_ex){
+            }
+            catch (SQLException sql_ex) {
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
         }
@@ -479,7 +502,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             consultaEliminarIngresos.executeUpdate();
             consultaEliminarEgresos.executeUpdate();
             consultaEliminarVer.executeUpdate();
-            
+
             consultaEliminarIngresos.close();
             consultaEliminarEgresos.close();
             consultaEliminarVer.close();
@@ -509,7 +532,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             insertarIngresos.executeBatch();
             insertarEgresos.executeBatch();
             insertarVer.executeBatch();
-            
+
             insertarIngresos.close();
             insertarEgresos.close();
             insertarVer.close();
@@ -528,7 +551,8 @@ public class SubBodegaDAO extends DAO<SubBodega>
                     getConexion().rollback();
                 }
                 getConexion().close();
-            } catch(SQLException sql_ex){
+            }
+            catch (SQLException sql_ex) {
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
             }
         }
@@ -656,10 +680,125 @@ public class SubBodegaDAO extends DAO<SubBodega>
             else {
                 resultado = true;
             }
-
         }
         catch (SQLException ex) {
             throw new SIGIPROException("Error de conexión con la base de datos. Contacte al administrador del sistema.");
+        }
+
+        return resultado;
+    }
+
+    public boolean moverArticulo(int id_inventario, int cantidad, int id_sub_bodega_destino) throws SIGIPROException
+    {
+        boolean resultado = false;
+        PreparedStatement restar_inventario = null;
+        ResultSet inventario_sub_bodega_origen = null;
+        PreparedStatement upsert_inventario = null;
+
+        try {
+            getConexion().setAutoCommit(false);
+
+            restar_inventario = getConexion().prepareStatement(" UPDATE bodega.inventarios_sub_bodegas SET cantidad = cantidad - ? WHERE id_inventario_sub_bodega = ? RETURNING *; ");
+
+            restar_inventario.setInt(1, cantidad);
+            restar_inventario.setInt(2, id_inventario);
+            
+            inventario_sub_bodega_origen = restar_inventario.executeQuery();
+
+            if (inventario_sub_bodega_origen.next()) {
+                
+                InventarioSubBodega inventario_sub_bodega = new InventarioSubBodega();
+                ProductoInterno producto = new ProductoInterno();
+                producto.setId_producto(inventario_sub_bodega_origen.getInt("id_producto"));
+                
+                inventario_sub_bodega.setFecha_vencimiento(inventario_sub_bodega_origen.getDate("fecha_vencimiento"));
+                inventario_sub_bodega.setProducto(producto);
+                
+                String primera_parte_consulta = " WITH upsert AS "
+                                                + " (UPDATE bodega.inventarios_sub_bodegas "
+                                                + "  SET cantidad = cantidad + ? "
+                                                + "  WHERE id_producto = ? and id_sub_bodega = ? and fecha_vencimiento";
+                String segunda_parte_consulta = "     INSERT INTO bodega.inventarios_sub_bodegas(id_producto, "
+                                                + "                                                id_sub_bodega, "
+                                                + "                                                fecha_vencimiento, "
+                                                + "                                                cantidad"
+                                                + "                                               ) "
+                                                + "                                               SELECT ?, "
+                                                + "                                                      ?, "
+                                                + "                                                      ?, "
+                                                + "                                                      ?  "
+                                                + "                                                      WHERE NOT EXISTS (SELECT * FROM upsert); ";
+
+                String consulta_final;
+                boolean fechas_null = false;
+                if (inventario_sub_bodega.getFecha_vencimiento() != null) {
+                    consulta_final = primera_parte_consulta + " = ? RETURNING *) " + segunda_parte_consulta;
+                }
+                else {
+                    fechas_null = true;
+                    consulta_final = primera_parte_consulta + " is null RETURNING *) " + segunda_parte_consulta;
+                }
+
+                upsert_inventario = getConexion().prepareStatement(consulta_final);
+
+                if (fechas_null) {
+                    upsert_inventario.setInt(1, cantidad);
+                    upsert_inventario.setInt(7, cantidad);
+
+                    upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
+                    upsert_inventario.setInt(4, inventario_sub_bodega.getProducto().getId_producto());
+
+                    upsert_inventario.setInt(3, id_sub_bodega_destino);
+                    upsert_inventario.setInt(5, id_sub_bodega_destino);
+
+                    upsert_inventario.setNull(6, java.sql.Types.DATE);
+                }
+                else {
+                    upsert_inventario.setInt(1, cantidad);
+                    upsert_inventario.setInt(8, cantidad);
+
+                    upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
+                    upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
+
+                    upsert_inventario.setInt(3, id_sub_bodega_destino);
+                    upsert_inventario.setInt(6, id_sub_bodega_destino);
+
+                    upsert_inventario.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+                    upsert_inventario.setDate(7, inventario_sub_bodega.getFecha_vencimiento());
+                }
+
+                upsert_inventario.executeUpdate();
+                resultado = true;
+            }
+            else {
+                throw new SIGIPROException("Error al consumir de la sub bodega. Inténtelo nuevamente.");
+            }
+        }
+        catch (SQLException ex) {
+            throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
+        }
+        finally {
+            try {
+                if (resultado) {
+                    getConexion().commit();
+                }
+                else {
+                    getConexion().rollback();
+                }
+                if (restar_inventario != null) {
+                    restar_inventario.close();
+                }
+                if (inventario_sub_bodega_origen != null) {
+                    inventario_sub_bodega_origen.close();
+                }
+                if (upsert_inventario != null) {
+                    upsert_inventario.close();
+                }
+                getConexion().close();
+            }
+            catch (SQLException sql_ex) {
+                throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
+            }
         }
 
         return resultado;
