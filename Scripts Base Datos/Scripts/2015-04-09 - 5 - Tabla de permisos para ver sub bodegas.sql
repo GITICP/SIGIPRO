@@ -53,7 +53,7 @@ ALTER TABLE ONLY bodega.inventarios_sub_bodegas ADD CONSTRAINT fk_id_sub_bodega 
 
 ALTER TABLE ONLY bodega.bitacora_sub_bodegas ADD CONSTRAINT pk_bitacora_sub_bodegas PRIMARY KEY (id_bitacora_sub_bodegas);
 ALTER TABLE ONLY bodega.bitacora_sub_bodegas ADD CONSTRAINT fk_sub_bodega FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas(id_sub_bodega);
-ALTER TABLE ONLY bodega.bitacora_sub_bodegas ADD CONSTRAINT fk_sub_bodega FOREIGN KEY (id_sub_bodega_destino) REFERENCES bodega.sub_bodegas(id_sub_bodega);
+ALTER TABLE ONLY bodega.bitacora_sub_bodegas ADD CONSTRAINT fk_sub_bodega_destino FOREIGN KEY (id_sub_bodega_destino) REFERENCES bodega.sub_bodegas(id_sub_bodega);
 ALTER TABLE ONLY bodega.bitacora_sub_bodegas ADD CONSTRAINT fk_producto FOREIGN KEY (id_producto) REFERENCES bodega.catalogo_interno(id_producto);
 ALTER TABLE ONLY bodega.bitacora_sub_bodegas ADD CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 
