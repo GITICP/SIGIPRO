@@ -34,7 +34,6 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-book"></i> Caballo número ${caballo.getNumero()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=evento&id_caballo=${caballo.getId_caballo()}">Eventos Clínicos</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=inoculo&id_caballo=${caballo.getId_caballo()}">Inóculos</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=sangriap&id_caballo=${caballo.getId_caballo()}">Sangrías de Prueba</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=sangria&id_caballo=${caballo.getId_caballo()}">Sangrías</a>
@@ -106,7 +105,48 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>                            
+                            </div>
+                            <div class="widget widget-table">
+                                <div class="widget-header">
+                                    <h3><i class="fa fa-check"></i> Eventos Clínicos del Caballo </h3>
+                                </div>
+                                <div class="widget-content">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+                                        <!-- Columnas -->
+                                        <thead> 
+                                            <tr>
+                                                <th>Identificador</th>
+                                                <th>Fecha del Evento</th>
+                                                <th>Tipo de Evento</th>
+                                                <th>Usuario responsable</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${caballo.getEventos()}" var="eventos">
+                                                <tr id ="${eventos.getId_evento()}">
+                                                    <td>
+                                                        <a href="/SIGIPRO/Caballeriza/EventoClinico?accion=ver&id_evento=${eventos.getId_evento()}">
+                                                            <div style="height:100%;width:100%">
+                                                                ${eventos.getId_evento()}
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td>${eventos.getFechaAsString()}</td>
+                                                    <td>${eventos.getTipo_evento().getNombre()}</td>
+                                                    <c:choose>
+                                                        <c:when test="${eventos.getResponsable()!= null}">
+                                                            <td>${eventos.getResponsable().getNombre_completo()}</td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <td>No Tiene Usuario Responsable</td>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <!-- END WIDGET TICKET TABLE -->
                     </div>

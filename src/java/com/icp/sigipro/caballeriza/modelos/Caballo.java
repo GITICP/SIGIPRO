@@ -70,6 +70,7 @@ public class Caballo {
     private BigDecimal sangre_dia3;
     private BigDecimal plasma_dia3;
     private BigDecimal LAL_dia3;
+    private List<EventoClinico> eventos;
     
     private List<Peso> pesos;
 
@@ -333,5 +334,23 @@ public class Caballo {
     public void agregarPeso(Peso p) {
         if(pesos == null) pesos = new ArrayList<Peso>();
         pesos.add(p);
+    }
+    
+    public List<EventoClinico> getEventos()
+    {
+        return eventos;
+    }
+
+    public void setEventos(List<EventoClinico> eventos)
+    {
+        this.eventos = eventos;
+    }
+
+    public void agregarEvento(EventoClinico c)
+    {
+        if (eventos == null) {
+            eventos = new ArrayList<EventoClinico>();
+        }
+        eventos.add(c);
     }
 }

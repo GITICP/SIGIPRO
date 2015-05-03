@@ -269,6 +269,43 @@ public class CaballoDAO
                     while (rs.next());
                 }
             }
+            
+            PreparedStatement consulta_eventos = getConexion().prepareStatement(
+                    " SELECT ec.id_evento, ec.fecha, ec.responsable, ec.descripcion, u.id_usuario, u.nombre_completo, te.id_tipo_evento, te.nombre "
+                  + " FROM (SELECT * FROM caballeriza.eventos_clinicos_caballos WHERE id_caballo = ?) as eventos "
+                  + "   INNER JOIN caballeriza.eventos_clinicos ec ON ec.id_evento = eventos.id_evento "
+                  + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
+                  + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
+            );
+            consulta_eventos.setInt(1, id_caballo);
+            ResultSet rs_eventos = consulta_eventos.executeQuery();
+
+            while (rs_eventos.next()) {
+                EventoClinico evento = new EventoClinico();
+                evento.setId_evento(rs_eventos.getInt("id_evento"));
+                evento.setFecha(rs_eventos.getDate("fecha"));
+                evento.setDescripcion(rs_eventos.getString("descripcion"));
+
+                Usuario responsable = new Usuario();
+                responsable.setId_usuario(rs_eventos.getInt("id_usuario"));
+                responsable.setNombre_completo(rs_eventos.getString("nombre_completo"));
+                evento.setResponsable(responsable);
+
+                TipoEvento tipo_evento = new TipoEvento();
+
+                tipo_evento.setId_tipo_evento(rs_eventos.getInt("id_tipo_evento"));
+                tipo_evento.setNombre(rs_eventos.getString("nombre"));
+                evento.setTipo_evento(tipo_evento);
+
+                caballo.agregarEvento(evento);
+            }
+            
+            
+            rs_eventos.close();
+            rs.close();
+            consulta_eventos.close();
+            consulta.close();
+            conexion.close();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -310,16 +347,14 @@ public class CaballoDAO
     public List<EventoClinico> ObtenerEventosCaballo(int id_caballo) throws SIGIPROException
     {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
-        TipoEventoDAO dao = new TipoEventoDAO();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " select ec.id_evento,ec.fecha,ec.responsable,ec.descripcion, u.id_usuario, u.nombre_completo, te.id_tipo_evento, te.nombre "
-                    + " from caballeriza.eventos_clinicos ec "
-                    + "   INNER JOIN seguridad.usuarios u ON u.id_usuario = ec.responsable "
-                    + "   INNER JOIN caballeriza.tipos_eventos te ON te.id_tipo_evento = ec.id_tipo_evento "
-                    + " left outer join caballeriza.eventos_clinicos_caballos ecc on ec.id_evento = ecc.id_evento "
-                    + " where id_caballo=?; "
+                    " SELECT ec.id_evento, ec.fecha, ec.responsable, ec.descripcion, u.id_usuario, u.nombre_completo, te.id_tipo_evento, te.nombre "
+                  + " FROM (SELECT * FROM caballeriza.eventos_clinicos_caballos WHERE id_caballo = ?) as eventos "
+                  + "   INNER JOIN caballeriza.eventos_clinicos ec ON ec.id_evento = eventos.id_evento "
+                  + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
+                  + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
             );
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
@@ -328,7 +363,6 @@ public class CaballoDAO
                 EventoClinico evento = new EventoClinico();
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
-                evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
                 evento.setDescripcion(rs.getString("descripcion"));
 
                 Usuario responsable = new Usuario();

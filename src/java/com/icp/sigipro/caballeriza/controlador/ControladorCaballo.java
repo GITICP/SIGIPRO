@@ -120,26 +120,7 @@ public class ControladorCaballo extends SIGIPROServlet
             ex.printStackTrace();
         }
     }
-
-    protected void getEvento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        String redireccion = "Caballo/VerEC.jsp";
-        int id_caballo = Integer.parseInt(request.getParameter("id_caballo"));
-        try {
-            Caballo g = dao.obtenerCaballo(id_caballo);
-            List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
-            request.setAttribute("caballo", g);
-            request.setAttribute("listaEventos", listaeventos);
-
-            redireccionar(request, response, redireccion);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
+    
     protected void getInoculo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
