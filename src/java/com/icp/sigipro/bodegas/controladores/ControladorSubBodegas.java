@@ -178,34 +178,38 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
 
         try {
-            validarAcceso(SubBodegaDAO.EGRESAR, getIdUsuario(request), id_sub_bodega, listaPermisos);
+            PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+
+            if (permisos_sub_bodega.isEncargado()) {
+                SubBodega sb;
+                try {
+                    sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+                    List<SubBodega> sbs = dao.obtenerSubBodegas();
+
+                    request.setAttribute("sub_bodega", sb);
+                    request.setAttribute("sub_bodegas", sbs);
+                    request.setAttribute("inventarios", sb.getInventarios());
+                    request.setAttribute("accion", "Mover");
+                }
+                catch (SIGIPROException ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea mover artículos. Inténtelo nuevamente."));
+                    try {
+                        obtenerSubBodegas(request);
+                    }
+                    catch (SIGIPROException sig_ex) {
+                        sig_ex.printStackTrace();
+                        request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea mover artículos. Notifique al administrador del sistema."));
+                    }
+                    redireccion = "SubBodegas/index.jsp";
+                }
+            } else {
+                redireccion = "/index.jsp";
+            }
         }
         catch (SIGIPROException ex) {
             throw new SIGIPROException(ex.getMessage(), "/index.jsp");
         }
 
-        SubBodega sb;
-
-        try {
-            sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
-            List<SubBodega> sbs = dao.obtenerSubBodegas();
-
-            request.setAttribute("sub_bodega", sb);
-            request.setAttribute("sub_bodegas", sbs);
-            request.setAttribute("inventarios", sb.getInventarios());
-            request.setAttribute("accion", "Mover");
-        }
-        catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea mover artículos. Inténtelo nuevamente."));
-            try {
-                obtenerSubBodegas(request);
-            }
-            catch (SIGIPROException sig_ex) {
-                sig_ex.printStackTrace();
-                request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea mover artículos. Notifique al administrador del sistema."));
-            }
-            redireccion = "SubBodegas/index.jsp";
-        }
         redireccionar(request, response, redireccion);
     }
 
@@ -310,12 +314,13 @@ public class ControladorSubBodegas extends SIGIPROServlet
                 SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
                 request.setAttribute("sub_bodega", sb);
                 request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
-            } catch(SIGIPROException sig_ex) {
+            }
+            catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
             }
         }
         else {
-            throw new SIGIPROException("", "/index.jsp");
+            redireccion = "/index.jsp";
         }
         redireccionar(request, response, redireccion);
     }
