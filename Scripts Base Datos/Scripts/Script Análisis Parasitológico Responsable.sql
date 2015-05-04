@@ -1,4 +1,4 @@
-﻿ALTER TABLE bioterio.analisis_parasitologicos
+ALTER TABLE bioterio.analisis_parasitologicos
 DROP COLUMN responsable;
 
 ALTER TABLE bioterio.analisis_parasitologicos

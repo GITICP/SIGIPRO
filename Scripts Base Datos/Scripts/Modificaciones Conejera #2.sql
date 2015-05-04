@@ -1,4 +1,4 @@
-﻿ALTER TABLE ONLY bioterio.conejos_produccion ADD CONSTRAINT pk_conejos_produccion PRIMARY KEY (id_produccion);
+ALTER TABLE ONLY bioterio.conejos_produccion ADD CONSTRAINT pk_conejos_produccion PRIMARY KEY (id_produccion);
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (256, '[Bioterio]AdministrarConejosProduccion', 'Permite agregar/editar/eliminar grupos de conejos de produccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (256, 250, 'Conejos Produccion', '/Conejera/ConejosProduccion');
