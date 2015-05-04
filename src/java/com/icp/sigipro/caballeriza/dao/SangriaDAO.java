@@ -156,7 +156,7 @@ public class SangriaDAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, spc.hematrocito "
+                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, spc.hematrocito "
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
                     + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
@@ -193,7 +193,8 @@ public class SangriaDAO
                     Caballo caballo = new Caballo();
                     caballo.setId_caballo(rs.getInt("id_caballo"));
                     caballo.setNombre(rs.getString("nombre"));
-                    caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                    caballo.setNumero_microchip(rs.getString("numero_microchip"));
+                    caballo.setNumero(rs.getInt("numero"));
                     sangria_caballo.setCaballo(caballo);
                     sangria_caballo.setLal_dia1(rs.getFloat("lal_dia1"));
                     sangria_caballo.setLal_dia2(rs.getFloat("lal_dia2"));
@@ -234,7 +235,7 @@ public class SangriaDAO
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, "
                     + "        s.responsable, s.potencia, sp.id_sangria_prueba, "
-                    + "        c.id_caballo, c.nombre, c.numero_microchip, "
+                    + "        c.id_caballo, c.nombre, c.numero, c.numero_microchip, "
                     + "        CASE "
                     + "             WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true "
                     + "             ELSE false "
@@ -265,7 +266,8 @@ public class SangriaDAO
                     Caballo caballo = new Caballo();
                     caballo.setId_caballo(rs.getInt("id_caballo"));
                     caballo.setNombre(rs.getString("nombre"));
-                    caballo.setNumero_microchip(rs.getInt("numero_microchip"));
+                    caballo.setNumero_microchip(rs.getString("numero_microchip"));
+                    caballo.setNumero(rs.getInt("numero"));
 
                     sangria_prueba.agregarCaballo(caballo);
                     if (rs.getBoolean("incluido")) {

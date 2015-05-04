@@ -73,7 +73,7 @@
                                         <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                             <thead>
                                                 <tr>
-                                                    <th rowspan="2">Nombre y Número de Microchip</th>
+                                                    <th rowspan="2">Nombre y Número de Caballo</th>
                                                     <th rowspan="2" style="text-align:center">Participó</th>
                                                     <th colspan="3">Día ${dia}</th>
                                                 </tr>
@@ -86,7 +86,7 @@
                                             <tbody>
                                                 <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
                                                     <tr id="${caballo.getId_caballo()}">
-                                                        <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero_microchip()})</td>
+                                                        <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
                                                         <td>
                                                             <label class="fancy-checkbox" style="text-align:center">
                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" ${(editar && sangria_caballo.sumatoria(dia) == 0) ? "" : "checked"}>

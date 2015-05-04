@@ -24,6 +24,7 @@ public class SubBodega extends IModelo
     private Usuario usuario;
     private String nombre;
     private List<InventarioSubBodega> inventarios;
+    private List<BitacoraSubBodega> historial;
 
     public SubBodega()
     {
@@ -102,5 +103,14 @@ public class SubBodega extends IModelo
     {
         this.inventarios = inventarios;
     }
+    
+    public List<BitacoraSubBodega> getHistorial()
+    {
+        return historial;
+    }
 
+    public void setHistorial(List<BitacoraSubBodega> historial)
+    {
+        this.historial = historial;
+    }
 }

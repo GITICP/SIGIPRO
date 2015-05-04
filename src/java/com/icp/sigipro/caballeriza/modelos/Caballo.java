@@ -23,6 +23,7 @@ public class Caballo {
     
     public static final String MUERTO = "Muerto";
     public static final String VIVO = "Vivo";
+    public static final String DESCARTADO = "Descartado";
     
     public static final String MACHO = "Macho";
     public static final String HEMBRA = "Hembra";
@@ -32,6 +33,7 @@ public class Caballo {
         {
             add(MUERTO);
             add(VIVO);
+            add(DESCARTADO);
         }
     };
     
@@ -46,8 +48,9 @@ public class Caballo {
     
     
     private int id_caballo;
+    private int numero;
     private String nombre;
-    private int numero_microchip;
+    private String numero_microchip;
     private Date fecha_nacimiento;
     private Date fecha_ingreso;
     private String sexo;
@@ -67,11 +70,14 @@ public class Caballo {
     private BigDecimal sangre_dia3;
     private BigDecimal plasma_dia3;
     private BigDecimal LAL_dia3;
+    private List<EventoClinico> eventos;
+    
+    private List<Peso> pesos;
 
     public Caballo() {
     }
 
-    public Caballo(int id_caballo, String nombre, int numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, byte[] fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
+    public Caballo(int id_caballo, String nombre, String numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, byte[] fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
         this.id_caballo = id_caballo;
         this.nombre = nombre;
         this.numero_microchip = numero_microchip;
@@ -114,6 +120,16 @@ public class Caballo {
         this.id_caballo = id_caballo;
     }
 
+    public int getNumero()
+    {
+        return numero;
+    }
+
+    public void setNumero(int numero)
+    {
+        this.numero = numero;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -122,11 +138,11 @@ public class Caballo {
         this.nombre = nombre;
     }
 
-    public int getNumero_microchip() {
+    public String getNumero_microchip() {
         return numero_microchip;
     }
 
-    public void setNumero_microchip(int numero_microchip) {
+    public void setNumero_microchip(String numero_microchip) {
         this.numero_microchip = numero_microchip;
     }
 
@@ -165,7 +181,13 @@ public class Caballo {
     }
 
     public void setColor(String color) {
-        this.color = color;
+        String valor_final = "Sin Color";
+        if (color != null) {
+            if (!color.equals("")){
+                valor_final = color;
+            }
+        }
+        this.color = valor_final;
     }
 
     public String getOtras_sennas() {
@@ -173,7 +195,13 @@ public class Caballo {
     }
 
     public void setOtras_sennas(String otras_sennas) {
-        this.otras_sennas = otras_sennas;
+        String valor_final = "Sin Otras Señas";
+        if (otras_sennas != null) {
+            if (!otras_sennas.equals("")){
+                valor_final = otras_sennas;
+            }
+        }
+        this.otras_sennas = valor_final;
     }
 
     public byte[] getFotografia() {
@@ -292,6 +320,37 @@ public class Caballo {
     public void setLAL_dia3(BigDecimal LAL_dia3) {
         this.LAL_dia3 = LAL_dia3;
     }
-    
 
+    public List<Peso> getPesos()
+    {
+        return pesos;
+    }
+
+    public void setPesos(List<Peso> pesos)
+    {
+        this.pesos = pesos;
+    }
+    
+    public void agregarPeso(Peso p) {
+        if(pesos == null) pesos = new ArrayList<Peso>();
+        pesos.add(p);
+    }
+    
+    public List<EventoClinico> getEventos()
+    {
+        return eventos;
+    }
+
+    public void setEventos(List<EventoClinico> eventos)
+    {
+        this.eventos = eventos;
+    }
+
+    public void agregarEvento(EventoClinico c)
+    {
+        if (eventos == null) {
+            eventos = new ArrayList<EventoClinico>();
+        }
+        eventos.add(c);
+    }
 }

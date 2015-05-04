@@ -54,15 +54,16 @@
                                 <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
                                 <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Observaciones:</strong> <td>${eventoclinico.getObservaciones()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                <tr><td> <strong>Reespondable:</strong> <td>
+                                <tr><td> <strong>Responsable:</strong> <td>
                                         <c:set var="val" value=""/>
                                         <c:choose> 
-                                            <c:when test="${eventoclinico.getResponsable() == null || eventoclinico.getResponsable() ==''}">
+                                            <c:when test="${eventoclinico.getResponsable() == null}">
                                                 No Tiene Usuario Responsable
                                             </c:when>
                                             <c:otherwise>
-                                                ${eventoclinico.getResponsable()}
+                                                ${eventoclinico.getResponsable().getNombre_completo()}
                                             </c:otherwise>
                                         </c:choose>
                                     </td></tr>                                         
@@ -73,16 +74,16 @@
                                     <h3><i class="fa fa-check"></i> Caballos del Evento Clínico </h3>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Número de Microchip</th>
+                                                <th>Nombre y Número de Caballo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${caballos}" var="caballo">
                                                 <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                                                    <td>${caballo.getNombre()} (${caballo.getNumero()})</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

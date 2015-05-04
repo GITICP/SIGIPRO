@@ -943,8 +943,14 @@ public class UsuarioDAO
         return resultado;
     }
 
-    public List<Usuario> obtenerUsuariosSeccion(int id_seccion) throws SIGIPROException
+    public List<Usuario> obtenerUsuariosSeccion(int... ids_secciones) throws SIGIPROException
     {
+        List<Integer> secciones = new ArrayList<Integer>();
+        for (int i : ids_secciones) {
+            secciones.add(i);
+        }
+        String secciones_final = pasar_id_secciones(secciones);
+        
         List<Usuario> resultado = new ArrayList<Usuario>();
 
         SingletonBD s = SingletonBD.getSingletonBD();
@@ -954,9 +960,7 @@ public class UsuarioDAO
 
         if (conexion != null) {
             try {
-                consulta = conexion.prepareStatement(" SELECT id_usuario, nombre_completo FROM seguridad.usuarios WHERE id_seccion = ?;");
-
-                consulta.setInt(1, id_seccion);
+                consulta = conexion.prepareStatement(" SELECT id_usuario, nombre_completo FROM seguridad.usuarios WHERE id_seccion in " + secciones_final + ";");
 
                 rs = consulta.executeQuery();
 
@@ -1016,6 +1020,18 @@ public class UsuarioDAO
             }
         }
         return resultado;
+    }
+    
+    private String pasar_id_secciones(List<Integer> ids_secciones)
+    {
+        String secciones = "(";
+        for (int s : ids_secciones) {
+            secciones = secciones + s;
+            secciones = secciones + ",";
+        }
+        secciones = secciones.substring(0, secciones.length() - 1);
+        secciones = secciones + ")";
+        return secciones;
     }
 
 }
