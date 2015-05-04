@@ -31,7 +31,7 @@ public class BarraFuncionalidad implements java.io.Serializable
     public void eliminarModulosVacios() {
         List<Modulo> arreglo = new ArrayList<Modulo>();
         for (Modulo m : modulos) {
-            if ((m.getFuncionalidades().size() + m.getSub_modulos().size()) != 0) arreglo.add(m);
+            if (m.tieneContenido()) arreglo.add(m);
         }
         modulos = arreglo;
     }

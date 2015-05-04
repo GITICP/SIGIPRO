@@ -105,4 +105,21 @@ public class Modulo implements java.io.Serializable
         }
         return resultado;
     }
+    
+    public boolean tieneContenido() {
+        boolean tiene_funcionalidades = funcionalidades.size() > 0;
+        boolean tiene_sub_modulos = iterarSubModulos();
+        return tiene_funcionalidades || tiene_sub_modulos;
+    }
+    
+    public boolean iterarSubModulos() {
+        List<Modulo> arreglo = new ArrayList<Modulo>();
+        for (Modulo mod : sub_modulos) {
+            if(mod.tieneContenido()) {
+                arreglo.add(mod);
+            }
+        }
+        sub_modulos = arreglo;
+        return sub_modulos.size() > 0;
+    }
 }
