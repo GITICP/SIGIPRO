@@ -28,8 +28,8 @@ public class MachoDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.machos (identificacion, fecha_ingreso, descripcion, fecha_retiro, id_padre, id_madre)"  
-              + " VALUES (?,?,?,?,?,?) RETURNING id_macho");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.machos (identificacion, fecha_ingreso, descripcion, fecha_retiro, id_padre, id_madre, fecha_preseleccion)"  
+              + " VALUES (?,?,?,?,?,?,?) RETURNING id_macho");
       
       consulta.setDate(2, p.getFecha_ingreso());
       consulta.setString(3, p.getDescripcion());
@@ -37,6 +37,7 @@ public class MachoDAO {
       consulta.setString(1, p.getIdentificacion());
       consulta.setString(5, p.getId_padre());
       consulta.setString(6, p.getId_madre());
+      consulta.setDate(7, p.getFecha_preseleccion());
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -58,7 +59,7 @@ public class MachoDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.machos "
-              + " SET  identificacion=?, fecha_ingreso=?, descripcion=?, fecha_retiro=?, id_padre=?, id_madre=?"
+              + " SET  identificacion=?, fecha_ingreso=?, descripcion=?, fecha_retiro=?, id_padre=?, id_madre=?, fecha_preseleccion=?"
               + " WHERE id_macho=?; "
       );
       consulta.setString(1, p.getIdentificacion());
@@ -67,7 +68,8 @@ public class MachoDAO {
       consulta.setDate(4, p.getFecha_retiro());
       consulta.setString(5, p.getId_padre());
       consulta.setString(6, p.getId_madre());
-      consulta.setInt(7, p.getId_macho());
+      consulta.setDate(7, p.getFecha_preseleccion());
+      consulta.setInt(8, p.getId_macho());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -122,6 +124,7 @@ public class MachoDAO {
         macho.setFecha_retiro(rs.getDate("fecha_retiro"));
         macho.setId_padre(rs.getString("id_padre"));
         macho.setId_madre(rs.getString("id_madre"));
+        macho.setFecha_preseleccion(rs.getDate("fecha_preseleccion"));
       }
       rs.close();
       consulta.close();
@@ -150,6 +153,7 @@ public class MachoDAO {
         macho.setFecha_retiro(rs.getDate("fecha_retiro"));  
         macho.setId_padre(rs.getString("id_padre"));
         macho.setId_madre(rs.getString("id_madre"));
+        macho.setFecha_preseleccion(rs.getDate("fecha_preseleccion"));
         resultado.add(macho);
       }
       rs.close();

@@ -48,6 +48,7 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre de la Cepa:</strong> <td>${cepa.getNombre()} </td></tr>
+                <tr><td> <strong>Descripción:</strong> <td>${cepa.getDescripcion()} </td></tr>
               </table>
               <br>
             </div>
