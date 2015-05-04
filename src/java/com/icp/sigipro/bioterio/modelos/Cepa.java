@@ -14,12 +14,21 @@ import org.json.JSONObject;
 public class Cepa {
   private int id_cepa;
   private String nombre;
+  private String descripcion;
 
   public Cepa(int id_cepa, String nombre) {
     this.id_cepa = id_cepa;
     this.nombre = nombre;
   }
   public Cepa() {
+  }
+
+  public String getDescripcion() {
+    return descripcion;
+  }
+
+  public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
   }
 
   public int getId_cepa() {

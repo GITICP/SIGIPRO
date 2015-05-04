@@ -26,7 +26,7 @@ public class AnalisisParasitologico {
   private String tratamiento_dosis;
   private String recetado_por;
   private Date fecha_tratamiento;
-  private String responsable;
+  private Usuario responsable;
 
   public int getId_analisis() {
     return id_analisis;
@@ -100,11 +100,11 @@ public class AnalisisParasitologico {
     this.fecha_tratamiento = fecha_tratamiento;
   }
 
-  public String getResponsable() {
+  public Usuario getResponsable() {
     return responsable;
   }
 
-  public void setResponsable(String responsable) {
+  public void setResponsable(Usuario responsable) {
     this.responsable = responsable;
   }
 
@@ -138,6 +138,7 @@ public class AnalisisParasitologico {
           JSON.put("id_objeto", field.get(this));
         }
       }
+      JSON.put("id_usuario", this.responsable.getID());
     } catch (Exception e) {
 
     }

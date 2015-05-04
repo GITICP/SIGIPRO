@@ -54,6 +54,7 @@
                                 <tr><td> <strong>Identificación:</strong> <td>${conejo.getIdentificacion()} </td></tr>
                                 <tr><td> <strong>Fecha de ingreso:</strong> <td>${conejo.getFecha_ingreso_S()} </td></tr>
                                 <tr><td> <strong>Fecha de retiro:</strong> <td>${conejo.getFecha_retiro_S()} </td></tr>
+                                <tr><td> <strong>Fecha de preselección:</strong> <td>${conejo.getFecha_preseleccion_S()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${conejo.getDescripcion()} </td></tr>
                                 <tr><td> <strong>Identificación del padre:</strong> <td>${conejo.getId_padre()} </td></tr>
                                 <tr><td> <strong>Identificación de la madre:</strong> <td>${conejo.getId_madre()} </td></tr>

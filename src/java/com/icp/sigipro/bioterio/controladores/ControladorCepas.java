@@ -215,6 +215,7 @@ public class ControladorCepas extends  SIGIPROServlet {
     
     cepa.setId_cepa(Integer.parseInt(request.getParameter("id_cepa")));
     cepa.setNombre(request.getParameter("nombre"));
+    cepa.setDescripcion(request.getParameter("descripcion"));
     
     return cepa;
   }

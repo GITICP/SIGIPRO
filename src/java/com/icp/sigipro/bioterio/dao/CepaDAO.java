@@ -29,10 +29,11 @@ public class CepaDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.cepas (nombre)"  
-              + " VALUES (?) RETURNING id_cepa");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.cepas (nombre, descripcion)"  
+              + " VALUES (?,?) RETURNING id_cepa");
       
       consulta.setString(1, p.getNombre());
+      consulta.setString(2, p.getDescripcion());
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -54,12 +55,13 @@ public class CepaDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.cepas "
-              + " SET  nombre=?"
+              + " SET  nombre=?, descripcion=?"
               + " WHERE id_cepa=?; "
       );
 
       consulta.setString(1, p.getNombre());
-      consulta.setInt(2, p.getId_cepa());
+      consulta.setString(2, p.getDescripcion());
+      consulta.setInt(3, p.getId_cepa());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -109,6 +111,7 @@ public class CepaDAO {
       if (rs.next()) {
         cepa.setId_cepa(rs.getInt("id_cepa"));
         cepa.setNombre(rs.getString("nombre"));
+        cepa.setDescripcion(rs.getString("descripcion"));
       }
       rs.close();
       consulta.close();
@@ -132,6 +135,8 @@ public class CepaDAO {
         Cepa cepa = new Cepa();
         cepa.setId_cepa(rs.getInt("id_cepa"));
         cepa.setNombre(rs.getString("nombre"));
+        cepa.setDescripcion(rs.getString("descripcion"));
+
         resultado.add(cepa);
       }
       rs.close();

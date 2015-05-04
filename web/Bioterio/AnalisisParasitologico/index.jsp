@@ -64,8 +64,8 @@
                           </div>
                         </a>
                       </td>
-                      <td>${analisis.getFecha_tratamiento_S()}</td>
-                      <td>${analisis.getResponsable()}</td>
+                      <td>${analisis.getFecha_S()}</td>
+                      <td>${analisis.getResponsable().getNombre_completo()}</td>
                       <td>${analisis.getRecetado_por()}</td>
                     </tr>
 
