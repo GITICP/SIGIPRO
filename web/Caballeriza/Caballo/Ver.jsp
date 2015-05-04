@@ -93,13 +93,17 @@
                                             <tr>
                                                 <th>Fecha de Pesaje</th>
                                                 <th>Peso</th>
+                                                <th>Editar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${caballo.getPesos()}" var="peso">
                                                 <tr>
-                                                    <td>${peso.getFechaAsString()}</td>
-                                                    <td>${peso.getPeso()}</td>
+                                                    <td class="fecha">${peso.getFechaAsString()}</td>
+                                                    <td class="peso">${peso.getPeso()}</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-warning btn-sm boton-accion peso-caballo">Editar</button>
+                                                    </td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

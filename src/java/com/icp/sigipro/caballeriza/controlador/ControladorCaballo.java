@@ -70,6 +70,7 @@ public class ControladorCaballo extends SIGIPROServlet
             add("editar");
             add("agregareditar");
             add("agregarpeso");
+            add("editarpeso");
         }
     };
 
@@ -328,6 +329,11 @@ public class ControladorCaballo extends SIGIPROServlet
         catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    protected void postEditarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        
     }
 
     private Caballo construirObjeto(HttpServletRequest request)

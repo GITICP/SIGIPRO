@@ -42,7 +42,12 @@ $(document).ready(function () {
             });
             $(this).html("Marcar Todos");
         }
-
+    });
+    
+    $(".peso-caballo").click(function(){
+        var fila = $(this).parent().parent();
+        var fecha = fila.find(".fecha").text();
+        var peso = fila.find(".peso").text();
     });
 });
 
