@@ -95,6 +95,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("CambioPiel");
             add("Desparasitación");
             add("Alimentación");
+            add("Otros");
 
         }
     };
@@ -578,6 +579,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
             case "Alimentación":
                 e.setId_categoria(4);
                 break;
+            default:
+                e.setId_categoria(15);
         }
         e.setObservaciones(request.getParameter("observacionesModal"));
         java.sql.Date date = new java.sql.Date(new Date().getTime());
