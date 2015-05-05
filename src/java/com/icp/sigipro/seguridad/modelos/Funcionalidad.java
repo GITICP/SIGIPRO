@@ -15,6 +15,7 @@ public class Funcionalidad implements java.io.Serializable
     private int id_padre;
     private String tag;
     private String redirect;
+    private int orden;
     
     public Funcionalidad(){}
 
@@ -56,5 +57,15 @@ public class Funcionalidad implements java.io.Serializable
     public void setRedirect(String redirect)
     {
         this.redirect = redirect;
+    }
+
+    public int getOrden()
+    {
+        return orden;
+    }
+
+    public void setOrden(int orden)
+    {
+        this.orden = orden;
     }
 }

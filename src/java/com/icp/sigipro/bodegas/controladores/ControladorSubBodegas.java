@@ -5,11 +5,11 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
+import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
@@ -20,6 +20,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,6 +48,8 @@ public class ControladorSubBodegas extends SIGIPROServlet
     private final SeccionDAO daoSecciones = new SeccionDAO();
     private final UsuarioDAO daoUsuarios = new UsuarioDAO();
 
+    private String redireccion;
+
     protected final Class clase = ControladorSubBodegas.class;
     protected final List<String> accionesGet = new ArrayList<String>()
     {
@@ -57,6 +60,8 @@ public class ControladorSubBodegas extends SIGIPROServlet
             add("editar");
             add("ingresar");
             add("consumir");
+            add("mover");
+            add("historial");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -67,6 +72,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             add("eliminar");
             add("ingresar");
             add("consumir");
+            add("mover");
         }
     };
 
@@ -76,7 +82,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         List<Integer> listaPermisos = getPermisosUsuario(request);
 
         validarPermiso(70, listaPermisos);
-        String redireccion = "SubBodegas/Agregar.jsp";
+        redireccion = "SubBodegas/Agregar.jsp";
 
         SubBodega sb = new SubBodega();
 
@@ -95,7 +101,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
-        String redireccion = "SubBodegas/Ingresar.jsp";
+        redireccion = "SubBodegas/Ingresar.jsp";
 
         try {
             validarAcceso(SubBodegaDAO.INGRESAR, getIdUsuario(request), id_sub_bodega, listaPermisos);
@@ -117,7 +123,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega a la que desea ingresar artículos. Inténtelo nuevamente."));
             try {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                obtenerSubBodegas(request);
             }
             catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega a la que desea ingresar artículos ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
@@ -130,7 +136,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     protected void getConsumir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        String redireccion = "SubBodegas/Consumir.jsp";
+        redireccion = "SubBodegas/Consumir.jsp";
 
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
 
@@ -151,15 +157,59 @@ public class ControladorSubBodegas extends SIGIPROServlet
             request.setAttribute("accion", "Consumir");
         }
         catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega a la que desea ingresar artículos. Inténtelo nuevamente."));
+            request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea consumir artículos. Inténtelo nuevamente."));
             try {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                obtenerSubBodegas(request);
             }
             catch (SIGIPROException sig_ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega a la que desea ingresar artículos ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
+                sig_ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea consumir artículos ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
             }
             redireccion = "SubBodegas/index.jsp";
         }
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void getMover(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        redireccion = "SubBodegas/Mover.jsp";
+
+        int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
+
+        try {
+            PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+
+            if (permisos_sub_bodega.isEncargado()) {
+                SubBodega sb;
+                try {
+                    sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+                    List<SubBodega> sbs = dao.obtenerSubBodegas();
+
+                    request.setAttribute("sub_bodega", sb);
+                    request.setAttribute("sub_bodegas", sbs);
+                    request.setAttribute("inventarios", sb.getInventarios());
+                    request.setAttribute("accion", "Mover");
+                }
+                catch (SIGIPROException ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea mover artículos. Inténtelo nuevamente."));
+                    try {
+                        obtenerSubBodegas(request);
+                    }
+                    catch (SIGIPROException sig_ex) {
+                        sig_ex.printStackTrace();
+                        request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega de la que desea mover artículos. Notifique al administrador del sistema."));
+                    }
+                    redireccion = "SubBodegas/index.jsp";
+                }
+            } else {
+                redireccion = "/index.jsp";
+            }
+        }
+        catch (SIGIPROException ex) {
+            throw new SIGIPROException(ex.getMessage(), "/index.jsp");
+        }
+
         redireccionar(request, response, redireccion);
     }
 
@@ -171,12 +221,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         try {
             validarPermisosSubBodega(id_usuario, lista_permisos);
 
-            if (lista_permisos.contains(1) || lista_permisos.contains(70)) {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
-            }
-            else {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
-            }
+            obtenerSubBodegas(request);
         }
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeAdvertencia("No se pudo obtener el listado completo. Refresque la página."));
@@ -184,67 +229,26 @@ public class ControladorSubBodegas extends SIGIPROServlet
             Logger.getGlobal().log(Level.SEVERE, mensaje_log);
         }
 
-        String redireccion = "SubBodegas/index.jsp";
+        redireccion = "SubBodegas/index.jsp";
         redireccionar(request, response, redireccion);
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        PermisoSubBodegas permisos_sub_bodega;
-
-        String redireccion = "SubBodegas/Ver.jsp";
+        redireccion = "SubBodegas/Ver.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
-        if (!listaPermisos.contains(1)) {
-            try {
-                permisos_sub_bodega = dao.obtenerPermisos(getIdUsuario(request), id_sub_bodega);
-            }
-            catch (SIGIPROException ex) {
-                throw new SIGIPROException(ex.getMessage(), "/index.jsp");
-            }
-        } else {
-            permisos_sub_bodega = new PermisoSubBodegas();
-            permisos_sub_bodega.setConsumir(true);
-            permisos_sub_bodega.setEncargado(true);
-            permisos_sub_bodega.setIngresar(true);
-            permisos_sub_bodega.setVer(true);
-        }
 
-        SubBodega sb = null;
-        try {
-            sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+        PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
 
-            request.setAttribute("sub_bodega", sb);
-
-            List<Usuario> usuarios_ingresos = dao.usuariosPermisos(SubBodegaDAO.INGRESAR, sb.getId_sub_bodega());
-            List<Usuario> usuarios_egresos = dao.usuariosPermisos(SubBodegaDAO.EGRESAR, sb.getId_sub_bodega());
-            List<Usuario> usuarios_ver = dao.usuariosPermisos(SubBodegaDAO.VER, sb.getId_sub_bodega());
-
-            request.setAttribute("permisos_usuario", permisos_sub_bodega);
-            request.setAttribute("usuarios_ingresos", usuarios_ingresos);
-            request.setAttribute("usuarios_egresos", usuarios_egresos);
-            request.setAttribute("usuarios_ver", usuarios_ver);
-            request.setAttribute("inventarios", sb.getInventarios());
-            request.setAttribute("sub_bodega", sb);
-        }
-        catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando. Inténtelo nuevamente."));
-            try {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
-            }
-            catch (SIGIPROException sig_ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
-            }
-            redireccion = "SubBodegas/index.jsp";
-        }
+        obtenerSubBodega(request, permisos_sub_bodega, id_sub_bodega);
 
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        String redireccion = "SubBodegas/Editar.jsp";
+        redireccion = "SubBodegas/Editar.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
 
         SubBodega sb;
@@ -275,7 +279,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando. Inténtelo nuevamente."));
             try {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                obtenerSubBodegas(request);
             }
             catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
@@ -292,17 +296,40 @@ public class ControladorSubBodegas extends SIGIPROServlet
         validarPermiso(13, listaPermisos);
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
         // dao.eliminarProductoInterno(id_producto);
-        String redireccion = "SubBodegas/index.jsp";
+        redireccion = "SubBodegas/index.jsp";
         // Obtener todo
         // Setear
         // request.setAttribute("listaProductos", productos);
     }
 
-  // </editor-fold>
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    {
+        redireccion = "SubBodegas/VerHistorial.jsp";
+        int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
+
+        PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+
+        if (permisos_sub_bodega.isEncargado()) {
+            try {
+                SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
+                request.setAttribute("sub_bodega", sb);
+                request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
+            }
+            catch (SIGIPROException sig_ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
+            }
+        }
+        else {
+            redireccion = "/index.jsp";
+        }
+        redireccionar(request, response, redireccion);
+    }
+
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        String redireccion = "SubBodegas/Agregar.jsp";
+        redireccion = "SubBodegas/Agregar.jsp";
 
         SubBodega sb = construirObjeto(request);
 
@@ -317,7 +344,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
                     bitacora_dao.setBitacora(sb.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SUBBODEGAS, request.getRemoteAddr());
 
                     request.setAttribute("mensaje", helper.mensajeDeExito("SubBodega agregada correctamente."));
-                    request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                    obtenerSubBodegas(request);
                     redireccion = "SubBodegas/index.jsp";
                 }
                 catch (SIGIPROException ex) {
@@ -338,7 +365,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        String redireccion;
         String id = request.getParameter("id_sub_bodega");
 
         SubBodega sb = construirObjeto(request);
@@ -353,7 +379,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             if (dao.editarSubBodega(sb, ids_ingresos, ids_egresos, ids_ver)) {
                 try {
                     request.setAttribute("mensaje", helper.mensajeDeExito("SubBodega editada correctamente."));
-                    request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                    obtenerSubBodegas(request);
                 }
                 catch (SIGIPROException ex) {
                     request.setAttribute("mensaje", helper.mensajeDeAdvertencia("SubBodega se editó correctamente, pero no se pudo obtener el listado completo. Refresque la página."));
@@ -394,15 +420,15 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
     protected void postIngresar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
 
-        String redireccion = "SubBodegas/Ingresar.jsp";
+        redireccion = "SubBodegas/Ingresar.jsp";
 
         SubBodega sub_bodega;
 
         try {
             InventarioSubBodega inventario_sub_bodega = new InventarioSubBodega();
+            BitacoraSubBodega bitacora = new BitacoraSubBodega();
 
             sub_bodega = dao.buscarSubBodega(id_sub_bodega);
             inventario_sub_bodega.setSub_bodega(sub_bodega);
@@ -411,13 +437,24 @@ public class ControladorSubBodegas extends SIGIPROServlet
             producto.setId_producto(Integer.parseInt(request.getParameter("producto")));
             inventario_sub_bodega.setProducto(producto);
 
-            inventario_sub_bodega.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+            int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+            inventario_sub_bodega.setCantidad(cantidad);
 
-            SingletonBD s = SingletonBD.getSingletonBD();
+            bitacora.setAccion(BitacoraSubBodega.INGRESAR);
+            bitacora.setSub_bodega(sub_bodega);
+            bitacora.setProducto(producto);
+            bitacora.setCantidad(cantidad);
+
+            Usuario usuario = new Usuario();
+            usuario.setIdUsuario(this.getIdUsuario(request));
+
+            bitacora.setUsuario(usuario);
+
+            HelperFechas h = HelperFechas.getSingletonHelperFechas();
             String fecha_vencimiento = request.getParameter("fecha_vencimiento");
             if (fecha_vencimiento != null) {
                 try {
-                    inventario_sub_bodega.setFecha_vencimiento(s.parsearFecha(fecha_vencimiento));
+                    inventario_sub_bodega.setFecha_vencimiento(h.formatearFecha(fecha_vencimiento));
                 }
                 catch (ParseException ex) {
                     // mostrar mensaje de error con la fecha.
@@ -425,18 +462,17 @@ public class ControladorSubBodegas extends SIGIPROServlet
             }
 
             try {
-                if (dao.registrarIngreso(inventario_sub_bodega)) {
+                if (dao.registrarIngreso(inventario_sub_bodega, bitacora)) {
                     request.setAttribute("mensaje", helper.mensajeDeExito("Ingreso de artículos registrado en la sub bodega correctamente."));
                     try {
-                        request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                        redireccion = "SubBodegas/Ver.jsp";
+                        PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+                        obtenerSubBodega(request, permisos_sub_bodega, id_sub_bodega);
                     }
                     catch (SIGIPROException ex) {
-                        request.setAttribute("mensaje", helper.mensajeDeAdvertencia("No se pudo obtener el listado completo. Refresque la página."));
-                        String mensaje_log = "Error de instanciación. Mensaje: " + ex.getMessage();
-                        Logger.getGlobal().log(Level.SEVERE, mensaje_log);
+                        request.setAttribute("mensaje", helper.mensajeDeError("Ingreso de artículos registrado en la sub bodega correctamente, pero hubo un error al obtener la sub bodega. Refresque la página."));
                     }
-
-                    redireccion = "SubBodegas/index.jsp";
+                    redireccion = "SubBodegas/Ver.jsp";
                 }
                 else {
                     throw new SIGIPROException();
@@ -471,14 +507,27 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         int inventario = Integer.parseInt(request.getParameter("id-inventario-sub-bodega"));
         int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
 
-        String redireccion = "SubBodegas/index.jsp";
+        BitacoraSubBodega bitacora = new BitacoraSubBodega();
+        Usuario u = new Usuario();
+        SubBodega s = new SubBodega();
+        u.setId_usuario(getIdUsuario(request));
+        s.setId_sub_bodega(id_sub_bodega);
+        bitacora.setUsuario(u);
+        bitacora.setCantidad(cantidad);
+        bitacora.setSub_bodega(s);
+        bitacora.setAccion(BitacoraSubBodega.EGRESAR);
+
+        redireccion = "SubBodegas/index.jsp";
 
         try {
-            dao.consumirArticulo(inventario, cantidad);
+            dao.consumirArticulo(inventario, cantidad, bitacora);
             request.setAttribute("mensaje", helper.mensajeDeExito("Artículos descontados correctamente."));
             try {
-                request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+                redireccion = "SubBodegas/Ver.jsp";
+                PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+                obtenerSubBodega(request, permisos_sub_bodega, id_sub_bodega);
             }
             catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("Artículos consumidos correctamente de la sub bodega, pero no se pudo obtener el listado completo."));
@@ -494,6 +543,119 @@ public class ControladorSubBodegas extends SIGIPROServlet
             }
         }
         redireccionar(request, response, redireccion);
+    }
+
+    protected void postMover(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
+    {
+        int inventario = Integer.parseInt(request.getParameter("id-inventario-sub-bodega"));
+        int sub_bodega_destino = Integer.parseInt(request.getParameter("id-sub-bodega-destino"));
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        int id_sub_bodega = Integer.parseInt(request.getParameter("id-sub-bodega"));
+
+        BitacoraSubBodega bitacora = new BitacoraSubBodega();
+
+        Usuario u = new Usuario();
+        SubBodega s = new SubBodega();
+        SubBodega s_destino = new SubBodega();
+        u.setId_usuario(getIdUsuario(request));
+        s.setId_sub_bodega(id_sub_bodega);
+        s_destino.setId_sub_bodega(sub_bodega_destino);
+        bitacora.setUsuario(u);
+        bitacora.setCantidad(cantidad);
+        bitacora.setSub_bodega(s);
+        bitacora.setSub_bodega_destino(s_destino);
+        bitacora.setAccion(BitacoraSubBodega.MOVER);
+
+        redireccion = "SubBodegas/index.jsp";
+
+        try {
+            dao.moverArticulo(inventario, cantidad, sub_bodega_destino, bitacora);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Artículos trasladados correctamente."));
+            try {
+                redireccion = "SubBodegas/Ver.jsp";
+                PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
+                obtenerSubBodega(request, permisos_sub_bodega, id_sub_bodega);
+            }
+            catch (SIGIPROException sig_ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError("Artículos trasladados correctamente, pero no se pudo obtener el listado completo."));
+            }
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+            try {
+                obtenerSubBodegas(request);
+            }
+            catch (SIGIPROException sig_ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError("No se pudo trasladar los artículos de la sub bodega ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
+            }
+        }
+        redireccionar(request, response, redireccion);
+    }
+
+    private void obtenerSubBodegas(HttpServletRequest request) throws AuthenticationException, SIGIPROException
+    {
+        List<Integer> lista_permisos = getPermisosUsuario(request);
+        int id_usuario = getIdUsuario(request);
+        if (lista_permisos.contains(1) || lista_permisos.contains(70)) {
+            request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
+        }
+        else {
+            request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
+        }
+    }
+
+    private PermisoSubBodegas obtenerPermisosVer(HttpServletRequest request, int id_sub_bodega) throws AuthenticationException, SIGIPROException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        PermisoSubBodegas permisos_sub_bodega = new PermisoSubBodegas();
+
+        if (!listaPermisos.contains(1)) {
+            try {
+                permisos_sub_bodega = dao.obtenerPermisos(getIdUsuario(request), id_sub_bodega);
+            }
+            catch (SIGIPROException ex) {
+                throw new SIGIPROException(ex.getMessage(), "/index.jsp");
+            }
+        }
+        else {
+            permisos_sub_bodega.setConsumir(true);
+            permisos_sub_bodega.setEncargado(true);
+            permisos_sub_bodega.setIngresar(true);
+            permisos_sub_bodega.setVer(true);
+        }
+
+        return permisos_sub_bodega;
+    }
+
+    private void obtenerSubBodega(HttpServletRequest request, PermisoSubBodegas permisos_sub_bodega, int id_sub_bodega) throws SIGIPROException, AuthenticationException
+    {
+        SubBodega sb = null;
+        try {
+            sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+
+            request.setAttribute("sub_bodega", sb);
+
+            List<Usuario> usuarios_ingresos = dao.usuariosPermisos(SubBodegaDAO.INGRESAR, sb.getId_sub_bodega());
+            List<Usuario> usuarios_egresos = dao.usuariosPermisos(SubBodegaDAO.EGRESAR, sb.getId_sub_bodega());
+            List<Usuario> usuarios_ver = dao.usuariosPermisos(SubBodegaDAO.VER, sb.getId_sub_bodega());
+
+            request.setAttribute("permisos_usuario", permisos_sub_bodega);
+            request.setAttribute("usuarios_ingresos", usuarios_ingresos);
+            request.setAttribute("usuarios_egresos", usuarios_egresos);
+            request.setAttribute("usuarios_ver", usuarios_ver);
+            request.setAttribute("inventarios", sb.getInventarios());
+            request.setAttribute("sub_bodega", sb);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando. Inténtelo nuevamente."));
+            try {
+                obtenerSubBodegas(request);
+            }
+            catch (SIGIPROException sig_ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError("No se encontró la sub bodega que está buscando ni se pudo obtener el listado completo. Notifique al administrador del sistema."));
+            }
+            redireccion = "SubBodegas/index.jsp";
+        }
     }
 
     // </editor-fold>
@@ -516,7 +678,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
         return sb;
     }
 
-  // </editor-fold>
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException

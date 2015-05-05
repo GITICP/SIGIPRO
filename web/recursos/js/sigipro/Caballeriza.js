@@ -14,19 +14,35 @@ $(document).ready(function () {
     tEventos = $("#caballos-evento").DataTable(configuracion);
     tCaballos = $("#caballos-grupo").DataTable(configuracion);
 
-    $("#caballosform").submit(function() {
+    $("#caballosform").submit(function () {
         llenarCampoAsociacion('c', T_EVENTOS_SELECTOR, $("#ids-eventos"));
     });
-    
-    $("#grupodecaballosForm").submit(function() {
+
+    $("#grupodecaballosForm").submit(function () {
         llenarCampoAsociacion('c', T_CABALLOS_SELECTOR, $("#ids-caballos"));
     });
-    
-    $("#checkbox-asociar-caballos").change(function() {
+
+    $("#checkbox-asociar-caballos").change(function () {
         $(".cuadro-opciones").toggle();
-        $("input[name='caballos']").each(function(){
+        $("input[name='caballos']").each(function () {
             $(this).prop("checked", false);
         });
+    });
+
+    $(".seleccionar-todo").click(function () {
+        var widget_padre = $(this).parent().parent().parent();
+        if ($(this).html() === "Marcar Todos") {
+            widget_padre.find("input[name='caballos']").each(function () {
+                $(this).prop("checked", true);
+            });
+            $(this).html("Desmarcar Todos");
+        } else {
+            widget_padre.find("input[name='caballos']").each(function () {
+                $(this).prop("checked", false);
+            });
+            $(this).html("Marcar Todos");
+        }
+
     });
 });
 
@@ -97,52 +113,53 @@ $(document).ready(function () {
 
         $("textarea ").val(split[1]);
     });
-    
+
     $("select[name='eventoModal']").on('change', function () {
         var split = $(this).val().split("|");
 
         $("textarea ").val(split[1]);
     });
-    
-    $("#seleccionInoculoGrupo").change(function(){
+
+    $("#seleccionInoculoGrupo").change(function () {
         var id_grupo = $(this).val();
-        
-        $(".caballos-grupo").each( function() {
-            $(this).find("input").each( function() {
+
+        $(".caballos-grupo").each(function () {
+            $(this).find("input").each(function () {
                 $(this).attr('checked', false);
             });
             $(this).hide();
         });
         $("#grupo-" + id_grupo).show();
     });
-    
-    $("#seleccionInoculo").change( function() {
+
+    $("#seleccionInoculo").change(function () {
         var id_inoculo = $(this).val();
 
-        $(".tabla-caballos").each( function() {
+        $(".tabla-caballos").each(function () {
             $(this).hide();
         });
-        
+
         $("#inoculo-" + id_inoculo).show();
     });
-    
-    $("#seleccion-sangria-prueba").change( function() {
+
+    $("#seleccion-sangria-prueba").change(function () {
         var id_sangria_prueba = $(this).val();
-        
-        $(".caballos-prueba").each( function() {
-            $(this).find("input").each( function() {
+
+        $(".caballos-prueba").each(function () {
+            $(this).find("input").each(function () {
                 $(this).attr('checked', false);
             });
+            $(this).hide();
         });
-        
+
         var contenedor_caballos = $("#prueba-" + id_sangria_prueba);
-        $(contenedor_caballos).find("input").each( function() {
+        $(contenedor_caballos).find("input").each(function () {
             $(this).attr('checked', true);
         });
         contenedor_caballos.show();
     });
-    
-    $("#form-prueba-sangria").submit( function() {
+
+    $("#form-prueba-sangria").submit(function () {
         llenar_campo_caballos();
     });
 });
@@ -158,32 +175,27 @@ function llenar_campo_caballos() {
     $('#caballos').val(caballos_codificados.slice(0, -3));
 }
 
-$(document).on("click", ".imagen-Modal", function () {                            
-                            var id_caballo = $(this).data('id');
-                            $("#id_caballo_imagen").val(id_caballo);                          
-                            });
-                            
-function previewFile(){
+function previewFile() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-  // Great success! All the File APIs are supported.
-       var preview = document.getElementById("imagenSubida"); //selects the query named img
-       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
-       var imagen = document.getElementById("imagen");
-       var reader  = new FileReader();
-       
-       reader.onload = function (e) {
-           preview.src = reader.result;
-           imagen.value = reader.toString();
+        // Great success! All the File APIs are supported.
+        var preview = document.getElementById("imagenSubida"); //selects the query named img
+        var file = document.querySelector('input[type=file]').files[0]; //sames as here
+        var imagen = document.getElementById("imagen");
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = reader.result;
+            imagen.value = reader.toString();
         };
 
 
 
-       if (file) {
-           reader.readAsDataURL(file); //reads the data as a URL
-       } else {
-           preview.src = "";
-       }
-    }else {
+        if (file) {
+            reader.readAsDataURL(file); //reads the data as a URL
+        } else {
+            preview.src = "";
+        }
+    } else {
         alert('The File APIs are not fully supported in this browser.');
-  }
+    }
 }

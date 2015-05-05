@@ -84,13 +84,16 @@
                     <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria_prueba.getId_sangria_prueba()}" hidden>
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba </h3>
+                            <div class="widget-header-toolbar">
+                                <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Desmarcar Todos</a>
+                            </div>
                         </div>
                         <div class="widget-content">
                             <c:forEach items="${sangria_prueba.getCaballos()}" var="caballo">
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
                                         <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">
-                                        <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                        <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                     </label>
                                 </div>
                             </c:forEach>
@@ -104,13 +107,16 @@
                         <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria.getSangria_prueba().getId_sangria_prueba()}">
                             <div class="widget-header">
                                 <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba </h3>
+                                <div class="widget-header-toolbar">
+                                    <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Desmarcar Todos</a>
+                                </div>
                             </div>
                             <div class="widget-content">
                                 <c:forEach items="${sangria.getSangria_prueba().getCaballos()}" var="caballo">
                                     <div class="col-md-4">
                                         <label class="fancy-checkbox">
                                             <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" ${(sangria.valididarCaballoEnSangria(caballo)) ? "checked" : ""}>
-                                            <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                            <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                         </label>
                                     </div>
                                 </c:forEach>
@@ -127,7 +133,7 @@
                                     <div class="col-md-4">
                                         <label class="fancy-checkbox">
                                             <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos" disabled ${(sangria.valididarCaballoEnSangria(caballo)) ? "checked" : ""}>
-                                            <span>${caballo.getNombre()} (${caballo.getNumero_microchip()}) </span>
+                                            <span>${caballo.getNombre()} (${caballo.getNumero()}) </span>
                                         </label>
                                     </div>
                                 </c:forEach>

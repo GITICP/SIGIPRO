@@ -19,9 +19,19 @@ public class Macho {
   private Date fecha_ingreso;
   private String descripcion;
   private Date fecha_retiro;
+  private Date fecha_preseleccion;
   private String id_padre;
   private String id_madre;
 
+  public Date getFecha_preseleccion() {
+    return fecha_preseleccion;
+  }
+
+  public void setFecha_preseleccion(Date fecha_preseleccion) {
+    this.fecha_preseleccion = fecha_preseleccion;
+  }
+
+  
   public String getId_padre() {
     return id_padre;
   }
@@ -112,6 +122,12 @@ public class Macho {
   } public String getFecha_retiro_S() {
     if (this.fecha_retiro != null) {
       return formatearFecha(fecha_retiro);
+    } else {
+      return "";
+    }
+  } public String getFecha_preseleccion_S() {
+    if (this.fecha_preseleccion != null) {
+      return formatearFecha(fecha_preseleccion);
     } else {
       return "";
     }

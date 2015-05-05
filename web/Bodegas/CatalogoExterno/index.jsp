@@ -52,7 +52,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-bodegas-ext" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>

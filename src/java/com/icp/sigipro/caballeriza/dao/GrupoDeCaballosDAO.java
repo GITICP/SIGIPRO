@@ -55,7 +55,7 @@ public class GrupoDeCaballosDAO
                 g.setId_grupo_caballo(resultadoConsulta.getInt("id_grupo_de_caballo"));
             }
 
-            if (caballos.equals("()")) {
+            if (!caballos.equals(")")) {
                 consulta_caballos = getConexion().prepareStatement("UPDATE caballeriza.caballos "
                                                                    + " SET id_grupo_de_caballo = (CASE "
                                                                    + " WHEN id_caballo in " + caballos + " THEN ? "
@@ -242,9 +242,9 @@ public class GrupoDeCaballosDAO
         List<GrupoDeCaballos> resultado = new ArrayList<GrupoDeCaballos>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip "
+                    " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
                     + " FROM caballeriza.grupos_de_caballos gc "
-                    + "     LEFT JOIN caballeriza.caballos c "
+                    + "     INNER JOIN caballeriza.caballos c "
                     + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ?;");
 
             consulta.setString(1, Caballo.VIVO);
@@ -265,7 +265,8 @@ public class GrupoDeCaballosDAO
                 Caballo c = new Caballo();
                 c.setId_caballo(rs.getInt("id_caballo"));
                 c.setNombre(rs.getString("nombre_caballo"));
-                c.setNumero_microchip(rs.getInt("numero_microchip"));
+                c.setNumero_microchip(rs.getString("numero_microchip"));
+                c.setNumero(rs.getInt("numero"));
 
                 g.agregarCaballo(c);
             }

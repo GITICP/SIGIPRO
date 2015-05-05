@@ -98,6 +98,7 @@
                                                                                     '${solicitud.getUsuario().getNombreCompleto()}',
                                                                                     '${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()})',
                                                                                     '${solicitud.getCantidad()} (${solicitud.getInventario().getSeccion().getNombre_seccion()})')" >Entregar</a>
+                                                                    <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=cerrar&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                                                 </td>
                                                             </c:when>
                                                             <c:otherwise>

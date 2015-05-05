@@ -44,6 +44,16 @@
           </div>
         </div>
       </div>
+      <label for="fecha_preseleccion" class="control-label">*Fecha de Preselección</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_preseleccion" value="${conejo.getFecha_retiro_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_preseleccion" data-date-format="dd/mm/yyyy" required
+                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                    onchange="setCustomValidity('')">      
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-md-6">
       <label for="descripcion" class="control-label">Descripción</label>
@@ -60,7 +70,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="id_padre" value="${conejo.getId_padre()}"  name="id_padre" required
+            <input  type="text" id="id_padre" value="${conejo.getId_padre()}"  name="id_padre" required class="form-control"
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">      
           </div>
@@ -72,7 +82,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="id_madre" value="${conejo.getId_madre()}"  name="id_madre" required
+            <input  type="text" id="id_madre" value="${conejo.getId_madre()}"  name="id_madre" required class="form-control"
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">  
           </div>

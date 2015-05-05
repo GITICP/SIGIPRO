@@ -138,7 +138,7 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet
             String redireccion = "GrupoDeCaballos/index.jsp";
             List<GrupoDeCaballos> gruposdecaballos = dao.obtenerGruposDeCaballos();
             request.setAttribute("listaGrupos", gruposdecaballos);
-            request.setAttribute("mensaje", helper.mensajeDeError("El Grupo de Caballos esta asociado a un inóculo y no se puede eliminar"));
+            request.setAttribute("mensaje", helper.mensajeDeError("El Grupo de Caballos tiene asociados uno o más caballos."));
             redireccionar(request, response, redireccion);
         }
 

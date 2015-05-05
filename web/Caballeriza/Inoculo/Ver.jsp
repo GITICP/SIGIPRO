@@ -72,13 +72,13 @@
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Número de Microchip</th>
+                                                <th>Nombre y Número de Caballo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${caballos}" var="caballo">
                                                 <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()} (${caballo.getNumero_microchip()})</td>
+                                                    <td>${caballo.getNombre()} (${caballo.getNumero()})</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

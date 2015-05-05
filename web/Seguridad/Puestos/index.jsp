@@ -99,7 +99,7 @@ Puestos
               </div>
             ${mensaje}
             <div class="widget-content">
-              <table id="datatable-column-filter-secciones" class="table table-sorting table-striped table-hover datatable">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>

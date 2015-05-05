@@ -96,7 +96,7 @@
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th rowspan="2">Nombre y Número de Microchip</th>
+                                                <th rowspan="2">Nombre y Número de Caballo</th>
                                                 <th rowspan="2" class="campo-tabla-centrado">Hematocrito</th>
                                                 <th colspan="3">Día 1 - ${sangria.getFecha_dia1AsString()}</th>
                                                 <th colspan="3">Día 2 - ${sangria.getFecha_dia2AsString()}</th>
@@ -118,7 +118,7 @@
                                             <c:set var="sin_datos" value="-"></c:set>
                                             <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
                                                 <tr id="${caballo.getId_caballo()}">
-                                                    <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero_microchip()})</td>
+                                                    <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
                                                     <td class="campo-tabla-centrado">${sangria_caballo.getHematocrito()}</td>
                                                     <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()}</td>
                                                     <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia1() == 0) ? sin_datos : sangria_caballo.getPlasma_dia1()}</td>
