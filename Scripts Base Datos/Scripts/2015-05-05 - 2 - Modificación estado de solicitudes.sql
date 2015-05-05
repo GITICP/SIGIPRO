@@ -1,4 +1,4 @@
-﻿ALTER TABLE bioterio.solicitudes_conejera
+ALTER TABLE bioterio.solicitudes_conejera
 DROP COLUMN estado;
 
 ALTER TABLE bioterio.solicitudes_ratonera

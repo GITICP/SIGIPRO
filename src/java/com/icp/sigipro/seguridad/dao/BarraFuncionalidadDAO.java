@@ -148,7 +148,6 @@ public class BarraFuncionalidadDAO
                 m.setId_modulo(id_menu);
                 m.setNombre(tag);
                 if (id_padre == 0) {
-                    System.out.println(m);
                     resultado.agregarModulo(m);
                 } else {
                     m.setId_padre(id_padre);
