@@ -6,6 +6,8 @@
 package com.icp.sigipro.seguridad.modelos;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -121,5 +123,19 @@ public class Modulo implements java.io.Serializable
         }
         sub_modulos = arreglo;
         return sub_modulos.size() > 0;
+    }
+    
+    public void ordenar() {
+        Collections.sort(funcionalidades, new ComparadorFuncionalidades());
+        
+    }
+    
+    private class ComparadorFuncionalidades implements Comparator<Funcionalidad>
+    {
+        @Override
+        public int compare(Funcionalidad f1, Funcionalidad f2)
+        {
+            return f1.getOrden() - f2.getOrden();
+        }
     }
 }

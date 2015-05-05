@@ -29,7 +29,7 @@ public class BarraFuncionalidadDAO
       {
         return consultarModulos(usuario,  " ;With sub_modulos as "
                                         + " ( "
-                                        + "Select distinct emp.id_menu_principal, emp.id_padre, emp.tag, emp.redirect "
+                                        + "Select distinct emp.id_menu_principal, emp.id_padre, emp.tag, emp.redirect, emp.orden "
                                         + "From seguridad.entradas_menu_principal emp "
                                         + "inner join "
                                         + "( "
@@ -118,6 +118,7 @@ public class BarraFuncionalidadDAO
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarBarraFuncionalidad(resultadoConsulta);
                 resultado.eliminarModulosVacios();
+                resultado.ordenarFuncionalidades();
                 resultadoConsulta.close();
                 conexion.close();
             }
@@ -139,7 +140,9 @@ public class BarraFuncionalidadDAO
             int id_menu  = resultadoConsulta.getInt("id_menu_principal");
             int id_padre = resultadoConsulta.getInt("id_padre");
             String tag = resultadoConsulta.getString("tag");
-            if (id_menu % 10 == 0)
+            int orden = resultadoConsulta.getInt("orden");
+            String redirect = resultadoConsulta.getString("redirect");
+            if (redirect == null)
             {
                 Modulo m = new Modulo();
                 m.setId_modulo(id_menu);
@@ -157,7 +160,8 @@ public class BarraFuncionalidadDAO
                 f.setId_funcionalidad(id_menu);
                 f.setId_padre(id_padre);
                 f.setTag(tag);
-                f.setRedirect(resultadoConsulta.getString("redirect"));
+                f.setRedirect(redirect);
+                f.setOrden(orden);
                 
                 resultado.agregarFuncionalidad(f);
             }
