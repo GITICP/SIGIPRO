@@ -84,6 +84,7 @@ public class ControladorCaballo extends SIGIPROServlet
         List<GrupoDeCaballos> listagrupos = grupodecaballosdao.obtenerGruposDeCaballos();
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("caballo", c);
+        request.setAttribute("imagenCaballo", this.obtenerImagen(c));
         request.setAttribute("listagrupos", listagrupos);
         request.setAttribute("accion", "Agregar");
         request.setAttribute("sexos", Caballo.SEXOS);
@@ -191,6 +192,7 @@ public class ControladorCaballo extends SIGIPROServlet
         List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
         request.setAttribute("listagrupos", listagrupos);
         request.setAttribute("caballo", caballo);
+        request.setAttribute("imagenCaballo", this.obtenerImagen(caballo));
         request.setAttribute("accion", "Editar");
         request.setAttribute("sexos", Caballo.SEXOS);
         request.setAttribute("estados", Caballo.ESTADOS);
@@ -199,95 +201,65 @@ public class ControladorCaballo extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        boolean resultado = false;
-        String redireccion = "Caballo/Agregar.jsp";
-        Caballo c = construirObjeto(request);
-
-        resultado = dao.insertarCaballo(c);
-
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        if (resultado) {
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
-
-            request.setAttribute("mensaje", helper.mensajeDeExito("Caballo agregado correctamente"));
-            redireccion = "Caballo/index.jsp";
-        }
-        else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Caballo no pudo ser agregado. El número de caballo ya se encuentra en uso."));
-            request.setAttribute("accion", "Agregar");
-            request.setAttribute("caballo", c);
-        }
-        request.setAttribute("listaCaballos", dao.obtenerCaballos());
-        redireccionar(request, response, redireccion);
-    }
-
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        boolean resultado = false;
-        String redireccion = "Caballo/Editar.jsp";
-        Caballo c = construirObjeto(request);
-        c.setId_caballo(Integer.parseInt(request.getParameter("id_caballo")));
-        resultado = dao.editarCaballo(c);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Caballo editado correctamente"));
-            redireccion = "Caballo/index.jsp";
-        }
-        else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Caballo no pudo ser agregado. El número de caballo ya se encuentra en uso."));
-            request.setAttribute("accion", "Editar");
-            request.setAttribute("caballo", c);
-        }
-        request.setAttribute("listaCaballos", dao.obtenerCaballos());
-        redireccionar(request, response, redireccion);
-    }
-
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String redireccion = "Caballo/index.jsp";
+        boolean resultado = false;
         try {
+            Caballo c = new Caballo();
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-            int id_caballo = 0;
-            ByteArrayInputStream bais = null;
-            long size = 0;
-            for (FileItem item : items) {
-                if (item.isFormField()) {
-                    // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
-                    String fieldName = item.getFieldName();
-                    if (fieldName.equals("id_caballo_imagen")) {
-                        String fieldValue = item.getString();
-                        id_caballo = Integer.parseInt(fieldValue);
+            c = construirObjeto(items);
+            
+            if (c.isAccion()){
+                resultado = dao.insertarCaballo(c);
+
+                HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                if (resultado) {
+                    BitacoraDAO bitacora = new BitacoraDAO();
+                    bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
+                    if (c.getFotografia()!=null){
+                        ByteArrayInputStream bais = new ByteArrayInputStream(c.getFotografia());
+                        dao.insertarImagen(bais, c.getId_caballo(),c.getFotografiaTamano());
                     }
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Caballo agregado correctamente"));
+                    redireccion = "Caballo/index.jsp";
                 }
                 else {
-                    byte[] data = item.get();
-                    bais = new ByteArrayInputStream(data);
-                    size = item.getSize();
+                    request.setAttribute("mensaje", helper.mensajeDeError("Caballo no pudo ser agregado. El número de caballo ya se encuentra en uso."));
+                    request.setAttribute("accion", "Agregar");
+                    request.setAttribute("caballo", c);
                 }
-            }
-            boolean resultado = dao.insertarImagen(bais, id_caballo, size);
-            HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-            if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Imagen a Caballo " + id_caballo + " agregada correctamente"));
-            }
-            else {
-                request.setAttribute("mensaje", helper.mensajeDeError("No pudo ser agregada la imagen."));
-            }
-            List<Caballo> caballos = dao.obtenerCaballos();
-            request.setAttribute("listaCaballos", caballos);
-            redireccionar(request, response, redireccion);
+                request.setAttribute("listaCaballos", dao.obtenerCaballos());
+                redireccionar(request, response, redireccion);
+            }else{
+                resultado = dao.editarCaballo(c);
 
-        }
-        catch (FileUploadException e) {
+                HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                if (resultado) {
+                    //Funcion que genera la bitacora
+                    BitacoraDAO bitacora = new BitacoraDAO();
+                    bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
+                    //*----------------------------*
+                    if (c.getFotografia()!=null){
+                        ByteArrayInputStream bais = new ByteArrayInputStream(c.getFotografia());
+                        dao.insertarImagen(bais, c.getId_caballo(),c.getFotografiaTamano());
+                        
+                    }
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Caballo editado correctamente"));
+                    redireccion = "Caballo/index.jsp";
+                }
+                else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Caballo no pudo ser agregado. El número de caballo ya se encuentra en uso."));
+                    request.setAttribute("accion", "Editar");
+                    request.setAttribute("caballo", c);
+                }
+                request.setAttribute("listaCaballos", dao.obtenerCaballos());
+                redireccionar(request, response, redireccion);
+            }
+        }catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
         }
+
     }
 
     protected void postAgregarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -330,47 +302,97 @@ public class ControladorCaballo extends SIGIPROServlet
         }
     }
 
-    private Caballo construirObjeto(HttpServletRequest request)
+    private Caballo construirObjeto(List<FileItem> items)
     {
         Caballo c = new Caballo();
-
-        GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
-        String grupo = request.getParameter("grupodecaballo");
-
-        GrupoDeCaballos grupodecaballo;
-        if (grupo.equals("")) {
-            grupodecaballo = null;
-        }
-        else {
-            grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(Integer.parseInt(request.getParameter("grupodecaballo")));
-        }
-        c.setGrupo_de_caballos(grupodecaballo);
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fecha_ingreso;
-        java.sql.Date fecha_ingresoSQL;
-        java.util.Date fecha_nacimiento;
-        java.sql.Date fecha_nacimientoSQL;
-        try {
-            fecha_ingreso = formatoFecha.parse(request.getParameter("fecha_ingreso"));
-            fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
-            fecha_nacimiento = formatoFecha.parse(request.getParameter("fecha_nacimiento"));
-            fecha_nacimientoSQL = new java.sql.Date(fecha_nacimiento.getTime());
-            c.setFecha_ingreso(fecha_ingresoSQL);
-            c.setFecha_nacimiento(fecha_nacimientoSQL);
+        for (FileItem item : items){
+            if (item.isFormField()){
+                
+                String fieldName = item.getFieldName();
+                String fieldValue = item.getString();
+                switch (fieldName){
+                    case "id_caballo":
+                        c.setId_caballo(Integer.parseInt(fieldValue));
+                        break;
+                    case "grupodecaballo":
+                        GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();  
+                        String grupo = fieldValue;
+                        GrupoDeCaballos grupodecaballo;
+                        if (grupo.equals("")) {
+                            grupodecaballo = null;
+                        }
+                        else {
+                            grupodecaballo = grupodecaballosdao.obtenerGrupoDeCaballos(Integer.parseInt(grupo));
+                        }
+                        c.setGrupo_de_caballos(grupodecaballo);
+                        break;
+                    case "fecha_ingreso":
+                        java.util.Date fecha_ingreso;
+                        java.sql.Date fecha_ingresoSQL;
+                        try{
+                            fecha_ingreso = formatoFecha.parse(fieldValue);
+                            fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
+                            c.setFecha_ingreso(fecha_ingresoSQL);
+                        }catch (ParseException ex){
+                            
+                        }
+                        break;
+                    case "fecha_nacimiento":
+                        java.util.Date fecha_nacimiento;
+                        java.sql.Date fecha_nacimientoSQL;
+                        try{
+                            fecha_nacimiento = formatoFecha.parse(fieldValue);
+                            fecha_nacimientoSQL = new java.sql.Date(fecha_nacimiento.getTime());
+                            c.setFecha_nacimiento(fecha_nacimientoSQL);
+                        }catch (ParseException ex){
+                            
+                        }
+                        break;
+                    case "numero_caballo":
+                        if (fieldValue != null){
+                            c.setNumero(Integer.parseInt(fieldValue));
+                        }
+                        break;
+                    case "nombre":
+                        c.setNombre(fieldValue);
+                        break;
+                    case "numero_microchip":
+                        c.setNumero_microchip(fieldValue);
+                        break;
+                    case "sexo":
+                        c.setSexo(fieldValue);
+                        break;
+                    case "color":
+                        c.setColor(fieldValue);
+                        break;
+                    case "otras_sennas":
+                        c.setOtras_sennas(fieldValue);
+                        break;
+                    case "estado":
+                        c.setEstado(fieldValue);
+                        break;
+                    case "accion":
+                        if (fieldValue.equals("Agregar"))
+                            c.setAccion(true);
+                        else
+                            c.setAccion(false);
+                        break;
+                }
+            }else{
+                // Process form file field (input type="file").
+                byte[] data = item.get();
+                long size = item.getSize();
+                if (size==0){
+                    c.setFotografia(null);
+                    c.setFotografiaTamano(0);
+                }else{
+                    c.setFotografia(data);
+                    c.setFotografiaTamano(size);
+                }
+            }   
         }
-        catch (ParseException ex) {
 
-        }
-        if (request.getParameter("numero_caballo") != null) {
-            c.setNumero(Integer.parseInt(request.getParameter("numero_caballo")));
-        }
-
-        c.setNombre(request.getParameter("nombre"));
-        c.setNumero_microchip(request.getParameter("numero_microchip"));
-        c.setSexo(request.getParameter("sexo"));
-        c.setColor(request.getParameter("color"));
-        c.setOtras_sennas(request.getParameter("otras_sennas"));
-        c.setEstado(request.getParameter("estado"));
         return c;
     }
 

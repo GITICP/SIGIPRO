@@ -53,10 +53,12 @@ public class Caballo {
     private String numero_microchip;
     private Date fecha_nacimiento;
     private Date fecha_ingreso;
+    private boolean accion;
     private String sexo;
     private String color;
     private String otras_sennas;
     private byte[] fotografia;
+    private long fotografiaTamano;
     private String estado;
     private GrupoDeCaballos grupo_de_caballos;
     private BigDecimal hematrocito;
@@ -110,6 +112,22 @@ public class Caballo {
 
         }
         return JSON.toString();
+    }
+
+    public boolean isAccion() {
+        return accion;
+    }
+
+    public void setAccion(boolean accion) {
+        this.accion = accion;
+    }
+
+    public long getFotografiaTamano() {
+        return fotografiaTamano;
+    }
+
+    public void setFotografiaTamano(long fotografiaTamano) {
+        this.fotografiaTamano = fotografiaTamano;
     }
 
     public int getId_caballo() {
