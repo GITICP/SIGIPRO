@@ -96,6 +96,8 @@ public class ColeccionHumedaDAO {
                 ch.setProposito(rs.getString("proposito"));
                 ch.setObservaciones(rs.getString("observaciones"));
                 ch.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
+            }else{
+                ch = null;
             }
             rs.close();
             consulta.close();

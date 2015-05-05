@@ -60,6 +60,12 @@ $(document).on("click", ".rDeceso-Modal", function () {
                             });
 
 
+$(document).on("click", ".rDeceso-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_reversar_deceso").val(id_serpiente);                          
+                            });
+
+
 $(document).on("click", ".deceso-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente_deceso").val(id_serpiente);                          

@@ -62,6 +62,7 @@
                     <th>Fecha de Solicitud</th>
                     <th>Cantidad Entregada (mg)</th>
                     <th>Fecha de Entrega</th>
+                    <th>Estado</th>
                     <c:if test="${booladmin}">
                       <th> Cambio Estado</th>
                     </c:if>
@@ -92,7 +93,7 @@
                               <td></td>
                           </c:otherwise>
                       </c:choose>
-                      
+                      <td>${solicitud.getEstado()}</td>
                       <c:if test="${booladmin}">
                         <c:choose>
                           <c:when test="${solicitud.getEstado().equals('Solicitado')}">

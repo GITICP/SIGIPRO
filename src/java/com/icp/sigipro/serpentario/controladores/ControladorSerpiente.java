@@ -581,6 +581,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 break;
             default:
                 e.setId_categoria(15);
+                break;
         }
         e.setObservaciones(request.getParameter("observacionesModal"));
         java.sql.Date date = new java.sql.Date(new Date().getTime());
