@@ -41,6 +41,10 @@ public class Veneno {
     public float getCantidad() {
         return cantidad;
     }
+    
+    public float getCantidadAsMiligramos(){
+        return cantidad*1000;
+    }
 
     public void setCantidad(float cantidad) {
         this.cantidad = cantidad;
