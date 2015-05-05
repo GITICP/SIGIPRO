@@ -123,7 +123,7 @@
                             
                   <div class="form-group">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cerrar Edición</button>
                         <a class="btn btn-primary confirmable-form" data-form-id="form-terminarEdicion" data-texto-confirmacion="terminar la edición de Serpientes a la Extracción"><i class="fa fa-check-circle"></i> Terminar Edición</a>
                     </div>
                   </div>

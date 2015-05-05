@@ -95,6 +95,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("CambioPiel");
             add("Desparasitación");
             add("Alimentación");
+            add("Otros");
 
         }
     };
@@ -577,6 +578,9 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 break;
             case "Alimentación":
                 e.setId_categoria(4);
+                break;
+            default:
+                e.setId_categoria(15);
                 break;
         }
         e.setObservaciones(request.getParameter("observacionesModal"));
