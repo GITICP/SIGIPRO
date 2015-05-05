@@ -106,10 +106,16 @@
                         </c:otherwise>
                     </c:choose>
                 <!--
-                <c:set var="contienePermisoReversar" value="false" />
+                <c:set var="contienePermisoReversarCV" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 316}">
-                    <c:set var="contienePermisoReversar" value="true" />
+                    <c:set var="contienePermisoReversarCV" value="true" />
+                  </c:if>
+                </c:forEach>
+                <c:set var="contienePermisoReversarDeceso" value="false" />
+                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                  <c:if test="${permiso == 1 || permiso == 317}">
+                    <c:set var="contienePermisoReversarDeceso" value="true" />
                   </c:if>
                 </c:forEach>
                 -->
@@ -221,8 +227,13 @@
                       </c:choose>
                               <td>
                           <c:if test="${eventos.getId_categoria()==5}">
-                              <c:if test="${contienePermisoReversar}">
-                                    <a class="btn btn-danger btn-sm boton-accion rPV-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalReversarCV">Reversar</a>
+                              <c:if test="${contienePermisoReversarCV}">
+                                    <a class="btn btn-danger btn-sm boton-accion rCV-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalReversarCV">Reversar</a>
+                              </c:if>
+                          </c:if>
+                          <c:if test="${eventos.getId_categoria()==6}">
+                              <c:if test="${contienePermisoReversarDeceso}">
+                                    <a class="btn btn-danger btn-sm boton-accion rDeceso-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalReversarDeceso">Reversar</a>
                               </c:if>
                           </c:if>
                               </td>
@@ -486,9 +497,28 @@
     <jsp:attribute name="form">
         <div class="widget-content">
             <form class="form-horizontal" id="agregarCatalogoTejido" autocomplete="off" method="post" action="Serpiente">
-                <input hidden="true" name="accion" value="reversar">
-                <input hidden="true" name="id_serpiente_reversar" id="id_serpiente_reversar">
+                <input hidden="true" name="accion" value="reversarcv">
+                <input hidden="true" name="id_serpiente_reversar_cv" id="id_serpiente_reversar_cv">
                 <label for="especie" class="control-label">¿Está seguro que desea reversar el paso a Colección Viva?</label>
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Reversar</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    
+ <t:modal idModal="modalReversarDeceso" titulo="Reversar Deceso">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="reversarDeceso" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="reversardeceso">
+                <input hidden="true" name="id_serpiente_reversar_deceso" id="id_serpiente_reversar_deceso">
+                <label for="especie" class="control-label">¿Está seguro que desea reversar el deceso?</label>
         <div class="form-group">
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
