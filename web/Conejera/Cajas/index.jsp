@@ -24,7 +24,7 @@
               <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupo ${grupo.getIdentificador()}</a>
             </li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Espacios</a>
+              Espacios
             </li>
           </ul>
         </div>
@@ -45,27 +45,56 @@
             ${mensaje}
             <div class="widget-content">
               <c:forEach items="${listaCajas}" var="caja">
-
+                <c:set var="flagllena" value="false" />  
+                <c:forEach items="${conejas}" var="coneja">
+                  <c:if test="${coneja.getCaja().getId_caja() == caja.getId_caja()}">
+                    <c:set var="flagllena" value="true" />
+                  </c:if>
+                </c:forEach>  
                 <c:choose>
-                  <c:when test="${caja.getNumero() < 10}">
-                    <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+                  <c:when test="${flagllena}">
+                    <c:choose>
+                      <c:when test="${caja.getNumero() < 10}">
+                        <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
 
-                      <div style="height:100%;width:100%">
-                        Espacio #0${caja.getNumero()}
-                      </div>
-                    </a>
+                          <div style="height:100%;width:100%">
+                            Espacio #0${caja.getNumero()}
+                            (Ocupado)
+                          </div>
+                        </a>
+                      </c:when>
+                      <c:otherwise>
+                        <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+                          <div style="height:100%;width:100%">
+                            Espacio #${caja.getNumero()}
+                            (Ocupado)
+                          </div>
+                        </a>
+                      </c:otherwise>
+                    </c:choose>
                   </c:when>
                   <c:otherwise>
-                    <a class="btn btn-default btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
-                      <div style="height:100%;width:100%">
-                        Espacio #${caja.getNumero()}
-                      </div>
-                    </a>
+                    <c:choose>
+                      <c:when test="${caja.getNumero() < 10}">
+                        <a class="btn btn-warning btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+
+                          <div style="height:100%;width:100%">
+                            Espacio #0${caja.getNumero()}
+                            (Disponible)
+                          </div>
+                        </a>
+                      </c:when>
+                      <c:otherwise>
+                        <a class="btn btn-warning btn-lg cajas" href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${caja.getId_caja()}">
+                          <div style="height:100%;width:100%">
+                            Espacio #${caja.getNumero()}
+                            (Disponible)
+                          </div>
+                        </a>
+                      </c:otherwise>
+                    </c:choose>
                   </c:otherwise>
-                </c:choose>
-
-
-
+                </c:choose>          
               </c:forEach> 
               <!--<table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                 <thead> 

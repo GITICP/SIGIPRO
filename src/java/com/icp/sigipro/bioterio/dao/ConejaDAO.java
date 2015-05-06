@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bioterio.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.bioterio.modelos.Caja;
 import com.icp.sigipro.bioterio.modelos.Coneja;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
@@ -171,13 +172,14 @@ public class ConejaDAO {
     }
     return coneja;
   }
-  public List<Coneja> obtenerConejas() throws SIGIPROException {
+  public List<Coneja> obtenerConejas(int id_grupo) throws SIGIPROException {
 
     List<Coneja> resultado = new ArrayList<Coneja>();
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.conejas");
+      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.conejas c INNER JOIN bioterio.cajas p ON c.id_caja = p.id_caja WHERE p.id_grupo=?");
+      consulta.setInt(1, id_grupo);
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
@@ -190,6 +192,10 @@ public class ConejaDAO {
         coneja.setFecha_ingreso(rs.getDate("fecha_ingreso"));
         coneja.setFecha_cambio(rs.getDate("fecha_cambio"));
         coneja.setFecha_seleccion(rs.getDate("fecha_seleccion"));
+        Caja caja = new Caja();
+        caja.setId_caja(rs.getInt("id_caja"));
+        caja.setNumero(rs.getInt("numero"));
+        coneja.setCaja(caja);
         resultado.add(coneja);
       }
       rs.close();

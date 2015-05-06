@@ -84,7 +84,14 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(permiso_por_buscar, listaPermisos);
         String redireccion = contexto + "AnalisisParasitologico/Agregar.jsp";
-        
+         try {
+            UsuarioDAO usuarios_dao = new UsuarioDAO();
+            List<Usuario> usuarios = usuarios_dao.obtenerUsuariosSeccion(4);
+            request.setAttribute("usuarios", usuarios);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }

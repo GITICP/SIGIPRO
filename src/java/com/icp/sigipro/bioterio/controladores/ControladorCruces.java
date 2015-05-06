@@ -213,11 +213,14 @@ public class ControladorCruces extends SIGIPROServlet {
     cruce.setCantidad_paridos(Integer.parseInt(request.getParameter("cantidad_paridos")));
     String fecha_nac = request.getParameter("fecha_cruce");
     String fecha_ret = request.getParameter("fecha_parto");
+    String fecha_est = request.getParameter("fecha_estimada_parto");
     SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
     java.util.Date fecha_nacimiento;
     java.sql.Date fecha_nacimientoSQL;
     java.util.Date fecha_retiro;
     java.sql.Date fecha_retiroSQL;
+    java.util.Date fecha_estimada;
+    java.sql.Date fecha_estimadaSQL;
     try {
       fecha_nacimiento = formatoFecha.parse(fecha_nac);
       fecha_nacimientoSQL = new java.sql.Date(fecha_nacimiento.getTime());
@@ -231,6 +234,14 @@ public class ControladorCruces extends SIGIPROServlet {
       cruce.setFecha_parto(fecha_retiroSQL);
     } catch (ParseException ex) {
       cruce.setFecha_parto(null);
+      Logger.getLogger(ControladorCruces.class.getName()).log(Level.SEVERE, null, ex);
+    }
+      try {
+      fecha_estimada = formatoFecha.parse(fecha_est);
+      fecha_estimadaSQL = new java.sql.Date(fecha_estimada.getTime());
+      cruce.setFecha_estimada_parto(fecha_estimadaSQL);
+    } catch (ParseException ex) {
+      cruce.setFecha_estimada_parto(null);
       Logger.getLogger(ControladorCruces.class.getName()).log(Level.SEVERE, null, ex);
     }
     return cruce;

@@ -14,11 +14,11 @@
     <input hidden="true" name="id_produccion" value="${conejo.getId_produccion()}">
     <input hidden="true" name="accion" value="${accion}">
     <div class="col-md-6">
-      <label for="identificador" class="control-label">*Identificador</label>
+      <label for="identificador" class="control-label">*Fecha del Grupo</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="identificador" value="${conejo.getIdentificador()}"  name="identificador" required class="form-control"
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" data-date-format="dd/mm/yyyy" class="form-control sigiproDatePickerEspecial" id="identificador" value="${conejo.getIdentificador()}"  name="identificador" required class="form-control"
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">      
           </div>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <label for="detalle_procedencia" class="control-label">*Detalle de Procedencia</label>
+      <label for="detalle_procedencia" class="control-label">Observaciones</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">

@@ -28,8 +28,8 @@ public class CruceDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.cruces (id_macho, id_coneja, fecha_cruce, observaciones, fecha_parto, cantidad_paridos)"  
-              + " VALUES (?,?,?,?,?,?) RETURNING id_cruce");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.cruces (id_macho, id_coneja, fecha_cruce, observaciones, fecha_parto, cantidad_paridos, fecha_estimada_parto)"  
+              + " VALUES (?,?,?,?,?,?,?) RETURNING id_cruce");
       
       consulta.setInt(1, p.getMacho().getId_macho());
       consulta.setInt(2, p.getConeja().getId_coneja());
@@ -37,6 +37,7 @@ public class CruceDAO {
       consulta.setString(4, p.getObservaciones());
       consulta.setDate(5, p.getFecha_parto());
       consulta.setInt(6, p.getCantidad_paridos());
+      consulta.setDate(7, p.getFecha_estimada_parto());
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -58,7 +59,7 @@ public class CruceDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.cruces "
-              + " SET  fecha_cruce=?, id_macho=?, observaciones=?, fecha_parto=?, cantidad_paridos=?"
+              + " SET  fecha_cruce=?, id_macho=?, observaciones=?, fecha_parto=?, cantidad_paridos=?, fecha_estimada_parto=?"
               + " WHERE id_cruce=?; "
       );
 
@@ -67,7 +68,8 @@ public class CruceDAO {
       consulta.setString(3, p.getObservaciones());
       consulta.setDate(4, p.getFecha_parto());
       consulta.setInt(5, p.getCantidad_paridos());
-      consulta.setInt(6, p.getId_cruce());
+      consulta.setDate(6, p.getFecha_estimada_parto());
+      consulta.setInt(7, p.getId_cruce());
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -124,6 +126,7 @@ public class CruceDAO {
         cruce.setFecha_parto(rs.getDate("fecha_parto"));
         cruce.setObservaciones(rs.getString("observaciones"));
         cruce.setCantidad_paridos(rs.getInt("cantidad_paridos"));
+        cruce.setFecha_estimada_parto(rs.getDate("fecha_estimada_parto"));
       }
       rs.close();
       consulta.close();
@@ -154,6 +157,7 @@ public class CruceDAO {
         cruce.setFecha_parto(rs.getDate("fecha_parto"));
         cruce.setObservaciones(rs.getString("observaciones"));
         cruce.setCantidad_paridos(rs.getInt("cantidad_paridos"));
+        cruce.setFecha_estimada_parto(rs.getDate("fecha_estimada_parto"));
         resultado.add(cruce);
       }
       rs.close();
@@ -185,6 +189,7 @@ public class CruceDAO {
         cruce.setFecha_parto(rs.getDate("fecha_parto"));
         cruce.setObservaciones(rs.getString("observaciones"));
         cruce.setCantidad_paridos(rs.getInt("cantidad_paridos"));
+        cruce.setFecha_estimada_parto(rs.getDate("fecha_estimada_parto"));
         resultado.add(cruce);
       }
       rs.close();

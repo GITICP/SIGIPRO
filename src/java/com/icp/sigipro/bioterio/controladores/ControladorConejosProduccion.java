@@ -133,7 +133,7 @@ private final int[] permisos = {256, 1, 1};
             bitacora.setBitacora(conejo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
 
             redireccion = "ConejosProduccion/index.jsp";
-            request.setAttribute("mensaje", helper.mensajeDeExito("ConejoProduccion agregado correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de conejos de producción agregado correctamente."));
         }
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
@@ -161,7 +161,7 @@ private final int[] permisos = {256, 1, 1};
             bitacora.setBitacora(conejo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
 
             redireccion = "ConejosProduccion/index.jsp";
-            request.setAttribute("mensaje", helper.mensajeDeExito("ConejoProduccion editado correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de conejos de producción editado correctamente."));
         }
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
@@ -196,7 +196,7 @@ private final int[] permisos = {256, 1, 1};
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(id_produccion, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("ConejoProduccion eliminado correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de conejos de producción eliminado correctamente."));
         }
         catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));

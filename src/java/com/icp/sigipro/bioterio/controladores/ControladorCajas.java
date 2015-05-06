@@ -70,6 +70,8 @@ public class ControladorCajas extends SIGIPROServlet {
     List<Caja> cajas;
     try {
       cajas = dao.obtenerCajas(id_grupo);
+      List<Coneja> conejas = coneja_dao.obtenerConejas(id_grupo);
+      request.setAttribute("conejas", conejas);
       request.setAttribute("listaCajas", cajas);
       Grupohembras grupo = grupoDAO.obtenerGrupohembras(id_grupo);
       request.setAttribute("grupo", grupo);
