@@ -29,8 +29,7 @@ public class IngresoDAO extends DAO<Ingreso>
         super(Ingreso.class, "bodega", "ingresos");
     }
 
-    @Override
-    public Ingreso buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SIGIPROException
+    public Ingreso buscar(int id) throws SIGIPROException, SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla + " i INNER JOIN bodega.catalogo_interno ci on ci.id_producto = i.id_producto INNER JOIN seguridad.secciones s on i.id_seccion = s.id_seccion WHERE id_ingreso = ?;";
 
@@ -52,24 +51,6 @@ public class IngresoDAO extends DAO<Ingreso>
             SIGIPROException ex = new SIGIPROException("El ingreso que está intentando buscar no existe.");
             throw ex;
         }
-    }
-
-    @Override
-    public List<Ingreso> buscarPor(String[] campos, Object valor)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean actualizar(Ingreso param)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean eliminar(Ingreso param)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

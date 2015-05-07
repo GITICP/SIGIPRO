@@ -19,7 +19,7 @@
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Ingresos?">Ingresos</a>
+              <a href="/SIGIPRO/Bodegas/SubBodegas?">Sub Bodegas</a>
             </li>
             <li class="active"> Agregar Sub Bodega </li>
           </ul>

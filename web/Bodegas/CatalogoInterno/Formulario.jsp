@@ -71,7 +71,6 @@
                     <h3><i class="fa fa-flask"></i> Opciones Avanzadas </h3>
                 </div>
                 <div class="widget-content">
-                    <!--<label for="cuarentena" class="control-label">Opciones</label>-->
                     <div class="form-group opciones">
                         <div class="col-sm-12">
                             <div class="input-group">

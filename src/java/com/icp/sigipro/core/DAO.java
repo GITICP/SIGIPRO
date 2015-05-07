@@ -73,35 +73,6 @@ public abstract class DAO<T extends IModelo>
     }
   }
 
-  //No usar este método
-  public T buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SIGIPROException
-  {
-    throw new UnsupportedOperationException();
-    /*
-    String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla;
-    T t = tipo.newInstance();
-    List<PropiedadModelo> propiedades = t.getMetodos("get");
-
-    for (PropiedadModelo p : propiedades) {
-      String nomTablaFinal = this.nombreTabla;
-      if(nombreTabla.endsWith("s")){
-        nomTablaFinal = this.nombreTabla.substring(0, this.nombreTabla.length() - 1);
-      }
-      if (p.getCampo().getName().equals("id_" + nomTablaFinal)) {
-        codigoConsulta += " WHERE " + p.getCampo().getName() + " = ?;";
-        break;
-      }
-    }
-    
-    PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
-    consulta.setInt(1, id);
-    ResultSet resultado = ejecutarConsulta(consulta);
-    resultado.next();
-    return construirObjeto(t.getMetodos("set"), resultado);*/
-  }
-
-  public abstract List<T> buscarPor(String[] campos, Object valor);
-
   public List<T> obtenerTodo() throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
   {
     String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla;
@@ -156,10 +127,6 @@ public abstract class DAO<T extends IModelo>
 
     return construirConsulta(consulta, lista);
   }
-
-  public abstract boolean actualizar(T param);
-
-  public abstract boolean eliminar(T param);
 
   protected List<T> construirLista(ResultSet resultadoConsulta) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
   {
