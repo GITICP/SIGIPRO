@@ -24,7 +24,17 @@ public class Cruce {
   private String observaciones;
   private int cantidad_paridos;
   private Date fecha_parto;
+  private Date fecha_estimada_parto;
 
+  public Date getFecha_estimada_parto() {
+    return fecha_estimada_parto;
+  }
+
+  public void setFecha_estimada_parto(Date fecha_estimada_parto) {
+    this.fecha_estimada_parto = fecha_estimada_parto;
+  }
+
+  
   public int getId_cruce() {
     return id_cruce;
   }
@@ -91,6 +101,13 @@ public class Cruce {
     public String getFecha_parto_S() {
     if (this.fecha_parto != null) {
       return formatearFecha(fecha_parto);
+    } else {
+      return "";
+    }
+  }
+    public String getFecha_estimada_parto_S() {
+    if (this.fecha_estimada_parto != null) {
+      return formatearFecha(fecha_estimada_parto);
     } else {
       return "";
     }

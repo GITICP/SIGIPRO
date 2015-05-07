@@ -44,7 +44,13 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+      String mensaje = ex.getMessage();
+      if (mensaje.contains("llave duplicada")){
+        throw new SIGIPROException("Error: El identificador ya existe");
+      }
+      else {
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+      }
     }
     return resultado;
   }
@@ -71,7 +77,13 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
-      throw new SIGIPROException("Se produjo un error al procesar la edición");
+      String mensaje = ex.getMessage();
+      if (mensaje.contains("unique_violation")){
+        throw new SIGIPROException("Error: El identificador ya existe");
+      }
+      else {
+      throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+      }
     }
     return resultado;
   }

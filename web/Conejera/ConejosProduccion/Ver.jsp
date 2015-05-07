@@ -51,9 +51,9 @@
                         ${mensaje}
                         <div class="widget-content">
                             <table class="tabla-ver">
-                                <tr><td> <strong>Identificación:</strong> <td>${conejo.getIdentificador()} </td></tr>
+                                <tr><td> <strong>Fecha del Grupo:</strong> <td>${conejo.getIdentificador()} </td></tr>
                                 <tr><td> <strong>Cantidad:</strong> <td>${conejo.getCantidad()} </td></tr>
-                                <tr><td> <strong>Detalle de procedencia:</strong> <td>${conejo.getDetalle_procedencia()} </td></tr>
+                                <tr><td> <strong>Observaciones:</strong> <td>${conejo.getDetalle_procedencia()} </td></tr>
                                     
                             </table>
                         </div>

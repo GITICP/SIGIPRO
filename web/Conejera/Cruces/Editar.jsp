@@ -23,9 +23,15 @@
         <div class="col-md-4 ">
           <ul class="breadcrumb">
             <li>Bioterio - Conejera</li>
-            <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
-            </li>
+            <li>
+             <a href="/SIGIPRO/Conejera/Gruposhembras?">Grupo ${cruce.getConeja().getCaja().getGrupo().getIdentificador()}</a>
+                        </li>
+                        <li> 
+                            <a href="/SIGIPRO/Conejera/Cajas?id_grupo=${cruce.getConeja().getCaja().getGrupo().getId_grupo()}">Espacios</a>
+                        </li>
+                        <li>
+                           <a href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${cruce.getConeja().getCaja().getId_caja()}">1</a>
+                        </li>
             <li class="active">Cruce de Coneja en Caja #${cruce.getConeja().getCaja().getNumero()}</li>
 
           </ul>

@@ -12,6 +12,7 @@
 <form id="formCara" class="form-horizontal" autocomplete="off" method="post" action="Caras">
     <input hidden="true" name="id_cara" value="${cara.getId_cara()}">
     <input hidden="true" name="accion" value="${accion}">
+    <input hidden="true" type="number" name="flag" id="flag" value=0>
     <div class="row">
         <div class="col-md-6">
             <label for="numero_cara" class="control-label">*Número de Cara</label>
@@ -181,11 +182,13 @@
                     </div>
                 </div>  
             </div>
+          <div class="col-md-12">                           
             <p id='mensajeFechas1' style='color:red;'><p>
             <p id='mensajeFechas2' style='color:red;'><p> 
             <p id='mensajeFechas3' style='color:red;'><p> 
             <p id='mensajeFechas4' style='color:red;'><p> 
             <p id='mensajeFechas5' style='color:red;'><p> 
+          </div>
         </div>
     </div>
     <div class="col-md-12">              
@@ -198,10 +201,10 @@
                     <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
                     <c:choose>
                         <c:when test= "${accion.equals('Editar')}">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmar()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                         </c:when>
                         <c:otherwise>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Cara</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmar()"><i class="fa fa-check-circle"></i> ${accion} Cara</button>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -210,4 +213,3 @@
     </div>
 
 </form>
-

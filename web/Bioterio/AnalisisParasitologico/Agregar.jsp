@@ -21,7 +21,7 @@
           <ul class="breadcrumb">
             <li>Bioterio</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/AnalisisParasitologico?especie=${especie}">Análisis Parasitológico</a>
+              <a href="/SIGIPRO/Bioterio/AnalisisParasitologico?especie=${especie}">Análisis Parasitológico</a>
             </li>
             <li class="active"> Agregar Análisis Parasitológico</li>
           </ul>
