@@ -390,7 +390,7 @@ public class EventoClinicoDAO
                     " SELECT ec.*, te.*, u.nombre_completo, u.id_usuario FROM caballeriza.eventos_clinicos ec "
                     + "    INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
                     + "    INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento"
-                    + " where id_tipo_evento = ?;"
+                    + " where te.id_tipo_evento = ?;"
             );
 
             consulta.setInt(1, id_tipo_evento);
