@@ -126,8 +126,10 @@ public class Modulo implements java.io.Serializable
     }
     
     public void ordenar() {
+        for(Modulo m : sub_modulos) {
+            m.ordenar();
+        }
         Collections.sort(funcionalidades, new ComparadorFuncionalidades());
-        
     }
     
     private class ComparadorFuncionalidades implements Comparator<Funcionalidad>
