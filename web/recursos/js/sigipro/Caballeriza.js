@@ -46,8 +46,20 @@ $(document).ready(function () {
     
     $(".peso-caballo").click(function(){
         var fila = $(this).parent().parent();
+        var idPeso = fila.data("id-peso");
         var fecha = fila.find(".fecha").text();
         var peso = fila.find(".peso").text();
+        $("#editar-id-peso").val(idPeso);
+        $("#editar-fecha-peso").val(fecha);
+        $("#editar-peso").val(peso);
+        $("#modalEditarPeso").modal("show");
+    });
+    
+    $(".peso-caballo-eliminar").click(function(){
+        var fila = $(this).parent().parent();
+        var idPeso = fila.data("id-peso");
+        $("#eliminar-peso-id").val(idPeso);
+        $("#ModalConfirmacionEliminar").modal("show");
     });
 });
 

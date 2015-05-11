@@ -229,12 +229,12 @@ public class CaballoDAO
         return resultado;
     }
 
-    public Caballo obtenerCaballo(int id_caballo)
+    public Caballo obtenerCaballo(int id_caballo) throws SIGIPROException
     {
         Caballo caballo = new Caballo();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT c.*, pc.peso, pc.fecha "
+                    " SELECT c.*, pc.id_peso, pc.peso, pc.fecha "
                     + " FROM caballeriza.caballos c "
                     + "           LEFT JOIN caballeriza.pesos_caballos pc ON pc.id_caballo = ? "
                     + " WHERE c.id_caballo = ? "
@@ -260,6 +260,7 @@ public class CaballoDAO
                 if (rs.getDate("fecha") != null) {
                     do {
                         Peso p = new Peso();
+                        p.setId_peso(rs.getInt("id_peso"));
                         p.setId_caballo(id_caballo);
                         p.setFecha(rs.getDate("fecha"));
                         p.setPeso(rs.getFloat("peso"));
@@ -307,8 +308,9 @@ public class CaballoDAO
             consulta.close();
             conexion.close();
         }
-        catch (Exception ex) {
+        catch (SQLException ex) {
             ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener el caballo.");
         }
         return caballo;
     }
@@ -566,6 +568,64 @@ public class CaballoDAO
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al registrar el peso.");
+        }
+    }
+    
+    public boolean editarPeso(Peso p) throws SIGIPROException
+    {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("UPDATE caballeriza.pesos_caballos SET fecha = ?, peso = ? WHERE id_peso = ?;");
+
+            consulta.setDate(1, p.getFecha());
+            consulta.setFloat(2, p.getPeso());
+            consulta.setInt(3, p.getId_peso());
+
+            if (consulta.executeUpdate() != 1) {
+                throw new SQLException();
+            }
+            else {
+                resultado = true;
+            }
+
+            consulta.close();
+            conexion.close();
+
+            return resultado;
+
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al editar el peso.");
+        }
+    }
+    
+    public boolean eliminarPeso(int id_peso) throws SIGIPROException
+    {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM caballeriza.pesos_caballos WHERE id_peso = ?;");
+
+            consulta.setInt(1, id_peso);
+
+            if (consulta.executeUpdate() != 1) {
+                throw new SQLException();
+            }
+            else {
+                resultado = true;
+            }
+
+            consulta.close();
+            conexion.close();
+
+            return resultado;
+
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al elimianr el peso.");
         }
     }
 

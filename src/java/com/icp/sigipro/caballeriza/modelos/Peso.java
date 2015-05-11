@@ -16,13 +16,23 @@ import org.json.JSONObject;
  */
 public class Peso
 {
-
+    private int id_peso;
     private int id_caballo;
     private float peso;
     private Date fecha;
 
     public Peso()
     {
+    }
+
+    public int getId_peso()
+    {
+        return id_peso;
+    }
+
+    public void setId_peso(int id_peso)
+    {
+        this.id_peso = id_peso;
     }
 
     public int getId_caballo()

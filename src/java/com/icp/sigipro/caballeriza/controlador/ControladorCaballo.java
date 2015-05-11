@@ -71,6 +71,7 @@ public class ControladorCaballo extends SIGIPROServlet
             add("agregareditar");
             add("agregarpeso");
             add("editarpeso");
+            add("eliminarpeso");
         }
     };
 
@@ -122,7 +123,7 @@ public class ControladorCaballo extends SIGIPROServlet
             ex.printStackTrace();
         }
     }
-    
+
     protected void getInoculo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -210,17 +211,17 @@ public class ControladorCaballo extends SIGIPROServlet
             Caballo c = new Caballo();
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
             c = construirObjeto(items);
-            
-            if (c.isAccion()){
+
+            if (c.isAccion()) {
                 resultado = dao.insertarCaballo(c);
 
                 HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
                 if (resultado) {
                     BitacoraDAO bitacora = new BitacoraDAO();
                     bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
-                    if (c.getFotografia()!=null){
+                    if (c.getFotografia() != null) {
                         ByteArrayInputStream bais = new ByteArrayInputStream(c.getFotografia());
-                        dao.insertarImagen(bais, c.getId_caballo(),c.getFotografiaTamano());
+                        dao.insertarImagen(bais, c.getId_caballo(), c.getFotografiaTamano());
                     }
                     request.setAttribute("mensaje", helper.mensajeDeExito("Caballo agregado correctamente"));
                     redireccion = "Caballo/index.jsp";
@@ -232,7 +233,8 @@ public class ControladorCaballo extends SIGIPROServlet
                 }
                 request.setAttribute("listaCaballos", dao.obtenerCaballos());
                 redireccionar(request, response, redireccion);
-            }else{
+            }
+            else {
                 resultado = dao.editarCaballo(c);
 
                 HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
@@ -241,10 +243,10 @@ public class ControladorCaballo extends SIGIPROServlet
                     BitacoraDAO bitacora = new BitacoraDAO();
                     bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CABALLO, request.getRemoteAddr());
                     //*----------------------------*
-                    if (c.getFotografia()!=null){
+                    if (c.getFotografia() != null) {
                         ByteArrayInputStream bais = new ByteArrayInputStream(c.getFotografia());
-                        dao.insertarImagen(bais, c.getId_caballo(),c.getFotografiaTamano());
-                        
+                        dao.insertarImagen(bais, c.getId_caballo(), c.getFotografiaTamano());
+
                     }
                     request.setAttribute("mensaje", helper.mensajeDeExito("Caballo editado correctamente"));
                     redireccion = "Caballo/index.jsp";
@@ -257,10 +259,10 @@ public class ControladorCaballo extends SIGIPROServlet
                 request.setAttribute("listaCaballos", dao.obtenerCaballos());
                 redireccionar(request, response, redireccion);
             }
-        }catch (FileUploadException e) {
+        }
+        catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
         }
-
     }
 
     protected void postAgregarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -269,26 +271,29 @@ public class ControladorCaballo extends SIGIPROServlet
         HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
         Peso p = new Peso();
         int id_caballo = 0;
-        
+
         try {
             id_caballo = Integer.parseInt(request.getParameter("id_caballo_peso"));
             p.setId_caballo(id_caballo);
             p.setFecha(helper_fechas.formatearFecha(request.getParameter("fecha_pesaje")));
             p.setPeso(Float.parseFloat(request.getParameter("peso")));
-        } catch(ParseException p_ex) {
-            
         }
-        
+        catch (ParseException p_ex) {
+            p_ex.printStackTrace();
+        }
+
         try {
             if (dao.agregarPeso(p)) {
                 request.setAttribute("mensaje", helper.mensajeDeExito("Peso registrado correctamente."));
-            } else {
+            }
+            else {
                 throw new SIGIPROException("Error al registrar el peso.");
             }
-        } catch(SIGIPROException sig_ex){
+        }
+        catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(redireccion));
         }
-        
+
         try {
             Caballo g = dao.obtenerCaballo(id_caballo);
             request.setAttribute("imagenCaballo", this.obtenerImagen(g));
@@ -296,33 +301,114 @@ public class ControladorCaballo extends SIGIPROServlet
             request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
             request.setAttribute("caballo", g);
             request.setAttribute("helper", helper);
-            redireccionar(request, response, redireccion);
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
+        redireccionar(request, response, redireccion);
     }
-    
+
     protected void postEditarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        
+        String redireccion = "Caballo/Ver.jsp";
+        HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+        Peso p = new Peso();
+        int id_caballo = 0;
+        int id_peso = 0;
+
+        try {
+            id_caballo = Integer.parseInt(request.getParameter("id_caballo_peso"));
+            id_peso = Integer.parseInt(request.getParameter("id_peso"));
+            p.setId_caballo(id_caballo);
+            p.setId_peso(id_peso);
+            p.setFecha(helper_fechas.formatearFecha(request.getParameter("fecha_pesaje")));
+            p.setPeso(Float.parseFloat(request.getParameter("peso")));
+        }
+        catch (ParseException p_ex) {
+
+        }
+
+        try {
+            if (dao.editarPeso(p)) {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Peso editado correctamente."));
+            }
+            else {
+                throw new SIGIPROException("Error al editar el peso.");
+            }
+        }
+        catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(redireccion));
+        }
+
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            request.setAttribute("imagenCaballo", this.obtenerImagen(g));
+            request.setAttribute("grupo", g.getGrupo_de_caballos());
+            request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
+            request.setAttribute("caballo", g);
+            request.setAttribute("helper", helper);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        redireccionar(request, response, redireccion);
+    }
+    
+   protected void postEliminarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String redireccion = "Caballo/Ver.jsp";
+        int id_caballo = 0;
+        int id_peso = 0;
+
+        try {
+            id_caballo = Integer.parseInt(request.getParameter("id_caballo_peso"));
+            id_peso = Integer.parseInt(request.getParameter("id_peso"));
+        }
+        catch (Exception p_ex) {
+            p_ex.printStackTrace();
+        }
+
+        try {
+            if (dao.eliminarPeso(id_peso)) {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Peso eliminado correctamente."));
+            }
+            else {
+                throw new SIGIPROException("Error al eliminar el peso.");
+            }
+        }
+        catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(redireccion));
+        }
+
+        try {
+            Caballo g = dao.obtenerCaballo(id_caballo);
+            request.setAttribute("imagenCaballo", this.obtenerImagen(g));
+            request.setAttribute("grupo", g.getGrupo_de_caballos());
+            request.setAttribute("nombregrupo", g.getGrupo_de_caballos().getNombre());
+            request.setAttribute("caballo", g);
+            request.setAttribute("helper", helper);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        redireccionar(request, response, redireccion);
     }
 
     private Caballo construirObjeto(List<FileItem> items)
     {
         Caballo c = new Caballo();
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        for (FileItem item : items){
-            if (item.isFormField()){
-                
+        for (FileItem item : items) {
+            if (item.isFormField()) {
+
                 String fieldName = item.getFieldName();
                 String fieldValue = item.getString();
-                switch (fieldName){
+                switch (fieldName) {
                     case "id_caballo":
                         c.setId_caballo(Integer.parseInt(fieldValue));
                         break;
                     case "grupodecaballo":
-                        GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();  
+                        GrupoDeCaballosDAO grupodecaballosdao = new GrupoDeCaballosDAO();
                         String grupo = fieldValue;
                         GrupoDeCaballos grupodecaballo;
                         if (grupo.equals("")) {
@@ -336,27 +422,29 @@ public class ControladorCaballo extends SIGIPROServlet
                     case "fecha_ingreso":
                         java.util.Date fecha_ingreso;
                         java.sql.Date fecha_ingresoSQL;
-                        try{
+                        try {
                             fecha_ingreso = formatoFecha.parse(fieldValue);
                             fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
                             c.setFecha_ingreso(fecha_ingresoSQL);
-                        }catch (ParseException ex){
-                            
+                        }
+                        catch (ParseException ex) {
+
                         }
                         break;
                     case "fecha_nacimiento":
                         java.util.Date fecha_nacimiento;
                         java.sql.Date fecha_nacimientoSQL;
-                        try{
+                        try {
                             fecha_nacimiento = formatoFecha.parse(fieldValue);
                             fecha_nacimientoSQL = new java.sql.Date(fecha_nacimiento.getTime());
                             c.setFecha_nacimiento(fecha_nacimientoSQL);
-                        }catch (ParseException ex){
-                            
+                        }
+                        catch (ParseException ex) {
+
                         }
                         break;
                     case "numero_caballo":
-                        if (fieldValue != null){
+                        if (fieldValue != null) {
                             c.setNumero(Integer.parseInt(fieldValue));
                         }
                         break;
@@ -379,24 +467,28 @@ public class ControladorCaballo extends SIGIPROServlet
                         c.setEstado(fieldValue);
                         break;
                     case "accion":
-                        if (fieldValue.equals("Agregar"))
+                        if (fieldValue.equals("Agregar")) {
                             c.setAccion(true);
-                        else
+                        }
+                        else {
                             c.setAccion(false);
+                        }
                         break;
                 }
-            }else{
+            }
+            else {
                 // Process form file field (input type="file").
                 byte[] data = item.get();
                 long size = item.getSize();
-                if (size==0){
+                if (size == 0) {
                     c.setFotografia(null);
                     c.setFotografiaTamano(0);
-                }else{
+                }
+                else {
                     c.setFotografia(data);
                     c.setFotografiaTamano(size);
                 }
-            }   
+            }
         }
 
         return c;
