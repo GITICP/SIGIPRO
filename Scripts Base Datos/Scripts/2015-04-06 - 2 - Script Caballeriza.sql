@@ -26,9 +26,10 @@ CREATE TABLE caballeriza.caballos (
 );
 
 CREATE TABLE caballeriza.pesos_caballos (
+    id_peso serial NOT NULL,
     id_caballo integer NOT NULL,
     fecha date NOT NULL,
-    peso decimal NOT NULL 
+    peso decimal NOT NULL
 );
 
 CREATE TABLE caballeriza.eventos_clinicos(
@@ -123,7 +124,7 @@ CREATE TABLE caballeriza.sangrias_caballos (
 --Llaves primarias esquema caballeriza
 ALTER TABLE ONLY caballeriza.grupos_de_caballos  ADD CONSTRAINT pk_grupos_de_caballos PRIMARY KEY (id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.caballos  ADD CONSTRAINT pk_caballos PRIMARY KEY (id_caballo);
-ALTER TABLE ONLY caballeriza.pesos_caballos  ADD CONSTRAINT pk_pesos_caballos PRIMARY KEY (id_caballo, fecha);
+ALTER TABLE ONLY caballeriza.pesos_caballos  ADD CONSTRAINT pk_pesos_caballos PRIMARY KEY (id_peso);
 ALTER TABLE ONLY caballeriza.inoculos  ADD CONSTRAINT pk_inoculos PRIMARY KEY (id_inoculo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos  ADD CONSTRAINT pk_eventos_clinicos PRIMARY KEY (id_evento);
 ALTER TABLE ONLY caballeriza.inoculos_caballos  ADD CONSTRAINT pk_inoculos_caballos PRIMARY KEY (id_caballo,id_inoculo);
