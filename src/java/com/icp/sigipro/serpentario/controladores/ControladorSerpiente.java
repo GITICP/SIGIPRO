@@ -95,6 +95,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("CambioPiel");
             add("Desparasitación");
             add("Alimentación");
+            add("Otros");
 
         }
     };
@@ -274,7 +275,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
 
     }
     
-        protected void postReversardeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void postReversardeceso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(317, listaPermisos);
@@ -341,13 +342,12 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Serpiente s = new Serpiente();
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
             s = construirObjeto(items);
-            System.out.println(s.isEstado());
             
             UsuarioDAO usuariodao = new UsuarioDAO();      
             Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
             s.setRecibida(usuario);
             
-            if (s.isEstado()){
+            if (s.isAccion()){
                 resultado = dao.insertarSerpiente(s);
                 if (resultado){
                     //Funcion que genera la bitacora
@@ -464,9 +464,9 @@ public class ControladorSerpiente extends SIGIPROServlet {
                         break;
                     case "accion":
                         if (fieldValue.equals("Agregar"))
-                            s.setEstado(true);
+                            s.setAccion(true);
                         else
-                            s.setEstado(false);
+                            s.setAccion(false);
                         break;
                     case "fecha_ingreso":
                         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -503,7 +503,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 // Process form file field (input type="file").
                 byte[] data = item.get();
                 long size = item.getSize();
-                System.out.println("TAMANO - "+size);
                 if (size==0){
                     s.setImagen(null);
                     s.setImagenTamano(0);
@@ -577,6 +576,9 @@ public class ControladorSerpiente extends SIGIPROServlet {
                 break;
             case "Alimentación":
                 e.setId_categoria(4);
+                break;
+            default:
+                e.setId_categoria(15);
                 break;
         }
         e.setObservaciones(request.getParameter("observacionesModal"));

@@ -49,10 +49,22 @@ $(document).on("click", ".ct-Modal", function () {
                             $("#id_serpiente_catalogo_tejido").val(id_serpiente);                          
                             });
                             
-$(document).on("click", ".rPV-Modal", function () {                            
+$(document).on("click", ".rCV-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
-                            $("#id_serpiente_reversar").val(id_serpiente);                          
+                            $("#id_serpiente_reversar_cv").val(id_serpiente);                          
                             });
+
+$(document).on("click", ".rDeceso-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_reversar_deceso").val(id_serpiente);                          
+                            });
+
+
+$(document).on("click", ".rDeceso-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_reversar_deceso").val(id_serpiente);                          
+                            });
+
 
 $(document).on("click", ".deceso-Modal", function () {                            
                             var id_serpiente = $(this).data('id');

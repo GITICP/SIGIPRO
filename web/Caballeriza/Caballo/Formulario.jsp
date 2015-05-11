@@ -8,7 +8,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form id="caballosform" class="form-horizontal" autocomplete="off" method="post" action="Caballo">
+<form id="caballosform" enctype='multipart/form-data' class="form-horizontal" autocomplete="off" method="post" action="Caballo">
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_caballo" value="${caballo.getId_caballo()}">
@@ -152,21 +152,49 @@
                 </div>
             </div>  
         </div>
+                    
+       <div class="col-md-12">
+            <div class="widget widget-table">
+ <div class="widget-header">
+   <h3><i class="fa fa-bug"></i> Imagen</h3>
+ </div>
+    <div class="widget-content">
+<label for="imagen" class="control-label">Seleccione una imagen</label>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <div class="input-group">                
+                      <input class='clearable' type="file" id="imagen_Caballo" name="imagen" accept="image/*" 
+                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                           onchange="previewFile()" />
+                    <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
+                  </div>
+                </div>
+              </div>
+              <c:if test="${!imagenCaballo.equals('')}">
+                  Imagen Actual: <img src="${imagenCaballo}" height="100">
+              </c:if>
+</div>
+</div>
+    
+<!-- Esta parte es la de los permisos de un rol -->
+<p class="campos-requeridos">
+    Los campos marcados con * son requeridos.
+</p>  
+
+
+<div class="form-group">
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+        <c:choose>
+          <c:when test= "${accion.equals('Editar')}">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+          </c:when>
+          <c:otherwise>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
+          </c:otherwise>
+        </c:choose>
     </div>
-    <p class="campos-requeridos">
-        Los campos marcados con * son requeridos.
-    </p>  
-    <div class="form-group">
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <c:choose>
-                <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                </c:when>
-                <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </div>
-</form>               
+</div>
+       </div>
+</div>
+</form>

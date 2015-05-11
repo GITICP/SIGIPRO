@@ -35,6 +35,15 @@ public class Serpiente {
     private Especie especie;
     private boolean estado;
     private boolean coleccionviva;
+    private boolean accion;
+
+    public boolean isAccion() {
+        return accion;
+    }
+
+    public void setAccion(boolean accion) {
+        this.accion = accion;
+    }
 
     public boolean isEstado() {
         return estado;

@@ -55,15 +55,17 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12">
-      <label for="observaciones" class="control-label">Observaciones</label>
+    <div class="col-md-6">
+      <label for="fecha_estimada_parto" class="control-label">Fecha Estimada del Parto</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${cruce.getObservaciones()}</textarea>
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_estimada_parto" value="${cruce.getFecha_estimada_parto_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_estimada_parto" data-date-format="dd/mm/yyyy" 
+                    oninvalid="setCustomValidity('Este campo es requerido ')"
+                    onchange="setCustomValidity('')">      
           </div>
         </div>
-      </div>        
+      </div>
     </div>
     <div class="col-md-6">
       <label for="fecha_parto" class="control-label">Fecha del Parto</label>
@@ -82,13 +84,23 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="number" id="cantidad_paridos" value="${cruce.getCantidad_paridos()}"  name="cantidad_paridos" 
+            <input  type="number" min="1" id="cantidad_paridos" value="${cruce.getCantidad_paridos()}"  name="cantidad_paridos"  class="form-control"
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">      
           </div>
         </div>
       </div>
     </div>
+     <div class="col-md-12">
+      <label for="observaciones" class="control-label">Observaciones</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${cruce.getObservaciones()}</textarea>
+          </div>
+        </div>
+      </div>        
+    </div>               
   </div>
   <div class="col-md-12">
     <p>

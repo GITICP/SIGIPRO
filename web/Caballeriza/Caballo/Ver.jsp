@@ -44,12 +44,13 @@
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-primary btn-sm boton-accion imagen-Modal" data-id='${caballo.getId_caballo()}' data-toggle="modal" data-target="#modalAgregarImagen">Imagen</a>
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=editar&id_caballo=${caballo.getId_caballo()}">Editar</a>
                                 </c:if>
                             </div>
                         </div>
                         ${mensaje}
+                        <div class="row">
+                        <div class="col-md-6">
                         <div class="widget-content">
                             <table>
                                 <tr><td> <strong>Nombre:</strong> <td>${caballo.getNombre()} </td></tr>
@@ -72,12 +73,19 @@
                                 <tr><td> <strong>Color:</strong> <td>${caballo.getColor()} </td></tr>
                                 <tr><td> <strong>Otras Señas:</strong> <td>${caballo.getOtras_sennas()}</td></tr>
                                 <tr><td> <strong>Estado:</strong> <td>${caballo.getEstado()}</td></tr>
-                                <tr><td> <strong>Imagen:</strong> <td>
-                                        <c:if test="${!imagenCaballo.equals('')}">
-                                            <img src="${imagenCaballo}" height="200">
-                                        </c:if>
-                                    </td></tr> 
                             </table>
+                        </div>
+                        </div>
+                            <div class="col-md-6" align="right">
+                                <div class="widget-content">
+                                    <c:if test="${!imagenCaballo.equals('')}">
+                                                <img src="${imagenCaballo}" height="250" width="250">
+                                    </c:if>
+                                </div>
+
+
+                            </div>
+                        </div>
                             <br>
                             <div class="widget widget-table">
                                 <div class="widget-header">
@@ -207,45 +215,4 @@
 
         </jsp:attribute>
 
-    </t:modal>
-
-    <t:modal idModal="modalAgregarImagen" titulo="Agregar Imagen">
-        <jsp:attribute name="form">
-            <div class="widget-content">
-                <form class="form-horizontal" id="agregarEventos" enctype='multipart/form-data' autocomplete="off" method="post" action="Caballo">
-                    <input hidden="true" name="accion" value="agregarimagen">
-                    <input hidden="true" id='id_serpiente_imagen' name='id_caballo_imagen' value="${caballo.getId_caballo()}">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="widget widget-table">
-                                <div class="widget-header">
-                                    <h3><i class="fa fa-photo"></i> Imagen</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <label for="imagen" class="control-label">Seleccione una imagen</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="input-group">                
-                                                <input type="file" name="imagen" accept="image/*" required onchange="previewFile()" />
-                                                <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <c:if test="${!imagenCaballo.equals('')}">
-                                        Imagen Actual: <img src="${imagenCaballo}" height="100">
-                                    </c:if>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>            
-
-                    <div class="form-group">
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Imagen</button>            </div>
-                    </div>
-                </form>
-            </div>
-        </jsp:attribute>
     </t:modal>

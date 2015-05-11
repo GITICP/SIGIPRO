@@ -157,6 +157,31 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           request.setAttribute("booladmin", boolAdmin);
           request.setAttribute("listaSolicitudes", solicitudes);
         } 
+        else if (accion.equalsIgnoreCase("cerrar")) {
+          redireccion = "Solicitudes/index.jsp";
+          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+          Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
+          HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+          
+            solicitud.setEstado("Cerrada");
+            boolean resultado;
+            resultado = dao.editarSolicitud(solicitud);     
+
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+            //*----------------------------* 
+            
+            if (resultado) {
+              request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada"));
+            } 
+            else {
+              request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
+          List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+          request.setAttribute("booladmin", boolAdmin);
+          request.setAttribute("listaSolicitudes", solicitudes);
+        } 
         else {
           validarPermisos(permisos, listaPermisos);
           redireccion = "Solicitudes/index.jsp";

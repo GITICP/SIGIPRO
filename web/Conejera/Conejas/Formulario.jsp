@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="col-md-6">
-      <label for="fecha_seleccion" class="control-label">*Fecha de Selección</label>
+      <label for="fecha_seleccion" class="control-label">*Fecha de Preselección</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">

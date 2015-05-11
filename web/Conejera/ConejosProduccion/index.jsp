@@ -48,7 +48,7 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Identificador</th>
+                    <th>Fecha del Grupo</th>
                     <th>Cantidad</th>
                   </tr>
                 </thead>

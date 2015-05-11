@@ -266,12 +266,17 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (353, '[S
 
 UPDATE seguridad.entradas_menu_principal SET redirect = '/Serpentario/Especie' WHERE id_menu_principal = 300;
 
+--Sub menús
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (299, 300, 'Serpientes', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (298, 300, 'Venenos', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (297, 300, 'Decesos', null);
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 300, 'Especie', '/Serpentario/Especie');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (302, 300, 'Serpiente', '/Serpentario/Serpiente');
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (301, 299, 'Especie', '/Serpentario/Especie');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (302, 299, 'Serpiente', '/Serpentario/Serpiente');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (303, 300, 'Extracción', '/Serpentario/Extraccion');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (304, 300, 'Lote', '/Serpentario/Lote');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (305, 300, 'Veneno', '/Serpentario/Veneno');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (304, 298, 'Lote', '/Serpentario/Lote');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (305, 298, 'Veneno', '/Serpentario/Veneno');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (306, 300, 'Solicitud Veneno', '/Serpentario/SolicitudVeneno');
 
 ------Permisos Menu Principal

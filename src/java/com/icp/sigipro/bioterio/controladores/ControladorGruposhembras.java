@@ -137,7 +137,7 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       bitacora.setBitacora(grupohembras.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
       //*----------------------------*
     } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", ex.getMessage() );
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()) );
     }
     if (resultado){
         redireccion = "Gruposhembras/index.jsp";
@@ -151,7 +151,6 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       }
     }
     else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
     }
     redireccionar(request, response, redireccion);
   }

@@ -25,20 +25,20 @@
                           <c:when test="${veneno.isRestriccion()}">
                                 <c:choose>
                                     <c:when test="${veneno.getEspecie().getId_especie() == solicitud.getEspecie().getId_especie()}">
-                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos) </option>
+                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos) </option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos)  </option>
+                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos)  </option>
                                     </c:otherwise>
                                 </c:choose> 
                           </c:when>
                           <c:otherwise>
                               <c:choose>
                                     <c:when test="${veneno.getEspecie().getId_especie() == solicitud.getEspecie().getId_especie()}">
-                                        <option data-stock="${veneno.getCantidad()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos) </option>
+                                        <option data-stock="${veneno.getCantidadAsMiligramos()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos) </option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option data-stock="${veneno.getCantidad()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidad()} Gramos)  </option>
+                                        <option data-stock="${veneno.getCantidadAsMiligramos()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos)  </option>
                                     </c:otherwise>
                                 </c:choose> 
                           </c:otherwise>

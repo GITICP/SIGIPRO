@@ -94,6 +94,7 @@
                                                                                 null,
                                                                                 '${solicitud.getSexo()}',
                                                                                 null)" >Entregar</a>
+                                  <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=cerrar&tipo=Anulada&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                 </td>
                               </c:when>
                               <c:otherwise>
@@ -106,7 +107,7 @@
                                                   null,
                                                   '${solicitud.getSexo()}',
                                                   null)" >Entregar</a>
-                                      <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=cerrar&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
+                                      <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=cerrar&tipo=Entrega Parcial&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                     </td>
                                   </c:when>
                                   <c:otherwise>

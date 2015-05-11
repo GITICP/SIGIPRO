@@ -73,6 +73,8 @@ public class CatalogoTejidoDAO {
                 ct.setEstado(rs.getString("estado"));
                 ct.setPosicion(rs.getString("posicion"));
                 ct.setUsuario(usuariodao.obtenerUsuario(rs.getInt("id_usuario")));
+            }else{
+                ct = null;
             }
             rs.close();
             consulta.close();

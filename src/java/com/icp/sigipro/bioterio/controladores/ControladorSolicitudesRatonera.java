@@ -292,6 +292,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+    String tipo = request.getParameter("tipo");
     boolean resultado = false;
     admin = verificarPermiso(203, listaPermisos);
     request.setAttribute("admin", admin);
@@ -301,7 +302,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
       List<Cepa> cepas = dao_ce.obtenerCepas();
       request.setAttribute("cepas", cepas);
       SolicitudRatonera solicitud = dao.obtenerSolicitudRatonera(id_solicitud);
-      solicitud.setEstado("Cerrada");
+      solicitud.setEstado("Cerrada ("+tipo+")");
       resultado = dao.editarSolicitudRatonera(solicitud);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
