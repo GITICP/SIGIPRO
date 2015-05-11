@@ -73,20 +73,20 @@ $(document).ready(function () {
         var regex = /^[0-9]+$/;
         if ($(this).val().match(regex)) {
             var cantidad = parseInt($(this).val());
-            if( parseInt($('#seleccion-consumir-producto :selected').data('cantidad-disponible')) < cantidad ){
+            if (parseInt($('#seleccion-consumir-producto :selected').data('cantidad-disponible')) < cantidad) {
                 $('#error-cantidad').text('Debe ser menor que la cantidad de inventario disponible.');
                 validez_form_consumir = false;
             } else {
                 $('#error-cantidad').text('');
-            validez_form_consumir = true;
+                validez_form_consumir = true;
             }
         } else {
             $('#error-cantidad').text('Debe ser un número');
             validez_form_consumir = false;
         }
     });
-    
-    $('#form-consumir-inventario-sub-bodega').submit(function(){
+
+    $('#form-consumir-inventario-sub-bodega').submit(function () {
         return validez_form_consumir;
     });
 });
@@ -94,14 +94,18 @@ $(document).ready(function () {
 // -- Ingresos -- //
 
 function agregarUsuarioIngresos() {
-    var usuarioSeleccionado = $(SELECCION_INGRESOS + " :selected");
-    usuarioSeleccionado.remove();
-    var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioIngreso(" + usuarioSeleccionado.val() + ")>");
-    botonEliminar.text("Eliminar");
-
-    var nuevaFila = tIngresos.row.add([usuarioSeleccionado.text(), botonEliminar[0].outerHTML]).draw().node();
-
-    $(nuevaFila).attr("id", "ingreso-" + usuarioSeleccionado.val());
+    $(T_INGRESOS_SELECTOR).dataTable().fnClearTable();
+    var select = $(SELECCION_INGRESOS);
+    var usuariosSeleccionados = select.val();
+    for (var i = 0; i < usuariosSeleccionados.length; i++) {
+        var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
+        
+        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioIngreso(" + elemento.val() + ")>");
+        botonEliminar.text("Eliminar");
+        
+        var nuevaFila = tIngresos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+        $(nuevaFila).attr("id", "ingreso-" + elemento.val());
+    }
 }
 
 function eliminarUsuarioIngreso(id) {
@@ -112,21 +116,25 @@ function eliminarUsuarioIngreso(id) {
     nuevaOpcion.text(fila.data()[0]);
 
     fila.remove().draw();
-
-    $(SELECCION_INGRESOS).append(nuevaOpcion);
+    
+    eliminarDeSelect(id, SELECCION_INGRESOS);
 }
 
 // -- Egresos -- //
 
 function agregarUsuarioEgresos() {
-    var usuarioSeleccionado = $(SELECCION_EGRESOS + " :selected");
-    usuarioSeleccionado.remove();
-    var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioEgreso(" + usuarioSeleccionado.val() + ")>");
-    botonEliminar.text("Eliminar");
-
-    var nuevaFila = tEgresos.row.add([usuarioSeleccionado.text(), botonEliminar[0].outerHTML]).draw().node();
-
-    $(nuevaFila).attr("id", "egreso-" + usuarioSeleccionado.val());
+    $(T_EGRESOS_SELECTOR).dataTable().fnClearTable();
+    var select = $(SELECCION_EGRESOS);
+    var usuariosSeleccionados = select.val();
+    for (var i = 0; i < usuariosSeleccionados.length; i++) {
+        var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
+        
+        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioEgreso(" + elemento.val() + ")>");
+        botonEliminar.text("Eliminar");
+        
+        var nuevaFila = tEgresos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+        $(nuevaFila).attr("id", "egreso-" + elemento.val());
+    }
 }
 
 function eliminarUsuarioEgreso(id) {
@@ -138,20 +146,24 @@ function eliminarUsuarioEgreso(id) {
 
     fila.remove().draw();
 
-    $(SELECCION_EGRESOS).append(nuevaOpcion);
+    eliminarDeSelect(id, SELECCION_EGRESOS);
 }
 
 // -- Ver -- //
 
 function agregarUsuarioVer() {
-    var usuarioSeleccionado = $(SELECCION_VER + " :selected");
-    usuarioSeleccionado.remove();
-    var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioVer(" + usuarioSeleccionado.val() + ")>");
-    botonEliminar.text("Eliminar");
-
-    var nuevaFila = tVer.row.add([usuarioSeleccionado.text(), botonEliminar[0].outerHTML]).draw().node();
-
-    $(nuevaFila).attr("id", "ver-" + usuarioSeleccionado.val());
+    $(T_VER_SELECTOR).dataTable().fnClearTable();
+    var select = $(SELECCION_VER);
+    var usuariosSeleccionados = select.val();
+    for (var i = 0; i < usuariosSeleccionados.length; i++) {
+        var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
+        
+        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioVer(" + elemento.val() + ")>");
+        botonEliminar.text("Eliminar");
+        
+        var nuevaFila = tVer.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+        $(nuevaFila).attr("id", "ver-" + elemento.val());
+    }
 }
 
 function eliminarUsuarioVer(id) {
@@ -163,7 +175,7 @@ function eliminarUsuarioVer(id) {
 
     fila.remove().draw();
 
-    $(SELECCION_VER).append(nuevaOpcion);
+    eliminarDeSelect(id, SELECCION_VER);
 }
 
 // -- Compartido -- //
@@ -184,4 +196,12 @@ function eliminarOpciones(selector_tabla, selector_seleccion) {
         var id = $(this).attr('id').split('-')[1];
         elemento_seleccion.find('option[value=' + id + ']').remove();
     });
+}
+
+function eliminarDeSelect(id, selector_select) {
+    var select = $(selector_select);
+    var valor = select.val();
+    var indice = valor.indexOf(id.toString());
+    valor.splice(indice, 1);
+    select.select2("val", valor);
 }

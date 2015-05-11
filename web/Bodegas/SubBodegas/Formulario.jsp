@@ -23,7 +23,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input type="text" value="${sub_bodega.getNombre()}" class="form-control" name="nombre" required
-                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               oninvalid="setCustomValidity('Este campo es requerido ')" placeholder="Nombre de Sub Bodega"
                                onchange="setCustomValidity('')">
                     </div>
                 </div>
@@ -202,7 +202,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-ingreso" class="select2" style='background-color: #fff;' name="id-usuario" required
+                        <select id="seleccion-usuario-ingreso" class="select2" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
@@ -233,7 +233,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-egreso" class="select2" style='background-color: #fff;' name="id-usuario" required
+                        <select id="seleccion-usuario-egreso" class="select2" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
@@ -264,7 +264,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-ver" class="select2" style='background-color: #fff;' name="id-usuario" required
+                        <select id="seleccion-usuario-ver" class="select2" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
