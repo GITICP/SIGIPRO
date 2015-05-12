@@ -22,6 +22,7 @@ import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -353,8 +354,8 @@ public class ControladorCaballo extends SIGIPROServlet
         }
         redireccionar(request, response, redireccion);
     }
-    
-   protected void postEliminarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+
+    protected void postEliminarpeso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String redireccion = "Caballo/Ver.jsp";
         int id_caballo = 0;
@@ -400,9 +401,14 @@ public class ControladorCaballo extends SIGIPROServlet
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         for (FileItem item : items) {
             if (item.isFormField()) {
-
                 String fieldName = item.getFieldName();
-                String fieldValue = item.getString();
+                String fieldValue;
+                try {
+                    fieldValue = item.getString("UTF-8").trim();
+                }
+                catch (UnsupportedEncodingException ex) {
+                    fieldValue = item.getString();
+                }
                 switch (fieldName) {
                     case "id_caballo":
                         c.setId_caballo(Integer.parseInt(fieldValue));

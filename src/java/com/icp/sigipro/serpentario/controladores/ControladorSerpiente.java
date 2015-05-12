@@ -21,6 +21,7 @@ import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -448,7 +449,13 @@ public class ControladorSerpiente extends SIGIPROServlet {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
-                String fieldValue = item.getString();
+                String fieldValue;
+                try {
+                    fieldValue = item.getString("UTF-8").trim();
+                }
+                catch (UnsupportedEncodingException ex) {
+                    fieldValue = item.getString();
+                }
                 switch(fieldName){
                     case "id_serpiente":
                         int id_serpiente = Integer.parseInt(fieldValue);
