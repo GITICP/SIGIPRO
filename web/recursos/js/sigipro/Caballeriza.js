@@ -77,14 +77,18 @@ function agregarEventoCaballo() {
 }
 
 function agregarCaballo() {
-    var caballoSeleccionado = $("#seleccioncaballo :selected");
-    caballoSeleccionado.remove();
-    var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarCaballo(" + caballoSeleccionado.val() + ")>");
-    botonEliminar.text("Eliminar");
-
-    var nuevaFila = tCaballos.row.add([caballoSeleccionado.text(), botonEliminar[0].outerHTML]).draw().node();
-
-    $(nuevaFila).attr("id", "caballo-" + caballoSeleccionado.val());
+    $(T_CABALLOS_SELECTOR).dataTable().fnClearTable();
+    var select = $("#seleccioncaballo");
+    var caballosSeleccionados = select.val();
+    for (var i = 0; i < caballosSeleccionados.length; i++) {
+        var elemento = select.find("option[value=" + caballosSeleccionados[i] + "]");
+        
+        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarCaballo(" + elemento.val() + ")>");
+        botonEliminar.text("Eliminar");
+        
+        var nuevaFila = tCaballos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+        $(nuevaFila).attr("id", "caballo-" + elemento.val());
+    }
 }
 
 function eliminarEventoDeCaballo(id) {
@@ -100,14 +104,11 @@ function eliminarEventoDeCaballo(id) {
 function eliminarCaballo(id) {
     var fila = tCaballos.row('#caballo-' + id);
 
-    var nuevaOpcion = $('<option>');
-    nuevaOpcion.val(id);
-    nuevaOpcion.text(fila.data()[0]);
-
     fila.remove().draw();
-
-    $("#seleccioncaballo").append(nuevaOpcion);
+    
+    eliminarDeSelect(id, "#seleccioncaballo");
 }
+
 function eliminarCaballoSP(id_caballo) {
     var fila = $('#' + id_caballo);
     fila.remove();
@@ -217,4 +218,12 @@ function previewFile(){
     }else {
         alert('The File APIs are not fully supported in this browser.');
   }
+}
+
+function eliminarDeSelect(id, selector_select) {
+    var select = $(selector_select);
+    var valor = select.val();
+    var indice = valor.indexOf(id.toString());
+    valor.splice(indice, 1);
+    select.select2("val", valor);
 }

@@ -99,7 +99,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group" id='inputGroupSeleccionCaballo'>
-                        <select id="seleccioncaballo" class="select2" style='background-color: #fff;' name="idcaballo" required
+                        <select id="seleccioncaballo" class="select2" style='background-color: #fff;' name="idcaballo" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido ')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
@@ -113,7 +113,7 @@
             <div class="form-group">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarCaballo()"><i class="fa fa-check-circle"></i> Asociar Caballo</button>
+                    <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarCaballo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </div>
             </div>
         </form>

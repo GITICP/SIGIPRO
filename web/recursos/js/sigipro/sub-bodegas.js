@@ -111,10 +111,6 @@ function agregarUsuarioIngresos() {
 function eliminarUsuarioIngreso(id) {
     var fila = tIngresos.row('#ingreso-' + id);
 
-    var nuevaOpcion = $('<option>');
-    nuevaOpcion.val(id);
-    nuevaOpcion.text(fila.data()[0]);
-
     fila.remove().draw();
     
     eliminarDeSelect(id, SELECCION_INGRESOS);
@@ -140,10 +136,6 @@ function agregarUsuarioEgresos() {
 function eliminarUsuarioEgreso(id) {
     var fila = tEgresos.row('#egreso-' + id);
 
-    var nuevaOpcion = $('<option>');
-    nuevaOpcion.val(id);
-    nuevaOpcion.text(fila.data()[0]);
-
     fila.remove().draw();
 
     eliminarDeSelect(id, SELECCION_EGRESOS);
@@ -168,10 +160,6 @@ function agregarUsuarioVer() {
 
 function eliminarUsuarioVer(id) {
     var fila = tVer.row('#ver-' + id);
-
-    var nuevaOpcion = $('<option>');
-    nuevaOpcion.val(id);
-    nuevaOpcion.text(fila.data()[0]);
 
     fila.remove().draw();
 
