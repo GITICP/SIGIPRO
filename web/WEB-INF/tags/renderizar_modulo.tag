@@ -13,13 +13,15 @@
 <li>
     <a>${modulo.getNombre()}</a>
     <ul class="dropdown-menu">
-        <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
-            <li><a href="<%=request.getContextPath()%>${funcionalidad.getRedirect()}">${funcionalidad.getTag()}</a></li>
+        <c:forEach items="${modulo.getItems()}" var="item">
+            <c:choose>
+                <c:when test="${item.getClass().getName() == 'com.icp.sigipro.seguridad.modelos.Modulo'}">
+                    <t:renderizar_modulo modulo="${item}" />
+                </c:when>
+                <c:otherwise>
+                    <t:renderizar_funcionalidad funcionalidad="${item}" />
+                </c:otherwise>
+            </c:choose>
         </c:forEach>
-        <c:if test="${modulo.getSub_modulos().size() > 0}">
-            <c:forEach items="${modulo.getSub_modulos()}" var="sub_modulo">
-                <t:renderizar_modulo modulo="${sub_modulo}" />
-            </c:forEach>
-        </c:if>
     </ul>
 </li>

@@ -6,7 +6,7 @@
 package com.icp.sigipro.seguridad.modelos;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,19 +43,10 @@ public class BarraFuncionalidad implements java.io.Serializable
         modulos = arreglo;
     }
 
-    public void agregarSubModulo(Modulo nuevo_modulo)
+    public void agregarItemMenu(ItemMenu nuevo_modulo)
     {
         for (Modulo modulo : modulos) {
-            if (modulo.agregarSubModulo(nuevo_modulo)) {
-                break;
-            }
-        }
-    }
-
-    public void agregarFuncionalidad(Funcionalidad funcionalidad)
-    {
-        for (Modulo modulo : modulos) {
-            if (modulo.agregarFuncionalidad(funcionalidad)) {
+            if (modulo.agregarItemMenu(nuevo_modulo)) {
                 break;
             }
         }
@@ -63,6 +54,7 @@ public class BarraFuncionalidad implements java.io.Serializable
     
     public void ordenarFuncionalidades()
     {
+        Collections.sort(modulos, new ComparadorItems());
         for (Modulo modulo : modulos) {
             modulo.ordenar();
         }

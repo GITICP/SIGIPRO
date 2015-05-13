@@ -14,130 +14,78 @@ import java.util.List;
  *
  * @author Boga
  */
-public class Modulo implements java.io.Serializable
+public class Modulo extends ItemMenu implements java.io.Serializable
 {
 
-    private int id_modulo;
-    private int id_padre;
-    private String nombre;
-    private List<Modulo> sub_modulos = new ArrayList<Modulo>();
-    private List<Funcionalidad> funcionalidades = new ArrayList<Funcionalidad>();
+    private List<ItemMenu> items = new ArrayList<ItemMenu>();
 
     public Modulo()
     {
     }
 
-    public int getId_modulo()
+    public List<ItemMenu> getItems()
     {
-        return id_modulo;
+        return items;
     }
 
-    public void setId_modulo(int id_modulo)
+    public void setItems(List<ItemMenu> items)
     {
-        this.id_modulo = id_modulo;
+        this.items = items;
     }
 
-    public String getNombre()
-    {
-        return nombre;
-    }
-
-    public void setNombre(String nombre)
-    {
-        this.nombre = nombre;
-    }
-
-    public List<Modulo> getSub_modulos()
-    {
-        return sub_modulos;
-    }
-
-    public void setSub_modulos(List<Modulo> sub_modulos)
-    {
-        this.sub_modulos = sub_modulos;
-    }
-
-    public List<Funcionalidad> getFuncionalidades()
-    {
-        return funcionalidades;
-    }
-
-    public void setFuncionalidades(List<Funcionalidad> funcionalidades)
-    {
-        this.funcionalidades = funcionalidades;
-    }
-
-    public int getId_padre()
-    {
-        return id_padre;
-    }
-
-    public void setId_padre(int id_padre)
-    {
-        this.id_padre = id_padre;
-    }
-
-    public boolean agregarFuncionalidad(Funcionalidad funcionalidad)
+    public boolean agregarItemMenu(ItemMenu item)
     {
         boolean resultado = false;
-        if (id_modulo == funcionalidad.getId_padre()) {
-            funcionalidades.add(funcionalidad);
+        if (id == item.getId_padre()) {
+            items.add(item);
             resultado = true;
-        } else {
-            if (sub_modulos != null) {
-                for (Modulo modulo : sub_modulos) {
-                    resultado = modulo.agregarFuncionalidad(funcionalidad);
+        }
+        else {
+            if (items != null) {
+                for (ItemMenu item_iterable : items) {
+                    if (item_iterable instanceof Modulo) {
+                        Modulo mod = (Modulo) item_iterable;
+                        resultado = mod.agregarItemMenu(item);
+                    }
                 }
             }
         }
         return resultado;
     }
-    
-    public boolean agregarSubModulo(Modulo modulo) {
-        boolean resultado = false;
-        if (id_modulo == modulo.getId_padre()) {
-            sub_modulos.add(modulo);
-            resultado = true;
-        } else {
-            if (sub_modulos != null) {
-                for (Modulo sub_modulo : sub_modulos) {
-                    resultado = sub_modulo.agregarSubModulo(modulo);
-                }
-            }
-        }
-        return resultado;
-    }
-    
-    public boolean tieneContenido() {
-        boolean tiene_funcionalidades = funcionalidades.size() > 0;
+
+    public boolean tieneContenido()
+    {
         boolean tiene_sub_modulos = iterarSubModulos();
-        return tiene_funcionalidades || tiene_sub_modulos;
+        boolean tiene_items = items.size() > 0;
+        return tiene_items || tiene_sub_modulos;
     }
-    
-    public boolean iterarSubModulos() {
-        List<Modulo> arreglo = new ArrayList<Modulo>();
-        for (Modulo mod : sub_modulos) {
-            if(mod.tieneContenido()) {
-                arreglo.add(mod);
+
+    public boolean iterarSubModulos()
+    {
+        List<ItemMenu> arreglo = new ArrayList<ItemMenu>();
+        for (ItemMenu item : items) {
+            if (item instanceof Modulo) {
+                Modulo mod = (Modulo) item;
+                if (mod.tieneContenido()) {
+                    arreglo.add(mod);
+                }
+            }
+            else {
+                arreglo.add(item);
             }
         }
-        sub_modulos = arreglo;
-        return sub_modulos.size() > 0;
+        items = arreglo;
+        return items.size() > 0;
     }
-    
-    public void ordenar() {
-        for(Modulo m : sub_modulos) {
-            m.ordenar();
-        }
-        Collections.sort(funcionalidades, new ComparadorFuncionalidades());
-    }
-    
-    private class ComparadorFuncionalidades implements Comparator<Funcionalidad>
+
+    public void ordenar()
     {
-        @Override
-        public int compare(Funcionalidad f1, Funcionalidad f2)
-        {
-            return f1.getOrden() - f2.getOrden();
+        for (ItemMenu item : items) {
+            if (item instanceof Modulo) {
+                Modulo mod = (Modulo) item;
+                mod.ordenar();
+            }
         }
+        Collections.sort(items, new ComparadorItems());
     }
 }
