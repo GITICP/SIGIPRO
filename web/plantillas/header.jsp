@@ -27,9 +27,7 @@
 
         <!-- Left nav -->
         <ul class="nav navbar-nav">
-            <c:forEach items="${sessionScope.barraFuncionalidad.getModulos()}" var="modulo">
-                <t:renderizar_modulo modulo="${modulo}" />
-            </c:forEach>
+            <t:renderizar_barra barra="${sessionScope.barraFuncionalidad}" />
         </ul>
 
         <!-- Right nav -->
