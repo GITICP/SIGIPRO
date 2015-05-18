@@ -235,7 +235,7 @@
                   <div class="input-group">                
                       <input class='clearable' type="file" id="imagen_Serpiente" name="imagen" accept="image/*" 
                            oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
-                           onchange="previewFile()" />
+                           onchange="previewFile()" /> <button type="button" id='boton_Cancelar' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen()"> Borrar</button>
                     <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
                   </div>
                 </div>

@@ -116,30 +116,39 @@ public class ControladorCatalogoTejido extends SIGIPROServlet {
         String redireccion = "CatalogoTejido/index.jsp";
         CatalogoTejido ct = construirCT(request);
         
+        boolean isDescarte = serpientedao.validarDescarte(ct.getSerpiente().getId_serpiente());
+        
         CatalogoTejido isCT = dao.obtenerCatalogoTejido(ct.getSerpiente());
         
         if (isCT==null){
-            UsuarioDAO usuariodao = new UsuarioDAO();
+            if(!isDescarte){
+                UsuarioDAO usuariodao = new UsuarioDAO();
 
-            Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
-            ct.setUsuario(usuario);
+                Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
+                ct.setUsuario(usuario);
 
-            resultado = dao.insertarSerpiente(ct);
+                resultado = dao.insertarSerpiente(ct);
 
-            if (resultado){
-                 //Funcion que genera la bitacora
-                bitacora.setBitacora(ct.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOTEJIDO,request.getRemoteAddr());
-                //*----------------------------*
-                Evento e = this.setEvento(ct.getSerpiente(), 8, request);
-                eventodao.insertarEvento(e);
-                bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-                request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ct.getSerpiente().getNumero_serpiente()+" agregada a Catálogo de Tejidos correctamente."));
-                redireccion = "CatalogoTejido/index.jsp";
+                if (resultado){
+                     //Funcion que genera la bitacora
+                    bitacora.setBitacora(ct.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATALOGOTEJIDO,request.getRemoteAddr());
+                    //*----------------------------*
+                    Evento e = this.setEvento(ct.getSerpiente(), 8, request);
+                    eventodao.insertarEvento(e);
+                    bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ct.getSerpiente().getNumero_serpiente()+" agregada a Catálogo de Tejidos correctamente."));
+                    redireccion = "CatalogoTejido/index.jsp";
+                }else{
+                    request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Catálogo de Tejidos por problemas con el Número de Ingreso. Este debe ser único."));
+                }
+                request.setAttribute("listaCT", dao.obtenerCatalogosTejidos());
+                redireccionar(request, response, redireccion); 
             }else{
-                request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Catálogo de Tejidos por problemas con el Número de Ingreso. Este debe ser único."));
+                redireccion = "CatalogoTejido/index.jsp";
+                request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Catálogo de Tejido ya que fue descartada."));
+                request.setAttribute("listaCT", dao.obtenerCatalogosTejidos());
+                redireccionar(request, response, redireccion);    
             }
-            request.setAttribute("listaCT", dao.obtenerCatalogosTejidos());
-            redireccionar(request, response, redireccion); 
         }else{
             redireccion = "CatalogoTejido/index.jsp";
             request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Catálogo de Tejido ya que ya está agregada."));

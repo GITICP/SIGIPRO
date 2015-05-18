@@ -17,6 +17,7 @@
     <form method="get" action="Serpiente" id="form-pasoCV">
                                     <input hidden="true" name="accion" value="coleccionviva">
                                     <input hidden="true" name="id_serpiente" value="${serpiente.getId_serpiente()}">
+                                    <input hidden='true' name="fecha_ingreso" id="fecha_ingreso" value="${serpiente.getFecha_ingresoAsString()}">
     </form>
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
@@ -93,7 +94,7 @@
                                             <a class="btn btn-primary btn-sm boton-accion ct-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalAgregarCatalogoTejido">Catálogo Tejido</a>
                                         </c:if>
                                         <c:if test="${coleccionhumeda==null && catalogotejido==null}">
-                                            <a class="btn btn-danger btn-sm boton-accion confirmable"  data-texto-confirmacion="descartar la Serpiente" data-href="/SIGIPRO/Serpentario/Serpiente?accion=descartar&id_serpiente=${serpiente.getId_serpiente()}">Descartar</a>
+                                            <a class="btn btn-danger btn-sm boton-accion descarte-Modal"  data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalDescarte">Descartar</a>
                                         </c:if>
                                     </c:when>
                                     <c:otherwise>
@@ -330,7 +331,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePickerSerpiente" name="fecha_deceso" data-date-format="dd/mm/yyyy" required
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerDeceso" class="form-control sigiproDatePickerSerpiente" name="fecha_deceso" data-date-format="dd/mm/yyyy" required
                                 oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
                                 onchange="setCustomValidity('')">
                             </select>
@@ -361,6 +362,39 @@
 
 </t:modal>
 
+<t:modal idModal="modalDescarte" titulo="Registrar Descarte">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarEventos" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="Descartar">
+                <input hidden="true" id='id_serpiente_descarte' name='id_serpiente_descarte'>
+                <label for="observaciones" class="control-label">*Observaciones</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                                oninvalid="setCustomValidity('Este campo es requerido. ')"
+                                oninput="setCustomValidity('')"></textarea>
+                    </div>
+                  </div>
+                </div>
+            
+        
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Descarte</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    
+    
+    
+    
 <t:modal idModal="modalAgregarColeccionHumeda" titulo="Agregar Serpiente a Colección Húmeda">
     <jsp:attribute name="form">
         <div class="widget-content">

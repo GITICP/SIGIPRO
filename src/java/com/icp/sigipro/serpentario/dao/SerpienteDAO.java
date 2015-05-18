@@ -324,6 +324,24 @@ public class SerpienteDAO {
         return serpiente;
     }
   
+    public boolean validarDescarte(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos WHERE id_categoria=14 and id_serpiente=?; ");
+            consulta.setInt(1, id_serpiente);
+            ResultSet rs = consulta.executeQuery();
+            if(rs.next()){
+                resultado=true;
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        }catch(Exception e) {
+            
+        }
+        return resultado;
+    }
+    
     public List<Serpiente> obtenerSerpientes(){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{

@@ -116,30 +116,39 @@ public class ControladorColeccionHumeda extends SIGIPROServlet {
         String redireccion = "ColeccionHumeda/index.jsp";
         ColeccionHumeda ch = construirCH(request);
         
+        boolean isDescarte = serpientedao.validarDescarte(ch.getSerpiente().getId_serpiente());
+        
         ColeccionHumeda isCH = dao.obtenerColeccionHumeda(ch.getSerpiente());
         
         if (isCH==null){
-            UsuarioDAO usuariodao = new UsuarioDAO();
+            if (!isDescarte){
+                UsuarioDAO usuariodao = new UsuarioDAO();
 
-            Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
-            ch.setUsuario(usuario);
+                Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
+                ch.setUsuario(usuario);
 
-            resultado = dao.insertarSerpiente(ch);
+                resultado = dao.insertarSerpiente(ch);
 
-            if (resultado){
-                 //Funcion que genera la bitacora
-                bitacora.setBitacora(ch.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_COLECCIONHUMEDA,request.getRemoteAddr());
-                //*----------------------------*
-                Evento e = this.setEvento(ch.getSerpiente(), 7, request);
-                eventodao.insertarEvento(e);
-                bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-                request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ch.getSerpiente().getNumero_serpiente()+" agregada a Colección Húmeda correctamente."));
-                redireccion = "ColeccionHumeda/index.jsp";
+                if (resultado){
+                     //Funcion que genera la bitacora
+                    bitacora.setBitacora(ch.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_COLECCIONHUMEDA,request.getRemoteAddr());
+                    //*----------------------------*
+                    Evento e = this.setEvento(ch.getSerpiente(), 7, request);
+                    eventodao.insertarEvento(e);
+                    bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente "+ch.getSerpiente().getNumero_serpiente()+" agregada a Colección Húmeda correctamente."));
+                    redireccion = "ColeccionHumeda/index.jsp";
+                }else{
+                    request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Colección Húmeda por problemas con el Número de Ingreso. Este debe ser único."));
+                }
+                request.setAttribute("listaCH", dao.obtenerColeccionesHumedas());
+                redireccionar(request, response, redireccion);
             }else{
-                request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Colección Húmeda por problemas con el Número de Ingreso. Este debe ser único."));
+                redireccion = "ColeccionHumeda/index.jsp";
+                request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Colección Húmeda ya que fue descartada."));
+                request.setAttribute("listaCH", dao.obtenerColeccionesHumedas());
+                redireccionar(request, response, redireccion); 
             }
-            request.setAttribute("listaCH", dao.obtenerColeccionesHumedas());
-            redireccionar(request, response, redireccion);
         }else{
             redireccion = "ColeccionHumeda/index.jsp";
             request.setAttribute("mensaje", helper.mensajeDeError("Serpiente no pudo ser agregada a Colección Húmeda ya que ya está agregada."));
