@@ -27,6 +27,7 @@ import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +61,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
         {
             add("index");
             add("ver");
+            add("editar");
             add("agregar");
             add("editarserpientes");
         }
@@ -68,6 +70,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
     {
         {
             add("agregar");
+            add("editar");
             add("registrar");
             add("centrifugado");
             add("terminar");
@@ -106,6 +109,24 @@ public class ControladorExtraccion extends SIGIPROServlet {
             request.setAttribute("listaUsuarios", usuariosextraccion);
             request.setAttribute("ejemplares",serpientesextraccion.size());
             
+            redireccionar(request, response, redireccion);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+    
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(321, listaPermisos);
+        String redireccion = "Extraccion/Editar.jsp";
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+        try {
+            Extraccion e = dao.obtenerExtraccion(id_extraccion);
+            request.setAttribute("extraccion", e); 
+            request.setAttribute("accion", "Editar");
             redireccionar(request, response, redireccion);
         }
         catch (Exception ex) {
@@ -249,6 +270,8 @@ public class ControladorExtraccion extends SIGIPROServlet {
             String redireccion = "Extraccion/Agregar.jsp";
             Extraccion e = construirObjeto(request);
             
+            
+            
             resultado = dao.insertarExtraccion(e);
 
             List<UsuariosExtraccion> usuariosextraccion = construirUsuarioExtraccion(request,e);
@@ -367,6 +390,32 @@ public class ControladorExtraccion extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
     
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Extraccion/index.jsp";
+        
+        Extraccion e = this.construirExtraccion(request);
+        
+        resultado = dao.editarExtraccionFinal(e);
+        
+        if (resultado){
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EXTRACCION,request.getRemoteAddr());
+            bitacora.setBitacora(e.getCentrifugado().parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CENTRIFUGADO,request.getRemoteAddr());
+            bitacora.setBitacora(e.getLiofilizacion().parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_LIOFILIZACION,request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Extraccion editada correctamente"));
+            redireccion = "Extraccion/index.jsp";    
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Extraccion no pudo ser editada correctamente"));
+            redireccion = "Extraccion/index.jsp";    
+        }
+        request.setAttribute("listaExtracciones", dao.obtenerExtracciones());
+        redireccionar(request, response, redireccion);
+        
+    }
+    
     protected void postLiofilizacionfin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
@@ -411,9 +460,15 @@ public class ControladorExtraccion extends SIGIPROServlet {
         e.setEspecie(especie);
         
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        
-        java.sql.Date fecha_registro = new java.sql.Date(new Date().getTime());
-        e.setFecha_extraccion(fecha_registro);
+        java.util.Date fecha_extraccion;
+        java.sql.Date fecha_extraccionSQL;
+        try {
+            fecha_extraccion = formatoFecha.parse(request.getParameter("fecha_extraccion"));
+            fecha_extraccionSQL = new java.sql.Date(fecha_extraccion.getTime());
+            e.setFecha_extraccion(fecha_extraccionSQL);
+        } catch (ParseException ex) {
+
+        }
         
         e.setNumero_extraccion(request.getParameter("numero_extraccion"));
         
@@ -426,6 +481,33 @@ public class ControladorExtraccion extends SIGIPROServlet {
         }
         
         return e;
+    }
+    
+    private Extraccion construirExtraccion(HttpServletRequest request){
+        Extraccion extraccion = new Extraccion();
+        
+        int id_extraccion = Integer.parseInt(request.getParameter("id_extraccion"));
+        float volumen_extraido = Float.parseFloat(request.getParameter("volumen_extraido"));
+        float volumen_recuperado = Float.parseFloat(request.getParameter("volumen_recuperado"));
+        float peso_recuperado = Float.parseFloat(request.getParameter("peso_recuperado"));
+        
+        extraccion.setId_extraccion(id_extraccion);
+        extraccion.setVolumen_extraido(volumen_extraido);
+        
+        Centrifugado centrifugado = new Centrifugado();
+        centrifugado.setId_extraccion(id_extraccion);
+        centrifugado.setVolumen_recuperado(volumen_recuperado);
+        
+        extraccion.setCentrifugado(centrifugado);
+        
+        Liofilizacion liofilizacion = new Liofilizacion();
+        liofilizacion.setId_extraccion(id_extraccion);
+        liofilizacion.setPeso_recuperado(peso_recuperado);
+        
+        extraccion.setLiofilizacion(liofilizacion);
+        
+        return extraccion;
+        
     }
     
     private boolean actualizarSerpientes(HttpServletRequest request, List<SerpientesExtraccion> se){

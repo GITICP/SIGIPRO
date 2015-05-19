@@ -135,7 +135,7 @@ public class ExtraccionDAO {
         boolean resultado = false;
         try{
             PreparedStatement consulta = getConexion().prepareStatement("UPDATE serpentario.extraccion "
-                    + "SET volumen_extraido=?, id_usuario_registro = ?, fecha_registro = ?"
+                    + "SET volumen_extraido=?, id_usuario_registro = ?, fecha_registro = ? "
                     + "WHERE id_extraccion=?");
 
             consulta.setFloat(1,e.getVolumen_extraido());
@@ -147,6 +147,44 @@ public class ExtraccionDAO {
                 resultado = true;
             }
             consulta.close();
+            conexion.close();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public boolean editarExtraccionFinal(Extraccion e){
+                boolean resultado = false;
+        try{
+            PreparedStatement consultaExtraccion = getConexion().prepareStatement("UPDATE serpentario.extraccion "
+                    + "SET volumen_extraido=? "
+                    + "WHERE id_extraccion=?");
+
+            PreparedStatement consultaCentrifugado = getConexion().prepareStatement("UPDATE serpentario.centrifugado "
+                    + "SET volumen_recuperado=? "
+                    + "WHERE id_extraccion=?");
+
+            PreparedStatement consultaLiofilizacion = getConexion().prepareStatement("UPDATE serpentario.liofilizacion "
+                    + "SET peso_recuperado=? "
+                    + "WHERE id_extraccion=?");
+
+            consultaExtraccion.setFloat(1,e.getVolumen_extraido());
+            consultaExtraccion.setInt(2,e.getId_extraccion());
+            
+            consultaCentrifugado.setFloat(1,e.getCentrifugado().getVolumen_recuperado());
+            consultaCentrifugado.setInt(2,e.getId_extraccion());
+            
+            consultaLiofilizacion.setFloat(1,e.getLiofilizacion().getPeso_recuperado());
+            consultaLiofilizacion.setInt(2,e.getId_extraccion());
+           
+            if ( consultaExtraccion.executeUpdate() == 1 && consultaCentrifugado.executeUpdate() == 1 && consultaLiofilizacion.executeUpdate() == 1){
+                resultado = true;
+            }
+            consultaExtraccion.close();
+            consultaCentrifugado.close();
+            consultaLiofilizacion.close();
             conexion.close();
         }
         catch(Exception ex){

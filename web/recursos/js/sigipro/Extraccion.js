@@ -103,6 +103,9 @@ function confirmacionAgregarSerpientes() {
   }
 }
 
+$(function() {
+    var datepicker = $("#datepickerSerpiente").datepicker({startDate:"0d"});
+});
 
 $(document).on("click", ".registrar-Modal", function () {                            
                             var numero_extraccion = $(this).data('id');
