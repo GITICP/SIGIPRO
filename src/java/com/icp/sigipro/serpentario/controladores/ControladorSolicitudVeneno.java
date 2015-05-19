@@ -208,7 +208,6 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        String redireccion = "SolicitudVeneno/Agregar.jsp";
         Solicitud s = construirObjeto(request);
         s.setEstado("Solicitado");
         Usuario usuario = usuariodao.obtenerUsuario((String)request.getSession().getAttribute("usuario"));
@@ -221,12 +220,8 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
             //*----------------------------*
-            redireccion = "SolicitudVeneno/index.jsp";
-            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
-            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
-            request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
         }
-        redireccionar(request, response, redireccion);
+        this.getIndex(request, response);
     }
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
