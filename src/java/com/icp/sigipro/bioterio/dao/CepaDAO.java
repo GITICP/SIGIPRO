@@ -43,7 +43,13 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+      String mensaje = ex.getMessage();
+      if (mensaje.contains("llave duplicada")){
+        throw new SIGIPROException("Error: El nombre de la cepa ya existe");
+      }
+      else {
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+      }
     }
     return resultado;
   }
@@ -69,7 +75,13 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+      String mensaje = ex.getMessage();
+      if (mensaje.contains("llave duplicada")){
+        throw new SIGIPROException("Error: El nombre de la cepa ya existe");
+      }
+      else {
       throw new SIGIPROException("Se produjo un error al procesar la edición");
+      }
     }
     return resultado;
   }

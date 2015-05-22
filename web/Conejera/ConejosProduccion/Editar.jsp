@@ -57,5 +57,8 @@
       </div>
 
   </jsp:attribute>
+    <jsp:attribute name="scripts">
+      <script src="/SIGIPRO/recursos/js/sigipro/conejos_produccion.js"></script>
+    </jsp:attribute>
 
 </t:plantilla_general>

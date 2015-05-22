@@ -104,7 +104,7 @@
                                                                                 '${solicitud.getPeso_requerido()}',
                                      ${solicitud.getNumero_cajas()},
                                                                                 '${solicitud.getSexo()}',
-                                                                                '${solicitud.getCepa().getNombre()}')" >Entregar</a>
+                                                                                '${solicitud.getCepa().getNombre()}', '${solicitud.getCepa().getId_cepa()}')" >Entregar</a>
                                   <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=cerrar&tipo=Anulada&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                 </td>
                               </c:when>
@@ -117,7 +117,7 @@
                                                                                 '${solicitud.getPeso_requerido()}',
                                          ${solicitud.getNumero_cajas()},
                                                                                 '${solicitud.getSexo()}',
-                                                                                '${solicitud.getCepa().getNombre()}')" >Entregar</a>
+                                                                                '${solicitud.getCepa().getNombre()}', '${solicitud.getCepa().getId_cepa()}')" >Entregar</a>
                                       <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=cerrar&tipo=Entrega Parcial&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                     </td>
                                   </c:when>
@@ -199,8 +199,9 @@
                 <td><input class="form-control" type="text" id="sex"  name="sex" disabled></td>
               </tr>
               <input type="text" id="cepa"  name="cepa" disabled hidden="true">
-            </table>
-
+            </table>          
+            <hr>
+                <p> La información de la solicitud original se muestra entre paréntesis. </p>
             <div class="form-group">
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>

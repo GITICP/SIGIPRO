@@ -46,7 +46,7 @@
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i>  Cruce del ${cruce.getFecha_cruce()} de Coneja en Caja #${cruce.getConeja().getCaja().getNumero()} </h3>
               <div class="btn-group widget-header-toolbar">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/Cruces?accion=editar&id_cruce${cruce.getId_cruce()}">Editar</a>
+                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/Cruces?accion=editar&id_cruce=${cruce.getId_cruce()}">Editar</a>
                   <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el cruce" data-href="/SIGIPRO/Conejera/Cruces?accion=eliminar&id_cruce=${cruce.getId_cruce()}">Eliminar</a>
               </div>
             </div>

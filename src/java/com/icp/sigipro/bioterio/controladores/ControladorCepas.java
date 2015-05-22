@@ -157,7 +157,7 @@ public class ControladorCepas extends  SIGIPROServlet {
       bitacora.setBitacora(cepa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
       //*----------------------------*
     } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", ex.getMessage() );
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()) );
     }
     if (resultado){
         redireccion = "Cepas/index.jsp";
@@ -171,7 +171,7 @@ public class ControladorCepas extends  SIGIPROServlet {
       }
     }
     else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      getAgregar(request, response);
     }
     redireccionar(request, response, redireccion);
   }
@@ -188,7 +188,7 @@ public class ControladorCepas extends  SIGIPROServlet {
       bitacora.setBitacora(cepa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
       //*----------------------------*
     } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", ex.getMessage() );
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()) );
     }
     if (resultado){
         redireccion = "Cepas/index.jsp";
@@ -203,7 +203,7 @@ public class ControladorCepas extends  SIGIPROServlet {
       }
     }
     else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      getEditar(request, response);
     }
     redireccionar(request, response, redireccion);
   }

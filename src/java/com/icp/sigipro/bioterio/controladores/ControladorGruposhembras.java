@@ -151,6 +151,7 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       }
     }
     else {
+      getAgregar(request, response);
     }
     redireccionar(request, response, redireccion);
   }
@@ -167,7 +168,7 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       bitacora.setBitacora(grupohembras.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
       //*----------------------------*
     } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", ex.getMessage() );
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()) );
     }
     if (resultado){
         redireccion = "Gruposhembras/index.jsp";
@@ -182,9 +183,10 @@ public class ControladorGruposhembras extends SIGIPROServlet  {
       }
     }
     else {
-      request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+      getEditar(request,response);
     }
     redireccionar(request, response, redireccion);
+    
   }
   
   // </editor-fold>

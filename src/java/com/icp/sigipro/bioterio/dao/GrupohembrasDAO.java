@@ -78,11 +78,11 @@ public class GrupohembrasDAO {
       cerrarConexion();
     } catch (Exception ex) {
       String mensaje = ex.getMessage();
-      if (mensaje.contains("unique_violation")){
+      if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El identificador ya existe");
       }
       else {
-      throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
       }
     }
     return resultado;
