@@ -227,7 +227,7 @@ public class ControladorExtraccion extends SIGIPROServlet {
         if (resultado){
             request.setAttribute("mensaje", helper.mensajeDeExito("Edición de Serpientes finalizada correctamente."));
         }else{
-            request.setAttribute("mensaje", helper.mensajeDeExito("Error, no se pudo terminar la Edición de Serpientes."));
+            request.setAttribute("mensaje", helper.mensajeDeError("No puede pasar a la siguiente etapa sin haber asignado serpientes a la extracción."));
         }
         
         
@@ -269,8 +269,6 @@ public class ControladorExtraccion extends SIGIPROServlet {
         try{
             String redireccion = "Extraccion/Agregar.jsp";
             Extraccion e = construirObjeto(request);
-            
-            
             
             resultado = dao.insertarExtraccion(e);
 

@@ -12,11 +12,13 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
 import com.icp.sigipro.serpentario.dao.LoteDAO;
+import com.icp.sigipro.serpentario.dao.RestriccionDAO;
 import com.icp.sigipro.serpentario.dao.SolicitudDAO;
 import com.icp.sigipro.serpentario.dao.VenenoDAO;
 import com.icp.sigipro.serpentario.modelos.EntregasSolicitud;
 import com.icp.sigipro.serpentario.modelos.Lote;
 import com.icp.sigipro.serpentario.modelos.LotesEntregasSolicitud;
+import com.icp.sigipro.serpentario.modelos.Restriccion;
 import com.icp.sigipro.serpentario.modelos.Solicitud;
 import com.icp.sigipro.serpentario.modelos.Veneno;
 import com.icp.sigipro.utilidades.HelpersHTML;
@@ -48,6 +50,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
     private LoteDAO lotedao = new LoteDAO();
     private EspecieDAO especiedao = new EspecieDAO();
     private UsuarioDAO usuariodao = new UsuarioDAO();
+    private RestriccionDAO restricciondao = new RestriccionDAO();
     
     HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
@@ -84,11 +87,30 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         validarPermiso(350, listaPermisos);
         String redireccion = "SolicitudVeneno/Agregar.jsp";
         Solicitud s = new Solicitud();
-        List<Veneno> venenos = venenodao.obtenerVenenos();
-        request.setAttribute("solicitud", s);
-        request.setAttribute("venenos", venenos);
-        request.setAttribute("accion", "Agregar");
-        redireccionar(request, response, redireccion);
+        int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
+        Veneno veneno = venenodao.obtenerVeneno(id_veneno);
+        String nombre_usuario = request.getSession().getAttribute("usuario").toString();
+        Usuario usuario = usuariodao.obtenerUsuario(nombre_usuario);
+        if (veneno.getCantidadAsMiligramos()>veneno.getCantidad_minima()){
+            Restriccion restriccion = restricciondao.obtenerRestriccion(id_veneno,usuario.getId_usuario());
+            
+            if((restriccion.getCantidad_anual()-restriccion.getCantidad_consumida())>0){
+                request.setAttribute("solicitud", s);
+                request.setAttribute("restriccion",restriccion);
+                request.setAttribute("veneno", veneno);
+                request.setAttribute("accion", "Agregar");
+                redireccionar(request, response, redireccion);
+            }else{
+                request.setAttribute("mensaje", helper.mensajeDeError("El Usuario seleccionado cuenta con "+restriccion.getCantidad_anual()+ 
+                    " mg de restricción sobre el Tipo de Veneno "+veneno.getEspecie().getGenero_especie()+" y ha consumido "+restriccion.getCantidad_consumida()+" mg de Veneno. "
+                        + "Ya no puede solicitar más veneno. "));
+                this.getIndex(request, response);
+            }
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("El Tipo de Veneno "+veneno.getEspecie().getGenero_especie()+" cuenta con "+veneno.getCantidadAsMiligramos()+ 
+                    " lo cual es inferior al mínimo requerido de "+veneno.getCantidad_minima()+"."));
+            this.getIndex(request, response);
+        }
     }
 
     protected void getEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -113,6 +135,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         String redireccion = "SolicitudVeneno/index.jsp";
         request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
         request.setAttribute("boolentrega",this.verificarEntregaSolicitud(request));
+        request.setAttribute("venenos", venenodao.obtenerVenenos());
         List<Solicitud> solicitudes = dao.obtenerSolicitudes();
         request.setAttribute("listaSolicitudes", solicitudes);
         redireccionar(request, response, redireccion);
@@ -331,26 +354,18 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
                         }
                         //*----------------------------*
                         redireccion = "SolicitudVeneno/index.jsp";
-                        request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
-                        request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
-                        request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                         request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada correctamente"));
+                        this.getIndex(request, response);
                     }else{
                         redireccion = "SolicitudVeneno/index.jsp";
-                        request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
-                        request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
-                        request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                         request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser entregada"));
+                        this.getIndex(request, response);
                     }
-                    redireccionar(request, response, redireccion);
+                    this.getIndex(request, response);
                 }
             }else{
-                redireccion = "SolicitudVeneno/index.jsp";
-                request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
-                request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
-                request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
                 request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser entregada."));
-                redireccionar(request, response, redireccion);
+                this.getIndex(request, response);
             }
         }else{
             s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud_entregar")));

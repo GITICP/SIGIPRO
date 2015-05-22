@@ -54,7 +54,7 @@
                 <c:choose>
                     <c:when test="${veneno.isRestriccion()}">
                         <tr><td> <strong>¿Es restringido?:</strong> <td>Si</td></tr>
-                        <tr><td> <strong>Cantidad Máxima:</strong> <td>${veneno.getCantidad_maxima()} Miligramos</td></tr>
+                        <tr><td> <strong>Cantidad Mínima de Existencia</strong> <td>${veneno.getCantidad_minima()} Miligramos</td></tr>
                     </c:when>
                     <c:otherwise>
                         <tr><td> <strong>¿Es restringido?:</strong> <td>No</td></tr>

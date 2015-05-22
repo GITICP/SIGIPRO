@@ -42,7 +42,7 @@
                     <th>Especie</th>
                     <th>Cantidad Total (G)</th>
                     <th>Restricción</th>
-                    <th>Cantidad Máxima (mg)</th>
+                    <th>Cantidad Mínima (mg)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -77,7 +77,7 @@
                       <c:choose>
                           <c:when test="${veneno.isRestriccion()}">
                               <td>Si</td>
-                              <td>${veneno.getCantidad_maxima()}</td>
+                              <td>${veneno.getCantidad_minima()}</td>
                           </c:when>
                           <c:otherwise>
                               <td>No</td>

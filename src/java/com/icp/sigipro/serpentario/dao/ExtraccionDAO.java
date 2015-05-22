@@ -198,7 +198,7 @@ public class ExtraccionDAO {
         try{
             PreparedStatement consulta = getConexion().prepareStatement("UPDATE serpentario.extraccion "
                     + "SET estado_serpientes=true "
-                    + "WHERE id_extraccion=?");
+                    + "WHERE id_extraccion=? and id_extraccion IN (SELECT id_extraccion FROM SERPENTARIO.SERPIENTES_EXTRACCION)");
 
             consulta.setInt(1,id_extraccion);
            

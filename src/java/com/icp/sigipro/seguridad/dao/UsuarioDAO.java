@@ -124,7 +124,7 @@ public class UsuarioDAO
         }
         return resultado;
     }
-
+    
     public Usuario obtenerUsuario(int idUsuario)
     {
         Usuario resultado = null;
@@ -566,6 +566,9 @@ public class UsuarioDAO
         }
         return resultado;
     }
+    
+    
+
 
     public List<Usuario> obtenerUsuarios()
     {
@@ -593,6 +596,9 @@ public class UsuarioDAO
         return resultado;
     }
     
+    
+    
+    
         public List<Usuario> obtenerUsuarios(Usuario u)
     {
         SingletonBD s = SingletonBD.getSingletonBD();
@@ -608,7 +614,6 @@ public class UsuarioDAO
                                                     + "FROM seguridad.usuarios us "
                                                     + "WHERE us.id_seccion = ?; ");
                 consulta.setInt(1, u.getId_seccion());
-                System.out.println(consulta);
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarUsuarios(resultadoConsulta);
                 resultadoConsulta.close();
