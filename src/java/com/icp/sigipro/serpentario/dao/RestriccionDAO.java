@@ -245,6 +245,9 @@ public class RestriccionDAO {
                 restriccion.setCantidad_anual(rs.getFloat("cantidad_anual"));
                 restriccion.setId_restriccion(rs.getInt("id_restriccion"));
                 restriccion.setCantidad_consumida(obtenerCantidad(usuario.getId_usuario(),especie.getId_especie()));
+            }else{
+                restriccion.setCantidad_consumida(this.obtenerCantidad(id_usuario, id_veneno));
+                restriccion.setCantidad_anual(0);
             }
             rs.close();
             consulta.close();

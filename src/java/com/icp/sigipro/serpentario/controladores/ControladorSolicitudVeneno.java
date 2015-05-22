@@ -91,17 +91,24 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
         Veneno veneno = venenodao.obtenerVeneno(id_veneno);
         String nombre_usuario = request.getSession().getAttribute("usuario").toString();
         Usuario usuario = usuariodao.obtenerUsuario(nombre_usuario);
-        if (veneno.getCantidadAsMiligramos()>veneno.getCantidad_minima()){
+        
+        if (veneno.getCantidadAsMiligramos()>veneno.getCantidad_minima() || veneno.getCantidad_minima()==0){
             Restriccion restriccion = restricciondao.obtenerRestriccion(id_veneno,usuario.getId_usuario());
-            
-            if((restriccion.getCantidad_anual()-restriccion.getCantidad_consumida())>0){
+            if (restriccion.getCantidad_anual()==0){
+                request.setAttribute("solicitud", s);
+                request.setAttribute("restriccion",restriccion);
+                request.setAttribute("veneno", veneno);
+                request.setAttribute("accion", "Agregar");
+                redireccionar(request, response, redireccion);
+            }
+            else if((restriccion.getCantidad_anual()-restriccion.getCantidad_consumida())>0){
                 request.setAttribute("solicitud", s);
                 request.setAttribute("restriccion",restriccion);
                 request.setAttribute("veneno", veneno);
                 request.setAttribute("accion", "Agregar");
                 redireccionar(request, response, redireccion);
             }else{
-                request.setAttribute("mensaje", helper.mensajeDeError("El Usuario seleccionado cuenta con "+restriccion.getCantidad_anual()+ 
+                request.setAttribute("mensaje", helper.mensajeDeError("El Usuario autenticado cuenta con "+restriccion.getCantidad_anual()+ 
                     " mg de restricción sobre el Tipo de Veneno "+veneno.getEspecie().getGenero_especie()+" y ha consumido "+restriccion.getCantidad_consumida()+" mg de Veneno. "
                         + "Ya no puede solicitar más veneno. "));
                 this.getIndex(request, response);
