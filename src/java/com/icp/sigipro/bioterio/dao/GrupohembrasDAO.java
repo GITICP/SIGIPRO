@@ -62,16 +62,15 @@ public class GrupohembrasDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.gruposhembras "
-              + " SET   identificador=?, cantidad_espacios=?"
+              + " SET   identificador=?"
               + " WHERE id_grupo=?; "
       );
 
       consulta.setString(1, p.getIdentificador());
-      consulta.setInt(2, p.getCantidad_espacios());
-      consulta.setInt(3, p.getId_grupo());
+      consulta.setInt(2, p.getId_grupo());
       
       if (consulta.executeUpdate() == 1) {
-        editarCajas(p);
+        //editarCajas(p);
         resultado = true;
       }
       consulta.close();
