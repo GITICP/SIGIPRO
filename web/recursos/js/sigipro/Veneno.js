@@ -1,7 +1,7 @@
 $("#restriccion").change(function() {
     if(this.checked) {
-        $("#cantidad_maxima").prop("disabled",false);
+        $("#cantidad_minima").prop("disabled",false);
     }else{
-         $("#cantidad_maxima").prop("disabled",true);
+         $("#cantidad_minima").prop("disabled",true);
     }
 });

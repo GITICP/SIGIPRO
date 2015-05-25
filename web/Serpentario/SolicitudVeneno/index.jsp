@@ -45,7 +45,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=agregar">Agregar Solicitud</a>
+                    <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarSolicitud">Agregar Solicitud</a>
                 </div>
               </c:if>
             </div>
@@ -170,3 +170,39 @@
     </jsp:attribute>
 
   </t:plantilla_general>
+
+      
+<t:modal idModal="modalAgregarSolicitud" titulo="Agregar Solicitud de Veneno">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarSolicitud" autocomplete="off" method="get" action="SolicitudVeneno">
+                <input hidden="true" name="accion" value="Agregar">
+                <label for="veneno" class="control-label">*Primero, elija el Tipo de Veneno que va a solicitar.</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <br>
+                      <select id="seleccionEspecie" class="select2" name="id_veneno"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                                    <option value=''></option>
+                                    <c:forEach items="${venenos}" var="veneno">
+                                        <option value=${veneno.getId_veneno()}>${veneno.getEspecie().getGenero_especie()}</option>
+                                    </c:forEach>
+                            </select>
+                    </div>
+                  </div>
+                </div>
+            
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Ir a Agregar Solicitud</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>

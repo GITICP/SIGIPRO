@@ -40,6 +40,25 @@
                 </div>
             </div>
         </div>
+        <label for="fecha_extraccion" class="control-label">*Fecha de Extracción</label>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <c:choose>
+                        <c:when test="${extraccion.getFecha_extraccion()==null}">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control" name="fecha_extraccion" data-date-format="dd/mm/yyyy" required
+                                oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                onchange="setCustomValidity('')">
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" disabled='true' value="${extraccion.getFecha_extraccionAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_extraccion" data-date-format="dd/mm/yyyy" required
+                                oninvalid="setCustomValidity('Este campo es requerido ')"
+                                onchange="setCustomValidity('')">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
     <label for="usuarios" class="control-label">*Usuarios de la Extracción</label>

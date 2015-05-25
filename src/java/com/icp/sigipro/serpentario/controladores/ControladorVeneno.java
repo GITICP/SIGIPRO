@@ -152,10 +152,10 @@ public class ControladorVeneno extends SIGIPROServlet {
 
         if (request.getParameter("restriccion") != null){
             v.setRestriccion(true);
-            v.setCantidad_maxima(Float.parseFloat(request.getParameter("cantidad_maxima")));
+            v.setCantidad_minima(Float.parseFloat(request.getParameter("cantidad_minima")));
         }else{
             v.setRestriccion(false);
-            v.setCantidad_maxima(0);
+            v.setCantidad_minima(0);
         }
 
         return v;

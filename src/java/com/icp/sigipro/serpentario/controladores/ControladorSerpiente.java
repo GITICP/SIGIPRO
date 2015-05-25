@@ -7,13 +7,16 @@ package com.icp.sigipro.serpentario.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.serpentario.dao.CatalogoTejidoDAO;
+import com.icp.sigipro.serpentario.dao.ColeccionHumedaDAO;
 import com.icp.sigipro.serpentario.dao.EspecieDAO;
 import com.icp.sigipro.serpentario.dao.EventoDAO;
 import com.icp.sigipro.serpentario.dao.SerpienteDAO;
+import com.icp.sigipro.serpentario.modelos.CatalogoTejido;
+import com.icp.sigipro.serpentario.modelos.ColeccionHumeda;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Evento;
 import com.icp.sigipro.serpentario.modelos.HelperSerpiente;
@@ -53,6 +56,8 @@ public class ControladorSerpiente extends SIGIPROServlet {
     private EventoDAO eventodao = new EventoDAO();
     private EspecieDAO especiedao = new EspecieDAO();
     private BitacoraDAO bitacora = new BitacoraDAO();
+    private CatalogoTejidoDAO ctdao = new CatalogoTejidoDAO();
+    private ColeccionHumedaDAO chdao = new ColeccionHumedaDAO();
     
     HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
@@ -65,7 +70,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
-            add("descartar");
             add("coleccionviva");
             
         }
@@ -76,6 +80,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             add("evento");
             add("agregareditar");
             add("reversarcv");
+            add("descartar");
             add("reversardeceso");
             add("deceso");
         }
@@ -224,32 +229,43 @@ public class ControladorSerpiente extends SIGIPROServlet {
 
     }
 
-    protected void getDescartar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(314, listaPermisos);
-        Serpiente s = dao.obtenerSerpiente(id_serpiente);
-        Evento e = this.setEvento(s, 14, request);
-        //----Agregar el Evento al Sistema
-        boolean resultado = eventodao.insertarEvento(e);
-        if (resultado){
-            request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente descartada con éxito."));
-             //Funcion que genera la bitacora
-            bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
-            //*----------------------------*
-        }else{
-            request.setAttribute("mensaje", helper.mensajeDeError("Error en la Base de Datos. Serpiente no pudo descartarse."));
-        }
-        this.getVer(request, response);
-
-
-    }
-
     // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
   
+    protected void postDescartar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente_descarte"));
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(314, listaPermisos);
+        Serpiente s = dao.obtenerSerpiente(id_serpiente);
+        
+        CatalogoTejido isCT = ctdao.obtenerCatalogoTejido(s);
+        ColeccionHumeda isCH = chdao.obtenerColeccionHumeda(s);
+        
+        if ((isCT==null)&&(isCH==null)){
+            Evento e = this.setEvento(s, 14, request);
+            e.setObservaciones(request.getParameter("observacionesModal"));
+            //----Agregar el Evento al Sistema
+            boolean resultado = eventodao.insertarEvento(e);
+            if (resultado){
+                request.setAttribute("mensaje", helper.mensajeDeExito("Serpiente descartada con éxito."));
+                 //Funcion que genera la bitacora
+                bitacora.setBitacora(e.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO,request.getRemoteAddr());
+                //*----------------------------*
+            }else{
+                request.setAttribute("mensaje", helper.mensajeDeError("Error en la Base de Datos. Serpiente no pudo descartarse."));
+            }
+            this.getIndex(request, response);
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Serpiente ya fue pasada a CH o CT."));
+            this.getIndex(request, response);
+
+        }
+
+
+    }
+    
     protected void postReversarcv(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);

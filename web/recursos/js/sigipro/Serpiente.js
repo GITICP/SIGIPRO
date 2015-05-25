@@ -8,8 +8,10 @@ function previewFile(){
         var reader  = new FileReader();
         if (size> 102400){
             document.getElementById("imagen_Serpiente").setCustomValidity("La imagen debe ser de 100KB o menos. ");
+            document.getElementById("boton_Cancelar").style.visibility = "visible";
         }else{
             document.getElementById("imagen_Serpiente").setCustomValidity("");
+            document.getElementById("boton_Cancelar").style.visibility = "visible";
         }       
         reader.onload = function (e) {
             preview.src = reader.result;
@@ -24,6 +26,12 @@ function previewFile(){
         alert('The File APIs are not fully supported in this browser.');
   }
 }
+
+
+$(function() {
+    var max = $("#fecha_ingreso").val();
+    var datepicker = $("#datepickerDeceso").datepicker({startDate:max,endDate:"-0d"});
+});
 
 
 $(document).on("click", ".open-Modal", function () {
@@ -59,6 +67,11 @@ $(document).on("click", ".rDeceso-Modal", function () {
                             $("#id_serpiente_reversar_deceso").val(id_serpiente);                          
                             });
 
+$(document).on("click", ".descarte-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_descarte").val(id_serpiente);                          
+                            });
+
 
 $(document).on("click", ".rDeceso-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
@@ -71,3 +84,11 @@ $(document).on("click", ".deceso-Modal", function () {
                             $("#id_serpiente_deceso").val(id_serpiente);                          
                             });
                             
+function eliminarImagen(){
+    var preview = document.getElementById("imagenSubida"); //selects the query named img
+    preview.src = "";
+    var imagen = document.getElementById("imagen_Serpiente");
+    imagen.value = "";
+    document.getElementById("imagen_Serpiente").setCustomValidity("");
+    document.getElementById("boton_Cancelar").style.visibility = "hidden";
+}

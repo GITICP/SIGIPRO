@@ -54,13 +54,13 @@ public class VenenoDAO {
         try{
             PreparedStatement consulta = getConexion().prepareStatement(
                   " UPDATE serpentario.venenos " +
-                  " SET restriccion=?, cantidad_maxima=? " +
+                  " SET restriccion=?, cantidad_minima=? " +
                   " WHERE id_veneno=?; "
 
           );
 
             consulta.setBoolean(1, v.isRestriccion());
-            consulta.setFloat(2, v.getCantidad_maxima());
+            consulta.setFloat(2, v.getCantidad_minima());
             consulta.setInt(3, v.getId_veneno());
 
             if ( consulta.executeUpdate() == 1){
@@ -84,7 +84,7 @@ public class VenenoDAO {
             EspecieDAO especiedao = new EspecieDAO();
             if(rs.next()){
                 veneno.setId_veneno(rs.getInt("id_veneno"));
-                veneno.setCantidad_maxima(rs.getFloat("cantidad_maxima"));
+                veneno.setCantidad_minima(rs.getFloat("cantidad_minima"));
                 veneno.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 veneno.setCantidad(obtenerCantidad(veneno));
                 veneno.setRestriccion(rs.getBoolean("restriccion"));
@@ -108,7 +108,7 @@ public class VenenoDAO {
             while(rs.next()){
                 Veneno veneno = new Veneno();
                 veneno.setId_veneno(rs.getInt("id_veneno"));
-                veneno.setCantidad_maxima(rs.getFloat("cantidad_maxima"));
+                veneno.setCantidad_minima(rs.getFloat("cantidad_minima"));
                 veneno.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
                 veneno.setRestriccion(rs.getBoolean("restriccion"));
                 veneno.setCantidad(obtenerCantidad(veneno));

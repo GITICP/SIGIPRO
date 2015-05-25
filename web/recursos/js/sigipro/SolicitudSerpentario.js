@@ -1,7 +1,6 @@
 $(function() {
-    var max = $('option:selected').data('stock');
-    $("input[name='cantidad']").attr("max", max);
-    validarSolicitud()
+    
+    validarSolicitud();
 });
 
 
@@ -10,16 +9,6 @@ $(document).on("click", ".rechazar-Modal", function () {
                             $("#id_solicitud").val(id_solicitud);                          
                             });
             
-
-$('#seleccionEspecie').change( function() {
-  var max = $('option:selected').data('stock');
-  $("#cantidad").val(0.0);
-  $("input[name='cantidad']").attr("max", max);
-  validarSolicitud()
-});
-                            
-
-
 function setLote(){
     if (!$('#entregarSolicitud')[0].checkValidity()) {
         $('<input type="submit">').hide().appendTo($('#entregarSolicitud')).click().remove();
@@ -109,14 +98,16 @@ function confirmacionAgregarLotes(id_solicitud,usuario,especie,cantidad) {
 
 function validarSolicitud(){
     var cantidad = parseFloat($("#cantidad").val());
-    var max = parseFloat($("#cantidad").attr("max"));
+    var restriccion = parseFloat($('#restriccion').val());
+    var consumido = parseFloat($('#consumido').val());
     if (isNaN(cantidad)){
         $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser un número.');
-    }else if (cantidad>max){
-        $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser menor o igual a la cantidad restringida.');
-    }else if (cantidad<0){
-        $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser mayor que 0.');
-    }else{
+    }else if (restriccion!==0.0){
+        if((consumido+cantidad)>restriccion){
+            $("#cantidad")[0].setCustomValidity('No puede solicitar más de lo restringido, en el presente año.');
+        }
+    }
+    else{
         $("#cantidad")[0].setCustomValidity('');
     }
 }
