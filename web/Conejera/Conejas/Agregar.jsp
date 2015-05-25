@@ -23,7 +23,7 @@
           <ul class="breadcrumb">
             <li>Bioterio-Conejera</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/Cajas?">Cajas</a>
+              <a href="/SIGIPRO/Conejera/Cajas?accion=ver&id_caja=${id_caja}">Cajas</a>
             </li>
             <li class="active"> Hoja de Vida Caja #${id_caja}</li>
           </ul>
@@ -59,6 +59,9 @@
 
 
   </jsp:attribute>
+    <jsp:attribute name="scripts">
+      <script src="/SIGIPRO/recursos/js/sigipro/conejas.js"></script>
+    </jsp:attribute>
 
 </t:plantilla_general>
 

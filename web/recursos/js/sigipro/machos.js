@@ -1,47 +1,14 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-$("input[name='fecha_cruce']").change(function () {
-  verificarFechas('fecha_cruce', 'fecha_estimada_parto', 'mensajeFechas1', 'Fecha de Cruce y Fecha Estimada de Parto:');
-  verificarFechas('fecha_cruce', 'fecha_parto', 'mensajeFechas2', 'Fecha de Cruce y Fecha de Parto:');
+$("input[name='fecha_ingreso']").change(function () {
+  verificarFechas('fecha_ingreso', 'fecha_retiro', 'mensajeFechas1', 'Fecha de Ingreso y Fecha de Retiro:');
+  verificarFechas('fecha_ingreso', 'fecha_preseleccion', 'mensajeFechas2', 'Fecha de Ingreso y Fecha de Preselección:');
 })
-$("input[name='fecha_parto']").change(function () {
-  verificarFechas('fecha_cruce', 'fecha_parto', 'mensajeFechas2', 'Fecha de Cruce y Fecha de Parto:');
+$("input[name='fecha_retiro']").change(function () {
+  verificarFechas('fecha_ingreso', 'fecha_retiro', 'mensajeFechas1', 'Fecha de Ingreso y Fecha de Retiro:');
 })
-$("input[name='fecha_estimada_parto']").change(function () {
-  verificarFechas('fecha_cruce', 'fecha_estimada_parto', 'mensajeFechas1', 'Fecha de Cruce y Fecha Estimada de Parto:');
+$("input[name='fecha_preseleccion']").change(function () {
+  verificarFechas('fecha_ingreso', 'fecha_preseleccion', 'mensajeFechas2', 'Fecha de Ingreso y Fecha de Preselección:');
 })
-
-$("input[name='fecha_cruce']").change(function () {
-  var fechaact = $('#fecha_cruce');
-  var fechadesact = $('#fecha_estimada_parto');
-  if (fechadesact.val() ===''){
-   var datenueva = addDays(fechaact.val(),30);
-   fechadesact.val(datenueva);
-   fechadesact.datepicker("setDate", datenueva);
-  }
-});
-
-$(document).ready(function () {
-  var fechaact = $('#fecha_cruce');
-  var fechaparto1 = $('#fecha_estimada_parto');
-  var fechaparto2 = $('#fecha_parto');
-  if (fechaact.val() !==''){
-    fechaparto1.datepicker({startDate:fechaact.val()});
-    fechaparto2.datepicker({startDate:fechaact.val()});
-  }
-})
-
-function addDays(strDate, days){
-    var fecha = strDate.split("/");
-    var theDate = new Date(fecha[2],fecha[1] - 1,fecha[0]);
-    var newDate = new Date(theDate);
-    newDate.setDate(theDate.getDate()+days);
-    return newDate;
-};
 
 function verificarFechas(fechai, fechaf, mensaje, headms) {
   var fechaact = document.getElementById(fechai).value.split("/");
@@ -60,12 +27,12 @@ function confirmar() {
   if ($('#mensajeFechas1').val() === "" &&
       $('#mensajeFechas2').text() === "")
   {
-    if (!$('#formCruce')[0].checkValidity()) {
-      $('<input type="submit">').hide().appendTo($('#formCruce')).click().remove();
-      $('#formCruce').find(':submit').click();
+    if (!$('#form-macho')[0].checkValidity()) {
+      $('<input type="submit">').hide().appendTo($('#form-macho')).click().remove();
+      $('#form-macho').find(':submit').click();
     }
     else {
-      $('#formCruce').submit();
+      $('#form-macho').submit();
     }
   }
   else

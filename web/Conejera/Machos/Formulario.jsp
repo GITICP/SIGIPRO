@@ -89,6 +89,10 @@
         </div>
       </div>
     </div>
+    <div class="col-md-12">                           
+      <p id='mensajeFechas1' style='color:red;'><p>
+      <p id='mensajeFechas2' style='color:red;'><p> 
+    </div>
   </div>
   <div class="col-md-12">
     <p>

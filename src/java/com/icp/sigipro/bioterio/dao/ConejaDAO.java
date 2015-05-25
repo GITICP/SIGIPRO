@@ -70,10 +70,10 @@ public class ConejaDAO {
       consulta.setDate(1, p.getFecha_nacimiento());
       consulta.setString(2, p.getId_padre());
       consulta.setString(3, p.getId_madre());
-       consulta.setDate(4, p.getFecha_retiro());
-       consulta.setDate(5, p.getFecha_ingreso());
-       consulta.setDate(6, p.getFecha_cambio());
-       consulta.setDate(7, p.getFecha_seleccion());
+      consulta.setDate(4, p.getFecha_retiro());
+      consulta.setDate(5, p.getFecha_ingreso());
+      consulta.setDate(6, p.getFecha_cambio());
+      consulta.setDate(7, p.getFecha_seleccion());
       consulta.setInt(8, p.getId_coneja());
       
       if (consulta.executeUpdate() == 1) {
@@ -86,26 +86,28 @@ public class ConejaDAO {
     }
     return resultado;
   }
-
-  public boolean eliminarConeja(int id_coneja) throws SIGIPROException {
+  public boolean eliminarConeja(Coneja p) throws SIGIPROException {
 
     boolean resultado = false;
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " DELETE FROM bioterio.conejas "
+              " UPDATE bioterio.conejas "
+              + " SET  bool_activa=?, fecha_cambio=?, observaciones=?"
               + " WHERE id_coneja=?; "
       );
-
-      consulta.setInt(1, id_coneja);
-
+      consulta.setBoolean(1, false);
+      consulta.setDate(2, p.getFecha_cambio());
+      consulta.setString(3, p.getObservaciones());
+      consulta.setInt(4, p.getId_coneja());
+      
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
-      throw new SIGIPROException("Se produjo un error al procesar la eliminación");
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
     }
     return resultado;
   }
@@ -146,7 +148,7 @@ public class ConejaDAO {
     Coneja coneja = new Coneja();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.conejas where id_coneja = ? ");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM bioterio.conejas where id_coneja = ? AND bool_activa=true");
 
       consulta.setInt(1, id_coneja);
 
@@ -178,7 +180,7 @@ public class ConejaDAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.conejas c INNER JOIN bioterio.cajas p ON c.id_caja = p.id_caja WHERE p.id_grupo=?");
+      consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.conejas c INNER JOIN bioterio.cajas p ON c.id_caja = p.id_caja WHERE p.id_grupo=? AND c.bool_activa=true");
       consulta.setInt(1, id_grupo);
       ResultSet rs = consulta.executeQuery();
 
