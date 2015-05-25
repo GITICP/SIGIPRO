@@ -1,5 +1,5 @@
-﻿ALTER TABLE bioterio.conejas
-DROP CONSTRAINT fk_cajas
+ALTER TABLE bioterio.conejas
+DROP CONSTRAINT fk_cajas;
 
 ALTER TABLE bioterio.conejas 
 ADD CONSTRAINT fk_cajas FOREIGN KEY (id_caja)

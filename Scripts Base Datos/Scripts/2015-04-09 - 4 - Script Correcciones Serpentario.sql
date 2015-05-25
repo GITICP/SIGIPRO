@@ -13,7 +13,7 @@ ALTER TABLE SERPENTARIO.CATALOGO_TEJIDO
 ADD COLUMN NUMERO_CATALOGO_TEJIDO integer NOT NULL UNIQUE;
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (307, 297, 'Colección Húmeda', '/Serpentario/ColeccionHumeda');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (308, 297, 'CatálogoTejido', '/Serpentario/CatalogoTejido');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (308, 297, 'Catálogo Tejido', '/Serpentario/CatalogoTejido');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (314, 307);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (314, 308);

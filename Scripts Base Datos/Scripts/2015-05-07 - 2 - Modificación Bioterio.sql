@@ -1,4 +1,4 @@
-﻿ALTER TABLE bioterio.conejos_produccion
+ALTER TABLE bioterio.conejos_produccion
 DROP COLUMN detalle_procedencia;
 
 ALTER TABLE bioterio.conejos_produccion

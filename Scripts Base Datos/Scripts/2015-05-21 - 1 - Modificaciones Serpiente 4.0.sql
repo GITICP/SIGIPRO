@@ -19,3 +19,9 @@ ALTER TABLE ONLY serpentario.restriccion ADD CONSTRAINT unq_restriccion UNIQUE (
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (360, '[Serpentario]AgregarRestriccion', 'Permite agregar restricciones a los usuarios.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (361, '[Serpentario]EditarRestriccion', 'Permite editar las cantidades anuales restringidas de cada usuario.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (362, '[Serpentario]EliminarRestriccion', 'Permite eliminar una restriccion de un usuario.');
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (309, 298, 'Restricción', '/Serpentario/Restriccion');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (360, 309);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (361, 309);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (362, 309);
