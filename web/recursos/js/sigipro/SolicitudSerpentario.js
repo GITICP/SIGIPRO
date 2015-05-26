@@ -100,12 +100,15 @@ function validarSolicitud(){
     var cantidad = parseFloat($("#cantidad").val());
     var restriccion = parseFloat($('#restriccion').val());
     var consumido = parseFloat($('#consumido').val());
+    var cantidadActual = parseFloat($('#cantidadactual').val());
     if (isNaN(cantidad)){
         $("#cantidad")[0].setCustomValidity('La cantidad solicitada debe ser un número.');
     }else if (restriccion!==0.0){
         if((consumido+cantidad)>restriccion){
             $("#cantidad")[0].setCustomValidity('No puede solicitar más de lo restringido, en el presente año.');
         }
+    }else if (cantidadActual<=cantidad){
+        $("#cantidad")[0].setCustomValidity('La cantidad solicitada es superior a la cantidad actual.');
     }
     else{
         $("#cantidad")[0].setCustomValidity('');

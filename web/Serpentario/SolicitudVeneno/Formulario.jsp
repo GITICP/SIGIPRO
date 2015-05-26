@@ -15,6 +15,7 @@
     <input hidden="true" name="estado" value="${solicitud.getEstado()}">
     <input hidden="true" name="consumido" id="consumido" value="${restriccion.getCantidad_consumida()}">
     <input hidden="true" name="restriccion" id="restriccion" value="${restriccion.getCantidad_anual()}">
+    <input hidden="true" name="cantidadactual" id="cantidadactual" value="${veneno.getCantidadAsMiligramos()}">
     
     <label for="seleccioninventario" class="control-label"> *Especie</label>
     <div class="form-group">
