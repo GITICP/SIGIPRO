@@ -46,7 +46,6 @@ public class ControladorConejas extends SIGIPROServlet
         {
             add("agregar");
             add("editar");
-            add("eliminar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -54,6 +53,7 @@ public class ControladorConejas extends SIGIPROServlet
         {
             add("agregar");
             add("editar");
+            add("eliminar");
         }
     };
 
@@ -89,35 +89,6 @@ public class ControladorConejas extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        int id_coneja = Integer.parseInt(request.getParameter("id_coneja"));
-        Coneja coneja;
-        int id_caja = 0;
-        try {
-            coneja = dao.obtenerConeja(id_coneja, true);
-            id_caja = coneja.getCaja().getId_caja();
-        }
-        catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        try {
-            dao.eliminarConeja(id_coneja);
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(id_coneja, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-            //*----------------------------* 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Coneja eliminada correctamente."));
-        }
-        catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        String redireccion = "Cajas?accion=ver&mensaje=Coneja retirada correctamente&id_caja=" + id_caja;
-        response.sendRedirect(redireccion);
-//redireccionar(request, response, redireccion);
-    }
 
   // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
@@ -176,7 +147,48 @@ public class ControladorConejas extends SIGIPROServlet
         response.sendRedirect(redireccion);
 //redireccionar(request, response, redireccion);
     }
+    protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "Conejas/Agregar.jsp";
+        int id_caja = 0;
+        int id_coneja = Integer.parseInt(request.getParameter("id_coneja"));
+        Coneja coneja;
+        try {
+            coneja = dao.obtenerConeja(id_coneja, true);
+            id_caja = coneja.getCaja().getId_caja();
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        try {
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+            coneja = dao.obtenerConeja(id_coneja, true);
+            java.util.Date fecha_cambio = new java.util.Date();
+            java.sql.Date fecha_cambioSQL;
+            fecha_cambioSQL = new java.sql.Date(fecha_cambio.getTime());
+            coneja.setFecha_cambio(fecha_cambioSQL);
+            coneja.setObservaciones(request.getParameter("observaciones"));
+            resultado = dao.eliminarConeja(coneja);
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_coneja, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            //*----------------------------* 
+           
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        if (resultado) {
 
+            redireccion = "Cajas?accion=ver&mensaje=Coneja retirada correctamente&id_caja=" + id_caja;
+        }
+        else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        }
+        response.sendRedirect(redireccion);
+        // redireccionar(request, response, redireccion);
+    }
   // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Coneja construirObjeto(HttpServletRequest request) throws SIGIPROException
@@ -190,7 +202,6 @@ public class ControladorConejas extends SIGIPROServlet
         String fecha_nac = request.getParameter("fecha_nacimiento");
         String fecha_ret = request.getParameter("fecha_retiro");
         String fecha_ingr = request.getParameter("fecha_ingreso");
-        String fecha_cam = request.getParameter("fecha_cambio");
         String fecha_sel = request.getParameter("fecha_seleccion");
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha_nacimiento;
@@ -199,8 +210,7 @@ public class ControladorConejas extends SIGIPROServlet
         java.sql.Date fecha_retiroSQL;
         java.util.Date fecha_ingreso;
         java.sql.Date fecha_ingresoSQL;
-        java.util.Date fecha_cambio;
-        java.sql.Date fecha_cambioSQL;
+
         java.util.Date fecha_seleccion;
         java.sql.Date fecha_seleccionSQL;
         try {
@@ -210,14 +220,11 @@ public class ControladorConejas extends SIGIPROServlet
             fecha_retiroSQL = new java.sql.Date(fecha_retiro.getTime());
             fecha_ingreso = formatoFecha.parse(fecha_ingr);
             fecha_ingresoSQL = new java.sql.Date(fecha_ingreso.getTime());
-            fecha_cambio = formatoFecha.parse(fecha_cam);
-            fecha_cambioSQL = new java.sql.Date(fecha_cambio.getTime());
             fecha_seleccion = formatoFecha.parse(fecha_sel);
             fecha_seleccionSQL = new java.sql.Date(fecha_seleccion.getTime());
             coneja.setFecha_nacimiento(fecha_nacimientoSQL);
             coneja.setFecha_retiro(fecha_retiroSQL);
             coneja.setFecha_ingreso(fecha_ingresoSQL);
-            coneja.setFecha_cambio(fecha_cambioSQL);
             coneja.setFecha_seleccion(fecha_seleccionSQL);
         }
         catch (ParseException ex) {

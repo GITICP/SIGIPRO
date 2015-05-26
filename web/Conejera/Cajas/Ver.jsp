@@ -54,7 +54,7 @@
                                         <c:choose>
                                             <c:when test="${!(coneja.getId_padre()  == null)}" >
                                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/Conejas?accion=editar&id_coneja=${coneja.getId_coneja()}">Editar Hoja de Vida</a>
-                                                <a class="btn btn-danger btn-sm boton-accion confirmable2" data-texto-confirmacion="retirar la coneja" data-href="/SIGIPRO/Conejera/Conejas?accion=eliminar&id_coneja=${coneja.getId_coneja()}">Retirar Coneja</a>
+                                                <a class="btn btn-danger btn-sm boton-accion" data-toggle="modal" data-target="#modalRetirar">Retirar Coneja</a>
                                             </c:when>
                                             <c:otherwise>
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Conejera/Conejas?accion=agregar&id_caja=${caja.getId_caja()}">Agregar Información</a>
@@ -67,9 +67,9 @@
                                         <tr><td> <strong>Fecha de nacimiento:</strong> <td>${coneja.getFecha_nacimiento()} </td></tr>
                                         <tr><td> <strong>Identificación del padre:</strong> <td>${coneja.getId_padre()} </td></tr>
                                         <tr><td> <strong>Identificación de la madre:</strong> <td>${coneja.getId_madre()} </td></tr>
-                                        <tr><td> <strong>Fecha de Retiro:</strong> <td>${coneja.getFecha_retiro_S()} </td></tr>
+                                        <tr><td> <strong>Fecha Estimada de Retiro:</strong> <td>${coneja.getFecha_retiro_S()} </td></tr>
                                         <tr><td> <strong>Fecha de Ingreso:</strong> <td>${coneja.getFecha_ingreso_S()} </td></tr>
-                                        <tr><td> <strong>Fecha de Cambio:</strong> <td>${coneja.getFecha_cambio_S()} </td></tr>
+                                        <tr><td> <strong>Fecha Real de Retiro:</strong> <td>${coneja.getFecha_cambio_S()} </td></tr>
                                         <tr><td> <strong>Fecha de Preselección:</strong> <td>${coneja.getFecha_seleccion_S()} </td></tr>
                                     </table>
                                     <br>
@@ -124,7 +124,35 @@
                 <!-- /main -->
             </div>
         </div>
+                                    
+       <t:modal idModal="modalRetirar" titulo="Observaciones">
 
+        <jsp:attribute name="form">
+          <h5> ¿Está seguro que desea retirar esta coneja? De ser así por favor indique las observaciones: </h5>
+          <form class="form-horizontal" id="form_retirar" data-show-auth="${show_modal_auth}" method="post" action="Conejas">
+            <input hidden="true" name="id_coneja" id="id_coneja" value="${coneja.getId_coneja()}">
+            <input hidden="true" name="accion" value="Eliminar" id="accion">
+            ${mensaje_auth}
+            <label for="observaciones" class="control-label">Observaciones</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group">
+                  <textarea class="form-control" rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aceptar</button>
+              </div>
+            </div>
+          </form>
+
+
+        </jsp:attribute>
+
+      </t:modal>
     </jsp:attribute>
     <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/cajas.js"></script>
