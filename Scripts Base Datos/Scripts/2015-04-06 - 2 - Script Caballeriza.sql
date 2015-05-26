@@ -12,7 +12,7 @@ CREATE TABLE caballeriza.grupos_de_caballos (
 
 CREATE TABLE caballeriza.caballos (
     id_caballo serial NOT NULL,
-    numero integer UNIQUE NOT NULL,
+    numero integer NOT NULL,
     nombre character varying(100) NOT NULL,
     numero_microchip character varying(20) NOT NULL,
     fecha_nacimiento Date NOT NULL,
@@ -136,6 +136,7 @@ ALTER TABLE ONLY caballeriza.sangrias  ADD CONSTRAINT pk_sangrias PRIMARY KEY (i
 ALTER TABLE ONLY caballeriza.sangrias_caballos  ADD CONSTRAINT pk_sangrias_caballos PRIMARY KEY (id_sangria,id_caballo);
 
 --Índices únicos esquema caballeriza
+CREATE UNIQUE INDEX i_numero ON caballeriza.caballos (numero) WHERE estado = 'Vivo';
 CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nombre);
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
 
