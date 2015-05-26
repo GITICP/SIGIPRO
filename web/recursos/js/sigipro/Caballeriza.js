@@ -89,6 +89,7 @@ function agregarCaballo() {
         var nuevaFila = tCaballos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
         $(nuevaFila).attr("id", "caballo-" + elemento.val());
     }
+    $("#modalAgregarCaballo").modal("hide");
 }
 
 function eliminarEventoDeCaballo(id) {

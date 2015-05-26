@@ -112,7 +112,7 @@
             </div>
             <div class="form-group">
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
                     <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarCaballo()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </div>
             </div>
