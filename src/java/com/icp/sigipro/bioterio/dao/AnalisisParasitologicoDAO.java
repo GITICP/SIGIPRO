@@ -51,6 +51,7 @@ public class AnalisisParasitologicoDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
     }
     return resultado;
@@ -82,6 +83,7 @@ public class AnalisisParasitologicoDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la edición");
     }
     return resultado;
@@ -105,6 +107,7 @@ public class AnalisisParasitologicoDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -141,6 +144,7 @@ public class AnalisisParasitologicoDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return analisis_parasitologico;
@@ -178,6 +182,7 @@ public class AnalisisParasitologicoDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -195,6 +200,7 @@ public class AnalisisParasitologicoDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -210,6 +216,7 @@ public class AnalisisParasitologicoDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }

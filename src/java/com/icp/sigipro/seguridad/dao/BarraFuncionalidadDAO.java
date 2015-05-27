@@ -124,6 +124,7 @@ public class BarraFuncionalidadDAO
             }
             catch(SQLException ex)
             {
+                ex.printStackTrace();
                 resultado = null;
             }
         }

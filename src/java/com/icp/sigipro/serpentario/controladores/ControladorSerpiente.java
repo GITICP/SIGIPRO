@@ -203,7 +203,6 @@ public class ControladorSerpiente extends SIGIPROServlet {
     {
         int id_serpiente = Integer.parseInt(request.getParameter("id_serpiente"));
         boolean pasoCV = eventodao.validarPasoCV(id_serpiente);
-        System.out.println(pasoCV);
         if (!pasoCV){
             List<Integer> listaPermisos = getPermisosUsuario(request);
             validarPermiso(312, listaPermisos);

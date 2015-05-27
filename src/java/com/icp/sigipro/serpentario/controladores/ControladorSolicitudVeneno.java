@@ -435,7 +435,6 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             le.setEntrega_solicitud(es);
             le.setLote(i);
             String columna = "cantidad_"+Integer.toString(i.getId_lote());
-            System.out.println("cantidad_"+Integer.toString(i.getId_lote()));
             String cantidad = request.getParameter(columna);
             le.setCantidad(Float.parseFloat(cantidad));
             

@@ -52,6 +52,7 @@ public class ColeccionHumedaDAO {
             conexion.close();
         }
         catch(Exception ex){
+            ex.printStackTrace();
             return false;
         }
         return resultado;
@@ -116,7 +117,6 @@ public class ColeccionHumedaDAO {
             ResultSet rs = consulta.executeQuery();
             UsuarioDAO usuariodao = new UsuarioDAO();
             SerpienteDAO serpientedao = new SerpienteDAO();
-            System.out.println(consulta);
             while(rs.next()){
                 ColeccionHumeda ch = new ColeccionHumeda();
                 ch.setId_coleccion_humeda(rs.getInt("id_coleccion_humeda"));
@@ -147,6 +147,7 @@ public class ColeccionHumedaDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

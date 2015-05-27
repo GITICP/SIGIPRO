@@ -103,7 +103,7 @@ public class Serpiente {
             diferencia = date_hoy.getTime() - date_ingreso.getTime();
             dias = diferencia / (1000 * 60 * 60 * 24);
         }catch (Exception e){
-            System.out.println("Error "+ e);
+            e.printStackTrace();
         }
         return (int)dias;
     }
@@ -120,7 +120,7 @@ public class Serpiente {
             diferencia = fecha_deceso.getTime() - date_ingreso.getTime();
             dias = diferencia / (1000 * 60 * 60 * 24);
         }catch (Exception e){
-            System.out.println("Error "+ e);
+            e.printStackTrace();
         }
         return (int)dias;
     }

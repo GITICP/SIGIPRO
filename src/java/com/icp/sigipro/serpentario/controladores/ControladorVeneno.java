@@ -111,7 +111,6 @@ public class ControladorVeneno extends SIGIPROServlet {
         String redireccion = "Veneno/Editar.jsp";
         int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
         Veneno veneno = dao.obtenerVeneno(id_veneno);
-        System.out.println(veneno.isRestriccion());
         request.setAttribute("veneno", veneno);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);

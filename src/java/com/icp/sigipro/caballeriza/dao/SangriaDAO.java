@@ -121,6 +121,7 @@ public class SangriaDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo la sangría correctamente.");
         }
         finally {
@@ -143,6 +144,7 @@ public class SangriaDAO
                 cerrarConexion();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos");
             }
         }
@@ -326,6 +328,7 @@ public class SangriaDAO
             rs.close();
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Las Sangrias no pueden ser accedidas.");
         }
         return resultado;
@@ -348,6 +351,7 @@ public class SangriaDAO
             get_fecha = Sangria.class.getDeclaredMethod("getFecha_dia" + dia, (Class<?>[]) null);
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error inesperado. Contacte al administrador del sistema.");
         }
 
@@ -448,6 +452,7 @@ public class SangriaDAO
                 cerrarConexion();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
             }
         }
@@ -565,6 +570,7 @@ public class SangriaDAO
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo registrar la sangría.");
         }
         finally {
@@ -590,6 +596,7 @@ public class SangriaDAO
                 cerrarConexion();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos");
             }
         }
@@ -605,6 +612,7 @@ public class SangriaDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;
@@ -619,6 +627,7 @@ public class SangriaDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

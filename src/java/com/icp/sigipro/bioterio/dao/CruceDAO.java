@@ -47,6 +47,7 @@ public class CruceDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
     }
     return resultado;
@@ -77,6 +78,7 @@ public class CruceDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la edición");
     }
     return resultado;
@@ -100,6 +102,7 @@ public class CruceDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -132,6 +135,7 @@ public class CruceDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return cruce;
@@ -164,6 +168,7 @@ public class CruceDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -196,6 +201,7 @@ public class CruceDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -213,6 +219,7 @@ public class CruceDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -228,6 +235,7 @@ public class CruceDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }

@@ -43,6 +43,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
     }
     return resultado;
@@ -69,6 +70,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la edición");
     }
     return resultado;
@@ -92,6 +94,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -118,6 +121,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return produccion;
@@ -144,6 +148,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -161,6 +166,7 @@ public class ConejoProduccionDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -176,6 +182,7 @@ public class ConejoProduccionDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }

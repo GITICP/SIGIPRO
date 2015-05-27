@@ -96,7 +96,7 @@ public class EditarPuesto extends SIGIPROServlet {
             }
             request.getRequestDispatcher("/Seguridad/Puestos/").forward(request, response);
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 

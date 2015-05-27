@@ -44,8 +44,8 @@ public class TipoEventoDAO {
             consulta.close();
             conexion.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El tipo de evento no pudo ser agregado correctamente.");
-
         }
         return resultado;
     }
@@ -64,6 +64,7 @@ public class TipoEventoDAO {
             consulta.close();
             conexion.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El tipo de evento no pudo ser eliminado debido a que uno o más eventos se encuentran asociadas a este.");
         }
         return resultado;
@@ -89,6 +90,7 @@ public class TipoEventoDAO {
             consulta.close();
             conexion.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El tipo de evento no pudo ser actualizado correctamente.");
         }
         return resultado;
@@ -110,6 +112,7 @@ public class TipoEventoDAO {
             consulta.close();
             conexion.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo obtener el tipo de evento correctamente.");
         }
         return tipoevento;
@@ -131,6 +134,7 @@ public class TipoEventoDAO {
             consulta.close();
             conexion.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo obtener los tipos de eventos correctamente.");
         }
         return resultado;

@@ -172,6 +172,7 @@ public class SolicitudDAO {
             conexion.close();
         }
         catch(SQLException ex){
+            ex.printStackTrace();
             throw new SIGIPROException("Solicitud no pudo ser eliminada.");
         }
         return resultado;
@@ -275,6 +276,7 @@ public class SolicitudDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

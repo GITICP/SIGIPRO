@@ -44,7 +44,7 @@ public class PuestoDAO {
                 conexion.close();
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -74,7 +74,7 @@ public class PuestoDAO {
                 conexion.close();
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -100,7 +100,7 @@ public class PuestoDAO {
                 conexion.close();
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -148,6 +148,7 @@ public class PuestoDAO {
                 consulta.close();
                 conexion.close();
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }

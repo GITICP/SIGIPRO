@@ -292,7 +292,6 @@ public class RestriccionDAO {
             consulta.setDate(2, finSQL);
             consulta.setInt(3, id_usuario);
             consulta.setInt(4, id_especie);
-            System.out.println(consulta);
             ResultSet rs = consulta.executeQuery();
             while(rs.next()){
                 cantidad = rs.getFloat("cantidad_entregada");
@@ -301,7 +300,7 @@ public class RestriccionDAO {
             consulta.close();
             conexion.close();
         }catch (Exception ex){
-            System.out.println(ex.toString());
+            ex.printStackTrace();
         }
         return cantidad;
     }
@@ -316,6 +315,7 @@ public class RestriccionDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

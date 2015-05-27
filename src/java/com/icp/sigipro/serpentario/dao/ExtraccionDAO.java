@@ -550,6 +550,7 @@ public class ExtraccionDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

@@ -43,6 +43,7 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       String mensaje = ex.getMessage();
       if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El nombre de la cepa ya existe");
@@ -75,6 +76,7 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       String mensaje = ex.getMessage();
       if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El nombre de la cepa ya existe");
@@ -104,6 +106,7 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -129,6 +132,7 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return cepa;
@@ -155,6 +159,7 @@ public class CepaDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -172,6 +177,7 @@ public class CepaDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -187,6 +193,7 @@ public class CepaDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }

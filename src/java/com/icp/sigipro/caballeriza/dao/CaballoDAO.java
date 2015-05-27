@@ -424,6 +424,7 @@ public class CaballoDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
@@ -456,6 +457,7 @@ public class CaballoDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
@@ -495,6 +497,7 @@ public class CaballoDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
@@ -535,6 +538,7 @@ public class CaballoDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
@@ -638,6 +642,7 @@ public class CaballoDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

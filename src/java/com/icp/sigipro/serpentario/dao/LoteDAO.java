@@ -97,7 +97,7 @@ public class LoteDAO {
             consulta.close();
             conexion.close();
          }catch (Exception e){
-             
+             e.printStackTrace();
          }
          
          return resultado;
@@ -267,7 +267,7 @@ public class LoteDAO {
                     float cantidad_actual = (float) (cantidad_original - (cantidad_entregada*0.001));
                     lote.setCantidad_actual(cantidad_actual);
                 }catch (Exception e){
-                    System.out.println(e.getStackTrace());
+                    e.printStackTrace();
                     lote.setCantidad_original(0);
                     lote.setCantidad_actual(0);
                 }
@@ -293,6 +293,7 @@ public class LoteDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

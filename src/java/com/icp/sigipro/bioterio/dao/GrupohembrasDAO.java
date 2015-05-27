@@ -44,6 +44,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       String mensaje = ex.getMessage();
       if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El identificador ya existe");
@@ -76,6 +77,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       String mensaje = ex.getMessage();
       if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El identificador ya existe");
@@ -106,6 +108,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -131,6 +134,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return grupohembras;
@@ -156,6 +160,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -173,6 +178,7 @@ public class GrupohembrasDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -188,6 +194,7 @@ public class GrupohembrasDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -217,6 +224,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación de cajas para el grupo");
     }
   }

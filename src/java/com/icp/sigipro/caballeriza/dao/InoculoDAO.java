@@ -88,6 +88,7 @@ public class InoculoDAO {
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
         }
         finally {
@@ -109,6 +110,7 @@ public class InoculoDAO {
                 }
                 cerrarConexion();
             } catch(SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos.");
             }
         }
@@ -164,7 +166,8 @@ public class InoculoDAO {
             }
         }
         catch (SQLException ex) {
-            throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
+            ex.printStackTrace();
+            throw new SIGIPROException("No se pudo registrar el Evento Clínico.");
         }
         finally {
             try {
@@ -182,6 +185,7 @@ public class InoculoDAO {
                 }
                 cerrarConexion();
             } catch(SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos.");
             }
         }
@@ -214,6 +218,7 @@ public class InoculoDAO {
             consulta.close();
             conexion.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El Inóculo no puede ser editado.");
         }
         return resultado;
@@ -244,6 +249,7 @@ public class InoculoDAO {
             conexion.close();
             rs.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El Inóculo no puede ser obtenido.");
         }
         return inoculo;
@@ -273,6 +279,7 @@ public class InoculoDAO {
             conexion.close();
             rs.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Los Inóculos no pueden ser accedidos.");
         }
         return resultado;
@@ -299,6 +306,7 @@ public class InoculoDAO {
             cerrarConexion();
             
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;        
@@ -324,6 +332,7 @@ public class InoculoDAO {
             conexion.close();
             rs.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El Inóculo no puede ser obtenido.");
         }
         return grupo;
@@ -370,6 +379,7 @@ public class InoculoDAO {
             cerrarConexion();
             
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Ourrió un error al realizar la solicitud.");
         }
         
@@ -384,6 +394,7 @@ public class InoculoDAO {
                 conexion = s.conectar();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;
@@ -396,6 +407,7 @@ public class InoculoDAO {
                     conexion.close();
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

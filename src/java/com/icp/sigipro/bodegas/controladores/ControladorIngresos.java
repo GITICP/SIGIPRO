@@ -180,7 +180,6 @@ public class ControladorIngresos extends SIGIPROServlet
 
         }
         catch (Exception ex) {
-          System.out.println(ex.getMessage());
           ex.printStackTrace();
         }
       }

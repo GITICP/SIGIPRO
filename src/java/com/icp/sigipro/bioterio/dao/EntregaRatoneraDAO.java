@@ -54,6 +54,7 @@ public class EntregaRatoneraDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
     }
     return resultado;
@@ -86,6 +87,7 @@ public class EntregaRatoneraDAO {
       cerrarConexion();
     }
       catch (Exception ex) {
+          ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al revisar la completitud de la entrega");
     }
   }
@@ -109,6 +111,7 @@ public class EntregaRatoneraDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -143,6 +146,7 @@ public class EntregaRatoneraDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return entrega_ratonera;
@@ -182,6 +186,7 @@ public class EntregaRatoneraDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -199,6 +204,7 @@ public class EntregaRatoneraDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -214,6 +220,7 @@ public class EntregaRatoneraDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }

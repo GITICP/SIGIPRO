@@ -47,7 +47,6 @@ public class SerpienteDAO {
             consulta.setFloat(8, s.getTalla_cola());
             consulta.setFloat(9, s.getPeso());
             consulta.setInt(10,s.getNumero_serpiente());
-            System.out.println(consulta);
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
@@ -58,6 +57,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(Exception ex){
+            ex.printStackTrace();
             return false;
         }
         return resultado;
@@ -74,7 +74,6 @@ public class SerpienteDAO {
             consulta.setBinaryStream(1, imagen,size);
             consulta.setInt(2, id_serpiente);
 
-            System.out.println(consulta);
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
             }
@@ -100,7 +99,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return nextval;
     }
@@ -118,7 +117,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return nextval;
     }
@@ -136,7 +135,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return nextval;
     }
@@ -156,6 +155,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(SQLException ex){
+            ex.printStackTrace();
             throw new SIGIPROException("Serpiente no pudo ser eliminada debido a que una o más objetos se encuentran asociadas a esta.");
         }
         return resultado;
@@ -337,7 +337,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch(Exception e) {
-            
+            e.printStackTrace();
         }
         return resultado;
     }
@@ -465,6 +465,7 @@ public class SerpienteDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

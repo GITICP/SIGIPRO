@@ -351,6 +351,7 @@ public class SolicitudDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -366,6 +367,7 @@ public class SolicitudDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -98,6 +98,7 @@ public class GrupoDeCaballosDAO
                 getConexion().close();
             }
             catch (SQLException ex_operaciones) {
+                ex_operaciones.printStackTrace();
                 throw new SIGIPROException("El Grupo de caballos no pudo ser guardado.");
             }
         }
@@ -121,6 +122,7 @@ public class GrupoDeCaballosDAO
             conexion.close();
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Grupo de caballos no pudo ser eliminado debido a que uno o más caballos se encuentran asociadas a este.");
         }
         return resultado;
@@ -188,6 +190,7 @@ public class GrupoDeCaballosDAO
                 getConexion().close();
             }
             catch (SQLException ex_operaciones) {
+                ex_operaciones.printStackTrace();
                 throw new SIGIPROException("El Grupo de caballos no pude ser editado.");
             }
         }
@@ -295,6 +298,7 @@ public class GrupoDeCaballosDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

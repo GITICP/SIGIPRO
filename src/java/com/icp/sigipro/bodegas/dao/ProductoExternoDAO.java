@@ -119,6 +119,7 @@ public class ProductoExternoDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se puede borrar este producto externo porque está ligado a uno o más productos internos.");
         }
         return resultado;
@@ -260,6 +261,7 @@ public class ProductoExternoDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             resultado = null;
         }
 
@@ -290,6 +292,7 @@ public class ProductoExternoDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             resultado = null;
         }
 
@@ -309,6 +312,7 @@ public class ProductoExternoDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }
@@ -324,6 +328,7 @@ public class ProductoExternoDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -141,7 +141,7 @@ public class VenenoDAO {
                 respuesta = (float) (cantidad_original - (cantidad_entregada*0.001));
             }
         }catch (Exception ex){
-                    
+            ex.printStackTrace();
         }
         return respuesta;
     }
@@ -163,7 +163,7 @@ public class VenenoDAO {
             consulta.close();
             conexion.close();
          }catch (Exception e){
-             
+             e.printStackTrace();
          }
          
          return resultado;
@@ -178,6 +178,7 @@ public class VenenoDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

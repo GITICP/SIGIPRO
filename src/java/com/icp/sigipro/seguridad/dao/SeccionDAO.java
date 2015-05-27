@@ -38,6 +38,7 @@ public class SeccionDAO {
         consulta.close();
         conexion.close();
       } catch (SQLException ex) {
+          ex.printStackTrace();
         resultado = null;
       }
     }
