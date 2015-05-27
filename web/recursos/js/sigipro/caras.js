@@ -102,11 +102,10 @@ function verificarFechas(fechai, fechaf, mensaje, headms) {
     // document.getElementById(fechaf).value = "";
 
   }
-}
-;
+};
 
 function confirmar() {
-  if ($('#mensajeFechas1').val() === "" &&
+  if ($('#mensajeFechas1').text() === "" &&
           $('#mensajeFechas2').text() === "" &&
           $('#mensajeFechas3').text() === "" &&
           $('#mensajeFechas4').text() === "" &&

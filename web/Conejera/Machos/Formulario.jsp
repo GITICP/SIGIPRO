@@ -104,10 +104,10 @@
           <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
           <c:choose>
             <c:when test= "${accion.equals('Editar')}">
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+              <button type="button" class="btn btn-primary" onclick="confirmar()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
             </c:when>
             <c:otherwise>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Macho</button>
+              <button type="button" class="btn btn-primary" onclick="confirmar()"><i class="fa fa-check-circle"></i> ${accion} Macho</button>
             </c:otherwise>
           </c:choose>
         </div>
