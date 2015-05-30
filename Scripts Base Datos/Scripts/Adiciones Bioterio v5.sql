@@ -38,7 +38,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (209, '[B
 --Entradas del Menu 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (208, 200, 'Salidas', '/Bioterio/Salidas?especie=True'); --salidas de los ratones
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (258, 250, 'Salidas', '/Bioterio/Salidas?especie=False');  --salidas de los conejos
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (209, 200, 'Pies de Cría', '/Bioterio/Pies'); 
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (209, 200, 'Pies de Cría', '/Ratonera/Pies'); 
 
 --Permisos del menu principal 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (208, 208);
