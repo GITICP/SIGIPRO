@@ -52,6 +52,7 @@ private final int[] permisos = {256, 1, 1};
             add("agregar");
             add("editar");
             add("eliminar");
+            add("trasladar");
         }
     };
  
@@ -211,7 +212,41 @@ private final int[] permisos = {256, 1, 1};
         }
         redireccionar(request, response, redireccion);
     }
+    protected void postTrasladar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "ConejosProduccion/Ver.jsp";
+        int id_produccion = Integer.parseInt(request.getParameter("id_produccion"));
+        int cant_vivos = Integer.parseInt(request.getParameter("cant_vivos"));
+        try {
+            ConejoProduccion conejo = dao.obtenerConejoProduccion(id_produccion);
+            if (cant_vivos <= conejo.getCantidad())
+            { conejo.setMortalidad(conejo.getCantidad() - cant_vivos);
+              dao.editarConejoProduccion(conejo);
+              BitacoraDAO bitacora = new BitacoraDAO();
+              bitacora.setBitacora(conejo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+              redireccion = "ConejosProduccion/index.jsp";
+              request.setAttribute("mensaje", helper.mensajeDeExito("Grupo de conejos de producción trasladado correctamente."));
+            }
+            else
+            {
+              request.setAttribute("mensaje", helper.mensajeDeError("La cantidad de vivos ingresados es mayor a la cantidad de conejos en el grupo"));
+            }
+            request.setAttribute("conejo", conejo);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
 
+        try {
+            List<ConejoProduccion> machos = dao.obtenerConejosProduccion();
+            request.setAttribute("conejos", machos);
+        }
+        catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        }
+        redireccionar(request, response, redireccion);
+    }
   // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
