@@ -79,6 +79,7 @@ public class Bitacora {
     public static final String ACCION_RECHAZAR = "RECHAZAR";
     public static final String ACCION_ENTREGAR = "ENTREGAR";
     public static final String ACCION_REPONER = "REPONER";
+    public static final String ACCION_ANULAR = "ANULAR";
 
    
     
