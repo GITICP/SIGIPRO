@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-      <label for="cv" class="control-label">*Colección Viva</label>
+      <label for="cv" class="control-label">*Localidad</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
