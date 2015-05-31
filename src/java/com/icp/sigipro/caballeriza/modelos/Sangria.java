@@ -32,6 +32,7 @@ public class Sangria {
     private float volumen_plasma_total;
     private float plasma_por_caballo;
     private float potencia;
+    private GrupoDeCaballos grupo;
     List<SangriaCaballo> sangrias_caballos;
     
     List<Caballo> caballos; //Este atributo es para ayudar y no se encuentra en la base de datos
@@ -180,6 +181,26 @@ public class Sangria {
     public void setSangrias_caballos(List<SangriaCaballo> sangrias_caballos)
     {
         this.sangrias_caballos = sangrias_caballos;
+    }
+
+    public GrupoDeCaballos getGrupo()
+    {
+        return grupo;
+    }
+
+    public void setGrupo(GrupoDeCaballos grupo)
+    {
+        this.grupo = grupo;
+    }
+
+    public List<Caballo> getCaballos()
+    {
+        return caballos;
+    }
+
+    public void setCaballos(List<Caballo> caballos)
+    {
+        this.caballos = caballos;
     }
     
     public void agregarSangriaCaballo(SangriaCaballo sangria_caballo) {

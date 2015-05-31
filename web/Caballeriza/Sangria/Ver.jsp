@@ -50,12 +50,10 @@
                         <div class="widget-content">
                             <table>
                                 <tr><td> <strong>Identificador:</strong></td> <td>${sangria.getId_sangria()} </td></tr>
-                                <tr><td> <strong>Responsable:</strong></td> <td>${sangria.getResponsable()} </td></tr>
-                                <tr><td> <strong>Sangría de Prueba:</strong></td> <td>${sangria.getSangria_prueba().getId_sangria_prueba()}</td></tr>
+                                <tr><td> <strong>Responsable:</strong></td> <td>${sangria.getResponsable().getNombre_completo()} </td></tr>
                                 <tr><td> <strong>Número de Informe de Control de Calidad:</strong></td> <td>${sangria.getNum_inf_cc()} </td></tr>
                                 <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>
                                 <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} </td></tr>
-                                <tr><td> <strong>Hematocrito Promedio:</strong></td> <td>${sangria.getHematrocito_promedio()} </td></tr>
                                 <tr><td> <strong>Peso de Plasma Total:</strong></td> <td>${sangria.getPeso_plasma_total()} </td></tr>
                                 <tr><td> <strong>Volumen de Plasma Total:</strong></td> <td>${sangria.getVolumen_plasma_total()} </td></tr>
                                 <tr><td> <strong>Plasma por Caballo:</strong></td> <td>${sangria.getPlasma_por_caballo()} </td></tr>
@@ -97,7 +95,6 @@
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">Nombre y Número de Caballo</th>
-                                                <th rowspan="2" class="campo-tabla-centrado">Hematocrito</th>
                                                 <th colspan="3">Día 1 - ${sangria.getFecha_dia1AsString()}</th>
                                                 <th colspan="3">Día 2 - ${sangria.getFecha_dia2AsString()}</th>
                                                 <th colspan="3">Día 3 - ${sangria.getFecha_dia3AsString()}</th>
@@ -119,7 +116,6 @@
                                             <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
                                                 <tr id="${caballo.getId_caballo()}">
                                                     <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
-                                                    <td class="campo-tabla-centrado">${sangria_caballo.getHematocrito()}</td>
                                                     <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()}</td>
                                                     <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia1() == 0) ? sin_datos : sangria_caballo.getPlasma_dia1()}</td>
                                                     <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia1() == 0)    ? sin_datos : sangria_caballo.getLal_dia1()}</td>

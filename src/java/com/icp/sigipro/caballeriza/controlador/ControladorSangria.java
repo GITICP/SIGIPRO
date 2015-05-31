@@ -105,7 +105,7 @@ public class ControladorSangria extends SIGIPROServlet
             request.setAttribute("sangria", sangria);
         }
         catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
@@ -173,8 +173,10 @@ public class ControladorSangria extends SIGIPROServlet
 
         int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
 
-        Sangria sangria = dao.obtenerSangriaConCaballosDePrueba(id_sangria);
-
+        Sangria sangria = dao.obtenerSangriaConCaballosDeGrupo(id_sangria);
+        UsuarioDAO usr_dao = new UsuarioDAO();
+        List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6);
+        request.setAttribute("usuarios_cab", lista_usuarios);
         request.setAttribute("sangria", sangria);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
@@ -290,6 +292,10 @@ public class ControladorSangria extends SIGIPROServlet
         u.setId_usuario(Integer.parseInt(request.getParameter("responsable")));
         sangria.setResponsable(u);
 
+        GrupoDeCaballos g = new GrupoDeCaballos();
+        g.setId_grupo_caballo(Integer.parseInt(request.getParameter("grupo")));
+        sangria.setGrupo(g);
+        
         String numero_informe_calidad = request.getParameter("num_inf_cc");
         String potencia = request.getParameter("potencia");
         String volumen_plasma_total = request.getParameter("volumen_plasma");

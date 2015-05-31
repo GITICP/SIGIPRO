@@ -7,9 +7,9 @@ package com.icp.sigipro.caballeriza.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
-import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Method;
@@ -50,8 +50,8 @@ public class SangriaDAO
             getConexion().setAutoCommit(false);
 
             consulta_sangria = getConexion().prepareStatement(
-                    " INSERT INTO caballeriza.sangrias(responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total) "
-                    + " VALUES (?,?,?,?,?) RETURNING id_sangria;"
+                    " INSERT INTO caballeriza.sangrias(responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total, id_grupo_caballos) "
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_sangria;"
             );
 
             consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
@@ -75,7 +75,7 @@ public class SangriaDAO
             else {
                 consulta_sangria.setFloat(5, s.getVolumen_plasma_total());
             }
-
+            consulta_sangria.setInt(6, s.getGrupo().getId_grupo_caballo());
             rs_sangria = consulta_sangria.executeQuery();
 
             if (rs_sangria.next()) {
@@ -176,7 +176,6 @@ public class SangriaDAO
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setFecha_dia2(rs.getDate("fecha_dia2"));
                 sangria.setFecha_dia3(rs.getDate("fecha_dia3"));
-                sangria.setHematrocito_promedio(rs.getFloat("hematrocito_promedio"));
                 sangria.setNum_inf_cc(rs.getInt("num_inf_cc"));
                 sangria.setPeso_plasma_total(rs.getFloat("peso_plasma_total"));
                 sangria.setPlasma_por_caballo(rs.getFloat("plasma_por_caballo"));
@@ -207,7 +206,6 @@ public class SangriaDAO
                     sangria_caballo.setSangre_dia1(rs.getFloat("sangre_dia1"));
                     sangria_caballo.setSangre_dia2(rs.getFloat("sangre_dia2"));
                     sangria_caballo.setSangre_dia3(rs.getFloat("sangre_dia3"));
-                    sangria_caballo.setHematocrito(rs.getFloat("hematrocito"));
 
                     sangria.agregarSangriaCaballo(sangria_caballo);
 
@@ -229,23 +227,23 @@ public class SangriaDAO
         return sangria;
     }
 
-    public Sangria obtenerSangriaConCaballosDePrueba(int id_sangria) throws SIGIPROException
+    public Sangria obtenerSangriaConCaballosDeGrupo(int id_sangria) throws SIGIPROException
     {
         Sangria sangria = new Sangria();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, "
-                    + "        s.responsable, s.potencia, sp.id_sangria_prueba, "
-                    + "        c.id_caballo, c.nombre, c.numero, c.numero_microchip, "
-                    + "        CASE "
-                    + "             WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true "
-                    + "             ELSE false "
-                    + "         END AS incluido "
-                    + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
-                    + " INNER JOIN caballeriza.sangrias_pruebas sp ON sp.id_sangria_prueba = s.id_sangria_prueba "
-                    + " INNER JOIN caballeriza.sangrias_pruebas_caballos spc ON sp.id_sangria_prueba = spc.id_sangria_prueba "
-                    + " INNER JOIN caballeriza.caballos c ON c.id_caballo = spc.id_caballo; "
+                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario," +
+"                             s.potencia, " +
+"                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, " +
+"                             CASE " +
+"                                  WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true " +
+"                                  ELSE false " +
+"                              END AS incluido " +
+"                      FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s " +
+"                      INNER JOIN seguridad.usuarios u ON u.id_usuario = s.responsable " +
+"                      INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos" +
+"                      INNER JOIN caballeriza.caballos c ON c.id_grupo_de_caballo = g.id_grupo_de_caballo; "
             );
 
             consulta.setInt(1, id_sangria);
@@ -259,11 +257,16 @@ public class SangriaDAO
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setNum_inf_cc(rs.getInt("num_inf_cc"));
                 sangria.setPotencia(rs.getFloat("potencia"));
-                //sangria.setResponsable(rs.getString("responsable"));
+                Usuario u = new Usuario();
+                u.setNombreCompleto(rs.getString("nombre_completo"));
+                u.setId_usuario(rs.getInt("id_usuario"));
+                sangria.setResponsable(u);
                 sangria.setVolumen_plasma_total(rs.getFloat("volumen_plasma_total"));
-                SangriaPrueba sangria_prueba = new SangriaPrueba();
-                sangria_prueba.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
-
+                
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                g.setNombre(rs.getString("nombre"));
+                
                 do {
                     Caballo caballo = new Caballo();
                     caballo.setId_caballo(rs.getInt("id_caballo"));
@@ -271,7 +274,7 @@ public class SangriaDAO
                     caballo.setNumero_microchip(rs.getString("numero_microchip"));
                     caballo.setNumero(rs.getInt("numero"));
 
-                    sangria_prueba.agregarCaballo(caballo);
+                    g.agregarCaballo(caballo);
                     if (rs.getBoolean("incluido")) {
                         SangriaCaballo sc = new SangriaCaballo();
                         sc.setCaballo(caballo);
@@ -279,6 +282,8 @@ public class SangriaDAO
                     }
                 }
                 while (rs.next());
+                
+                sangria.setGrupo(g);
             }
             else {
                 throw new SIGIPROException("La sangría que está intentando buscar no existe.");
