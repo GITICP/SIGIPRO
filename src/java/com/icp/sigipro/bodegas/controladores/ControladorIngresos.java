@@ -12,6 +12,7 @@ import com.icp.sigipro.bodegas.dao.IngresoDAO;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
 import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
+import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.configuracion.modelos.Seccion;
@@ -272,6 +273,9 @@ public class ControladorIngresos extends SIGIPROServlet
         Seccion seccion = new Seccion();
         seccion.setId_seccion(Integer.parseInt(request.getParameter("seccion")));
         ingreso.setSeccion(seccion);
+        
+        SubBodega sb = new SubBodega();
+        ingreso.setSub_bodega(sb);
 
         boolean valido = false;
 

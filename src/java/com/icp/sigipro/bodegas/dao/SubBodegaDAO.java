@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
+import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
@@ -14,6 +15,7 @@ import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -577,6 +579,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
         boolean resultado = false;
         PreparedStatement upsert_inventario = null;
         PreparedStatement insert_bitacora = null;
+        PreparedStatement insert_ingreso = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -636,6 +639,20 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
 
             upsert_inventario.executeUpdate();
+            
+            insert_ingreso = getConexion().prepareStatement(
+                " INSERT INTO bodega.ingresos (id_producto, id_seccion, fecha_ingreso, fecha_registro, cantidad, fecha_vencimiento, estado, destino) "
+              + " VALUES (?,?,current_date,current_date,?,?,?,?); "
+            );
+            
+            insert_ingreso.setInt(1, inventario_sub_bodega.getProducto().getId_producto());
+            insert_ingreso.setInt(2, inventario_sub_bodega.getSub_bodega().getSeccion().getId_seccion());
+            insert_ingreso.setInt(3, inventario_sub_bodega.getCantidad());
+            insert_ingreso.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+            insert_ingreso.setString(5, Ingreso.DISPONIBLE);
+            insert_ingreso.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+            
+            insert_ingreso.executeUpdate();
 
             insert_bitacora = prepararInsertBitacora(bitacora);
 
@@ -663,6 +680,9 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 }
                 if (insert_bitacora != null) {
                     insert_bitacora.close();
+                }
+                if (insert_ingreso != null) {
+                    insert_ingreso.close();
                 }
                 getConexion().close();
             }
