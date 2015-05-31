@@ -61,5 +61,5 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (70, '[Bo
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (70, 109);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (109, 100,'Sub Bodegas', '/Bodegas/SubBodegas');
 
-ALTER TABLE ONLY bodega.ingresos ADD destino integer;
+ALTER TABLE ONLY bodega.ingresos ADD id_sub_bodega integer;
 ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_destino FOREIGN KEY (destino) REFERENCES bodega.sub_bodegas (id_sub_bodega);
