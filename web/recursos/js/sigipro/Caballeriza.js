@@ -194,22 +194,23 @@ function llenar_campo_caballos() {
     $('#caballos').val(caballos_codificados.slice(0, -3));
 }
 
-function previewFile(){
+function previstaImagen(input,id){
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-  // Great success! All the File APIs are supported
-        var preview = document.getElementById("imagenSubida"); //selects the query named img
-        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+        var preview = document.getElementById("imagenSubida"+id); //selects the query named img
+        var file    = document.querySelector('input[id='+input.id.toString()+']').files[0]; //sames as here
         var size  = file.size;
-        var imagen = document.getElementById("imagen_Caballo");
+        var imagen = document.getElementById(input.id.toString());
         var reader  = new FileReader();
         if (size> 102400){
-            document.getElementById("imagen_Caballo").setCustomValidity("La imagen debe ser de 100KB o menos. ");
+            document.getElementById(input.id).setCustomValidity("La imagen debe ser de 100KB o menos. ");
+            document.getElementById("botonCancelar"+id).style.visibility = "visible";
         }else{
-            document.getElementById("imagen_Caballo").setCustomValidity("");
+            document.getElementById(input.id).setCustomValidity("");
+            document.getElementById("botonCancelar"+id).style.visibility = "visible";
         }       
         reader.onload = function (e) {
             preview.src = reader.result;
-            imagen.value = reader.toString();
+            input.value = reader.toString();
         };
         if (file) {
             reader.readAsDataURL(file); //reads the data as a URL
@@ -219,6 +220,21 @@ function previewFile(){
     }else {
         alert('The File APIs are not fully supported in this browser.');
   }
+}
+
+function mostrarGrande(imagen){
+    $('#imagenGrande').prop('src',imagen.src);
+    $('#modalVerImagen').modal('show');
+    
+}
+
+function eliminarImagen(id){
+    var preview = document.getElementById("imagenSubida"+id); //selects the query named img
+    preview.src = "";
+    var imagen = document.getElementById("imagen"+id);
+    imagen.value = "";
+    imagen.setCustomValidity("");
+    document.getElementById("botonCancelar"+id).style.visibility = "hidden";
 }
 
 function eliminarDeSelect(id, selector_select) {
