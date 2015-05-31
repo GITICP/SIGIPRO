@@ -147,7 +147,7 @@ public abstract class DAO<T extends IModelo>
                 IModelo o = (IModelo) tupla.getCampo().getType().newInstance();
                 List<PropiedadModelo> metodosAsociacion = o.getMetodos("set");
                 for (PropiedadModelo tuplaAsociacion : metodosAsociacion) {
-                    if (!tuplaAsociacion.getCampo().getType().getName().startsWith("com.icp.sigipro")) {
+                    if (!(tuplaAsociacion.getCampo().getType().getName().startsWith("com.icp.sigipro") ||  tuplaAsociacion.getCampo().getType().getName().startsWith("java.util.List"))) {
                         tuplaAsociacion.getMetodo().invoke(o, resultadoConsulta.getObject(tuplaAsociacion.getCampo().getName()));
                     }
                 }

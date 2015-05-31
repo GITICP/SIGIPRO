@@ -27,12 +27,12 @@ CREATE TABLE bodega.inventarios_sub_bodegas (
 CREATE TABLE bodega.bitacora_sub_bodegas (
         id_bitacora_sub_bodegas serial NOT NULL,
         fecha_accion timestamp DEFAULT NOW(),
-        id_sub_bodega int NOT NULL,
-        id_sub_bodega_destino int,
+        id_sub_bodega integer NOT NULL,
+        id_sub_bodega_destino integer,
         accion character varying(20) NOT NULL,
-        id_producto int NOT NULL,
-        cantidad int NOT NULL,
-        id_usuario int NOT NULL
+        id_producto integer NOT NULL,
+        cantidad integer NOT NULL,
+        id_usuario integer NOT NULL
 );
 
 ALTER TABLE ONLY bodega.usuarios_sub_bodegas_ingresos ADD CONSTRAINT pk_usuarios_sub_bodegas_ingresos PRIMARY KEY (id_sub_bodega, id_usuario);
@@ -61,3 +61,5 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (70, '[Bo
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (70, 109);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (109, 100,'Sub Bodegas', '/Bodegas/SubBodegas');
 
+ALTER TABLE ONLY bodega.ingresos ADD destino integer;
+ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_destino FOREIGN KEY (destino) REFERENCES bodega.sub_bodegas (id_sub_bodega);
