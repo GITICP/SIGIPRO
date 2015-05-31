@@ -13,13 +13,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
+import org.postgresql.util.Base64;
 
 /**
  *
  * @author Walter
  */
-public class EventoClinico
-{
+public class EventoClinico {
 
     private int id_evento;
     private Date fecha;
@@ -29,13 +29,15 @@ public class EventoClinico
     private TipoEvento tipo_evento;
     private List<Caballo> caballos;
     private List<GrupoDeCaballos> grupos_involucrados;
+    private long imagen_tamano;
+    private byte[] imagen;
+    private boolean accion;
+    private List<String> id_caballos;
 
-    public EventoClinico()
-    {
+    public EventoClinico() {
     }
 
-    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable, TipoEvento tipo_evento)
-    {
+    public EventoClinico(int id_evento, Date fecha, String descripcion, Usuario responsable, TipoEvento tipo_evento) {
         this.id_evento = id_evento;
         this.fecha = fecha;
         this.descripcion = descripcion;
@@ -43,96 +45,118 @@ public class EventoClinico
         this.tipo_evento = tipo_evento;
     }
 
-    public int getId_evento()
-    {
+    public List<String> getId_caballos() {
+        return id_caballos;
+    }
+
+    public void setId_caballos(List<String> id_caballos) {
+        this.id_caballos = id_caballos;
+    }
+
+    public boolean isAccion() {
+        return accion;
+    }
+
+    public void setAccion(boolean accion) {
+        this.accion = accion;
+    }
+
+    public long getImagen_tamano() {
+        return imagen_tamano;
+    }
+
+    public void setImagen_tamano(long imagen_tamano) {
+        this.imagen_tamano = imagen_tamano;
+    }
+
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
+    public String getImagen_ver() {
+        try {
+            return "data:image/jpeg;base64," + Base64.encodeBytes(this.getImagen());
+        } catch (Exception ex) {
+            return "";
+        }
+    }
+
+    public int getId_evento() {
         return id_evento;
     }
 
-    public void setId_evento(int id_evento)
-    {
+    public void setId_evento(int id_evento) {
         this.id_evento = id_evento;
     }
 
-    public Date getFecha()
-    {
+    public Date getFecha() {
         return fecha;
     }
 
-    public String getFechaAsString()
-    {
+    public String getFechaAsString() {
         return formatearFecha(fecha);
     }
 
-    public void setFecha(Date fecha)
-    {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
-    public String getDescripcion()
-    {
+    public String getDescripcion() {
         return descripcion;
     }
 
-    public void setDescripcion(String descripcion)
-    {
+    public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
-    public String getObservaciones()
-    {
+    public String getObservaciones() {
         return observaciones;
     }
 
-    public void setObservaciones(String observaciones)
-    {
+    public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
 
-    public Usuario getResponsable()
-    {
+    public Usuario getResponsable() {
         return responsable;
     }
 
-    public void setResponsable(Usuario responsable)
-    {
+    public void setResponsable(Usuario responsable) {
         this.responsable = responsable;
     }
 
-    public TipoEvento getTipo_evento()
-    {
+    public TipoEvento getTipo_evento() {
         return tipo_evento;
     }
 
-    public void setTipo_evento(TipoEvento tipo_evento)
-    {
+    public void setTipo_evento(TipoEvento tipo_evento) {
         this.tipo_evento = tipo_evento;
     }
 
-    public List<Caballo> getCaballos()
-    {
+    public List<Caballo> getCaballos() {
         return caballos;
     }
 
-    public void setCaballos(List<Caballo> caballos)
-    {
+    public void setCaballos(List<Caballo> caballos) {
         this.caballos = caballos;
     }
 
-    public void agregarCaballo(Caballo c)
-    {
+    public void agregarCaballo(Caballo c) {
         if (caballos == null) {
             caballos = new ArrayList<Caballo>();
         }
         caballos.add(c);
     }
 
-    public List<GrupoDeCaballos> getGrupos_involucrados()
-    {
+    public List<GrupoDeCaballos> getGrupos_involucrados() {
         return grupos_involucrados;
     }
 
-    public String getGrupos_involucradosAsString()
-    {
+    public String getGrupos_involucradosAsString() {
         String resultado = "Sin grupos asociados.";
         if (grupos_involucrados != null) {
             resultado = "";
@@ -144,21 +168,18 @@ public class EventoClinico
         return resultado;
     }
 
-    public void setGrupos_involucrados(List<GrupoDeCaballos> grupos_involucrados)
-    {
+    public void setGrupos_involucrados(List<GrupoDeCaballos> grupos_involucrados) {
         this.grupos_involucrados = grupos_involucrados;
     }
 
-    public void agregarGrupo(GrupoDeCaballos g)
-    {
+    public void agregarGrupo(GrupoDeCaballos g) {
         if (grupos_involucrados == null) {
             grupos_involucrados = new ArrayList<GrupoDeCaballos>();
         }
         grupos_involucrados.add(g);
     }
 
-    public boolean valididarCaballoEnEvento(Caballo c)
-    {
+    public boolean valididarCaballoEnEvento(Caballo c) {
         boolean resultado = false;
         if (caballos != null) {
             for (Caballo caballo : caballos) {
@@ -172,8 +193,7 @@ public class EventoClinico
     }
 
 //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
-    public String parseJSON()
-    {
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
         try {
@@ -182,22 +202,19 @@ public class EventoClinico
                 Field field = properties[i];
                 if (i != 0) {
                     JSON.put(field.getName(), field.get(this));
-                }
-                else {
+                } else {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
             JSON.put("id_tipo_evento", this.tipo_evento.getId_tipo_evento());
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
         }
         return JSON.toString();
     }
 
-    private String formatearFecha(Date fecha)
-    {
+    private String formatearFecha(Date fecha) {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
     }

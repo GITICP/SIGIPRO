@@ -18,18 +18,28 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.serpentario.modelos.Especie;
+import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.utilidades.HelpersHTML;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -52,8 +62,7 @@ public class ControladorEventoClinico extends SIGIPROServlet {
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
-            add("agregar");
-            add("editar");
+            add("agregareditar");
         }
     };
 
@@ -72,6 +81,7 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         request.setAttribute("helper", HelpersHTML.getSingletonHelpersHTML());
         request.setAttribute("evento", c);
         request.setAttribute("grupos_caballos", grupos_caballos);
+        request.setAttribute("imagenEvento", c.getImagen_ver());
         request.setAttribute("usuarios_cab_prod", lista_usuarios);
         request.setAttribute("listatipos", listatipos);
         request.setAttribute("accion", "Agregar");
@@ -95,6 +105,7 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         try {
             EventoClinico g = dao.obtenerEventoClinico(id_evento);
             List<Caballo> listacaballos = dao.obtenerCaballosEvento(id_evento);
+            request.setAttribute("imagenEvento", g.getImagen_ver());
             request.setAttribute("caballos", listacaballos);
             request.setAttribute("eventoclinico", g);
             redireccionar(request, response, redireccion);
@@ -117,77 +128,153 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6, 1);
         request.setAttribute("usuarios_cab_prod", lista_usuarios);
         request.setAttribute("listatipos", listatipos);
+        request.setAttribute("imagenEvento", eventoclinico.getImagen_ver());
         request.setAttribute("evento", eventoclinico);
         request.setAttribute("grupos_caballos", grupos_caballos);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
     }
 
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String redireccion = "Serpiente/index.jsp";
         boolean resultado = false;
-        String redireccion = "EventoClinico/Agregar.jsp";
-        EventoClinico c = construirObjeto(request);
-        String[] ids_caballos = request.getParameterValues("caballos");
-        if(ids_caballos == null) ids_caballos = new String[]{};
-        resultado = dao.insertarEventoClinico(c, ids_caballos);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(c.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Evento Clínico agregado correctamente"));
-            redireccion = "EventoClinico/index.jsp";
-        }
-        request.setAttribute("listaEventosClinicos", dao.obtenerEventosClinicos());
-        redireccionar(request, response, redireccion);
-    }
-
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        boolean resultado = false;
-        String redireccion = "EventoClinico/Editar.jsp";
-        EventoClinico c = construirObjeto(request);
-        c.setId_evento(Integer.parseInt(request.getParameter("id_evento")));
-        String[] ids_caballos = request.getParameterValues("caballos");
-        if(ids_caballos == null) ids_caballos = new String[]{};
-        resultado = dao.editarEventoClinico(c, ids_caballos);
-        //Funcion que genera la bitacora
-        BitacoraDAO bitacora = new BitacoraDAO();
-        bitacora.setBitacora(c.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_EVENTO_CLINICO,request.getRemoteAddr());
-        //*----------------------------*
-        HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-        if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Evento Clínico editado correctamente"));
-            redireccion = "EventoClinico/index.jsp";
-        }
-        request.setAttribute("listaEventosClinicos", dao.obtenerEventosClinicos());
-        redireccionar(request, response, redireccion);
-    }
-
-    private EventoClinico construirObjeto(HttpServletRequest request) throws SIGIPROException {
-        EventoClinico e = new EventoClinico();
-        TipoEventoDAO tipoeventodao = new TipoEventoDAO();
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date fecha;
-        java.sql.Date fechaSQL;
         try {
-            fecha = formatoFecha.parse(request.getParameter("fecha"));
-            fechaSQL = new java.sql.Date(fecha.getTime());
-            e.setFecha(fechaSQL);
-        } catch (ParseException ex) {
+            EventoClinico ec = new EventoClinico();
+            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            ec = construirObjeto(items);
 
+            if (ec.isAccion()) {
+                resultado = dao.insertarEventoClinico(ec, ec.getId_caballos());
+                if (resultado) {
+                    //Funcion que genera la bitacora
+                    BitacoraDAO bitacora = new BitacoraDAO();
+                    bitacora.setBitacora(ec.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());
+                    //*----------------------------*
+                    if (ec.getImagen() != null) {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(ec.getImagen());
+                        dao.insertarImagen(bais, ec.getId_evento(), ec.getImagen_tamano());
+                    }
+                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Evento Clínico agregado correctamente"));
+                    redireccion = "EventoClinico/index.jsp";
+                } else {
+                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                    request.setAttribute("mensaje", helper.mensajeDeError("Evento Clínico no pudo ser agregado correctamente."));
+                    redireccion = "EventoClinico/index.jsp";
+                }
+                request.setAttribute("listaEventosClinicos", dao.obtenerEventosClinicos());
+                redireccionar(request, response, redireccion);
+
+            } else {
+                resultado = dao.editarEventoClinico(ec, ec.getId_caballos());
+                if (resultado) {
+                    //Funcion que genera la bitacora
+                    BitacoraDAO bitacora = new BitacoraDAO();
+                    bitacora.setBitacora(ec.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());
+                    //*----------------------------*
+                    if (ec.getImagen() != null) {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(ec.getImagen());
+                        dao.insertarImagen(bais, ec.getId_evento(), ec.getImagen_tamano());
+                    }
+                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Evento Clínico editado correctamente"));
+                    redireccion = "EventoClinico/index.jsp";
+                } else {
+                    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+                    request.setAttribute("mensaje", helper.mensajeDeError("Evento Clínico no pudo ser editado correctamente."));
+                    redireccion = "EventoClinico/index.jsp";
+                }
+                request.setAttribute("listaEventosClinicos", dao.obtenerEventosClinicos());
+                redireccionar(request, response, redireccion);
+
+            }
+
+        } catch (FileUploadException e) {
+            throw new ServletException("Cannot parse multipart request.", e);
+        } catch (SIGIPROException ex) {
+            ex.printStackTrace();
         }
-        e.setDescripcion(request.getParameter("descripcion"));
-        e.setObservaciones(request.getParameter("observaciones"));
-        String tipodeevento= request.getParameter("tipoevento");
-        String[] tiposeleccionado;
-        tiposeleccionado=tipodeevento.split(",");
-        e.setTipo_evento(tipoeventodao.obtenerTipoEvento(Integer.parseInt(tiposeleccionado[0])));
-        Usuario responsable = new Usuario();
-        responsable.setId_usuario(Integer.parseInt(request.getParameter("responsable")));
-        e.setResponsable(responsable);
-        
-        return e;
+
+    }
+
+    private EventoClinico construirObjeto(List<FileItem> items) throws SIGIPROException {
+        EventoClinico ec = new EventoClinico();
+        TipoEventoDAO tipoeventodao = new TipoEventoDAO();
+        ec.setId_caballos(new ArrayList<String>());
+        for (FileItem item : items) {
+            System.out.println(item.getFieldName());
+            if (item.isFormField()) {
+                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+                String fieldName = item.getFieldName();
+                System.out.println(item.getString());
+
+                String fieldValue;
+                try {
+                    fieldValue = item.getString("UTF-8").trim();
+                } catch (UnsupportedEncodingException ex) {
+                    fieldValue = item.getString();
+                }
+                switch (fieldName) {
+                    case "id_evento":
+                        int id_evento = Integer.parseInt(fieldValue);
+                        ec.setId_evento(id_evento);
+                        break;
+                    case "descripcion":
+                        String descripcion = fieldValue;
+                        ec.setDescripcion(descripcion);
+                        break;
+                    case "observaciones":
+                        String observaciones = fieldValue;
+                        ec.setObservaciones(observaciones);
+                        break;
+                    case "accion":
+                        if (fieldValue.equals("Agregar")) {
+                            ec.setAccion(true);
+                        } else {
+                            ec.setAccion(false);
+                        }
+                        break;
+                    case "fecha":
+                        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                        java.util.Date fecha;
+                        java.sql.Date fechaSQL;
+                        try {
+                            fecha = formatoFecha.parse(fieldValue);
+                            fechaSQL = new java.sql.Date(fecha.getTime());
+                            ec.setFecha(fechaSQL);
+                        } catch (ParseException ex) {
+
+                        }
+                        break;
+                    case "tipoevento":
+                        String[] tiposeleccionado;
+                        tiposeleccionado = fieldValue.split(",");
+                        ec.setTipo_evento(tipoeventodao.obtenerTipoEvento(Integer.parseInt(tiposeleccionado[0])));
+                        break;
+                    case "responsable":
+                        Usuario responsable = new Usuario();
+                        responsable.setId_usuario(Integer.parseInt(fieldValue));
+                        ec.setResponsable(responsable);
+                        break;
+                    case "caballos":
+                        List<String> id_caballos = ec.getId_caballos();
+                        id_caballos.add(fieldValue);
+                        ec.setId_caballos(id_caballos);
+                }
+            } else {
+                // Process form file field (input type="file").
+                byte[] data = item.get();
+                long size = item.getSize();
+                if (size == 0) {
+                    ec.setImagen(null);
+                    ec.setImagen_tamano(0);
+                } else {
+                    ec.setImagen(data);
+                    ec.setImagen_tamano(size);
+                }
+            }
+        }
+        return ec;
     }
 
     @Override

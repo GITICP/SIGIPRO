@@ -202,10 +202,10 @@ function previstaImagen(input,id){
         var imagen = document.getElementById(input.id.toString());
         var reader  = new FileReader();
         if (size> 102400){
-            document.getElementById(input.id).setCustomValidity("La imagen debe ser de 100KB o menos. ");
+            input.setCustomValidity("La imagen debe ser de 100KB o menos. ");
             document.getElementById("botonCancelar"+id).style.visibility = "visible";
         }else{
-            document.getElementById(input.id).setCustomValidity("");
+            input.setCustomValidity("");
             document.getElementById("botonCancelar"+id).style.visibility = "visible";
         }       
         reader.onload = function (e) {
