@@ -12,13 +12,26 @@
     <div class="col-md-6">
         <input hidden="true" name="id_sangria" value="${sangria.getId_sangria()}">
         <input hidden="true" name="accion" value="${accion}">
-        <label for="responsable" class="control-label">*Responsable</label>
+        <label for="responsable" class="control-label">Responsable</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <input type="text" placeholder="Responsable Sangría" class="form-control" name="responsable" required
-                           value="${sangria.getResponsable()}" oninvalid="setCustomValidity('Este campo es requerido ')"
-                           onchange="setCustomValidity('')">
+                    <select id="seleccionResponsable" class="select2" name="responsable" 
+                            style='background-color: #fff;' required
+                            oninvalid="setCustomValidity('Por favor seleccione el responsable del evento')"
+                            onchange="setCustomValidity('')">
+                        <option value=''></option>
+                        <c:forEach items="${usuarios_cab}" var="usuario">
+                            <c:choose>
+                                <c:when test="${usuario.getId_usuario() == evento.getResponsable().getId_usuario()}" >
+                                    <option value="${usuario.getId_usuario()}" selected> ${usuario.getNombre_completo()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${usuario.getId_usuario()}"> ${usuario.getNombre_completo()}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
                 </div>
             </div>
         </div>
@@ -54,24 +67,24 @@
         </div>
     </div>
     <div class="col-md-6">
-        <label for="sangria_prueba" class="control-label">*Sangría de Prueba</label>
+        <label for="sangria_prueba" class="control-label">*Grupo de Caballos</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
                     <c:choose >
                         <c:when test="${accion == 'Agregar'}">
-                            <select id="seleccion-sangria-prueba" class="select2" name="sangria_prueba"
+                            <select id="seleccionInoculoGrupo" class="select2" name="grupo"
                                     style="background-color: #fff" required
                                     oninvalid="setCustomValidity('Por favor seleccione la sangría de prueba.')"
                                     onchange="setCustomValidity('')">
                                 <option value=""></option>
-                                <c:forEach items="${sangrias_prueba}" var="sangria_prueba">
-                                    <option value="${sangria_prueba.getId_sangria_prueba()}">${sangria_prueba.getId_sangria_prueba()}</option>
+                                <c:forEach items="${lista_grupos}" var="grupo">
+                                    <option value ="${grupo.getId_grupo_caballo()}">${grupo.getNombre()}</option>
                                 </c:forEach>
                             </select>
                         </c:when>
                         <c:otherwise>
-                            <input class="form-control" name="sangria_prueba" value="${sangria.getSangria_prueba().getId_sangria_prueba()}" readonly>
+                            <!-- Editar -->
                         </c:otherwise>
                     </c:choose>
 
@@ -80,16 +93,16 @@
         </div>
         <c:choose >
             <c:when test="${accion == 'Agregar'}">
-                <c:forEach items="${sangrias_prueba}" var="sangria_prueba">
-                    <div class="widget widget-table cuadro-opciones caballos-prueba" id="prueba-${sangria_prueba.getId_sangria_prueba()}" hidden>
+                <c:forEach items="${lista_grupos}" var="grupo_caballo">
+                    <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${grupo_caballo.getId_grupo_caballo()}" hidden>
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> Caballos de la sangría de prueba </h3>
+                            <h3><i class="fa fa-flask"></i> Caballos del Grupo ${grupo_caballo.getNombre()} para la sangría</h3>
                             <div class="widget-header-toolbar">
-                                <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Desmarcar Todos</a>
+                                <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Marcar Todos</a>
                             </div>
                         </div>
                         <div class="widget-content">
-                            <c:forEach items="${sangria_prueba.getCaballos()}" var="caballo">
+                            <c:forEach items="${grupo_caballo.getCaballos()}" var="caballo">
                                 <div class="col-md-4">
                                     <label class="fancy-checkbox">
                                         <input type="checkbox" value="${caballo.getId_caballo()}" name="caballos">

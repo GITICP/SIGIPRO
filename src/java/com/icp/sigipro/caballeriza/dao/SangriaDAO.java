@@ -11,6 +11,7 @@ import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Method;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -49,31 +50,30 @@ public class SangriaDAO
             getConexion().setAutoCommit(false);
 
             consulta_sangria = getConexion().prepareStatement(
-                    " INSERT INTO caballeriza.sangrias(id_sangria_prueba, responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total) "
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_sangria;"
+                    " INSERT INTO caballeriza.sangrias(responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total) "
+                    + " VALUES (?,?,?,?,?) RETURNING id_sangria;"
             );
 
-            consulta_sangria.setInt(1, s.getSangria_prueba().getId_sangria_prueba());
-            consulta_sangria.setString(2, s.getResponsable());
-
-            consulta_sangria.setInt(3, s.getSangrias_caballos().size());
+            consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
+            consulta_sangria.setInt(2, s.getSangrias_caballos().size());
+            
             if (s.getNum_inf_cc() == 0) {
-                consulta_sangria.setNull(4, java.sql.Types.INTEGER);
+                consulta_sangria.setNull(3, java.sql.Types.INTEGER);
             }
             else {
-                consulta_sangria.setInt(4, s.getNum_inf_cc());
+                consulta_sangria.setInt(3, s.getNum_inf_cc());
             }
             if (s.getPotencia() == 0.0f) {
+                consulta_sangria.setNull(4, java.sql.Types.FLOAT);
+            }
+            else {
+                consulta_sangria.setFloat(4, s.getPotencia());
+            }
+            if (s.getVolumen_plasma_total()== 0.0f) {
                 consulta_sangria.setNull(5, java.sql.Types.FLOAT);
             }
             else {
-                consulta_sangria.setFloat(5, s.getPotencia());
-            }
-            if (s.getVolumen_plasma_total()== 0.0f) {
-                consulta_sangria.setNull(6, java.sql.Types.FLOAT);
-            }
-            else {
-                consulta_sangria.setFloat(6, s.getVolumen_plasma_total());
+                consulta_sangria.setFloat(5, s.getVolumen_plasma_total());
             }
 
             rs_sangria = consulta_sangria.executeQuery();
@@ -158,11 +158,11 @@ public class SangriaDAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, spc.hematrocito "
+                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario"
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
                     + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
-                    + "   INNER JOIN caballeriza.sangrias_pruebas_caballos spc ON sc.id_caballo = spc.id_caballo AND spc.id_sangria_prueba = s.id_sangria_prueba; "
+                    + "   INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario; "
             );
 
             consulta.setInt(1, id_sangria);
@@ -181,12 +181,12 @@ public class SangriaDAO
                 sangria.setPeso_plasma_total(rs.getFloat("peso_plasma_total"));
                 sangria.setPlasma_por_caballo(rs.getFloat("plasma_por_caballo"));
                 sangria.setPotencia(rs.getFloat("potencia"));
-                sangria.setResponsable(rs.getString("responsable"));
                 sangria.setSangre_total(rs.getFloat("sangre_total"));
-                SangriaPrueba sangria_prueba = new SangriaPrueba();
-                sangria_prueba.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
-                sangria.setSangria_prueba(sangria_prueba);
                 sangria.setVolumen_plasma_total(rs.getFloat("volumen_plasma_total"));
+                Usuario usuario = new Usuario();
+                usuario.setNombreCompleto(rs.getString("nombre_completo"));
+                usuario.setId_usuario(rs.getInt("id_usuario"));
+                sangria.setResponsable(usuario);
 
                 do {
 
@@ -259,7 +259,7 @@ public class SangriaDAO
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setNum_inf_cc(rs.getInt("num_inf_cc"));
                 sangria.setPotencia(rs.getFloat("potencia"));
-                sangria.setResponsable(rs.getString("responsable"));
+                //sangria.setResponsable(rs.getString("responsable"));
                 sangria.setVolumen_plasma_total(rs.getFloat("volumen_plasma_total"));
                 SangriaPrueba sangria_prueba = new SangriaPrueba();
                 sangria_prueba.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
@@ -279,8 +279,6 @@ public class SangriaDAO
                     }
                 }
                 while (rs.next());
-
-                sangria.setSangria_prueba(sangria_prueba);
             }
             else {
                 throw new SIGIPROException("La sangría que está intentando buscar no existe.");
@@ -302,19 +300,16 @@ public class SangriaDAO
     {
         List<Sangria> resultado = new ArrayList<Sangria>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.sangrias");
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT s.*, u.nombre_completo, u.id_usuario FROM caballeriza.sangrias s INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario;");
             ResultSet rs = consulta.executeQuery();
             SangriaPruebaDAO dao = new SangriaPruebaDAO();
             while (rs.next()) {
                 Sangria sangria = new Sangria();
                 sangria.setId_sangria(rs.getInt("id_sangria"));
-                sangria.setSangria_prueba(dao.obtenerSangriaPrueba(rs.getInt("id_sangria_prueba")));
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setFecha_dia2(rs.getDate("fecha_dia2"));
                 sangria.setFecha_dia3(rs.getDate("fecha_dia3"));
-                sangria.setHematrocito_promedio(rs.getFloat("hematrocito_promedio"));
                 sangria.setNum_inf_cc(rs.getInt("num_inf_cc"));
-                sangria.setResponsable(rs.getString("responsable"));
                 sangria.setCantidad_de_caballos(rs.getInt("cantidad_de_caballos"));
                 sangria.setSangre_total(rs.getFloat("sangre_total"));
                 sangria.setPeso_plasma_total(rs.getFloat("peso_plasma_total"));
@@ -322,6 +317,10 @@ public class SangriaDAO
                 sangria.setPlasma_por_caballo(rs.getFloat("plasma_por_caballo"));
                 sangria.setPotencia(rs.getFloat("potencia"));
                 resultado.add(sangria);
+                Usuario usuario = new Usuario();
+                usuario.setNombreCompleto(rs.getString("nombre_completo"));
+                usuario.setId_usuario(rs.getInt("id_usuario"));
+                sangria.setResponsable(usuario);
             }
             consulta.close();
             cerrarConexion();
@@ -482,7 +481,7 @@ public class SangriaDAO
             
             consulta_sangria = getConexion().prepareStatement(consulta);
 
-            consulta_sangria.setString(1, s.getResponsable());
+            consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
 
             if (s.getNum_inf_cc() == 0) {
                 consulta_sangria.setNull(2, java.sql.Types.INTEGER);
