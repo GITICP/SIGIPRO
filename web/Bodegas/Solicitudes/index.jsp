@@ -41,14 +41,20 @@
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos">Préstamos</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Agregar Nueva Solicitud</a>
+                                <c:if test="${booladmin}">
+                                  <a id="btn-entregar-solicitudes" 
+                                     class="btn btn-warning btn-sm boton-accion"
+                                     >Entregar</a>
+                                </c:if>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" id="tablita">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
+                                        <th>Selección Entrega</th>
                                         <th>Número de Solicitud</th>
                                         <th>Usuario Solicitante</th>
                                         <th>Producto</th>
@@ -67,6 +73,17 @@
                                     <c:forEach items="${listaSolicitudes}" var="solicitud">
 
                                         <tr id ="${solicitud.getId_solicitud()}">
+                                            <td>
+                                              <c:choose>
+                                                    <c:when test="${solicitud.getEstado().equals('Aprobada')}">
+                                                         <input type="checkbox" name="entregar" value="${solicitud.getId_solicitud()}">
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                      <input type="checkbox" name="entregar" value="${solicitud.getId_solicitud()}" disabled="true">
+                                                    </c:otherwise>
+                                            </c:choose>
+                                            
+                                            </td>
                                             <td>
                                                 <a href="/SIGIPRO/Bodegas/Solicitudes?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
                                                     <div style="height:100%;width:100%">
@@ -94,10 +111,6 @@
                                                         <c:choose>
                                                             <c:when test="${solicitud.getEstado().equals('Aprobada')}">
                                                                 <td>
-                                                                    <a class="btn btn-primary btn-sm boton-accion "  onclick="confirmarAuth(${solicitud.getId_solicitud()},
-                                                                                    '${solicitud.getUsuario().getNombreCompleto()}',
-                                                                                    '${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()})',
-                                                                                    '${solicitud.getCantidad()} (${solicitud.getInventario().getSeccion().getNombre_seccion()})')" >Entregar</a>
                                                                     <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Bodegas/Solicitudes?accion=cerrar&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                                                 </td>
                                                             </c:when>
@@ -128,8 +141,7 @@
 
             <jsp:attribute name="form">
                 <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
-                    <input hidden="true" name="id_solicitud_auth" id="id_solicitud_auth" value="${id_solicitud_authent}">
-                    <input hidden="true" name="id_solicitud_auth2" id="id_solicitud_auth2" >
+                    <input hidden="true" name="ids-por-entregar" id="ids-por-entregar" >
                     <input hidden="true" name="accionindex" id="accionindex" value="accionindex">
                     ${mensaje_auth}
                     <table class="tabla-modal">
@@ -148,28 +160,21 @@
                                 <p id='mensajeValidación' style='color:red;'><p>
                             </td>
                         </tr>
+                        
                     </table>
                     <hr>
                     <h4> Detalle de Despacho</h4>
-                    <table class="tabla-modal">
-                        <tr>
-                            <td><label for="num-sol" class="control-label"> Número de Solicitud: </label></td>
-                            <td><input class="form-control" type="text" id="num-sol"  name="num-sol" disabled></td>
-                        </tr>
-                        <tr>
-                            <td><label for="usr-sol" class="control-label"> Usuario Solicitante: </label></td>
-                            <td><input class="form-control" type="text" id="usr-sol"  name="usr-sol" disabled></td>
-                        </tr>
-                        <tr>
-                            <td><label for="prd" class="control-label"> Producto:  </label></td>
-                            <td><input class="form-control" type="text" id="prd"  name="prd" disabled></td></td>
-                        </tr>
-                        <tr>
-                            <td><label for="cnt" class="control-label"> Cantidad: </label></td>
-                            <td><input class="form-control" type="text" id="cnt"  name="cnt" disabled></td>
-                        </tr>
+                    <hr>
+                    <table class="tabla-modal" id="tabla_informacion">
+                      <thead> 
+                          <th>Id Solicitud</th>
+                          <th>Usuario Solicitante</th>
+                          <th>Producto</th>
+                          <th>Cantidad</th>
+                      </thead>
+                      <tbody>
+                      </tbody>
                     </table>
-
                     <div class="form-group">
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
@@ -180,9 +185,7 @@
 
 
             </jsp:attribute>
-
-        </t:modal>
-
+           </t:modal>
         <t:modal idModal="ModalRechazar" titulo="Observaciones">
 
             <jsp:attribute name="form">
