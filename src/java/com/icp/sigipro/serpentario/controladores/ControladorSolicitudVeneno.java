@@ -65,6 +65,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             add("editar");
             add("entregar");
             add("aprobar");
+            
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -74,6 +75,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             add("editar");
             add("rechazar");
             add("entregar");
+            add("anular");
            
             
         }
@@ -292,7 +294,7 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
     {
         boolean resultado = false;
         String redireccion = "SolicitudVeneno/index.jsp";
-        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud_rechazar")));
         if (s.getEstado().equals("Solicitado")){
             s.setEstado("Rechazado");
             s.setObservaciones(request.getParameter("observaciones"));
@@ -316,6 +318,38 @@ public class ControladorSolicitudVeneno extends SIGIPROServlet {
             request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
             request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
             request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser rechazazda."));
+            redireccionar(request, response, redireccion);
+        }
+    }
+
+    protected void postAnular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        String redireccion = "SolicitudVeneno/index.jsp";
+        Solicitud s = dao.obtenerSolicitud(Integer.parseInt(request.getParameter("id_solicitud_anular")));
+        if (s.getEstado().equals("Aprobado")){
+            s.setEstado("Anulado");
+            s.setObservaciones(request.getParameter("observaciones"));
+            resultado = dao.editarSolicitud(s);
+
+            if (resultado){
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(s.parseJSON(),Bitacora.ACCION_ANULAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUDS,request.getRemoteAddr());
+                //*----------------------------*
+                redireccion = "SolicitudVeneno/index.jsp";
+                request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+                request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
+                request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud anulada correctamente"));
+            }
+            redireccionar(request, response, redireccion);
+        }else{
+            redireccion = "SolicitudVeneno/index.jsp";
+            request.setAttribute("listaSolicitudes", dao.obtenerSolicitudes());
+            request.setAttribute("booladmin", this.verificarAdminSolicitud(request));
+            request.setAttribute("boolentrega", this.verificarEntregaSolicitud(request));
+            request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no puede ser anulada."));
             redireccionar(request, response, redireccion);
         }
     }
