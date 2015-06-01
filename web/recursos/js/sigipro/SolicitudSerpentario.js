@@ -6,7 +6,12 @@ $(function() {
 
 $(document).on("click", ".rechazar-Modal", function () {                            
                             var id_solicitud = $(this).data('id');
-                            $("#id_solicitud").val(id_solicitud);                          
+                            $("#id_solicitud_rechazar").val(id_solicitud);                          
+                            });
+                            
+$(document).on("click", ".anular-Modal", function () {                            
+                            var id_solicitud = $(this).data('id');
+                            $("#id_solicitud_anular").val(id_solicitud);                          
                             });
             
 function setLote(){

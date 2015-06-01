@@ -49,25 +49,37 @@
                             </div>
                         </div>
                         ${mensaje}
-                        <div class="widget-content">
-                            <table>
-                                <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
-                                <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
-                                <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
-                                <tr><td> <strong>Observaciones:</strong> <td>${eventoclinico.getObservaciones()} </td></tr>
-                                <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                <tr><td> <strong>Responsable:</strong> <td>
-                                        <c:set var="val" value=""/>
-                                        <c:choose> 
-                                            <c:when test="${eventoclinico.getResponsable() == null}">
-                                                No Tiene Usuario Responsable
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${eventoclinico.getResponsable().getNombre_completo()}
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td></tr>                                         
-                            </table>
+                        <div class="col-md-6">
+                            <div class="widget-content">
+                                <table>
+                                    <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
+                                    <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
+                                    <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
+                                    <tr><td> <strong>Observaciones:</strong> <td>${eventoclinico.getObservaciones()} </td></tr>
+                                    <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
+                                    <tr><td> <strong>Responsable:</strong> <td>
+                                            <c:set var="val" value=""/>
+                                            <c:choose> 
+                                                <c:when test="${eventoclinico.getResponsable() == null}">
+                                                    No Tiene Usuario Responsable
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${eventoclinico.getResponsable().getNombre_completo()}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td></tr>                                         
+                                </table>
+                            </div>
+                        </div>
+                            <div class="col-md-6" align="right">
+                                <div class="widget-content">
+                                    <c:if test="${!imagenEvento.equals('')}">
+                                        <img src="${imagenEvento}" height="250" width="250">
+                                    </c:if>
+                                </div>
+
+
+                            </div>
                             <br>
                             <div class="widget widget-table">
                                 <div class="widget-header">

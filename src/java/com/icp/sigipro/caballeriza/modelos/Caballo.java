@@ -57,8 +57,7 @@ public class Caballo {
     private String sexo;
     private String color;
     private String otras_sennas;
-    private byte[] fotografia;
-    private long fotografiaTamano;
+    
     private String estado;
     private GrupoDeCaballos grupo_de_caballos;
     private BigDecimal hematrocito;
@@ -73,13 +72,13 @@ public class Caballo {
     private BigDecimal plasma_dia3;
     private BigDecimal LAL_dia3;
     private List<EventoClinico> eventos;
-    
+    private List<Imagen> imagenes;
     private List<Peso> pesos;
 
     public Caballo() {
     }
 
-    public Caballo(int id_caballo, String nombre, String numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, byte[] fotografia, String estado, GrupoDeCaballos grupo_de_caballos) {
+    public Caballo(int id_caballo, String nombre, String numero_microchip, Date fecha_nacimiento, Date fecha_ingreso, String sexo, String color, String otras_sennas, String estado, GrupoDeCaballos grupo_de_caballos) {
         this.id_caballo = id_caballo;
         this.nombre = nombre;
         this.numero_microchip = numero_microchip;
@@ -88,7 +87,6 @@ public class Caballo {
         this.sexo = sexo;
         this.color = color;
         this.otras_sennas = otras_sennas;
-        this.fotografia = fotografia;
         this.estado = estado;
         this.grupo_de_caballos = grupo_de_caballos;
     }
@@ -120,14 +118,6 @@ public class Caballo {
 
     public void setAccion(boolean accion) {
         this.accion = accion;
-    }
-
-    public long getFotografiaTamano() {
-        return fotografiaTamano;
-    }
-
-    public void setFotografiaTamano(long fotografiaTamano) {
-        this.fotografiaTamano = fotografiaTamano;
     }
 
     public int getId_caballo() {
@@ -222,12 +212,12 @@ public class Caballo {
         this.otras_sennas = valor_final;
     }
 
-    public byte[] getFotografia() {
-        return fotografia;
+    public List<Imagen> getImagenes() {
+        return imagenes;
     }
 
-    public void setFotografia(byte[] fotografia) {
-        this.fotografia = fotografia;
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
     }
 
     public String getEstado() {

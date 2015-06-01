@@ -1,4 +1,4 @@
-DROP TABLE bodega.usuarios_sub_bodegas_ingresos;
+﻿DROP TABLE bodega.usuarios_sub_bodegas_ingresos;
 DROP TABLE bodega.usuarios_sub_bodegas_egresos;
 
 CREATE TABLE bodega.usuarios_sub_bodegas_ingresos ( 
@@ -62,4 +62,4 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (109, 100,'Sub Bodegas', '/Bodegas/SubBodegas');
 
 ALTER TABLE ONLY bodega.ingresos ADD id_sub_bodega integer;
-ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_destino FOREIGN KEY (destino) REFERENCES bodega.sub_bodegas (id_sub_bodega);
+ALTER TABLE ONLY bodega.ingresos ADD CONSTRAINT fk_destino FOREIGN KEY (id_sub_bodega) REFERENCES bodega.sub_bodegas (id_sub_bodega);

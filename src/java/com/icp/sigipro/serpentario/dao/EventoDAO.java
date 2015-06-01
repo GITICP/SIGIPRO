@@ -231,7 +231,7 @@ public class EventoDAO {
     public Evento obtenerEvento(int id_evento){
         Evento e = new Evento();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos as eventos INNER JOIN serpentario.cateogiras as categorias ON eventos.id_categoria = categorias.id_categoria "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos as eventos INNER JOIN serpentario.categorias as categorias ON eventos.id_categoria = categorias.id_categoria "
                     + "WHERE eventos.id_evento=?;");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();

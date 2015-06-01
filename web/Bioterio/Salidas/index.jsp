@@ -7,7 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="ConejosProduccion" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Bioterio" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
@@ -18,9 +18,9 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bioterio - Conejera</li>
+            <li>Bioterio - Salida</li>
             <li> 
-              <a href="/SIGIPRO/Conejera/ConejosProduccion?">Grupos de Conejos de Produccion</a>
+              <a href="/SIGIPRO/Bioterio/Salidas?especie=${especie}">Salida Extraordinaria</a>
             </li>
           </ul>
         </div>
@@ -36,9 +36,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i>Grupos de Conejos de Produccion</h3>
+              <h3><i class="fa fa-barcode"></i>Salida Extraordinaria</h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Conejera/ConejosProduccion?accion=agregar">Agregar Grupo</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Bioterio/Salidas?accion=agregar&especie=${especie}">Agregar Salida</a>
                 </div>
             </div>
             ${mensaje}
@@ -47,31 +47,26 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Fecha del Grupo</th>
-                    <th>Cantidad</th>
-                    <th>Mortalidad</th>
+                      <th>Fecha</th>
+                      <th>Cantidad</th>
+                      <th>Razón</th>
+                      <th>Observaciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${conejos}" var="conejo">
+                  <c:forEach items="${lista_salida}" var="salida">
                       
                     <tr>
                       <td>
-                        <a href="/SIGIPRO/Conejera/ConejosProduccion?accion=ver&id_produccion=${conejo.getId_produccion()}">
+                        <a href="/SIGIPRO/Bioterio/Salidas?accion=ver&id_salida=${salida.getId_salida()}">
                           <div style="height:100%;width:100%">
-                            ${conejo.getIdentificador()}
+                            ${salida.getFecha_S()}
                           </div>
                         </a>
                       </td>
-                      <td>${conejo.getCantidad()}</td>
-                      <c:choose>
-                      <c:when test="${conejo.getMortalidad() >-1}">
-                      <td>${conejo.getMortalidad()}</td>
-                      </c:when>
-                      <c:otherwise>
-                        <td>Sin Trasladar</td>
-                      </c:otherwise>
-                      </c:choose>
+                      <td>${salida.getCantidad()}</td>
+                      <td>${salida.getRazon()}</td>
+                      <td>${salida.getObservaciones()}</td>
                     </tr>
 
                   </c:forEach>

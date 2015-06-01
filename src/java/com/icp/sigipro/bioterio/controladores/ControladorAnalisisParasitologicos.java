@@ -218,7 +218,7 @@ public class ControladorAnalisisParasitologicos extends SIGIPROServlet
 
         try {
             List<AnalisisParasitologico> lista_analisis = dao.obtenerAnalisisParasitologicos(especie_consultada);
-            request.setAttribute("conejos", lista_analisis);
+            request.setAttribute("lista_analisis", lista_analisis);
         }
         catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));

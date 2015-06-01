@@ -22,7 +22,7 @@ CREATE TABLE caballeriza.caballos (
     otras_sennas character varying(500),
     fotografia bytea,
     estado character varying(45) NOT NULL,
-    id_grupo_de_caballos integer NOT NULL
+    id_grupo_de_caballo integer
 );
 
 CREATE TABLE caballeriza.pesos_caballos (
@@ -105,7 +105,7 @@ ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caba
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES caballeriza.tipos_eventos(id_tipo_evento);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_usuario_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_usuario_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
-ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_grupo FOREING KEY (id_grupo_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballos);
+ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_grupo FOREIGN KEY (id_grupo_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.sangrias_caballos ADD CONSTRAINT fk_id_sangria FOREIGN KEY (id_sangria) REFERENCES caballeriza.sangrias(id_sangria);
 ALTER TABLE ONLY caballeriza.sangrias_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 
@@ -136,6 +136,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (402, 400, 'Caballos', '/Caballeriza/Caballo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (403, 400, 'Grupos', '/Caballeriza/GrupoDeCaballos');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (404, 400, 'Eventos Clínicos', '/Caballeriza/EventoClinico');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (407, 400, 'Sangría', '/Caballeriza/Sangria');
 
 --Permisos Menu Principal
 
@@ -254,7 +255,6 @@ $$ LANGUAGE plpgsql;
     -- Menú
 
         INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (405, 400, 'Inóculos', '/Caballeriza/Inoculo');
-        INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (407, 400, 'Sangría', '/Caballeriza/Sangria');
         INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba');
 
     -- Permisos - Menú

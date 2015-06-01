@@ -77,12 +77,16 @@
                                 </div>
                             </div>
                             <div class="col-md-6" align="right">
-                                <div class="widget-content">
-                                    <c:if test="${!imagenCaballo.equals('')}">
-                                        <img src="${imagenCaballo}" height="250" width="250">
-                                    </c:if>
-                                </div>
-
+                                <table>
+                                <c:forEach items="${caballo.getImagenes()}" var='imagen'>
+                                    <td>
+                                        <div class="widget-content">
+                                            <span style="cursor:zoom-in">
+                                        <img title="Click para ampliar imagen." src="${imagen.getImagen_ver()}" height="100" width="100" onclick="mostrarGrande(this)"></span>
+                                  </div>  
+                                    </td>
+                                </c:forEach>
+                                </table>
 
                             </div>
                         </div>
@@ -287,3 +291,14 @@
     </jsp:attribute>
 
 </t:modal>
+        
+<t:modal idModal="modalVerImagen" titulo="Ver Imagen">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <img id="imagenGrande" src="" height="540" width="540">
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
