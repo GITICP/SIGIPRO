@@ -93,4 +93,14 @@ $(document).ready(function(){
         $('#ids-por-entregar').val(ids);
         $("#ModalAutorizar").modal('show');
     });
+    
+    $("#entrega-sub-bodega").change(function() {
+        if($(this).prop("checked")){
+            $("#select-sub-bodegas").show();
+            $("#seleccion-sub-bodega").prop("required", true);
+        } else {
+            $("#select-sub-bodegas").hide();
+            $("#seleccion-sub-bodega").prop("required", false);
+        }
+    });
 });

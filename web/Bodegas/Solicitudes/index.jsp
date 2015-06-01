@@ -42,9 +42,9 @@
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos">Préstamos</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Agregar Nueva Solicitud</a>
                                 <c:if test="${booladmin}">
-                                  <a id="btn-entregar-solicitudes" 
-                                     class="btn btn-warning btn-sm boton-accion"
-                                     >Entregar</a>
+                                    <a id="btn-entregar-solicitudes" 
+                                       class="btn btn-warning btn-sm boton-accion"
+                                       >Entregar</a>
                                 </c:if>
                             </div>
                         </div>
@@ -74,15 +74,15 @@
 
                                         <tr id ="${solicitud.getId_solicitud()}">
                                             <td>
-                                              <c:choose>
+                                                <c:choose>
                                                     <c:when test="${solicitud.getEstado().equals('Aprobada')}">
-                                                         <input type="checkbox" name="entregar" value="${solicitud.getId_solicitud()}">
+                                                        <input type="checkbox" name="entregar" value="${solicitud.getId_solicitud()}">
                                                     </c:when>
                                                     <c:otherwise>
-                                                      <input type="checkbox" name="entregar" value="${solicitud.getId_solicitud()}" disabled="true">
+                                                        <input type="checkbox" name="entregar" value="${solicitud.getId_solicitud()}" disabled="true">
                                                     </c:otherwise>
-                                            </c:choose>
-                                            
+                                                </c:choose>
+
                                             </td>
                                             <td>
                                                 <a href="/SIGIPRO/Bodegas/Solicitudes?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
@@ -160,20 +160,36 @@
                                 <p id='mensajeValidación' style='color:red;'><p>
                             </td>
                         </tr>
-                        
+                        <tr>
+                            <td>Enviar a Sub Bodega</td>
+                            <td><input id="entrega-sub-bodega" type="checkbox" name="entrega_sub_bodega" value="true"></td>
+                        </tr>
+                        <tr id="select-sub-bodegas" hidden="true">
+                            <td>Sub Bodega</td>
+                            <td>
+                                <select id="seleccion-sub-bodega" class="select2" style='background-color: #fff;' name="sub_bodega"
+                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                        onchange="setCustomValidity('')">
+                                    <option value=''></option>
+                                    <c:forEach items="${lista_sub_bodegas}" var="sub_bodega">
+                                        <option value=${sub_bodega.getId_sub_bodega()}> ${sub_bodega.getNombre()}</option>
+                                    </c:forEach>
+                                </select> 
+                            </td>
+                        </tr>
                     </table>
                     <hr>
                     <h4> Detalle de Despacho</h4>
                     <hr>
                     <table class="tabla-modal" id="tabla_informacion">
-                      <thead> 
-                          <th>Id Solicitud</th>
-                          <th>Usuario Solicitante</th>
-                          <th>Producto</th>
-                          <th>Cantidad</th>
-                      </thead>
-                      <tbody>
-                      </tbody>
+                        <thead> 
+                        <th>Id Solicitud</th>
+                        <th>Usuario Solicitante</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
                     </table>
                     <div class="form-group">
                         <div class="modal-footer">
@@ -185,7 +201,7 @@
 
 
             </jsp:attribute>
-           </t:modal>
+        </t:modal>
         <t:modal idModal="ModalRechazar" titulo="Observaciones">
 
             <jsp:attribute name="form">
