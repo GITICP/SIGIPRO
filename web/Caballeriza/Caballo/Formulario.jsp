@@ -13,7 +13,6 @@
         <div class="col-md-6">
             <input hidden="true" name="id_caballo" value="${caballo.getId_caballo()}">
             <input hidden="true" name="accion" value="${accion}">
-            <input hidden='true' id='imagenSubida2' value=''>
             <label for="nombre" class="control-label">*Nombre</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -152,49 +151,82 @@
                 </div>
             </div>  
         </div>
-                    
-       <div class="col-md-12">
+
+        <div class="col-md-12">
             <div class="widget widget-table">
- <div class="widget-header">
-   <h3><i class="fa fa-bug"></i> Imagen</h3>
- </div>
-    <div class="widget-content">
-<label for="imagen" class="control-label">Seleccione una imagen</label>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <div class="input-group">                
-                      <input class='clearable' type="file" id="imagen_Caballo" name="imagen" accept="image/*" 
-                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
-                           onchange="previewFile()" />
-                    <div><img name='imagenSubida' id="imagenSubida" src='' height="200" alt=""></div>
-                  </div>
+                <div class="widget-header">
+                    <h3><i class="fa fa-image"></i> Imagenes</h3>
                 </div>
-              </div>
-              <c:if test="${!imagenCaballo.equals('')}">
-                  Imagen Actual: <img src="${imagenCaballo}" height="100">
-              </c:if>
-</div>
-</div>
-    
-<!-- Esta parte es la de los permisos de un rol -->
-<p class="campos-requeridos">
-    Los campos marcados con * son requeridos.
-</p>  
+                <c:choose>
+                    <c:when test="${accion.equals('Agregar')}">
+                        <jsp:include page="ImagenesAgregar.jsp"></jsp:include>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="col-md-12">
+                            <c:forEach items="${caballo.getImagenes()}" var="imagen">
+                                <div class="col-md-4">
+                                    <div class="widget-content">
+                                        <label for="imagen" class="control-label">Seleccione una imagen</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">                
+                                                    <input class='clearable' type="file" id="imagen${imagen.getId_imagen()}" name="${imagen.getId_imagen()}" accept="image/*" 
+                                                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                                           onchange="previstaImagen(this, ${imagen.getId_imagen()})" /> <button type="button" id='botonCancelar${imagen.getId_imagen()}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${imagen.getId_imagen()})"> Borrar</button>
+                                                    <div><img name='imagenSubida' id="imagenSubida${imagen.getId_imagen()}" src='' height="100" alt=""></div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        Imagen Actual: <img src="${imagen.getImagen_ver()}" height="50">
+                                    </div>
+                                </div>
+                            </c:forEach>
+                            <c:forEach var="numero" begin="${empieza}" end="${termina}">
+                                <div class="col-md-4">
+                                    <div class="widget-content">
+                                        <label for="imagen" class="control-label">Seleccione una imagen</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">                
+                                                    <input class='clearable' type="file" id="imagen${numero}" name="imagen" accept="image/*" 
+                                                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                                           onchange="previstaImagen(this, ${numero})" /> <button type="button" id='botonCancelar${numero}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${numero})"> Borrar</button>
+                                                    <div><img name='imagenSubida' id="imagenSubida${numero}" src='' height="100" alt=""></div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img src="${imagen.getImagen_ver()}" height="50">
+                                    </div>
+                                </div>
+                            </c:forEach>
+
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
+            </div>
+
+            <!-- Esta parte es la de los permisos de un rol -->
+            <p class="campos-requeridos">
+                Los campos marcados con * son requeridos.
+            </p>  
 
 
-<div class="form-group">
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-        <c:choose>
-          <c:when test= "${accion.equals('Editar')}">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-          </c:when>
-          <c:otherwise>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
-          </c:otherwise>
-        </c:choose>
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <c:choose>
+                        <c:when test= "${accion.equals('Editar')}">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Caballo</button>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-       </div>
-</div>
 </form>

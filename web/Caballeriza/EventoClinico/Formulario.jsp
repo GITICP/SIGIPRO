@@ -7,12 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form class="form-horizontal" autocomplete="off" method="post" action="EventoClinico">
+<form class="form-horizontal" autocomplete="off" enctype='multipart/form-data' method="post" action="EventoClinico">
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_evento" value="${evento.getId_evento()}">
             <input hidden="true" name="accion" value="${accion}">
-            <input hidden='true' id='imagenSubida2' value=''>
             <label for="tipoevento" class="control-label">*Tipo del Evento Clínico</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -159,8 +158,29 @@
                 </c:forEach>
             </div>
         </div>
-    </div>
 
+    </div>
+    <div class="widget widget-table">
+        <div class="widget-header">
+            <h3><i class="fa fa-image"></i> Imagen</h3>
+        </div>
+        <div class="widget-content">
+            <label for="imagen" class="control-label">Seleccione una imagen</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">                
+                        <input class='clearable' type="file" id="imagen1" name="imagen" accept="image/*" 
+                               oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                               onchange="previstaImagen(this, 1)" /> <button type="button" id='botonCancelar1' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(1)"> Borrar</button>
+                        <div><img name='imagenSubida' id="imagenSubida1" src='' height="150" alt=""></div>
+                    </div>
+                </div>
+            </div>
+            <c:if test="${!imagenEvento.equals('')}">
+                Imagen Actual: <img src="${imagenEvento}" height="100">
+            </c:if>
+        </div>
+    </div>
     <!-- Esta parte es la de los permisos de un rol -->
     <p class="campos-requeridos">
         Los campos marcados con * son requeridos.
