@@ -7,7 +7,11 @@ package com.icp.sigipro.bioterio.controladores;
 
 
 import com.icp.sigipro.bioterio.dao.CepaDAO;
+import com.icp.sigipro.bioterio.dao.PieDAO;
+import com.icp.sigipro.bioterio.dao.PiexCepaDAO;
 import com.icp.sigipro.bioterio.modelos.Cepa;
+import com.icp.sigipro.bioterio.modelos.Pie;
+import com.icp.sigipro.bioterio.modelos.PiexCepa;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
@@ -33,6 +37,8 @@ public class ControladorCepas extends  SIGIPROServlet {
 
   private final int[] permisos = {202, 1, 1};
   private CepaDAO dao = new CepaDAO();
+  private PiexCepaDAO pcdao = new PiexCepaDAO();
+  private PieDAO pdao = new PieDAO();
   private HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
   protected final Class clase = ControladorCepas.class;
@@ -92,7 +98,12 @@ public class ControladorCepas extends  SIGIPROServlet {
     int id_cepa = Integer.parseInt(request.getParameter("id_cepa"));
     try {
       Cepa s = dao.obtenerCepa(id_cepa);
+      PiexCepa p = pcdao.obtenerPiexCepa(id_cepa);
+      List<Pie> pies = pdao.obtenerPiesRestantes();
+      request.setAttribute("pies", pies);
       request.setAttribute("cepa", s);
+      request.setAttribute("pieasociado", p);
+      
     }
     catch (Exception ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));

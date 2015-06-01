@@ -18,7 +18,17 @@ public class ConejoProduccion {
   private String identificador;
   private int cantidad;
   private String detalle_procedencia;
+  private int mortalidad;
 
+  public int getMortalidad() {
+    return mortalidad;
+  }
+
+  public void setMortalidad(int mortalidad) {
+    this.mortalidad = mortalidad;
+  }
+
+  
   public int getId_produccion() {
     return id_produccion;
   }
