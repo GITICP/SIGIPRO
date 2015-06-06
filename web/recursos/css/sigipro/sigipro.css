@@ -83,3 +83,11 @@
     margin-right: 1em;
     margin-bottom: 1em;
 }
+
+#dialogo-entregas {
+    width: 1100px;
+}
+
+#tabla_informacion {
+    width: 100%;
+}

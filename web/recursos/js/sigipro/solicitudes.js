@@ -88,19 +88,60 @@ $(document).ready(function(){
             var id = pivote + $(this).val();
             ids += id;
             var fila = $(this).parent().parent();
-            $('#tabla_informacion').append('<tr><td>'+fila.attr('id')+'</td><td>'+fila.find('td:eq(2)').html()+'</td><td>'+fila.find('td:eq(3)').html()+'</td><td>'+fila.find('td:eq(4)').html()+'</td></tr>');
+            var celdas = fila.find('td');
+            var fila_html = $('<tr>');
+            fila_html.attr('id', 'info-entrega-' + fila.attr('id'));
+            fila_html.data('perecedero', fila.data('perecedero'));
+                var id = $('<td>');
+                    id.text(fila.attr('id'));
+                    fila_html.append(id);
+                var usuario = $('<td>');
+                    usuario.text(celdas.eq(2).text());
+                    fila_html.append(usuario);
+                var producto = $('<td>');
+                    producto.text(celdas.eq(3).text());
+                    fila_html.append(producto);
+                var cantidad = $('<td>');
+                    cantidad.text(celdas.eq(4).text());
+                    fila_html.append(cantidad);
+            $('#tabla_informacion').append(fila_html);
         });
+        
         $('#ids-por-entregar').val(ids);
         $("#ModalAutorizar").modal('show');
     });
     
     $("#entrega-sub-bodega").change(function() {
+        var tabla = $('#tabla_informacion');
+        
         if($(this).prop("checked")){
+            
+            tabla.find('th:eq(4)').show();
             $("#select-sub-bodegas").show();
             $("#seleccion-sub-bodega").prop("required", true);
+            
+            tabla.find('tbody > tr').each(function(){
+                var celda = $("<td>");
+                if($(this).data('perecedero')) {
+                    var input = $('<input>');
+                    celda.append(input);
+                } else {
+                    celda.text('Producto No Perecedero');
+                }
+                
+                $(this).append(celda);
+            });
+            
         } else {
+            
+            tabla.find("tbody > tr").each(function(){
+                $(this).find('td:last').remove();
+            });
+            
+            tabla.find('th:eq(4)').hide();
             $("#select-sub-bodegas").hide();
             $("#seleccion-sub-bodega").prop("required", false);
+            
         }
     });
 });

@@ -260,6 +260,7 @@ public class SolicitudDAO
                   + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
                   + "         ci.nombre AS nombre_producto, "
                   + "         ci.codigo_icp AS cod_icp ,"
+                  + "         ci.perecedero, "
                   + "         ci.id_producto, "
                   + "         i.stock_actual "
                   + " FROM ( ";
@@ -315,6 +316,7 @@ public class SolicitudDAO
                     p.setId_producto(rs.getInt("id_producto"));
                     p.setCodigo_icp(rs.getString("cod_icp"));
                     p.setNombre(rs.getString("nombre_producto"));
+                    p.setPerecedero(rs.getBoolean("perecedero"));
                     
                     i.setId_producto(rs.getInt("id_producto"));
 
@@ -354,46 +356,52 @@ public class SolicitudDAO
             java.util.Date hoy = new java.util.Date();
             Date hoysql = new Date(hoy.getTime());
             String estado = "Entregada";
-            PreparedStatement consulta_entregar = getConexion().prepareStatement(" UPDATE bodega.solicitudes"
-                    + " SET estado=?, fecha_entrega=?, id_usuario_recibo=?"
-                    + " WHERE id_solicitud=?");
-
+            
             String[] ids_parseados = parsearAsociacion("#af#", ids);
-
-            for (int i = 0; i < ids_parseados.length; i++) {
-                consulta_entregar.setInt(4, Integer.parseInt(ids_parseados[i]));
-                consulta_entregar.setInt(3, id_usuario_recibo);
-                consulta_entregar.setDate(2, hoysql);
-                consulta_entregar.setString(1, estado);
-                consulta_entregar.addBatch();
-            }
-
-            int[] resultados = consulta_entregar.executeBatch();
-            consulta_entregar.close();
-
-            boolean ciclo_break = false;
-
-            for (int i = 0; i < resultados.length; i++) {
-                if (resultados[i] != 1) {
-                    ciclo_break = true;
-                    break;
-                }
+            
+            PreparedStatement consulta_entregar = getConexion().prepareStatement(
+                    " UPDATE bodega.solicitudes"
+                  + " SET estado=?, fecha_entrega=?, id_usuario_recibo=?"
+                  + " WHERE id_solicitud in " + this.pasar_ids_solicitudes(ids_parseados) + ";"
+            );
+            
+            consulta_entregar.setInt(3, id_usuario_recibo);
+            consulta_entregar.setDate(2, hoysql);
+            consulta_entregar.setString(1, estado);
+            
+            int cant_resultados = consulta_entregar.executeUpdate();
+            
+            PreparedStatement consulta_inventarios = getConexion().prepareStatement(
+                    " SELECT i.id_producto, s.id_solicitud, s.cantidad "
+                  + " FROM (SELECT id_solicitud, cantidad, id_inventario FROM bodega.solicitudes WHERE id_solicitud in (1,2)) s "
+                  + "     INNER JOIN bodega.inventarios i ON i.id_inventario = s.id_inventario; "
+            );
+            
+            ResultSet rs_solicitudes = consulta_inventarios.executeQuery();
+            
+            List<Solicitud> solicitudes = new ArrayList<Solicitud>();
+            
+            while(rs_solicitudes.next()) {
+                cant_resultados++;
+                Solicitud s = new Solicitud();
+                    s.setId_solicitud(rs_solicitudes.getInt("id_solicitud"));
+                    s.setCantidad(rs_solicitudes.getInt("cantidad"));
+                    Inventario i = new Inventario();
+                    i.setId_producto(rs_solicitudes.getInt("id_producto"));
+                    s.setInventario(i);
             }
             
-
-            if (ciclo_break) {
-                resultado = false;
-            }
-            else {
-                resultado = true;
-            }
-
+            rs_solicitudes.close();
+            
+            consulta_inventarios.close();
+            consulta_entregar.close();
+            
+            resultado = cant_resultados == ids_parseados.length;
         }
         catch (SQLException ex) {
             ex.printStackTrace();
             try {
                 getConexion().rollback();
-                // Mapear mensaje.
                 throw new SIGIPROException("No se pudo realizar la entrega múltiple.");
             }
             catch (SQLException roll_ex) {
@@ -456,5 +464,17 @@ public class SolicitudDAO
                 conexion = null;
             }
         }
+    }
+    
+    private String pasar_ids_solicitudes(String[] ids_solicitudes)
+    {
+        String solicitudes = "(";
+        for (String s : ids_solicitudes) {
+            solicitudes = solicitudes + s;
+            solicitudes = solicitudes + ",";
+        }
+        solicitudes = solicitudes.substring(0, solicitudes.length() - 1);
+        solicitudes = solicitudes + ")";
+        return solicitudes;
     }
 }

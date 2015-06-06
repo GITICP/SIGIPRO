@@ -72,7 +72,7 @@
                                 <tbody>
                                     <c:forEach items="${listaSolicitudes}" var="solicitud">
 
-                                        <tr id ="${solicitud.getId_solicitud()}">
+                                        <tr id ="${solicitud.getId_solicitud()}" data-perecedero="${solicitud.getInventario().getProducto().isPerecedero()}">
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${solicitud.getEstado().equals('Aprobada')}">
@@ -137,7 +137,7 @@
             <!-- /main -->
         </div>
 
-        <t:modal idModal="ModalAutorizar" titulo="Firma de Retiro">
+        <t:modal idModal="ModalAutorizar" titulo="Firma de Retiro" id_dialogo="dialogo-entregas">
 
             <jsp:attribute name="form">
                 <form class="form-horizontal" id="form_modalautorizar" data-show-auth="${show_modal_auth}" method="post" action="Solicitudes">
@@ -181,12 +181,13 @@
                     <hr>
                     <h4> Detalle de Despacho</h4>
                     <hr>
-                    <table class="tabla-modal" id="tabla_informacion">
+                    <table id="tabla_informacion">
                         <thead> 
                         <th>Id Solicitud</th>
                         <th>Usuario Solicitante</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
+                        <th hidden="true">Fecha de Vencimiento</th>
                         </thead>
                         <tbody>
                         </tbody>
