@@ -41,7 +41,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Espacio  ${caja.getNumero()} del Grupo ${caja.getGrupo().getIdentificador()} </h3>
+                            <h3><i class="fa fa-archive"></i> Espacio  ${caja.getNumero()} del Grupo ${caja.getGrupo().getIdentificador()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

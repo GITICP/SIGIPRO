@@ -42,7 +42,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Grupo ${conejo.getIdentificador()}</h3>
+                            <h3><i class="sigipro-rabbit-group"></i> Grupo ${conejo.getIdentificador()}</h3>
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/ConejosProduccion?accion=editar&id_produccion=${conejo.getId_produccion()}">Editar Grupo</a>
                                 <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar el grupo de producción" data-form-id="form-eliminar-conejoproduccion">Eliminar Grupo</a>

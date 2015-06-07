@@ -42,7 +42,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Pie ${pie.getCodigo()}</h3>
+                            <h3><i class="sigipro-mouse-1"></i> Pie ${pie.getCodigo()}</h3>
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ratonera/Pies?accion=editar&id_pie=${pie.getId_pie()}">Editar Pie</a>
                                 <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar el pie" data-form-id="form-eliminar-pie">Eliminar Pie</a>

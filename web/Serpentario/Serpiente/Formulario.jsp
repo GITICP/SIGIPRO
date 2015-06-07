@@ -226,7 +226,7 @@
     <div class="col-md-12">
         <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-bug"></i> Imagen</h3>
+                <h3><i class="fa fa-file-image-o"></i> Imagen</h3>
             </div>
             <div class="widget-content">
                 <label for="imagen" class="control-label">Seleccione una imagen</label>

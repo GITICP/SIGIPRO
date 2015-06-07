@@ -21,7 +21,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">SIGIPRO</a>
+        <a class="navbar-brand" href="/SIGIPRO">SIGIPRO</a>
     </div>
     <div class="navbar-collapse collapse">
 

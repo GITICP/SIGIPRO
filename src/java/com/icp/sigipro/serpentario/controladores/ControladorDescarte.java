@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorDescarte extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 300, 301, 302};
+    private final int[] permisos = {1, 363, 363, 363};
     //-----------------
     private DescarteDAO dao = new DescarteDAO();
     private EventoDAO eventodao = new EventoDAO();

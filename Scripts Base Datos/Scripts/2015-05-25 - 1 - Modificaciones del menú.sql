@@ -47,6 +47,7 @@ UPDATE seguridad.entradas_menu_principal SET orden = 4 WHERE id_menu_principal =
 UPDATE seguridad.entradas_menu_principal SET orden = 5 WHERE id_menu_principal = 297;
 UPDATE seguridad.entradas_menu_principal SET orden = 1 WHERE id_menu_principal = 307;
 UPDATE seguridad.entradas_menu_principal SET orden = 2 WHERE id_menu_principal = 308;
+UPDATE seguridad.entradas_menu_principal SET orden = 3 WHERE id_menu_principal = 310;
 
 
 -- Orden Bioterio
