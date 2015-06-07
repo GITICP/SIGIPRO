@@ -34,7 +34,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Agregar Nueva Salida Extraordinaria</h3>
+              <h3><i class="fa fa-sign-out"></i> Agregar Nueva Salida Extraordinaria</h3>
             </div>
             ${mensaje}
             <div class="widget-content">

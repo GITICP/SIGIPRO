@@ -33,7 +33,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Editar Salida ${analisis.getFecha()}</h3>
+              <h3><i class="fa fa-sign-out"></i> Editar Salida ${analisis.getFecha()}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
