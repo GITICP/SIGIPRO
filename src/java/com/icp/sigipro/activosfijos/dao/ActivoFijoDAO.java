@@ -73,9 +73,11 @@ public class ActivoFijoDAO
             cerrarConexion();
         }
         catch (PSQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Esta placa ya existe en el sistema");
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             Logger.getLogger(ActivoFijoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
@@ -279,13 +281,14 @@ public class ActivoFijoDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             try {
                 getConexion().rollback();
-
                 // Mapear mensaje.
                 throw new SIGIPROException("No se pudo eliminar debido a que el activo fijo se referencia con otros registros.");
             }
             catch (SQLException roll_ex) {
+                roll_ex.printStackTrace();
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
         }
@@ -302,6 +305,7 @@ public class ActivoFijoDAO
                 }
             }
             catch (SQLException roll_ex) {
+                roll_ex.printStackTrace();
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
         }
@@ -324,6 +328,7 @@ public class ActivoFijoDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -339,6 +344,7 @@ public class ActivoFijoDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

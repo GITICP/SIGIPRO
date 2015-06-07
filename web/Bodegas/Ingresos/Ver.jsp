@@ -44,7 +44,7 @@
                                     </c:if>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${contienePermisoEditar}">
+                            <c:if test="${contienePermisoEditar && ingreso.getSub_bodega() == null}">
                                 <div class="btn-group widget-header-toolbar">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bodegas/Ingresos?accion=editar&id_ingreso=${ingreso.getId_ingreso()}">Editar</a>
                                 </div>
@@ -64,6 +64,7 @@
                                 <tr><td> <strong>Cantidad ingresada: </strong></td> <td>${ingreso.getCantidad()} </td></tr>
                                 <tr><td> <strong>Estado: </strong></td> <td>${ingreso.getEstado()} </td></tr>
                                 <tr><td> <strong>Precio: </strong></td> <td>${ingreso.getPrecio()} </td></tr>
+                                <tr><td> <strong>Destino </strong></td> <td>${(ingreso.getSub_bodega() == null) ? "Bodega" : ingreso.getSub_bodega().getNombre()} </td></tr>
                             </table>
                             <br>
                             <!-- END WIDGET TICKET TABLE -->

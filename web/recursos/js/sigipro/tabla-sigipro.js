@@ -1,61 +1,68 @@
 $(document).ready(function () {
-  var cantidadTablas = $('.sigipro-tabla-filter').length;
-  if (cantidadTablas > 0) {
-    var selectorTabla = '.sigipro-tabla-filter';
-    $(selectorTabla).each(function () {
-      var dtTable = $(this).DataTable({// use DataTable, not dataTable
-        sDom: // redefine sDom without lengthChange and default search box
-                "t" +
-                "<'row'<'col-sm-6'i><'col-sm-6'p>>"
-      });
-      var ths = '';
-      var cantidadColumnas = $(this).find('thead th').length;
+    $.fn.dataTable.moment('DD/MM/YYYY');
+    
+    var cantidadTablas = $('.sigipro-tabla-filter').length;
+    if (cantidadTablas > 0) {
+        var selectorTabla = '.sigipro-tabla-filter';
+        $(selectorTabla).each(function () {
+            var dtTable = $(this).DataTable({// use DataTable, not dataTable
+                sDom:
+                        "t" +
+                        "<'row'<'col-sm-6'i><'col-sm-6'p>>"
+            });
+            var ths = '';
+            var cantidadColumnas = $(this).find('thead th').length;
 
-      for (i = 0; i < cantidadColumnas; i++) {
-        ths += '<th></th>';
-      }
+            for (i = 0; i < cantidadColumnas; i++) {
+                ths += '<th></th>';
+            }
 
-      $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
-      $(this).find('thead .row-filter th').each(function () {
-        $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
-      });
+            $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
+            $(this).find('thead .row-filter th').each(function () {
+                $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+            });
 
-      $(this).find('.row-filter input').on('keyup change', function () {
-        dtTable
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-      });
-    });
-  }
+            $(this).find('.row-filter input').on('keyup change', function () {
+                dtTable
+                        .column($(this).parent().index() + ':visible')
+                        .search(this.value)
+                        .draw();
+            });
+        });
+    }
     var cantidadTablas = $('.sigipro-desc-filter').length;
     if (cantidadTablas > 0) {
-      var selectorTabla = '.sigipro-desc-filter';
-      $(selectorTabla).each(function () {
-        var dtTable = $(this).DataTable({// use DataTable, not dataTable
-          sDom: // redefine sDom without lengthChange and default search box
-                  "t" +
-                  "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-          "order": [[ 0, "desc" ]]
-        });
-        var ths = '';
-        var cantidadColumnas = $(this).find('thead th').length;
+        var selectorTabla = '.sigipro-desc-filter';
+        $(selectorTabla).each(function () {
+            var columna_filtro = 0;
+            if($(this).data("columna-filtro")){
+                columna_filtro = $(this).data("columna-filtro");
+            }
+            
+            var dtTable = $(this).DataTable({
+                sDom:
+                        "t" +
+                        "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+                "order": [[columna_filtro, "desc"]]
+            });
+            var ths = '';
+            var cantidadColumnas = $(this).find('thead th').length;
 
-        for (i = 0; i < cantidadColumnas; i++) {
-          ths += '<th></th>';
-        }
+            for (i = 0; i < cantidadColumnas; i++) {
+                ths += '<th></th>';
+            }
 
-        $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
-        $(this).find('thead .row-filter th').each(function () {
-          $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
-        });
+            $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
+            $(this).find('thead .row-filter th').each(function () {
+                $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+            });
 
-        $(this).find('.row-filter input').on('keyup change', function () {
-          dtTable
-                  .column($(this).parent().index() + ':visible')
-                  .search(this.value)
-                  .draw();
+            $(this).find('.row-filter input').on('keyup change', function () {
+                dtTable
+                        .column($(this).parent().index() + ':visible')
+                        .search(this.value)
+                        .draw();
+            });
         });
-      });
     }
 });

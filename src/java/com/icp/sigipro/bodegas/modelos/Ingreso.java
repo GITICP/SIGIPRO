@@ -20,6 +20,7 @@ public class Ingreso extends IModelo
 {
   int id_ingreso;
   ProductoInterno producto;
+  SubBodega sub_bodega;
   Seccion seccion;
   Date fecha_ingreso;
   Date fecha_registro;
@@ -144,6 +145,16 @@ public class Ingreso extends IModelo
   {
     this.precio = precio;
   }
+
+    public SubBodega getSub_bodega()
+    {
+        return sub_bodega;
+    }
+
+    public void setSub_bodega(SubBodega sub_bodega)
+    {
+        this.sub_bodega = sub_bodega;
+    }
   
   public String getFecha_vencimientoAsString(){
     if(fecha_vencimiento != null){

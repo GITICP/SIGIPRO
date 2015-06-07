@@ -31,7 +31,7 @@ public class Ubicacion
                 }
             }          
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return JSON.toString();
     }

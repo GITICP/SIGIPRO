@@ -74,7 +74,7 @@ public class ProductoExterno_InternoDAO
 
         }
         catch (SQLException ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -97,7 +97,7 @@ public class ProductoExterno_InternoDAO
 
         }
         catch (SQLException ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -132,6 +132,7 @@ public class ProductoExterno_InternoDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 

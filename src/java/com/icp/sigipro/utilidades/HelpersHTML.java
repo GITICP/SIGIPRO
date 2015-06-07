@@ -35,6 +35,11 @@ public class HelpersHTML
       DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
       return df.format(date);
   }
+    
+    public Date getFecha_hoy_asDate(){
+      Date date = new Date();
+      return date;
+  }
 
   public String mensajeDeError(String mensaje)
   {

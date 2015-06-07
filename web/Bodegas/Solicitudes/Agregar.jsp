@@ -23,7 +23,7 @@
           <ul class="breadcrumb">
             <li>Bodegas</li>
             <li> 
-              <a href="/SIGIPRO/Bodegas/Solicitudes?">Solicitudes</a>
+              <a href="/SIGIPRO/Bodegas/Solicitudes?">Solicitudes </a>
             </li>
             <li class="active"> Agregar Nueva Solicitud </li>
 

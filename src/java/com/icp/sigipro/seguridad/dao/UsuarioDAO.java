@@ -6,6 +6,7 @@
 package com.icp.sigipro.seguridad.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.*;
 import com.icp.sigipro.utilidades.UtilidadEmail;
 import java.math.BigInteger;
@@ -118,12 +119,12 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
         return resultado;
     }
-
+    
     public Usuario obtenerUsuario(int idUsuario)
     {
         Usuario resultado = null;
@@ -224,7 +225,41 @@ public class UsuarioDAO
             conexion.close();
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 
+        return resultado;
+    }
+
+    public Usuario obtenerUsuario(String nombre_usuario)
+    {
+        Usuario resultado = null;
+        try {
+            SingletonBD s = SingletonBD.getSingletonBD();
+            Connection conexion = s.conectar();
+
+            PreparedStatement consulta = conexion.prepareStatement(" Select id_usuario,id_seccion,nombre_completo "
+                                                                   + " From seguridad.usuarios"
+                                                                   + " Where nombre_usuario = ? ");
+
+            consulta.setString(1, nombre_usuario);
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+
+            if (resultadoConsulta.next()) {
+                resultado = new Usuario();
+                int id_usuario = resultadoConsulta.getInt("id_usuario");
+                int id_seccion = resultadoConsulta.getInt("id_seccion");
+
+                resultado.setId_usuario(id_usuario);
+                resultado.setNombre_usuario(nombre_usuario);
+                resultado.setId_seccion(id_seccion);
+                resultado.setNombre_completo(resultadoConsulta.getString("nombre_completo"));
+
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -254,7 +289,7 @@ public class UsuarioDAO
             conexion.close();
         }
         catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -531,6 +566,9 @@ public class UsuarioDAO
         }
         return resultado;
     }
+    
+    
+
 
     public List<Usuario> obtenerUsuarios()
     {
@@ -552,6 +590,39 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+    
+    
+    
+    
+        public List<Usuario> obtenerUsuarios(Usuario u)
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+
+        List<Usuario> resultado = null;
+
+        if (conexion != null) {
+            try {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
+                                                    + "us.id_seccion, us.id_puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                                                    + "FROM seguridad.usuarios us "
+                                                    + "WHERE us.id_seccion = ?; ");
+                consulta.setInt(1, u.getId_seccion());
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarUsuarios(resultadoConsulta);
+                resultadoConsulta.close();
+                consulta.close();
+                conexion.close();
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -615,6 +686,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -641,6 +713,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -700,6 +773,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -737,6 +811,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -843,10 +918,133 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
         return resultado;
+    }
+
+    public boolean AutorizarRecibo(String usuario, String contrasenna)
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+        boolean resultado = false;
+
+        if (conexion != null) {
+            try {
+                PreparedStatement consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena "
+                                                                                 + "FROM seguridad.usuarios us "
+                                                                                 + "WHERE us.nombre_usuario = ? and us.contrasena = ?");
+
+                consultaContrasena.setString(1, usuario);
+                String hash = md5(contrasenna);
+                consultaContrasena.setString(2, hash);
+                ResultSet resultadoConsulta = consultaContrasena.executeQuery();
+                if (resultadoConsulta.next()) {
+                    resultado = true;
+                }
+                resultadoConsulta.close();
+                consultaContrasena.close();
+                conexion.close();
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+
+    public List<Usuario> obtenerUsuariosSeccion(int... ids_secciones) throws SIGIPROException
+    {
+        List<Integer> secciones = new ArrayList<Integer>();
+        for (int i : ids_secciones) {
+            secciones.add(i);
+        }
+        String secciones_final = pasar_id_secciones(secciones);
+        
+        List<Usuario> resultado = new ArrayList<Usuario>();
+
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+
+        if (conexion != null) {
+            try {
+                consulta = conexion.prepareStatement(" SELECT id_usuario, nombre_completo FROM seguridad.usuarios WHERE id_seccion in " + secciones_final + ";");
+
+                rs = consulta.executeQuery();
+
+                while (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setId_usuario(rs.getInt("id_usuario"));
+                    u.setNombreCompleto(rs.getString("nombre_completo"));
+                    resultado.add(u);
+                }
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+                throw new SIGIPROException("Error al obtener usuarios. Inténtelo nuevamente.");
+            }
+            finally {
+                try {
+                    conexion.close();
+                    if (consulta != null) {
+                        consulta.close();
+                    }
+                    if (rs != null) {
+                        consulta.close();
+                    }
+                }
+                catch (SQLException sql_ex) {
+                    sql_ex.printStackTrace();
+                    throw new SIGIPROException("Rrror al comunicarse con la base de datos. Comunique al administrador del sistema.");
+                }
+            }
+        }
+        return resultado;
+    }
+
+    public boolean autorizarRecibo(String usuario, String contrasenna)
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+        boolean resultado = false;
+
+        if (conexion != null) {
+            try {
+                PreparedStatement consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena "
+                                                                                 + "FROM seguridad.usuarios us "
+                                                                                 + "WHERE us.nombre_usuario = ? and us.contrasena = ?");
+
+                consultaContrasena.setString(1, usuario);
+                String hash = md5(contrasenna);
+                consultaContrasena.setString(2, hash);
+                ResultSet resultadoConsulta = consultaContrasena.executeQuery();
+                if (resultadoConsulta.next()) {
+                    resultado = true;
+                }
+                resultadoConsulta.close();
+                consultaContrasena.close();
+                conexion.close();
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+    
+    private String pasar_id_secciones(List<Integer> ids_secciones)
+    {
+        String secciones = "(";
+        for (int s : ids_secciones) {
+            secciones = secciones + s;
+            secciones = secciones + ",";
+        }
+        secciones = secciones.substring(0, secciones.length() - 1);
+        secciones = secciones + ")";
+        return secciones;
     }
 
 }

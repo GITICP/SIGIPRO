@@ -88,7 +88,6 @@ public class CerrarSesion extends HttpServlet {
             
             HttpSession sesion = request.getSession(false);
             
-            System.out.println("user="+sesion.getAttribute("usuario"));
             if(sesion != null)
             {
                 sesion.invalidate();
