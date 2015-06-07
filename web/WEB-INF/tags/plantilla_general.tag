@@ -37,6 +37,7 @@
         <link href="${direccion_contexto}/recursos/css/sigipro/sigipro.css" rel="stylesheet" type="text/css" media="screen">
         <link href="${direccion_contexto}/recursos/css/sigipro/jquery.smartmenus.bootstrap.css" rel="stylesheet" type="text/css" media="screen">
         <link href="${direccion_contexto}/recursos/css/sigipro-icons.css" rel="stylesheet" type="text/css"/>
+        <link href="${direccion_contexto}/recursos/css/sigipro-icons-fix.css" rel="stylesheet" type="text/css"/>
         
         <jsp:invoke fragment="css" />
 

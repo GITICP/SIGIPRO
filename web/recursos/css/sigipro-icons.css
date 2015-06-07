@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sigipro-icons';
-  src: url('../fonts/sigipro-icons.eot?28904878');
-  src: url('../fonts/sigipro-icons.eot?28904878#iefix') format('embedded-opentype'),
-       url('../fonts/sigipro-icons.woff?28904878') format('woff'),
-       url('../fonts/sigipro-icons.ttf?28904878') format('truetype'),
-       url('../fonts/sigipro-icons.svg?28904878#sigipro-icons') format('svg');
+  src: url('../fonts/sigipro-icons.eot?3720629');
+  src: url('../fonts/sigipro-icons.eot?3720629#iefix') format('embedded-opentype'),
+       url('../fonts/sigipro-icons.woff?3720629') format('woff'),
+       url('../fonts/sigipro-icons.ttf?3720629') format('truetype'),
+       url('../fonts/sigipro-icons.svg?3720629#sigipro-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'sigipro-icons';
-    src: url('../font/sigipro-icons.svg?28904878#sigipro-icons') format('svg');
+    src: url('../font/sigipro-icons.svg?3720629#sigipro-icons') format('svg');
   }
 }
 */
@@ -54,11 +54,12 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
  
-.sigipro-rabbit-2:before { content: '\e800'; } /* '' */
-.sigipro-snake-1:before { content: '\e801'; } /* '' */
-.sigipro-snake-2:before { content: '\e802'; } /* '' */
-.sigipro-horse-1:before { content: '\e803'; } /* '' */
-.sigipro-snake-3:before { content: '\e804'; } /* '' */
-.sigipro-horse-2:before { content: '\e805'; } /* '' */
-.sigipro-mouse-1:before { content: '\e806'; } /* '' */
-.sigipro-rabbit-1:before { content: '\e807'; } /* '' */
+.sigipro-snake-3:before { content: '\e800'; } /* '' */
+.sigipro-horse-1:before { content: '\e801'; } /* '' */
+.sigipro-horse-2:before { content: '\e802'; } /* '' */
+.sigipro-mouse-1:before { content: '\e803'; } /* '' */
+.sigipro-rabbit-1:before { content: '\e804'; } /* '' */
+.sigipro-rabbit-2:before { content: '\e805'; } /* '' */
+.sigipro-rabbit-group:before { content: '\e806'; } /* '' */
+.sigipro-snake-1:before { content: '\e807'; } /* '' */
+.sigipro-snake-2:before { content: '\e808'; } /* '' */

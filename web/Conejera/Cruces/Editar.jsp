@@ -49,7 +49,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i>Editar Cruce de Coneja en Caja #${cruce.getConeja().getCaja().getNumero()}</h3>
+              <h3><i class="sigipro-rabbit-group"></i> Editar Cruce de Coneja en Caja #${cruce.getConeja().getCaja().getNumero()}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">
