@@ -1,16 +1,25 @@
 // Variables globales de tablas
 tEventos = null;
 tCaballos = null;
+valor_fecha_hoy = null;
 T_EVENTOS_SELECTOR = "#caballos-evento";
 T_CABALLOS_SELECTOR = "#caballos-grupo";
 
 $(document).ready(function () {
+    var hoy = new Date();
+    var dd = hoy.getDate();
+    var mm = hoy.getMonth() + 1; //January is 0!
+    var yyyy = hoy.getFullYear();
+
+    valor_fecha_hoy = dd + mm * 100 + yyyy * 10000;
+
     var configuracion = {
         "paging": false,
         "ordering": false,
         "bFilter": false,
         "info": false
     };
+
     tEventos = $("#caballos-evento").DataTable(configuracion);
     tCaballos = $("#caballos-grupo").DataTable(configuracion);
 
@@ -43,8 +52,8 @@ $(document).ready(function () {
             $(this).html("Marcar Todos");
         }
     });
-    
-    $(".peso-caballo").click(function(){
+
+    $(".peso-caballo").click(function () {
         var fila = $(this).parent().parent();
         var idPeso = fila.data("id-peso");
         var fecha = fila.find(".fecha").text();
@@ -54,12 +63,61 @@ $(document).ready(function () {
         $("#editar-peso").val(peso);
         $("#modalEditarPeso").modal("show");
     });
-    
-    $(".peso-caballo-eliminar").click(function(){
+
+    $(".peso-caballo-eliminar").click(function () {
         var fila = $(this).parent().parent();
         var idPeso = fila.data("id-peso");
         $("#eliminar-peso-id").val(idPeso);
         $("#ModalConfirmacionEliminar").modal("show");
+    });
+
+    $("#caballosform").submit(function () {
+        if ($("#mensaje-fechas").html() === "") {
+            return true;
+        } else {
+            $('#ModalFechas').remove();
+            $('body').append("<div class='modal fade' id='ModalFechas' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='display: none;'>\
+          <div class='modal-dialog'>\
+            <div class='modal-content'>\
+              <div class='modal-header'>\
+                <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>\
+                <h4 class='modal-title' id='myModalLabel'>Confirmaci&oacute;n</h4>\
+              </div>\
+              <div class='modal-body'>\
+                  <h5 class='title'> La fecha de nacimiento no puede ser mayor que la de ingreso, y ambas deben ser antes que hoy.</h5>\
+                  <br>\
+              </div>\
+              <div class='form-group'>\
+                    <div class='modal-footer'>\
+                      <button type='button' class='btn btn-primary' data-dismiss='modal'><i class='fa fa-times-circle'></i> Confirmar</button>\
+                    </div>\
+                  </div>\
+            </div>\
+          </div>\
+        </div>");
+            $("#ModalFechas").modal('show');
+            return false;
+        }
+    });
+
+    $(".fecha-caballo").change(function () {
+        try {
+            var fecha_nacimiento = $("#nacimiento-caballo").val();
+            var partes_fecha_nac = fecha_nacimiento.split("/");
+            var valor_fecha_nac = parseInt(partes_fecha_nac[2]) * 10000 + parseInt(partes_fecha_nac[1]) * 100 + parseInt(partes_fecha_nac[0]);
+
+            var fecha_ingreso = $("#ingreso-caballo").val();
+            var partes_fecha_ing = fecha_ingreso.split("/");
+            var valor_fecha_ing = parseInt(partes_fecha_ing[2]) * 10000 + parseInt(partes_fecha_ing[1]) * 100 + parseInt(partes_fecha_ing[0]);
+
+            if (valor_fecha_nac > valor_fecha_ing || valor_fecha_nac > valor_fecha_hoy || valor_fecha_ing > valor_fecha_hoy) {
+                $("#mensaje-fechas").html("La fecha de nacimiento no puede ser mayor que la de ingreso, y ambas deben ser antes que hoy.");
+            } else {
+                $("#mensaje-fechas").html("");
+            }
+        } catch (error_fechas) {
+            $("#mensaje-fechas").html("La fecha de nacimiento no puede ser mayor que la de ingreso y ambas deben ser antes que hoy.");
+        }
     });
 });
 
@@ -82,10 +140,10 @@ function agregarCaballo() {
     var caballosSeleccionados = select.val();
     for (var i = 0; i < caballosSeleccionados.length; i++) {
         var elemento = select.find("option[value=" + caballosSeleccionados[i] + "]");
-        
+
         var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarCaballo(" + elemento.val() + ")>");
         botonEliminar.text("Eliminar");
-        
+
         var nuevaFila = tCaballos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
         $(nuevaFila).attr("id", "caballo-" + elemento.val());
     }
@@ -106,7 +164,7 @@ function eliminarCaballo(id) {
     var fila = tCaballos.row('#caballo-' + id);
 
     fila.remove().draw();
-    
+
     eliminarDeSelect(id, "#seleccioncaballo");
 }
 
@@ -194,20 +252,20 @@ function llenar_campo_caballos() {
     $('#caballos').val(caballos_codificados.slice(0, -3));
 }
 
-function previstaImagen(input,id){
+function previstaImagen(input, id) {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var preview = document.getElementById("imagenSubida"+id); //selects the query named img
-        var file    = document.querySelector('input[id='+input.id.toString()+']').files[0]; //sames as here
-        var size  = file.size;
+        var preview = document.getElementById("imagenSubida" + id); //selects the query named img
+        var file = document.querySelector('input[id=' + input.id.toString() + ']').files[0]; //sames as here
+        var size = file.size;
         var imagen = document.getElementById(input.id.toString());
-        var reader  = new FileReader();
-        if (size> 102400){
+        var reader = new FileReader();
+        if (size > 102400) {
             input.setCustomValidity("La imagen debe ser de 100KB o menos. ");
-            document.getElementById("botonCancelar"+id).style.visibility = "visible";
-        }else{
+            document.getElementById("botonCancelar" + id).style.visibility = "visible";
+        } else {
             input.setCustomValidity("");
-            document.getElementById("botonCancelar"+id).style.visibility = "visible";
-        }       
+            document.getElementById("botonCancelar" + id).style.visibility = "visible";
+        }
         reader.onload = function (e) {
             preview.src = reader.result;
             input.value = reader.toString();
@@ -216,25 +274,25 @@ function previstaImagen(input,id){
             reader.readAsDataURL(file); //reads the data as a URL
         } else {
             preview.src = "";
-        }    
-    }else {
+        }
+    } else {
         alert('The File APIs are not fully supported in this browser.');
-  }
+    }
 }
 
-function mostrarGrande(imagen){
-    $('#imagenGrande').prop('src',imagen.src);
+function mostrarGrande(imagen) {
+    $('#imagenGrande').prop('src', imagen.src);
     $('#modalVerImagen').modal('show');
-    
+
 }
 
-function eliminarImagen(id){
-    var preview = document.getElementById("imagenSubida"+id); //selects the query named img
+function eliminarImagen(id) {
+    var preview = document.getElementById("imagenSubida" + id); //selects the query named img
     preview.src = "";
-    var imagen = document.getElementById("imagen"+id);
+    var imagen = document.getElementById("imagen" + id);
     imagen.value = "";
     imagen.setCustomValidity("");
-    document.getElementById("botonCancelar"+id).style.visibility = "hidden";
+    document.getElementById("botonCancelar" + id).style.visibility = "hidden";
 }
 
 function eliminarDeSelect(id, selector_select) {
