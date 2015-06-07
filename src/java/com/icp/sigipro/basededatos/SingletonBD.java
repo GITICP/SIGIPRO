@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,51 +21,53 @@ import java.text.SimpleDateFormat;
 public class SingletonBD
 {
 
-  private static SingletonBD theSingleton = null;
+    private static SingletonBD theSingleton = null;
 
-  protected SingletonBD()
-  {
-  }
+    protected SingletonBD()
+    {
+    }
 
-  public static SingletonBD getSingletonBD()
-  {
-    if (theSingleton == null) {
-      theSingleton = new SingletonBD();
+    public static SingletonBD getSingletonBD()
+    {
+        if (theSingleton == null) {
+            theSingleton = new SingletonBD();
+        }
+        return theSingleton;
     }
-    return theSingleton;
-  }
 
-  public Connection conectar()
-  {
-    Connection conexion = null;
+    public Connection conectar()
+    {
+        Connection conexion = null;
 
-    try {
-      Class.forName("org.postgresql.Driver");
-      conexion
-      = DriverManager.getConnection(
-                      "jdbc:postgresql://localhost/sigipro", "postgres", "Solaris2014"
-              
-              );
+        try {
+            Class.forName("org.postgresql.Driver");
+            conexion
+            = DriverManager.getConnection(
+                            "jdbc:postgresql://localhost/sigipro", "postgres", "Solaris2014"
+                    );
+        }
+        catch (ClassNotFoundException ex) {
+            System.out.println("Clase no encontrada");
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return conexion;
     }
-    catch (ClassNotFoundException ex) {
-      System.out.println("Clase no encontrada");
+
+    private Date parsearFecha(java.util.Date fecha)
+    {
+        return new Date(fecha.getTime());
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+
+    public Date parsearFecha(String fecha, String formato) throws ParseException
+    {
+        SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
+        return parsearFecha(formatoFecha.parse(fecha));
     }
-    return conexion;
-  }
-  
-  private Date parsearFecha(java.util.Date fecha){
-    return new Date(fecha.getTime());
-  }
-  
-  public Date parsearFecha(String fecha, String formato) throws ParseException{
-    SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
-    return parsearFecha(formatoFecha.parse(fecha));
-  }
-  
-  public Date parsearFecha(String fecha) throws ParseException{
-    return parsearFecha(fecha, "dd/MM/yyyy");
-  }
+
+    public Date parsearFecha(String fecha) throws ParseException
+    {
+        return parsearFecha(fecha, "dd/MM/yyyy");
+    }
 }
