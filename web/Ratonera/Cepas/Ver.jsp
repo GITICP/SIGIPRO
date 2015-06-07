@@ -63,7 +63,7 @@
                         <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAsociar">Asociar Pie</a>
                       </c:when>
                       <c:otherwise>
-                        <a class="btn btn-warning btn-sm boton-warning confirmable-form" data-texto-confirmacion="retirar el pie" data-form-id="form-eliminar-piexcepa">Retirar Pie</a>
+                        <a class="btn btn-warning btn-sm boton-warning confirmable-form boton-accion" data-texto-confirmacion="retirar el pie" data-form-id="form-eliminar-piexcepa">Retirar Pie</a>
                       </c:otherwise>
                     </c:choose>
                   </div>     
