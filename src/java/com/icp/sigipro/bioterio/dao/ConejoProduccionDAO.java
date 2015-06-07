@@ -28,12 +28,13 @@ public class ConejoProduccionDAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.conejos_produccion (identificador, cantidad, detalle_procedencia)"  
-              + " VALUES (?,?,?) RETURNING id_produccion");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.conejos_produccion (identificador, cantidad, detalle_procedencia, mortalidad)"  
+              + " VALUES (?,?,?,?) RETURNING id_produccion");
       
       consulta.setString(1, p.getIdentificador());
       consulta.setInt(2, p.getCantidad());
       consulta.setString(3, p.getDetalle_procedencia());
+      consulta.setInt(4, -1);
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -43,6 +44,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar el ingreso");
     }
     return resultado;
@@ -55,13 +57,15 @@ public class ConejoProduccionDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.conejos_produccion "
-              + " SET  identificador=?, cantidad=?, detalle_procedencia=?"
+              + " SET  identificador=?, cantidad=?, detalle_procedencia=?, mortalidad=?"
               + " WHERE id_produccion=?; "
       );
       consulta.setString(1, p.getIdentificador());
       consulta.setInt(2, p.getCantidad());
       consulta.setString(3, p.getDetalle_procedencia());
-      consulta.setInt(4, p.getId_produccion());
+      consulta.setInt(4, p.getMortalidad());
+      consulta.setInt(5, p.getId_produccion());
+      
       
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -69,6 +73,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la edición");
     }
     return resultado;
@@ -92,6 +97,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -112,12 +118,14 @@ public class ConejoProduccionDAO {
         produccion.setId_produccion(rs.getInt("id_produccion"));
         produccion.setIdentificador(rs.getString("identificador"));
         produccion.setCantidad(rs.getInt("cantidad"));
+        produccion.setMortalidad(rs.getInt("mortalidad"));
         produccion.setDetalle_procedencia(rs.getString("detalle_procedencia"));
    }
       rs.close();
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return produccion;
@@ -137,6 +145,7 @@ public class ConejoProduccionDAO {
         produccion.setId_produccion(rs.getInt("id_produccion"));
         produccion.setIdentificador(rs.getString("identificador"));
         produccion.setCantidad(rs.getInt("cantidad"));
+        produccion.setMortalidad(rs.getInt("mortalidad"));
         produccion.setDetalle_procedencia(rs.getString("detalle_procedencia"));
         resultado.add(produccion);
       }
@@ -144,6 +153,7 @@ public class ConejoProduccionDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -161,6 +171,7 @@ public class ConejoProduccionDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -176,6 +187,7 @@ public class ConejoProduccionDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }

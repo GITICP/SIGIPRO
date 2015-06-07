@@ -124,6 +124,7 @@ public class BarraFuncionalidadDAO
             }
             catch(SQLException ex)
             {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -145,25 +146,26 @@ public class BarraFuncionalidadDAO
             if (redirect == null)
             {
                 Modulo m = new Modulo();
-                m.setId_modulo(id_menu);
+                m.setId(id_menu);
                 m.setNombre(tag);
+                m.setOrden(orden);
                 if (id_padre == 0) {
                     resultado.agregarModulo(m);
                 } else {
                     m.setId_padre(id_padre);
-                    resultado.agregarSubModulo(m);
+                    resultado.agregarItemMenu(m);
                 }
             }
             else
             {
                 Funcionalidad f = new Funcionalidad();
-                f.setId_funcionalidad(id_menu);
+                f.setId(id_menu);
                 f.setId_padre(id_padre);
-                f.setTag(tag);
+                f.setNombre(tag);
                 f.setRedirect(redirect);
                 f.setOrden(orden);
                 
-                resultado.agregarFuncionalidad(f);
+                resultado.agregarItemMenu(f);
             }
         }
         return resultado;

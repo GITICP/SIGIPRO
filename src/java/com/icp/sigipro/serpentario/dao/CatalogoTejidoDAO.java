@@ -52,6 +52,7 @@ public class CatalogoTejidoDAO {
             conexion.close();
         }
         catch(Exception ex){
+            ex.printStackTrace();
             return false;
         }
         return resultado;
@@ -152,6 +153,7 @@ public class CatalogoTejidoDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

@@ -37,7 +37,6 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-barcode"></i>Grupos de Conejos de Produccion</h3>
-
                 <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Conejera/ConejosProduccion?accion=agregar">Agregar Grupo</a>
                 </div>
@@ -50,6 +49,7 @@
                   <tr>
                     <th>Fecha del Grupo</th>
                     <th>Cantidad</th>
+                    <th>Mortalidad</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -64,6 +64,14 @@
                         </a>
                       </td>
                       <td>${conejo.getCantidad()}</td>
+                      <c:choose>
+                      <c:when test="${conejo.getMortalidad() >-1}">
+                      <td>${conejo.getMortalidad()}</td>
+                      </c:when>
+                      <c:otherwise>
+                        <td>Sin Trasladar</td>
+                      </c:otherwise>
+                      </c:choose>
                     </tr>
 
                   </c:forEach>

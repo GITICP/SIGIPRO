@@ -12,7 +12,7 @@ CREATE TABLE caballeriza.grupos_de_caballos (
 
 CREATE TABLE caballeriza.caballos (
     id_caballo serial NOT NULL,
-    numero integer UNIQUE NOT NULL,
+    numero integer NOT NULL,
     nombre character varying(100) NOT NULL,
     numero_microchip character varying(20) NOT NULL,
     fecha_nacimiento Date NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE caballeriza.caballos (
     otras_sennas character varying(500),
     fotografia bytea,
     estado character varying(45) NOT NULL,
-    id_grupo_de_caballo int
+    id_grupo_de_caballo integer
 );
 
 CREATE TABLE caballeriza.pesos_caballos (
@@ -40,6 +40,7 @@ CREATE TABLE caballeriza.eventos_clinicos(
     id_tipo_evento int NOT NULL,
     observaciones character varying(500)
 );
+
 CREATE TABLE caballeriza.tipos_eventos (
     id_tipo_evento serial NOT NULL,
     nombre character varying(45),
@@ -50,63 +51,23 @@ CREATE TABLE caballeriza.eventos_clinicos_caballos (
     id_evento integer NOT NULL,
     id_caballo integer NOT NULL
 );
-CREATE TABLE caballeriza.inoculos (
-    id_inoculo serial NOT NULL,
-    mnn character varying(45) NOT NULL,
-    baa character varying(45) NOT NULL,
-    bap character varying(45) NOT NULL,
-    cdd character varying(45) NOT NULL,
-    lms character varying(45) NOT NULL,
-    tetox character varying(45) NOT NULL,
-    otro character varying(45) NOT NULL,
-    encargado_preparacion character varying(100) NOT NULL,
-    encargado_inyeccion character varying(100) NOT NULL,
-    fecha Date NOT NULL,
-    grupo_de_caballos INT
-);
-
-CREATE TABLE caballeriza.inoculos_caballos (
-    id_inoculo integer NOT NULL,
-    id_caballo integer NOT NULL
-);
-
-CREATE TABLE caballeriza.sangrias_pruebas (
-    id_sangria_prueba serial NOT NULL,
-    muestra character varying(45) NOT NULL,
-    num_solicitud integer,
-    num_informe integer,
-    fecha_recepcion_muestra Date NOT NULL,
-    fecha_informe Date,
-    responsable character varying(45) NOT NULL,
-    id_inoculo integer not null
-);
-
-
-CREATE TABLE caballeriza.sangrias_pruebas_caballos (
-    id_sangria_prueba integer NOT NULL,
-    id_caballo integer NOT NULL,
-    hematrocito decimal,
-    hemoglobina decimal 
-    
-);
 
 CREATE TABLE caballeriza.sangrias (
     id_sangria serial not null,
-    id_sangria_prueba integer not null,
     fecha_dia1 date,
     fecha_dia2 date,
     fecha_dia3 date,
-    hematrocito_promedio decimal,
     num_inf_cc integer,
-    responsable character varying(45) NOT NULL,
+    responsable integer NOT NULL,
     cantidad_de_caballos integer,
     sangre_total decimal,
     peso_plasma_total decimal,
     volumen_plasma_total decimal,
     plasma_por_caballo decimal,
-    potencia decimal
-    
+    potencia decimal,
+    id_grupo_caballos integer NOT NULL
 );
+
 CREATE TABLE caballeriza.sangrias_caballos (
     id_sangria integer NOT NULL,
     id_caballo integer NOT NULL,
@@ -125,17 +86,14 @@ CREATE TABLE caballeriza.sangrias_caballos (
 ALTER TABLE ONLY caballeriza.grupos_de_caballos  ADD CONSTRAINT pk_grupos_de_caballos PRIMARY KEY (id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.caballos  ADD CONSTRAINT pk_caballos PRIMARY KEY (id_caballo);
 ALTER TABLE ONLY caballeriza.pesos_caballos  ADD CONSTRAINT pk_pesos_caballos PRIMARY KEY (id_peso);
-ALTER TABLE ONLY caballeriza.inoculos  ADD CONSTRAINT pk_inoculos PRIMARY KEY (id_inoculo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos  ADD CONSTRAINT pk_eventos_clinicos PRIMARY KEY (id_evento);
-ALTER TABLE ONLY caballeriza.inoculos_caballos  ADD CONSTRAINT pk_inoculos_caballos PRIMARY KEY (id_caballo,id_inoculo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos  ADD CONSTRAINT pk_eventos_caballos PRIMARY KEY (id_evento,id_caballo);
 ALTER TABLE ONLY caballeriza.tipos_eventos  ADD CONSTRAINT pk_tipos_eventos PRIMARY KEY (id_tipo_evento);
-ALTER TABLE ONLY caballeriza.sangrias_pruebas  ADD CONSTRAINT pk_sangrias_pruebas PRIMARY KEY (id_sangria_prueba);
-ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangrias_pruebas_caballos PRIMARY KEY (id_sangria_prueba,id_caballo);
 ALTER TABLE ONLY caballeriza.sangrias  ADD CONSTRAINT pk_sangrias PRIMARY KEY (id_sangria);
 ALTER TABLE ONLY caballeriza.sangrias_caballos  ADD CONSTRAINT pk_sangrias_caballos PRIMARY KEY (id_sangria,id_caballo);
 
 --Índices únicos esquema caballeriza
+CREATE UNIQUE INDEX i_numero ON caballeriza.caballos (numero);
 CREATE UNIQUE INDEX i_nombre ON caballeriza.grupos_de_caballos USING btree (nombre);
 CREATE UNIQUE INDEX i_numero_microchip ON caballeriza.caballos USING btree (numero_microchip);
 
@@ -146,13 +104,8 @@ ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_even
 ALTER TABLE ONLY caballeriza.eventos_clinicos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES caballeriza.tipos_eventos(id_tipo_evento);
 ALTER TABLE ONLY caballeriza.eventos_clinicos ADD CONSTRAINT fk_id_usuario_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
-ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
-ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
-ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIGN KEY (grupo_de_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo) ON DELETE SET NULL;
-ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
-ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
-ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
-ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
+ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_usuario_responsable FOREIGN KEY (responsable) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY caballeriza.sangrias ADD CONSTRAINT fk_id_grupo FOREIGN KEY (id_grupo_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo);
 ALTER TABLE ONLY caballeriza.sangrias_caballos ADD CONSTRAINT fk_id_sangria FOREIGN KEY (id_sangria) REFERENCES caballeriza.sangrias(id_sangria);
 ALTER TABLE ONLY caballeriza.sangrias_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
 
@@ -172,12 +125,6 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (54, '[Ca
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (55, '[Caballeriza]AgregarEventoClinico', 'Permite agregar una Caballo al catálogo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (56, '[Caballeriza]EditarEventoClinico', 'Permite editar una Caballo al catálogo');
 
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (57, '[Caballeriza]AgregarInoculo', 'Permite agregar un Inóculo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (58, '[Caballeriza]EditarInoculo', 'Permite editar un Inóculo');
-
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (59, '[Caballeriza]AgregarSangriaPrueba', 'Permite agregar una Sangría de Prueba');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (60, '[Caballeriza]EditarSangriaPrueba', 'Permite editar una Sangría de Prueba');
-
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (61, '[Caballeriza]AgregarSangria', 'Permite agregar una Sangría');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (62, '[Caballeriza]EditarSangria', 'Permite editar una Sangría');
 
@@ -189,9 +136,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (402, 400, 'Caballos', '/Caballeriza/Caballo');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (403, 400, 'Grupos', '/Caballeriza/GrupoDeCaballos');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (404, 400, 'Eventos Clínicos', '/Caballeriza/EventoClinico');
---INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (405, 400, 'Inóculos', '/Caballeriza/Inoculo');
---INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (407, 400, 'Sangría', '/Caballeriza/Sangria');
---INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (407, 400, 'Sangría', '/Caballeriza/Sangria');
 
 --Permisos Menu Principal
 
@@ -205,22 +150,18 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (54, 403);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (55, 404);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (56, 404);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (57, 405);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (58, 405);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (59, 406);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (61, 407);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (62, 407);
 
 --Función para actualizar las estadísticas de caballeriza
 CREATE OR REPLACE FUNCTION caballeriza.actualizar_estadisticas_sangria(param_id_sangria int) RETURNS VOID AS $$
-	DECLARE v_hematocrito_promedio float;
+	--DECLARE v_hematocrito_promedio float;
 	DECLARE v_sangre_total float;
 	DECLARE v_plasma_total float;
 	DECLARE v_id_sangria_prueba int;
 	BEGIN
-		v_id_sangria_prueba := (SELECT id_sangria_prueba FROM caballeriza.sangrias WHERE id_sangria = param_id_sangria);
-		v_hematocrito_promedio := (SELECT AVG(hematrocito) FROM caballeriza.sangrias_pruebas_caballos WHERE id_sangria_prueba = v_id_sangria_prueba);
+		--v_id_sangria_prueba := (SELECT id_sangria_prueba FROM caballeriza.sangrias WHERE id_sangria = param_id_sangria);
+		--v_hematocrito_promedio := (SELECT AVG(hematrocito) FROM caballeriza.sangrias_pruebas_caballos WHERE id_sangria_prueba = v_id_sangria_prueba);
 		v_sangre_total := (SELECT SUM(
 					CASE WHEN sangre_dia1 IS NULL THEN 0 ELSE sangre_dia1 END +
 					CASE WHEN sangre_dia2 IS NULL THEN 0 ELSE sangre_dia2 END +
@@ -233,10 +174,94 @@ CREATE OR REPLACE FUNCTION caballeriza.actualizar_estadisticas_sangria(param_id_
 					) FROM caballeriza.sangrias_caballos WHERE id_sangria = param_id_sangria);
 
 		UPDATE caballeriza.sangrias
-		SET hematrocito_promedio = v_hematocrito_promedio,
-		    sangre_total = v_sangre_total,
+		SET sangre_total = v_sangre_total, --hematrocito_promedio = v_hematocrito_promedio,
 		    peso_plasma_total = v_plasma_total,
 		    plasma_por_caballo = v_plasma_total / cantidad_de_caballos
 		WHERE id_sangria = param_id_sangria;
 	END 
 $$ LANGUAGE plpgsql;
+
+
+/* 
+
+ * Cosas de Producción de Caballeriza *
+
+    -- Tablas
+
+        CREATE TABLE caballeriza.inoculos (
+            id_inoculo serial NOT NULL,
+            mnn character varying(45) NOT NULL,
+            baa character varying(45) NOT NULL,
+            bap character varying(45) NOT NULL,
+            cdd character varying(45) NOT NULL,
+            lms character varying(45) NOT NULL,
+            tetox character varying(45) NOT NULL,
+            otro character varying(45) NOT NULL,
+            encargado_preparacion character varying(100) NOT NULL,
+            encargado_inyeccion character varying(100) NOT NULL,
+            fecha Date NOT NULL,
+            grupo_de_caballos INT
+        );
+
+        CREATE TABLE caballeriza.inoculos_caballos (
+            id_inoculo integer NOT NULL,
+            id_caballo integer NOT NULL
+        );
+
+        CREATE TABLE caballeriza.sangrias_pruebas (
+            id_sangria_prueba serial NOT NULL,
+            muestra character varying(45) NOT NULL,
+            num_solicitud integer,
+            num_informe integer,
+            fecha_recepcion_muestra Date NOT NULL,
+            fecha_informe Date,
+            responsable character varying(45) NOT NULL,
+            id_inoculo integer not null
+        );
+
+        CREATE TABLE caballeriza.sangrias_pruebas_caballos (
+            id_sangria_prueba integer NOT NULL,
+            id_caballo integer NOT NULL,
+            hematrocito decimal,
+            hemoglobina decimal 
+        );
+
+    -- Constraints
+
+        -- PK's
+
+        ALTER TABLE ONLY caballeriza.inoculos  ADD CONSTRAINT pk_inoculos PRIMARY KEY (id_inoculo);
+        ALTER TABLE ONLY caballeriza.inoculos_caballos  ADD CONSTRAINT pk_inoculos_caballos PRIMARY KEY (id_caballo,id_inoculo);
+        ALTER TABLE ONLY caballeriza.sangrias_pruebas  ADD CONSTRAINT pk_sangrias_pruebas PRIMARY KEY (id_sangria_prueba);
+        ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangrias_pruebas_caballos PRIMARY KEY (id_sangria_prueba,id_caballo);    
+
+        -- FK's
+
+        ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
+        ALTER TABLE ONLY caballeriza.inoculos_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
+        ALTER TABLE ONLY caballeriza.inoculos ADD CONSTRAINT fk_grupo_de_caballos FOREIGN KEY (grupo_de_caballos) REFERENCES caballeriza.grupos_de_caballos(id_grupo_de_caballo) ON DELETE SET NULL;
+        ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_inoculo FOREIGN KEY (id_inoculo) REFERENCES caballeriza.inoculos(id_inoculo);
+        ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
+        ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
+
+    -- Permisos
+
+        INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (57, '[Caballeriza]AgregarInoculo', 'Permite agregar un Inóculo');
+        INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (58, '[Caballeriza]EditarInoculo', 'Permite editar un Inóculo');
+
+        INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (59, '[Caballeriza]AgregarSangriaPrueba', 'Permite agregar una Sangría de Prueba');
+        INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (60, '[Caballeriza]EditarSangriaPrueba', 'Permite editar una Sangría de Prueba');
+
+    -- Menú
+
+        INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (405, 400, 'Inóculos', '/Caballeriza/Inoculo');
+        INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba');
+
+    -- Permisos - Menú
+
+        INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (57, 405);
+        INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (58, 405);
+        INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (59, 406);
+        INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
+
+*/

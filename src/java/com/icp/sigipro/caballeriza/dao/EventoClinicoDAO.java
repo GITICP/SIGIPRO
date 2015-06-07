@@ -12,6 +12,7 @@ import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,19 +24,16 @@ import java.util.List;
  *
  * @author Walter
  */
-public class EventoClinicoDAO
-{
+public class EventoClinicoDAO {
 
     private Connection conexion;
 
-    public EventoClinicoDAO()
-    {
+    public EventoClinicoDAO() {
         SingletonBD s = SingletonBD.getSingletonBD();
         conexion = s.conectar();
     }
 
-    public boolean insertarEventoClinico(EventoClinico c, String[] ids_caballos) throws SIGIPROException
-    {
+    public boolean insertarEventoClinico(EventoClinico c, List<String> ids_caballos) throws SIGIPROException {
         boolean resultado_insert_evento = false;
         boolean resultado_asociacion_caballos = false;
         PreparedStatement consulta_caballos = null;
@@ -45,7 +43,7 @@ public class EventoClinicoDAO
             getConexion().setAutoCommit(false);
 
             consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos (fecha, descripcion,responsable,id_tipo_evento, observaciones) "
-                                                      + " VALUES (?,?,?,?,?) RETURNING id_evento");
+                    + " VALUES (?,?,?,?,?) RETURNING id_evento");
             consulta.setDate(1, c.getFecha());
             consulta.setString(2, c.getDescripcion());
             consulta.setInt(3, c.getResponsable().getId_usuario());
@@ -58,7 +56,7 @@ public class EventoClinicoDAO
                 c.setId_evento(resultadoConsulta.getInt("id_evento"));
             }
 
-            if (ids_caballos != null || ids_caballos.length > 0) {
+            if (ids_caballos != null || ids_caballos.size() > 0) {
                 consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos_caballos (id_evento, id_caballo) VALUES (?,?);");
 
                 for (String id_caballo : ids_caballos) {
@@ -83,20 +81,19 @@ public class EventoClinicoDAO
                 }
 
                 consulta_caballos.close();
-            }
-            else {
+            } else {
                 resultado_asociacion_caballos = true;
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo registrar el Evento Clinico.");
-        }
-        finally {
+        } finally {
             try {
                 if (resultado_insert_evento && resultado_asociacion_caballos) {
+                    System.out.println("me cago en todo");
                     getConexion().commit();
-                }
-                else {
+                } else {
+                    System.out.println("me super cago");
                     getConexion().rollback();
                 }
                 if (resultadoConsulta != null) {
@@ -109,16 +106,15 @@ public class EventoClinicoDAO
                     consulta_caballos.close();
                 }
                 cerrarConexion();
-            }
-            catch (SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos.");
             }
         }
         return resultado_insert_evento && resultado_asociacion_caballos;
     }
 
-    public boolean editarEventoClinico(EventoClinico evento, String[] ids_caballos) throws SIGIPROException
-    {
+    public boolean editarEventoClinico(EventoClinico evento, List<String> ids_caballos) throws SIGIPROException {
         boolean resultado_consulta = false;
         boolean resultado_delete_caballos = false;
         boolean resultado_asociacion_caballos = false;
@@ -153,7 +149,7 @@ public class EventoClinicoDAO
                 resultado_delete_caballos = true;
             }
 
-            if (ids_caballos != null || ids_caballos.length > 0) {
+            if (ids_caballos != null || ids_caballos.size() > 0) {
                 consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.eventos_clinicos_caballos (id_evento, id_caballo) VALUES (?,?);");
 
                 for (String id_caballo : ids_caballos) {
@@ -178,20 +174,17 @@ public class EventoClinicoDAO
                 }
 
                 consulta_caballos.close();
-            }
-            else {
+            } else {
                 resultado_asociacion_caballos = true;
             }
-        }
-        catch (SQLException ex) {
-            throw new SIGIPROException("El evento clinico no puede ser editado.");
-        }
-        finally {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("El evento clínico no puede ser editado.");
+        } finally {
             try {
                 if (resultado_consulta && resultado_asociacion_caballos && resultado_delete_caballos) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                 }
                 if (consulta != null) {
@@ -204,16 +197,39 @@ public class EventoClinicoDAO
                     consulta_caballos.close();
                 }
                 cerrarConexion();
-            }
-            catch (SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos.");
             }
         }
         return resultado_consulta && resultado_asociacion_caballos && resultado_delete_caballos;
     }
 
-    public EventoClinico obtenerEventoClinico(int id_evento) throws SIGIPROException
-    {
+    public boolean insertarImagen(InputStream imagen, int id_evento, long size) {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("UPDATE CABALLERIZA.EVENTOS_CLINICOS "
+                    + "SET imagen=? "
+                    + "WHERE id_evento = ?;");
+            System.out.println(imagen);
+            System.out.println(size);
+            consulta.setBinaryStream(1, imagen, size);
+            consulta.setInt(2, id_evento);
+            System.out.println(consulta);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            getConexion().commit();
+            System.out.println(resultado);
+            consulta.close();
+            conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+
+    public EventoClinico obtenerEventoClinico(int id_evento) throws SIGIPROException {
         EventoClinico evento = new EventoClinico();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
@@ -229,6 +245,7 @@ public class EventoClinicoDAO
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setDescripcion(rs.getString("descripcion"));
                 evento.setObservaciones(rs.getString("observaciones"));
+                evento.setImagen(rs.getBytes("imagen"));
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));
@@ -239,15 +256,14 @@ public class EventoClinicoDAO
             consulta.close();
             cerrarConexion();
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("El evento clinico no puede ser obtenido.");
         }
         return evento;
     }
 
-    public EventoClinico obtenerEventoClinicoConCaballos(int id_evento) throws SIGIPROException
-    {
+    public EventoClinico obtenerEventoClinicoConCaballos(int id_evento) throws SIGIPROException {
         EventoClinico evento = new EventoClinico();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
@@ -263,6 +279,7 @@ public class EventoClinicoDAO
                 evento.setFecha(rs.getDate("fecha"));
                 evento.setDescripcion(rs.getString("descripcion"));
                 evento.setObservaciones(rs.getString("observaciones"));
+                evento.setImagen(rs.getBytes("imagen"));
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));
@@ -275,34 +292,32 @@ public class EventoClinicoDAO
                         c.setId_caballo(rs.getInt("id_caballo"));
                         c.setNombre(rs.getString("nombre"));
                         evento.agregarCaballo(c);
-                    }
-                    while (rs.next());
+                    } while (rs.next());
                 }
             }
             rs.close();
             consulta.close();
             cerrarConexion();
 
-        }
-        catch (SQLException ex) {
-            throw new SIGIPROException("El evento clinico no puede ser obtenido.");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("El evento clínico no puede ser obtenido.");
         }
         return evento;
     }
 
-    public List<EventoClinico> obtenerEventosClinicos() throws SIGIPROException
-    {
+    public List<EventoClinico> obtenerEventosClinicos() throws SIGIPROException {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT distinct ec.*, te.*, u.nombre_completo, u.id_usuario, gc.id_grupo_de_caballo, gc.nombre as nombre_grupo "
-                  + " FROM caballeriza.eventos_clinicos ec  "
-                  + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario  "
-                  + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
-                  + "   INNER JOIN caballeriza.eventos_clinicos_caballos ecc ON ecc.id_evento = ec.id_evento "
-                  + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = ecc.id_caballo "
-                  + "   INNER JOIN caballeriza.grupos_de_caballos gc ON c.id_grupo_de_caballo = gc.id_grupo_de_caballo "
-                  + " ORDER BY id_evento "
+                    + " FROM caballeriza.eventos_clinicos ec  "
+                    + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario  "
+                    + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
+                    + "   INNER JOIN caballeriza.eventos_clinicos_caballos ecc ON ecc.id_evento = ec.id_evento "
+                    + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = ecc.id_caballo "
+                    + "   INNER JOIN caballeriza.grupos_de_caballos gc ON c.id_grupo_de_caballo = gc.id_grupo_de_caballo "
+                    + " ORDER BY id_evento "
             );
 
             ResultSet rs = consulta.executeQuery();
@@ -314,9 +329,9 @@ public class EventoClinicoDAO
                 int id_evento = rs.getInt("id_evento");
 
                 if (evento.getId_evento() != id_evento) {
-                    
+
                     evento = new EventoClinico();
-                    
+
                     evento.setId_evento(id_evento);
                     evento.setFecha(rs.getDate("fecha"));
                     evento.setDescripcion(rs.getString("descripcion"));
@@ -332,7 +347,7 @@ public class EventoClinicoDAO
                     tipo.setNombre(rs.getString("nombre"));
 
                     evento.setTipo_evento(tipo);
-                    
+
                     resultado.add(evento);
                 }
 
@@ -348,15 +363,14 @@ public class EventoClinicoDAO
             consulta.close();
             cerrarConexion();
             rs.close();
-        }
-        catch (SQLException ex) {
-            throw new SIGIPROException("Los eventos clinicos no pueden ser accedidos.");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Los eventos clínicos no pueden ser accedidos.");
         }
         return resultado;
     }
 
-    public List<EventoClinico> obtenerEventosClinicosSinTipo() throws SIGIPROException
-    {
+    public List<EventoClinico> obtenerEventosClinicosSinTipo() throws SIGIPROException {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
 
         try {
@@ -375,15 +389,14 @@ public class EventoClinicoDAO
             consulta.close();
             cerrarConexion();
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    public List<EventoClinico> obtenerEventosTipo(int id_tipo_evento)
-    {
+    public List<EventoClinico> obtenerEventosTipo(int id_tipo_evento) {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
@@ -417,15 +430,13 @@ public class EventoClinicoDAO
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public List<Caballo> obtenerCaballosEvento(int id_evento) throws SIGIPROException
-    {
+    public List<Caballo> obtenerCaballosEvento(int id_evento) throws SIGIPROException {
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
@@ -444,36 +455,34 @@ public class EventoClinicoDAO
             consulta.close();
             cerrarConexion();
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    private Connection getConexion()
-    {
+    private Connection getConexion() {
         try {
             if (conexion.isClosed()) {
                 SingletonBD s = SingletonBD.getSingletonBD();
                 conexion = s.conectar();
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;
     }
 
-    private void cerrarConexion()
-    {
+    private void cerrarConexion() {
         if (conexion != null) {
             try {
                 if (conexion.isClosed()) {
                     conexion.close();
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -77,6 +77,9 @@
                                                             <c:when test="${!extraccion.isIsLiofilizacionFin()}">
                                                                    <a class="btn btn-warning btn-sm boton-accion liofilizacion-fin-Modal" data-id='${extraccion.getId_extraccion()}/-/${extraccion.getNumero_extraccion()}' data-toggle="modal" data-target="#modalRegistrarLiofilizacionFin">5- Fin Liofilizacion</a>
                                                             </c:when>
+                                                            <c:otherwise>
+                                                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Extraccion?accion=editar&id_extraccion=${extraccion.getId_extraccion()}">Editar</a>
+                                                            </c:otherwise>
                                                         </c:choose>
                                                     </c:otherwise>
                                                 </c:choose>

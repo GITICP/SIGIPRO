@@ -65,6 +65,7 @@ public class Bitacora {
     public static final String TABLA_LOTESENTREGASSOLICITUD = "SERPENTARIO.LOTES_ENTREGAS_SOLICITUD";
     public static final String TABLA_CATALOGOTEJIDO = "SERPENTARIO.CATALOGO_TEJIDO";
     public static final String TABLA_COLECCIONHUMEDA = "SERPENTARIO.COLECCION_HUMEDA";
+    public static final String TABLA_RESTRICCION = "SERPENTARIO.RESTRICCION";
     
     
     
@@ -78,6 +79,7 @@ public class Bitacora {
     public static final String ACCION_RECHAZAR = "RECHAZAR";
     public static final String ACCION_ENTREGAR = "ENTREGAR";
     public static final String ACCION_REPONER = "REPONER";
+    public static final String ACCION_ANULAR = "ANULAR";
 
    
     

@@ -65,7 +65,7 @@
           </div>
         </div>
       </div>
-      <label for="descripcion" class="control-label">*Resultados</label>
+      <label for="descripcion" class="control-label">Resultados</label>
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">

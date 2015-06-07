@@ -75,6 +75,7 @@ public class EspecieDAO {
             conexion.close();
         }
         catch(SQLException ex){
+            ex.printStackTrace();
             throw new SIGIPROException("Ubicación no pudo ser eliminada debido a que una o más serpientes se encuentran asociadas a esta.");
         }
         return resultado;
@@ -160,6 +161,7 @@ public class EspecieDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

@@ -97,7 +97,6 @@ public class EventoDAO {
             consulta.setInt(7, e.getSerpiente().getId_serpiente());
             consulta.setInt(8, e.getExtraccion().getId_extraccion());
             ResultSet resultadoConsulta = consulta.executeQuery();
-            System.out.println(consulta);
             if ( resultadoConsulta.next() ){
                 resultado = true;
                 e.setId_evento(resultadoConsulta.getInt("id_evento"));
@@ -215,7 +214,7 @@ public class EventoDAO {
                     extraccion = extracciondao.obtenerExtraccion(rs.getInt("id_extraccion"));
                     e.setExtraccion(extraccion);
                 }catch (Exception ex){
-                    
+                    ex.printStackTrace();
                 }
                 resultado.add(e);
             }
@@ -232,7 +231,7 @@ public class EventoDAO {
     public Evento obtenerEvento(int id_evento){
         Evento e = new Evento();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos as eventos INNER JOIN serpentario.cateogiras as categorias ON eventos.id_categoria = categorias.id_categoria "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos as eventos INNER JOIN serpentario.categorias as categorias ON eventos.id_categoria = categorias.id_categoria "
                     + "WHERE eventos.id_evento=?;");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
@@ -253,7 +252,7 @@ public class EventoDAO {
                     //Tratar de agarrar la extraccion desde el DAO
                     Extraccion extraccion = new Extraccion();
                 }catch (Exception ex){
-                    
+                    ex.printStackTrace();
                 }
             }
             rs.close();
@@ -275,6 +274,7 @@ public class EventoDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

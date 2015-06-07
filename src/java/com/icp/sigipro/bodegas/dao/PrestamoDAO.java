@@ -254,6 +254,7 @@ public class PrestamoDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }
@@ -269,6 +270,7 @@ public class PrestamoDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

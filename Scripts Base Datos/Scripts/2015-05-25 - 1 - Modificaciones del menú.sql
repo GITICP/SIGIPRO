@@ -30,14 +30,24 @@ UPDATE seguridad.entradas_menu_principal SET redirect = null where id_menu_princ
 ALTER TABLE seguridad.entradas_menu_principal ADD orden integer;
 
 -- Orden Serpentario
+    -- Serpientes
+UPDATE seguridad.entradas_menu_principal SET orden = 1 WHERE id_menu_principal = 299;
 UPDATE seguridad.entradas_menu_principal SET orden = 1 WHERE id_menu_principal = 302;
 UPDATE seguridad.entradas_menu_principal SET orden = 2 WHERE id_menu_principal = 301;
-UPDATE seguridad.entradas_menu_principal SET orden = 3 WHERE id_menu_principal = 303;
-UPDATE seguridad.entradas_menu_principal SET orden = 4 WHERE id_menu_principal = 304;
-UPDATE seguridad.entradas_menu_principal SET orden = 5 WHERE id_menu_principal = 305;
-UPDATE seguridad.entradas_menu_principal SET orden = 6 WHERE id_menu_principal = 306;
-UPDATE seguridad.entradas_menu_principal SET orden = 7 WHERE id_menu_principal = 307;
-UPDATE seguridad.entradas_menu_principal SET orden = 8 WHERE id_menu_principal = 308;
+    -- Extracción
+UPDATE seguridad.entradas_menu_principal SET orden = 2 WHERE id_menu_principal = 303;
+    -- Venenos
+UPDATE seguridad.entradas_menu_principal SET orden = 3 WHERE id_menu_principal = 298;
+UPDATE seguridad.entradas_menu_principal SET orden = 1 WHERE id_menu_principal = 304;
+UPDATE seguridad.entradas_menu_principal SET orden = 2 WHERE id_menu_principal = 305;
+UPDATE seguridad.entradas_menu_principal SET orden = 3 WHERE id_menu_principal = 309;
+    -- Solicitudes
+UPDATE seguridad.entradas_menu_principal SET orden = 4 WHERE id_menu_principal = 306;
+    -- Decesos
+UPDATE seguridad.entradas_menu_principal SET orden = 5 WHERE id_menu_principal = 297;
+UPDATE seguridad.entradas_menu_principal SET orden = 1 WHERE id_menu_principal = 307;
+UPDATE seguridad.entradas_menu_principal SET orden = 2 WHERE id_menu_principal = 308;
+
 
 -- Orden Bioterio
 

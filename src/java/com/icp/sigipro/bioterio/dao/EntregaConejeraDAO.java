@@ -59,6 +59,7 @@ public class EntregaConejeraDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar el ingreso");
         }
         return resultado;
@@ -93,6 +94,7 @@ public class EntregaConejeraDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al revisar la completitud de la entrega");
         }
     }
@@ -117,6 +119,7 @@ public class EntregaConejeraDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la eliminación");
         }
         return resultado;
@@ -150,6 +153,7 @@ public class EntregaConejeraDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
         return entrega_conejera;
@@ -187,6 +191,7 @@ public class EntregaConejeraDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
         return resultado;
@@ -205,6 +210,7 @@ public class EntregaConejeraDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }
@@ -220,6 +226,7 @@ public class EntregaConejeraDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -16,17 +16,17 @@ public class Veneno {
     private int id_veneno;
     private boolean restriccion;
     private float cantidad;
-    private float cantidad_maxima;
+    private float cantidad_minima;
     
     private Especie especie;
 
     public Veneno() {
     }
 
-    public Veneno(int id_veneno, boolean restriccion, float cantidad_maxima, Especie especie) {
+    public Veneno(int id_veneno, boolean restriccion, float cantidad_minima, Especie especie) {
         this.id_veneno = id_veneno;
         this.restriccion = restriccion;
-        this.cantidad_maxima = cantidad_maxima;
+        this.cantidad_minima = cantidad_minima;
         this.especie = especie;
     }
 
@@ -58,12 +58,12 @@ public class Veneno {
         this.restriccion = restriccion;
     }
 
-    public float getCantidad_maxima() {
-        return cantidad_maxima;
+    public float getCantidad_minima() {
+        return cantidad_minima;
     }
 
-    public void setCantidad_maxima(float cantidad_maxima) {
-        this.cantidad_maxima = cantidad_maxima;
+    public void setCantidad_minima(float cantidad_minima) {
+        this.cantidad_minima = cantidad_minima;
     }
 
     public Especie getEspecie() {

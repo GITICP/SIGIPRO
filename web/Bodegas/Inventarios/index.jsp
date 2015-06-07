@@ -50,7 +50,7 @@
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
-                                        <th>Código del producto</th>
+                                        <th>Código ICP</th>
                                         <th>Producto</th>
                                         <th>Sección</th>
                                         <th>Stock Actual</th>
@@ -59,14 +59,14 @@
                                 <tbody>
                                     <c:forEach items="${listaInventarios}" var="inventarios">
                                         <tr id ="${inventarios.getId_inventario()}">
-                                            <td>${inventarios.getId_inventario()}</td>
                                             <td>
                                                 <a href="/SIGIPRO/Bodegas/Inventarios?accion=ver&id_inventario=${inventarios.getId_inventario()}">
                                                     <div style="height:100%;width:100%">
-                                                        ${inventarios.getProducto().getNombre()}
+                                                        ${inventarios.getProducto().getId_producto()}
                                                     </div>
                                                 </a>
                                             </td>
+                                            <td>${inventarios.getProducto().getNombre()}</td>
                                             <td>${inventarios.getSeccion().getNombre_seccion()}</td>
                                             <td>${inventarios.getStock_actual()}</td>
                                         </tr>

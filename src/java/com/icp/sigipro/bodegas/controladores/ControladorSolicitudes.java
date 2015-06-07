@@ -12,6 +12,7 @@ import com.icp.sigipro.bodegas.dao.InventarioDAO;
 import com.icp.sigipro.bodegas.dao.SolicitudDAO;
 import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -162,7 +163,9 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-          
+            boolean resta;
+            InventarioDAO inventarioDAO = new InventarioDAO();
+            resta = inventarioDAO.restarInventario(solicitud.getId_inventario(),solicitud.getCantidad());
             solicitud.setEstado("Cerrada");
             boolean resultado;
             resultado = dao.editarSolicitud(solicitud);     
@@ -172,7 +175,7 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_APROBAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
             //*----------------------------* 
             
-            if (resultado) {
+            if (resultado && resta) {
               request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada"));
             } 
             else {
@@ -341,32 +344,32 @@ public class ControladorSolicitudes extends SIGIPROServlet {
           redireccion = "Solicitudes/index.jsp";
           String usuario = request.getParameter("usr");
           String contrasena = request.getParameter("passw");
-          int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_auth2"));
-          Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
-          int id_seccion = solicitud.getUsuario().getIdSeccion();
-          boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
+          String ids = request.getParameter("ids-por-entregar");
+         // int id_seccion = solicitud.getUsuario().getIdSeccion();
+         // boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena, id_seccion);
+          if (ids==""){
+             request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Debe seleccionar al menos una solicitud"));
+          }
+          else
+          {
+          boolean auth = usrDAO.AutorizarRecibo(usuario, contrasena);
           if (auth) {
-            java.util.Date hoy = new java.util.Date();
-            Date hoysql = new Date(hoy.getTime());
             int id_us_recibo = usrDAO.obtenerIDUsuario(usuario);
-            solicitud.setFecha_entrega(hoysql);
-            solicitud.setId_usuario_recibo(id_us_recibo);
-            solicitud.setEstado("Entregada");
-            boolean resultado;
-            resultado = dao.editarSolicitud(solicitud);
-            
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_ENTREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
-            //*----------------------------*
+            boolean resultado=false;
+            try {
+              resultado = dao.entregarMasivo(ids, id_us_recibo);
+              //Funcion que genera la bitacora
+              //BitacoraDAO bitacora = new BitacoraDAO();
+              // bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_ENTREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
+              //*----------------------------*
+            } catch (SIGIPROException ex) {
+              Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             if (resultado ) {
-              request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada"));
-              InventarioDAO inventarioDAO = new InventarioDAO();
-              Inventario inventario = inventarioDAO.obtenerInventario(solicitud.getId_inventario());
-
+              request.setAttribute("mensaje", helper.mensajeDeExito("Solicitudes entregadas"));
               //Funcion que genera la bitacora
-              bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
+              //bitacora.setBitacora(inventario.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_INVENTARIO,request.getRemoteAddr());
               //*----------------------------*
               
             } 
@@ -375,10 +378,11 @@ public class ControladorSolicitudes extends SIGIPROServlet {
             }
           }
           else
-          { request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos, o el usuario no pertenece a la sección solicitante."));
-            request.setAttribute("id_solicitud_authent", id_solicitud);
-            request.setAttribute("show_modal_auth", true);
+          { //request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos, o el usuario no pertenece a la sección solicitante."));
+            request.setAttribute("mensaje", helper.mensajeDeError("El usuario o contraseña son incorrectos"));
+            //request.setAttribute("show_modal_auth", true);
 
+          }
           }
           List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
           request.setAttribute("booladmin", boolAdmin);

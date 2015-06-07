@@ -11,44 +11,17 @@
   <div class="col-md-12">
     <input hidden="true" name="accion" id="accion" value=${accion}>
     <input hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
+    <input hidden="true" name="especie" value="${veneno.getEspecie().getId_especie()}"> 
     <input hidden="true" name="estado" value="${solicitud.getEstado()}">
+    <input hidden="true" name="consumido" id="consumido" value="${restriccion.getCantidad_consumida()}">
+    <input hidden="true" name="restriccion" id="restriccion" value="${restriccion.getCantidad_anual()}">
+    <input hidden="true" name="cantidadactual" id="cantidadactual" value="${veneno.getCantidadAsMiligramos()}">
+    
     <label for="seleccioninventario" class="control-label"> *Especie</label>
     <div class="form-group">
       <div class="col-sm-6">
         <div class="input-group">
-              <select id="seleccionEspecie" class="select2" style='background-color: #fff;' name="especie" required
-                      oninvalid="setCustomValidity('Este campo es requerido')"
-                      onchange="setCustomValidity('')">
-                <option value=''></option>
-                <c:forEach items="${venenos}" var="veneno">
-                      <c:choose>
-                          <c:when test="${veneno.isRestriccion()}">
-                                <c:choose>
-                                    <c:when test="${veneno.getEspecie().getId_especie() == solicitud.getEspecie().getId_especie()}">
-                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos) </option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option data-stock="${veneno.getCantidad_maxima()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos) (Restricción - ${veneno.getCantidad_maxima()} Miligramos)  </option>
-                                    </c:otherwise>
-                                </c:choose> 
-                          </c:when>
-                          <c:otherwise>
-                              <c:choose>
-                                    <c:when test="${veneno.getEspecie().getId_especie() == solicitud.getEspecie().getId_especie()}">
-                                        <option data-stock="${veneno.getCantidadAsMiligramos()}" value=${veneno.getEspecie().getId_especie()} selected>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos) </option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option data-stock="${veneno.getCantidadAsMiligramos()}" value=${veneno.getEspecie().getId_especie()}>${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos)  </option>
-                                    </c:otherwise>
-                                </c:choose> 
-                          </c:otherwise>
-                      
-                      
-                      </c:choose>
-                          
-                      
-                </c:forEach>
-              </select> 
+            <input type="text" class="form-control" disabled="true" value="${veneno.getEspecie().getGenero_especie()} (${veneno.getCantidadAsMiligramos()} Miligramos)">
         </div>
       </div>
     </div>
@@ -58,7 +31,7 @@
     <div class="form-group">
       <div class="col-sm-12">
         <div class="input-group">
-            <input id="cantidad" placeholder="Número mayor a 0" type="number" step="any" min="0" class="form-control" name="cantidad" value="${solicitud.getCantidad()}" required 
+            <input id="cantidad" placeholder="Número mayor a 1" type="number" step="any" min="1" class="form-control" name="cantidad" value="${solicitud.getCantidad()}" required 
                   oninput="validarSolicitud()"> 
         </div>
       </div>

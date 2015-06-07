@@ -57,7 +57,7 @@ public class ActivoFijo {
                 }
             }          
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return JSON.toString();
     }

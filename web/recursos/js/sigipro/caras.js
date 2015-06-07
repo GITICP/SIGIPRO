@@ -26,6 +26,69 @@ $("input[name='fecha_selnf']").change(function () {
   verificarFechas('fecha_selni', 'fecha_selnf', 'mensajeFechas5', 'Fechas de Selección de Machos y Hembras:')
 }
 );
+$("input[name='fecha_apai']").change(function () {
+  var fechaact = $('#fecha_apai');
+  var fechadesact = $('#fecha_apaf');
+  if (fechadesact.val() ===''){
+   var datenueva = addDays(fechaact.val(),4);
+   fechadesact.val(datenueva);
+   fechadesact.datepicker("setDate", datenueva);
+  }
+  verificarFechas('fecha_apai', 'fecha_apaf', 'mensajeFechas1', 'Fechas de Apareamiento:')
+}
+);
+$("input[name='fecha_elimi']").change(function () {
+  var fechaact = $('#fecha_elimi');
+  var fechadesact = $('#fecha_elimf');
+  if (fechadesact.val() ===''){
+   var datenueva = addDays(fechaact.val(),4);
+   fechadesact.val(datenueva);
+   fechadesact.datepicker("setDate", datenueva);
+  }
+  verificarFechas('fecha_elimi', 'fecha_elimf', 'mensajeFechas2', 'Fechas de Eliminación de Machos:')
+}
+);
+$("input[name='fecha_elihi']").change(function () {
+  var fechaact = $('#fecha_elihi');
+  var fechadesact = $('#fecha_elihf');
+  if (fechadesact.val() ===''){
+   var datenueva = addDays(fechaact.val(),4);
+   fechadesact.val(datenueva);
+   fechadesact.datepicker("setDate", datenueva);
+  }
+  verificarFechas('fecha_elihi', 'fecha_elihf', 'mensajeFechas3', 'Fechas de Eliminación de Hembras:')
+}
+);
+$("input[name='fecha_repoi']").change(function () {
+  var fechaact = $('#fecha_repoi');
+  var fechadesact = $('#fecha_repof');
+  if (fechadesact.val() ===''){
+   var datenueva = addDays(fechaact.val(),4);
+   fechadesact.val(datenueva);
+   fechadesact.datepicker("setDate", datenueva);
+  }
+  verificarFechas('fecha_repoi', 'fecha_repof', 'mensajeFechas4', 'Fechas de Reposición de Ciclo:')
+}
+);
+$("input[name='fecha_selni']").change(function () {
+  var fechaact = $('#fecha_selni');
+  var fechadesact = $('#fecha_selnf');
+  if (fechadesact.val() ===''){
+   var datenueva = addDays(fechaact.val(),4);
+   fechadesact.val(datenueva);
+   fechadesact.datepicker("setDate", datenueva);
+  }
+  verificarFechas('fecha_selni', 'fecha_selnf', 'mensajeFechas5', 'Fechas de Selección de Machos y Hembras:')
+}
+);
+
+function addDays(strDate, days) {
+    var fecha = strDate.split("/");
+    var theDate = new Date(fecha[2],fecha[1] - 1,fecha[0]);
+    var newDate = new Date(theDate);
+    newDate.setDate(theDate.getDate()+4);
+    return newDate; //newDate.getDate()+'/'+ (newDate.getMonth() +1)+'/'+ newDate.getFullYear();
+}
 
 function verificarFechas(fechai, fechaf, mensaje, headms) {
   var fechaact = document.getElementById(fechai).value.split("/");
@@ -39,11 +102,10 @@ function verificarFechas(fechai, fechaf, mensaje, headms) {
     // document.getElementById(fechaf).value = "";
 
   }
-}
-;
+};
 
-function confirmar () {
-  if ($('#mensajeFechas1').val() === "" &&
+function confirmar() {
+  if ($('#mensajeFechas1').text() === "" &&
           $('#mensajeFechas2').text() === "" &&
           $('#mensajeFechas3').text() === "" &&
           $('#mensajeFechas4').text() === "" &&

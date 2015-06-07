@@ -6,6 +6,7 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
+import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
@@ -14,6 +15,7 @@ import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -67,6 +69,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
         return resultado;
@@ -118,6 +121,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
         return resultado;
@@ -164,6 +168,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
         return resultado;
@@ -186,6 +191,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al obtener subbodegas.");
         }
         return listaResultado;
@@ -218,6 +224,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al obtener subbodegas.");
         }
         return listaResultado;
@@ -282,6 +289,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al obtener sub bodega");
         }
         return s;
@@ -349,6 +357,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al obtener sub bodega");
         }
         return sub_bodega;
@@ -430,6 +439,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             resultado = true;
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
         }
         finally {
@@ -464,6 +474,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 getConexion().close();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
         }
@@ -540,6 +551,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             resultado = true;
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
         }
         finally {
@@ -553,6 +565,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 getConexion().close();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
             }
         }
@@ -566,6 +579,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
         boolean resultado = false;
         PreparedStatement upsert_inventario = null;
         PreparedStatement insert_bitacora = null;
+        PreparedStatement insert_ingreso = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -625,6 +639,20 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
 
             upsert_inventario.executeUpdate();
+            
+            insert_ingreso = getConexion().prepareStatement(
+                " INSERT INTO bodega.ingresos (id_producto, id_seccion, fecha_ingreso, fecha_registro, cantidad, fecha_vencimiento, estado, destino) "
+              + " VALUES (?,?,current_date,current_date,?,?,?,?); "
+            );
+            
+            insert_ingreso.setInt(1, inventario_sub_bodega.getProducto().getId_producto());
+            insert_ingreso.setInt(2, inventario_sub_bodega.getSub_bodega().getSeccion().getId_seccion());
+            insert_ingreso.setInt(3, inventario_sub_bodega.getCantidad());
+            insert_ingreso.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+            insert_ingreso.setString(5, Ingreso.DISPONIBLE);
+            insert_ingreso.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+            
+            insert_ingreso.executeUpdate();
 
             insert_bitacora = prepararInsertBitacora(bitacora);
 
@@ -636,6 +664,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al registrar ingreso. Inténtelo nuevamente.");
         }
         finally {
@@ -652,9 +681,13 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 if (insert_bitacora != null) {
                     insert_bitacora.close();
                 }
+                if (insert_ingreso != null) {
+                    insert_ingreso.close();
+                }
                 getConexion().close();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
         }
@@ -731,6 +764,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de conexión con la base de datos. Contacte al administrador del sistema.");
         }
         finally {
@@ -753,6 +787,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 getConexion().close();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
         }
@@ -858,6 +893,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
         }
         finally {
@@ -883,6 +919,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
                 getConexion().close();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
         }

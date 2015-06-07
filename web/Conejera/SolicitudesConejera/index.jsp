@@ -93,7 +93,7 @@
                                                                                 '${solicitud.getPeso_requerido()}',
                                                                                 null,
                                                                                 '${solicitud.getSexo()}',
-                                                                                null)" >Entregar</a>
+                                                                                null,null)" >Entregar</a>
                                   <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=cerrar&tipo=Anulada&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                 </td>
                               </c:when>
@@ -106,7 +106,7 @@
                                                   '${solicitud.getPeso_requerido()}',
                                                   null,
                                                   '${solicitud.getSexo()}',
-                                                  null)" >Entregar</a>
+                                                  null,null)" >Entregar</a>
                                       <a class="btn btn-danger btn-sm boton-accion confirmableCerrar" data-texto-confirmacion="cerrar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=cerrar&tipo=Entrega Parcial&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Cerrar</a>
                                     </td>
                                   </c:when>
@@ -183,7 +183,8 @@
                 <td><input class="form-control" type="text" id="sex" name="sex" disabled></td>
               </tr>
             </table>
-
+            <hr>
+                <p> La información de la solicitud original se muestra entre paréntesis. </p>
             <div class="form-group">
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>

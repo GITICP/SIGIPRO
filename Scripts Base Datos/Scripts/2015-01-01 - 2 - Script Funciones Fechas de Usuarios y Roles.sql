@@ -1,4 +1,4 @@
-﻿--- Funcion para cambiar los estados de usuario de acuerdo a las fechas -- 
+--- Funcion para cambiar los estados de usuario de acuerdo a las fechas -- 
 CREATE FUNCTION seguridad.f_FechasUsuario() RETURNS VOID 
 AS
 $func$

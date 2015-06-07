@@ -24,7 +24,17 @@ public class Coneja {
   private Date fecha_ingreso;
   private Date fecha_cambio;
   private Date fecha_seleccion;
+  private String observaciones;
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+  
   public Date getFecha_ingreso() {
     return fecha_ingreso;
   }

@@ -42,6 +42,7 @@ public class BitacoraDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -55,7 +56,7 @@ public class BitacoraDAO
             this.insertarBitacora(bitacora);
         }
         catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -179,6 +180,7 @@ public class BitacoraDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

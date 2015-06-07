@@ -68,7 +68,7 @@
                           </div>
                         </a>
                       </td>
-                      <td>${sangria.getResponsable()}</td>
+                      <td>${sangria.getResponsable().getNombre_completo()}</td>
                       <td>${sangria.getCantidad_de_caballos()}</td>
                       <td>${sangria.getPotencia()}</td>
                     </tr>

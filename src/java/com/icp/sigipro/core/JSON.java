@@ -21,10 +21,8 @@ public abstract class JSON {
         ActivoFijo a = (ActivoFijo)o;
         try{
             Field properties[] = _class.getDeclaredFields();
-            System.out.println(properties.length);
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
-                System.out.println(field.get(a));
                 if (i != 0){
                     JSON.put(field.getName(), field.get(a));
                 }else{

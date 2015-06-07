@@ -46,7 +46,7 @@ public class InventarioDAO extends DAO<Inventario> {
       cerrarConexion();
 
     } catch (SQLException ex) {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
 
     return resultado;

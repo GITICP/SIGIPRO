@@ -44,6 +44,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       String mensaje = ex.getMessage();
       if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El identificador ya existe");
@@ -62,27 +63,27 @@ public class GrupohembrasDAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE bioterio.gruposhembras "
-              + " SET   identificador=?, cantidad_espacios=?"
+              + " SET   identificador=?"
               + " WHERE id_grupo=?; "
       );
 
       consulta.setString(1, p.getIdentificador());
-      consulta.setInt(2, p.getCantidad_espacios());
-      consulta.setInt(3, p.getId_grupo());
+      consulta.setInt(2, p.getId_grupo());
       
       if (consulta.executeUpdate() == 1) {
-        editarCajas(p);
+        //editarCajas(p);
         resultado = true;
       }
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       String mensaje = ex.getMessage();
-      if (mensaje.contains("unique_violation")){
+      if (mensaje.contains("llave duplicada")){
         throw new SIGIPROException("Error: El identificador ya existe");
       }
       else {
-      throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
       }
     }
     return resultado;
@@ -107,6 +108,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación");
     }
     return resultado;
@@ -132,6 +134,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return grupohembras;
@@ -157,6 +160,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
     return resultado;
@@ -174,6 +178,7 @@ public class GrupohembrasDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -189,6 +194,7 @@ public class GrupohembrasDAO {
         }
       }
       catch (Exception ex) {
+          ex.printStackTrace();
         conexion = null;
       }
     }
@@ -218,6 +224,7 @@ public class GrupohembrasDAO {
       consulta.close();
       cerrarConexion();
     } catch (Exception ex) {
+        ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la eliminación de cajas para el grupo");
     }
   }

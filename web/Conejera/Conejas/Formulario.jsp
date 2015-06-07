@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="col-md-6">
-      <label for="fecha_retiro" class="control-label">*Fecha de Retiro</label>
+      <label for="fecha_retiro" class="control-label">*Fecha Estimada de Retiro</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
@@ -58,18 +58,6 @@
       </div>
     </div>
     <div class="col-md-6">
-      <label for="fecha_cambio" class="control-label">*Fecha de Cambio</label>
-      <div class="form-group">
-        <div class="col-md-12">
-          <div class="input-group">
-            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_cambio" value="${coneja.getFecha_cambio_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_cambio" data-date-format="dd/mm/yyyy" required
-                    oninvalid="setCustomValidity('Este campo es requerido ')"
-                    onchange="setCustomValidity('')">      
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
       <label for="fecha_seleccion" class="control-label">*Fecha de Preselección</label>
       <div class="form-group">
         <div class="col-md-12">
@@ -86,7 +74,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="id_padre" value="${coneja.getId_padre()}"  name="id_padre" required
+            <input  type="text" id="id_padre" value="${coneja.getId_padre()}"  name="id_padre" required  class="form-control"
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">      
           </div>
@@ -98,12 +86,20 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="text" id="id_madre" value="${coneja.getId_madre()}"  name="id_madre" required
-                    oninvalid="setCustomValidity('Este campo es requerido ')"
+            <input  type="text" id="id_madre" value="${coneja.getId_madre()}"  name="id_madre" required class="form-control"
+                    oninvalid="setCustomValidity('Este campo es requerido ')" 
                     onchange="setCustomValidity('')">  
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-md-12">                           
+            <p id='mensajeFechas11' style='color:red;'><p>
+            <p id='mensajeFechas12' style='color:red;'><p> 
+            <p id='mensajeFechas14' style='color:red;'><p> 
+            <p id='mensajeFechas22' style='color:red;'><p>
+            <p id='mensajeFechas23' style='color:red;'><p> 
+            <p id='mensajeFechas32' style='color:red;'><p> 
     </div>
   </div>
   <div class="col-md-12">
@@ -116,10 +112,10 @@
           <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
           <c:choose>
             <c:when test= "${accion.equals('Editar')}">
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+              <button type="button" onclick="confirmar()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
             </c:when>
             <c:otherwise>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Coneja</button>
+              <button type="button" onclick="confirmar()" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Coneja</button>
             </c:otherwise>
           </c:choose>
         </div>

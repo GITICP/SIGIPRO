@@ -119,12 +119,12 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
         return resultado;
     }
-
+    
     public Usuario obtenerUsuario(int idUsuario)
     {
         Usuario resultado = null;
@@ -225,7 +225,7 @@ public class UsuarioDAO
             conexion.close();
         }
         catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -259,7 +259,7 @@ public class UsuarioDAO
             }
         }
         catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -289,7 +289,7 @@ public class UsuarioDAO
             conexion.close();
         }
         catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
 
         return resultado;
@@ -566,6 +566,9 @@ public class UsuarioDAO
         }
         return resultado;
     }
+    
+    
+
 
     public List<Usuario> obtenerUsuarios()
     {
@@ -587,11 +590,15 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
         return resultado;
     }
+    
+    
+    
     
         public List<Usuario> obtenerUsuarios(Usuario u)
     {
@@ -608,7 +615,6 @@ public class UsuarioDAO
                                                     + "FROM seguridad.usuarios us "
                                                     + "WHERE us.id_seccion = ?; ");
                 consulta.setInt(1, u.getId_seccion());
-                System.out.println(consulta);
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarUsuarios(resultadoConsulta);
                 resultadoConsulta.close();
@@ -616,6 +622,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -679,6 +686,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -705,6 +713,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -764,6 +773,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -801,6 +811,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -907,7 +918,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
         return resultado;
@@ -937,7 +948,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
         return resultado;
@@ -972,6 +983,7 @@ public class UsuarioDAO
                 }
             }
             catch (SQLException ex) {
+                ex.printStackTrace();
                 throw new SIGIPROException("Error al obtener usuarios. Inténtelo nuevamente.");
             }
             finally {
@@ -985,6 +997,7 @@ public class UsuarioDAO
                     }
                 }
                 catch (SQLException sql_ex) {
+                    sql_ex.printStackTrace();
                     throw new SIGIPROException("Rrror al comunicarse con la base de datos. Comunique al administrador del sistema.");
                 }
             }
@@ -1016,7 +1029,7 @@ public class UsuarioDAO
                 conexion.close();
             }
             catch (SQLException ex) {
-                System.out.println(ex);
+                ex.printStackTrace();
             }
         }
         return resultado;

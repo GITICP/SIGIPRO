@@ -102,6 +102,7 @@ public class EditarRol extends SIGIPROServlet {
     try {
       processRequest(request, response);
     } catch (SQLException ex) {
+        ex.printStackTrace();
       Logger.getLogger(EditarRol.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
@@ -198,7 +199,7 @@ public class EditarRol extends SIGIPROServlet {
       request.getRequestDispatcher("/Seguridad/Roles/").forward(request, response);
 
     } catch (Exception ex) {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
   }
 

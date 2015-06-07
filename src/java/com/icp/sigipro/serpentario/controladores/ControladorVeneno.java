@@ -111,7 +111,6 @@ public class ControladorVeneno extends SIGIPROServlet {
         String redireccion = "Veneno/Editar.jsp";
         int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
         Veneno veneno = dao.obtenerVeneno(id_veneno);
-        System.out.println(veneno.isRestriccion());
         request.setAttribute("veneno", veneno);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
@@ -152,10 +151,10 @@ public class ControladorVeneno extends SIGIPROServlet {
 
         if (request.getParameter("restriccion") != null){
             v.setRestriccion(true);
-            v.setCantidad_maxima(Float.parseFloat(request.getParameter("cantidad_maxima")));
+            v.setCantidad_minima(Float.parseFloat(request.getParameter("cantidad_minima")));
         }else{
             v.setRestriccion(false);
-            v.setCantidad_maxima(0);
+            v.setCantidad_minima(0);
         }
 
         return v;

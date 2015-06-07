@@ -45,7 +45,7 @@
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=agregar">Agregar Solicitud</a>
+                    <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarSolicitud">Agregar Solicitud</a>
                 </div>
               </c:if>
             </div>
@@ -109,13 +109,14 @@
                               <c:when test="${solicitud.getEstado().equals('Aprobado')}">
                                   <c:if test="${boolentrega}">
                                     <td>
-                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}">Entregar</a>                                
+                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Serpentario/SolicitudVeneno?accion=entregar&id_solicitud=${solicitud.getId_solicitud()}">Entregar</a>  
+                                        <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id="${solicitud.getId_solicitud()}" data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>  
                                     </td>
                                   </c:if>
                               </c:when>
                               <c:otherwise>
                                 <td>
-                                 <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Completada</a>
+                                 <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Completada</button>
                                 </td>
                               </c:otherwise>
                             </c:choose>
@@ -140,12 +141,11 @@
         <div class="widget-content">
             <form class="form-horizontal" id="rechazarSolicitud" autocomplete="off" method="post" action="SolicitudVeneno">
                 <input hidden="true" name="accion" value="Rechazar">
-                <input hidden="true" id='id_solicitud' name='id_solicitud' value="">
+                <input hidden="true" id='id_solicitud_rechazar' name='id_solicitud_rechazar' value="">
                 <label for="observaciones" class="control-label">¿Razones por las cuales rechaza la solicitud?</label>
                 <div class="form-group">
                   <div class="col-sm-12">
                     <div class="input-group">
-                        <BR>
                       <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones" class="form-control" name="observaciones" ></textarea>
                     </div>
                   </div>
@@ -163,6 +163,7 @@
     </jsp:attribute>
 
 </t:modal>
+      
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
@@ -170,3 +171,66 @@
     </jsp:attribute>
 
   </t:plantilla_general>
+
+<t:modal idModal="modalAnularSolicitud" titulo="Anular Solicitud">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="rechazarSolicitud" autocomplete="off" method="post" action="SolicitudVeneno">
+                <input hidden="true" name="accion" value="Anular">
+                <input hidden="true" id='id_solicitud_anular' name='id_solicitud_anular' value="">
+                <label for="observaciones" class="control-label">¿Razones por las cuales anula la solicitud?</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                      <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones" class="form-control" name="observaciones" ></textarea>
+                    </div>
+                  </div>
+                </div>
+            
+        
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Anular Solicitud</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+      
+<t:modal idModal="modalAgregarSolicitud" titulo="Agregar Solicitud de Veneno">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarSolicitud" autocomplete="off" method="get" action="SolicitudVeneno">
+                <input hidden="true" name="accion" value="Agregar">
+                <label for="veneno" class="control-label">*Primero, elija el Tipo de Veneno que va a solicitar.</label>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                        <br>
+                      <select id="seleccionEspecie" class="select2" name="id_veneno"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                                    <option value=''></option>
+                                    <c:forEach items="${venenos}" var="veneno">
+                                        <option value=${veneno.getId_veneno()}>${veneno.getEspecie().getGenero_especie()}</option>
+                                    </c:forEach>
+                            </select>
+                    </div>
+                  </div>
+                </div>
+            
+        <div class="form-group">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Ir a Agregar Solicitud</button>            </div>
+        </div>
+        </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>

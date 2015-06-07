@@ -47,7 +47,6 @@ public class SerpienteDAO {
             consulta.setFloat(8, s.getTalla_cola());
             consulta.setFloat(9, s.getPeso());
             consulta.setInt(10,s.getNumero_serpiente());
-            System.out.println(consulta);
             ResultSet resultadoConsulta = consulta.executeQuery();
             if ( resultadoConsulta.next() ){
                 resultado = true;
@@ -58,6 +57,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(Exception ex){
+            ex.printStackTrace();
             return false;
         }
         return resultado;
@@ -74,7 +74,6 @@ public class SerpienteDAO {
             consulta.setBinaryStream(1, imagen,size);
             consulta.setInt(2, id_serpiente);
 
-            System.out.println(consulta);
             if ( consulta.executeUpdate() == 1){
                 resultado = true;
             }
@@ -100,7 +99,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return nextval;
     }
@@ -118,7 +117,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return nextval;
     }
@@ -136,7 +135,7 @@ public class SerpienteDAO {
             consulta.close();
             conexion.close();
         }catch (Exception e){
-            
+            e.printStackTrace();
         }
         return nextval;
     }
@@ -156,6 +155,7 @@ public class SerpienteDAO {
             conexion.close();
         }
         catch(SQLException ex){
+            ex.printStackTrace();
             throw new SIGIPROException("Serpiente no pudo ser eliminada debido a que una o más objetos se encuentran asociadas a esta.");
         }
         return resultado;
@@ -324,6 +324,24 @@ public class SerpienteDAO {
         return serpiente;
     }
   
+    public boolean validarDescarte(int id_serpiente){
+        boolean resultado = false;
+        try{
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.eventos WHERE id_categoria=14 and id_serpiente=?; ");
+            consulta.setInt(1, id_serpiente);
+            ResultSet rs = consulta.executeQuery();
+            if(rs.next()){
+                resultado=true;
+            }
+            rs.close();
+            consulta.close();
+            conexion.close();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public List<Serpiente> obtenerSerpientes(){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
@@ -401,8 +419,9 @@ public class SerpienteDAO {
     public List<Serpiente> obtenerSerpientesCuarentena(int id_especie,int id_extraccion){
         List<Serpiente> resultado = new ArrayList<Serpiente>();
         try{
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM serpentario.serpientes WHERE id_especie=? AND ID_SERPIENTE NOT IN(SELECT ID_SERPIENTE "
-                    + "FROM SERPENTARIO.EVENTOS AS evento WHERE evento.id_categoria=6) "
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM serpentario.serpientes WHERE id_especie=? "
+                    + "AND ID_SERPIENTE NOT IN (SELECT ID_SERPIENTE FROM SERPENTARIO.EVENTOS AS evento WHERE evento.id_categoria=6) "
+                    + "AND ID_SERPIENTE NOT IN (SELECT ID_SERPIENTE FROM SERPENTARIO.EVENTOS AS evento WHERE evento.id_categoria=5) "
                     + "AND ID_SERPIENTE NOT IN (SELECT SE.ID_SERPIENTE FROM SERPENTARIO.SERPIENTES_EXTRACCION AS SE WHERE ID_EXTRACCION=?);");
             consulta.setInt(1, id_especie);
             consulta.setInt(2, id_extraccion);
@@ -447,6 +466,7 @@ public class SerpienteDAO {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;

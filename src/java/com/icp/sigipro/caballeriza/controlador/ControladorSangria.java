@@ -7,14 +7,16 @@ package com.icp.sigipro.caballeriza.controlador;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
-import com.icp.sigipro.caballeriza.dao.SangriaPruebaDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
-import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -68,10 +70,12 @@ public class ControladorSangria extends SIGIPROServlet
         validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Agregar.jsp";
 
-        SangriaPruebaDAO sangria_pruebas_dao = new SangriaPruebaDAO();
-        List<SangriaPrueba> sangrias_prueba = sangria_pruebas_dao.obtenerSangriasPruebasLimitadoConCaballos();
-
-        request.setAttribute("sangrias_prueba", sangrias_prueba);
+        GrupoDeCaballosDAO gruposdao= new GrupoDeCaballosDAO();
+        UsuarioDAO usr_dao = new UsuarioDAO();
+        List<GrupoDeCaballos> lista_grupos = gruposdao.obtenerGruposDeCaballosConCaballos();
+        List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6);
+        request.setAttribute("usuarios_cab", lista_usuarios);
+        request.setAttribute("lista_grupos", lista_grupos);
         request.setAttribute("helper", helper);
         request.setAttribute("accion", "Agregar");
 
@@ -101,7 +105,7 @@ public class ControladorSangria extends SIGIPROServlet
             request.setAttribute("sangria", sangria);
         }
         catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
@@ -169,8 +173,10 @@ public class ControladorSangria extends SIGIPROServlet
 
         int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
 
-        Sangria sangria = dao.obtenerSangriaConCaballosDePrueba(id_sangria);
-
+        Sangria sangria = dao.obtenerSangriaConCaballosDeGrupo(id_sangria);
+        UsuarioDAO usr_dao = new UsuarioDAO();
+        List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6);
+        request.setAttribute("usuarios_cab", lista_usuarios);
         request.setAttribute("sangria", sangria);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
@@ -282,8 +288,14 @@ public class ControladorSangria extends SIGIPROServlet
     {
         Sangria sangria = new Sangria();
 
-        sangria.setResponsable(request.getParameter("responsable"));
+        Usuario u = new Usuario();
+        u.setId_usuario(Integer.parseInt(request.getParameter("responsable")));
+        sangria.setResponsable(u);
 
+        GrupoDeCaballos g = new GrupoDeCaballos();
+        g.setId_grupo_caballo(Integer.parseInt(request.getParameter("grupo")));
+        sangria.setGrupo(g);
+        
         String numero_informe_calidad = request.getParameter("num_inf_cc");
         String potencia = request.getParameter("potencia");
         String volumen_plasma_total = request.getParameter("volumen_plasma");
@@ -297,11 +309,6 @@ public class ControladorSangria extends SIGIPROServlet
         if (!volumen_plasma_total.isEmpty()) {
             sangria.setVolumen_plasma_total(Float.parseFloat(volumen_plasma_total));
         }
-
-        SangriaPrueba sangria_prueba = new SangriaPrueba();
-        String sang_prueba = request.getParameter("sangria_prueba");
-        sangria_prueba.setId_sangria_prueba(Integer.parseInt(sang_prueba));
-        sangria.setSangria_prueba(sangria_prueba);
 
         String[] ids_caballos = request.getParameterValues("caballos");
 

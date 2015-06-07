@@ -93,6 +93,7 @@ public class SangriaPruebaDAO
             }
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo registrar la sangría de prueba.");
         }
         finally {
@@ -115,6 +116,7 @@ public class SangriaPruebaDAO
                 cerrarConexion();
             }
             catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos.");
             }
         }
@@ -145,7 +147,8 @@ public class SangriaPruebaDAO
             rs.close();
         }
         catch (SQLException ex) {
-            throw new SIGIPROException("Los eventos clinicos no pueden ser accedidos.");
+            ex.printStackTrace();
+            throw new SIGIPROException("Los eventos clínicos no pueden ser accedidos.");
         }
         return resultado;
     }
@@ -174,6 +177,7 @@ public class SangriaPruebaDAO
 
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
@@ -203,7 +207,8 @@ public class SangriaPruebaDAO
             rs.close();
         }
         catch (SQLException ex) {
-            throw new SIGIPROException("La prueba de sangría no puede ser obtenida.");
+            ex.printStackTrace();
+            throw new SIGIPROException("La sangría de prueba no puede ser obtenida.");
         }
         return sangriap;
     }
@@ -306,7 +311,7 @@ public class SangriaPruebaDAO
             cerrarConexion();
                     
         } catch(SQLException ex) {
-            
+            ex.printStackTrace();
         }
         
         return resultado;
@@ -321,6 +326,7 @@ public class SangriaPruebaDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
         return conexion;
@@ -335,6 +341,7 @@ public class SangriaPruebaDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -45,18 +45,18 @@
             </div>
     </div>    
     <div class="col-md-6">
-        <label for="cantidad_maxima" class="control-label">*Cantidad Máxima (mg)</label>
+        <label for="cantidad_minima" class="control-label">*Cantidad Mínima (mg)</label>
         <div class="form-group">
           <div class="col-sm-12">
             <div class="input-group">
                 <c:choose>
                     <c:when test="${veneno.isRestriccion()}">
-                        <input id="cantidad_maxima" type="number" step="any" class="form-control" name="cantidad_maxima" value="${veneno.getCantidad_maxima()}" required
+                        <input id="cantidad_minima" type="number" step="any" class="form-control" name="cantidad_minima" value="${veneno.getCantidad_minima()}" required
                             oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                             oninput="setCustomValidity('')"> 
                     </c:when>
                     <c:otherwise>
-                        <input id="cantidad_maxima" type="number" step="any" class="form-control" name="cantidad_maxima" value="0" disabled="true" required
+                        <input id="cantidad_minima" type="number" step="any" class="form-control" name="cantidad_minima" value="0" disabled="true" required
                             oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                             oninput="setCustomValidity('')"> 
                     </c:otherwise>

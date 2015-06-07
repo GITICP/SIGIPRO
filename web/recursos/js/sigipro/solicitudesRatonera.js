@@ -31,10 +31,13 @@ function RechazarSolicitud(id_solicitud){
   $('#observaciones').val("");
   $('#ModalRechazar').modal('show');
 }
-function entregarSolicitud(id_solicitud, numeroan, peso, numerocajas, sexo, cepa){
+function entregarSolicitud(id_solicitud, numeroan, peso, numerocajas, sexo, cepa, id_cepa){
   
-  $('#numero_animales').val("");
-  $('#numero_cajas').val("");
+  $('#numero_animales').val(numeroan);
+  $('#peso_entrega').select2("val",peso);
+  $('#sexo').select2("val",sexo);
+  $('#id_cepa').select2("val",id_cepa);
+  $('#numero_cajas').val(numerocajas);
   $('#id_solicitud_ent').val(id_solicitud);
   $('#ModalEntrega').modal('show');
   $('#numsol').val(id_solicitud);
@@ -44,21 +47,33 @@ function entregarSolicitud(id_solicitud, numeroan, peso, numerocajas, sexo, cepa
   $('#sexsol').val(sexo);
   $('#cepasol').val(cepa);
 }
+function parsearopciones(opciones, valor){
+  for (i = 0; i < opciones.lenght; i++)
+  {
+    if (opciones[i].text === valor)
+    {return i;}
+  }
+};
 
 function confirmarAuth(){
   id_solicitud = $('#id_solicitud_ent').val();
   numero_animales = $('#numero_animales').val();
+  numero_animales_sol =$('#numan').val();
   peso = $('#peso_entrega').val();
+  peso_sol = $('#pesosol').val();
   sexo = $('#sexo').val();
+  sexo_sol =$('#sexsol').val();
   numero_cajas = $('#numero_cajas').val();
+  numero_cajas_sol = $('#cajassol').val();
   cepa = $('#id_cepa').val();
+  
   
   $('#id_solicitud_auth2').val(id_solicitud);
   $('#num-sol').val(id_solicitud);
-  $('#usr-sol').val(numero_animales);
-  $('#prd').val(peso);
-  $('#cnt').val(numero_cajas);
-  $('#sex').val(sexo);
+  $('#usr-sol').val(numero_animales + " (" + numero_animales_sol+")");
+  $('#prd').val(peso + " (" + peso_sol+")");
+  $('#cnt').val(numero_cajas + " (" + numero_cajas_sol+")");
+  $('#sex').val(sexo + " (" + sexo_sol+")");
   $('#cepa').val(cepa);
   $('#usr-sol1').val(numero_animales);
   $('#prd1').val(peso);

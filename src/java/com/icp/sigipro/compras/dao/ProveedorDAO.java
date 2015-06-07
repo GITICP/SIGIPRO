@@ -167,13 +167,7 @@ public class ProveedorDAO
     {
         SingletonBD s = SingletonBD.getSingletonBD();
         if (conexion == null) {
-            long startTime = System.currentTimeMillis();
-
             conexion = s.conectar();
-
-            long endTime = System.currentTimeMillis();
-            long duration = (endTime - startTime);
-            System.out.println("Conectar: " + duration);
         }
         else {
             try {
@@ -182,6 +176,7 @@ public class ProveedorDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }
