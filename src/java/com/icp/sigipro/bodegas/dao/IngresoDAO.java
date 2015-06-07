@@ -6,15 +6,16 @@
 package com.icp.sigipro.bodegas.dao;
 
 import com.icp.sigipro.bodegas.modelos.Ingreso;
+import com.icp.sigipro.bodegas.modelos.ProductoInterno;
+import com.icp.sigipro.bodegas.modelos.SubBodega;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,18 +30,48 @@ public class IngresoDAO extends DAO<Ingreso>
         super(Ingreso.class, "bodega", "ingresos");
     }
 
-    @Override
-    public Ingreso buscar(int id) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SIGIPROException
+    public Ingreso buscar(int id) throws SIGIPROException, SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla + " i INNER JOIN bodega.catalogo_interno ci on ci.id_producto = i.id_producto INNER JOIN seguridad.secciones s on i.id_seccion = s.id_seccion WHERE id_ingreso = ?;";
+        ;
 
-        Ingreso t = tipo.newInstance();
-
-        PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+        PreparedStatement consulta = getConexion().prepareStatement(
+                " SELECT i.*, s.nombre_seccion, s.id_seccion, ci.id_producto, ci.nombre as nombre_producto, sb.id_sub_bodega, sb.nombre as nombre_sub_bodega "
+              + " FROM bodega.ingresos i "
+              + " INNER JOIN bodega.catalogo_interno ci on ci.id_producto = i.id_producto "
+              + " INNER JOIN seguridad.secciones s on i.id_seccion = s.id_seccion "
+              + " LEFT JOIN bodega.sub_bodegas sb on i.id_sub_bodega = sb.id_sub_bodega "
+              + " WHERE id_ingreso = ?;"
+        );
         consulta.setInt(1, id);
         ResultSet resultado = ejecutarConsulta(consulta);
         if (resultado.next()) {
-            Ingreso i = construirObjeto(t.getMetodos("set"), resultado);
+            Ingreso i = new Ingreso();
+            
+            i.setCantidad(resultado.getInt("cantidad"));
+            i.setEstado(resultado.getString("estado"));
+            i.setFecha_ingreso(resultado.getDate("fecha_ingreso"));
+            i.setFecha_registro(resultado.getDate("fecha_registro"));
+            i.setFecha_vencimiento(resultado.getDate("fecha_vencimiento"));
+            i.setId_ingreso(resultado.getInt("id_ingreso"));
+            i.setPrecio(resultado.getInt("precio"));
+            
+            ProductoInterno pi = new ProductoInterno();
+            pi.setNombre(resultado.getString("nombre_producto"));
+            pi.setId_producto(resultado.getInt("id_producto"));
+            i.setProducto(pi);
+            
+            Seccion s = new Seccion();
+            s.setNombre_seccion(resultado.getString("nombre_seccion"));
+            s.setId_seccion(resultado.getInt("id_seccion"));
+            i.setSeccion(s);
+            
+            int id_sub_bodega = resultado.getInt("id_sub_bodega");
+            if(id_sub_bodega != 0) {
+                SubBodega sb = new SubBodega();
+                sb.setId_sub_bodega(id_sub_bodega);
+                sb.setNombre(resultado.getString("nombre_sub_bodega"));
+                i.setSub_bodega(sb);
+            }
             resultado.close();
             consulta.close();
             return i;
@@ -52,24 +83,6 @@ public class IngresoDAO extends DAO<Ingreso>
             SIGIPROException ex = new SIGIPROException("El ingreso que está intentando buscar no existe.");
             throw ex;
         }
-    }
-
-    @Override
-    public List<Ingreso> buscarPor(String[] campos, Object valor)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean actualizar(Ingreso param)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean eliminar(Ingreso param)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -85,12 +98,54 @@ public class IngresoDAO extends DAO<Ingreso>
         consulta.close();
         return resultado;
     }
+    
+    @Override
+    protected List<Ingreso> construirLista(ResultSet resultadoConsulta) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        
+        List<Ingreso> resultado = new ArrayList<Ingreso>();
+        
+        while (resultadoConsulta.next()) {
+            Ingreso i = new Ingreso();
+            
+            i.setCantidad(resultadoConsulta.getInt("cantidad"));
+            i.setEstado(resultadoConsulta.getString("estado"));
+            i.setFecha_ingreso(resultadoConsulta.getDate("fecha_ingreso"));
+            i.setFecha_registro(resultadoConsulta.getDate("fecha_registro"));
+            i.setFecha_vencimiento(resultadoConsulta.getDate("fecha_vencimiento"));
+            i.setId_ingreso(resultadoConsulta.getInt("id_ingreso"));
+            i.setPrecio(resultadoConsulta.getInt("precio"));
+            
+            ProductoInterno pi = new ProductoInterno();
+            pi.setNombre(resultadoConsulta.getString("nombre_producto"));
+            pi.setId_producto(resultadoConsulta.getInt("id_producto"));
+            i.setProducto(pi);
+            
+            Seccion s = new Seccion();
+            s.setNombre_seccion(resultadoConsulta.getString("nombre_seccion"));
+            s.setId_seccion(resultadoConsulta.getInt("id_seccion"));
+            i.setSeccion(s);
+            
+            int id_sub_bodega = resultadoConsulta.getInt("id_sub_bodega");
+            if(id_sub_bodega != 0) {
+                SubBodega sb = new SubBodega();
+                sb.setId_sub_bodega(id_sub_bodega);
+                sb.setNombre(resultadoConsulta.getString("nombre_sub_bodega"));
+                i.setSub_bodega(sb);
+            }
+            resultado.add(i);
+        }
+
+        resultadoConsulta.close();
+        return resultado;
+    }
 
     private PreparedStatement construirConsultaObtenerTodo(String condicion) throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException
     {
-        String codigoConsulta = "SELECT * FROM " + nombreModulo + "." + nombreTabla + " i "
+        String codigoConsulta = "SELECT i.*, s.nombre_seccion, s.id_seccion, ci.id_producto, ci.nombre as nombre_producto, sb.id_sub_bodega, sb.nombre as nombre_sub_bodega "
+                                + " FROM " + nombreModulo + "." + nombreTabla + " i "
                                 + " INNER JOIN bodega.catalogo_interno ci on ci.id_producto = " + "i.id_producto "
                                 + " INNER JOIN seguridad.secciones s on s.id_seccion = i.id_seccion "
+                                + " LEFT JOIN bodega.sub_bodegas sb on sb.id_sub_bodega = i.id_sub_bodega "
                                 + " WHERE i.estado = ?";
         PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
         consulta.setString(1, condicion);
@@ -107,7 +162,21 @@ public class IngresoDAO extends DAO<Ingreso>
 
         try {
             getConexion().setAutoCommit(false);
-            insertIngreso = construirInsertar(param);
+            insertIngreso = getConexion().prepareStatement(
+                    " INSERT INTO bodega.ingresos (id_producto, id_seccion, "
+                  + " fecha_ingreso, fecha_registro, cantidad, fecha_vencimiento,"
+                  + " estado, precio) VALUES (?,?,?,?,?,?,?,?) RETURNING id_ingreso;"
+            );
+            
+            insertIngreso.setInt(1, param.getProducto().getId_producto());
+            insertIngreso.setInt(2, param.getSeccion().getId_seccion());
+            insertIngreso.setDate(3, param.getFecha_ingreso());
+            insertIngreso.setDate(4, param.getFecha_registro());
+            insertIngreso.setInt(5, param.getCantidad());
+            insertIngreso.setDate(6, param.getFecha_vencimiento());
+            insertIngreso.setString(7, param.getEstado());
+            insertIngreso.setInt(8, param.getPrecio());
+            
 
             if (!(param.getEstado().equalsIgnoreCase(Ingreso.CUARENTENA) || param.getEstado().equalsIgnoreCase(Ingreso.NO_DISPONIBLE))) {
                 upsertInventario = construirUpsertInventario(param);
@@ -131,6 +200,9 @@ public class IngresoDAO extends DAO<Ingreso>
             catch (SQLException ex) {
                 ex.printStackTrace();
             }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
         }
         finally {
             if (insertIngreso != null) {

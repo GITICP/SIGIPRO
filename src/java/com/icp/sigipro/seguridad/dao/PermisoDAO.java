@@ -45,6 +45,7 @@ public class PermisoDAO
             }
             catch(SQLException ex)
             {
+                ex.printStackTrace();
                 resultado = null;
             }
         }
@@ -90,6 +91,7 @@ public List<Permiso> obtenerPermisosRestantes(String p_idrol)
             }
             catch(SQLException ex)
             {
+                ex.printStackTrace();
                 resultado = null;
             }
         }

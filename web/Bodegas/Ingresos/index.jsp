@@ -86,6 +86,7 @@
                         <th>Cantidad</th>
                         <th>Precio</th>
                         <th>Estado</th>
+                        <th>Destino</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -106,6 +107,7 @@
                           <td>${ingreso.getCantidad()}</td>
                           <td>${ingreso.getPrecio()}</td>
                           <td>${ingreso.getEstado()}</td>
+                          <td>${(ingreso.getSub_bodega() == null) ? "Bodega" : ingreso.getSub_bodega().getNombre()}</td> 
                         </tr>
 
                       </c:forEach>

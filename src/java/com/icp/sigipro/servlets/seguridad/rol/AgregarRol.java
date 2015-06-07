@@ -96,6 +96,7 @@ public class AgregarRol extends SIGIPROServlet
       processRequest(request, response);
     }
     catch (SQLException ex) {
+        ex.printStackTrace();
       Logger.getLogger(AgregarRol.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
@@ -213,6 +214,7 @@ public class AgregarRol extends SIGIPROServlet
 
     }
     catch (SQLException ex) {
+        ex.printStackTrace();
       Logger.getLogger(AgregarRol.class.getName()).log(Level.SEVERE, null, ex);
       request.setAttribute("mensaje", "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">"
                                           + "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n"

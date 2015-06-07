@@ -5,95 +5,52 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page import="com.icp.sigipro.seguridad.modelos.BarraFuncionalidad"%>
 <%@page import="java.util.List"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
-  List<BarraFuncionalidad> modulos;
-  modulos = (List<BarraFuncionalidad>) session.getAttribute("barraFuncionalidad");
 
-  if (modulos != null) {
-    request.setAttribute("modulos", modulos);
-  }
-%>
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="container">
-    <div class="row">
-      <!-- logo -->
-      <div class="col-md-2 logo">
-        <p style="color:#fff">SIGIPRO</p>
-      </div>
-      <!-- end logo -->
-      <div class="col-md-10">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="top-bar-right">
-              <!-- logged user and the menu -->
-              <div class="logged-user">
-                <div class="btn-group">
-                  <a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+<form id="cerrar-sesion" action="<%= request.getContextPath()%>/Cuenta/CerrarSesion" method="post"></form>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/SIGIPRO">SIGIPRO</a>
+    </div>
+    <div class="navbar-collapse collapse">
+
+        <!-- Left nav -->
+        <ul class="nav navbar-nav">
+            <t:renderizar_barra barra="${sessionScope.barraFuncionalidad}" />
+        </ul>
+
+        <!-- Right nav -->
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="#">
                     <span class="name">Bienvenido, ${sessionScope.usuario}</span>
-                    <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu" role="menu" style="z-index:1055">
+                </a>
+                <ul class="dropdown-menu">
                     <li>
-                      <a href="#">
-                        <i class="fa fa-user"></i>
-                        <span class="text" data-toggle="modal" data-target="#modalCambiarContrasena">Cambiar Contraseña</span>
-                      </a>
+                        <a href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="text" data-toggle="modal" data-target="#modalCambiarContrasena">Cambiar Contraseña</span>
+                        </a>
                     </li>
-                  </ul>
-
-
-                </div>
-              </div>
-              <div class="logged-user">
-                <form action="<%= request.getContextPath()%>/Cuenta/CerrarSesion" method="post">
-                  <button class="botonCerrarSesion" type="submit">
+                </ul>
+            </li>
+            <li>
+                <a class="confirmable-form cerrar-sesion" data-form-id="cerrar-sesion" data-texto-confirmacion="cerrar sesión">
                     <i class="fa fa-power-off"></i>
                     <span class="text">Cerrar Sesión</span>
-                  </button>
-                </form>
-              </div>
-              <!-- end logged user and the menu -->
-            </div>
-            <!-- /top-bar-right -->
-          </div>
-        </div>
-        <!-- /row -->
-      </div>
-    </div>
-    <!-- /row -->
-  </div>
-  <!-- /container -->
-</div>
-<!-- /top -->
-
-
-
-
-<div id="top-nav" class="navbar navbar-inverse navbar-static-top" style="background-color: #3C730D; border-color: #fff;"> 
-  <nav class="nav-sigipro" id="menu-sigipro" role="navigation">
-    <a href="#menu-sigipro" title="Show navigation">Mostrar Menú</a>
-    <a href="#" title="Hide navigation">Ocultar Menú</a>
-    <ul>
-      <li><a href='<%= request.getContextPath()%>'> Inicio </a></li>
-        <c:forEach items="${modulos}" var="modulo">
-        <li>
-          <a>${modulo.getModulo()}</a>
-          <ul>
-            <c:forEach items="${modulo.getFuncionalidades()}" var="funcionalidad">
-              <li>
-                <a href="<%= request.getContextPath()%>${funcionalidad[1]}">
-                  ${funcionalidad[0]}
                 </a>
-              </li>
-            </c:forEach> 
-          </ul>
-        </li>
-      </c:forEach>
-    </ul>
-  </nav>
+            </li>
+        </ul>
+    </div><!--/.nav-collapse -->
 </div>

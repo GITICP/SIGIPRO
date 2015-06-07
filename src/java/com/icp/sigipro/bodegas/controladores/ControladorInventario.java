@@ -137,7 +137,6 @@ public class ControladorInventario extends SIGIPROServlet {
                     request.setAttribute("listaInventarios", inventarios);
                 }
                 catch (Exception ex) {
-                    System.out.println(ex.getMessage());
                     ex.printStackTrace();
                 }
             }

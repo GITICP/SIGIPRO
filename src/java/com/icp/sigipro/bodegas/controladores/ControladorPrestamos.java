@@ -150,9 +150,15 @@ public class ControladorPrestamos extends SIGIPROServlet {
           int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
           SolicitudDAO soldao = new SolicitudDAO();
           Solicitud prestamo = soldao.obtenerSolicitud(id_solicitud);
+          Prestamo prestamoP = dao.obtenerPrestamo(id_solicitud);
           HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
           prestamo.setEstado("Pendiente");
+          String nombre_usr = (String) sesion.getAttribute("usuario");
+          int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
+          prestamoP.setId_usuario_aprobo(id_usuario);
           boolean resultado;
+          boolean resultado2;
+          resultado2 = dao.editarPrestamo(prestamoP);
           resultado = soldao.editarSolicitud(prestamo);
 
           //Funcion que genera la bitacora
@@ -160,7 +166,7 @@ public class ControladorPrestamos extends SIGIPROServlet {
           bitacora.setBitacora(prestamo.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRESTAMO, request.getRemoteAddr());
           //*----------------------------*
 
-          if (resultado) {
+          if (resultado & resultado2) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Préstamo aceptado"));
           } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));

@@ -11,11 +11,15 @@ import com.icp.sigipro.bodegas.modelos.Prestamo;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -341,6 +345,87 @@ public class SolicitudDAO
         return resultado;
     }
 
+        public boolean entregarMasivo(String ids, int id_usuario_recibo) throws SIGIPROException
+    {
+        boolean resultado = false;
+        
+        try {
+            getConexion().setAutoCommit(false);
+            java.util.Date hoy = new java.util.Date();
+            Date hoysql = new Date(hoy.getTime());
+            String estado = "Entregada";
+            PreparedStatement consulta_entregar = getConexion().prepareStatement(" UPDATE bodega.solicitudes"
+                    + " SET estado=?, fecha_entrega=?, id_usuario_recibo=?"
+                    + " WHERE id_solicitud=?");
+
+            String[] ids_parseados = parsearAsociacion("#af#", ids);
+
+            for (int i = 0; i < ids_parseados.length; i++) {
+                consulta_entregar.setInt(4, Integer.parseInt(ids_parseados[i]));
+                consulta_entregar.setInt(3, id_usuario_recibo);
+                consulta_entregar.setDate(2, hoysql);
+                consulta_entregar.setString(1, estado);
+                consulta_entregar.addBatch();
+            }
+
+            int[] resultados = consulta_entregar.executeBatch();
+            consulta_entregar.close();
+
+            boolean ciclo_break = false;
+
+            for (int i = 0; i < resultados.length; i++) {
+                if (resultados[i] != 1) {
+                    ciclo_break = true;
+                    break;
+                }
+            }
+            
+
+            if (ciclo_break) {
+                resultado = false;
+            }
+            else {
+                resultado = true;
+            }
+
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            try {
+                getConexion().rollback();
+                // Mapear mensaje.
+                throw new SIGIPROException("No se pudo realizar la entrega múltiple.");
+            }
+            catch (SQLException roll_ex) {
+                roll_ex.printStackTrace();
+                throw new SIGIPROException("Error de conexión con la base de datos.");
+            }
+        }
+        finally {
+            try {
+                if (resultado) {
+                    getConexion().commit();
+                    getConexion().close();
+                }
+                else {
+                    getConexion().rollback();
+                    getConexion().close();
+                    throw new SIGIPROException("Ocurrió un error a la hora de realizar la entrega múltiple. Inténtelo nuevamente.");
+                }
+            }
+            catch (SQLException roll_ex) {
+                roll_ex.printStackTrace();
+                throw new SIGIPROException("Error de conexión con la base de datos.");
+            }
+        }
+        return resultado;
+    }
+
+    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas)
+    {
+        String[] idsTemp = asociacionesCodificadas.split(pivote);
+        return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
+    }
     private Connection getConexion()
     {
         try {
@@ -351,6 +436,7 @@ public class SolicitudDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -366,6 +452,7 @@ public class SolicitudDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

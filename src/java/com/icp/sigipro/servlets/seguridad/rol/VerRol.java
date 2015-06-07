@@ -82,6 +82,7 @@ public class VerRol extends HttpServlet {
     try {
       processRequest(request, response);
     } catch (SQLException ex) {
+        ex.printStackTrace();
       Logger.getLogger(VerRol.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
@@ -100,6 +101,7 @@ public class VerRol extends HttpServlet {
     try {
       processRequest(request, response);
     } catch (SQLException ex) {
+        ex.printStackTrace();
       Logger.getLogger(VerRol.class.getName()).log(Level.SEVERE, null, ex);
     }
   }

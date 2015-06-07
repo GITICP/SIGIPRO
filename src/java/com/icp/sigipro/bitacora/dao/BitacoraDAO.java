@@ -42,6 +42,7 @@ public class BitacoraDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -55,7 +56,7 @@ public class BitacoraDAO
             this.insertarBitacora(bitacora);
         }
         catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -128,7 +129,6 @@ public class BitacoraDAO
                 bitacora.setTabla(rs.getString("tabla"));
                 bitacora.setEstado(rs.getString("estado"));
 
-                System.out.println(bitacora.getId_bitacora());
                 resultado.add(bitacora);
             }
             rs.close();
@@ -180,6 +180,7 @@ public class BitacoraDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

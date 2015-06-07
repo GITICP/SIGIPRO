@@ -107,11 +107,6 @@ public class ControladorCatalogoExterno extends SIGIPROServlet {
           
           try {
           dao.eliminarProductoExterno(id_producto);
-          System.out.println(request.getRemoteAddr());
-          System.out.println(request.getRemoteHost());
-          System.out.println(request.getRemoteUser());
-          System.out.println(InetAddress.getLocalHost().getHostName());
-          
           
           //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();

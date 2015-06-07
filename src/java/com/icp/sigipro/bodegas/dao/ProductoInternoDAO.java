@@ -268,7 +268,7 @@ public class ProductoInternoDAO
                 cerrarConexion();
             }
             catch (Exception ex_bd) {
-                ex.printStackTrace();
+                ex_bd.printStackTrace();
             }
         }
         return resultado;
@@ -404,8 +404,6 @@ public class ProductoInternoDAO
                     producto.setReactivo(new Reactivo());
                 }
 
-                System.out.println(id_reactivo);
-
                 resultado.add(producto);
             }
             
@@ -478,6 +476,7 @@ public class ProductoInternoDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             resultado = null;
         }
 
@@ -514,6 +513,7 @@ public class ProductoInternoDAO
             cerrarConexion();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             resultado = null;
         }
 
@@ -563,6 +563,7 @@ public class ProductoInternoDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -578,6 +579,7 @@ public class ProductoInternoDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -12,10 +12,26 @@ package com.icp.sigipro.core;
 public class SIGIPROException extends Exception
 {
 
-  public SIGIPROException() {  }
-  public SIGIPROException(String mensaje)
-  {
-    super(mensaje);
-  }
+    String redireccion;
+
+    public SIGIPROException()
+    {
+    }
+
+    public SIGIPROException(String mensaje)
+    {
+        super(mensaje);
+    }
+
+    public SIGIPROException(String mensaje, String redireccion_error)
+    {
+        super(mensaje);
+        redireccion = redireccion_error;
+    }
+
+    public String getRedireccion()
+    {
+        return redireccion;
+    }
 
 }

@@ -99,6 +99,7 @@ public class UbicacionDAO
             cerrarConexion();
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Ubicación no pudo ser eliminada debido a que uno o más activos se encuentran asociados a esta.");
         }
         return resultado;
@@ -168,6 +169,7 @@ public class UbicacionDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -183,6 +185,7 @@ public class UbicacionDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

@@ -99,6 +99,7 @@ public class UbicacionBodegaDAO
             cerrarConexion();
         }
         catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Ubicación no pudo ser eliminada debido a que uno o más productos se encuentran asociados a esta.");
         }
         return resultado;
@@ -261,6 +262,7 @@ public class UbicacionBodegaDAO
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             conexion = null;
         }
 
@@ -276,6 +278,7 @@ public class UbicacionBodegaDAO
                 }
             }
             catch (Exception ex) {
+                ex.printStackTrace();
                 conexion = null;
             }
         }

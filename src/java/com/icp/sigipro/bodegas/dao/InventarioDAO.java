@@ -46,7 +46,7 @@ public class InventarioDAO extends DAO<Inventario> {
       cerrarConexion();
 
     } catch (SQLException ex) {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
 
     return resultado;
@@ -175,19 +175,4 @@ public class InventarioDAO extends DAO<Inventario> {
     }
     return inventario;
   }
-
-    @Override
-    public List<Inventario> buscarPor(String[] campos, Object valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean actualizar(Inventario param) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean eliminar(Inventario param) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
