@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-bug"></i>Serpiente ${serpiente.getNumero_serpiente()} </h3>
+              <h3><i class="sigipro-snake-3"></i>Serpiente ${serpiente.getNumero_serpiente()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEvento" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -177,7 +177,7 @@
                 <div class="col-md-12">
            <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-users"></i> Eventos</h3>
+              <h3><i class="fa fa-calendar"></i> Eventos</h3>
             </div>
             <div class="widget-content">
               <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
