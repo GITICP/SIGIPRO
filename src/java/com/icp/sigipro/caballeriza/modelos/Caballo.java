@@ -158,7 +158,12 @@ public class Caballo {
         return fecha_nacimiento;
     }
     public String getFecha_nacimientoAsString() {
-        return formatearFecha(fecha_nacimiento);
+        String resultado = "Sin fecha de nacimiento";
+        if (fecha_nacimiento != null) {
+            return formatearFecha(fecha_nacimiento);
+        }
+        return resultado;
+        
     }
     public void setFecha_nacimiento(Date fecha_nacimiento) {
         this.fecha_nacimiento = fecha_nacimiento;

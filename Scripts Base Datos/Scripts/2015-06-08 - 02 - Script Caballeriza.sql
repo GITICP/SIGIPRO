@@ -15,7 +15,7 @@ CREATE TABLE caballeriza.caballos (
     numero integer NOT NULL,
     nombre character varying(100) NOT NULL,
     numero_microchip character varying(20) NOT NULL,
-    fecha_nacimiento Date NOT NULL,
+    fecha_nacimiento Date,
     fecha_ingreso Date NOT NULL,
     sexo character varying(45) NOT NULL,
     color character varying(45) NOT NULL,
