@@ -35,7 +35,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()} </h3>
+                            <h3><i class="fa fa-sign-in"></i> Ingreso del ${ingreso.getFecha_ingreso()} de ${ingreso.getProducto().getNombre()} </h3>
                             <c:if test="${!(ingreso.getEstado() == 'Rechazado')}">
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -73,7 +73,8 @@
                     </div>
                     <!-- /main -->
                 </div>
+            </div>
 
-            </jsp:attribute>
+        </jsp:attribute>
 
-        </t:plantilla_general>
+    </t:plantilla_general>

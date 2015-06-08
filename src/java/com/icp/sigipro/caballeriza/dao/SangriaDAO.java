@@ -50,8 +50,8 @@ public class SangriaDAO
             getConexion().setAutoCommit(false);
 
             consulta_sangria = getConexion().prepareStatement(
-                    " INSERT INTO caballeriza.sangrias(responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total, id_grupo_caballos) "
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_sangria;"
+                    " INSERT INTO caballeriza.sangrias(responsable, cantidad_de_caballos, num_inf_cc, potencia, volumen_plasma_total, id_grupo_caballos, fecha) "
+                    + " VALUES (?,?,?,?,?,?, current_date) RETURNING id_sangria;"
             );
 
             consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
@@ -158,11 +158,12 @@ public class SangriaDAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario"
+                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario, fecha, gc.nombre as nombre_grupo "
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
                     + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
-                    + "   INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario; "
+                    + "   INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario "
+                    + "   INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos;"
             );
 
             consulta.setInt(1, id_sangria);
@@ -172,6 +173,7 @@ public class SangriaDAO
             if (rs.next()) {
 
                 sangria.setId_sangria(id_sangria);
+                sangria.setFecha(rs.getDate("fecha"));
                 sangria.setCantidad_de_caballos(rs.getInt("cantidad_de_caballos"));
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setFecha_dia2(rs.getDate("fecha_dia2"));
@@ -186,6 +188,9 @@ public class SangriaDAO
                 usuario.setNombreCompleto(rs.getString("nombre_completo"));
                 usuario.setId_usuario(rs.getInt("id_usuario"));
                 sangria.setResponsable(usuario);
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setNombre(rs.getString("nombre_grupo"));
+                sangria.setGrupo(g);
 
                 do {
 
@@ -234,7 +239,7 @@ public class SangriaDAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario," +
-"                             s.potencia, " +
+"                             s.potencia, fecha," +
 "                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, " +
 "                             CASE " +
 "                                  WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true " +
@@ -254,6 +259,7 @@ public class SangriaDAO
             if (rs.next()) {
 
                 sangria.setId_sangria(id_sangria);
+                sangria.setFecha(rs.getDate("fecha"));
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setNum_inf_cc(rs.getInt("num_inf_cc"));
                 sangria.setPotencia(rs.getFloat("potencia"));
@@ -305,12 +311,18 @@ public class SangriaDAO
     {
         List<Sangria> resultado = new ArrayList<Sangria>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT s.*, u.nombre_completo, u.id_usuario FROM caballeriza.sangrias s INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario;");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT s.*, u.nombre_completo, u.id_usuario, gc.nombre "
+                  + " FROM caballeriza.sangrias s "
+                  + " INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario"
+                  + " INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos;"
+            );
             ResultSet rs = consulta.executeQuery();
             SangriaPruebaDAO dao = new SangriaPruebaDAO();
             while (rs.next()) {
                 Sangria sangria = new Sangria();
                 sangria.setId_sangria(rs.getInt("id_sangria"));
+                sangria.setFecha(rs.getDate("fecha"));
                 sangria.setFecha_dia1(rs.getDate("fecha_dia1"));
                 sangria.setFecha_dia2(rs.getDate("fecha_dia2"));
                 sangria.setFecha_dia3(rs.getDate("fecha_dia3"));
@@ -326,6 +338,9 @@ public class SangriaDAO
                 usuario.setNombreCompleto(rs.getString("nombre_completo"));
                 usuario.setId_usuario(rs.getInt("id_usuario"));
                 sangria.setResponsable(usuario);
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setNombre(rs.getString("nombre"));
+                sangria.setGrupo(g);
             }
             consulta.close();
             cerrarConexion();

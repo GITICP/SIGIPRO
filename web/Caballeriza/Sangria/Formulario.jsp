@@ -138,7 +138,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${sangria.getGrupo().getId_grupo()}">
+                        <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${sangria.getGrupo().getId_grupo_caballo()}">
                             <div class="widget-header">
                                 <h3><i class="fa fa-flask"></i> Caballos del grupo (No modificable debido a que la sangría ya comenzó)</h3>
                             </div>

@@ -20,6 +20,7 @@ import org.json.JSONObject;
  */
 public class Sangria {
     private int id_sangria;
+    private Date fecha;
     private Date fecha_dia1;
     private Date fecha_dia2;
     private Date fecha_dia3;
@@ -62,6 +63,20 @@ public class Sangria {
 
     public void setId_sangria(int id_sangria) {
         this.id_sangria = id_sangria;
+    }
+    
+    public String getId_sangria_especial() {
+        return formatearFecha(fecha).replaceAll("/", "-") + "-" + grupo.getNombre() + " (id: " + id_sangria + ")";
+    }
+
+    public Date getFecha()
+    {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha)
+    {
+        this.fecha = fecha;
     }
 
     public Date getFecha_dia1() {

@@ -24,7 +24,7 @@
                             <a href="/SIGIPRO/Caballeriza/Sangria?">Sangría</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getId_sangria()}">Sangría ${sangria.getId_sangria()}</a>
+                            <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getId_sangria()}">Sangría ${sangria.getId_sangria_especial()}</a>
                         </li>
                         <li class="active"> Agregar Extracción</li>
 
@@ -43,7 +43,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-tint"></i> Agregar Extracción del día ${dia} para la sangría ${sangria.getId_sangria()}</h3>
+                            <h3><i class="fa fa-tint"></i> Agregar Extracción del día ${dia} para la sangría ${sangria.getId_sangria_especial()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

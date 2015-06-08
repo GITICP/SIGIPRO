@@ -202,11 +202,9 @@ public class ControladorEventoClinico extends SIGIPROServlet {
         TipoEventoDAO tipoeventodao = new TipoEventoDAO();
         ec.setId_caballos(new ArrayList<String>());
         for (FileItem item : items) {
-            System.out.println(item.getFieldName());
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
-                System.out.println(item.getString());
 
                 String fieldValue;
                 try {
