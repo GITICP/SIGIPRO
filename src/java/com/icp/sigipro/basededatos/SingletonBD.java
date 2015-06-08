@@ -47,9 +47,14 @@ public class SingletonBD
         return theSingleton;
     }
 
-    public Connection conectar() throws SQLException
-    {        
-        return cpds.getConnection();
+    public Connection conectar()
+    {
+        try {
+            return cpds.getConnection();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     private Date parsearFecha(java.util.Date fecha)
