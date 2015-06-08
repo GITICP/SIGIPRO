@@ -81,10 +81,8 @@
                         <th>Producto</th>
                         <th>Sección</th>
                         <th>Fecha Ingreso</th>
-                        <th>Fecha Registro</th>
                         <th>Fecha Vencimiento</th>
                         <th>Cantidad</th>
-                        <th>Precio</th>
                         <th>Estado</th>
                         <th>Destino</th>
                       </tr>
@@ -102,10 +100,8 @@
                           </td>
                           <td>${ingreso.getSeccion().getNombre_seccion()}</td>
                           <td>${ingreso.getFecha_ingresoAsString()}</td>
-                          <td>${ingreso.getFecha_registroAsString()}</td>
                           <td>${ingreso.getFecha_vencimientoAsString()}</td>
                           <td>${ingreso.getCantidad()}</td>
-                          <td>${ingreso.getPrecio()}</td>
                           <td>${ingreso.getEstado()}</td>
                           <td>${(ingreso.getSub_bodega() == null) ? "Bodega" : ingreso.getSub_bodega().getNombre()}</td> 
                         </tr>
