@@ -90,10 +90,8 @@ public class EventoClinicoDAO {
         } finally {
             try {
                 if (resultado_insert_evento && resultado_asociacion_caballos) {
-                    System.out.println("me cago en todo");
                     getConexion().commit();
                 } else {
-                    System.out.println("me super cago");
                     getConexion().rollback();
                 }
                 if (resultadoConsulta != null) {
@@ -211,16 +209,12 @@ public class EventoClinicoDAO {
             PreparedStatement consulta = getConexion().prepareStatement("UPDATE CABALLERIZA.EVENTOS_CLINICOS "
                     + "SET imagen=? "
                     + "WHERE id_evento = ?;");
-            System.out.println(imagen);
-            System.out.println(size);
             consulta.setBinaryStream(1, imagen, size);
             consulta.setInt(2, id_evento);
-            System.out.println(consulta);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
             getConexion().commit();
-            System.out.println(resultado);
             consulta.close();
             conexion.close();
         } catch (Exception ex) {
@@ -314,9 +308,9 @@ public class EventoClinicoDAO {
                     + " FROM caballeriza.eventos_clinicos ec  "
                     + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario  "
                     + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
-                    + "   INNER JOIN caballeriza.eventos_clinicos_caballos ecc ON ecc.id_evento = ec.id_evento "
-                    + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = ecc.id_caballo "
-                    + "   INNER JOIN caballeriza.grupos_de_caballos gc ON c.id_grupo_de_caballo = gc.id_grupo_de_caballo "
+                    + "   LEFT JOIN caballeriza.eventos_clinicos_caballos ecc ON ecc.id_evento = ec.id_evento "
+                    + "   LEFT JOIN caballeriza.caballos c ON c.id_caballo = ecc.id_caballo "
+                    + "   LEFT JOIN caballeriza.grupos_de_caballos gc ON c.id_grupo_de_caballo = gc.id_grupo_de_caballo "
                     + " ORDER BY id_evento "
             );
 
