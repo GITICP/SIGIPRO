@@ -49,12 +49,12 @@
             <div class="widget-content">
               <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                 <!-- Columnas -->
-                <thead> 
+                <thead>
                   <tr>
                       <th>Identificador:</th>
-                      <th>Responsable:</th>
-                      <th>Número de caballos:</th>
-                      <th>Potencia:</th>
+                      <th>Grupo:</th>
+                      <th>Número de Caballos:</th>
+                      <th>Sangre Total:</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -64,13 +64,13 @@
                       <td>
                         <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getId_sangria()}">
                           <div style="height:100%;width:100%">
-                            ${sangria.getId_sangria()}
+                            ${sangria.getId_sangria_especial()}
                           </div>
                         </a>
                       </td>
-                      <td>${sangria.getResponsable().getNombre_completo()}</td>
+                      <td>${sangria.getGrupo().getNombre()}</td>
                       <td>${sangria.getCantidad_de_caballos()}</td>
-                      <td>${sangria.getPotencia()}</td>
+                      <td>${sangria.getSangre_total()}</td>
                     </tr>
 
                   </c:forEach>

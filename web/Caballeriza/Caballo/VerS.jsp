@@ -72,7 +72,7 @@
                                                 <td>
                                                     <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getSangria().getId_sangria()}">
                                                         <div style="height:100%;width:100%">
-                                                            ${sangria.getSangria().getId_sangria()}
+                                                            ${sangria.getSangria().getId_sangria_especial()}
                                                         </div>
                                                     </a>
                                                 </td>

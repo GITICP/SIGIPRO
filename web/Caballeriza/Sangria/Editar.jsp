@@ -26,7 +26,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
-                        <li class="active">Sangria ${sangria.getId_sangria()}</li>
+                        <li class="active">Sangria ${sangria.getId_sangria_especial()}</li>
 
                     </ul>
                 </div>

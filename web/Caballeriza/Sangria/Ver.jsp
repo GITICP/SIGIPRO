@@ -23,7 +23,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Sangria?">Sangría</a>
                         </li>
-                        <li class="active"> ${sangria.getId_sangria()} </li>
+                        <li class="active"> ${sangria.getId_sangria_especial()} </li>
                     </ul>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-tint"></i> Sangría ${sangria.getId_sangria()} </h3>
+                            <h3><i class="fa fa-tint"></i> Sangría ${sangria.getId_sangria_especial()} </h3>
                             <c:set var="contienePermisoEditar" value="false" />
                             <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                                 <c:if test="${permiso == 1 || permiso == 62}">
@@ -49,7 +49,7 @@
                         ${mensaje}
                         <div class="widget-content">
                             <table>
-                                <tr><td> <strong>Identificador:</strong></td> <td>${sangria.getId_sangria()} </td></tr>
+                                <tr><td> <strong>Identificador:</strong></td> <td>${sangria.getId_sangria_especial()} </td></tr>
                                 <tr><td> <strong>Responsable:</strong></td> <td>${sangria.getResponsable().getNombre_completo()} </td></tr>
                                 <tr><td> <strong>Número de Informe de Control de Calidad:</strong></td> <td>${sangria.getNum_inf_cc()} </td></tr>
                                 <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>

@@ -54,6 +54,7 @@ CREATE TABLE caballeriza.eventos_clinicos_caballos (
 
 CREATE TABLE caballeriza.sangrias (
     id_sangria serial not null,
+    fecha date,
     fecha_dia1 date,
     fecha_dia2 date,
     fecha_dia3 date,
