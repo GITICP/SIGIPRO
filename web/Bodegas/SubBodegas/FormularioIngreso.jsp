@@ -45,7 +45,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input id="control-cantidad" hidden="true" name="control-cantidad" value="${ingreso.getCantidad()}">
-                        <input id="cantidad" maxlength="45" placeholder="0" class="form-control campo-numero" name="cantidad" value="${ingreso.getCantidad()}"
+                        <input id="cantidad" type="number" maxlength="45" placeholder="0" class="form-control campo-numero" name="cantidad" value="${ingreso.getCantidad()}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                oninput="setCustomValidity('')" ><p id="errorCantidad" class="error-form"></p>
