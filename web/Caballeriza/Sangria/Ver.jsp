@@ -73,19 +73,25 @@
                                             </c:otherwise>
                                         </c:choose>
                                         <c:choose>
-                                            <c:when test="${sangria.getFecha_dia2() == null}">
+                                            <c:when test="${sangria.getFecha_dia2() == null && sangria.getFecha_dia1() != null}">
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Registrar Extracción Día 2</a>
                                             </c:when>
-                                            <c:otherwise>
+                                            <c:when test="${sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
                                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Editar Extracción Día 2</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-primary btn-sm boton-accion" disabled>Registrar Extracción Día 2</a>
                                             </c:otherwise>
                                         </c:choose>
                                         <c:choose>
-                                            <c:when test="${sangria.getFecha_dia3() == null}">
+                                            <c:when test="${sangria.getFecha_dia3() == null && sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Registrar Extracción Día 3</a>
                                             </c:when>
-                                            <c:otherwise>
+                                            <c:when test="${sangria.getFecha_dia3() != null && sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
                                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Editar Extracción Día 3</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-primary btn-sm boton-accion" disabled>RegistrarExtracción Día 3</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>

@@ -83,3 +83,7 @@
     margin-right: 1em;
     margin-bottom: 1em;
 }
+
+.columna-escondida {
+    display: none;
+}
