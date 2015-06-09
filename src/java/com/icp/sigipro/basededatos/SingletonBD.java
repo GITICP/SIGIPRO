@@ -7,13 +7,14 @@ package com.icp.sigipro.basededatos;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import com.mchange.v2.c3p0.*;
 import java.beans.PropertyVetoException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class SingletonBD
 {
@@ -25,18 +26,32 @@ public class SingletonBD
     {
         try {
             cpds = new ComboPooledDataSource();
+
+            // Configuración de Base de Datos
             cpds.setDriverClass("org.postgresql.Driver");
             cpds.setJdbcUrl("jdbc:postgresql://localhost/sigipro");
             cpds.setUser("postgres");
             cpds.setPassword("Solaris2014");
 
+            // Configuración de máximos y mínimos de conexiones
             cpds.setMinPoolSize(10);
             cpds.setAcquireIncrement(5);
             cpds.setMaxStatements(180);
-            cpds.setMaxPoolSize(50);
-        } catch (PropertyVetoException pvx) {
+            cpds.setMaxPoolSize(80);
+
+            // Configuración de tiempos de vida
+            cpds.setMaxIdleTime(30);
+            cpds.setMaxIdleTimeExcessConnections(60);
+            cpds.setCheckoutTimeout(5000);
+        }
+        catch (PropertyVetoException pvx) {
             pvx.printStackTrace();
         }
+    }
+
+    public void eliminarPool()
+    {
+        cpds.hardReset();
     }
 
     public static SingletonBD getSingletonBD()
@@ -51,9 +66,46 @@ public class SingletonBD
     {
         try {
             return cpds.getConnection();
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+
+    public static void cerrarSilencioso(Statement s)
+    {
+        if (s != null) {
+            try {
+                s.close();
+            }
+            catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
+            }
+        }
+    }
+
+    public static void cerrarSilencioso(ResultSet rs)
+    {
+        if (rs != null) {
+            try {
+                rs.close();
+            }
+            catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
+            }
+        }
+    }
+
+    public static void cerrarSilencioso(Connection c)
+    {
+        if (c != null) {
+            try {
+                c.close();
+            }
+            catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
+            }
         }
     }
 
