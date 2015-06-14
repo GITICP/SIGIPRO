@@ -40,7 +40,7 @@
               <h3><i class="fa fa-barcode"></i> Préstamos</h3>
                 <div class="btn-group widget-header-toolbar">
                   <c:if test="${booladminprest}">
-                     <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=admin">Administrar Prestamos</a>
+                     <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=admin">Administrar Préstamos</a>
                   </c:if>
                     <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes">Solicitudes</a>
                     <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos?accion=agregar">Solicitar nuevo Préstamo</a>

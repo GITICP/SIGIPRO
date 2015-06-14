@@ -2,11 +2,10 @@ package com.icp.sigipro.bitacora.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.core.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
@@ -16,38 +15,10 @@ import org.postgresql.util.PGobject;
  *
  * @author ld.conejo
  */
-public class BitacoraDAO
+public class BitacoraDAO extends DAO
 {
 
-    private Connection conexion;
-
-    public BitacoraDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
-
-    public BitacoraDAO(Connection conexion)
-    {
-        this.conexion = conexion;
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
+    public BitacoraDAO(){ }
 
     public void setBitacora(String JSON, String accion, Object nombre_usuario, String tabla, String ip)
     {
@@ -170,20 +141,4 @@ public class BitacoraDAO
         }
         return bitacora;
     }
-    
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
-    }
-
 }

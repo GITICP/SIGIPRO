@@ -11,9 +11,9 @@ import com.icp.sigipro.bodegas.modelos.Prestamo;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,16 +26,10 @@ import java.util.List;
  *
  * @author Amed
  */
-public class SolicitudDAO
+public class SolicitudDAO extends DAO
 {
 
-    private Connection conexion;
-
-    public SolicitudDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
+    public SolicitudDAO() { }
 
     public boolean insertarSolicitud(Solicitud p)
     {
@@ -274,8 +268,10 @@ public class SolicitudDAO
                   + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
                   + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
 
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta;
+            
             if (id_usuario == 0) {
                 codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
@@ -288,7 +284,7 @@ public class SolicitudDAO
                 consulta.setInt(1, id_usuario);
             }
 
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Solicitud solicitud = new Solicitud();
@@ -335,12 +331,14 @@ public class SolicitudDAO
 
                 resultado.add(solicitud);
             }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }
+        finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
@@ -425,36 +423,5 @@ public class SolicitudDAO
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
-    }
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
-    
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

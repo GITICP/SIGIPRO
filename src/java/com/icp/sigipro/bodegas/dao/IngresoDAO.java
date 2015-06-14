@@ -9,7 +9,7 @@ import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.modelos.Seccion;
-import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.DAOEspecial;
 import com.icp.sigipro.core.SIGIPROException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author Boga
  */
-public class IngresoDAO extends DAO<Ingreso>
+public class IngresoDAO extends DAOEspecial<Ingreso>
 {
 
     public IngresoDAO()
