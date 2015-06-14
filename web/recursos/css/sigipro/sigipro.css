@@ -70,6 +70,7 @@
 .campo-tabla-centrado {
     text-align:center;
 }
+
 .sigipro-tab-content {
   padding: 0px;
 }
@@ -86,6 +87,8 @@
 
 .columna-escondida {
     display: none;
+}
+
 #dialogo-entregas {
     width: 1100px;
 }
