@@ -15,7 +15,7 @@ CREATE TABLE caballeriza.caballos (
     numero integer NOT NULL,
     nombre character varying(100) NOT NULL,
     numero_microchip character varying(20) NOT NULL,
-    fecha_nacimiento Date NOT NULL,
+    fecha_nacimiento Date,
     fecha_ingreso Date NOT NULL,
     sexo character varying(45) NOT NULL,
     color character varying(45) NOT NULL,
@@ -54,6 +54,7 @@ CREATE TABLE caballeriza.eventos_clinicos_caballos (
 
 CREATE TABLE caballeriza.sangrias (
     id_sangria serial not null,
+    fecha date,
     fecha_dia1 date,
     fecha_dia2 date,
     fecha_dia3 date,

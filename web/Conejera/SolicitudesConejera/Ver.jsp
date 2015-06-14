@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Solicitud Número ${solicitud.getId_solicitud()} </h3>
+              <h3><i class="fa fa-list-alt"></i> Solicitud Número ${solicitud.getId_solicitud()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:if test="${solicitud.getEstado() == 'Pendiente'}">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Conejera/SolicitudesConejera?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar</a>

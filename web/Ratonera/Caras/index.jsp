@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Caras </h3>
+              <h3><i class="sigipro-mouse-1"></i> Caras </h3>
                 <div class="btn-group widget-header-toolbar">
                   <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/Caras?accion=agregar">Agregar Cara</a>
                 </div>

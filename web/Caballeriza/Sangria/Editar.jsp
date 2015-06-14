@@ -26,7 +26,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
-                        <li class="active">Sangria ${sangria.getId_sangria()}</li>
+                        <li class="active">Sangria ${sangria.getId_sangria_especial()}</li>
 
                     </ul>
                 </div>
@@ -43,7 +43,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> Editar Sangría </h3>
+                            <h3><i class="fa fa-tint"></i> Editar Sangría </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

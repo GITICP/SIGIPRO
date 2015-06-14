@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Destete  ${destete.getFecha_destete()} </h3>
+              <h3><i class="sigipro-mouse-1"></i> Destete  ${destete.getFecha_destete()} </h3>
               <div class="btn-group widget-header-toolbar">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ratonera/Destetes?accion=editar&id_destete=${destete.getId_destete()}">Editar</a>
                   <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Destete" data-href="/SIGIPRO/Ratonera/Destetes?accion=eliminar&id_destete=${destete.getId_destete()}">Eliminar</a>

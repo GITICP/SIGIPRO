@@ -11,7 +11,7 @@ $(document).ready(function () {
                         "<'row'<'col-sm-6'i><'col-sm-6'p>>"
             });
             var ths = '';
-            var cantidadColumnas = $(this).find('thead th').length;
+            var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
 
             for (i = 0; i < cantidadColumnas; i++) {
                 ths += '<th></th>';
@@ -46,7 +46,7 @@ $(document).ready(function () {
                 "order": [[columna_filtro, "desc"]]
             });
             var ths = '';
-            var cantidadColumnas = $(this).find('thead th').length;
+            var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
 
             for (i = 0; i < cantidadColumnas; i++) {
                 ths += '<th></th>';

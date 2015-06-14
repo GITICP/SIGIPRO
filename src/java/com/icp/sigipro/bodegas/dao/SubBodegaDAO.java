@@ -641,7 +641,7 @@ public class SubBodegaDAO extends DAO<SubBodega>
             upsert_inventario.executeUpdate();
             
             insert_ingreso = getConexion().prepareStatement(
-                " INSERT INTO bodega.ingresos (id_producto, id_seccion, fecha_ingreso, fecha_registro, cantidad, fecha_vencimiento, estado, destino) "
+                " INSERT INTO bodega.ingresos (id_producto, id_seccion, fecha_ingreso, fecha_registro, cantidad, fecha_vencimiento, estado, id_sub_bodega) "
               + " VALUES (?,?,current_date,current_date,?,?,?,?); "
             );
             

@@ -183,8 +183,6 @@ public class ControladorCaballo extends SIGIPROServlet {
 
         int empieza = ultimoId + cantidadImagenes+1;
         int termina = ultimoId + 5;
-        System.out.println(empieza);
-        System.out.println(termina);
 
         GrupoDeCaballosDAO grupodao = new GrupoDeCaballosDAO();
         List<GrupoDeCaballos> listagrupos = grupodao.obtenerGruposDeCaballos();
@@ -466,7 +464,7 @@ public class ControladorCaballo extends SIGIPROServlet {
 
                 } catch (Exception ex) {
                     id_imagen = 0;
-                }System.out.println(id_imagen);
+                }
                 if (id_imagen == 0) {
                     byte[] data = item.get();
                     long size = item.getSize();

@@ -46,7 +46,7 @@
                         </div>
             <div class="widget widget-table">
                             <div class="widget-header">
-                                <h3><i class="fa fa-check"></i> Inóculos del Caballo </h3>
+                                <h3><i class="sigipro-horse-1"></i> Inóculos del Caballo </h3>
                             </div>
                             <div class="widget-content">
                                 <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">

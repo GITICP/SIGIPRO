@@ -37,7 +37,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Solicitudes de Bodega </h3>
+                            <h3><i class="fa fa-list-alt"></i> Solicitudes de Bodega </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos">Préstamos</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Agregar Nueva Solicitud</a>
@@ -50,7 +50,7 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" id="tablita">
+                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" id="tablita" data-columna-filtro="1">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>

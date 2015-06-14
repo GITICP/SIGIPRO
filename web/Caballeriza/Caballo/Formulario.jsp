@@ -69,7 +69,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" value="${(caballo.getFecha_ingreso() != null) ? caballo.getFecha_ingresoAsString() : helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                        <input type="text" value="${(caballo.getFecha_ingreso() != null) ? caballo.getFecha_ingresoAsString() : helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="ingreso-caballo" class="form-control sigiproDatePicker fecha-caballo" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
@@ -79,8 +79,8 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" value="${(caballo.getFecha_nacimiento() != null) ? caballo.getFecha_nacimientoAsString() : helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_nacimiento" data-date-format="dd/mm/yyyy"
-                               oninvalid="setCustomValidity('Este campo es requerido ')" 
+                        <input type="text" value="${(caballo.getFecha_nacimiento() != null) ? caballo.getFecha_nacimientoAsString() : ""}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="nacimiento-caballo" class="form-control sigiproDatePicker fecha-caballo" name="fecha_nacimiento" data-date-format="dd/mm/yyyy"
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
                 </div>
@@ -136,26 +136,46 @@
                                 oninvalid="setCustomValidity('Por favor seleccione un estado')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
-                            <c:forEach items="${estados}" var="estado">
-                                <c:choose>
-                                    <c:when test="${estado.equals(caballo.getEstado())}" >
-                                        <option value="${estado}" selected> ${estado}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value="${estado}">${estado}</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${accion.equals('Agregar')}">
+                                    <c:forEach items="${estados}" var="estado">
+                                        <c:choose>
+                                            <c:when test="${estado.equals('Vivo')}" >
+                                                <option value="${estado}" selected> ${estado}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${estado}">${estado}</option>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach items="${estados}" var="estado">
+                                        <c:choose>
+                                            <c:when test="${estado.equals(caballo.getEstado())}" >
+                                                <option value="${estado}" selected> ${estado}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${estado}">${estado}</option>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
                         </select>
                     </div>
                 </div>
             </div>  
         </div>
-
+    </div>
+    <div class="row" style="padding-left:1em;padding-bottom:1em;">
+        <p id="mensaje-fechas" class="error-form"></p>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <div class="widget widget-table">
                 <div class="widget-header">
-                    <h3><i class="fa fa-image"></i> Imagenes</h3>
+                    <h3><i class="fa fa-image"></i> Imágenes</h3>
                 </div>
                 <c:choose>
                     <c:when test="${accion.equals('Agregar')}">
@@ -174,7 +194,7 @@
                                                            oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
                                                            onchange="previstaImagen(this, ${imagen.getId_imagen()})" /> <button type="button" id='botonCancelar${imagen.getId_imagen()}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${imagen.getId_imagen()})"> Borrar</button>
                                                     <div><img name='imagenSubida' id="imagenSubida${imagen.getId_imagen()}" src='' height="100" alt=""></div>
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -193,7 +213,7 @@
                                                            oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
                                                            onchange="previstaImagen(this, ${numero})" /> <button type="button" id='botonCancelar${numero}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${numero})"> Borrar</button>
                                                     <div><img name='imagenSubida' id="imagenSubida${numero}" src='' height="100" alt=""></div>
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>

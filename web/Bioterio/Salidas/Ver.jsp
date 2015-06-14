@@ -38,7 +38,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Salida Extraordinaria ${salida.getFecha()}</h3>
+                            <h3><i class="fa fa-sign-out"></i> Salida Extraordinaria ${salida.getFecha()}</h3>
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bioterio/Salidas?especie=${salida.isEspecie()}&accion=editar&id_salida=${salida.getId_salida()}">Editar Salida</a>
                                 <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este análisis" data-form-id="form-eliminar-salida">Eliminar Salida</a>

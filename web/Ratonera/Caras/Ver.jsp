@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cara Número ${cara.getNumero_cara()} </h3>
+              <h3><i class="sigipro-mouse-1"></i> Cara Número ${cara.getNumero_cara()} </h3>
               <div class="btn-group widget-header-toolbar">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ratonera/Caras?accion=editar&id_cara=${cara.getId_cara()}">Editar</a>
                   <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar la Cara" data-href="/SIGIPRO/Ratonera/Caras?accion=eliminar&id_cara=${cara.getId_cara()}">Eliminar</a>

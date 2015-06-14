@@ -35,7 +35,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> Caballo número ${caballo.getNumero()} </h3>
+                            <h3><i class="sigipro-horse-1"></i> Caballo número ${caballo.getNumero()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
@@ -72,7 +72,7 @@
                                                 <td>
                                                     <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getSangria().getId_sangria()}">
                                                         <div style="height:100%;width:100%">
-                                                            ${sangria.getSangria().getId_sangria()}
+                                                            ${sangria.getSangria().getId_sangria_especial()}
                                                         </div>
                                                     </a>
                                                 </td>

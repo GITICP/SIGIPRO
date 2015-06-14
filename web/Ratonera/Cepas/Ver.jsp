@@ -41,7 +41,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-barcode"></i> Cepa  ${cepa.getNombre()} </h3>
+              <h3><i class="sigipro-mouse-1"></i> Cepa  ${cepa.getNombre()} </h3>
               <div class="btn-group widget-header-toolbar">
                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ratonera/Cepas?accion=editar&id_cepa=${cepa.getId_cepa()}">Editar</a>
                 <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Cepa" data-href="/SIGIPRO/Ratonera/Cepas?accion=eliminar&id_cepa=${cepa.getId_cepa()}">Eliminar</a>
@@ -63,7 +63,7 @@
                         <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAsociar">Asociar Pie</a>
                       </c:when>
                       <c:otherwise>
-                        <a class="btn btn-warning btn-sm boton-warning confirmable-form" data-texto-confirmacion="retirar el pie" data-form-id="form-eliminar-piexcepa">Retirar Pie</a>
+                        <a class="btn btn-warning btn-sm boton-warning confirmable-form boton-accion" data-texto-confirmacion="retirar el pie" data-form-id="form-eliminar-piexcepa">Retirar Pie</a>
                       </c:otherwise>
                     </c:choose>
                   </div>     

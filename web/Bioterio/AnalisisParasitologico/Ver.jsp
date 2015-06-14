@@ -37,7 +37,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-barcode"></i> Análisis Parasitológico ${analisis.getNumero_informe()}</h3>
+                            <h3><i class="fa fa-list-alt"></i> Análisis Parasitológico ${analisis.getNumero_informe()}</h3>
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Bioterio/AnalisisParasitologico?accion=editar&id_analisis=${analisis.getId_analisis()}">Editar Análisis</a>
                                 <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este análisis" data-form-id="form-eliminar-analisis">Eliminar Análisis</a>

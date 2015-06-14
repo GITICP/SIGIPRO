@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-book"></i> Grupos de Caballos </h3>
+              <h3><i class="sigipro-horse-2"></i> Grupos de Caballos </h3>
 
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">

@@ -24,7 +24,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/EventoClinico?">Eventos Clínicos</a>
                         </li>
-                        <li class="active"> ${eventoclinico.getId_evento()} </li>
+                        <li class="active">Evento Clínico ${eventoclinico.getId_evento()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${eventoclinico.getId_evento()} </h3>
+                            <h3><i class="fa fa-book"></i> Evento Clínico ${eventoclinico.getId_evento()} </h3>
                             <div class="btn-group widget-header-toolbar">
 
                                 <c:set var="contienePermisoEditar" value="false" />
@@ -49,35 +49,37 @@
                             </div>
                         </div>
                         ${mensaje}
-                        <div class="col-md-6">
-                            <div class="widget-content">
-                                <table>
-                                    <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
-                                    <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
-                                    <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
-                                    <tr><td> <strong>Observaciones:</strong> <td>${eventoclinico.getObservaciones()} </td></tr>
-                                    <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
-                                    <tr><td> <strong>Responsable:</strong> <td>
-                                            <c:set var="val" value=""/>
-                                            <c:choose> 
-                                                <c:when test="${eventoclinico.getResponsable() == null}">
-                                                    No Tiene Usuario Responsable
-                                                </c:when>
-                                                <c:otherwise>
-                                                    ${eventoclinico.getResponsable().getNombre_completo()}
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td></tr>                                         
-                                </table>
-                            </div>
-                        </div>
-                            <div class="col-md-6" align="right">
-                                <div class="widget-content">
-                                    <c:if test="${!imagenEvento.equals('')}">
-                                        <img src="${imagenEvento}" height="250" width="250">
-                                    </c:if>
+                        <div class="widget-content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="widget-content">
+                                        <table>
+                                            <tr><td> <strong>Identificador:</strong></td> <td>${eventoclinico.getId_evento()} </td></tr>
+                                            <tr><td> <strong>Tipo del Evento:</strong></td> <td>${eventoclinico.getTipo_evento().getNombre()} </td></tr>
+                                            <tr><td> <strong>Descripción:</strong> <td>${eventoclinico.getDescripcion()} </td></tr>
+                                            <tr><td> <strong>Observaciones:</strong> <td>${eventoclinico.getObservaciones()} </td></tr>
+                                            <tr><td> <strong>Fecha:</strong> <td>${eventoclinico.getFechaAsString()} </td></tr>
+                                            <tr><td> <strong>Responsable:</strong> <td>
+                                                    <c:set var="val" value=""/>
+                                                    <c:choose> 
+                                                        <c:when test="${eventoclinico.getResponsable() == null}">
+                                                            No Tiene Usuario Responsable
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${eventoclinico.getResponsable().getNombre_completo()}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td></tr>                                         
+                                        </table>
+                                    </div>
                                 </div>
-
+                                <div class="col-md-6" align="right">
+                                    <div class="widget-content">
+                                        <c:if test="${!imagenEvento.equals('')}">
+                                            <img src="${imagenEvento}" height="250" width="250">
+                                        </c:if>
+                                    </div>
+                                </div>
 
                             </div>
                             <br>
@@ -104,13 +106,14 @@
                             </div>
                         </div>
                     </div>
-                    <!-- END WIDGET TICKET TABLE -->
                 </div>
-                <!-- /main-content -->
+                <!-- END WIDGET TICKET TABLE -->
             </div>
-            <!-- /main -->
+            <!-- /main-content -->
         </div>
+        <!-- /main -->
+    </div>
 
-    </jsp:attribute>
+</jsp:attribute>
 
 </t:plantilla_general>
