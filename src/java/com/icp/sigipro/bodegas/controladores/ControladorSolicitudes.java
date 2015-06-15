@@ -418,7 +418,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     int id_us_recibo = usrDAO.obtenerIDUsuario(usuario);
                     boolean resultado = false;
                     try {
-                        if (request.getParameter("entrega_sub_bodega").equals("")) {
+                        if (request.getParameter("entrega_sub_bodega") == null) {
                             resultado = dao.entregarMasivo(ids, id_us_recibo, null, 0);
                         }
                         else {
