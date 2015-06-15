@@ -15,7 +15,6 @@ import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.utilidades.HelperFechas;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

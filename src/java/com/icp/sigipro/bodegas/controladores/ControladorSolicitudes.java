@@ -24,6 +24,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +44,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ControladorSolicitudes", urlPatterns = {"/Bodegas/Solicitudes"})
 public class ControladorSolicitudes extends SIGIPROServlet
 {
+
+    SubBodegaDAO sb_dao = new SubBodegaDAO();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
@@ -161,6 +165,14 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     }
 
                     List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                    List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
+                    try {
+                        lista_sub_bodegas = sb_dao.obtenerSubBodegas();
+                    }
+                    catch (SIGIPROException sig_ex) {
+                        request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                    }
+                    request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
                     request.setAttribute("booladmin", boolAdmin);
                     request.setAttribute("listaSolicitudes", solicitudes);
                 }
@@ -188,13 +200,20 @@ public class ControladorSolicitudes extends SIGIPROServlet
                         request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
                     }
                     List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                    List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
+                    try {
+                        lista_sub_bodegas = sb_dao.obtenerSubBodegas();
+                    }
+                    catch (SIGIPROException sig_ex) {
+                        request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                    }
+                    request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
                     request.setAttribute("booladmin", boolAdmin);
                     request.setAttribute("listaSolicitudes", solicitudes);
                 }
                 else {
                     validarPermisos(permisos, listaPermisos);
                     redireccion = "Solicitudes/index.jsp";
-                    SubBodegaDAO sb_dao = new SubBodegaDAO();
                     List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
                     try {
                         lista_sub_bodegas = sb_dao.obtenerSubBodegas();
@@ -211,7 +230,6 @@ public class ControladorSolicitudes extends SIGIPROServlet
             else {
                 validarPermisos(permisos, listaPermisos);
                 redireccion = "Solicitudes/index.jsp";
-                SubBodegaDAO sb_dao = new SubBodegaDAO();
                 List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
                 try {
                     lista_sub_bodegas = sb_dao.obtenerSubBodegas();
@@ -329,6 +347,14 @@ public class ControladorSolicitudes extends SIGIPROServlet
                 request.setAttribute("booladmin", boolAdmin);
                 List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
                 request.setAttribute("listaSolicitudes", solicitudes);
+                List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
+                try {
+                    lista_sub_bodegas = sb_dao.obtenerSubBodegas();
+                }
+                catch (SIGIPROException sig_ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                }
+                request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
             }
             else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
@@ -359,6 +385,16 @@ public class ControladorSolicitudes extends SIGIPROServlet
             else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
             }
+
+            List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
+            try {
+                lista_sub_bodegas = sb_dao.obtenerSubBodegas();
+            }
+            catch (SIGIPROException sig_ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+            }
+            request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
+
             List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
             request.setAttribute("booladmin", boolAdmin);
             request.setAttribute("listaSolicitudes", solicitudes);
@@ -382,7 +418,20 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     int id_us_recibo = usrDAO.obtenerIDUsuario(usuario);
                     boolean resultado = false;
                     try {
-                        resultado = dao.entregarMasivo(ids, id_us_recibo);
+                        if (request.getParameter("entrega_sub_bodega").equals("")) {
+                            resultado = dao.entregarMasivo(ids, id_us_recibo, null, 0);
+                        }
+                        else {
+                            String[] ids_parseados = parsearAsociacion("#af#", ids);
+                            HashMap fechas_vencimiento = new HashMap(ids_parseados.length);
+                            int id_sub_bodega = Integer.parseInt(request.getParameter("sub_bodega"));
+                            for (String id : ids_parseados) {
+                                String fecha = request.getParameter("fecha_vencimiento_" + id);
+                                fechas_vencimiento.put(id, fecha);
+                            }
+                            resultado = dao.entregarMasivo(ids, id_us_recibo, fechas_vencimiento, id_sub_bodega);
+                        }
+
                         //Funcion que genera la bitacora
                         //BitacoraDAO bitacora = new BitacoraDAO();
                         // bitacora.setBitacora(solicitud.parseJSON(),Bitacora.ACCION_ENTREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_SOLICITUD,request.getRemoteAddr());
@@ -390,6 +439,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     }
                     catch (SIGIPROException ex) {
                         Logger.getLogger(ControladorSolicitudes.class.getName()).log(Level.SEVERE, null, ex);
+                        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                     }
 
                     if (resultado) {
@@ -399,9 +449,6 @@ public class ControladorSolicitudes extends SIGIPROServlet
                         //*----------------------------*
 
                     }
-                    else {
-                        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-                    }
                 }
                 else { //request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos, o el usuario no pertenece a la sección solicitante."));
                     request.setAttribute("mensaje", helper.mensajeDeError("El usuario o contraseña son incorrectos"));
@@ -410,6 +457,14 @@ public class ControladorSolicitudes extends SIGIPROServlet
                 }
             }
             List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+            List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
+                try {
+                    lista_sub_bodegas = sb_dao.obtenerSubBodegas();
+                }
+                catch (SIGIPROException sig_ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+                }
+                request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
             request.setAttribute("booladmin", boolAdmin);
             request.setAttribute("listaSolicitudes", solicitudes);
             RequestDispatcher vista = request.getRequestDispatcher(redireccion);
@@ -431,5 +486,11 @@ public class ControladorSolicitudes extends SIGIPROServlet
     protected int getPermiso()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private String[] parsearAsociacion(String pivote, String asociacionesCodificadas)
+    {
+        String[] idsTemp = asociacionesCodificadas.split(pivote);
+        return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
     }
 }
