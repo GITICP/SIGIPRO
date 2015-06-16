@@ -70,7 +70,7 @@
                                         <h3><i class="fa fa-check"></i> Información de la Sangría </h3>                                        
                                     </div>
                                     <div class="widget-content">
-                                        <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                                        <table id="tabla-sangrias-caballos" class="table table-sorting table-striped table-hover datatable">
                                             <thead>
                                                 <tr>
                                                     <th rowspan="2">Nombre y Número de Caballo</th>
@@ -85,11 +85,35 @@
                                             </thead>
                                             <tbody>
                                                 <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
+                                                    <c:set var="deshabilitado" value="false"></c:set>
                                                     <tr id="${caballo.getId_caballo()}">
                                                         <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
                                                         <td>
                                                             <label class="fancy-checkbox" style="text-align:center">
-                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" ${(editar && sangria_caballo.sumatoria(dia) == 0) ? "" : "checked"}>
+                                                                <c:choose>
+                                                                    <c:when test="${editar}">
+                                                                        <c:choose>
+                                                                            <c:when test="${sangria_caballo.getParticipo(dia)}">
+                                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos">
+                                                                                <c:set var="deshabilitado" value="true"></c:set>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <c:choose>
+                                                                            <c:when test="${sangria_caballo.getParticipo(dia - 1)}">
+                                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" disabled>
+                                                                                <c:set var="deshabilitado" value="true"></c:set>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                                 <span></span>
                                                             </label>
                                                         </td>
@@ -103,15 +127,15 @@
                                                         </c:if>
                                                         <td>
                                                             <input type="number" step="any" placeholder="" class="form-control" name="sangre_${sangria_caballo.getCaballo().getId_caballo()}"
-                                                                   value="${(sangre == 0) ? "" : sangre}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                                                   value="${(sangre == 0) ? "" : sangre}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
                                                         </td>
                                                         <td>
                                                             <input type="number" step="any" placeholder="" class="form-control" name="plasma_${sangria_caballo.getCaballo().getId_caballo()}"
-                                                                   value="${(plasma == 0) ? "" : plasma}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                                                   value="${(plasma == 0) ? "" : plasma}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
                                                         </td>
                                                         <td>
                                                             <input type="number" step="any" placeholder="" class="form-control" name="lal_${sangria_caballo.getCaballo().getId_caballo()}"
-                                                                   value="${(lal == 0) ? "" : lal}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">
+                                                                   value="${(lal == 0) ? "" : lal}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
