@@ -285,15 +285,123 @@ public class SolicitudDAO
         try {
             PreparedStatement consulta;
             if (id_usuario == 0) {
-                codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado != 'Pendiente Prestamo' ORDER BY fecha_solicitud DESC " + parte_2;
+                codigo_consulta = parte_1
+                                  + " SELECT * "
+                                  + " FROM bodega.solicitudes "
+                                  + " Where ( estado in ('Pendiente','Aprobada') ) OR ( (estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < fecha_entrega) ) "
+                                  + " ORDER BY fecha_solicitud DESC " 
+                                  + parte_2;
+                consulta = getConexion().prepareStatement(codigo_consulta);
+            }
+            else {
+                codigo_consulta = parte_1 
+                                  + " SELECT s.* FROM bodega.solicitudes s "
+                                  + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
+                                  + " WHERE u.id_seccion = ? AND (( estado in ('Pendiente','Aprobada') ) OR ( (estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < fecha_entrega) )) "
+                                  + " ORDER BY s.id_solicitud DESC " 
+                                  + parte_2;
+                consulta = getConexion().prepareStatement(codigo_consulta);
+                consulta.setInt(1, id_usuario);
+            }
+
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                Solicitud solicitud = new Solicitud();
+                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
+                solicitud.setId_inventario(rs.getInt("id_inventario"));
+                solicitud.setId_usuario(rs.getInt("id_usuario"));
+                solicitud.setCantidad(rs.getInt("cantidad"));
+                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud.setEstado(rs.getString("estado"));
+                solicitud.setFecha_entrega(rs.getDate("fecha_entrega"));
+                solicitud.setId_usuario_recibo(rs.getInt("id_usuario_recibo"));
+                solicitud.setObservaciones(rs.getString("observaciones"));
+
+                Usuario u = new Usuario();
+                u.setNombreCompleto(rs.getString("nombre_solicitante"));
+                u.setIdSeccion(rs.getInt("id_seccion"));
+                u.setNombreSeccion(rs.getString("nombre_seccion_usuario"));
+
+                Usuario u_receptor = new Usuario();
+                u_receptor.setNombreCompleto(rs.getString("nombre_recibe"));
+
+                Inventario i = new Inventario();
+                ProductoInterno p = new ProductoInterno();
+                p.setId_producto(rs.getInt("id_producto"));
+                p.setCodigo_icp(rs.getString("cod_icp"));
+                p.setNombre(rs.getString("nombre_producto"));
+                p.setPerecedero(rs.getBoolean("perecedero"));
+
+                i.setId_producto(rs.getInt("id_producto"));
+
+                Seccion s = new Seccion();
+                s.setNombre_seccion(rs.getString("nombre_seccion"));
+                s.setId_seccion(rs.getInt("seccion_inventario"));
+
+                i.setId_seccion(rs.getInt("seccion_inventario"));
+
+                i.setProducto(p);
+                i.setSeccion(s);
+
+                i.setStock_actual(rs.getInt("stock_actual"));
+
+                solicitud.setUsuario(u);
+                solicitud.setInventario(i);
+                solicitud.setUsuarioReceptor(u_receptor);
+
+                resultado.add(solicitud);
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public List<Solicitud> obtenerSolicitudesEntregadas(int seccion_usuario)
+    {
+
+        List<Solicitud> resultado = new ArrayList<Solicitud>();
+        String parte_1 = " SELECT solicitud.*, "
+                         + "         u.nombre_completo AS nombre_solicitante, "
+                         + "         u_rec.nombre_completo AS nombre_recibe, "
+                         + "         s.id_seccion AS seccion_inventario, "
+                         + "         s.nombre_seccion AS nombre_seccion, "
+                         + "         u.id_seccion AS id_seccion, "
+                         + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
+                         + "         ci.nombre AS nombre_producto, "
+                         + "         ci.codigo_icp AS cod_icp ,"
+                         + "         ci.perecedero, "
+                         + "         ci.id_producto, "
+                         + "         i.stock_actual "
+                         + " FROM ( ";
+
+        String codigo_consulta;
+
+        String parte_2 = "         ) AS solicitud "
+                         + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
+                         + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
+                         + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
+                         + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
+                         + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
+                         + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
+
+        try {
+            PreparedStatement consulta;
+            if (seccion_usuario == 0) {
+                codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado = 'Entregada' OR estado = 'Cerrada' OR estado = 'Rechazada' ORDER BY fecha_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
             }
             else {
                 codigo_consulta = parte_1 + " SELECT s.* FROM bodega.solicitudes s "
                                   + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND s.estado != 'Pendiente Prestamo' ORDER BY s.id_solicitud DESC " + parte_2;
+                                  + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
-                consulta.setInt(1, id_usuario);
+                consulta.setInt(1, seccion_usuario);
             }
 
             ResultSet rs = consulta.executeQuery();

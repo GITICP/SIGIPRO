@@ -17,6 +17,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,6 +47,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
 {
 
     SubBodegaDAO sb_dao = new SubBodegaDAO();
+    final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
@@ -75,18 +77,18 @@ public class ControladorSolicitudes extends SIGIPROServlet
             HttpSession sesion = request.getSession();
             List<Integer> listaPermisos = (List<Integer>) sesion.getAttribute("listaPermisos");
             int[] permisos = {24, 25, 1};
-            int usuario_solicitante;
+            int seccion_usuario_solicitante;
             UsuarioDAO usrDAO = new UsuarioDAO();
             boolean boolAdmin = false;
             if (verificarPermiso(25, listaPermisos)) {
-                usuario_solicitante = 0;
+                seccion_usuario_solicitante = 0;
                 boolAdmin = true;
             }
             else {
                 String nombre_usr = (String) sesion.getAttribute("usuario");
                 int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
                 Usuario us = usrDAO.obtenerUsuario(id_usuario);
-                usuario_solicitante = us.getIdSeccion();
+                seccion_usuario_solicitante = us.getIdSeccion();
             }
 
             if (accion != null) {
@@ -117,7 +119,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     //*----------------------------* 
 
                     redireccion = "Solicitudes/index.jsp";
-                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(seccion_usuario_solicitante);
                     request.setAttribute("listaSolicitudes", solicitudes);
                     HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
                     request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud eliminada correctamente"));
@@ -164,7 +166,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                         request.setAttribute("mensaje", helper.mensajeDeError("No se puede aprobar la solicitud, la cantidad solicitada es mayor a las existencias del producto"));
                     }
 
-                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(seccion_usuario_solicitante);
                     List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
                     try {
                         lista_sub_bodegas = sb_dao.obtenerSubBodegas();
@@ -185,6 +187,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     InventarioDAO inventarioDAO = new InventarioDAO();
                     resta = inventarioDAO.restarInventario(solicitud.getId_inventario(), solicitud.getCantidad());
                     solicitud.setEstado("Cerrada");
+                    solicitud.setFecha_entrega(helper_fechas.getFecha_hoy());
                     boolean resultado;
                     resultado = dao.editarSolicitud(solicitud);
 
@@ -199,7 +202,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     else {
                         request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
                     }
-                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(seccion_usuario_solicitante);
                     List<SubBodega> lista_sub_bodegas = new ArrayList<SubBodega>();
                     try {
                         lista_sub_bodegas = sb_dao.obtenerSubBodegas();
@@ -208,6 +211,13 @@ public class ControladorSolicitudes extends SIGIPROServlet
                         request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
                     }
                     request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
+                    request.setAttribute("booladmin", boolAdmin);
+                    request.setAttribute("listaSolicitudes", solicitudes);
+                }
+                else if(accion.equalsIgnoreCase("vercompletadas")){
+                    validarPermisos(permisos, listaPermisos);
+                    redireccion = "Solicitudes/VerCompletadas.jsp";
+                    List<Solicitud> solicitudes = dao.obtenerSolicitudesEntregadas(seccion_usuario_solicitante);
                     request.setAttribute("booladmin", boolAdmin);
                     request.setAttribute("listaSolicitudes", solicitudes);
                 }
@@ -221,7 +231,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     catch (SIGIPROException sig_ex) {
                         request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
                     }
-                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                    List<Solicitud> solicitudes = dao.obtenerSolicitudes(seccion_usuario_solicitante);
                     request.setAttribute("booladmin", boolAdmin);
                     request.setAttribute("listaSolicitudes", solicitudes);
                     request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
@@ -237,7 +247,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
                 catch (SIGIPROException sig_ex) {
                     request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
                 }
-                List<Solicitud> solicitudes = dao.obtenerSolicitudes(usuario_solicitante);
+                List<Solicitud> solicitudes = dao.obtenerSolicitudes(seccion_usuario_solicitante);
                 request.setAttribute("booladmin", boolAdmin);
                 request.setAttribute("listaSolicitudes", solicitudes);
                 request.setAttribute("lista_sub_bodegas", lista_sub_bodegas);
@@ -372,6 +382,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
             Solicitud solicitud = dao.obtenerSolicitud(id_solicitud);
             solicitud.setEstado("Rechazada");
             solicitud.setObservaciones(obs);
+            solicitud.setFecha_entrega(helper_fechas.getFecha_hoy());
             boolean resultado;
             resultado = dao.editarSolicitud(solicitud);
 
