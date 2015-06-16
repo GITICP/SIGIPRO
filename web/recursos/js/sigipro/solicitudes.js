@@ -1,4 +1,4 @@
-function AprobarSolicitud(id_solicitud){
+function AprobarSolicitud(id_solicitud) {
     var elementoConfirmable = $('.confirmableAprobar');
     var textoConfirmacion = elementoConfirmable.data('texto-confirmacion');
     var referencia = elementoConfirmable.data('href');
@@ -26,32 +26,32 @@ function AprobarSolicitud(id_solicitud){
     $("#ModalEliminarGenerico").modal('show');
 }
 
-function RechazarSolicitud(id_solicitud){
-  $('#id_solicitud_rech').val(id_solicitud);
-  $('#ModalRechazar').modal('show');
+function RechazarSolicitud(id_solicitud) {
+    $('#id_solicitud_rech').val(id_solicitud);
+    $('#ModalRechazar').modal('show');
 }
 
-$('#cantidadinput').change( function() {
-  var max = $('option:selected').data('stock');
-  $("input[name='cantidad']").attr("max", max);
-}
-        );
-
-$(document).ready(function () {
-
-         table = $('#tabladeSolicitudes').DataTable();
-         table.destroy();
-
-         table = $('#tabladeSolicitudes').DataTable( { 
-           sDom: // redefine sDom without lengthChange and default search box
-              "t" +
-              "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-          "order": [[ 0, "desc" ]]
-    } );
+$('#cantidadinput').change(function () {
+    var max = $('option:selected').data('stock');
+    $("input[name='cantidad']").attr("max", max);
 }
 );
 
-function CerrarSolicitud(id_solicitud){
+$(document).ready(function () {
+
+    table = $('#tabladeSolicitudes').DataTable();
+    table.destroy();
+
+    table = $('#tabladeSolicitudes').DataTable({
+        sDom: // redefine sDom without lengthChange and default search box
+                "t" +
+                "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        "order": [[0, "desc"]]
+    });
+}
+);
+
+function CerrarSolicitud(id_solicitud) {
     var elementoConfirmable = $('.confirmableCerrar');
     var textoConfirmacion = elementoConfirmable.data('texto-confirmacion');
     var referencia = elementoConfirmable.data('href');
@@ -79,18 +79,82 @@ function CerrarSolicitud(id_solicitud){
     $("#ModalCerrarGenerico").modal('show');
 }
 
-$(document).ready(function(){
-    $('#btn-entregar-solicitudes').click(function(){
+$(document).ready(function () {
+    $('#btn-entregar-solicitudes').click(function () {
         var pivote = "#af#";
         var ids = "";
         $('#tabla_informacion tbody').empty();
-        $('input[name=entregar]:checked').each(function(){
+        $('input[name=entregar]:checked').each(function () {
             var id = pivote + $(this).val();
             ids += id;
             var fila = $(this).parent().parent();
-            $('#tabla_informacion').append('<tr><td>'+fila.attr('id')+'</td><td>'+fila.find('td:eq(2)').html()+'</td><td>'+fila.find('td:eq(3)').html()+'</td><td>'+fila.find('td:eq(4)').html()+'</td></tr>');
+            var celdas = fila.find('td');
+            var fila_html = $('<tr>');
+            fila_html.attr('id', 'info-entrega-' + fila.attr('id'));
+            fila_html.data('perecedero', fila.data('perecedero'));
+            var id = $('<td>');
+            id.text(fila.attr('id'));
+            fila_html.append(id);
+            var usuario = $('<td>');
+            usuario.text(celdas.eq(2).text());
+            fila_html.append(usuario);
+            var producto = $('<td>');
+            producto.text(celdas.eq(3).text());
+            fila_html.append(producto);
+            var cantidad = $('<td>');
+            cantidad.text(celdas.eq(4).text());
+            fila_html.append(cantidad);
+            $('#tabla_informacion').append(fila_html);
         });
+
         $('#ids-por-entregar').val(ids);
         $("#ModalAutorizar").modal('show');
+    });
+
+    $("#entrega-sub-bodega").change(function () {
+        var tabla = $('#tabla_informacion');
+
+        if ($(this).prop("checked")) {
+
+            tabla.find('th:eq(4)').show();
+            $("#select-sub-bodegas").show();
+            $("#seleccion-sub-bodega").prop("required", true);
+
+            tabla.find('tbody > tr').each(function () {
+                var id = $(this).find('td:eq(0)');
+                var celda = $("<td>");
+                if ($(this).data('perecedero')) {
+                    var input = $('<input type="text" \
+                                          value="" \
+                                          class="form-control sigiproDatePicker" \
+                                          name="fecha_vencimiento_' + id.html() + '" \
+                                          data-date-format="dd/mm/yyyy" \
+                                          required \>');
+                    celda.append(input);
+                } else {
+                    celda.text('Producto No Perecedero');
+                }
+
+                $(this).append(celda); 
+
+                $('.sigiproDatePicker').each(function () {
+                    $(this).datepicker()
+                            .on('changeDate', function () {
+                                $(this).datepicker('hide');
+                            });
+                });
+            });
+
+        } else {
+
+            tabla.find("tbody > tr").each(function () {
+                $(this).find('td:last').remove();
+            });
+
+            tabla.find('th:eq(4)').hide();
+            $("#select-sub-bodegas").hide();
+            $("#seleccion-sub-bodega").prop("required", false);
+
+        }
     });
 });

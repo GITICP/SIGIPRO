@@ -17,6 +17,7 @@ public class BitacoraSubBodega
     public static final String INGRESAR = "Ingresar";
     public static final String EGRESAR = "Consumir";
     public static final String MOVER = "Movimiento";
+    public static final String ENTREGAR = "Entregar";
     
     private int id_bitacora_sub_bodega;
     private ProductoInterno producto;

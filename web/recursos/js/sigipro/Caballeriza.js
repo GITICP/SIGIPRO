@@ -119,6 +119,19 @@ $(document).ready(function () {
             $("#mensaje-fechas").html("La fecha de nacimiento no puede ser mayor que la de ingreso y ambas deben ser antes que hoy.");
         }
     });
+    
+    $("#tabla-sangrias-caballos").find("input[name='caballos']").change(function(){
+        var inputs = $(this).parent().parent().parent().find("input[type='number']");
+        if( $(this).prop("checked")) {
+            inputs.each(function(){
+               $(this).prop("disabled", false) ;
+            });
+        } else {
+            inputs.each(function(){
+               $(this).prop("disabled", true) ;
+            });
+        }
+    });
 });
 
 // -- Caballos -- //

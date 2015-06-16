@@ -55,7 +55,7 @@
                                 <thead> 
                                     <tr>
                                         <th>Fecha y Hora</th>
-                                        <th>Accion</th>
+                                        <th>Acción</th>
                                         <th>Producto</th>
                                         <th>Cantidad</th>
                                         <th>Usuario</th>
