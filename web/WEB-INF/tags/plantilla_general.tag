@@ -109,6 +109,8 @@
         
         <script>
             $(document).ready(function () {
+                
+                
                 if ($('.sigiproDatePicker').length > 0) {
                     $('.sigiproDatePicker').datepicker()
                             .on('changeDate', function () {
@@ -123,6 +125,8 @@
                             });
                     $("#fechaActivacion").datepicker({startDate: 0});
                 }
+                
+                
                 if ($('.sigiproDatePickerEspecial').length > 0) {
                     $('.sigiproDatePickerEspecial').datepicker()
                             .on('changeDate', function () {
@@ -130,7 +134,8 @@
                             });
                     $("#fechaActivacion").datepicker({startDate: 0});
                 }
-
+                
+                
                 if ($('.sigiproDatePickerSerpiente').length > 0) {
                     $('.sigiproDatePickerSerpiente').datepicker({endDate: '-0d'})
                             .on('changeDate', function () {

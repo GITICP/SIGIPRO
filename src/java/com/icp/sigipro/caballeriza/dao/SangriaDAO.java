@@ -196,6 +196,9 @@ public class SangriaDAO extends DAO
                     caballo.setNumero_microchip(rs.getString("numero_microchip"));
                     caballo.setNumero(rs.getInt("numero"));
                     sangria_caballo.setCaballo(caballo);
+                    sangria_caballo.setParticipo_dia1(rs.getBoolean("participo_dia1"));
+                    sangria_caballo.setParticipo_dia2(rs.getBoolean("participo_dia2"));
+                    sangria_caballo.setParticipo_dia3(rs.getBoolean("participo_dia3"));
                     sangria_caballo.setLal_dia1(rs.getFloat("lal_dia1"));
                     sangria_caballo.setLal_dia2(rs.getFloat("lal_dia2"));
                     sangria_caballo.setLal_dia3(rs.getFloat("lal_dia3"));
@@ -376,7 +379,8 @@ public class SangriaDAO extends DAO
                     " UPDATE caballeriza.sangrias_caballos "
                     + " SET sangre_dia" + dia + " = 0,"
                     + "     plasma_dia" + dia + " = 0,"
-                    + "     lal_dia" + dia + " = 0"
+                    + "     lal_dia" + dia + " = 0,"
+                    + "     participo_dia" + dia + " = false "
                     + " WHERE id_sangria = ?; "
             );
 
@@ -391,7 +395,8 @@ public class SangriaDAO extends DAO
                     " UPDATE caballeriza.sangrias_caballos "
                     + " SET sangre_dia" + dia + " = ?, "
                     + "     plasma_dia" + dia + " = ?, "
-                    + "     lal_dia" + dia + " = ? "
+                    + "     lal_dia" + dia + " = ?, "
+                    + "     participo_dia" + dia + " = true "
                     + " WHERE id_sangria = ? AND id_caballo = ?; "
             );
 

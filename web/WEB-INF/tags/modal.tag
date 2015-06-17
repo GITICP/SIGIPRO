@@ -9,10 +9,11 @@
 <%-- The list of normal or fragment attributes can be specified here: --%>
 <%@attribute name="idModal" required="true"%>
 <%@attribute name="titulo"  required="true"%>
+<%@attribute name="id_dialogo" %>
 <%@attribute name="form"    required="true" fragment="true"%>
 
 <div lang="es" class="modal fade"  id="${idModal}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog">
+  <div class="modal-dialog" id="${id_dialogo}">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

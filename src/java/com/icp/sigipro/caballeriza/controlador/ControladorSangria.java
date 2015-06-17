@@ -127,7 +127,7 @@ public class ControladorSangria extends SIGIPROServlet
             request.setAttribute("accion", "Extraccion");
         }
         catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             redireccion = "Sangria/index.jsp";
         }
 
