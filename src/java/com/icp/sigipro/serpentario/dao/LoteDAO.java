@@ -5,11 +5,10 @@
  */
 package com.icp.sigipro.serpentario.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.serpentario.modelos.Lote;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -19,14 +18,10 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class LoteDAO {
-    private Connection conexion;
-    
+public class LoteDAO extends DAO{
     
     public LoteDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     } 
 
     public boolean insertarLote(Lote l){
@@ -43,7 +38,7 @@ public class LoteDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -73,7 +68,7 @@ public class LoteDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }catch (Exception e){
             
         }
@@ -95,7 +90,7 @@ public class LoteDAO {
              }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
          }catch (Exception e){
              e.printStackTrace();
          }
@@ -116,7 +111,7 @@ public class LoteDAO {
                 resultado = consulta.executeUpdate() == 1;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -141,7 +136,7 @@ public class LoteDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -163,7 +158,7 @@ public class LoteDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -200,7 +195,7 @@ public class LoteDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -236,7 +231,7 @@ public class LoteDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -276,26 +271,11 @@ public class LoteDAO {
             resultado.setExtracciones(obtenerExtracciones(resultado));
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
         return resultado;
-    }
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
     }
 }

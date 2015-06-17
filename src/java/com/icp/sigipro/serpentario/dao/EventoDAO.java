@@ -5,14 +5,12 @@
  */
 package com.icp.sigipro.serpentario.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.modelos.Evento;
 import com.icp.sigipro.serpentario.modelos.Extraccion;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -22,14 +20,10 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class EventoDAO {
-     private Connection conexion;
-    
+public class EventoDAO extends DAO{
     
     public EventoDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     } 
     
     public boolean insertarEvento(Evento e){
@@ -49,7 +43,7 @@ public class EventoDAO {
             }
             resultadoConsulta.close();            
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -74,7 +68,7 @@ public class EventoDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -103,7 +97,7 @@ public class EventoDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -123,7 +117,7 @@ public class EventoDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -140,7 +134,7 @@ public class EventoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -157,7 +151,7 @@ public class EventoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -178,7 +172,7 @@ public class EventoDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -220,7 +214,7 @@ public class EventoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -257,26 +251,11 @@ public class EventoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
         return e;
-    }
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
     }
 }
