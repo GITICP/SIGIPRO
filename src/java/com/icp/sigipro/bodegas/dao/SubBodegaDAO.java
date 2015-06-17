@@ -12,7 +12,7 @@ import com.icp.sigipro.bodegas.modelos.PermisoSubBodegas;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.modelos.Seccion;
-import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.DAOEspecial;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +28,7 @@ import javax.security.sasl.AuthenticationException;
  *
  * @author Boga
  */
-public class SubBodegaDAO extends DAO<SubBodega>
+public class SubBodegaDAO extends DAOEspecial<SubBodega>
 {
 
     public static final String INGRESAR = "bodega.usuarios_sub_bodegas_ingresos";

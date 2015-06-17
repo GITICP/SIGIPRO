@@ -9,7 +9,7 @@ import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
 import com.icp.sigipro.configuracion.modelos.Seccion;
-import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.DAOEspecial;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Amed
  */
-public class InventarioDAO extends DAO<Inventario> {
+public class InventarioDAO extends DAOEspecial<Inventario> {
 
   public InventarioDAO() {
     super(Inventario.class,"bodega","inventarios");

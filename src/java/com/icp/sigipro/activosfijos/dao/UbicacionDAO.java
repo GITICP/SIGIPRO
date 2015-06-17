@@ -2,6 +2,7 @@ package com.icp.sigipro.activosfijos.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.activosfijos.modelos.Ubicacion;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,17 +15,8 @@ import java.util.List;
  *
  * @author Walter
  */
-public class UbicacionDAO
+public class UbicacionDAO extends DAO
 {
-
-    private Connection conexion;
-
-    public UbicacionDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
-
     public boolean insertarUbicacion(Ubicacion u)
     {
 
@@ -157,37 +149,5 @@ public class UbicacionDAO
             ex.printStackTrace();
         }
         return resultado;
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
-    
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

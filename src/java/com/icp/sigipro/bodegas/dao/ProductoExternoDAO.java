@@ -5,10 +5,9 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ProductoExterno;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -19,15 +18,11 @@ import java.util.List;
  *
  * @author Amed
  */
-public class ProductoExternoDAO
+public class ProductoExternoDAO extends DAO
 {
-
-    private Connection conexion;
 
     public ProductoExternoDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public boolean insertarProductoExterno(ProductoExterno p)
@@ -297,40 +292,5 @@ public class ProductoExternoDAO
         }
 
         return resultado;
-    }
-
-    private Connection getConexion()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        if (conexion == null) {
-            conexion = s.conectar();
-        }
-        else {
-            try {
-                if (conexion.isClosed()) {
-                    conexion = s.conectar();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

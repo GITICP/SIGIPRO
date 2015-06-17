@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.serpentario.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.modelos.Centrifugado;
@@ -14,7 +14,6 @@ import com.icp.sigipro.serpentario.modelos.Liofilizacion;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
 import com.icp.sigipro.serpentario.modelos.SerpientesExtraccion;
 import com.icp.sigipro.serpentario.modelos.UsuariosExtraccion;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -26,16 +25,11 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class ExtraccionDAO {
-    private Connection conexion;
-    
+public class ExtraccionDAO extends DAO{    
     
     public ExtraccionDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     } 
-    
     
     public boolean insertarExtraccion(Extraccion e){
         boolean resultado = false;
@@ -55,7 +49,7 @@ public class ExtraccionDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -78,7 +72,7 @@ public class ExtraccionDAO {
                 }
                 
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -100,7 +94,7 @@ public class ExtraccionDAO {
                 }
                 
                 consulta.close();
-                conexion.close();
+                cerrarConexion();
             }
             catch(Exception ex){
                 ex.printStackTrace();
@@ -123,7 +117,7 @@ public class ExtraccionDAO {
                     resultado = true;
                 }
                 consulta.close();
-                conexion.close();
+                cerrarConexion();
             }
             catch(Exception ex){
                 ex.printStackTrace();
@@ -147,7 +141,7 @@ public class ExtraccionDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -185,7 +179,7 @@ public class ExtraccionDAO {
             consultaExtraccion.close();
             consultaCentrifugado.close();
             consultaLiofilizacion.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -206,7 +200,7 @@ public class ExtraccionDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -231,7 +225,7 @@ public class ExtraccionDAO {
             }
             
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -258,7 +252,7 @@ public class ExtraccionDAO {
             }
 
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -306,7 +300,7 @@ public class ExtraccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -330,7 +324,7 @@ public class ExtraccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -388,7 +382,7 @@ public class ExtraccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -468,7 +462,7 @@ public class ExtraccionDAO {
             }      
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -491,7 +485,7 @@ public class ExtraccionDAO {
             }      
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -516,7 +510,7 @@ public class ExtraccionDAO {
             } 
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -540,19 +534,4 @@ public class ExtraccionDAO {
             return false;
         }
     }
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    } 
 }

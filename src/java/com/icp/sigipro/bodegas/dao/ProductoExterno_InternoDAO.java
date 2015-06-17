@@ -5,9 +5,8 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ProductoExternoInterno;
-import java.sql.Connection;
+import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +19,10 @@ import java.util.List;
  *
  * @author Amed
  */
-public class ProductoExterno_InternoDAO
+public class ProductoExterno_InternoDAO extends DAO
 {
-
-    private Connection conexion;
-
     public ProductoExterno_InternoDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public boolean insertarProductoExterno_Interno(ProductoExternoInterno p)
@@ -48,7 +42,7 @@ public class ProductoExterno_InternoDAO
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -70,7 +64,7 @@ public class ProductoExterno_InternoDAO
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
         }
         catch (SQLException ex) {
@@ -93,7 +87,7 @@ public class ProductoExterno_InternoDAO
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
         }
         catch (SQLException ex) {
@@ -120,22 +114,5 @@ public class ProductoExterno_InternoDAO
             resultado = null;
         }
         return resultado;
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
     }
 }
