@@ -386,9 +386,11 @@ public class SolicitudDAO extends DAO
                          + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
                          + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
                          + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
 
         try {
-            PreparedStatement consulta;
+            
             if (seccion_usuario == 0) {
                 codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado = 'Entregada' OR estado = 'Cerrada' OR estado = 'Rechazada' ORDER BY fecha_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
@@ -401,7 +403,7 @@ public class SolicitudDAO extends DAO
                 consulta.setInt(1, seccion_usuario);
             }
 
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Solicitud solicitud = new Solicitud();
@@ -663,38 +665,6 @@ public class SolicitudDAO extends DAO
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 
     private String pasar_ids_solicitudes(String[] ids_solicitudes)
