@@ -5,11 +5,10 @@
  */
 package com.icp.sigipro.caballeriza.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,15 +20,11 @@ import java.util.List;
  *
  * @author Walter
  */
-public class GrupoDeCaballosDAO
+public class GrupoDeCaballosDAO extends DAO
 {
-
-    private Connection conexion;
 
     public GrupoDeCaballosDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public boolean insertarGrupoDeCaballos(GrupoDeCaballos g, String[] ids_caballos) throws SIGIPROException
@@ -73,7 +68,8 @@ public class GrupoDeCaballosDAO
                 else {
                     resultado = false;
                 }
-            } else {
+            }
+            else {
                 resultado = resultado_insert_grupo;
             }
 
@@ -95,7 +91,7 @@ public class GrupoDeCaballosDAO
                 if (consulta_caballos != null) {
                     consulta_caballos.close();
                 }
-                getConexion().close();
+                cerrarConexion();
             }
             catch (SQLException ex_operaciones) {
                 ex_operaciones.printStackTrace();
@@ -119,7 +115,7 @@ public class GrupoDeCaballosDAO
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -187,7 +183,7 @@ public class GrupoDeCaballosDAO
                 if (consulta_caballos != null) {
                     consulta_caballos.close();
                 }
-                getConexion().close();
+                cerrarConexion();
             }
             catch (SQLException ex_operaciones) {
                 ex_operaciones.printStackTrace();
@@ -232,7 +228,7 @@ public class GrupoDeCaballosDAO
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -275,7 +271,7 @@ public class GrupoDeCaballosDAO
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -287,21 +283,6 @@ public class GrupoDeCaballosDAO
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
-    }
-
-    private Connection getConexion()
-    {
-        try {
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
     }
 
     private String pasar_id_caballos(String[] ids_caballos)
