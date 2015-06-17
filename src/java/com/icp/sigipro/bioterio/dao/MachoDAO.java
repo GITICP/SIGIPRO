@@ -5,30 +5,21 @@
  */
 package com.icp.sigipro.bioterio.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bioterio.modelos.Macho;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Amed
  */
-public class MachoDAO
+public class MachoDAO extends DAO
 {
-    private Connection conexion;
-
-    public MachoDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
+    public MachoDAO() {  }
 
     public boolean insertarMacho(Macho p) throws SIGIPROException
     {
@@ -185,40 +176,5 @@ public class MachoDAO
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
         return resultado;
-    }
-
-    private Connection getConexion()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        if (conexion == null) {
-            conexion = s.conectar();
-        }
-        else {
-            try {
-                if (conexion.isClosed()) {
-                    conexion = s.conectar();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

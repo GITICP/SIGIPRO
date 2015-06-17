@@ -5,13 +5,11 @@
  */
 package com.icp.sigipro.bioterio.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.bioterio.modelos.Cepa;
 import com.icp.sigipro.bioterio.modelos.EntregaConejera;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -21,15 +19,11 @@ import java.util.List;
  *
  * @author Amed
  */
-public class EntregaConejeraDAO
+public class EntregaConejeraDAO extends DAO
 {
-
-    private Connection conexion;
 
     public EntregaConejeraDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public boolean insertarEntregaConejera(EntregaConejera p) throws SIGIPROException
@@ -195,40 +189,5 @@ public class EntregaConejeraDAO
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
         return resultado;
-    }
-
-    private Connection getConexion()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        if (conexion == null) {
-            conexion = s.conectar();
-        }
-        else {
-            try {
-                if (conexion.isClosed()) {
-                    conexion = s.conectar();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }
