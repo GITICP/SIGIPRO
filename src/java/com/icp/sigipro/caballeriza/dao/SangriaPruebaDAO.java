@@ -5,13 +5,12 @@
  */
 package com.icp.sigipro.caballeriza.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,15 +21,11 @@ import java.util.List;
  *
  * @author Walter
  */
-public class SangriaPruebaDAO
+public class SangriaPruebaDAO extends DAO
 {
-
-    private Connection conexion;
 
     public SangriaPruebaDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public boolean insertarSangriaPrueba(SangriaPrueba sp, List<SangriaPruebaCaballo> informacion_caballos) throws SIGIPROException
@@ -143,7 +138,7 @@ public class SangriaPruebaDAO
                 resultado.add(sangriap);
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
             rs.close();
         }
         catch (SQLException ex) {
@@ -203,7 +198,7 @@ public class SangriaPruebaDAO
                 sangriap.setInoculo(inoculodao.obtenerInoculo(rs.getInt("id_inoculo")));
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
             rs.close();
         }
         catch (SQLException ex) {
@@ -257,7 +252,7 @@ public class SangriaPruebaDAO
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -316,35 +311,4 @@ public class SangriaPruebaDAO
         
         return resultado;
     }
-
-    private Connection getConexion()
-    {
-        try {
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
-    }
-
 }
