@@ -245,10 +245,11 @@ public class GrupoDeCaballosDAO
         List<GrupoDeCaballos> resultado = new ArrayList<GrupoDeCaballos>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
+                      " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
                     + " FROM caballeriza.grupos_de_caballos gc "
                     + "     INNER JOIN caballeriza.caballos c "
-                    + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ?;");
+                    + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ? "
+                    + " ORDER BY gc.id_grupo_de_caballo;");
 
             consulta.setString(1, Caballo.VIVO);
 
