@@ -455,7 +455,13 @@ public class EventoClinicoDAO extends DAO
         List<Caballo> resultado = new ArrayList<Caballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" select nombre, numero_microchip, numero from caballeriza.caballos c left outer join caballeriza.eventos_clinicos_caballos ecc on c.id_caballo = ecc.id_caballo where id_evento=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                      " SELECT c.nombre, c.numero_microchip, c.numero, gc.nombre as nombre_grupo, gc.id_grupo_de_caballo "
+                    + " FROM caballeriza.caballos c "
+                    + "     LEFT OUTER JOIN caballeriza.eventos_clinicos_caballos ecc ON c.id_caballo = ecc.id_caballo "
+                    + "     LEFT OUTER JOIN caballeriza.grupos_de_caballos gc ON c.id_grupo_de_caballo = gc.id_grupo_de_caballo "
+                    + " WHERE id_evento=?; "
+            );
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
 
@@ -464,6 +470,12 @@ public class EventoClinicoDAO extends DAO
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getString("numero_microchip"));
                 caballo.setNumero(rs.getInt("numero"));
+                
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                g.setNombre(rs.getString("nombre_grupo"));
+                caballo.setGrupo_de_caballos(g);
+                
                 resultado.add(caballo);
             }
             rs.close();
