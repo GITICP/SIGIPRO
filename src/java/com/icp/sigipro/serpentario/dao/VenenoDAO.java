@@ -6,9 +6,9 @@
 package com.icp.sigipro.serpentario.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Veneno;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -18,14 +18,10 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class VenenoDAO {
-    private Connection conexion;
-    
+public class VenenoDAO extends DAO{    
     
     public VenenoDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     } 
     
     public int insertarVeneno(Especie e){
@@ -40,7 +36,7 @@ public class VenenoDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -67,7 +63,7 @@ public class VenenoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -91,7 +87,7 @@ public class VenenoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -116,7 +112,7 @@ public class VenenoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -161,26 +157,11 @@ public class VenenoDAO {
              }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
          }catch (Exception e){
              e.printStackTrace();
          }
          
          return resultado;
      }
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    }
 }

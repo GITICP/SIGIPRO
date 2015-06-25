@@ -5,11 +5,9 @@
  */
 package com.icp.sigipro.serpentario.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
-import com.icp.sigipro.bodegas.modelos.UbicacionBodega;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.serpentario.modelos.Especie;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,14 +18,10 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class EspecieDAO {
-    private Connection conexion;
-    
+public class EspecieDAO extends DAO{
     
     public EspecieDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     } 
     
     public boolean insertarEspecie(Especie e){
@@ -44,7 +38,7 @@ public class EspecieDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -72,7 +66,7 @@ public class EspecieDAO {
                 
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(SQLException ex){
             ex.printStackTrace();
@@ -100,7 +94,7 @@ public class EspecieDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -122,7 +116,7 @@ public class EspecieDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -144,26 +138,11 @@ public class EspecieDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    }  
 }

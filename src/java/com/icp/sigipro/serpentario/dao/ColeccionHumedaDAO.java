@@ -5,11 +5,10 @@
  */
 package com.icp.sigipro.serpentario.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.serpentario.modelos.ColeccionHumeda;
 import com.icp.sigipro.serpentario.modelos.Serpiente;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -19,17 +18,11 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class ColeccionHumedaDAO {
-    private Connection conexion;
-    
+public class ColeccionHumedaDAO extends DAO{    
     
     public ColeccionHumedaDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     } 
-    
-    
     
     public boolean insertarSerpiente(ColeccionHumeda ch){
         boolean resultado = false;
@@ -49,7 +42,7 @@ public class ColeccionHumedaDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -74,7 +67,7 @@ public class ColeccionHumedaDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -102,7 +95,7 @@ public class ColeccionHumedaDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -130,26 +123,11 @@ public class ColeccionHumedaDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
         return chs;
     }
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    } 
 }

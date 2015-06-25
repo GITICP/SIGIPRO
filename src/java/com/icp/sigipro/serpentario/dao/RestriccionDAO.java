@@ -7,6 +7,7 @@ package com.icp.sigipro.serpentario.dao;
 
 import com.icp.sigipro.serpentario.modelos.Restriccion;
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.modelos.Especie;
 import com.icp.sigipro.serpentario.modelos.Veneno;
@@ -17,22 +18,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
  *
  * @author ld.conejo
  */
-public class RestriccionDAO {
-    private Connection conexion;
+public class RestriccionDAO extends DAO{
     private String inicio = "-10-01";
     private String fin = "-09-30";
     
     public RestriccionDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
     
     public boolean insertarRestriccion(Restriccion r){
@@ -50,7 +47,7 @@ public class RestriccionDAO {
             }
             resultadoConsulta.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -70,7 +67,7 @@ public class RestriccionDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -88,7 +85,7 @@ public class RestriccionDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -113,7 +110,7 @@ public class RestriccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -157,7 +154,7 @@ public class RestriccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -202,7 +199,7 @@ public class RestriccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -251,7 +248,7 @@ public class RestriccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -298,26 +295,10 @@ public class RestriccionDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
         }catch (Exception ex){
             ex.printStackTrace();
         }
         return cantidad;
-    }
-    
-    
-    private Connection getConexion(){
-        try{     
-            if ( conexion.isClosed() ){
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
     }
 }

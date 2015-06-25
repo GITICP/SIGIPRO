@@ -15,12 +15,15 @@ public class SangriaCaballo
     private Sangria sangria;
     private Caballo caballo;
     private float hematocrito; //Este campo no está en la BD. Se creó por conveniencia para evitar anidación extra para las sangrías.
+    private boolean participo_dia1;
     private float sangre_dia1;
     private float plasma_dia1;
     private float lal_dia1;
+    private boolean participo_dia2;
     private float sangre_dia2;
     private float plasma_dia2;
     private float lal_dia2;
+    private boolean participo_dia3;
     private float sangre_dia3;
     private float plasma_dia3;
     private float lal_dia3;
@@ -48,6 +51,16 @@ public class SangriaCaballo
     public void setCaballo(Caballo caballo)
     {
         this.caballo = caballo;
+    }
+
+    public boolean isParticipo_dia1()
+    {
+        return participo_dia1;
+    }
+
+    public void setParticipo_dia1(boolean participo_dia1)
+    {
+        this.participo_dia1 = participo_dia1;
     }
 
     public float getSangre_dia1()
@@ -80,6 +93,16 @@ public class SangriaCaballo
         this.lal_dia1 = lal_dia1;
     }
 
+    public boolean isParticipo_dia2()
+    {
+        return participo_dia2;
+    }
+
+    public void setParticipo_dia2(boolean participo_dia2)
+    {
+        this.participo_dia2 = participo_dia2;
+    }
+
     public float getSangre_dia2()
     {
         return sangre_dia2;
@@ -108,6 +131,16 @@ public class SangriaCaballo
     public void setLal_dia2(float lal_dia2)
     {
         this.lal_dia2 = lal_dia2;
+    }
+
+    public boolean isParticipo_dia3()
+    {
+        return participo_dia3;
+    }
+
+    public void setParticipo_dia3(boolean participo_dia3)
+    {
+        this.participo_dia3 = participo_dia3;
     }
 
     public float getSangre_dia3()
@@ -148,6 +181,21 @@ public class SangriaCaballo
     public void setHematocrito(float hematocrito)
     {
         this.hematocrito = hematocrito;
+    }
+    
+    public boolean getParticipo(int dia) {
+        boolean resultado = false;
+        
+        if (dia == 0) {
+            resultado = true;
+        } else if (dia == 1) {
+            resultado = participo_dia1;
+        } else if (dia == 2) {
+            resultado = participo_dia2;
+        } else if (dia == 3) {
+            resultado = participo_dia3;
+        }
+        return resultado;
     }
     
     public float getSangre(int dia) {

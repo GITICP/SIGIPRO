@@ -92,12 +92,14 @@
                                         <thead>
                                             <tr>
                                                 <th>Nombre y Número de Caballo</th>
+                                                <th>Grupo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${caballos}" var="caballo">
                                                 <tr id="${caballo.getId_caballo()}">
                                                     <td>${caballo.getNombre()} (${caballo.getNumero()})</td>
+                                                    <td>${caballo.getGrupo_de_caballos().getNombre()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

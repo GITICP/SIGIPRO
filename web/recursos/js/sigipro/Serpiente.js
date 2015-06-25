@@ -31,6 +31,7 @@ function previewFile(){
 $(function() {
     var max = $("#fecha_ingreso").val();
     var datepicker = $("#datepickerDeceso").datepicker({startDate:max,endDate:"-0d"});
+    $("#datepickerSerpiente").datepicker({endDate:"0d"});
 });
 
 

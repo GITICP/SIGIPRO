@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.caballeriza.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
 import com.icp.sigipro.caballeriza.modelos.Imagen;
@@ -14,10 +13,10 @@ import com.icp.sigipro.caballeriza.modelos.Peso;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.InputStream;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,20 +27,19 @@ import java.util.List;
  *
  * @author Walter
  */
-public class CaballoDAO {
+public class CaballoDAO extends DAO
+{
 
-    private Connection conexion;
-
-    public CaballoDAO() {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
+    public CaballoDAO()
+    {
     }
 
-    public boolean insertarCaballo(Caballo c) {
+    public boolean insertarCaballo(Caballo c)
+    {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.caballos (nombre, numero_microchip,fecha_nacimiento,fecha_ingreso,sexo,color,otras_sennas,estado,id_grupo_de_caballo, numero) "
-                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_caballo");
+                                                                        + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_caballo");
             consulta.setString(1, c.getNombre());
             consulta.setString(2, c.getNumero_microchip());
             consulta.setDate(3, c.getFecha_nacimiento());
@@ -52,7 +50,8 @@ public class CaballoDAO {
             consulta.setString(8, c.getEstado());
             if (c.getGrupo_de_caballos() == null) {
                 consulta.setNull(9, java.sql.Types.INTEGER);
-            } else {
+            }
+            else {
                 consulta.setInt(9, c.getGrupo_de_caballos().getId_grupo_caballo());
             }
             consulta.setInt(10, c.getNumero());
@@ -62,14 +61,16 @@ public class CaballoDAO {
                 c.setId_caballo(resultadoConsulta.getInt("id_caballo"));
             }
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public boolean editarCaballo(Caballo c) {
+    public boolean editarCaballo(Caballo c)
+    {
         boolean resultado = false;
 
         try {
@@ -84,7 +85,8 @@ public class CaballoDAO {
             consulta.setString(2, c.getEstado());
             if (c.getGrupo_de_caballos() == null) {
                 consulta.setNull(3, java.sql.Types.INTEGER);
-            } else {
+            }
+            else {
                 consulta.setInt(3, c.getGrupo_de_caballos().getId_grupo_caballo());
             }
             consulta.setString(4, c.getColor());
@@ -99,15 +101,17 @@ public class CaballoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
 
     }
 
-    public boolean eliminarCaballoDeGrupos(int id_caballo) {
+    public boolean eliminarCaballoDeGrupos(int id_caballo)
+    {
         boolean resultado = false;
 
         try {
@@ -126,15 +130,17 @@ public class CaballoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
 
     }
 
-    public boolean insertarImagen(InputStream imagen, int id_caballo, long size) {
+    public boolean insertarImagen(InputStream imagen, int id_caballo, long size)
+    {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement("INSERT INTO caballeriza.imagenes (id_caballo,imagen) VALUES (?,?)");
@@ -145,19 +151,21 @@ public class CaballoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public boolean editarImagen(int id_imagen, InputStream imagen, int id_caballo, long size) {
+    public boolean editarImagen(int id_imagen, InputStream imagen, int id_caballo, long size)
+    {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement("UPDATE CABALLERIZA.IMAGENES "
-                    + "SET imagen=? "
-                    + "WHERE id_imagen = ?;");
+                                                                        + "SET imagen=? "
+                                                                        + "WHERE id_imagen = ?;");
 
             consulta.setBinaryStream(1, imagen, size);
             consulta.setInt(2, id_imagen);
@@ -165,14 +173,16 @@ public class CaballoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public List<Caballo> obtenerCaballosGrupo(int id_grupo_de_caballo) {
+    public List<Caballo> obtenerCaballosGrupo(int id_grupo_de_caballo)
+    {
         List<Caballo> resultado = new ArrayList<Caballo>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos where id_grupo_de_caballo = ?");
@@ -196,14 +206,16 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public List<Caballo> obtenerCaballosRestantes() {
+    public List<Caballo> obtenerCaballosRestantes()
+    {
         List<Caballo> resultado = new ArrayList<Caballo>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_caballo, nombre, numero_microchip, numero FROM caballeriza.caballos where id_grupo_de_caballo is null AND estado = ?;");
@@ -224,14 +236,16 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public Caballo obtenerCaballo(int id_caballo) throws SIGIPROException {
+    public Caballo obtenerCaballo(int id_caballo) throws SIGIPROException
+    {
         Caballo caballo = new Caballo();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
@@ -256,7 +270,6 @@ public class CaballoDAO {
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setNumero(rs.getInt("numero"));
-                caballo.setImagenes(this.obtenerImagenesCaballo(id_caballo));
 
                 if (rs.getDate("fecha") != null) {
                     do {
@@ -267,7 +280,8 @@ public class CaballoDAO {
                         p.setPeso(rs.getFloat("peso"));
 
                         caballo.agregarPeso(p);
-                    } while (rs.next());
+                    }
+                    while (rs.next());
                 }
             }
 
@@ -301,43 +315,63 @@ public class CaballoDAO {
                 caballo.agregarEvento(evento);
             }
 
+            List<Imagen> imagenes = new ArrayList<Imagen>();
+            PreparedStatement consulta_imagenes = getConexion().prepareStatement(" SELECT * FROM caballeriza.imagenes WHERE id_caballo=?; ");
+            consulta_imagenes.setInt(1, id_caballo);
+            ResultSet rs_imagenes = consulta_imagenes.executeQuery();
+            while (rs_imagenes.next()) {
+                Imagen imagen = new Imagen();
+                imagen.setId_caballo(id_caballo);
+                imagen.setId_imagen(rs_imagenes.getInt("id_imagen"));
+                imagen.setImagen(rs_imagenes.getBytes("imagen"));
+                imagen.setImagen_tamano(imagen.getImagen().length);
+                imagenes.add(imagen);
+            }
+
+            caballo.setImagenes(imagenes);
+
+            rs_imagenes.close();
             rs_eventos.close();
             rs.close();
+            consulta_imagenes.close();
             consulta_eventos.close();
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener el caballo.");
         }
         return caballo;
     }
 
-    public List<Imagen> obtenerImagenesCaballo(int id_caballo) {
+    public List<Imagen> obtenerImagenesCaballo(int id_caballo)
+    {
         List<Imagen> respuesta = new ArrayList<Imagen>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.imagenes WHERE id_caballo=?; ");
-            consulta.setInt(1, id_caballo);
-            ResultSet rs = consulta.executeQuery();
-            while (rs.next()) {
+            PreparedStatement consulta_imagenes = getConexion().prepareStatement(" SELECT * FROM caballeriza.imagenes WHERE id_caballo=?; ");
+            consulta_imagenes.setInt(1, id_caballo);
+            ResultSet rs_imagenes = consulta_imagenes.executeQuery();
+            while (rs_imagenes.next()) {
                 Imagen imagen = new Imagen();
                 imagen.setId_caballo(id_caballo);
-                imagen.setId_imagen(rs.getInt("id_imagen"));
-                imagen.setImagen(rs.getBytes("imagen"));
+                imagen.setId_imagen(rs_imagenes.getInt("id_imagen"));
+                imagen.setImagen(rs_imagenes.getBytes("imagen"));
                 imagen.setImagen_tamano(imagen.getImagen().length);
                 respuesta.add(imagen);
             }
-            rs.close();
-            consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            rs_imagenes.close();
+            consulta_imagenes.close();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return respuesta;
 
     }
 
-    public List<Caballo> obtenerCaballos() {
+    public List<Caballo> obtenerCaballos()
+    {
         List<Caballo> resultado = new ArrayList<Caballo>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos ");
@@ -359,14 +393,16 @@ public class CaballoDAO {
                 resultado.add(caballo);
             }
             consulta.close();
-            conexion.close();
-        } catch (Exception ex) {
+            cerrarConexion();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public List<EventoClinico> ObtenerEventosCaballo(int id_caballo) throws SIGIPROException {
+    public List<EventoClinico> ObtenerEventosCaballo(int id_caballo) throws SIGIPROException
+    {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
 
         try {
@@ -401,24 +437,26 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    public List<Inoculo> ObtenerInoculosCaballo(int id_caballo) throws SIGIPROException {
+    public List<Inoculo> ObtenerInoculosCaballo(int id_caballo) throws SIGIPROException
+    {
         List<Inoculo> resultado = new ArrayList<Inoculo>();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement("select mnn,baa,bap,cdd,lms,tetox,otro, i.id_inoculo, fecha "
-                    + " from caballeriza.inoculos i "
-                    + " left outer join caballeriza.inoculos_caballos ic "
-                    + " on i.id_inoculo = ic.id_inoculo "
-                    + " where id_caballo=?; ");
+                                                                        + " from caballeriza.inoculos i "
+                                                                        + " left outer join caballeriza.inoculos_caballos ic "
+                                                                        + " on i.id_inoculo = ic.id_inoculo "
+                                                                        + " where id_caballo=?; ");
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
 
@@ -437,24 +475,26 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    public List<SangriaPruebaCaballo> ObtenerSangriasPruebaCaballo(int id_caballo) throws SIGIPROException {
+    public List<SangriaPruebaCaballo> ObtenerSangriasPruebaCaballo(int id_caballo) throws SIGIPROException
+    {
         List<SangriaPruebaCaballo> resultado = new ArrayList<SangriaPruebaCaballo>();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement("select sp.id_sangria_prueba, muestra, fecha_recepcion_muestra, hematrocito, hemoglobina "
-                    + " from caballeriza.sangrias_pruebas sp "
-                    + " left outer join caballeriza.sangrias_pruebas_caballos spc "
-                    + " on sp.id_sangria_prueba= spc.id_sangria_prueba"
-                    + " where id_caballo=?; ");
+                                                                        + " from caballeriza.sangrias_pruebas sp "
+                                                                        + " left outer join caballeriza.sangrias_pruebas_caballos spc "
+                                                                        + " on sp.id_sangria_prueba= spc.id_sangria_prueba"
+                                                                        + " where id_caballo=?; ");
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
             SangriaPruebaDAO spdao = new SangriaPruebaDAO();
@@ -468,24 +508,26 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    public List<SangriaCaballo> ObtenerSangriasCaballo(int id_caballo) throws SIGIPROException {
+    public List<SangriaCaballo> ObtenerSangriasCaballo(int id_caballo) throws SIGIPROException
+    {
         List<SangriaCaballo> resultado = new ArrayList<SangriaCaballo>();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement("select s.id_sangria, fecha_dia1, sangre_dia1, sangre_dia2, sangre_dia3, plasma_dia1, plasma_dia2, plasma_dia3, lal_dia1, lal_dia2, lal_dia3 "
-                    + " from caballeriza.sangrias s "
-                    + " left outer join caballeriza.sangrias_caballos sc "
-                    + " on s.id_sangria= sc.id_sangria "
-                    + " where id_caballo=?; ");
+                                                                        + " from caballeriza.sangrias s "
+                                                                        + " left outer join caballeriza.sangrias_caballos sc "
+                                                                        + " on s.id_sangria= sc.id_sangria "
+                                                                        + " where id_caballo=?; ");
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
             SangriaDAO sdao = new SangriaDAO();
@@ -506,16 +548,18 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    public List<EventoClinico> ObtenerEventosCaballoRestantes(int id_caballo) throws SIGIPROException {
+    public List<EventoClinico> ObtenerEventosCaballoRestantes(int id_caballo) throws SIGIPROException
+    {
         List<EventoClinico> resultado = new ArrayList<EventoClinico>();
         TipoEventoDAO dao = new TipoEventoDAO();
 
@@ -545,16 +589,18 @@ public class CaballoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
 
-    public boolean agregarPeso(Peso p) throws SIGIPROException {
+    public boolean agregarPeso(Peso p) throws SIGIPROException
+    {
 
         boolean resultado = false;
 
@@ -567,22 +613,25 @@ public class CaballoDAO {
 
             if (consulta.executeUpdate() != 1) {
                 throw new SQLException();
-            } else {
+            }
+            else {
                 resultado = true;
             }
 
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
             return resultado;
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al registrar el peso.");
         }
     }
 
-    public boolean editarPeso(Peso p) throws SIGIPROException {
+    public boolean editarPeso(Peso p) throws SIGIPROException
+    {
         boolean resultado = false;
 
         try {
@@ -594,22 +643,25 @@ public class CaballoDAO {
 
             if (consulta.executeUpdate() != 1) {
                 throw new SQLException();
-            } else {
+            }
+            else {
                 resultado = true;
             }
 
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
             return resultado;
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al editar el peso.");
         }
     }
 
-    public boolean eliminarPeso(int id_peso) throws SIGIPROException {
+    public boolean eliminarPeso(int id_peso) throws SIGIPROException
+    {
         boolean resultado = false;
 
         try {
@@ -619,31 +671,20 @@ public class CaballoDAO {
 
             if (consulta.executeUpdate() != 1) {
                 throw new SQLException();
-            } else {
+            }
+            else {
                 resultado = true;
             }
 
             consulta.close();
-            conexion.close();
+            cerrarConexion();
 
             return resultado;
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al elimianr el peso.");
         }
-    }
-
-    private Connection getConexion() {
-        try {
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
     }
 }

@@ -5,16 +5,15 @@
  */
 package com.icp.sigipro.caballeriza.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Method;
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,15 +25,10 @@ import java.util.List;
  *
  * @author Walter
  */
-public class SangriaDAO
+public class SangriaDAO extends DAO
 {
-
-    private Connection conexion;
-
     public SangriaDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public Sangria insertarSangria(Sangria s) throws SIGIPROException
@@ -202,6 +196,9 @@ public class SangriaDAO
                     caballo.setNumero_microchip(rs.getString("numero_microchip"));
                     caballo.setNumero(rs.getInt("numero"));
                     sangria_caballo.setCaballo(caballo);
+                    sangria_caballo.setParticipo_dia1(rs.getBoolean("participo_dia1"));
+                    sangria_caballo.setParticipo_dia2(rs.getBoolean("participo_dia2"));
+                    sangria_caballo.setParticipo_dia3(rs.getBoolean("participo_dia3"));
                     sangria_caballo.setLal_dia1(rs.getFloat("lal_dia1"));
                     sangria_caballo.setLal_dia2(rs.getFloat("lal_dia2"));
                     sangria_caballo.setLal_dia3(rs.getFloat("lal_dia3"));
@@ -382,7 +379,8 @@ public class SangriaDAO
                     " UPDATE caballeriza.sangrias_caballos "
                     + " SET sangre_dia" + dia + " = 0,"
                     + "     plasma_dia" + dia + " = 0,"
-                    + "     lal_dia" + dia + " = 0"
+                    + "     lal_dia" + dia + " = 0,"
+                    + "     participo_dia" + dia + " = false "
                     + " WHERE id_sangria = ?; "
             );
 
@@ -397,7 +395,8 @@ public class SangriaDAO
                     " UPDATE caballeriza.sangrias_caballos "
                     + " SET sangre_dia" + dia + " = ?, "
                     + "     plasma_dia" + dia + " = ?, "
-                    + "     lal_dia" + dia + " = ? "
+                    + "     lal_dia" + dia + " = ?, "
+                    + "     participo_dia" + dia + " = true "
                     + " WHERE id_sangria = ? AND id_caballo = ?; "
             );
 
@@ -620,35 +619,5 @@ public class SangriaDAO
             }
         }
         return s;
-    }
-
-    private Connection getConexion()
-    {
-        try {
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }
