@@ -11,6 +11,11 @@ SELECCION_INGRESOS = "#seleccion-usuario-ingreso";
 SELECCION_EGRESOS = "#seleccion-usuario-egreso";
 SELECCION_VER = "#seleccion-usuario-ver";
 
+
+MODAL_INGRESOS = "#modalAgregarUsuarioIngresos";
+MODAL_EGRESOS = "#modalAgregarUsuarioEgresos";
+MODAL_VER = "#modalAgregarUsuarioVer";
+
 validez_form_consumir = false;
 
 $(document).ready(function () {
@@ -95,15 +100,15 @@ $(document).ready(function () {
         crearSelectEditar(SELECCION_VER, T_VER_SELECTOR);
 
         $(".sb-agregar-ingresos").click(function () {
-            abrirModal("#modalAgregarUsuarioIngresos", SELECCION_INGRESOS, T_INGRESOS_SELECTOR);
+            abrirModal(MODAL_INGRESOS, SELECCION_INGRESOS, T_INGRESOS_SELECTOR);
         });
 
         $(".sb-agregar-egresos").click(function () {
-            abrirModal("#modalAgregarUsuarioEgresos", SELECCION_EGRESOS, T_EGRESOS_SELECTOR);
+            abrirModal(MODAL_EGRESOS, SELECCION_EGRESOS, T_EGRESOS_SELECTOR);
         });
 
         $(".sb-agregar-ver").click(function () {
-            abrirModal("#modalAgregarUsuarioVer", SELECCION_VER, T_VER_SELECTOR);
+            abrirModal(MODAL_VER, SELECCION_VER, T_VER_SELECTOR);
         });
     }
 });
@@ -125,6 +130,8 @@ function agregarUsuarioIngresos() {
             $(nuevaFila).attr("id", "ingreso-" + elemento.val());
         }
     }
+    
+    cerrarModal(MODAL_INGRESOS);
 }
 
 function eliminarUsuarioIngreso(id) {
@@ -152,6 +159,7 @@ function agregarUsuarioEgresos() {
             $(nuevaFila).attr("id", "egreso-" + elemento.val());
         }
     }
+    cerrarModal(MODAL_EGRESOS);
 }
 
 function eliminarUsuarioEgreso(id) {
@@ -179,6 +187,8 @@ function agregarUsuarioVer() {
             $(nuevaFila).attr("id", "ver-" + elemento.val());
         }
     }
+    
+    cerrarModal(MODAL_VER);
 }
 
 function eliminarUsuarioVer(id) {
@@ -226,4 +236,8 @@ function crearSelectEditar(selector_select, selector_tabla) {
 function abrirModal(modal_selector, select_selector, tabla_selector) {
     crearSelectEditar(select_selector, tabla_selector);
     $(modal_selector).modal("show");
+}
+
+function cerrarModal(modal_selector) {
+    $(modal_selector).modal("hide");
 }
