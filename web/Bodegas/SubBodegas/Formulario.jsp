@@ -82,7 +82,7 @@
                 <div class="widget-header">
                     <h3><i class="fa fa-sign-in"></i> Usuarios con permiso de ingresar artículos a sub bodega</h3>
                     <div class="btn-group widget-header-toolbar">
-                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUsuarioIngresos">Agregar</a>
+                        <a class="btn btn-primary btn-sm boton-accion sb-agregar-ingresos">Agregar</a>
                     </div>
                 </div>
                 <div class="widget-content">
@@ -96,7 +96,7 @@
                         <tbody>
                             <c:forEach items="${usuarios_ingresos}" var="usuario">
                                 <tr id="ingreso-${usuario.getId_usuario()}">
-                                    <td>${usuario.getNombre_completo()}</td>
+                                    <td>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</td>
                                     <td>
                                         <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarUsuarioIngreso(${usuario.getId_usuario()})" >Eliminar</button>
                                     </td>
@@ -114,7 +114,7 @@
                 <div class="widget-header">
                     <h3><i class="fa fa-sign-out"></i> Usuarios con permiso de sacar artículos de sub bodega</h3>
                     <div class="btn-group widget-header-toolbar">
-                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUsuarioEgresos">Agregar</a>
+                        <a class="btn btn-primary btn-sm boton-accion sb-agregar-egresos">Agregar</a>
                     </div>
                 </div>
                 <div class="widget-content">
@@ -128,7 +128,7 @@
                         <tbody>
                             <c:forEach items="${usuarios_egresos}" var="usuario">
                                 <tr id="egreso-${usuario.getId_usuario()}">
-                                    <td>${usuario.getNombre_completo()}</td>
+                                    <td>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</td>
                                     <td>
                                         <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarUsuarioEgreso(${usuario.getId_usuario()})" >Eliminar</button>
                                     </td>
@@ -146,7 +146,7 @@
                 <div class="widget-header">
                     <h3><i class="fa fa-eye"></i> Usuarios con permiso de ver inventario de sub bodega</h3>
                     <div class="btn-group widget-header-toolbar">
-                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarUsuarioVer">Agregar</a>
+                        <a class="btn btn-primary btn-sm boton-accion sb-agregar-ver">Agregar</a>
                     </div>
                 </div>
                 <div class="widget-content">
@@ -160,7 +160,7 @@
                         <tbody>
                             <c:forEach items="${usuarios_ver}" var="usuario">
                                 <tr id="ver-${usuario.getId_usuario()}">
-                                    <td>${usuario.getNombre_completo()}</td>
+                                    <td>${usuario.getNombre_completo()} (${usuario.getNombre_usuario()})</td>
                                     <td>
                                         <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarUsuarioVer(${usuario.getId_usuario()})" >Eliminar</button>
                                     </td>
@@ -202,7 +202,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-ingreso" class="select2" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
+                        <select id="seleccion-usuario-ingreso" class="select2 select2-sub-bodegas" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
@@ -215,7 +215,7 @@
         </form>
         <div class="form-group">
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cerrar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                 <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarUsuarioIngresos()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
             </div>
         </div>
@@ -233,7 +233,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-egreso" class="select2" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
+                        <select id="seleccion-usuario-egreso" class="select2 select2-sub-bodegas" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
@@ -246,7 +246,7 @@
         </form>
         <div class="form-group">
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cerrar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                 <button id="btn-agregar-ubicacion" type="button" class="btn btn-primary" onclick="agregarUsuarioEgresos()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
             </div>
         </div>
@@ -264,7 +264,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccion-usuario-ver" class="select2" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
+                        <select id="seleccion-usuario-ver" class="select2 select2-sub-bodegas" style='background-color: #fff;' name="id-usuario" multiple="multiple" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${usuarios}" var="usuario">
