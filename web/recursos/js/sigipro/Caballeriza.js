@@ -197,19 +197,7 @@ function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
 }
 
 $(document).ready(function () {
-
-    $("select[name='tipoevento']").on('change', function () {
-        var split = $(this).val().split(",");
-
-        $("textarea ").val(split[1]);
-    });
-
-    $("select[name='eventoModal']").on('change', function () {
-        var split = $(this).val().split("|");
-
-        $("textarea ").val(split[1]);
-    });
-
+    
     $("#seleccionInoculoGrupo").change(function () {
         var id_grupo = $(this).val();
 
