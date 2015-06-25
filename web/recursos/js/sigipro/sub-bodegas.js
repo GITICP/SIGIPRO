@@ -22,10 +22,6 @@ $(document).ready(function () {
         $(this).submit();
     });
 
-    eliminarOpciones(T_INGRESOS_SELECTOR, SELECCION_INGRESOS);
-    eliminarOpciones(T_EGRESOS_SELECTOR, SELECCION_EGRESOS);
-    eliminarOpciones(T_VER_SELECTOR, SELECCION_VER);
-
     var configuracion = {
         "paging": false,
         "ordering": false,
@@ -89,6 +85,27 @@ $(document).ready(function () {
     $('#form-consumir-inventario-sub-bodega').submit(function () {
         return validez_form_consumir;
     });
+
+    var selects_sub_bodegas = $('.select2-sub-bodegas');
+
+    if (selects_sub_bodegas.length > 1) {
+
+        crearSelectEditar(SELECCION_INGRESOS, T_INGRESOS_SELECTOR);
+        crearSelectEditar(SELECCION_EGRESOS, T_EGRESOS_SELECTOR);
+        crearSelectEditar(SELECCION_VER, T_VER_SELECTOR);
+
+        $(".sb-agregar-ingresos").click(function () {
+            abrirModal("#modalAgregarUsuarioIngresos", SELECCION_INGRESOS, T_INGRESOS_SELECTOR);
+        });
+
+        $(".sb-agregar-egresos").click(function () {
+            abrirModal("#modalAgregarUsuarioEgresos", SELECCION_EGRESOS, T_EGRESOS_SELECTOR);
+        });
+
+        $(".sb-agregar-ver").click(function () {
+            abrirModal("#modalAgregarUsuarioVer", SELECCION_VER, T_VER_SELECTOR);
+        });
+    }
 });
 
 // -- Ingresos -- //
@@ -97,14 +114,16 @@ function agregarUsuarioIngresos() {
     $(T_INGRESOS_SELECTOR).dataTable().fnClearTable();
     var select = $(SELECCION_INGRESOS);
     var usuariosSeleccionados = select.val();
-    for (var i = 0; i < usuariosSeleccionados.length; i++) {
-        var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
-        
-        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioIngreso(" + elemento.val() + ")>");
-        botonEliminar.text("Eliminar");
-        
-        var nuevaFila = tIngresos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
-        $(nuevaFila).attr("id", "ingreso-" + elemento.val());
+    if (usuariosSeleccionados !== null) {
+        for (var i = 0; i < usuariosSeleccionados.length; i++) {
+            var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
+
+            var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioIngreso(" + elemento.val() + ")>");
+            botonEliminar.text("Eliminar");
+
+            var nuevaFila = tIngresos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+            $(nuevaFila).attr("id", "ingreso-" + elemento.val());
+        }
     }
 }
 
@@ -112,7 +131,7 @@ function eliminarUsuarioIngreso(id) {
     var fila = tIngresos.row('#ingreso-' + id);
 
     fila.remove().draw();
-    
+
     eliminarDeSelect(id, SELECCION_INGRESOS);
 }
 
@@ -122,14 +141,16 @@ function agregarUsuarioEgresos() {
     $(T_EGRESOS_SELECTOR).dataTable().fnClearTable();
     var select = $(SELECCION_EGRESOS);
     var usuariosSeleccionados = select.val();
-    for (var i = 0; i < usuariosSeleccionados.length; i++) {
-        var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
-        
-        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioEgreso(" + elemento.val() + ")>");
-        botonEliminar.text("Eliminar");
-        
-        var nuevaFila = tEgresos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
-        $(nuevaFila).attr("id", "egreso-" + elemento.val());
+    if (usuariosSeleccionados !== null) {
+        for (var i = 0; i < usuariosSeleccionados.length; i++) {
+            var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
+
+            var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioEgreso(" + elemento.val() + ")>");
+            botonEliminar.text("Eliminar");
+
+            var nuevaFila = tEgresos.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+            $(nuevaFila).attr("id", "egreso-" + elemento.val());
+        }
     }
 }
 
@@ -147,14 +168,16 @@ function agregarUsuarioVer() {
     $(T_VER_SELECTOR).dataTable().fnClearTable();
     var select = $(SELECCION_VER);
     var usuariosSeleccionados = select.val();
-    for (var i = 0; i < usuariosSeleccionados.length; i++) {
-        var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
-        
-        var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioVer(" + elemento.val() + ")>");
-        botonEliminar.text("Eliminar");
-        
-        var nuevaFila = tVer.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
-        $(nuevaFila).attr("id", "ver-" + elemento.val());
+    if (usuariosSeleccionados !== null) {
+        for (var i = 0; i < usuariosSeleccionados.length; i++) {
+            var elemento = select.find("option[value=" + usuariosSeleccionados[i] + "]");
+
+            var botonEliminar = $("<button type='button' class='btn btn-danger btn-sm' style='margin-left:7px;margin-right:5px;' onclick=eliminarUsuarioVer(" + elemento.val() + ")>");
+            botonEliminar.text("Eliminar");
+
+            var nuevaFila = tVer.row.add([elemento.text(), botonEliminar[0].outerHTML]).draw().node();
+            $(nuevaFila).attr("id", "ver-" + elemento.val());
+        }
     }
 }
 
@@ -178,18 +201,29 @@ function llenarCampoAsociacion(string_pivote, tabla, campo_escondido) {
     campo_escondido.val(asociacionCodificada);
 }
 
-function eliminarOpciones(selector_tabla, selector_seleccion) {
-    var elemento_seleccion = $(selector_seleccion);
-    $(selector_tabla).find('tr[id]').each(function () {
-        var id = $(this).attr('id').split('-')[1];
-        elemento_seleccion.find('option[value=' + id + ']').remove();
-    });
-}
-
 function eliminarDeSelect(id, selector_select) {
     var select = $(selector_select);
     var valor = select.val();
     var indice = valor.indexOf(id.toString());
     valor.splice(indice, 1);
     select.select2("val", valor);
+}
+
+function crearSelectEditar(selector_select, selector_tabla) {
+    var filas = $(selector_tabla + ' tbody tr');
+    var select = $(selector_select);
+    var valor = [];
+
+    if (filas.find(".dataTables_empty").length === 0) {
+        filas.each(function () {
+            valor.push($(this).attr('id').split('-')[1]);
+        });
+    }
+
+    select.select2("val", valor);
+}
+
+function abrirModal(modal_selector, select_selector, tabla_selector) {
+    crearSelectEditar(select_selector, tabla_selector);
+    $(modal_selector).modal("show");
 }
