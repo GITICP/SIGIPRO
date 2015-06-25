@@ -84,7 +84,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input  type="number" min="1" id="cantidad_paridos" value="${cruce.getCantidad_paridos()}"  name="cantidad_paridos"  class="form-control"
+            <input  type="number" min="0" id="cantidad_paridos" value="${cruce.getCantidad_paridos()}"  name="cantidad_paridos"  class="form-control"
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">      
           </div>
