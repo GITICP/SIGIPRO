@@ -50,7 +50,7 @@ CREATE TABLE control_calidad.certificados_reactivos (
 -- Table: equipos
 CREATE TABLE control_calidad.equipos (
     id_equipo serial  NOT NULL,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(50) NOT NULL,
     descripcion varchar(500)  NULL,
     id_tipo_equipo int  NOT NULL,
     CONSTRAINT equipos_pk PRIMARY KEY (id_equipo)
@@ -91,7 +91,7 @@ CREATE TABLE control_calidad.muestras (
 -- Table: tipos_muestras
 CREATE TABLE control_calidad.tipos_muestras (
     id_tipo_muestra serial NOT NULL,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(50) NOT NULL,
     descripcion varchar(500) NOT NULL,
     CONSTRAINT tipos_muestras_pk PRIMARY KEY (id_tipo_muestra)
 );
@@ -110,7 +110,7 @@ CREATE TABLE control_calidad.tipos_muestras_analisis (
 -- Table: reactivos
 CREATE TABLE control_calidad.reactivos (
     id_reactivo serial  NOT NULL,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(50) NOT NULL,
     id_tipo_reactivo int  NOT NULL,
     preparacion varchar(500)  NULL,
     CONSTRAINT reactivos_pk PRIMARY KEY (id_reactivo)
@@ -146,7 +146,7 @@ CREATE TABLE control_calidad.solicitudes (
 -- Table: tipos_equipos
 CREATE TABLE control_calidad.tipos_equipos (
     id_tipo_equipo serial  NOT NULL,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(50) NOT NULL,
     descripcion varchar(500) NULL,
     CONSTRAINT tipos_equipos_pk PRIMARY KEY (id_tipo_equipo)
 );
@@ -165,7 +165,7 @@ CREATE TABLE control_calidad.tipos_equipos_analisis (
 -- Table: tipos_reactivos
 CREATE TABLE control_calidad.tipos_reactivos (
     id_tipo_reactivo serial  NOT NULL,
-    nombre varchar(20)  NOT NULL,
+    nombre varchar(50)  NOT NULL,
     machote varchar(500) NULL,
     CONSTRAINT tipos_reactivos_pk PRIMARY KEY (id_tipo_reactivo)
 );

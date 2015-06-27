@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.core;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -20,9 +21,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
@@ -33,6 +31,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public abstract class SIGIPROServlet extends HttpServlet
 {   
     protected final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    protected final BitacoraDAO bitacora = new BitacoraDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
