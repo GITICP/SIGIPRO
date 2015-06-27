@@ -270,7 +270,6 @@ public class CaballoDAO extends DAO
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setNumero(rs.getInt("numero"));
-                caballo.setImagenes(this.obtenerImagenesCaballo(id_caballo));
 
                 if (rs.getDate("fecha") != null) {
                     do {
@@ -316,8 +315,25 @@ public class CaballoDAO extends DAO
                 caballo.agregarEvento(evento);
             }
 
+            List<Imagen> imagenes = new ArrayList<Imagen>();
+            PreparedStatement consulta_imagenes = getConexion().prepareStatement(" SELECT * FROM caballeriza.imagenes WHERE id_caballo=?; ");
+            consulta_imagenes.setInt(1, id_caballo);
+            ResultSet rs_imagenes = consulta_imagenes.executeQuery();
+            while (rs_imagenes.next()) {
+                Imagen imagen = new Imagen();
+                imagen.setId_caballo(id_caballo);
+                imagen.setId_imagen(rs_imagenes.getInt("id_imagen"));
+                imagen.setImagen(rs_imagenes.getBytes("imagen"));
+                imagen.setImagen_tamano(imagen.getImagen().length);
+                imagenes.add(imagen);
+            }
+
+            caballo.setImagenes(imagenes);
+
+            rs_imagenes.close();
             rs_eventos.close();
             rs.close();
+            consulta_imagenes.close();
             consulta_eventos.close();
             consulta.close();
             cerrarConexion();
@@ -333,20 +349,19 @@ public class CaballoDAO extends DAO
     {
         List<Imagen> respuesta = new ArrayList<Imagen>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.imagenes WHERE id_caballo=?; ");
-            consulta.setInt(1, id_caballo);
-            ResultSet rs = consulta.executeQuery();
-            while (rs.next()) {
+            PreparedStatement consulta_imagenes = getConexion().prepareStatement(" SELECT * FROM caballeriza.imagenes WHERE id_caballo=?; ");
+            consulta_imagenes.setInt(1, id_caballo);
+            ResultSet rs_imagenes = consulta_imagenes.executeQuery();
+            while (rs_imagenes.next()) {
                 Imagen imagen = new Imagen();
                 imagen.setId_caballo(id_caballo);
-                imagen.setId_imagen(rs.getInt("id_imagen"));
-                imagen.setImagen(rs.getBytes("imagen"));
+                imagen.setId_imagen(rs_imagenes.getInt("id_imagen"));
+                imagen.setImagen(rs_imagenes.getBytes("imagen"));
                 imagen.setImagen_tamano(imagen.getImagen().length);
                 respuesta.add(imagen);
             }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
+            rs_imagenes.close();
+            consulta_imagenes.close();
         }
         catch (Exception ex) {
             ex.printStackTrace();

@@ -5,9 +5,7 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
-import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.Prestamo;
@@ -19,7 +17,6 @@ import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -294,7 +291,7 @@ public class SolicitudDAO extends DAO
                 codigo_consulta = parte_1 
                                   + " SELECT s.* FROM bodega.solicitudes s "
                                   + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND (( estado in ('Pendiente','Aprobada') ) OR ( (estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < fecha_entrega) )) "
+                                  + " WHERE u.id_seccion = ? AND (( s.estado in ('Pendiente','Aprobada') ) OR ( (s.estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < s.fecha_entrega) )) "
                                   + " ORDER BY s.id_solicitud DESC " 
                                   + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
@@ -398,7 +395,7 @@ public class SolicitudDAO extends DAO
             else {
                 codigo_consulta = parte_1 + " SELECT s.* FROM bodega.solicitudes s "
                                   + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
+                                  + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR s.estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
                 consulta.setInt(1, seccion_usuario);
             }

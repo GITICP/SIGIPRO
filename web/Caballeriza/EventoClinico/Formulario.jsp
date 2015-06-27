@@ -80,19 +80,19 @@
             </div>  
         </div>
         <div class="col-md-6">
-            <label for="descripcion" class="control-label">*Descripción</label>
+            <label for="descripcion" class="control-label">Descripción</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea rows="5" cols="50" maxlength="500" placeholder="Descripción" class="form-control" name="descripcion" id="descripcion" required oninvalid="setCustomValidity('Este campo es requerido ')" oninput="setCustomValidity('')">${evento.getDescripcion()}</textarea>
+                        <textarea rows="5" cols="50" maxlength="500" placeholder="Descripción" class="form-control" name="descripcion" id="descripcion" oninvalid="setCustomValidity('Este campo es requerido ')" oninput="setCustomValidity('')">${evento.getDescripcion()}</textarea>
                     </div>
                 </div>
             </div>
-            <label for="observaciones" class="control-label">*Observaciones</label>
+            <label for="observaciones" class="control-label">Observaciones</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones del evento" class="form-control" name="observaciones" id="observaciones" required oninvalid="setCustomValidity('Este campo es requerido ')" oninput="setCustomValidity('')">${evento.getObservaciones()}</textarea>
+                        <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones del evento" class="form-control" name="observaciones" id="observaciones" oninvalid="setCustomValidity('Este campo es requerido ')" oninput="setCustomValidity('')">${evento.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>
