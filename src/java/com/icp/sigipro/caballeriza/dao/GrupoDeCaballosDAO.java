@@ -85,12 +85,9 @@ public class GrupoDeCaballosDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (consulta != null) {
-                    consulta.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
+                cerrarSilencioso(resultadoConsulta);
+                cerrarSilencioso(consulta);
+                cerrarSilencioso(consulta_caballos);
                 cerrarConexion();
             }
             catch (SQLException ex_operaciones) {
@@ -177,12 +174,8 @@ public class GrupoDeCaballosDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (consulta != null) {
-                    consulta.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
+                cerrarSilencioso(consulta);
+                cerrarSilencioso(consulta_caballos);
                 cerrarConexion();
             }
             catch (SQLException ex_operaciones) {
@@ -197,10 +190,12 @@ public class GrupoDeCaballosDAO extends DAO
     public GrupoDeCaballos obtenerGrupoDeCaballos(int id_grupo_caballo)
     {
         GrupoDeCaballos grupodecaballos = new GrupoDeCaballos();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.grupos_de_caballos where id_grupo_de_caballo = ?");
+            consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.grupos_de_caballos where id_grupo_de_caballo = ?");
             consulta.setInt(1, id_grupo_caballo);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 grupodecaballos.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
                 grupodecaballos.setNombre(rs.getString("nombre"));
@@ -209,6 +204,10 @@ public class GrupoDeCaballosDAO extends DAO
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }
+        finally{
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
         }
         return grupodecaballos;
     }
