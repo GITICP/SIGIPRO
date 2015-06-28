@@ -186,8 +186,6 @@ public class ControladorCaballo extends SIGIPROServlet {
 
         GrupoDeCaballosDAO grupodao = new GrupoDeCaballosDAO();
         List<GrupoDeCaballos> listagrupos = grupodao.obtenerGruposDeCaballos();
-        List<EventoClinico> listaeventosrestantes = dao.ObtenerEventosCaballoRestantes(id_caballo);
-        List<EventoClinico> listaeventos = dao.ObtenerEventosCaballo(id_caballo);
         request.setAttribute("listagrupos", listagrupos);
         //Numeros para iterar las imagenes faltantes
         request.setAttribute("empieza", empieza);
@@ -197,8 +195,6 @@ public class ControladorCaballo extends SIGIPROServlet {
         request.setAttribute("accion", "Editar");
         request.setAttribute("sexos", Caballo.SEXOS);
         request.setAttribute("estados", Caballo.ESTADOS);
-        request.setAttribute("listaEventosRestantes", listaeventosrestantes);
-        request.setAttribute("listaEventos", listaeventos);
         redireccionar(request, response, redireccion);
     }
 
