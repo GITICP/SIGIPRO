@@ -60,6 +60,7 @@ public class CaballoDAO extends DAO
                 resultado = true;
                 c.setId_caballo(resultadoConsulta.getInt("id_caballo"));
             }
+            resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
         }
@@ -190,7 +191,6 @@ public class CaballoDAO extends DAO
             consulta.setString(1, Caballo.VIVO);
 
             ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
 
             while (rs.next()) {
                 Caballo caballo = new Caballo();
@@ -359,6 +359,7 @@ public class CaballoDAO extends DAO
                 caballo.setNumero(rs.getInt("numero"));
                 resultado.add(caballo);
             }
+            rs.close();
             consulta.close();
             cerrarConexion();
         }
