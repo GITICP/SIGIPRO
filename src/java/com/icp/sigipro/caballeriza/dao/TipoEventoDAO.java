@@ -39,6 +39,7 @@ public class TipoEventoDAO extends DAO
                 resultado = true;
                 te.setId_tipo_evento(resultadoConsulta.getInt("id_tipo_evento"));
             }
+            resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
         }
