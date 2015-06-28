@@ -181,39 +181,6 @@ public class CaballoDAO extends DAO
         return resultado;
     }
 
-    public List<Caballo> obtenerCaballosGrupo(int id_grupo_de_caballo)
-    {
-        List<Caballo> resultado = new ArrayList<Caballo>();
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos where id_grupo_de_caballo = ?");
-            consulta.setInt(1, id_grupo_de_caballo);
-            ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
-            while (rs.next()) {
-                Caballo caballo = new Caballo();
-                caballo.setId_caballo(rs.getInt("id_caballo"));
-                caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getString("numero_microchip"));
-                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
-                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
-                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                caballo.setSexo(rs.getString("sexo"));
-                caballo.setColor(rs.getString("color"));
-                caballo.setOtras_sennas(rs.getString("otras_sennas"));
-                caballo.setEstado(rs.getString("estado"));
-                caballo.setNumero(rs.getInt("numero"));
-                resultado.add(caballo);
-            }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return resultado;
-    }
-
     public List<Caballo> obtenerCaballosRestantes()
     {
         List<Caballo> resultado = new ArrayList<Caballo>();
