@@ -190,7 +190,7 @@ public class CaballoDAO extends DAO
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT c.*, g.nombre as nombre_grupo, g.descripcion as descripcion_grupo, pc.id_peso, pc.peso, pc.fecha "
                     + " FROM caballeriza.caballos c "
-                    + "     INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = c.id_grupo_de_caballo "
+                    + "     LEFT JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = c.id_grupo_de_caballo "
                     + "     LEFT JOIN caballeriza.pesos_caballos pc ON pc.id_caballo = ? "
                     + " WHERE c.id_caballo = ? "
             );
@@ -208,7 +208,7 @@ public class CaballoDAO extends DAO
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setNumero(rs.getInt("numero"));
-                
+
                 GrupoDeCaballos grupo = new GrupoDeCaballos();
                 grupo.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
                 grupo.setNombre(rs.getString("nombre_grupo"));
@@ -321,11 +321,10 @@ public class CaballoDAO extends DAO
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT c.*, g.nombre as nombre_grupo, g.descripcion as descripcion_grupo "
                     + " FROM caballeriza.caballos c "
-                    + " INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = c.id_grupo_de_caballo; "
+                    + " LEFT JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = c.id_grupo_de_caballo; "
             );
-            
+
             ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
             while (rs.next()) {
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
@@ -338,13 +337,16 @@ public class CaballoDAO extends DAO
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setNumero(rs.getInt("numero"));
-                
-                GrupoDeCaballos grupo = new GrupoDeCaballos();
-                grupo.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
-                grupo.setDescripcion(rs.getString("descripcion_grupo"));
-                grupo.setNombre(rs.getString("nombre_grupo"));
-                caballo.setGrupo_de_caballos(grupo);
-                
+
+                int id_grupo_caballo = rs.getInt("id_grupo_de_caballo");
+                if (id_grupo_caballo != 0) {
+                    GrupoDeCaballos grupo = new GrupoDeCaballos();
+                    grupo.setId_grupo_caballo(id_grupo_caballo);
+                    grupo.setDescripcion(rs.getString("descripcion_grupo"));
+                    grupo.setNombre(rs.getString("nombre_grupo"));
+                    caballo.setGrupo_de_caballos(grupo);
+                }
+
                 resultado.add(caballo);
             }
             rs.close();

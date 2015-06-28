@@ -28,7 +28,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input type="number" placeholder="Número de Caballo" class="form-control" name="numero_caballo" value=${(caballo.getNumero()!=0) ? caballo.getNumero() : ""} required
-                               oninvalid="setCustomValidity('Este campo es requerido ')" ${(caballo.getNumero()!=0) ? "disabled" : ""}
+                               oninvalid="setCustomValidity('Este campo es requerido ')" ${(caballo.getNumero()!=0 && accion=='Editar') ? "disabled" : ""}
                                oninput="setCustomValidity('')"> 
                     </div>
                 </div>

@@ -208,6 +208,7 @@ public class GrupoDeCaballosDAO extends DAO
         finally{
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return grupodecaballos;
     }
