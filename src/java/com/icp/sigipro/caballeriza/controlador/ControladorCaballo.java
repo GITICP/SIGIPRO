@@ -228,7 +228,6 @@ public class ControladorCaballo extends SIGIPROServlet {
             } else {
                 resultado = dao.editarCaballo(c);
 
-                HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
                 if (resultado) {
                     //Funcion que genera la bitacora
                     BitacoraDAO bitacora = new BitacoraDAO();
