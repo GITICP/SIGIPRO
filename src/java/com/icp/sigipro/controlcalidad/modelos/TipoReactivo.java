@@ -15,8 +15,17 @@ import org.json.JSONObject;
 public class TipoReactivo {
     private int id_tipo_reactivo;
     private String nombre;
+    private String descripcion;
 
     public TipoReactivo() {
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public int getId_tipo_reactivo() {

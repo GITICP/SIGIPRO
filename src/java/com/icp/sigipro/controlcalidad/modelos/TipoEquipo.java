@@ -15,9 +15,20 @@ import org.json.JSONObject;
 public class TipoEquipo {
     private int id_tipo_equipo;
     private String nombre;
+    private String descripcion;
 
     public TipoEquipo() {
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    
+    
 
     public int getId_tipo_equipo() {
         return id_tipo_equipo;

@@ -412,6 +412,11 @@ ALTER TABLE control_calidad.tipos_muestras_analisis ADD CONSTRAINT tipos_muestra
     INITIALLY IMMEDIATE 
 ;
 
+ALTER TABLE control_calidad.tipos_equipos
+ADD COLUMN descripcion varchar(500);
+
+ALTER TABLE control_calidad.tipos_reactivos
+ADD COLUMN descripcion varchar(500);
 
 -- End of file.
 
