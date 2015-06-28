@@ -417,6 +417,7 @@ public class EventoClinicoDAO extends DAO
                 eventoclinico.setId_evento(rs.getInt("id_evento"));
                 eventoclinico.setFecha(rs.getDate("fecha"));
                 eventoclinico.setDescripcion(rs.getString("descripcion"));
+                eventoclinico.setObservaciones(rs.getString("observaciones"));
 
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));

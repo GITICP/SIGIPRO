@@ -136,9 +136,9 @@
                                                     </c:choose>
                                                     <c:choose>
                                                         <c:when test="${sangria_caballo.isParticipo_dia2()}">
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia1() == 0) ? sin_datos : sangria_caballo.getPlasma_dia1()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia1() == 0)    ? sin_datos : sangria_caballo.getLal_dia1()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia2() == 0) ? sin_datos : sangria_caballo.getSangre_dia2()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia2() == 0) ? sin_datos : sangria_caballo.getPlasma_dia2()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia2() == 0)    ? sin_datos : sangria_caballo.getLal_dia2()}</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
@@ -148,9 +148,9 @@
                                                     </c:choose>
                                                     <c:choose>
                                                         <c:when test="${sangria_caballo.isParticipo_dia3()}">
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia2() == 0) ? sin_datos : sangria_caballo.getSangre_dia2()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia2() == 0) ? sin_datos : sangria_caballo.getPlasma_dia2()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia2() == 0)    ? sin_datos : sangria_caballo.getLal_dia2()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia3() == 0) ? sin_datos : sangria_caballo.getSangre_dia3()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia3() == 0) ? sin_datos : sangria_caballo.getPlasma_dia3()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia3() == 0)    ? sin_datos : sangria_caballo.getLal_dia3()}</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>

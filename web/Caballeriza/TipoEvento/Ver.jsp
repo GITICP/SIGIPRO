@@ -69,16 +69,24 @@
                                     <h3><i class="fa fa-check"></i> Eventos del Tipo Asociados</h3>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="eventos-tipo" class="table table-sorting table-striped table-hover datatable">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" data-columna-filtro="1">
                                         <thead>
                                             <tr>
+                                                <th>Identificador</th>
+                                                <th>Fecha</th>
                                                 <th>Descripción</th>
+                                                <th>Observaciones</th>
+                                                <th>Responsable</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${eventos}" var="evento">
                                                 <tr id="${evento.getId_evento()}">
+                                                    <td>${evento.getId_evento()}</td>
+                                                    <td>${evento.getFechaAsString()}</td>
                                                     <td>${evento.getDescripcion()}</td>
+                                                    <td>${evento.getObservaciones()}</td>
+                                                    <td>${evento.getResponsable().getNombre_completo()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
