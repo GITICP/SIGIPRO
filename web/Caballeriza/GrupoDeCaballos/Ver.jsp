@@ -24,7 +24,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/GrupoDeCaballos?">Grupos de Caballos</a>
                         </li>
-                        <li class="active"> ${grupodecaballos.getNombre()} </li>
+                        <li class="active"> Grupo de Caballos ${grupodecaballos.getNombre()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="sigipro-horse-2"></i> ${grupodecaballos.getNombre()} </h3>
+                            <h3><i class="sigipro-horse-2"></i>  Grupo de Caballos ${grupodecaballos.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEliminar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">

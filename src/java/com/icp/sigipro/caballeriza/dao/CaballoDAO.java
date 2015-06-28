@@ -436,7 +436,7 @@ public class CaballoDAO extends DAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    "select s.id_sangria, fecha_dia1, sangre_dia1, sangre_dia2, sangre_dia3, plasma_dia1, plasma_dia2, plasma_dia3, lal_dia1, lal_dia2, lal_dia3 "
+                    "select s.id_sangria, fecha_dia1, sangre_dia1, sangre_dia2, sangre_dia3, plasma_dia1, plasma_dia2, plasma_dia3, lal_dia1, lal_dia2, lal_dia3, participo_dia1, participo_dia2, participo_dia3 "
                     + " from caballeriza.sangrias s "
                     + " left outer join caballeriza.sangrias_caballos sc "
                     + " on s.id_sangria= sc.id_sangria "
@@ -458,6 +458,9 @@ public class CaballoDAO extends DAO
                 sangriac.setLal_dia1(rs.getFloat("lal_dia1"));
                 sangriac.setLal_dia2(rs.getFloat("lal_dia2"));
                 sangriac.setLal_dia3(rs.getFloat("lal_dia3"));
+                sangriac.setParticipo_dia1(rs.getBoolean("participo_dia1"));
+                sangriac.setParticipo_dia2(rs.getBoolean("participo_dia2"));
+                sangriac.setParticipo_dia3(rs.getBoolean("participo_dia3"));
                 resultado.add(sangriac);
             }
             rs.close();

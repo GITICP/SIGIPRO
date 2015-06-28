@@ -21,9 +21,9 @@
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangría</a>
+                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
-                        <li class="active"> ${sangria.getId_sangria_especial()} </li>
+                        <li class="active"> Sangría ${sangria.getId_sangria_especial()} </li>
                     </ul>
                 </div>
             </div>
