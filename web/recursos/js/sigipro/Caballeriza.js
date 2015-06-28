@@ -1,9 +1,12 @@
+/* global tEventos, tCaballos */
+
 // Variables globales de tablas
 tEventos = null;
 tCaballos = null;
 valor_fecha_hoy = null;
 T_EVENTOS_SELECTOR = "#caballos-evento";
 T_CABALLOS_SELECTOR = "#caballos-grupo";
+SELECTOR_SELECT_CABALLOS_GRUPO = "#seleccioncaballo";
 
 $(document).ready(function () {
     var hoy = new Date();
@@ -132,6 +135,11 @@ $(document).ready(function () {
             });
         }
     });
+    
+    var select_caballos_grupo = $(SELECTOR_SELECT_CABALLOS_GRUPO);
+    if (select_caballos_grupo.length >= 1) {
+        crearSelectEditar(SELECTOR_SELECT_CABALLOS_GRUPO);
+    }
 });
 
 // -- Caballos -- //
@@ -301,5 +309,19 @@ function eliminarDeSelect(id, selector_select) {
     var valor = select.val();
     var indice = valor.indexOf(id.toString());
     valor.splice(indice, 1);
+    select.select2("val", valor);
+}
+
+function crearSelectEditar(selector_select) {
+    var filas = $(T_CABALLOS_SELECTOR + ' tbody tr');
+    var select = $(selector_select);
+    var valor = [];
+
+    if (filas.find(".dataTables_empty").length === 0) {
+        filas.each(function () {
+            valor.push($(this).attr('id').split('-')[1]);
+        });
+    }
+
     select.select2("val", valor);
 }

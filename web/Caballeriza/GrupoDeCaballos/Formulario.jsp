@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="widget-content">
-                <table id="caballos-grupo" class="table table-sorting table-striped table-hover datatable">
+                <table id="caballos-grupo" class="table table-sorting table-striped table-hover datatable tablaSigipro">
                     <thead>
                         <tr>
                             <th>Nombre y Número de Caballo</th>
@@ -105,6 +105,9 @@
                             <option value=''></option>
                             <c:forEach items="${caballos_restantes}" var="caballo">
                                 <option value=${caballo.getId_caballo()}>${caballo.getNombre()} (${caballo.getNumero()})</option>
+                            </c:forEach>
+                            <c:forEach items="${caballos}" var="caballo">
+                                <option value="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero()})</option>
                             </c:forEach>
                         </select>
                     </div>

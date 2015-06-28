@@ -69,10 +69,10 @@
                                     <h3><i class="fa fa-check"></i> Caballos del Grupo de Caballos Asociados</h3>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                                         <thead>
                                             <tr>
-                                                <th>Nombre y Numero de Caballo</th>
+                                                <th>Nombre y Número de Caballo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
