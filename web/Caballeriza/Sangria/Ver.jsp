@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">Nombre y Número de Caballo</th>

@@ -11,6 +11,7 @@ import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Imagen;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.caballeriza.modelos.Peso;
+import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
@@ -434,21 +435,41 @@ public class CaballoDAO extends DAO
     {
         List<SangriaCaballo> resultado = new ArrayList<SangriaCaballo>();
 
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    "select s.id_sangria, fecha_dia1, sangre_dia1, sangre_dia2, sangre_dia3, plasma_dia1, plasma_dia2, plasma_dia3, lal_dia1, lal_dia2, lal_dia3, participo_dia1, participo_dia2, participo_dia3 "
-                    + " from caballeriza.sangrias s "
-                    + " left outer join caballeriza.sangrias_caballos sc "
-                    + " on s.id_sangria= sc.id_sangria "
-                    + " where id_caballo=?; "
-            );
-            consulta.setInt(1, id_caballo);
-            ResultSet rs = consulta.executeQuery();
-            SangriaDAO sdao = new SangriaDAO();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
 
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT s.id_sangria, s.fecha, s.fecha_dia1, s.fecha_dia2, s.fecha_dia3, "
+                    + " g.id_grupo_de_caballo, g.nombre, "
+                    + " sc.sangre_dia1, sc.sangre_dia2, sc.sangre_dia3, sc.plasma_dia1, sc.plasma_dia2, sc.plasma_dia3, sc.lal_dia1, sc.lal_dia2, sc.lal_dia3, sc.participo_dia1, sc.participo_dia2, sc.participo_dia3 "
+                    + " FROM caballeriza.sangrias s "
+                    + "     INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos "
+                    + "     LEFT OUTER JOIN caballeriza.sangrias_caballos sc ON s.id_sangria= sc.id_sangria"
+                    + " WHERE id_caballo=?; "
+            );
+
+            consulta.setInt(1, id_caballo);
+
+            rs = consulta.executeQuery();
+
+            
             while (rs.next()) {
+                Sangria s = new Sangria();
+                
+                s.setId_sangria(rs.getInt("id_sangria"));
+                s.setFecha(rs.getDate("fecha"));
+                s.setFecha_dia1(rs.getDate("fecha_dia1"));
+                s.setFecha_dia2(rs.getDate("fecha_dia2"));
+                s.setFecha_dia3(rs.getDate("fecha_dia3"));
+
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setNombre(rs.getString("nombre"));
+                g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                s.setGrupo(g);
+
                 SangriaCaballo sangriac = new SangriaCaballo();
-                sangriac.setSangria(sdao.obtenerSangria(rs.getInt("id_sangria")));
+                sangriac.setSangria(s);
                 sangriac.setSangre_dia1(rs.getFloat("sangre_dia1"));
                 sangriac.setSangre_dia2(rs.getFloat("sangre_dia2"));
                 sangriac.setSangre_dia3(rs.getFloat("sangre_dia3"));
@@ -461,17 +482,21 @@ public class CaballoDAO extends DAO
                 sangriac.setParticipo_dia1(rs.getBoolean("participo_dia1"));
                 sangriac.setParticipo_dia2(rs.getBoolean("participo_dia2"));
                 sangriac.setParticipo_dia3(rs.getBoolean("participo_dia3"));
+                
                 resultado.add(sangriac);
-            }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
 
+            }
         }
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
+        finally {
+            cerrarSilencioso(consulta);
+            cerrarSilencioso(rs);
+            cerrarConexion();
+        }
+
         return resultado;
     }
 

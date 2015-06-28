@@ -73,6 +73,10 @@ public class Sangria {
     {
         return fecha;
     }
+    
+    public String getFechaAsString() {
+        return formatearFecha(fecha);
+    }
 
     public void setFecha(Date fecha)
     {
