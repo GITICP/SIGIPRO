@@ -22,10 +22,11 @@ public class TipoReactivoDAO extends DAO {
     {
         boolean resultado = false;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_reactivos (nombre,descripcion) "
-                                                                        + " VALUES (?,?) RETURNING id_tipo_reactivo");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_reactivos (nombre,descripcion,machote) "
+                                                                        + " VALUES (?,?,?) RETURNING id_tipo_reactivo");
             consulta.setString(1, tiporeactivo.getNombre());
             consulta.setString(2, tiporeactivo.getDescripcion());
+            consulta.setString(3, tiporeactivo.getMachote());
             ResultSet rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -45,11 +46,12 @@ public class TipoReactivoDAO extends DAO {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_reactivos "
-                    + "SET nombre=?, descripcion=? "
+                    + "SET nombre=?, descripcion=?, machote=? "
                     + "WHERE id_tipo_reactivo = ?; ");
             consulta.setString(1, tiporeactivo.getNombre());
             consulta.setString(2, tiporeactivo.getDescripcion());
-            consulta.setInt(3, tiporeactivo.getId_tipo_reactivo());
+            consulta.setString(3, tiporeactivo.getMachote());
+            consulta.setInt(4, tiporeactivo.getId_tipo_reactivo());
             if (consulta.executeUpdate()==1) {
                 resultado = true;
             }
@@ -94,6 +96,7 @@ public class TipoReactivoDAO extends DAO {
                 resultado.setId_tipo_reactivo(rs.getInt("id_tipo_reactivo"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
+                resultado.setMachote(rs.getString("machote"));
             }
             consulta.close();
             cerrarConexion();

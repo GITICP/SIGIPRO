@@ -16,8 +16,17 @@ public class TipoReactivo {
     private int id_tipo_reactivo;
     private String nombre;
     private String descripcion;
+    private String machote;
 
     public TipoReactivo() {
+    }
+
+    public String getMachote() {
+        return machote;
+    }
+
+    public void setMachote(String machote) {
+        this.machote = machote;
     }
 
     public String getDescripcion() {

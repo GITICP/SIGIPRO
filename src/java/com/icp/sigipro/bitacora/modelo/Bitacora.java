@@ -66,6 +66,20 @@ public class Bitacora {
     public static final String TABLA_CATALOGOTEJIDO = "SERPENTARIO.CATALOGO_TEJIDO";
     public static final String TABLA_COLECCIONHUMEDA = "SERPENTARIO.COLECCION_HUMEDA";
     public static final String TABLA_RESTRICCION = "SERPENTARIO.RESTRICCION";
+    public static final String TABLA_TIPOEQUIPO = "CONTROL_CALIDAD.TIPOS_EQUIPOS";
+    public static final String TABLA_TIPOREACTIVO = "CONTROL_CALIDAD.TIPOS_REACTIVOS";
+    public static final String TABLA_EQUIPO = "CONTROL_CALIDAD.EQUIPOS";
+    public static final String TABLA_REACTIVOCC = "CONTROL_CALIDAD.REACTIVOS";
+    public static final String TABLA_ANALISIS = "CONTROL_CALIDAD.ANALISIS";
+    public static final String TABLA_ANALISISGRUPOSOLICITUD = "CONTROL_CALIDAD.ANALISIS_GRUPO_SOLICITUD";
+    public static final String TABLA_CERTIFICADOEQUIPO = "CONTROL_CALIDAD.CERTIFICADOS_EQUIPOS";
+    public static final String TABLA_CERTIFICADOREACTIVO = "CONTROL_CALIDAD.CERTIFICADOS_REACTIVOS";
+    public static final String TABLA_GRUPO = "CONTROL_CALIDAD.GRUPOS";
+    public static final String TABLA_MUESTRA = "CONTROL_CALIDAD.MUESTRAS";
+    public static final String TABLA_RESULTADO = "CONTROL_CALIDAD.RESULTADOS";
+    public static final String TABLA_SOLICITUDCC = "CONTROL_CALIDAD.SOLICITUDES";
+    public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
+
     
     
     
