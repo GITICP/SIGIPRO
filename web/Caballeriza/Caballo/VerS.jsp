@@ -69,6 +69,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <c:if test="${listaSangrias.size() == 0}">
+                                            <td colspan="8">No hay información disponible.</td>
+                                            </c:if>
                                             <c:set var="sin_datos" value="-"></c:set>
                                             <c:forEach items="${listaSangrias}" var="sangria">
                                                 <tr id ="${sangria.getSangria().getId_sangria()}">
