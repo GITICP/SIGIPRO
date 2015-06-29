@@ -26,7 +26,7 @@
             <li> 
               <a href="/SIGIPRO/Caballeriza/TipoEvento?">Tipos de Eventos</a>
             </li>
-            <li class="active">Tipo ${tipoevento.getNombre()}</li>
+            <li class="active">Tipo de Evento ${tipoevento.getNombre()}</li>
 
           </ul>
         </div>
@@ -43,7 +43,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-book"></i> Editar Tipo </h3>
+              <h3><i class="fa fa-book"></i> Editar Tipo de Evento ${tipoevento.getNombre()}</h3>
             </div>
             ${mensaje}
             <div class="widget-content">

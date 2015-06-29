@@ -20,7 +20,7 @@
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangría</a>
+                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
                     </ul>
                 </div>

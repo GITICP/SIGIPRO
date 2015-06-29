@@ -63,6 +63,8 @@ public class ControladorSangria extends SIGIPROServlet
             add("extraccion");
         }
     };
+    
+    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
@@ -181,7 +183,11 @@ public class ControladorSangria extends SIGIPROServlet
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
     }
+    
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
         String redireccion = "Sangria/Agregar.jsp";
@@ -283,7 +289,11 @@ public class ControladorSangria extends SIGIPROServlet
         }
         redireccionar(request, response, redireccion);
     }
+    
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Métodos modelo">
+    
     private Sangria construirObjeto(HttpServletRequest request)
     {
         Sangria sangria = new Sangria();
@@ -326,7 +336,11 @@ public class ControladorSangria extends SIGIPROServlet
 
         return sangria;
     }
+    
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
+    
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
@@ -353,5 +367,7 @@ public class ControladorSangria extends SIGIPROServlet
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    // </editor-fold>
 
 }

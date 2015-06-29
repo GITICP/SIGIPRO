@@ -24,7 +24,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/TipoEvento?">Tipos de Eventos</a>
                         </li>
-                        <li class="active"> ${tipoevento.getNombre()} </li>
+                        <li class="active"> Tipo de Evento ${tipoevento.getNombre()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${tipoevento.getNombre()} </h3>
+                            <h3><i class="fa fa-book"></i> Tipo de Evento ${tipoevento.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEliminar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -69,16 +69,24 @@
                                     <h3><i class="fa fa-check"></i> Eventos del Tipo Asociados</h3>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="eventos-tipo" class="table table-sorting table-striped table-hover datatable">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" data-columna-filtro="1">
                                         <thead>
                                             <tr>
+                                                <th>Identificador</th>
+                                                <th>Fecha</th>
                                                 <th>Descripción</th>
+                                                <th>Observaciones</th>
+                                                <th>Responsable</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${eventos}" var="evento">
                                                 <tr id="${evento.getId_evento()}">
+                                                    <td>${evento.getId_evento()}</td>
+                                                    <td>${evento.getFechaAsString()}</td>
                                                     <td>${evento.getDescripcion()}</td>
+                                                    <td>${evento.getObservaciones()}</td>
+                                                    <td>${evento.getResponsable().getNombre_completo()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

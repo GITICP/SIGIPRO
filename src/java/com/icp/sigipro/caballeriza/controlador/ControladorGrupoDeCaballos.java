@@ -84,10 +84,8 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet
         String redireccion = "GrupoDeCaballos/Ver.jsp";
         int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
         try {
-            GrupoDeCaballos g = dao.obtenerGrupoDeCaballos(id_grupo_caballos);
-            CaballoDAO c = new CaballoDAO();
-            List<Caballo> caballos = c.obtenerCaballosGrupo(id_grupo_caballos);
-            request.setAttribute("caballos", caballos);
+            GrupoDeCaballos g = dao.obtenerGruposDeCaballosConCaballos(id_grupo_caballos);
+            request.setAttribute("caballos", g.getCaballos());
             request.setAttribute("grupodecaballos", g);
             redireccionar(request, response, redireccion);
         }
@@ -103,13 +101,12 @@ public class ControladorGrupoDeCaballos extends SIGIPROServlet
         validarPermiso(53, listaPermisos);
         String redireccion = "GrupoDeCaballos/Editar.jsp";
         int id_grupo_caballos = Integer.parseInt(request.getParameter("id_grupo_de_caballo"));
-        GrupoDeCaballos grupodecaballos = dao.obtenerGrupoDeCaballos(id_grupo_caballos);
+        GrupoDeCaballos g = dao.obtenerGruposDeCaballosConCaballos(id_grupo_caballos);
         CaballoDAO c = new CaballoDAO();
-        List<Caballo> caballos = c.obtenerCaballosGrupo(id_grupo_caballos);
         List<Caballo> caballos_restantes = c.obtenerCaballosRestantes();
-        request.setAttribute("caballos", caballos);
+        request.setAttribute("caballos", g.getCaballos());
         request.setAttribute("caballos_restantes", caballos_restantes);
-        request.setAttribute("grupodecaballos", grupodecaballos);
+        request.setAttribute("grupodecaballos", g);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
