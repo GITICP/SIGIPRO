@@ -10,18 +10,29 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.serpentario.modelos.Especie;
-import com.icp.sigipro.serpentario.modelos.Veneno;
 import com.icp.sigipro.utilidades.HelpersHTML;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -47,18 +58,53 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
+            add("archivo");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
     {
         {
-            add("agregar");
-            add("editar");
+            add("agregareditar");
         }
     };
 
   // <editor-fold defaultstate="collapsed" desc="Métodos Get">
   
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        
+        int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
+        TipoReactivo tiporeactivo = dao.obtenerTipoReactivo(id_tipo_reactivo);
+        
+        String filename = tiporeactivo.getMachote();
+        File file = new File(filename);
+        
+        if(file.exists()){
+            ServletContext ctx = getServletContext();
+            InputStream fis = new FileInputStream(file);
+            String mimeType = ctx.getMimeType(file.getAbsolutePath());
+            
+            response.setContentType(mimeType != null? mimeType:"application/octet-stream");
+            response.setContentLength((int) file.length());
+            String nombre = "machote-"+tiporeactivo.getNombre()+"."+this.getFileExtension(filename);
+            response.setHeader("Content-Disposition", "attachment; filename=\""+nombre+"\"");
+            
+            ServletOutputStream os = response.getOutputStream();
+            byte[] bufferData = new byte[1024];
+            int read=0;
+            while ((read=fis.read(bufferData))!=-1){
+                os.write(bufferData,0,read);
+            }
+            os.flush();
+            os.close();
+            fis.close();
+            
+        }
+        
+    }
+    
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -83,6 +129,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        System.out.println(request.getServletContext().getAttribute("FILES_DIR"));
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "TipoReactivo/Ver.jsp";
@@ -141,55 +188,139 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
   
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resultado = false;
-        TipoReactivo tr = construirObjeto(request);
-        resultado = dao.insertarTipoReactivo(tr);
-        if (resultado){
-            request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo agregado correctamente"));        
-            //Funcion que genera la bitacora
-            bitacora.setBitacora(tr.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr());
-            //*----------------------------*
-            this.getIndex(request, response);
-        }else{
-            request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser agregado. Inténtelo de nuevo."));        
-            this.getAgregar(request, response);
+        try{
+            File prueba = new File(".");
+            System.out.println(System.getProperty("user.dir"));
+            System.out.println(prueba.getAbsolutePath());
+            String path = this.getClass().getClassLoader().getResource("").getPath();
+            String fullPath = URLDecoder.decode(path, "UTF-8");
+
+            String pathArr[] = fullPath.split("/WEB-INF/classes/");
+
+            System.out.println(fullPath);
+
+            System.out.println(pathArr[0]);
+
+            fullPath = pathArr[0];
+            String reponsePath = "";
+            reponsePath = new File(fullPath).getPath() + File.separatorChar + "newfile.txt";
+            
+            System.out.println(reponsePath);
+            
+            String ubicacion = "C:\\Users\\ld.conejo\\Documents\\SIGIPRO\\TipoReactivo\\Machotes";
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            //factory.setSizeThreshold(1000000);
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> items = upload.parseRequest(request);
+            TipoReactivo tr = construirObjeto(items,request,ubicacion);
+            if (tr.getId_tipo_reactivo()==0){
+                resultado = dao.insertarTipoReactivo(tr);
+                if (resultado){
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo agregado correctamente"));        
+                    //Funcion que genera la bitacora
+                    bitacora.setBitacora(tr.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr());
+                    //*----------------------------*
+                    this.getIndex(request, response);
+                }else{
+                    request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser agregado. Inténtelo de nuevo."));        
+                    this.getAgregar(request, response);
+                }
+            }else{
+                resultado = dao.editarTipoReactivo(tr);
+                if (resultado){
+                    //Funcion que genera la bitacora
+                    bitacora.setBitacora(tr.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr());
+                    //*----------------------------*
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo editado correctamente"));
+                    this.getIndex(request, response);
+                }
+                else{
+                    request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser editado. Inténtelo de nuevo."));
+                    request.setAttribute("id_tipo_reactivo",tr.getId_tipo_reactivo());
+                    this.getEditar(request, response);
+                }
+            }
+        }catch (FileUploadException e) {
+            throw new ServletException("Cannot parse multipart request.", e);
         }
 
     }
     
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        boolean resultado = false;
-        TipoReactivo tr = construirObjeto(request);
-        int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
-        tr.setId_tipo_reactivo(id_tipo_reactivo);
-        resultado = dao.editarTipoReactivo(tr);
-        if (resultado){
-            //Funcion que genera la bitacora
-            bitacora.setBitacora(tr.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr());
-            //*----------------------------*
-            request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo editado correctamente"));
-            this.getIndex(request, response);
-        }
-        else{
-            request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser editado. Inténtelo de nuevo."));
-            request.setAttribute("id_tipo_reactivo",id_tipo_reactivo);
-            this.getEditar(request, response);
-        }
-    }
   // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   
-    private TipoReactivo construirObjeto(HttpServletRequest request) {
+    private TipoReactivo construirObjeto(List<FileItem> items,HttpServletRequest request,String ubicacion) {
         TipoReactivo tr = new TipoReactivo();
-        tr.setNombre(request.getParameter("nombre"));
-        tr.setDescripcion(request.getParameter("descripcion"));
-        tr.setMachote(request.getParameter("machote"));
+        for (FileItem item : items) {
+            if (item.isFormField()) {
+                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+                String fieldName = item.getFieldName();
+                String fieldValue;
+                try {
+                    fieldValue = item.getString("UTF-8").trim();
+                }
+                catch (UnsupportedEncodingException ex) {
+                    fieldValue = item.getString();
+                }
+                switch(fieldName){
+                    case "nombre":
+                        tr.setNombre(fieldValue);
+                        break;
+                    case "descripcion":
+                        tr.setDescripcion(fieldValue);
+                        break;
+                    case "id_tipo_reactivo":
+                        int id_tipo_reactivo = Integer.parseInt(fieldValue);
+                        tr.setId_tipo_reactivo(id_tipo_reactivo);
+                        break;
+                }    
+            } else {
+                try {
+                    File directorio = new File(ubicacion);
+                    if (!directorio.exists()) {
+                        System.out.println("Creando directorio: " + ubicacion);
+                        boolean result = false;
+                        try{
+                            directorio.mkdirs();
+                            result = true;
+                        } 
+                        catch(SecurityException se){
+                            se.printStackTrace();
+                        }        
+                        if(result) {    
+                            System.out.println("Directorio Creado");  
+                        }
+                    }
+                    //Creacion del nombre
+                    Date dNow = new Date();
+                    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmm");
+                    String fecha = ft.format(dNow);
+                    String extension = this.getFileExtension(item.getName());
+                    String nombre = tr.getNombre()+"-"+fecha+"."+extension;
+                    //---------------------
+                    File archivo = new File(ubicacion,nombre);
+                    item.write(archivo);
+                    tr.setMachote(archivo.getAbsolutePath());
+                    System.out.println("Absolute Path at server="+archivo.getAbsolutePath());
 
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                
+            }
+    }
         return tr;
+    }
+    
+    private String getFileExtension(String fileName) {
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+        return fileName.substring(fileName.lastIndexOf(".")+1);
+        else return "";
     }
   
   // </editor-fold>
