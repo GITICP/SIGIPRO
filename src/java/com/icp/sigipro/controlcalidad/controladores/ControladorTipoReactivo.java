@@ -192,31 +192,23 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     {
         boolean resultado = false;
         try{
-            File prueba = new File(".");
-            System.out.println(System.getProperty("user.dir"));
-            System.out.println(prueba.getAbsolutePath());
+            //Se crea el Path en la carpeta del Proyecto
             String path = this.getClass().getClassLoader().getResource("").getPath();
             String fullPath = URLDecoder.decode(path, "UTF-8");
-
             String pathArr[] = fullPath.split("/WEB-INF/classes/");
-
-            System.out.println(fullPath);
-
-            System.out.println(pathArr[0]);
-
             fullPath = pathArr[0];
-            String reponsePath = "";
-            reponsePath = new File(fullPath).getPath() + File.separatorChar + "newfile.txt";
-            
-            System.out.println(reponsePath);
-            
-            String ubicacion = "C:\\Users\\ld.conejo\\Documents\\SIGIPRO\\TipoReactivo\\Machotes";
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "TipoReactivo" + File.separatorChar + "Machotes";
+            //-------------------------------------------
+            System.out.println(ubicacion);
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
             DiskFileItemFactory factory = new DiskFileItemFactory();
-            //factory.setSizeThreshold(1000000);
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
             TipoReactivo tr = construirObjeto(items,request,ubicacion);
+            
             if (tr.getId_tipo_reactivo()==0){
                 resultado = dao.insertarTipoReactivo(tr);
                 if (resultado){
@@ -281,33 +273,22 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                 }    
             } else {
                 try {
-                    File directorio = new File(ubicacion);
-                    if (!directorio.exists()) {
-                        System.out.println("Creando directorio: " + ubicacion);
-                        boolean result = false;
-                        try{
-                            directorio.mkdirs();
-                            result = true;
-                        } 
-                        catch(SecurityException se){
-                            se.printStackTrace();
-                        }        
-                        if(result) {    
-                            System.out.println("Directorio Creado");  
-                        }
+                    System.out.println(item.getSize());
+                    if(item.getSize() != 0){
+                        this.crearDirectorio(ubicacion);
+                        //Creacion del nombre
+                        Date dNow = new Date();
+                        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmm");
+                        String fecha = ft.format(dNow);
+                        String extension = this.getFileExtension(item.getName());
+                        String nombre = tr.getNombre()+"-"+fecha+"."+extension;
+                        //---------------------
+                        File archivo = new File(ubicacion,nombre);
+                        item.write(archivo);
+                        tr.setMachote(archivo.getAbsolutePath());
+                    }else{
+                        tr.setMachote("");
                     }
-                    //Creacion del nombre
-                    Date dNow = new Date();
-                    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmm");
-                    String fecha = ft.format(dNow);
-                    String extension = this.getFileExtension(item.getName());
-                    String nombre = tr.getNombre()+"-"+fecha+"."+extension;
-                    //---------------------
-                    File archivo = new File(ubicacion,nombre);
-                    item.write(archivo);
-                    tr.setMachote(archivo.getAbsolutePath());
-                    System.out.println("Absolute Path at server="+archivo.getAbsolutePath());
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -315,6 +296,28 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
             }
     }
         return tr;
+    }
+    
+    private boolean crearDirectorio(String path){
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try{
+                directorio.mkdirs();
+                resultado = true;
+            } 
+            catch(SecurityException se){
+                se.printStackTrace();
+            }        
+            if(resultado) {    
+                System.out.println("Directorio Creado");  
+            }
+        }else{
+            resultado=true;
+        }
+        return resultado;
     }
     
     private String getFileExtension(String fileName) {

@@ -26,16 +26,35 @@
         </div>
       </div>
                    
-      <label for="nombre" class="control-label">* Machote de Preparación</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="file" id="machote" name="machote" value="${tiporeactivo.getMachote()}" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
-                oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                onchange="setCustomValidity('')"/>
-          </div>
-        </div>
-      </div>
+              <c:choose>
+                  <c:when test="${tiporeactivo.getId_tipo_reactivo()!=0}">
+                        <label for="nombre" class="control-label"> Machote de Preparación (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
+                        <div class="form-group">
+                          <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="file" id="machote" name="machote"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                    oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                    onchange="setCustomValidity('')"/>
+                            </div>
+                        </div>
+                      </div>
+                  </c:when>
+                  <c:otherwise>
+                    <label for="nombre" class="control-label">* Machote de Preparación</label>
+                        <div class="form-group">
+                          <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="file" id="machote" name="machote"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
+                                    oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                    onchange="setCustomValidity('')"/>
+                            </div>
+                        </div>
+                      </div>
+                  </c:otherwise>
+              </c:choose>
+                  
+              
+          
     </div>
     <div class="col-md-6">
       <label for="descripcion" class="control-label">Descripción</label>

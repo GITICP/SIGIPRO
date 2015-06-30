@@ -45,13 +45,24 @@ public class TipoReactivoDAO extends DAO {
     {
         boolean resultado = false;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_reactivos "
-                    + "SET nombre=?, descripcion=?, machote=? "
-                    + "WHERE id_tipo_reactivo = ?; ");
-            consulta.setString(1, tiporeactivo.getNombre());
-            consulta.setString(2, tiporeactivo.getDescripcion());
-            consulta.setString(3, tiporeactivo.getMachote());
-            consulta.setInt(4, tiporeactivo.getId_tipo_reactivo());
+            PreparedStatement consulta;
+            if (tiporeactivo.getMachote().equals("")){
+                consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_reactivos "
+                        + "SET nombre=?, descripcion=? "
+                        + "WHERE id_tipo_reactivo = ?; ");
+                consulta.setString(1, tiporeactivo.getNombre());
+                consulta.setString(2, tiporeactivo.getDescripcion());
+                consulta.setInt(3, tiporeactivo.getId_tipo_reactivo());
+            }else{
+                consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_reactivos "
+                        + "SET nombre=?, descripcion=?, machote=? "
+                        + "WHERE id_tipo_reactivo = ?; ");
+                consulta.setString(1, tiporeactivo.getNombre());
+                consulta.setString(2, tiporeactivo.getDescripcion());
+                consulta.setString(3, tiporeactivo.getMachote());
+                consulta.setInt(4, tiporeactivo.getId_tipo_reactivo());
+            }
+            System.out.println(consulta);
             if (consulta.executeUpdate()==1) {
                 resultado = true;
             }
