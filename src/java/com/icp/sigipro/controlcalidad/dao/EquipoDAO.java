@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.dao;
 
+import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.DAO;
@@ -18,6 +19,29 @@ import java.util.List;
  * @author ld.conejo
  */
 public class EquipoDAO extends DAO{
+    
+        public boolean insertarCertificado(CertificadoEquipo certificado)
+    {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.certificados_equipos (id_equipo,fecha_certificado,path) "
+                                                                        + " VALUES (?,?,?) RETURNING id_certificado_equipo");
+            consulta.setInt(1, certificado.getId_certificado_equipo());
+            consulta.setDate(2, certificado.getFecha_certificado());
+            consulta.setString(3, certificado.getPath());
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = true;
+                certificado.setId_certificado_equipo(rs.getInt("id_certificado_equipo"));
+            }
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
     
     public boolean insertarEquipo(Equipo equipo)
     {
@@ -65,6 +89,26 @@ public class EquipoDAO extends DAO{
         return resultado;
     }
     
+    public CertificadoEquipo obtenerCertificado(int id_certificado_equipo)
+    {
+        CertificadoEquipo resultado = new CertificadoEquipo();
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT path FROM control_calidad.certificados_equipos WHERE id_certificado_equipo=? ");
+            consulta.setInt(1, id_certificado_equipo);
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_certificado_equipo(id_certificado_equipo);
+                resultado.setPath(rs.getString("path"));
+            }
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public List<Equipo> obtenerEquipos()
     {
         List<Equipo> resultado = new ArrayList<Equipo>();
@@ -94,19 +138,29 @@ public class EquipoDAO extends DAO{
     {
         Equipo resultado = new Equipo();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.nombre as nombre_tipo "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path "
                     + "FROM control_calidad.equipos as equipo INNER JOIN control_calidad.tipos_equipos as tipo ON equipo.id_tipo_equipo = tipo.id_tipo_equipo "
+                    + "INNER JOIN control_calidad.certificados_equipos as cert ON cert.id_equipo = equipo.id_equipo "
                     + "WHERE equipo.id_equipo = ?; ");
             consulta.setInt(1, id_equipo);
             ResultSet rs = consulta.executeQuery();
-            if (rs.next()) {
-                TipoEquipo tipo = new TipoEquipo();
-                tipo.setNombre(rs.getString("nombre_tipo"));
-                resultado.setTipo_equipo(tipo);
-                resultado.setDescripcion(rs.getString("descripcion"));
-                resultado.setId_equipo(rs.getInt("id_equipo"));
-                resultado.setNombre(rs.getString("nombre"));
+            List<CertificadoEquipo> certificados = new ArrayList<CertificadoEquipo>();
+            while (rs.next()) {
+                if (resultado.getId_equipo()==0){
+                    TipoEquipo tipo = new TipoEquipo();
+                    tipo.setNombre(rs.getString("nombre_tipo"));
+                    resultado.setTipo_equipo(tipo);
+                    resultado.setDescripcion(rs.getString("descripcion"));
+                    resultado.setId_equipo(rs.getInt("id_equipo"));
+                    resultado.setNombre(rs.getString("nombre"));
+                }
+                CertificadoEquipo certificado = new CertificadoEquipo();
+                certificado.setFecha_certificado(rs.getDate("fecha_certificado"));
+                certificado.setId_certificado_equipo(rs.getInt("id_certificado_equipo"));
+                certificado.setPath(rs.getString("path"));
+                certificados.add(certificado);
             }
+            resultado.setCertificados(certificados);
             consulta.close();
             cerrarConexion();
         }

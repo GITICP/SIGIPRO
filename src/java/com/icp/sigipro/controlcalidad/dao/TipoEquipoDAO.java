@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.dao;
 
+import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;

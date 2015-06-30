@@ -6,6 +6,9 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -83,5 +86,11 @@ public class Equipo {
             
         }
         return JSON.toString();
+    }
+    
+    private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
 }
