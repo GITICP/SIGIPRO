@@ -138,7 +138,7 @@ public class EquipoDAO extends DAO{
     {
         Equipo resultado = new Equipo();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path "
+            PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.id_tipo_equipo, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path "
                     + "FROM control_calidad.equipos as equipo INNER JOIN control_calidad.tipos_equipos as tipo ON equipo.id_tipo_equipo = tipo.id_tipo_equipo "
                     + "INNER JOIN control_calidad.certificados_equipos as cert ON cert.id_equipo = equipo.id_equipo "
                     + "WHERE equipo.id_equipo = ?; ");
@@ -149,6 +149,8 @@ public class EquipoDAO extends DAO{
                 if (resultado.getId_equipo()==0){
                     TipoEquipo tipo = new TipoEquipo();
                     tipo.setNombre(rs.getString("nombre_tipo"));
+                    tipo.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
+                    System.out.println(tipo.getId_tipo_equipo());
                     resultado.setTipo_equipo(tipo);
                     resultado.setDescripcion(rs.getString("descripcion"));
                     resultado.setId_equipo(rs.getInt("id_equipo"));

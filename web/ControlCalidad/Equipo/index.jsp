@@ -54,13 +54,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaTipos}" var="tipo">
+                  <c:forEach items="${listaEquipos}" var="equipo">
 
-                    <tr id ="${tipo.getId_tipo_reactivo()}">
+                    <tr id ="${tipo.getId_equipo()}">
                       <td>
-                        <a href="/SIGIPRO/ControlCalidad/Equipo?accion=ver&id_tipo_reactivo=${tipo.getId_tipo_reactivo()}">
+                        <a href="/SIGIPRO/ControlCalidad/Equipo?accion=ver&id_equipo=${equipo.getId_equipo()}">
                           <div style="height:100%;width:100%">
-                            ${tipo.getNombre()}
+                            ${equipo.getNombre()}
                           </div>
                         </a>
                       </td>

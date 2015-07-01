@@ -76,7 +76,7 @@ public class ControladorEquipo extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
 
         int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
-        String equipo = request.getParameter("nomhre");
+        String equipo = request.getParameter("nombre");
         CertificadoEquipo certificado = dao.obtenerCertificado(id_certificado_equipo);
 
         String filename = certificado.getPath();
@@ -136,6 +136,7 @@ public class ControladorEquipo extends SIGIPROServlet {
         try {
             Equipo e = dao.obtenerEquipo(id_equipo);
             request.setAttribute("equipo", e);
+            request.setAttribute("certificados", e.getCertificados());
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -149,6 +150,8 @@ public class ControladorEquipo extends SIGIPROServlet {
         String redireccion = "Equipo/Editar.jsp";
         int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
         Equipo equipo = dao.obtenerEquipo(id_equipo);
+        List<TipoEquipo> tipoequipos = tipoequipodao.obtenerTipoEquipos();
+        request.setAttribute("tipoequipos", tipoequipos);
         request.setAttribute("equipo", equipo);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
@@ -254,7 +257,9 @@ public class ControladorEquipo extends SIGIPROServlet {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Equipo construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
-        Equipo tr = new Equipo();
+        Equipo e = new Equipo();
+        List<CertificadoEquipo> certificados = new ArrayList<CertificadoEquipo>();
+        e.setCertificados(certificados);
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -267,20 +272,20 @@ public class ControladorEquipo extends SIGIPROServlet {
                 }
                 switch (fieldName) {
                     case "nombre":
-                        tr.setNombre(fieldValue);
+                        e.setNombre(fieldValue);
                         break;
                     case "descripcion":
-                        tr.setDescripcion(fieldValue);
+                        e.setDescripcion(fieldValue);
                         break;
                     case "id_equipo":
                         int id_equipo = Integer.parseInt(fieldValue);
-                        tr.setId_equipo(id_equipo);
+                        e.setId_equipo(id_equipo);
                         break;
-                    case "id_tipo_equipo":
+                    case "tipo_equipo":
                         int id_tipo_equipo = Integer.parseInt(fieldValue);
                         TipoEquipo tipo_equipo = new TipoEquipo();
                         tipo_equipo.setId_tipo_equipo(id_tipo_equipo);
-                        tr.setTipo_equipo(tipo_equipo);
+                        e.setTipo_equipo(tipo_equipo);
                         break;
                 }
             } else {
@@ -295,12 +300,12 @@ public class ControladorEquipo extends SIGIPROServlet {
                         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                         String fecha = ft.format(dNow);
                         String extension = this.getFileExtension(item.getName());
-                        String nombre = tr.getNombre() + "-" + fecha + "." + extension;
+                        String nombre = e.getNombre() + "-" + fecha + "." + extension;
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
                         certificado.setPath(archivo.getAbsolutePath());
-                        tr.getCertificados().add(certificado);
+                        e.getCertificados().add(certificado);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -308,7 +313,7 @@ public class ControladorEquipo extends SIGIPROServlet {
 
             }
         }
-        return tr;
+        return e;
     }
 
     private boolean crearDirectorio(String path) {
