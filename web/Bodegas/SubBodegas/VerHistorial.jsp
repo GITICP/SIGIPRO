@@ -50,26 +50,46 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
-                                        <th>Fecha y Hora</th>
+                                        <th>Fecha y Hora de Registro</th>
+                                        <th>Fecha de Acción</th>
                                         <th>Acción</th>
                                         <th>Producto</th>
                                         <th>Cantidad</th>
                                         <th>Usuario</th>
+                                        <th>Observaciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${sub_bodega.getHistorial()}" var="bitacora">
+                                        <c:choose>
+                                            <c:when test="${bitacora.getAccion().equals('Movimiento')}">
+                                                <c:set var="movimiento" value="true"></c:set>
+                                                <c:choose>
+                                                    <c:when test="${bitacora.getSub_bodega_destino().getId_sub_bodega() == id_sub_bodega}">
+                                                        <c:set var="texto" value="(Desde ${bitacora.getSub_bodega().getNombre()})"></c:set>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:set var="texto" value="(Hacia ${bitacora.getSub_bodega_destino().getNombre()})"></c:set>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="movimiento" value="false"></c:set>
+                                                <c:set var="texto" value=""></c:set>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <tr>
                                             <td>${bitacora.getFecha_accion()}</td>
-                                            <%----%>
-                                            <td>${bitacora.getAccion()}</td>
+                                            <td>${bitacora.getFechaAsString()}</td>
+                                            <td>${bitacora.getAccion()} ${texto}</td>
                                             <td>${bitacora.getProducto().getNombre()}</td>
                                             <td>${bitacora.getCantidad()}</td>
                                             <td>${bitacora.getUsuario().getNombre_completo()}</td>
+                                            <td>${bitacora.getObservaciones()}</td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
