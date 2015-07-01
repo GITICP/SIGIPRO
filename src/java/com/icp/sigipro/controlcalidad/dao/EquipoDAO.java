@@ -18,14 +18,13 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class EquipoDAO extends DAO{
-    
-        public boolean insertarCertificado(CertificadoEquipo certificado,int id_equipo)
-    {
+public class EquipoDAO extends DAO {
+
+    public boolean insertarCertificado(CertificadoEquipo certificado, int id_equipo) {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.certificados_equipos (id_equipo,fecha_certificado,path) "
-                                                                        + " VALUES (?,?,?) RETURNING id_certificado_equipo");
+                    + " VALUES (?,?,?) RETURNING id_certificado_equipo");
             consulta.setInt(1, id_equipo);
             consulta.setDate(2, certificado.getFecha_certificado());
             consulta.setString(3, certificado.getPath());
@@ -36,22 +35,20 @@ public class EquipoDAO extends DAO{
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public boolean insertarEquipo(Equipo equipo)
-    {
+
+    public boolean insertarEquipo(Equipo equipo) {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.equipos (nombre,id_tipo_equipo,descripcion) "
-                                                                        + " VALUES (?,?,?) RETURNING id_equipo");
+                    + " VALUES (?,?,?) RETURNING id_equipo");
             consulta.setString(1, equipo.getNombre());
             consulta.setInt(2, equipo.getTipo_equipo().getId_tipo_equipo());
-            consulta.setString(3,equipo.getDescripcion());
+            consulta.setString(3, equipo.getDescripcion());
             ResultSet rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -59,15 +56,13 @@ public class EquipoDAO extends DAO{
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public boolean editarEquipo(Equipo equipo)
-    {
+
+    public boolean editarEquipo(Equipo equipo) {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.equipos "
@@ -77,20 +72,18 @@ public class EquipoDAO extends DAO{
             consulta.setInt(2, equipo.getTipo_equipo().getId_tipo_equipo());
             consulta.setString(3, equipo.getDescripcion());
             consulta.setInt(4, equipo.getId_equipo());
-            if (consulta.executeUpdate()==1) {
+            if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public CertificadoEquipo obtenerCertificado(int id_certificado_equipo)
-    {
+
+    public CertificadoEquipo obtenerCertificado(int id_certificado_equipo) {
         CertificadoEquipo resultado = new CertificadoEquipo();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT path FROM control_calidad.certificados_equipos WHERE id_certificado_equipo=? ");
@@ -102,15 +95,13 @@ public class EquipoDAO extends DAO{
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public List<Equipo> obtenerEquipos()
-    {
+
+    public List<Equipo> obtenerEquipos() {
         List<Equipo> resultado = new ArrayList<Equipo>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, tipo.nombre as nombre_tipo "
@@ -127,15 +118,13 @@ public class EquipoDAO extends DAO{
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public Equipo obtenerEquipo(int id_equipo)
-    {
+
+    public Equipo obtenerEquipo(int id_equipo) {
         Equipo resultado = new Equipo();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.id_tipo_equipo, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path "
@@ -146,11 +135,10 @@ public class EquipoDAO extends DAO{
             ResultSet rs = consulta.executeQuery();
             List<CertificadoEquipo> certificados = new ArrayList<CertificadoEquipo>();
             while (rs.next()) {
-                if (resultado.getId_equipo()==0){
+                if (resultado.getId_equipo() == 0) {
                     TipoEquipo tipo = new TipoEquipo();
                     tipo.setNombre(rs.getString("nombre_tipo"));
                     tipo.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
-                    System.out.println(tipo.getId_tipo_equipo());
                     resultado.setTipo_equipo(tipo);
                     resultado.setDescripcion(rs.getString("descripcion"));
                     resultado.setId_equipo(rs.getInt("id_equipo"));
@@ -165,26 +153,23 @@ public class EquipoDAO extends DAO{
             resultado.setCertificados(certificados);
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public boolean eliminarEquipo(int id_equipo)
-    {
+
+    public boolean eliminarEquipo(int id_equipo) {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.equipos WHERE id_equipo=?; ");
             consulta.setInt(1, id_equipo);
             if (consulta.executeUpdate() == 1) {
-                resultado=true;
+                resultado = true;
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
