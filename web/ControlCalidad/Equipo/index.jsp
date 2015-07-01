@@ -51,6 +51,7 @@
                 <thead> 
                   <tr>
                     <th>Nombre</th>
+                    <th>Tipo de Equipo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -64,6 +65,7 @@
                           </div>
                         </a>
                       </td>
+                      <td>${equipo.getTipo_equipo().getNombre()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

@@ -29,22 +29,31 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccionTipo" class="select2" name="tipo_equipo"
-                                style='background-color: #fff;' required
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                onchange="setCustomValidity('')">
-                            <option value=''></option>
-                            <c:forEach items="${tipoequipos}" var="tipoequipo">
-                                <c:choose>
-                                    <c:when test="${tipoequipo.getId_tipo_equipo() == equipo.getTipo_equipo().getId_tipo_equipo()}" >
-                                        <option value=${tipoequipo.getId_tipo_equipo()} selected> ${tipoequipo.getNombre()}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value=${tipoequipo.getId_tipo_equipo()}> ${tipoequipo.getNombre()}</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
+                        <c:choose>
+                            <c:when test="${equipo.getId_equipo()==0}">
+                                <select id="seleccionTipo" class="select2" name="tipo_equipo"
+                                        style='background-color: #fff;' required
+                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                        onchange="setCustomValidity('')">
+                                    <option value=''></option>
+                                    <c:forEach items="${tipoequipos}" var="tipoequipo">
+                                        <c:choose>
+                                            <c:when test="${tipoequipo.getId_tipo_equipo() == equipo.getTipo_equipo().getId_tipo_equipo()}" >
+                                                <option value=${tipoequipo.getId_tipo_equipo()} selected> ${tipoequipo.getNombre()}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value=${tipoequipo.getId_tipo_equipo()}> ${tipoequipo.getNombre()}</option>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </select>
+                            </c:when>
+                            <c:otherwise>
+                                <input type="text" maxlength="45" class="form-control" name="tipo_equipo" value="${equipo.getTipo_equipo().getNombre()}"
+                                       disabled > 
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                 </div>
             </div>

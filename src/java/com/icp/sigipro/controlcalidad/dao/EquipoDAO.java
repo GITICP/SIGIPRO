@@ -66,12 +66,11 @@ public class EquipoDAO extends DAO {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.equipos "
-                    + "SET nombre=?, id_tipo_equipo=?, descripcion=? "
+                    + "SET nombre=?, descripcion=? "
                     + "WHERE id_equipo = ?; ");
             consulta.setString(1, equipo.getNombre());
-            consulta.setInt(2, equipo.getTipo_equipo().getId_tipo_equipo());
-            consulta.setString(3, equipo.getDescripcion());
-            consulta.setInt(4, equipo.getId_equipo());
+            consulta.setString(2, equipo.getDescripcion());
+            consulta.setInt(3, equipo.getId_equipo());
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }

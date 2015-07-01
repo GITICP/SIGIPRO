@@ -68,19 +68,17 @@ public class ReactivoDAO extends DAO {
             PreparedStatement consulta;
             if (reactivo.getPreparacion().equals("")) {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.reactivos "
-                        + "SET nombre=?, id_tipo_reactivo=? "
+                        + "SET nombre=? "
                         + "WHERE id_reactivo = ?; ");
                 consulta.setString(1, reactivo.getNombre());
-                consulta.setInt(2, reactivo.getTipo_reactivo().getId_tipo_reactivo());
-                consulta.setInt(3, reactivo.getId_reactivo());
+                consulta.setInt(2, reactivo.getId_reactivo());
             } else {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.reactivos "
-                        + "SET nombre=?, id_tipo_reactivo=?, preparacion=? "
+                        + "SET nombre=?, preparacion=? "
                         + "WHERE id_reactivo = ?; ");
                 consulta.setString(1, reactivo.getNombre());
-                consulta.setInt(2, reactivo.getTipo_reactivo().getId_tipo_reactivo());
-                consulta.setString(3, reactivo.getPreparacion());
-                consulta.setInt(4, reactivo.getId_reactivo());
+                consulta.setString(2, reactivo.getPreparacion());
+                consulta.setInt(3, reactivo.getId_reactivo());
             }
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

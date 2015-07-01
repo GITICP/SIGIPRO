@@ -29,22 +29,30 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="seleccionTipo" class="select2" name="tipo_reactivo"
-                                style='background-color: #fff;' required
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                onchange="setCustomValidity('')">
-                            <option value=''></option>
-                            <c:forEach items="${tiporeactivos}" var="tiporeactivo">
-                                <c:choose>
-                                    <c:when test="${tiporeactivo.getId_tipo_reactivo() == reactivo.getTipo_reactivo().getId_tipo_reactivo()}" >
-                                        <option value=${tiporeactivo.getId_tipo_reactivo()} selected> ${tiporeactivo.getNombre()}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value=${tiporeactivo.getId_tipo_reactivo()}> ${tiporeactivo.getNombre()}</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
+                        <c:choose>
+                            <c:when test="${reactivo.getId_reactivo()==0}">
+                                <select id="seleccionTipo" class="select2" name="tipo_reactivo"
+                                        style='background-color: #fff;' required
+                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                        onchange="setCustomValidity('')">
+                                    <option value=''></option>
+                                    <c:forEach items="${tiporeactivos}" var="tiporeactivo">
+                                        <c:choose>
+                                            <c:when test="${tiporeactivo.getId_tipo_reactivo() == reactivo.getTipo_reactivo().getId_tipo_reactivo()}" >
+                                                <option value=${tiporeactivo.getId_tipo_reactivo()} selected> ${tiporeactivo.getNombre()}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value=${tiporeactivo.getId_tipo_reactivo()}> ${tiporeactivo.getNombre()}</option>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </select>
+                            </c:when>
+                            <c:otherwise>
+                                <input type="text" maxlength="45" class="form-control" name="tipo_reactivo" value="${reactivo.getTipo_reactivo().getNombre()}"
+                                       disabled > 
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
             </div>

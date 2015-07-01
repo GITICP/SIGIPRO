@@ -51,6 +51,7 @@
                 <thead> 
                   <tr>
                     <th>Nombre</th>
+                    <th>Tipo de Reactivo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -64,6 +65,7 @@
                           </div>
                         </a>
                       </td>
+                      <td>${reactivo.getTipo_reactivo().getNombre()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
