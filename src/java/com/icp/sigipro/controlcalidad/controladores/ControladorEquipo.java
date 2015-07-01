@@ -63,6 +63,7 @@ public class ControladorEquipo extends SIGIPROServlet {
             add("eliminar");
             add("editar");
             add("certificado");
+            add("eliminarcertificado");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -178,6 +179,31 @@ public class ControladorEquipo extends SIGIPROServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser eliminado ya que tiene certificados asociados."));
+            this.getIndex(request, response);
+        }
+
+    }
+
+    protected void getEliminarcertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(521, listaPermisos);
+        int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
+        boolean resultado = false;
+        try {
+            resultado = dao.eliminarCertificado(id_certificado_equipo);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                bitacora.setBitacora(id_certificado_equipo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOEQUIPO, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Certificado de Equipo eliminado correctamente"));
+
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Certificado de Equipo no pudo ser eliminado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Certificado de Equipo no pudo ser eliminado."));
             this.getIndex(request, response);
         }
 

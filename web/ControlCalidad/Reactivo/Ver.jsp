@@ -54,6 +54,12 @@
                                 <c:if test="${contienePermisoEditar}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Reactivo?accion=editar&id_reactivo=${reactivo.getId_reactivo()}">Editar</a>
                                 </c:if>
+                                <c:set var="contienePermisoEliminarCertificado" value="false" />
+                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                    <c:if test="${permiso == 1 || permiso == 531}">
+                                        <c:set var="contienePermisoEliminarCertificado" value="true" />
+                                    </c:if>
+                                </c:forEach>
                             </div>
                         </div>
                         ${mensaje}
@@ -89,6 +95,10 @@
                                             <tr>
                                                 <th>Fecha del Certificado</th>
                                                 <th>Certificado</th>
+                                                    <c:if test="${contienePermisoEliminarCertificado}">
+                                                    <th>Eliminar</th>
+                                                    </c:if>
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -100,6 +110,12 @@
                                                     <td>
                                                         <a href="/SIGIPRO/ControlCalidad/Reactivo?accion=certificado&id_certificado_reactivo=${certificado.getId_certificado_reactivo()}&nombre=${reactivo.getNombre()}">Descargar Certificado</a>
                                                     </td>
+                                                    <c:if test="${contienePermisoEliminarCertificado}">
+                                                        <td>
+                                                            <a class="btn btn-danger btn-sm boton-accion eliminarCertificado-Modal" data-id='${certificado.getId_certificado_reactivo()}' data-toggle="modal" data-target="#modalEliminarCertificado">Eliminar</a>
+                                                        </td>  
+                                                    </c:if>
+
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
@@ -156,6 +172,26 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Certificado</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalEliminarCertificado" titulo="Eliminar Certificado de Reactivo">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="eliminarCertificado" autocomplete="off" method="get" action="Reactivo">
+                <input hidden="true" name="accion" value="Eliminarcertificado">
+                <input hidden="true" id='id_certificado_reactivo' name='id_certificado_reactivo' value="">
+                <label for="label" class="control-label">¿Está seguro que desea eliminar el certificado de reactivo?</label>
+
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Eliminar Certificado</button>            </div>
                 </div>
             </form>
         </div>

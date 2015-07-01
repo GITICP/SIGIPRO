@@ -54,6 +54,12 @@
                                 <c:if test="${contienePermisoEditar}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Equipo?accion=editar&id_equipo=${equipo.getId_equipo()}">Editar</a>
                                 </c:if>
+                                <c:set var="contienePermisoEliminarCertificado" value="false" />
+                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                    <c:if test="${permiso == 1 || permiso == 521}">
+                                        <c:set var="contienePermisoEliminarCertificado" value="true" />
+                                    </c:if>
+                                </c:forEach>
                             </div>
                         </div>
                         ${mensaje}
@@ -88,6 +94,9 @@
                                             <tr>
                                                 <th>Fecha del Certificado</th>
                                                 <th>Certificado</th>
+                                                    <c:if test="${contienePermisoEliminarCertificado}">
+                                                    <th>Eliminar</th>
+                                                    </c:if>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -99,6 +108,12 @@
                                                     <td>
                                                         <a href="/SIGIPRO/ControlCalidad/Equipo?accion=certificado&id_certificado_equipo=${certificado.getId_certificado_equipo()}&nombre=${equipo.getNombre()}">Descargar Certificado</a>
                                                     </td>
+                                                    <c:if test="${contienePermisoEliminarCertificado}">
+                                                        <td>
+                                                            <a class="btn btn-danger btn-sm boton-accion eliminarCertificado-Modal" data-id='${certificado.getId_certificado_equipo()}' data-toggle="modal" data-target="#modalEliminarCertificado">Eliminar</a>
+                                                        </td>  
+                                                    </c:if>
+
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
@@ -116,7 +131,7 @@
         </div>
 
     </jsp:attribute>
-<jsp:attribute name="scripts">
+    <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/Equipo.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
@@ -155,6 +170,26 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Certificado</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalEliminarCertificado" titulo="Eliminar Certificado de Equipo">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="eliminarCertificado" autocomplete="off" method="get" action="Equipo">
+                <input hidden="true" name="accion" value="Eliminarcertificado">
+                <input hidden="true" id='id_certificado_equipo' name='id_certificado_equipo' value="">
+                <label for="label" class="control-label">¿Está seguro que desea eliminar el certificado de equipo?</label>
+
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Eliminar Certificado</button>            </div>
                 </div>
             </form>
         </div>

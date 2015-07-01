@@ -184,5 +184,21 @@ public class ReactivoDAO extends DAO {
         }
         return resultado;
     }
+    
+    public boolean eliminarCertificado(int id_certificado) {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.certificados_reactivos WHERE id_certificado_reactivo=?; ");
+            consulta.setInt(1, id_certificado);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
 
 }

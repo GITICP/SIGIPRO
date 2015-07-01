@@ -47,7 +47,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorReactivo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 530};
+    private final int[] permisos = {1, 530,531};
     //-----------------
     private ReactivoDAO dao = new ReactivoDAO();
     private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
@@ -65,6 +65,7 @@ public class ControladorReactivo extends SIGIPROServlet {
             add("editar");
             add("certificado");
             add("preparacion");
+            add("eliminarcertificado");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -199,14 +200,23 @@ public class ControladorReactivo extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(530, listaPermisos);
         int id_reactivo = Integer.parseInt(request.getParameter("id_reactivo"));
+        Reactivo reactivo = dao.obtenerReactivo(id_reactivo);
+
         boolean resultado = false;
         try {
             resultado = dao.eliminarReactivo(id_reactivo);
             if (resultado) {
-                //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_reactivo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_REACTIVO, request.getRemoteAddr());
-                //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Reactivo eliminado correctamente"));
+                File preparacion = new File(reactivo.getPreparacion());
+                if (preparacion.delete()) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_reactivo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_REACTIVO, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Reactivo eliminado correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Reactivo eliminado correctamente pero hubo un error eliminando el archivo de preparación."));
+
+                }
+
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Reactivo no pudo ser eliminado ya que tiene certificados asociados."));
             }
@@ -218,9 +228,34 @@ public class ControladorReactivo extends SIGIPROServlet {
         }
 
     }
+
+    protected void getEliminarcertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(531, listaPermisos);
+        int id_certificado_reactivo = Integer.parseInt(request.getParameter("id_certificado_reactivo"));
+        boolean resultado = false;
+        try {
+            resultado = dao.eliminarCertificado(id_certificado_reactivo);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                bitacora.setBitacora(id_certificado_reactivo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOREACTIVO, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Certificado de Reactivo eliminado correctamente"));
+
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Certificado de Reactivo no pudo ser eliminado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Certificado de Reactivo no pudo ser eliminado."));
+            this.getIndex(request, response);
+        }
+
+    }
     // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+// <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
         try {
@@ -352,7 +387,7 @@ public class ControladorReactivo extends SIGIPROServlet {
                                 cert.setPath(archivoCert.getAbsolutePath());
                                 r.getCertificados().add(cert);
                         }
-                    }else if (item.getFieldName().equals("preparacion")){
+                    } else if (item.getFieldName().equals("preparacion")) {
                         r.setPreparacion("");
                     }
                 } catch (Exception ex) {
@@ -405,7 +440,8 @@ public class ControladorReactivo extends SIGIPROServlet {
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
-            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class
+            );
             metodo.invoke(this, request, response);
         } else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);

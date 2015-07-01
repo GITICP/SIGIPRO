@@ -42,16 +42,15 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorTipoReactivo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1,510};
+    private final int[] permisos = {1, 510};
     //-----------------
     private TipoReactivoDAO dao = new TipoReactivoDAO();
-    
+
     HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO(); 
+    BitacoraDAO bitacora = new BitacoraDAO();
 
     protected final Class clase = ControladorTipoReactivo.class;
-    protected final List<String> accionesGet = new ArrayList<String>()
-    {
+    protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
             add("ver");
@@ -61,52 +60,48 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
             add("archivo");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>()
-    {
+    protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregareditar");
         }
     };
 
   // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-  
-    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        
+
         int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
         TipoReactivo tiporeactivo = dao.obtenerTipoReactivo(id_tipo_reactivo);
-        
+
         String filename = tiporeactivo.getMachote();
         File file = new File(filename);
-        
-        if(file.exists()){
+
+        if (file.exists()) {
             ServletContext ctx = getServletContext();
             InputStream fis = new FileInputStream(file);
             String mimeType = ctx.getMimeType(file.getAbsolutePath());
-            
-            response.setContentType(mimeType != null? mimeType:"application/octet-stream");
+
+            response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            String nombre = "machote-"+tiporeactivo.getNombre()+"."+this.getFileExtension(filename);
-            response.setHeader("Content-Disposition", "attachment; filename=\""+nombre+"\"");
-            
+            String nombre = "machote-" + tiporeactivo.getNombre() + "." + this.getFileExtension(filename);
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
+
             ServletOutputStream os = response.getOutputStream();
             byte[] bufferData = new byte[1024];
-            int read=0;
-            while ((read=fis.read(bufferData))!=-1){
-                os.write(bufferData,0,read);
+            int read = 0;
+            while ((read = fis.read(bufferData)) != -1) {
+                os.write(bufferData, 0, read);
             }
             os.flush();
             os.close();
             fis.close();
-            
+
         }
-        
+
     }
-    
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(510, listaPermisos);
 
@@ -117,8 +112,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "TipoReactivo/index.jsp";
@@ -127,8 +121,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println(request.getServletContext().getAttribute("FILES_DIR"));
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
@@ -138,15 +131,13 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
             TipoReactivo tr = dao.obtenerTipoReactivo(id_tipo_reactivo);
             request.setAttribute("tiporeactivo", tr);
             redireccionar(request, response, redireccion);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
     }
-    
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(510, listaPermisos);
         String redireccion = "TipoReactivo/Editar.jsp";
@@ -158,40 +149,41 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
 
     }
 
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(510, listaPermisos);
         int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
+        TipoReactivo tiporeactivo = dao.obtenerTipoReactivo(id_tipo_reactivo);
         boolean resultado = false;
-        try{
+        try {
             resultado = dao.eliminarTipoReactivo(id_tipo_reactivo);
-            if (resultado){
-                //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_tipo_reactivo,Bitacora.ACCION_ELIMINAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr()); 
-                //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente")); 
-            }
-            else{
-               request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser eliminado ya que tiene reactivos asociados."));  
+            if (resultado) {
+                File machote = new File(tiporeactivo.getMachote());
+                if (machote.delete()) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_tipo_reactivo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOREACTIVO, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente"));
+                }else{
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente pero hubo un error eliminando el machote."));
+                }
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser eliminado ya que tiene reactivos asociados."));
             }
             this.getIndex(request, response);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser eliminado ya que tiene reactivos asociados."));  
+            request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser eliminado ya que tiene reactivos asociados."));
             this.getIndex(request, response);
         }
-        
+
     }
     // </editor-fold>
-  
+
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-  
-    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
-        try{
+        try {
             //Se crea el Path en la carpeta del Proyecto
             String path = this.getClass().getClassLoader().getResource("").getPath();
             String fullPath = URLDecoder.decode(path, "UTF-8");
@@ -207,46 +199,43 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
-            TipoReactivo tr = construirObjeto(items,request,ubicacion);
-            
-            if (tr.getId_tipo_reactivo()==0){
+            TipoReactivo tr = construirObjeto(items, request, ubicacion);
+
+            if (tr.getId_tipo_reactivo() == 0) {
                 resultado = dao.insertarTipoReactivo(tr);
-                if (resultado){
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo agregado correctamente"));        
+                if (resultado) {
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo agregado correctamente"));
                     //Funcion que genera la bitacora
-                    bitacora.setBitacora(tr.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr());
+                    bitacora.setBitacora(tr.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOREACTIVO, request.getRemoteAddr());
                     //*----------------------------*
                     this.getIndex(request, response);
-                }else{
-                    request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser agregado. Inténtelo de nuevo."));        
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser agregado. Inténtelo de nuevo."));
                     this.getAgregar(request, response);
                 }
-            }else{
+            } else {
                 resultado = dao.editarTipoReactivo(tr);
-                if (resultado){
+                if (resultado) {
                     //Funcion que genera la bitacora
-                    bitacora.setBitacora(tr.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_TIPOREACTIVO,request.getRemoteAddr());
+                    bitacora.setBitacora(tr.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOREACTIVO, request.getRemoteAddr());
                     //*----------------------------*
                     request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo editado correctamente"));
                     this.getIndex(request, response);
-                }
-                else{
+                } else {
                     request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser editado. Inténtelo de nuevo."));
-                    request.setAttribute("id_tipo_reactivo",tr.getId_tipo_reactivo());
+                    request.setAttribute("id_tipo_reactivo", tr.getId_tipo_reactivo());
                     this.getEditar(request, response);
                 }
             }
-        }catch (FileUploadException e) {
+        } catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
         }
 
     }
-    
+
   // </editor-fold>
-  
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-  
-    private TipoReactivo construirObjeto(List<FileItem> items,HttpServletRequest request,String ubicacion) {
+    private TipoReactivo construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
         TipoReactivo tr = new TipoReactivo();
         for (FileItem item : items) {
             if (item.isFormField()) {
@@ -255,11 +244,10 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                 String fieldValue;
                 try {
                     fieldValue = item.getString("UTF-8").trim();
-                }
-                catch (UnsupportedEncodingException ex) {
+                } catch (UnsupportedEncodingException ex) {
                     fieldValue = item.getString();
                 }
-                switch(fieldName){
+                switch (fieldName) {
                     case "nombre":
                         tr.setNombre(fieldValue);
                         break;
@@ -270,90 +258,87 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                         int id_tipo_reactivo = Integer.parseInt(fieldValue);
                         tr.setId_tipo_reactivo(id_tipo_reactivo);
                         break;
-                }    
+                }
             } else {
                 try {
                     System.out.println(item.getSize());
-                    if(item.getSize() != 0){
+                    if (item.getSize() != 0) {
                         this.crearDirectorio(ubicacion);
                         //Creacion del nombre
                         Date dNow = new Date();
-                        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmm");
+                        SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                         String fecha = ft.format(dNow);
                         String extension = this.getFileExtension(item.getName());
-                        String nombre = tr.getNombre()+"-"+fecha+"."+extension;
+                        String nombre = tr.getNombre() + "-" + fecha + "." + extension;
                         //---------------------
-                        File archivo = new File(ubicacion,nombre);
+                        File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
                         tr.setMachote(archivo.getAbsolutePath());
-                    }else{
+                    } else {
                         tr.setMachote("");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                
+
             }
-    }
+        }
         return tr;
     }
-    
-    private boolean crearDirectorio(String path){
+
+    private boolean crearDirectorio(String path) {
         boolean resultado = false;
         File directorio = new File(path);
         if (!directorio.exists()) {
             System.out.println("Creando directorio: " + path);
             resultado = false;
-            try{
+            try {
                 directorio.mkdirs();
                 resultado = true;
-            } 
-            catch(SecurityException se){
+            } catch (SecurityException se) {
                 se.printStackTrace();
-            }        
-            if(resultado) {    
-                System.out.println("Directorio Creado");  
             }
-        }else{
-            resultado=true;
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
         }
         return resultado;
     }
-    
-    private String getFileExtension(String fileName) {
-        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
-        return fileName.substring(fileName.lastIndexOf(".")+1);
-        else return "";
-    }
-  
-  // </editor-fold>
-  
-  // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
-  @Override
-  protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
-  {
-      List<String> lista_acciones;
-      if (accionHTTP.equals("get")){
-          lista_acciones = accionesGet; 
-      } else {
-          lista_acciones = accionesPost;
-      }
-    if (lista_acciones.contains(accion.toLowerCase())) {
-      String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
-      Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
-      metodo.invoke(this, request, response);
-    }
-    else {
-      Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
-      metodo.invoke(this, request, response);
-    }
-  }
 
-  @Override
-  protected int getPermiso()
-  {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-  
+    private String getFileExtension(String fileName) {
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
+    }
+
+  // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
+    @Override
+    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        List<String> lista_acciones;
+        if (accionHTTP.equals("get")) {
+            lista_acciones = accionesGet;
+        } else {
+            lista_acciones = accionesPost;
+        }
+        if (lista_acciones.contains(accion.toLowerCase())) {
+            String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
+            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+            metodo.invoke(this, request, response);
+        } else {
+            Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
+            metodo.invoke(this, request, response);
+        }
+    }
+
+    @Override
+    protected int getPermiso() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
   // </editor-fold>
 }

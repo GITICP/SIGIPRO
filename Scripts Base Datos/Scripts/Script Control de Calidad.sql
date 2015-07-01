@@ -426,6 +426,11 @@ ADD COLUMN machote varchar(500);
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (500, '[ControlCalidad]AdministrarTipoEquipo', 'Permite agregar, editar y eliminar un tipo de equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (510, '[ControlCalidad]AdministrarTipoReactivo', 'Permite agregar, editar y eliminar un tipo de reactivo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (520, '[ControlCalidad]AdministrarEquipo', 'Permite agregar, editar y eliminar un equipo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (521, '[ControlCalidad]AdministrarCertificadoEquipo', 'Permite agregar y eliminar un certificado de equipo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[ControlCalidad]AdministrarReactivo', 'Permite agregar, editar y eliminar un reactivo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdministrarCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
+
 
 
 -- End of file.

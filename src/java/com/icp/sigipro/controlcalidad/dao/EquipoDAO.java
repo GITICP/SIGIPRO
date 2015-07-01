@@ -174,4 +174,20 @@ public class EquipoDAO extends DAO {
         }
         return resultado;
     }
+    
+    public boolean eliminarCertificado(int id_certificado) {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.certificados_equipos WHERE id_certificado_equipo=?; ");
+            consulta.setInt(1, id_certificado);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
 }
