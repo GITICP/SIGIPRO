@@ -20,13 +20,13 @@ import java.util.List;
  */
 public class EquipoDAO extends DAO{
     
-        public boolean insertarCertificado(CertificadoEquipo certificado)
+        public boolean insertarCertificado(CertificadoEquipo certificado,int id_equipo)
     {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.certificados_equipos (id_equipo,fecha_certificado,path) "
                                                                         + " VALUES (?,?,?) RETURNING id_certificado_equipo");
-            consulta.setInt(1, certificado.getId_certificado_equipo());
+            consulta.setInt(1, id_equipo);
             consulta.setDate(2, certificado.getFecha_certificado());
             consulta.setString(3, certificado.getPath());
             ResultSet rs = consulta.executeQuery();
