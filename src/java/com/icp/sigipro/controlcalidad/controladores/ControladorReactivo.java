@@ -352,6 +352,8 @@ public class ControladorReactivo extends SIGIPROServlet {
                                 cert.setPath(archivoCert.getAbsolutePath());
                                 r.getCertificados().add(cert);
                         }
+                    }else if (item.getFieldName().equals("preparacion")){
+                        r.setPreparacion("");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

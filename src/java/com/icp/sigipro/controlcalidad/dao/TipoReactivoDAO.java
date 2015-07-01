@@ -62,7 +62,6 @@ public class TipoReactivoDAO extends DAO {
                 consulta.setString(3, tiporeactivo.getMachote());
                 consulta.setInt(4, tiporeactivo.getId_tipo_reactivo());
             }
-            System.out.println(consulta);
             if (consulta.executeUpdate()==1) {
                 resultado = true;
             }
