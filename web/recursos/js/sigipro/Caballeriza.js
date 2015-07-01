@@ -304,6 +304,37 @@ function eliminarImagen(id) {
     document.getElementById("botonCancelar" + id).style.visibility = "hidden";
 }
 
+function borrarImagen(id) {
+    var formData = $("#caballosform").serializeArray();
+    var URL = $("#caballosform").attr("action") + "?accion=eliminarimagen&id_imagen="+id;
+    $.ajax(
+            {
+                url : URL,
+                type: "POST",
+                success: function(data,textStatus,jqXHR)
+                {
+                    document.getElementById("botonBorrar"+id).style.visibility = "hidden";
+                    $("#labelImagen"+id).text("Eliminada.");
+                    $("#imagenActual"+id).prop("src","");
+                    $("#imagenActual"+id).prop("height",0);
+                    
+                },
+                error:function(jqXHR,textStatus,errorThrown)
+                {
+                    alert("Error al enviar la solicitud.");
+                    
+                }
+                
+            });
+    var preview = document.getElementById("imagenSubida" + id); //selects the query named img
+    preview.src = "";
+    var imagen = document.getElementById("imagen" + id);
+    imagen.value = "";
+    imagen.setCustomValidity("");
+    document.getElementById("botonCancelar" + id).style.visibility = "hidden";
+}
+
+
 function eliminarDeSelect(id, selector_select) {
     var select = $(selector_select);
     var valor = select.val();

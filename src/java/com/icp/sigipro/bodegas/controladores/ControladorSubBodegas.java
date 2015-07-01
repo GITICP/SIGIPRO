@@ -47,6 +47,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     private SubBodegaDAO dao = new SubBodegaDAO();
     private final SeccionDAO daoSecciones = new SeccionDAO();
     private final UsuarioDAO daoUsuarios = new UsuarioDAO();
+    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
 
     private String redireccion;
 
@@ -172,7 +173,6 @@ public class ControladorSubBodegas extends SIGIPROServlet
 
     protected void getMover(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
         redireccion = "SubBodegas/Mover.jsp";
 
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
@@ -185,6 +185,15 @@ public class ControladorSubBodegas extends SIGIPROServlet
                 try {
                     sb = dao.buscarSubBodegaEInventarios(id_sub_bodega);
                     List<SubBodega> sbs = dao.obtenerSubBodegas();
+                    SubBodega temp = null;
+                    
+                    for (SubBodega sub : sbs) {
+                        if (sub.getId_sub_bodega() == id_sub_bodega){
+                            temp = sub;
+                            break;
+                        }
+                    }
+                    sbs.remove(temp);
 
                     request.setAttribute("sub_bodega", sb);
                     request.setAttribute("sub_bodegas", sbs);
@@ -202,7 +211,8 @@ public class ControladorSubBodegas extends SIGIPROServlet
                     }
                     redireccion = "SubBodegas/index.jsp";
                 }
-            } else {
+            }
+            else {
                 redireccion = "/index.jsp";
             }
         }
@@ -306,6 +316,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     {
         redireccion = "SubBodegas/VerHistorial.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
+        request.setAttribute("id_sub_bodega", id_sub_bodega);
 
         PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
 
@@ -314,6 +325,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
                 SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
                 request.setAttribute("sub_bodega", sb);
                 request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
+                request.setAttribute("permisos_usuario", permisos_sub_bodega);
             }
             catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
@@ -326,6 +338,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -444,17 +457,27 @@ public class ControladorSubBodegas extends SIGIPROServlet
             bitacora.setSub_bodega(sub_bodega);
             bitacora.setProducto(producto);
             bitacora.setCantidad(cantidad);
+            bitacora.setObservaciones(request.getParameter("observaciones"));
 
             Usuario usuario = new Usuario();
             usuario.setIdUsuario(this.getIdUsuario(request));
 
             bitacora.setUsuario(usuario);
 
-            HelperFechas h = HelperFechas.getSingletonHelperFechas();
+            String fecha = request.getParameter("fecha");
+            if (fecha != null) {
+                try {
+                    bitacora.setFecha(helper_fechas.formatearFecha(fecha));
+                }
+                catch (ParseException ex) {
+                    // mostrar mensaje de error con la fecha.
+                }
+            }
+
             String fecha_vencimiento = request.getParameter("fecha_vencimiento");
             if (fecha_vencimiento != null) {
                 try {
-                    inventario_sub_bodega.setFecha_vencimiento(h.formatearFecha(fecha_vencimiento));
+                    inventario_sub_bodega.setFecha_vencimiento(helper_fechas.formatearFecha(fecha_vencimiento));
                 }
                 catch (ParseException ex) {
                     // mostrar mensaje de error con la fecha.
@@ -518,6 +541,17 @@ public class ControladorSubBodegas extends SIGIPROServlet
         bitacora.setCantidad(cantidad);
         bitacora.setSub_bodega(s);
         bitacora.setAccion(BitacoraSubBodega.EGRESAR);
+        bitacora.setObservaciones(request.getParameter("observaciones"));
+
+        String fecha = request.getParameter("fecha");
+        if (fecha != null) {
+            try {
+                bitacora.setFecha(helper_fechas.formatearFecha(fecha));
+            }
+            catch (ParseException ex) {
+                // mostrar mensaje de error con la fecha.
+            }
+        }
 
         redireccion = "SubBodegas/index.jsp";
 
@@ -565,6 +599,17 @@ public class ControladorSubBodegas extends SIGIPROServlet
         bitacora.setSub_bodega(s);
         bitacora.setSub_bodega_destino(s_destino);
         bitacora.setAccion(BitacoraSubBodega.MOVER);
+        bitacora.setObservaciones(request.getParameter("observaciones"));
+        
+        String fecha = request.getParameter("fecha");
+        if (fecha != null) {
+            try {
+                bitacora.setFecha(helper_fechas.formatearFecha(fecha));
+            }
+            catch (ParseException ex) {
+                // mostrar mensaje de error con la fecha.
+            }
+        }
 
         redireccion = "SubBodegas/index.jsp";
 
@@ -659,6 +704,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private SubBodega construirObjeto(HttpServletRequest request)
     {
@@ -679,11 +725,13 @@ public class ControladorSubBodegas extends SIGIPROServlet
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
         List<String> listaAcciones;
+        request.setAttribute("helper_fechas", helper_fechas);
         if (accionHTTP.equals("get")) {
             listaAcciones = accionesGet;
         }
