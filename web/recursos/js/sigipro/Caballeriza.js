@@ -321,7 +321,7 @@ function borrarImagen(id) {
                 },
                 error:function(jqXHR,textStatus,errorThrown)
                 {
-                    alert("Todo mal");
+                    alert("Error al enviar la solicitud.");
                     
                 }
                 
