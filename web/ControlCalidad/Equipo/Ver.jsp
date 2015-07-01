@@ -116,35 +116,36 @@
         </div>
 
     </jsp:attribute>
-
+<jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/Equipo.js"></script>
+    </jsp:attribute>
 </t:plantilla_general>
 
 
 <t:modal idModal="modalCertificado" titulo="Agregar Certificado">
     <jsp:attribute name="form">
         <div class="widget-content">
-            <form class="form-horizontal" id="agregarCertificado" autocomplete="off" method="post" action="Equipo">
+            <form class="form-horizontal" enctype='multipart/form-data' id="agregarCertificado" autocomplete="off" method="post" action="Equipo">
                 <input hidden="true" name="accion" value="Certificado">
-                <input hidden="true" id='id_equipo' name='id_equipo'>
-
-                <label for="fecha" class="control-label">*Fecha de Deceso</label>
+                <input hidden="true" id='id_equipo_certificado' name='id_equipo_certificado'>
+                <%--
+                <label for="fecha" class="control-label">*Fecha de Certificado</label>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerDeceso" class="form-control sigiproDatePickerSerpiente" name="fecha_deceso" data-date-format="dd/mm/yyyy" required
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerCertificado" class="form-control sigiproDatePicker" name="fecha_certificado" data-date-format="dd/mm/yyyy" required
                                    oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
                                    onchange="setCustomValidity('')">
-                            </select>
                         </div>
                     </div>
-                </div>
-                <label for="observaciones" class="control-label">*Observaciones</label>
+                </div> --%>
+                <label for="observaciones" class="control-label">*Certificado</label>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
-                                      oninvalid="setCustomValidity('Este campo es requerido. ')"
-                                      oninput="setCustomValidity('')"></textarea>
+                            <input type="file" id="certificado" name="certificado"  accept="application/pdf,image/jpeg,image/gif,image/png" required
+                                   oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                   onchange="setCustomValidity('')"/>
                         </div>
                     </div>
                 </div>
@@ -153,7 +154,7 @@
                 <div class="form-group">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Deceso</button>            </div>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Certificado</button>            </div>
                 </div>
             </form>
         </div>

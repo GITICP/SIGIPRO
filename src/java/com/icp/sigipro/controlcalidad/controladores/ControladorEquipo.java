@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -260,6 +261,7 @@ public class ControladorEquipo extends SIGIPROServlet {
         Equipo e = new Equipo();
         List<CertificadoEquipo> certificados = new ArrayList<CertificadoEquipo>();
         e.setCertificados(certificados);
+        CertificadoEquipo cert = new CertificadoEquipo();
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -271,6 +273,9 @@ public class ControladorEquipo extends SIGIPROServlet {
                     fieldValue = item.getString();
                 }
                 switch (fieldName) {
+                    case "id_equipo_certificado":
+                        e.setId_equipo(Integer.parseInt(fieldValue));
+                        break;
                     case "nombre":
                         e.setNombre(fieldValue);
                         break;
@@ -291,9 +296,8 @@ public class ControladorEquipo extends SIGIPROServlet {
             } else {
                 try {
                     if (item.getSize() != 0) {
-                        CertificadoEquipo certificado = new CertificadoEquipo();
                         java.sql.Date date = new java.sql.Date(new Date().getTime());
-                        certificado.setFecha_certificado(date);
+                        cert.setFecha_certificado(date);
                         this.crearDirectorio(ubicacion);
                         //Creacion del nombre
                         Date dNow = new Date();
@@ -304,8 +308,8 @@ public class ControladorEquipo extends SIGIPROServlet {
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
-                        certificado.setPath(archivo.getAbsolutePath());
-                        e.getCertificados().add(certificado);
+                        cert.setPath(archivo.getAbsolutePath());
+                        e.getCertificados().add(cert);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
