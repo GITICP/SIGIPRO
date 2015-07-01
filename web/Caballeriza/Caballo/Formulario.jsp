@@ -114,7 +114,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" placeholder="Ej: Negro" class="form-control" name="color"
+                        <input type="text" placeholder="Ej: Negro" class="form-control" name="color" value="${caballo.getColor()}"
                                oninput="setCustomValidity('')"> 
                     </div>
                 </div>
@@ -198,7 +198,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        Imagen Actual: <img src="${imagen.getImagen_ver()}" height="50">
+                                                    <label id="labelImagen${imagen.getId_imagen()}"> Imagen Actual: </label>
+                                                    <img id="imagenActual${imagen.getId_imagen()}" src="${imagen.getImagen_ver()}" height="50">
+                                        <button type="button" id='botonBorrar${imagen.getId_imagen()}' class="btn btn-danger" onclick="borrarImagen(${imagen.getId_imagen()})"> Borrar</button>
                                     </div>
                                 </div>
                             </c:forEach>

@@ -588,4 +588,32 @@ public class CaballoDAO extends DAO
             throw new SIGIPROException("Error al elimianr el peso.");
         }
     }
+    
+    public boolean eliminarImagen(int id_imagen) throws SIGIPROException
+    {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM caballeriza.imagenes WHERE id_imagen = ?;");
+
+            consulta.setInt(1, id_imagen);
+
+            if (consulta.executeUpdate() != 1) {
+                throw new SQLException();
+            }
+            else {
+                resultado = true;
+            }
+
+            consulta.close();
+            cerrarConexion();
+
+            return resultado;
+
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al elimianr el peso.");
+        }
+    }
 }

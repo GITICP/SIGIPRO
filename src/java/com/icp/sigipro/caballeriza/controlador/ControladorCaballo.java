@@ -29,6 +29,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +74,7 @@ public class ControladorCaballo extends SIGIPROServlet
             add("agregarpeso");
             add("editarpeso");
             add("eliminarpeso");
+            add("eliminarimagen");
         }
     };
 
@@ -278,6 +281,16 @@ public class ControladorCaballo extends SIGIPROServlet
         }
         catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
+        }
+    }
+    
+    protected void postEliminarimagen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        
+        try {
+            int id_imagen = Integer.parseInt(request.getParameter("id_imagen"));
+            dao.eliminarImagen(id_imagen);
+        } catch (SIGIPROException ex) {
+            Logger.getLogger(ControladorCaballo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
