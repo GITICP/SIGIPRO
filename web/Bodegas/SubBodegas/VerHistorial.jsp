@@ -41,10 +41,7 @@
                             <h3><i class="fa fa-th-large"></i> ${sub_bodega.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:if test="${permisos_usuario.isEncargado() || permisos_usuario.isIngresar() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
-                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ingresar&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Ingresar</a>
-                                </c:if>
-                                <c:if test="${permisos_usuario.isEncargado() || permisos_usuario.isConsumir() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
-                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=consumir&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Consumir</a>
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ver&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Volver</a>
                                 </c:if>
                             </div>
                         </div>

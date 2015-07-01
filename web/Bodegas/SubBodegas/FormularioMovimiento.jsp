@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            <label id="label-fecha" for="fecha" class="control-label">* Fecha de Ingreso</label>
+            <label id="label-fecha" for="fecha" class="control-label">* Fecha de Movimiento</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">

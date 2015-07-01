@@ -325,6 +325,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
                 SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
                 request.setAttribute("sub_bodega", sb);
                 request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
+                request.setAttribute("permisos_usuario", permisos_sub_bodega);
             }
             catch (SIGIPROException sig_ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
