@@ -188,10 +188,13 @@ public class ControladorEquipo extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(521, listaPermisos);
         int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
+        String certificado = dao.obtenerCertificado(id_certificado_equipo).getPath();
         boolean resultado = false;
         try {
             resultado = dao.eliminarCertificado(id_certificado_equipo);
             if (resultado) {
+                File archivo = new File(certificado);
+                archivo.delete();
                 //Funcion que genera la bitacora 
                 bitacora.setBitacora(id_certificado_equipo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOEQUIPO, request.getRemoteAddr());
                 //----------------------------
