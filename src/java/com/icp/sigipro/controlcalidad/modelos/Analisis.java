@@ -15,6 +15,8 @@ import org.json.JSONObject;
  */
 public class Analisis {
     private int id_analisis;
+    private String nombre;
+    private int cantidad_pendiente;
     //Debe ser de tipo XML pero se define luego
     private String estructura; 
     //PATH de la ubicacion del archivo XSL
@@ -25,6 +27,22 @@ public class Analisis {
     private List<TipoMuestra> tipos_muestras_analisis;
 
     public Analisis() {
+    }
+
+    public int getCantidad_pendiente() {
+        return cantidad_pendiente;
+    }
+
+    public void setCantidad_pendiente(int cantidad_pendiente) {
+        this.cantidad_pendiente = cantidad_pendiente;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public int getId_analisis() {

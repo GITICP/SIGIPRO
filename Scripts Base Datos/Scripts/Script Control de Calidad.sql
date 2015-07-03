@@ -422,6 +422,9 @@ ADD COLUMN descripcion varchar(500);
 ALTER TABLE control_calidad.tipos_reactivos
 ADD COLUMN machote varchar(500);
 
+ALTER TABLE control_calidad.analisis
+ADD COLUMN nombre varchar(50);
+
 --500
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (500, '[ControlCalidad]AdministrarTipoEquipo', 'Permite agregar, editar y eliminar un tipo de equipo');
