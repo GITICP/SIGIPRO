@@ -57,7 +57,7 @@
                 <tbody>
                   <c:forEach items="${listaEquipos}" var="equipo">
 
-                    <tr id ="${tipo.getId_equipo()}">
+                    <tr id ="${equipo.getId_equipo()}">
                       <td>
                         <a href="/SIGIPRO/ControlCalidad/Equipo?accion=ver&id_equipo=${equipo.getId_equipo()}">
                           <div style="height:100%;width:100%">
