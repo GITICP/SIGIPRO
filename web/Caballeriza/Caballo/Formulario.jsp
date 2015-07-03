@@ -191,7 +191,7 @@
                                             <div class="col-sm-12">
                                                 <div class="input-group">                
                                                     <input class='clearable' type="file" id="imagen${imagen.getId_imagen()}" name="${imagen.getId_imagen()}" accept="image/*" 
-                                                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                                           oninvalid="setCustomValidity('El tamaño debe ser de 300KB o menos. ')" 
                                                            onchange="previstaImagen(this, ${imagen.getId_imagen()})" /> <button type="button" id='botonCancelar${imagen.getId_imagen()}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${imagen.getId_imagen()})"> Borrar</button>
                                                     <div><img name='imagenSubida' id="imagenSubida${imagen.getId_imagen()}" src='' height="100" alt=""></div>
 
@@ -212,7 +212,7 @@
                                             <div class="col-sm-12">
                                                 <div class="input-group">                
                                                     <input class='clearable' type="file" id="imagen${numero}" name="imagen" accept="image/*" 
-                                                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                                           oninvalid="setCustomValidity('El tamaño debe ser de 300KB o menos. ')" 
                                                            onchange="previstaImagen(this, ${numero})" /> <button type="button" id='botonCancelar${numero}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${numero})"> Borrar</button>
                                                     <div><img name='imagenSubida' id="imagenSubida${numero}" src='' height="100" alt=""></div>
 

@@ -6,8 +6,8 @@ function previewFile(){
         var size  = file.size;
         var imagen = document.getElementById("imagen_Serpiente");
         var reader  = new FileReader();
-        if (size> 102400){
-            document.getElementById("imagen_Serpiente").setCustomValidity("La imagen debe ser de 100KB o menos. ");
+        if (size> 307200){
+            document.getElementById("imagen_Serpiente").setCustomValidity("La imagen debe ser de 300KB o menos. ");
             document.getElementById("boton_Cancelar").style.visibility = "visible";
         }else{
             document.getElementById("imagen_Serpiente").setCustomValidity("");

@@ -268,8 +268,8 @@ function previstaImagen(input, id) {
         var size = file.size;
         var imagen = document.getElementById(input.id.toString());
         var reader = new FileReader();
-        if (size > 102400) {
-            input.setCustomValidity("La imagen debe ser de 100KB o menos. ");
+        if (size > 307200) {
+            input.setCustomValidity("La imagen debe ser de 300KB o menos. ");
             document.getElementById("botonCancelar" + id).style.visibility = "visible";
         } else {
             input.setCustomValidity("");
