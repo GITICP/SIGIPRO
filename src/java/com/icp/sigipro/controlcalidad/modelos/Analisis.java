@@ -5,7 +5,9 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
+import java.sql.SQLXML;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -16,9 +18,10 @@ import org.json.JSONObject;
 public class Analisis {
     private int id_analisis;
     //Debe ser de tipo XML pero se define luego
-    private String estructura; 
+    private SQLXML estructura; 
     //PATH de la ubicacion del archivo XSL
     private String machote;
+    private Usuario encargado;
     
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
@@ -35,11 +38,11 @@ public class Analisis {
         this.id_analisis = id_analisis;
     }
 
-    public String getEstructura() {
+    public SQLXML getEstructura() {
         return estructura;
     }
 
-    public void setEstructura(String estructura) {
+    public void setEstructura(SQLXML estructura) {
         this.estructura = estructura;
     }
 
@@ -49,6 +52,16 @@ public class Analisis {
 
     public void setMachote(String machote) {
         this.machote = machote;
+    }
+
+    public Usuario getEncargado()
+    {
+        return encargado;
+    }
+
+    public void setEncargado(Usuario encargado)
+    {
+        this.encargado = encargado;
     }
 
     public List<TipoEquipo> getTipos_equipos_analisis() {
@@ -94,5 +107,4 @@ public class Analisis {
         }
         return JSON.toString();
     }
-    
 }
