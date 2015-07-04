@@ -723,14 +723,26 @@ function firstDefined() {
 }
 
 
-function htmlEscape(s) {
-	return (s + '').replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/'/g, '&#039;')
-		.replace(/"/g, '&quot;')
-		.replace(/\n/g, '<br />');
-}
+  function htmlEscape(s) {
+    return (s + '').replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/'/g, '&#039;')
+            .replace(/"/g, '&quot;')
+            .replace(/\n/g, '<br />')
+            .replace('á', '\u00e1')
+            .replace('é', '\u00e9')
+            .replace('í', '\u00ed')
+            .replace('ó', '\u00f3')
+            .replace('ú', '\u00fa')
+            .replace('Á', '\u00c1')
+            .replace('É', '\u00c9')
+            .replace('Í', '\u00cd')
+            .replace('Ó', '\u00d3')
+            .replace('Ú', '\u00da')
+            .replace('ñ', '\u00f1')
+            .replace('Ñ', '\u00d1');
+  }
 
 
 function stripHtmlEntities(text) {

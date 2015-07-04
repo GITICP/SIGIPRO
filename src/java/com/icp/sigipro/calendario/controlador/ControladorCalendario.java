@@ -6,14 +6,14 @@
 package com.icp.sigipro.calendario.controlador;
 
 
-import com.icp.sigipro.calendario.dao.CalendarioDAO;
-import com.icp.sigipro.bioterio.modelos.Cepa;
-import com.icp.sigipro.bioterio.modelos.Pie;
-import com.icp.sigipro.bioterio.modelos.PiexCepa;
+import com.icp.sigipro.calendario.dao.EventoDAO;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.calendario.modelos.Evento;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,17 +24,19 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
  *
  * @author Amed
  */
-@WebServlet(name = "ControladorCalendario", urlPatterns = {"/Calendario"})
+@WebServlet(name = "ControladorCalendario", urlPatterns = {"/Calendario/Calendario"})
 public class ControladorCalendario extends  SIGIPROServlet {
 
   private final int[] permisos = {5000, 1, 1};
-  private CalendarioDAO dao = new CalendarioDAO();
+  private EventoDAO dao = new EventoDAO();
+  private UsuarioDAO dao_us = new UsuarioDAO();
   private HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
   protected final Class clase = ControladorCalendario.class;
@@ -42,30 +44,29 @@ public class ControladorCalendario extends  SIGIPROServlet {
   {
     {
       add("index");
-      add("ver");
       add("agregar");
-      add("editar");
-      add("eliminar");
     }
   };
   protected final List<String> accionesPost = new ArrayList<String>()
   {
     {
       add("agregar");
-      add("editar");
     }
   };
-  
+  protected final List<String> opcionesCompartir = new ArrayList<String>()
+  {
+    {
+      add("Secciones");
+      add("Usuarios");
+      add("Roles");
+      add("Todos");
+    }
+  };
    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
   
   protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
-    List<Integer> listaPermisos = getPermisosUsuario(request);
-    validarPermiso(202, listaPermisos);
     String redireccion = "Calendario/Agregar.jsp";
-
-    Cepa ds = new Cepa();
-    request.setAttribute("cepa", ds);
     request.setAttribute("accion", "Agregar");
 
     redireccionar(request, response, redireccion);
@@ -73,30 +74,16 @@ public class ControladorCalendario extends  SIGIPROServlet {
 
   protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
-
-    String redireccion = "Calendario/Calendario/index.jsp";
-    redireccionar(request, response, redireccion);
-  }
-
-  protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-
-    String redireccion = "Calendario/Ver.jsp";
-    redireccionar(request, response, redireccion);
-  }
-
-  protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-
-    String redireccion = "Calendario/Editar.jsp";
-    redireccionar(request, response, redireccion);
-  }
-
-  protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
     String redireccion = "Calendario/index.jsp";
+    HttpSession sesion = request.getSession();
+    String nombre_usr = (String) sesion.getAttribute("usuario");
+    Usuario us = dao_us.obtenerUsuario(nombre_usr);
+    String json = dao.getEventos(us);
+    request.setAttribute("eventos", json);
+    request.setAttribute("opcionesCompartir", opcionesCompartir);
     redireccionar(request, response, redireccion);
   }
+
   
   // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Métodos Post">
@@ -109,24 +96,13 @@ public class ControladorCalendario extends  SIGIPROServlet {
     redireccionar(request, response, redireccion);
   }
   
-  protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    
-    String redireccion = "Calendario/Editar.jsp";
-   
-    redireccionar(request, response, redireccion);
-  }
   
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-   private Cepa construirObjeto(HttpServletRequest request) throws SIGIPROException {
-    Cepa cepa = new Cepa();
+   private Evento construirObjeto(HttpServletRequest request) throws SIGIPROException {
+    Evento evento = new Evento();
     
-    cepa.setId_cepa(Integer.parseInt(request.getParameter("id_cepa")));
-    cepa.setNombre(request.getParameter("nombre"));
-    cepa.setDescripcion(request.getParameter("descripcion"));
-    
-    return cepa;
+    return evento;
   }
   
   // </editor-fold>

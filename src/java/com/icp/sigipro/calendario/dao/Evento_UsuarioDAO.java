@@ -4,11 +4,10 @@
  * and open the template in the editor.
  */
 package com.icp.sigipro.calendario.dao;
-
 /**
  *
  * @author Amed
  */
-public class CalendarioDAO {
+public class Evento_UsuarioDAO {
   
 }
