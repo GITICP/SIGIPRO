@@ -33,7 +33,7 @@ public class EventoDAO {
         SingletonBD s = SingletonBD.getSingletonBD();
     }
 
-    public boolean insertarEvento(Evento evento, String sharing_type, String ids)
+    public boolean insertarEvento(Evento evento, Integer id_usuario, Boolean Shared, String sharing_type, String[] ids) throws SIGIPROException
     {
         boolean resultado = false;
         try {
@@ -47,10 +47,30 @@ public class EventoDAO {
             consulta.setBoolean(5, evento.getAllDay());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
-            if (resultadoConsulta.next()) {
+            if (resultadoConsulta.next()) {  
                 resultado = true;
-                //evento.setId_evento(resultadoConsulta.getInt("id"));
-                // --------Aqui falta agregar los inserts de los compartidos
+                Integer id_evento = resultadoConsulta.getInt("id");
+                insertarEvento_Usuario(id_evento, id_usuario);
+                if (Shared)
+                  {
+                    if (sharing_type.equals("Usuarios"))
+                    {for(int i=0; i<ids.length; i++)
+                      {insertarEvento_Usuario(id_evento,
+                              Integer.parseInt(ids[i]));}
+                    }
+                    else if (sharing_type.equals("Secciones"))
+                    {for(int i=0; i<ids.length; i++)
+                      {insertarEvento_Seccion(id_evento,
+                              Integer.parseInt(ids[i]));}
+                    }
+                    else if (sharing_type.equals("Roles"))
+                    {for(int i=0; i<ids.length; i++)
+                      {insertarEvento_Rol(id_evento,
+                              Integer.parseInt(ids[i]));}
+                    }
+                    else
+                    {insertarEvento_Seccion(id_evento,0);}
+                  }
             }
 
             resultadoConsulta.close();
@@ -59,10 +79,86 @@ public class EventoDAO {
         }
         catch (SQLException e) {
             e.printStackTrace();
+            throw new SIGIPROException("Ocurrió un error al insertar el evento.");
         }
         return resultado;
     }
 
+    public boolean insertarEvento_Usuario(Integer id_e, Integer id_u) throws SIGIPROException
+    {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion()
+                    .prepareStatement("insert into calendario.eventos_usuarios(id_usuario, id_evento) values (?, ?) RETURNING id_evento");
+            // Parameters start with 1
+            consulta.setInt(1, id_u);
+            consulta.setInt(2, id_e);
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = true;
+            }
+
+            resultadoConsulta.close();
+            consulta.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SIGIPROException("Ocurrió un error al compartir el evento.");
+        }
+        return resultado;
+    }
+        public boolean insertarEvento_Seccion(Integer id_e, Integer id_s) throws SIGIPROException
+    {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion()
+                    .prepareStatement("insert into calendario.eventos_secciones(id_seccion, id_evento) values (?, ?) RETURNING id_evento");
+            // Parameters start with 1
+            consulta.setInt(1, id_s);
+            consulta.setInt(2, id_e);
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = true;
+            }
+
+            resultadoConsulta.close();
+            consulta.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SIGIPROException("Ocurrió un error al compartir el evento.");
+        }
+        return resultado;
+    }
+        public boolean insertarEvento_Rol(Integer id_e, Integer id_r) throws SIGIPROException
+    {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion()
+                    .prepareStatement("insert into calendario.eventos_roles(id_rol, id_evento) values (?, ?) RETURNING id_evento");
+            // Parameters start with 1
+            consulta.setInt(1, id_r);
+            consulta.setInt(2, id_e);
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = true;
+            }
+
+            resultadoConsulta.close();
+            consulta.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SIGIPROException("Ocurrió un error al compartir el evento.");
+        }
+        return resultado;
+    }
 //    public boolean editarEvento(Evento evento)
 //    {
 //        boolean resultado = false;
@@ -137,7 +233,7 @@ public class EventoDAO {
 //
 //        return evento;
 //    }
-  public List<Evento> obtenerEventos(Usuario u) {
+  public List<Evento> obtenerEventos(Usuario u) throws SIGIPROException {
     List<Evento> eventos = new ArrayList<Evento>();
     try {
       PreparedStatement preparedStatement = getConexion().
@@ -187,11 +283,12 @@ public class EventoDAO {
         }
         catch (SQLException e) {
             e.printStackTrace();
+            throw new SIGIPROException("No se puede obtener los eventos.");
         }
 
         return eventos;
     }
-    public String getEventos(Usuario u){
+    public String getEventos(Usuario u) throws SIGIPROException{
       List<Evento> eventos = obtenerEventos(u);
       String json = new Gson().toJson(eventos);
       return json;

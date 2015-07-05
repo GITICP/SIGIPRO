@@ -50,88 +50,100 @@
 
       <jsp:attribute name="form">
         <form name="modal" id="nuevo-evento-form" action="Calendario" method="POST">
-          <div class="col-md-12">
-            <input type="checkbox" name="allday" id="allday"/> 
-            <label for="allday" class="control-label">Evento de todo el día</label> 
-          </div>
-          <div class="col-md-12">
-            <label for="start_date" class="control-label">*Fecha y hora de inicio:</label>
-          </div>
-          <div class="col-md-12">
-            <div class="col-md-6">
-              <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="start_date" value="${cara.getFecha_eliminacionhembra_f_S()}" class="form-control sigiproDatePickerEspecial" name="start_date" data-date-format="yyyy-mm-dd" required
-                      oninvalid="setCustomValidity('Este campo es requerido ')"
-                      onchange="setCustomValidity('')" style="width:220px;">
+          <input hidden="true" type="text" value="agregar" name="accion" id="accion"/>
+          <div class="row">
+            <div class="col-md-12">
+              <input type="checkbox" name="allday" id="allday" value="true"/> 
+              <label for="allday" class="control-label">Evento de todo el día</label> 
             </div>
-            <div class="col-md-6">
-              <input type="text" pattern="\d{1,2}:\d{1,2}" id="start_time" placeholder="Ej. 14:00" name="start_time" class="form-control"
-                     style="width:100px;" />
+            <div class="col-md-12">
+              <label for="start_date" class="control-label">*Fecha y hora de inicio:</label>
+            </div>
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="start_date" value="${cara.getFecha_eliminacionhembra_f_S()}" class="form-control sigiproDatePickerEspecial" name="start_date" data-date-format="yyyy-mm-dd" required
+                        oninvalid="setCustomValidity('Este campo es requerido ')"
+                        onchange="setCustomValidity('')" style="width:220px;">
+              </div>
+              <div class="col-md-6">
+                <input type="text" pattern="\d{1,2}:\d{1,2}" id="start_time" placeholder="Ej. 14:00" name="start_time" class="form-control" required oninvalid="setCustomValidity('Este campo es requerido, introduzca una hora en el formato 23:59 ')"
+                       onchange="setCustomValidity('')"
+                       style="width:100px;" />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label for="end_date" class="control-label">Fecha y hora final:</label>
+            </div>
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="end_date" value="${cara.getFecha_eliminacionhembra_f_S()}" class="form-control sigiproDatePickerEspecial" name="end_date" data-date-format="yyyy-mm-dd" 
+                        oninvalid="setCustomValidity('Este campo es requerido ')"
+                        onchange="setCustomValidity('')" style="width:220px;">
+              </div>
+              <div class="col-md-6">
+                <input type="text" pattern="\d{1,2}:\d{1,2}" id="end_time" placeholder="Ej. 14:00" name="end_time" class="form-control"
+                       style="width:100px;" />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label for="title" class="control-label">*Nombre del evento:</label>
+            </div>
+            <div class="col-md-12">
+              <input type="text" id="title" name="title" class="form-control" required oninvalid="setCustomValidity('Este campo es requerido ')"
+                     onchange="setCustomValidity('')"
+                     maxlength="255" style="width:520px;"/>
+            </div>
+            <div class="col-md-12">
+              <label for="description" class="control-label">Descripción</label>
+              <textarea name="description" id="description"
+                        rows="9" style="width:520px;"></textarea>
+            </div>
+            <div class="col-md-12">
+              <input type="checkbox" name="shared" id="shared" value="true" />
+              <label for="shared" class="control-label">Compartido</label>
+            </div>
+            <div class="col-md-12" hidden="true" id="divquien">
+              <label for="whotoshare" class="control-label" >¿Compartido con quién?</label>
+              <select id="whotoshare" class="select2" name="whotoshare"  hidden="true"
+                      oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                <c:forEach items="${opcionesCompartir}" var="o">
+                  <option value=${o} selected> ${o}</option>
+                </c:forEach>
+              </select>
+            </div>
+            <div class="col-md-12" hidden="true" id="divsecciones">
+              <label for="shared" class="control-label" >Escoja las secciones con las que quiere compartir el evento</label>
+              <select multiple id="secciones" class="select2 select2-multiple" name="secciones"  hidden="true"
+                      oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                <c:forEach items="${secciones}" var="o">
+                  <option value=${o.getId_seccion()} > ${o.getNombre_seccion()}</option>
+                </c:forEach>
+              </select>
+            </div>
+            <div class="col-md-12" hidden="true" id="divusuarios">            
+              <label for="shared" class="control-label" >Escoja los usuarios con los que quiere compartir el evento</label>
+              <select multiple tabindex="-1" id="usuarios" class="select2 select2-multiple" name="usuarios"  hidden="true"
+                      oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                <c:forEach items="${usuarios}" var="o">
+                  <option value=${o.getID()} > ${o.getNombreCompleto()}</option>
+                </c:forEach>
+              </select>
+            </div>
+            <div class="col-md-12" hidden="true" id="divroles">
+              <label for="shared" class="control-label" >Escoja los roles con los que quiere compartir el evento</label>
+              <select multiple id="roles" class="select2 select2-multiple" name="roles"  hidden="true"
+                      oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                <c:forEach items="${roles}" var="o">
+                  <option value=${o.getID()} > ${o.getNombreRol()}</option>
+                </c:forEach>
+              </select>
             </div>
           </div>
-          <div class="col-md-12">
-            <label for="end_date" class="control-label">Fecha y hora final:</label>
-          </div>
-          <div class="col-md-12">
-            <div class="col-md-6">
-              <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="end_date" value="${cara.getFecha_eliminacionhembra_f_S()}" class="form-control sigiproDatePickerEspecial" name="end_date" data-date-format="yyyy-mm-dd" required
-                      oninvalid="setCustomValidity('Este campo es requerido ')"
-                      onchange="setCustomValidity('')" style="width:220px;">
-            </div>
-            <div class="col-md-6">
-              <input type="text" pattern="\d{1,2}:\d{1,2}" id="end_time" placeholder="Ej. 14:00" name="end_time" class="form-control"
-                     style="width:100px;" />
-            </div>
-          </div>
-          <div class="col-md-12">
-            <label for="title" class="control-label">*Nombre del evento:</label>
-          </div>
-          <div class="col-md-12">
-            <input type="text" id="event_subject" name="title" class="form-control"
-                   maxlength="255" style="width:520px;"/>
-          </div>
-          <div class="col-md-12">
-            <label for="description" class="control-label">Descripción</label>
-            <textarea name="event_description" id="event_description"
-                      rows="9" style="width:520px;"></textarea>
-          </div>
-          <div class="col-md-12">
-            <input type="checkbox" name="shared" id="shared" />
-            <label for="shared" class="control-label">Compartido</label>
-          </div>
-          <div class="col-md-12" hidden="true" id="divquien">
-            <label for="whotoshare" class="control-label" >¿Compartido con quién?</label>
-            <select id="whotoshare" class="select2" name="whotoshare" required hidden="true"
-                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-              <c:forEach items="${opcionesCompartir}" var="o">
-                                        <option value=${o} selected> ${o}</option>
 
-               </c:forEach>
-            </select>
-          </div>
-          <div class="col-md-12" hidden="true" id="divsecciones">
-            <label for="shared" class="control-label" >Escoja las secciones con las que quiere compartir el evento</label>
-            <select id="secciones" class="select2-multiple" name="whotoshare" required hidden="true"
-                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-              
-            </select>
-          </div>
-          <div class="col-md-12" hidden="true" id="divusuarios">            
-            <label for="shared" class="control-label" >Escoja los usuarios con los que quiere compartir el evento</label>
-            <select id="usuarios" class="select2-multiple" name="whotoshare" required hidden="true"
-                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-            </select>
-          </div>
-          <div class="col-md-12" hidden="true" id="divroles">
-            <label for="shared" class="control-label" >Escoja los roles con los que quiere compartir el evento</label>
-            <select id="roles" class="select2-multiple" name="whotoshare" required hidden="true"
-                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-            </select>
-          </div>
-     
           <div class="row">
             <div class="form-group">
               <div class="modal-footer">
-                <button type="button"  class="btn btn-primary" id="crear">Crear Evento</button>
+                <button type="button"  class="btn btn-primary" id="crear" onclick="validar()">Crear Evento</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelar">Cancelar</button>
               </div>
             </div>
