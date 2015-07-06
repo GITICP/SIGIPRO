@@ -1,6 +1,6 @@
 <%-- 
     Document   : index
-    Created on : Jun 30, 2015, 8:24:32 PM
+    Created on : Jul 2, 2015, 8:43:50 PM
     Author     : ld.conejo
 --%>
 
@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Control de Calidad</li>
             <li> 
-              <a href="/SIGIPRO/ControlCalidad/Equipo?">Equipos</a>
+              <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
             </li>
           </ul>
         </div>
@@ -31,16 +31,16 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Equipos </h3>
+              <h3><i class="fa fa-gears"></i> Análisis </h3>
               <c:set var="contienePermiso" value="false" />
               <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 520}">
+                <c:if test="${permiso == 1 || permiso == 540}">
                   <c:set var="contienePermiso" value="true" />
                 </c:if>
               </c:forEach>
               <c:if test="${contienePermiso}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Equipo?accion=agregar">Agregar Equipo</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=agregar">Agregar Análisis</a>
                 </div>
               </c:if>
             </div>
@@ -51,21 +51,21 @@
                 <thead> 
                   <tr>
                     <th>Nombre</th>
-                    <th>Tipo de Equipo</th>
+                    <th>Análisis Pendientes</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaEquipos}" var="equipo">
+                  <c:forEach items="${listaAnalisis}" var="analisis">
 
-                    <tr id ="${equipo.getId_equipo()}">
+                    <tr id ="${analisis.getId_analisis()}">
                       <td>
-                        <a href="/SIGIPRO/ControlCalidad/Equipo?accion=ver&id_equipo=${equipo.getId_equipo()}">
+                        <a href="/SIGIPRO/ControlCalidad/Analisis?accion=ver&id_analisis=${analisis.getId_analisis()}">
                           <div style="height:100%;width:100%">
-                            ${equipo.getNombre()}
+                            ${analisis.getNombre()}
                           </div>
                         </a>
                       </td>
-                      <td>${equipo.getTipo_equipo().getNombre()}</td>
+                      <td>${analisis.getCantidad_pendiente()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

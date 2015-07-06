@@ -41,7 +41,15 @@ public class TipoMuestra {
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        if (descripcion == null) {
+            this.descripcion = "Sin descripción.";
+        } else {
+            if (descripcion.isEmpty()) {
+                this.descripcion = "Sin descripción.";
+            } else {
+                this.descripcion = descripcion;
+            }
+        }   
     }
     
     public String parseJSON(){
@@ -63,5 +71,4 @@ public class TipoMuestra {
         }
         return JSON.toString();
     }
-    
 }

@@ -137,7 +137,7 @@ public class ReactivoDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT reactivo.id_reactivo, reactivo.nombre, reactivo.preparacion, tipo.id_tipo_reactivo, tipo.nombre as nombre_tipo, cert.id_certificado_reactivo, cert.fecha_certificado, cert.path "
                     + "FROM control_calidad.reactivos as reactivo INNER JOIN control_calidad.tipos_reactivos as tipo ON reactivo.id_tipo_reactivo = tipo.id_tipo_reactivo "
-                    + "INNER JOIN control_calidad.certificados_reactivos as cert ON cert.id_reactivo = reactivo.id_reactivo "
+                    + "LEFT OUTER JOIN control_calidad.certificados_reactivos as cert ON cert.id_reactivo = reactivo.id_reactivo "
                     + "WHERE reactivo.id_reactivo = ?; ");
             consulta.setInt(1, id_reactivo);
             ResultSet rs = consulta.executeQuery();
@@ -152,11 +152,13 @@ public class ReactivoDAO extends DAO {
                     resultado.setId_reactivo(rs.getInt("id_reactivo"));
                     resultado.setNombre(rs.getString("nombre"));
                 }
-                CertificadoReactivo certificado = new CertificadoReactivo();
-                certificado.setFecha_certificado(rs.getDate("fecha_certificado"));
-                certificado.setId_certificado_reactivo(rs.getInt("id_certificado_reactivo"));
-                certificado.setPath(rs.getString("path"));
-                certificados.add(certificado);
+                if (rs.getInt("id_certificado_reactivo") != 0) {
+                    CertificadoReactivo certificado = new CertificadoReactivo();
+                    certificado.setFecha_certificado(rs.getDate("fecha_certificado"));
+                    certificado.setId_certificado_reactivo(rs.getInt("id_certificado_reactivo"));
+                    certificado.setPath(rs.getString("path"));
+                    certificados.add(certificado);
+                }
             }
             resultado.setCertificados(certificados);
             consulta.close();
@@ -182,7 +184,7 @@ public class ReactivoDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean eliminarCertificado(int id_certificado) {
         boolean resultado = false;
         try {

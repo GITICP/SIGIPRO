@@ -233,10 +233,13 @@ public class ControladorReactivo extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(531, listaPermisos);
         int id_certificado_reactivo = Integer.parseInt(request.getParameter("id_certificado_reactivo"));
+        String certificado = dao.obtenerCertificado(id_certificado_reactivo).getPath();
         boolean resultado = false;
         try {
             resultado = dao.eliminarCertificado(id_certificado_reactivo);
             if (resultado) {
+                File archivo = new File(certificado);
+                archivo.delete();
                 //Funcion que genera la bitacora 
                 bitacora.setBitacora(id_certificado_reactivo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOREACTIVO, request.getRemoteAddr());
                 //----------------------------
@@ -296,8 +299,16 @@ public class ControladorReactivo extends SIGIPROServlet {
                     this.getAgregar(request, response);
                 }
             } else if (r.getCertificados().isEmpty()) {
+                String archivoViejo = "";
+                if (!r.getPreparacion().equals("")){
+                    archivoViejo = dao.obtenerReactivo(r.getId_reactivo()).getPreparacion();
+                }
                 resultado = dao.editarReactivo(r);
                 if (resultado) {
+                    if (!archivoViejo.equals("")){
+                        File archivo = new File(archivoViejo);
+                        archivo.delete();
+                    }
                     //Funcion que genera la bitacora
                     bitacora.setBitacora(r.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_REACTIVO, request.getRemoteAddr());
                     //*----------------------------*

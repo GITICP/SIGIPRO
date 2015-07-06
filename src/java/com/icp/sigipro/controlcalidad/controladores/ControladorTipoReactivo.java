@@ -214,8 +214,16 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                     this.getAgregar(request, response);
                 }
             } else {
+                String archivoViejo = "";
+                if (!tr.getMachote().equals("")){
+                    archivoViejo = dao.obtenerTipoReactivo(tr.getId_tipo_reactivo()).getMachote();
+                }
                 resultado = dao.editarTipoReactivo(tr);
                 if (resultado) {
+                    if (!archivoViejo.equals("")){
+                        File archivo = new File(archivoViejo);
+                        archivo.delete();
+                    }
                     //Funcion que genera la bitacora
                     bitacora.setBitacora(tr.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOREACTIVO, request.getRemoteAddr());
                     //*----------------------------*
@@ -261,7 +269,6 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                 }
             } else {
                 try {
-                    System.out.println(item.getSize());
                     if (item.getSize() != 0) {
                         this.crearDirectorio(ubicacion);
                         //Creacion del nombre

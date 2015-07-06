@@ -128,7 +128,7 @@ public class EquipoDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.id_tipo_equipo, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path "
                     + "FROM control_calidad.equipos as equipo INNER JOIN control_calidad.tipos_equipos as tipo ON equipo.id_tipo_equipo = tipo.id_tipo_equipo "
-                    + "INNER JOIN control_calidad.certificados_equipos as cert ON cert.id_equipo = equipo.id_equipo "
+                    + "LEFT OUTER JOIN control_calidad.certificados_equipos as cert ON cert.id_equipo = equipo.id_equipo "
                     + "WHERE equipo.id_equipo = ?; ");
             consulta.setInt(1, id_equipo);
             ResultSet rs = consulta.executeQuery();
@@ -143,11 +143,13 @@ public class EquipoDAO extends DAO {
                     resultado.setId_equipo(rs.getInt("id_equipo"));
                     resultado.setNombre(rs.getString("nombre"));
                 }
-                CertificadoEquipo certificado = new CertificadoEquipo();
-                certificado.setFecha_certificado(rs.getDate("fecha_certificado"));
-                certificado.setId_certificado_equipo(rs.getInt("id_certificado_equipo"));
-                certificado.setPath(rs.getString("path"));
-                certificados.add(certificado);
+                if (rs.getInt("id_certificado_equipo") != 0) {
+                    CertificadoEquipo certificado = new CertificadoEquipo();
+                    certificado.setFecha_certificado(rs.getDate("fecha_certificado"));
+                    certificado.setId_certificado_equipo(rs.getInt("id_certificado_equipo"));
+                    certificado.setPath(rs.getString("path"));
+                    certificados.add(certificado);
+                }
             }
             resultado.setCertificados(certificados);
             consulta.close();
@@ -173,7 +175,7 @@ public class EquipoDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean eliminarCertificado(int id_certificado) {
         boolean resultado = false;
         try {

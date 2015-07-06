@@ -7,11 +7,12 @@ package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
+import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
-import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
-import com.icp.sigipro.controlcalidad.modelos.Equipo;
+import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
+import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
+import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.File;
@@ -22,7 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,19 +42,20 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorEquipo", urlPatterns = {"/ControlCalidad/Equipo"})
-public class ControladorEquipo extends SIGIPROServlet {
+@WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
+public class ControladorAnalisis extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 520};
+    private final int[] permisos = {1, 540};
     //-----------------
-    private EquipoDAO dao = new EquipoDAO();
+    private AnalisisDAO dao = new AnalisisDAO();
     private TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
+    private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
 
     HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     BitacoraDAO bitacora = new BitacoraDAO();
 
-    protected final Class clase = ControladorEquipo.class;
+    protected final Class clase = ControladorAnalisis.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
@@ -62,8 +63,7 @@ public class ControladorEquipo extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
-            add("certificado");
-            add("eliminarcertificado");
+            add("archivo");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -73,15 +73,14 @@ public class ControladorEquipo extends SIGIPROServlet {
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getCertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
 
-        int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
-        String equipo = request.getParameter("nombre");
-        CertificadoEquipo certificado = dao.obtenerCertificado(id_certificado_equipo);
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        Analisis analisis = dao.obtenerAnalisis(id_analisis);
 
-        String filename = certificado.getPath();
+        String filename = analisis.getMachote();
         File file = new File(filename);
 
         if (file.exists()) {
@@ -91,7 +90,7 @@ public class ControladorEquipo extends SIGIPROServlet {
 
             response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            String nombre = "certificado-" + equipo + "." + this.getFileExtension(filename);
+            String nombre = "machote-" + analisis + "." + this.getFileExtension(filename);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
 
             ServletOutputStream os = response.getOutputStream();
@@ -110,13 +109,15 @@ public class ControladorEquipo extends SIGIPROServlet {
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(520, listaPermisos);
+        validarPermiso(540, listaPermisos);
 
-        String redireccion = "Equipo/Agregar.jsp";
-        Equipo e = new Equipo();
-        List<TipoEquipo> tipoequipos = tipoequipodao.obtenerTipoEquipos();
-        request.setAttribute("equipo", e);
-        request.setAttribute("tipoequipos", tipoequipos);
+        String redireccion = "Analisis/Agregar.jsp";
+        Analisis a = new Analisis();
+        List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
+        List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
+        request.setAttribute("analisis", a);
+        request.setAttribute("tipoequipo", tipoequipo);
+        request.setAttribute("tiporeactivo", tiporeactivo);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -124,21 +125,20 @@ public class ControladorEquipo extends SIGIPROServlet {
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Equipo/index.jsp";
-        List<Equipo> equipos = dao.obtenerEquipos();
-        request.setAttribute("listaEquipos", equipos);
+        String redireccion = "Analisis/index.jsp";
+        List<Analisis> analisis = dao.obtenerAnalisis();
+        request.setAttribute("listaAnalisis", analisis);
         redireccionar(request, response, redireccion);
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Equipo/Ver.jsp";
-        int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
+        String redireccion = "Analisis/Ver.jsp";
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         try {
-            Equipo e = dao.obtenerEquipo(id_equipo);
-            request.setAttribute("equipo", e);
-            request.setAttribute("certificados", e.getCertificados());
+            Analisis a = dao.obtenerAnalisis(id_analisis);
+            request.setAttribute("analisis", a);
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -148,13 +148,15 @@ public class ControladorEquipo extends SIGIPROServlet {
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(520, listaPermisos);
-        String redireccion = "Equipo/Editar.jsp";
-        int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
-        Equipo equipo = dao.obtenerEquipo(id_equipo);
-        List<TipoEquipo> tipoequipos = tipoequipodao.obtenerTipoEquipos();
-        request.setAttribute("tipoequipos", tipoequipos);
-        request.setAttribute("equipo", equipo);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "Analisis/Editar.jsp";
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        Analisis a = dao.obtenerAnalisis(id_analisis);
+        List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
+        List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
+        request.setAttribute("analisis", a);
+        request.setAttribute("tipoequipo", tipoequipo);
+        request.setAttribute("tiporeactivo", tiporeactivo);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -162,57 +164,29 @@ public class ControladorEquipo extends SIGIPROServlet {
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(520, listaPermisos);
-        int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
+        validarPermiso(540, listaPermisos);
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         boolean resultado = false;
         try {
-            resultado = dao.eliminarEquipo(id_equipo);
+            resultado = dao.eliminarAnalisis(id_analisis);
             if (resultado) {
                 //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_equipo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EQUIPO, request.getRemoteAddr());
+                bitacora.setBitacora(id_analisis, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Equipo eliminado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis eliminado correctamente"));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser eliminado ya que tiene certificados asociados."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             }
             this.getIndex(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser eliminado ya que tiene certificados asociados."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             this.getIndex(request, response);
         }
 
     }
 
-    protected void getEliminarcertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(521, listaPermisos);
-        int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
-        String certificado = dao.obtenerCertificado(id_certificado_equipo).getPath();
-        boolean resultado = false;
-        try {
-            resultado = dao.eliminarCertificado(id_certificado_equipo);
-            if (resultado) {
-                File archivo = new File(certificado);
-                archivo.delete();
-                //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_certificado_equipo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOEQUIPO, request.getRemoteAddr());
-                //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Certificado de Equipo eliminado correctamente"));
-
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Certificado de Equipo no pudo ser eliminado."));
-            }
-            this.getIndex(request, response);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Certificado de Equipo no pudo ser eliminado."));
-            this.getIndex(request, response);
-        }
-
-    }
     // </editor-fold>
-
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
@@ -222,7 +196,7 @@ public class ControladorEquipo extends SIGIPROServlet {
             String fullPath = URLDecoder.decode(path, "UTF-8");
             String pathArr[] = fullPath.split("/WEB-INF/classes/");
             fullPath = pathArr[0];
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Equipo" + File.separatorChar + "Certificados";
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Analisis" + File.separatorChar + "Machotes";
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
             this.crearDirectorio(ubicacion);
@@ -231,51 +205,32 @@ public class ControladorEquipo extends SIGIPROServlet {
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
-            Equipo e = construirObjeto(items, request, ubicacion);
+            Analisis a = construirObjeto(items, request, ubicacion);
 
-            if (e.getId_equipo() == 0) {
-                resultado = dao.insertarEquipo(e);
+            if (a.getId_analisis() == 0) {
+                resultado = dao.insertarAnalisis(a);
                 if (resultado) {
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Equipo agregado correctamente"));
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Analisis agregado correctamente"));
                     //Funcion que genera la bitacora
-                    bitacora.setBitacora(e.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EQUIPO, request.getRemoteAddr());
+                    bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                     //*----------------------------*
-                    for (CertificadoEquipo cert : e.getCertificados()) {
-                        resultado = dao.insertarCertificado(cert, e.getId_equipo());
-                        if (resultado) {
-                            //Funcion que genera la bitacora
-                            bitacora.setBitacora(cert.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOEQUIPO, request.getRemoteAddr());
-                            //*----------------------------*
-                        }
-                    }
                     this.getIndex(request, response);
                 } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser agregado. Inténtelo de nuevo."));
+                    request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
                     this.getAgregar(request, response);
                 }
-            } else if (e.getCertificados().isEmpty()) {
-                resultado = dao.editarEquipo(e);
+            } else {
+                resultado = dao.editarAnalisis(a);
                 if (resultado) {
                     //Funcion que genera la bitacora
-                    bitacora.setBitacora(e.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EQUIPO, request.getRemoteAddr());
+                    bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                     //*----------------------------*
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Equipo editado correctamente"));
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
                     this.getIndex(request, response);
                 } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser editado. Inténtelo de nuevo."));
-                    request.setAttribute("id_equipo", e.getId_equipo());
+                    request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
+                    request.setAttribute("id_analisis", a.getId_analisis());
                     this.getEditar(request, response);
-                }
-            } else {
-                for (CertificadoEquipo cert : e.getCertificados()) {
-                    resultado = dao.insertarCertificado(cert, e.getId_equipo());
-                    if (resultado) {
-                        request.setAttribute("mensaje", helper.mensajeDeExito("Certificado de Equipo agregado correctamente"));
-                        //Funcion que genera la bitacora
-                        bitacora.setBitacora(cert.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CERTIFICADOEQUIPO, request.getRemoteAddr());
-                        //*----------------------------*
-                        this.getIndex(request, response);
-                    }
                 }
             }
         } catch (FileUploadException e) {
@@ -286,11 +241,10 @@ public class ControladorEquipo extends SIGIPROServlet {
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-    private Equipo construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
-        Equipo e = new Equipo();
-        List<CertificadoEquipo> certificados = new ArrayList<CertificadoEquipo>();
-        e.setCertificados(certificados);
-        CertificadoEquipo cert = new CertificadoEquipo();
+    private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
+        Analisis a = new Analisis();
+        a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
+        a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -301,44 +255,36 @@ public class ControladorEquipo extends SIGIPROServlet {
                 } catch (UnsupportedEncodingException ex) {
                     fieldValue = item.getString();
                 }
+                //Todavia falta la estructura
                 switch (fieldName) {
-                    case "id_equipo_certificado":
-                        e.setId_equipo(Integer.parseInt(fieldValue));
-                        break;
                     case "nombre":
-                        e.setNombre(fieldValue);
+                        a.setNombre(fieldValue);
                         break;
-                    case "descripcion":
-                        e.setDescripcion(fieldValue);
+                    case "id_analisis":
+                        int id_analisis = Integer.parseInt(fieldValue);
+                        a.setId_analisis(id_analisis);
                         break;
-                    case "id_equipo":
-                        int id_equipo = Integer.parseInt(fieldValue);
-                        e.setId_equipo(id_equipo);
+                    case "tipo_equipos":
+                        System.out.println(fieldValue);
                         break;
-                    case "tipo_equipo":
-                        int id_tipo_equipo = Integer.parseInt(fieldValue);
-                        TipoEquipo tipo_equipo = new TipoEquipo();
-                        tipo_equipo.setId_tipo_equipo(id_tipo_equipo);
-                        e.setTipo_equipo(tipo_equipo);
+                    case "tipo_reactivos":
+                        System.out.println(fieldValue);
                         break;
                 }
             } else {
                 try {
                     if (item.getSize() != 0) {
-                        java.sql.Date date = new java.sql.Date(new Date().getTime());
-                        cert.setFecha_certificado(date);
                         this.crearDirectorio(ubicacion);
                         //Creacion del nombre
                         Date dNow = new Date();
                         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                         String fecha = ft.format(dNow);
                         String extension = this.getFileExtension(item.getName());
-                        String nombre = e.getNombre() + "-" + fecha + "." + extension;
+                        String nombre = a.getNombre() + "-" + fecha + "." + extension;
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
-                        cert.setPath(archivo.getAbsolutePath());
-                        e.getCertificados().add(cert);
+                        a.setMachote(archivo.getAbsolutePath());
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -346,7 +292,7 @@ public class ControladorEquipo extends SIGIPROServlet {
 
             }
         }
-        return e;
+        return a;
     }
 
     private boolean crearDirectorio(String path) {
