@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
@@ -14,7 +13,6 @@ import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +31,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -43,20 +47,19 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * @author ld.conejo
  */
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
-public class ControladorAnalisis extends SIGIPROServlet {
+public class ControladorAnalisis extends SIGIPROServlet
+{
 
     //Falta implementar
     private final int[] permisos = {1, 540};
     //-----------------
-    private AnalisisDAO dao = new AnalisisDAO();
-    private TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
-    private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
-
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
+    private final AnalisisDAO dao = new AnalisisDAO();
+    private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
+    private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
 
     protected final Class clase = ControladorAnalisis.class;
-    protected final List<String> accionesGet = new ArrayList<String>() {
+    protected final List<String> accionesGet = new ArrayList<String>()
+    {
         {
             add("index");
             add("ver");
@@ -64,16 +67,19 @@ public class ControladorAnalisis extends SIGIPROServlet {
             add("eliminar");
             add("editar");
             add("archivo");
+            add("realizar");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>() {
+    protected final List<String> accionesPost = new ArrayList<String>()
+    {
         {
             add("agregareditar");
         }
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
 
@@ -107,7 +113,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     }
 
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
 
@@ -122,7 +129,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Analisis/index.jsp";
@@ -131,7 +139,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Analisis/Ver.jsp";
@@ -140,13 +149,15 @@ public class ControladorAnalisis extends SIGIPROServlet {
             Analisis a = dao.obtenerAnalisis(id_analisis);
             request.setAttribute("analisis", a);
             redireccionar(request, response, redireccion);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         String redireccion = "Analisis/Editar.jsp";
@@ -162,7 +173,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     }
 
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -174,11 +186,13 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 bitacora.setBitacora(id_analisis, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //----------------------------
                 request.setAttribute("mensaje", helper.mensajeDeExito("Analisis eliminado correctamente"));
-            } else {
+            }
+            else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             }
             this.getIndex(request, response);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             this.getIndex(request, response);
@@ -186,9 +200,33 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     }
 
+    protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "Analisis/Realizar.jsp";
+        /*
+        try {
+            TransformerFactory tff = TransformerFactory.newInstance();
+            Analisis 
+            Transformer tf = tff.newTransformer(new StreamSource(new File(
+                    "src\\pruebaxslt\\Prueba.xsl"
+            )));
+            StreamSource ss = new StreamSource(new File("src\\pruebaxslt\\Prueba.xml"));
+            StreamResult sr = new StreamResult(new File("src\\pruebaxslt\\Prueba.html"));
+            tf.transform(ss, sr);
+        } catch (TransformerException ex ){
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }*/
+
+        redireccionar(request, response, redireccion);
+    }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         boolean resultado = false;
         try {
             //Se crea el Path en la carpeta del Proyecto
@@ -215,11 +253,13 @@ public class ControladorAnalisis extends SIGIPROServlet {
                     bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                     //*----------------------------*
                     this.getIndex(request, response);
-                } else {
+                }
+                else {
                     request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
                     this.getAgregar(request, response);
                 }
-            } else {
+            }
+            else {
                 resultado = dao.editarAnalisis(a);
                 if (resultado) {
                     //Funcion que genera la bitacora
@@ -227,13 +267,15 @@ public class ControladorAnalisis extends SIGIPROServlet {
                     //*----------------------------*
                     request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
                     this.getIndex(request, response);
-                } else {
+                }
+                else {
                     request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
                     request.setAttribute("id_analisis", a.getId_analisis());
                     this.getEditar(request, response);
                 }
             }
-        } catch (FileUploadException e) {
+        }
+        catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
         }
 
@@ -241,7 +283,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-    private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
+    private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion)
+    {
         Analisis a = new Analisis();
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
@@ -252,7 +295,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 String fieldValue;
                 try {
                     fieldValue = item.getString("UTF-8").trim();
-                } catch (UnsupportedEncodingException ex) {
+                }
+                catch (UnsupportedEncodingException ex) {
                     fieldValue = item.getString();
                 }
                 //Todavia falta la estructura
@@ -271,7 +315,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         System.out.println(fieldValue);
                         break;
                 }
-            } else {
+            }
+            else {
                 try {
                     if (item.getSize() != 0) {
                         this.crearDirectorio(ubicacion);
@@ -286,7 +331,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         item.write(archivo);
                         a.setMachote(archivo.getAbsolutePath());
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
@@ -295,7 +341,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
         return a;
     }
 
-    private boolean crearDirectorio(String path) {
+    private boolean crearDirectorio(String path)
+    {
         boolean resultado = false;
         File directorio = new File(path);
         if (!directorio.exists()) {
@@ -304,22 +351,26 @@ public class ControladorAnalisis extends SIGIPROServlet {
             try {
                 directorio.mkdirs();
                 resultado = true;
-            } catch (SecurityException se) {
+            }
+            catch (SecurityException se) {
                 se.printStackTrace();
             }
             if (resultado) {
                 System.out.println("Directorio Creado");
             }
-        } else {
+        }
+        else {
             resultado = true;
         }
         return resultado;
     }
 
-    private String getFileExtension(String fileName) {
+    private String getFileExtension(String fileName)
+    {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
-        } else {
+        }
+        else {
             return "";
         }
     }
@@ -327,25 +378,29 @@ public class ControladorAnalisis extends SIGIPROServlet {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
-    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    {
         List<String> lista_acciones;
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
-        } else {
+        }
+        else {
             lista_acciones = accionesPost;
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
             Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
-        } else {
+        }
+        else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
         }
     }
 
     @Override
-    protected int getPermiso() {
+    protected int getPermiso()
+    {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

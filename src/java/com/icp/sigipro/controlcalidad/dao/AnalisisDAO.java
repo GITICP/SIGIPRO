@@ -24,9 +24,9 @@ public class AnalisisDAO extends DAO {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis (nombre,estructura,machote) "
-                    + " VALUES (?,XML(?),?) RETURNING id_analisis");
+                    + " VALUES (?,?,?) RETURNING id_analisis");
             consulta.setString(1, analisis.getNombre());
-            consulta.setString(2, analisis.getEstructura());
+            consulta.setSQLXML(2, analisis.getEstructura());
             consulta.setString(3, analisis.getMachote());
             ResultSet rs = consulta.executeQuery();
             if (rs.next()) {
@@ -47,17 +47,17 @@ public class AnalisisDAO extends DAO {
             PreparedStatement consulta;
             if (analisis.getMachote().equals("")) {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
-                        + "SET nombre=?, estructura=XML(?) "
+                        + "SET nombre=?, estructura=? "
                         + "WHERE id_analisis = ?; ");
                 consulta.setString(1, analisis.getNombre());
-                consulta.setString(2, analisis.getEstructura());
+                consulta.setSQLXML(2, analisis.getEstructura());
                 consulta.setInt(3, analisis.getId_analisis());
             } else {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
-                        + "SET nombre=?, estructura=XML(?), machote=? "
+                        + "SET nombre=?, estructura=?, machote=? "
                         + "WHERE id_analisis = ?; ");
                 consulta.setString(1, analisis.getNombre());
-                consulta.setString(2, analisis.getEstructura());
+                consulta.setSQLXML(2, analisis.getEstructura());
                 consulta.setString(3, analisis.getMachote());
                 consulta.setInt(4, analisis.getId_analisis());
             }
@@ -106,7 +106,7 @@ public class AnalisisDAO extends DAO {
             if (rs.next()) {
                 resultado.setId_analisis(rs.getInt("id_analisis"));
                 resultado.setMachote(rs.getString("descripcion"));
-                resultado.setEstructura(rs.getString("estructura"));
+                resultado.setEstructura(rs.getSQLXML("estructura"));
                 resultado.setNombre(rs.getString("nombre"));
             }
             resultado.setTipos_equipos_analisis(this.obtenerTipoEquipos(id_analisis));
