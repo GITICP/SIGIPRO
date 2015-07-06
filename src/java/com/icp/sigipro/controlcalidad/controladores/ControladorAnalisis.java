@@ -116,8 +116,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
         List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
         List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
         request.setAttribute("analisis", a);
-        request.setAttribute("tipoequipo", tipoequipo);
-        request.setAttribute("tiporeactivo", tiporeactivo);
+        request.setAttribute("tipoequipos", tipoequipo);
+        request.setAttribute("tiporeactivos", tiporeactivo);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -210,6 +210,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
             if (a.getId_analisis() == 0) {
                 resultado = dao.insertarAnalisis(a);
                 if (resultado) {
+                    dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
+                    dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
                     request.setAttribute("mensaje", helper.mensajeDeExito("Analisis agregado correctamente"));
                     //Funcion que genera la bitacora
                     bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
@@ -264,11 +266,15 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         int id_analisis = Integer.parseInt(fieldValue);
                         a.setId_analisis(id_analisis);
                         break;
-                    case "tipo_equipos":
-                        System.out.println(fieldValue);
+                    case "tipoequipos":
+                        TipoEquipo tipoequipo = new TipoEquipo();
+                        tipoequipo.setId_tipo_equipo(Integer.parseInt(fieldValue));
+                        a.getTipos_equipos_analisis().add(tipoequipo);
                         break;
-                    case "tipo_reactivos":
-                        System.out.println(fieldValue);
+                    case "tiporeactivos":
+                        TipoReactivo tiporeactivo = new TipoReactivo();
+                        tiporeactivo.setId_tipo_reactivo(Integer.parseInt(fieldValue));
+                        a.getTipos_reactivos_analisis().add(tiporeactivo);
                         break;
                 }
             } else {

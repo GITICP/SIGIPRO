@@ -157,7 +157,7 @@ CREATE TABLE control_calidad.tipos_equipos (
 CREATE TABLE control_calidad.tipos_equipos_analisis (
     id_analisis int  NOT NULL,
     id_tipo_equipo int  NOT NULL,
-    CONSTRAINT tipos_equipos_analisis_pk PRIMARY KEY (id_analisis)
+    CONSTRAINT tipos_equipos_analisis_pk PRIMARY KEY (id_analisis,id_tipo_equipo)
 );
 
 
