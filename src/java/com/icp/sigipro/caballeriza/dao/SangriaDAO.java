@@ -230,7 +230,7 @@ public class SangriaDAO extends DAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario,"
+                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre as nombre_grupo, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario,"
                     + "                             s.potencia, fecha,"
                     + "                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, "
                     + "                             CASE "
@@ -263,7 +263,7 @@ public class SangriaDAO extends DAO
 
                 GrupoDeCaballos g = new GrupoDeCaballos();
                 g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
-                g.setNombre(rs.getString("nombre"));
+                g.setNombre(rs.getString("nombre_grupo"));
 
                 do {
                     Caballo caballo = new Caballo();
