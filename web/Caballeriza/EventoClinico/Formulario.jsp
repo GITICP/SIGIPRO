@@ -170,7 +170,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">                
                         <input class='clearable' type="file" id="imagen1" name="imagen" accept="image/*" 
-                               oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                               oninvalid="setCustomValidity('El tamaño debe ser de 300KB o menos. ')" 
                                onchange="previstaImagen(this, 1)" /> <button type="button" id='botonCancelar1' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(1)"> Borrar</button>
                         <div><img name='imagenSubida' id="imagenSubida1" src='' height="150" alt=""></div>
                     </div>
