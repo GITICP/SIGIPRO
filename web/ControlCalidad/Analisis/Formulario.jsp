@@ -13,6 +13,7 @@
         <div class="col-md-6">
             <input hidden="true" name="id_analisis" value="${analisis.getId_analisis()}">
             <input hidden="true" name="accion" value="${accion}">
+            <input hidden="true" name="orden" id="orden">
 
             <label for="nombre" class="control-label">*Nombre/Código/Identificador</label>
             <div class="form-group">
@@ -92,19 +93,19 @@
         <div class="col-md-12">
             <div class="widget widget-table">
                 <div class="widget-header">
-                    <h3><i class="fa fa-download"></i> Estructura</h3>
+                    <h3><i class="fa fa-th-list"></i> Estructura</h3>
                     <div class="btn-group widget-header-toolbar">
 
                     </div>
                 </div>
                 <div class="widget-content">
-                    <div class="campos">
-                        <br>
+                    <div class="campos sortable" id="sortable">
 
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
+                                <br>
                                 <button type="button" onclick="agregarCampo()" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Campo</button>
                                 <button type="button" onclick="agregarTabla()" class="btn btn-primary"><i class="fa fa-plus-square"></i> Agregar Tabla</button>
                             </div>
@@ -114,24 +115,23 @@
 
             </div>
         </div>
-            <!-- Esta parte es la de los permisos de un rol -->
-            <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
-        </div>
+        <!-- Esta parte es la de los permisos de un rol -->
+        <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
+    </div>
 
 
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                <c:choose>
-                    <c:when test= "${accion.equals('Editar')}">
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Analisis</button>
-                    </c:otherwise>
-                </c:choose>    </div>
-        </div>
+    <div class="form-group">
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+            <c:choose>
+                <c:when test= "${accion.equals('Editar')}">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                </c:when>
+                <c:otherwise>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Analisis</button>
+                </c:otherwise>
+            </c:choose>    </div>
+    </div>
 
 
 </form>
-
