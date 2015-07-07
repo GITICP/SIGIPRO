@@ -12,15 +12,20 @@ import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
+import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +37,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -56,6 +60,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     private final AnalisisDAO dao = new AnalisisDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
     private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
+    private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
 
     protected final Class clase = ControladorAnalisis.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -205,20 +210,31 @@ public class ControladorAnalisis extends SIGIPROServlet
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         String redireccion = "Analisis/Realizar.jsp";
-        /*
+        
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        
+        ControlXSLT xslt;
+        Analisis analisis;
+        
         try {
+            xslt = controlxsltdao.obtenerControlXSLT();
+            analisis = dao.obtenerAnalisis(id_analisis);
+            
             TransformerFactory tff = TransformerFactory.newInstance();
-            Analisis 
-            Transformer tf = tff.newTransformer(new StreamSource(new File(
-                    "src\\pruebaxslt\\Prueba.xsl"
-            )));
-            StreamSource ss = new StreamSource(new File("src\\pruebaxslt\\Prueba.xml"));
-            StreamResult sr = new StreamResult(new File("src\\pruebaxslt\\Prueba.html"));
-            tf.transform(ss, sr);
-        } catch (TransformerException ex ){
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = analisis.getEstructura().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+            
+            String formulario = stream_result.getWriter().toString();
+            
+            request.setAttribute("formulario", formulario);
+        } catch (TransformerException | SIGIPROException | SQLException ex ) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
-        }*/
+        }
 
         redireccionar(request, response, redireccion);
     }

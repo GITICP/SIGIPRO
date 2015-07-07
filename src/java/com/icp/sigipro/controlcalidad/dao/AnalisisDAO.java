@@ -105,7 +105,7 @@ public class AnalisisDAO extends DAO {
             ResultSet rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado.setId_analisis(rs.getInt("id_analisis"));
-                resultado.setMachote(rs.getString("descripcion"));
+                resultado.setMachote(rs.getString("machote"));
                 resultado.setEstructura(rs.getSQLXML("estructura"));
                 resultado.setNombre(rs.getString("nombre"));
             }
