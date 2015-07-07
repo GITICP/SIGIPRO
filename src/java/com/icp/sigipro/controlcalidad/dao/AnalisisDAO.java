@@ -29,10 +29,51 @@ public class AnalisisDAO extends DAO {
             consulta.setSQLXML(2, analisis.getEstructura());
             consulta.setString(3, analisis.getMachote());
             ResultSet rs = consulta.executeQuery();
+            System.out.println(consulta);
             if (rs.next()) {
                 resultado = true;
                 analisis.setId_analisis(rs.getInt("id_analisis"));
             }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    public boolean insertarTipoReactivo(List<TipoReactivo> tiporeactivos, int id_analisis) {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_reactivos_analisis (id_analisis,id_tipo_reactivo) "
+                    + " VALUES (?,?);");
+            
+            for (TipoReactivo tipo : tiporeactivos){
+                consulta.setInt(1, id_analisis);
+                consulta.setInt(2, tipo.getId_tipo_reactivo());
+                consulta.addBatch();
+            }
+            consulta.executeBatch();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+        public boolean insertarTipoEquipo(List<TipoEquipo> tipoequipos, int id_analisis) {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_equipos_analisis (id_analisis,id_tipo_equipo) "
+                    + " VALUES (?,?);");
+            
+            for (TipoEquipo tipo : tipoequipos){
+                consulta.setInt(1, id_analisis);
+                consulta.setInt(2, tipo.getId_tipo_equipo());
+                consulta.addBatch();
+            }
+            consulta.executeBatch();
             consulta.close();
             cerrarConexion();
         } catch (Exception ex) {
@@ -76,7 +117,7 @@ public class AnalisisDAO extends DAO {
         List<Analisis> resultado = new ArrayList<Analisis>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre, count(ags.id_analisis) as cantidad "
-                    + "FROM control_calidad.analisis as analisis INNER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
+                    + "FROM control_calidad.analisis as analisis LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
                     + "WHERE ags.id_analisis_grupo_solicitud not in (SELECT id_analisis_grupo_solicitud FROM control_calidad.resultados) "
                     + "GROUP BY analisis.id_analisis");
             ResultSet rs = consulta.executeQuery();
