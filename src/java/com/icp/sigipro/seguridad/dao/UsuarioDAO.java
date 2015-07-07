@@ -255,8 +255,11 @@ public class UsuarioDAO
                 resultado.setNombre_usuario(nombre_usuario);
                 resultado.setId_seccion(id_seccion);
                 resultado.setNombre_completo(resultadoConsulta.getString("nombre_completo"));
-
             }
+            
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -988,13 +991,13 @@ public class UsuarioDAO
             }
             finally {
                 try {
-                    conexion.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
                     if (consulta != null) {
                         consulta.close();
                     }
-                    if (rs != null) {
-                        consulta.close();
-                    }
+                    conexion.close();
                 }
                 catch (SQLException sql_ex) {
                     sql_ex.printStackTrace();
