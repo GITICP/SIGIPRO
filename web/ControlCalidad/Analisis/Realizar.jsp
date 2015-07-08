@@ -14,8 +14,6 @@
 
     <jsp:attribute name="contenido">
 
-
-
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
             <div class="row">
@@ -23,9 +21,9 @@
                     <ul class="breadcrumb">
                         <li>Control de Calidad</li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Analisis?">Analisis</a>
+                            <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
                         </li>
-                        <li class="active"> Realizar Nuevo Analisis «Insertar nombre del análisis acá» </li>
+                        <li class="active"> Realizar Nuevo Análisis «Insertar nombre del análisis acá» </li>
 
                     </ul>
                 </div>
@@ -37,12 +35,29 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Realizar Nuevo Analisis «Insertar nombre del análisis acá» </h3>
+                            <h3><i class="fa fa-gears"></i> Realizar Nuevo Análisis «Insertar nombre del análisis acá» </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
 
-                            ${formulario}
+                            <form method="post" class="form-horizontal" action="Analisis">
+                                <input type="hidden" value="realizar" />
+                                ${cuerpo_formulario}
+
+                                <div class="form-group">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                                        <c:choose>
+                                            <c:when test= "${accion_especifica.equals('Editar')}">
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Realizar Análisis</button>
+                                            </c:otherwise>
+                                        </c:choose>    
+                                    </div>
+                                </div>
+                            </form>
 
                         </div>
                     </div>

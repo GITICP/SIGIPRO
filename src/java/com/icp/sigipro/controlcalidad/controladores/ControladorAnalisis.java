@@ -231,8 +231,9 @@ public class ControladorAnalisis extends SIGIPROServlet
             
             String formulario = stream_result.getWriter().toString();
             
-            request.setAttribute("formulario", formulario);
-        } catch (TransformerException | SIGIPROException | SQLException ex ) {
+            request.setAttribute("cuerpo_formulario", formulario);
+            request.setAttribute("accion_especifica", "Agregar");
+        } catch ( TransformerException | SIGIPROException | SQLException ex ) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
         }
@@ -301,6 +302,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion)
     {
@@ -456,6 +458,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
