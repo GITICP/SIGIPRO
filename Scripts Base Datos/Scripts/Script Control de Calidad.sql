@@ -412,15 +412,8 @@ ALTER TABLE control_calidad.tipos_muestras_analisis ADD CONSTRAINT tipos_muestra
     INITIALLY IMMEDIATE 
 ;
 
-ALTER TABLE control_calidad.tipos_equipos
-ADD COLUMN descripcion varchar(500);
-
 ALTER TABLE control_calidad.tipos_reactivos
 ADD COLUMN descripcion varchar(500);
-
-
-ALTER TABLE control_calidad.tipos_reactivos
-ADD COLUMN machote varchar(500);
 
 ALTER TABLE control_calidad.analisis
 ADD COLUMN nombre varchar(50);
@@ -432,7 +425,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (510, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (520, '[ControlCalidad]AdministrarEquipo', 'Permite agregar, editar y eliminar un equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (521, '[ControlCalidad]AdministrarCertificadoEquipo', 'Permite agregar y eliminar un certificado de equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[ControlCalidad]AdministrarReactivo', 'Permite agregar, editar y eliminar un reactivo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdministrarCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdminCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
 
 
 
