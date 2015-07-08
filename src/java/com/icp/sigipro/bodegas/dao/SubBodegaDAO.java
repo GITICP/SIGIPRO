@@ -44,8 +44,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     {
         boolean resultado = false;
 
+        PreparedStatement consulta = null;
+        ResultSet resultado_consulta = null;
+
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(
+            consulta = getConexion().prepareStatement(
                     " SELECT 1 "
                     + " FROM bodega.sub_bodegas "
                     + " WHERE (id_usuario = ? and id_sub_bodega = ?) "
@@ -57,7 +60,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consulta.setInt(2, id_sub_bodega);
             consulta.setInt(4, id_sub_bodega);
 
-            ResultSet resultado_consulta = consulta.executeQuery();
+            resultado_consulta = consulta.executeQuery();
 
             if (resultado_consulta.next()) {
                 resultado = true;
@@ -70,15 +73,22 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
+        finally {
+            cerrarSilencioso(resultado_consulta);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return resultado;
     }
 
     public PermisoSubBodegas obtenerPermisos(int id_usuario, int id_sub_bodega) throws AuthenticationException, SIGIPROException
     {
         PermisoSubBodegas resultado = null;
+        PreparedStatement consulta = null;
+        ResultSet resultado_consulta = null;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(
+            consulta = getConexion().prepareStatement(
                     "	  SELECT 'ingresos' as permiso "
                     + "	  FROM bodega.usuarios_sub_bodegas_ingresos "
                     + "	  where id_usuario = ? and id_sub_bodega = ? "
@@ -105,7 +115,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consulta.setInt(7, id_usuario);
             consulta.setInt(8, id_sub_bodega);
 
-            ResultSet resultado_consulta = consulta.executeQuery();
+            resultado_consulta = consulta.executeQuery();
             resultado = new PermisoSubBodegas();
 
             if (resultado_consulta.next()) {
@@ -122,6 +132,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
+        finally {
+            cerrarSilencioso(resultado_consulta);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return resultado;
     }
 
@@ -129,8 +144,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     {
         boolean resultado = false;
 
+        PreparedStatement consulta = null;
+        ResultSet resultado_consulta = null;
+
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(
+            consulta = getConexion().prepareStatement(
                     " SELECT 1 FROM "
                     + "	( "
                     + "	  SELECT id_usuario "
@@ -156,7 +174,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consulta.setInt(3, id_usuario);
             consulta.setInt(4, id_usuario);
 
-            ResultSet resultado_consulta = consulta.executeQuery();
+            resultado_consulta = consulta.executeQuery();
 
             if (resultado_consulta.next()) {
                 resultado = true;
@@ -169,6 +187,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
         }
+        finally {
+            cerrarSilencioso(resultado_consulta);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return resultado;
     }
 
@@ -176,13 +199,16 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     {
         List<SubBodega> listaResultado = new ArrayList<SubBodega>();
 
+        PreparedStatement consulta = null;
+        ResultSet resultados = null;
+
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(
+            consulta = getConexion().prepareStatement(
                     " SELECT sb.id_sub_bodega, sb.nombre, u.nombre_completo, s.nombre_seccion"
                     + " FROM bodega.sub_bodegas sb INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
                     + "                            INNER JOIN seguridad.usuarios u on u.id_usuario = sb.id_usuario;");
 
-            ResultSet resultados = consulta.executeQuery();
+            resultados = consulta.executeQuery();
 
             while (resultados.next()) {
                 listaResultado.add(construirSubBodega(resultados));
@@ -192,6 +218,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener subbodegas.");
         }
+        finally {
+            cerrarSilencioso(resultados);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return listaResultado;
     }
 
@@ -200,8 +231,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
 
         List<SubBodega> listaResultado = new ArrayList<SubBodega>();
 
+        PreparedStatement consulta = null;
+        ResultSet resultados = null;
+
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(
+            consulta = getConexion().prepareStatement(
                     " SELECT sb.id_sub_bodega, sb.nombre, u.nombre_completo, s.nombre_seccion "
                     + " FROM bodega.sub_bodegas sb INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
                     + "                              INNER JOIN seguridad.usuarios u on u.id_usuario = sb.id_usuario "
@@ -215,7 +249,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consulta.setInt(3, id_usuario);
             consulta.setInt(4, id_usuario);
 
-            ResultSet resultados = consulta.executeQuery();
+            resultados = consulta.executeQuery();
 
             while (resultados.next()) {
                 listaResultado.add(construirSubBodega(resultados));
@@ -224,6 +258,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener subbodegas.");
+        }
+        finally {
+            cerrarSilencioso(resultados);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return listaResultado;
     }
@@ -249,12 +288,14 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     public SubBodega buscarSubBodega(int id) throws SIGIPROException
     {
         SubBodega s = new SubBodega();
+        PreparedStatement consulta = null;
+        ResultSet resultado = null;
         try {
             String codigoConsulta = "SELECT sb.nombre, u.id_usuario, u.nombre_usuario, u.nombre_completo, s.id_seccion, s.nombre_seccion FROM " + nombreModulo + "." + nombreTabla + " sb INNER JOIN seguridad.secciones s on s.id_seccion = sb.id_seccion INNER JOIN seguridad.usuarios u on u.id_usuario = sb.id_usuario WHERE id_sub_bodega = ?";
 
-            PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+            consulta = getConexion().prepareStatement(codigoConsulta);
             consulta.setInt(1, id);
-            ResultSet resultado = ejecutarConsulta(consulta);
+            resultado = ejecutarConsulta(consulta);
 
             if (resultado.next()) {
                 s.setId_sub_bodega(id);
@@ -272,14 +313,15 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 s.setSeccion(seccion);
                 s.setUsuario(usuario);
             }
-
-            resultado.close();
-            consulta.close();
-            cerrarConexion();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener sub bodega");
+        }
+        finally {
+            cerrarSilencioso(resultado);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return s;
     }
@@ -287,6 +329,10 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     public SubBodega buscarSubBodegaEInventarios(int id) throws SIGIPROException
     {
         SubBodega sub_bodega = null;
+
+        PreparedStatement consulta = null;
+        ResultSet resultado = null;
+
         try {
             String codigoConsulta = " SELECT sb.id_sub_bodega, sb.nombre, u.nombre_completo, s.nombre_seccion, isb.id_inventario_sub_bodega, ci.id_producto, ci.nombre as nombre_producto, ci.codigo_icp, isb.cantidad, isb.fecha_vencimiento "
                                     + " FROM bodega.sub_bodegas sb "
@@ -296,9 +342,9 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                                     + "   LEFT JOIN bodega.catalogo_interno ci on ci.id_producto = isb.id_producto "
                                     + " WHERE sb.id_sub_bodega = ?;";
 
-            PreparedStatement consulta = getConexion().prepareStatement(codigoConsulta);
+            consulta = getConexion().prepareStatement(codigoConsulta);
             consulta.setInt(1, id);
-            ResultSet resultado = ejecutarConsulta(consulta);
+            resultado = ejecutarConsulta(consulta);
 
             if (resultado.next()) {
                 sub_bodega = new SubBodega();
@@ -349,6 +395,11 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener sub bodega");
         }
+        finally {
+            cerrarSilencioso(resultado);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return sub_bodega;
     }
 
@@ -356,6 +407,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     {
 
         boolean resultado = false;
+        ResultSet idSubBodega = null;
         PreparedStatement consultaInsertar = null;
         PreparedStatement consultaEliminarIngresos = null;
         PreparedStatement consultaEliminarEgresos = null;
@@ -374,16 +426,12 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consultaInsertar.setInt(2, param.getUsuario().getId_usuario());
             consultaInsertar.setString(3, param.getNombre());
 
-            ResultSet idSubBodega = consultaInsertar.executeQuery();
+            idSubBodega = consultaInsertar.executeQuery();
 
             if (idSubBodega.next()) {
                 param.setId_sub_bodega(idSubBodega.getInt("id_sub_bodega"));
-                idSubBodega.close();
-                consultaInsertar.close();
             }
             else {
-                consultaInsertar.close();
-                idSubBodega.close();
                 throw new SIGIPROException("Error al insertar sub bodega");
             }
 
@@ -439,33 +487,20 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 else {
                     getConexion().rollback();
                 }
-                if (consultaInsertar != null) {
-                    consultaInsertar.close();
-                }
-                if (consultaEliminarIngresos != null) {
-                    consultaEliminarIngresos.close();
-                }
-                if (consultaEliminarEgresos != null) {
-                    consultaEliminarEgresos.close();
-                }
-                if (consultaEliminarVer != null) {
-                    consultaEliminarVer.close();
-                }
-                if (insertarIngresos != null) {
-                    insertarIngresos.close();
-                }
-                if (insertarEgresos != null) {
-                    insertarEgresos.close();
-                }
-                if (insertarVer != null) {
-                    insertarVer.close();
-                }
-                getConexion().close();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
+            cerrarSilencioso(idSubBodega);
+            cerrarSilencioso(consultaInsertar);
+            cerrarSilencioso(consultaEliminarIngresos);
+            cerrarSilencioso(consultaEliminarEgresos);
+            cerrarSilencioso(consultaEliminarVer);
+            cerrarSilencioso(insertarIngresos);
+            cerrarSilencioso(insertarEgresos);
+            cerrarSilencioso(insertarVer);
+            cerrarConexion();
         }
 
         return resultado;
@@ -475,11 +510,20 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     {
 
         boolean resultado = false;
+
+        PreparedStatement consultaInsertar = null;
+        PreparedStatement consultaEliminarIngresos = null;
+        PreparedStatement consultaEliminarEgresos = null;
+        PreparedStatement consultaEliminarVer = null;
+        PreparedStatement insertarIngresos = null;
+        PreparedStatement insertarEgresos = null;
+        PreparedStatement insertarVer = null;
+
         try {
             getConexion().setAutoCommit(false);
 
-            PreparedStatement consultaInsertar = getConexion().prepareStatement(" UPDATE " + this.nombreModulo + "." + this.nombreTabla
-                                                                                + " SET id_seccion = ?, id_usuario = ?, nombre = ? WHERE id_sub_bodega = ?");
+            consultaInsertar = getConexion().prepareStatement(" UPDATE " + this.nombreModulo + "." + this.nombreTabla
+                                                              + " SET id_seccion = ?, id_usuario = ?, nombre = ? WHERE id_sub_bodega = ?");
 
             consultaInsertar.setInt(1, param.getSeccion().getId_seccion());
             consultaInsertar.setInt(2, param.getUsuario().getId_usuario());
@@ -491,9 +535,9 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 throw new SIGIPROException("Error al editar sub bodega");
             }
 
-            PreparedStatement consultaEliminarIngresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = ?");
-            PreparedStatement consultaEliminarEgresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = ?");
-            PreparedStatement consultaEliminarVer = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = ?");
+            consultaEliminarIngresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ingresos WHERE id_sub_bodega = ?");
+            consultaEliminarEgresos = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_egresos WHERE id_sub_bodega = ?");
+            consultaEliminarVer = getConexion().prepareStatement("DELETE FROM bodega.usuarios_sub_bodegas_ver WHERE id_sub_bodega = ?");
 
             consultaEliminarIngresos.setInt(1, param.getId_sub_bodega());
             consultaEliminarEgresos.setInt(1, param.getId_sub_bodega());
@@ -503,13 +547,9 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consultaEliminarEgresos.executeUpdate();
             consultaEliminarVer.executeUpdate();
 
-            consultaEliminarIngresos.close();
-            consultaEliminarEgresos.close();
-            consultaEliminarVer.close();
-
-            PreparedStatement insertarIngresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ingresos (id_sub_bodega, id_usuario) VALUES (?,?)");
-            PreparedStatement insertarEgresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_egresos (id_sub_bodega, id_usuario) VALUES (?,?)");
-            PreparedStatement insertarVer = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ver (id_sub_bodega, id_usuario) VALUES (?,?)");
+            insertarIngresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ingresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            insertarEgresos = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_egresos (id_sub_bodega, id_usuario) VALUES (?,?)");
+            insertarVer = getConexion().prepareStatement("INSERT INTO bodega.usuarios_sub_bodegas_ver (id_sub_bodega, id_usuario) VALUES (?,?)");
 
             for (String idIngreso : idsIngresos) {
                 insertarIngresos.setInt(1, param.getId_sub_bodega());
@@ -533,10 +573,6 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             insertarEgresos.executeBatch();
             insertarVer.executeBatch();
 
-            insertarIngresos.close();
-            insertarEgresos.close();
-            insertarVer.close();
-
             resultado = true;
         }
         catch (SQLException ex) {
@@ -551,12 +587,19 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 else {
                     getConexion().rollback();
                 }
-                getConexion().close();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
             }
+            cerrarSilencioso(consultaInsertar);
+            cerrarSilencioso(consultaEliminarIngresos);
+            cerrarSilencioso(consultaEliminarEgresos);
+            cerrarSilencioso(consultaEliminarVer);
+            cerrarSilencioso(insertarIngresos);
+            cerrarSilencioso(insertarEgresos);
+            cerrarSilencioso(insertarVer);
+            cerrarConexion();
         }
 
         return resultado;
@@ -664,21 +707,15 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 else {
                     getConexion().rollback();
                 }
-                if (upsert_inventario != null) {
-                    upsert_inventario.close();
-                }
-                if (insert_bitacora != null) {
-                    insert_bitacora.close();
-                }
-                if (insert_ingreso != null) {
-                    insert_ingreso.close();
-                }
-                getConexion().close();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
+            cerrarSilencioso(upsert_inventario);
+            cerrarSilencioso(insert_bitacora);
+            cerrarSilencioso(insert_ingreso);
+            cerrarConexion();
         }
 
         return resultado;
@@ -687,16 +724,19 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     public List<Usuario> usuariosPermisos(String tabla_por_buscar, int id_sub_bodega) throws SIGIPROException
     {
         List<Usuario> usuarios = new ArrayList<Usuario>();
+        
+        PreparedStatement consulta_permisos = null;
+        ResultSet resultados = null;
 
         try {
-            PreparedStatement consulta_permisos = getConexion().prepareStatement(" SELECT u.id_usuario, u.nombre_completo, u.nombre_usuario "
+            consulta_permisos = getConexion().prepareStatement(" SELECT u.id_usuario, u.nombre_completo, u.nombre_usuario "
                                                                                  + " FROM " + tabla_por_buscar + " p_sb "
                                                                                  + " INNER JOIN seguridad.usuarios u ON u.id_usuario = p_sb.id_usuario "
                                                                                  + " WHERE id_sub_bodega = ?;");
 
             consulta_permisos.setInt(1, id_sub_bodega);
 
-            ResultSet resultados = consulta_permisos.executeQuery();
+            resultados = consulta_permisos.executeQuery();
 
             while (resultados.next()) {
                 Usuario u = new Usuario();
@@ -712,6 +752,10 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener los usuarios con permisos.");
+        } finally {
+            cerrarSilencioso(consulta_permisos);
+            cerrarSilencioso(resultados);
+            cerrarConexion();
         }
 
         return usuarios;
@@ -764,21 +808,15 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 else {
                     getConexion().rollback();
                 }
-                if (resultado_update != null) {
-                    resultado_update.close();
-                }
-                if (actualizar_inventario != null) {
-                    actualizar_inventario.close();
-                }
-                if (insert_bitacora != null) {
-                    insert_bitacora.close();
-                }
-                getConexion().close();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
+            cerrarSilencioso(resultado_update);
+            cerrarSilencioso(actualizar_inventario);
+            cerrarSilencioso(insert_bitacora);
+            cerrarConexion();
         }
 
         return resultado;
@@ -893,24 +931,16 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                 else {
                     getConexion().rollback();
                 }
-                if (restar_inventario != null) {
-                    restar_inventario.close();
-                }
-                if (inventario_sub_bodega_origen != null) {
-                    inventario_sub_bodega_origen.close();
-                }
-                if (upsert_inventario != null) {
-                    upsert_inventario.close();
-                }
-                if (insert_bitacora != null) {
-                    upsert_inventario.close();
-                }
-                getConexion().close();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema");
             }
+            cerrarSilencioso(restar_inventario);
+            cerrarSilencioso(inventario_sub_bodega_origen);
+            cerrarSilencioso(upsert_inventario);
+            cerrarSilencioso(insert_bitacora);
+            cerrarConexion();
         }
 
         return resultado;
@@ -919,11 +949,14 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
     public SubBodega obtenerHistorial(int id_sub_bodega) throws SIGIPROException
     {
         SubBodega resultado = new SubBodega();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
 
         try {
             resultado = this.buscarSubBodega(id_sub_bodega);
 
-            PreparedStatement consulta = getConexion().prepareStatement(
+            consulta = getConexion().prepareStatement(
                     " SELECT sb.id_sub_bodega as id_sb_buscada, sb.nombre as nombre_buscada, b.*, sb2.nombre as nombre_destino, ci.nombre as nombre_producto, u.nombre_completo as nombre_usuario "
                     + " FROM bodega.sub_bodegas sb "
                     + "   LEFT JOIN bodega.bitacora_sub_bodegas b ON b.id_sub_bodega = sb.id_sub_bodega "
@@ -937,7 +970,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             consulta.setInt(2, id_sub_bodega);
             consulta.setInt(3, id_sub_bodega);
 
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
 
             List<BitacoraSubBodega> historial = new ArrayList<BitacoraSubBodega>();
             while (rs.next()) {
@@ -974,14 +1007,14 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             }
 
             resultado.setHistorial(historial);
-
-            rs.close();
-            consulta.close();
-            getConexion().close();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
 
         return resultado;

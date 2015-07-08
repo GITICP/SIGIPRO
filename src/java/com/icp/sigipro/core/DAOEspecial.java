@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,21 +51,6 @@ public abstract class DAOEspecial<T extends IModelo>
             }
         }
         return conexion;
-    }
-
-    public void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (!conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 
     public List<T> obtenerTodo() throws SQLException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
@@ -202,5 +188,25 @@ public abstract class DAOEspecial<T extends IModelo>
     protected int ejecutarConsultaSinResultado(PreparedStatement consulta) throws SQLException
     {
         return consulta.executeUpdate();
+    }
+    
+    protected void cerrarConexion()
+    {
+        cerrarSilencioso(conexion);
+    }
+
+    protected void cerrarSilencioso(Connection c)
+    {
+        SingletonBD.cerrarSilencioso(c);
+    }
+
+    protected void cerrarSilencioso(ResultSet rs)
+    {
+        SingletonBD.cerrarSilencioso(rs);
+    }
+
+    protected void cerrarSilencioso(Statement s)
+    {
+        SingletonBD.cerrarSilencioso(s);
     }
 }
