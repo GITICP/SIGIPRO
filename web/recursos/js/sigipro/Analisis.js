@@ -283,8 +283,6 @@ function agregarTabla() {
     }
     var orden = $("#orden").val();
     $(".campos").append(fila);
-function agregarCampo() {
-    alert(contador);
     contador++;
 }
 
