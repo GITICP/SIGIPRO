@@ -532,7 +532,7 @@ public class SolicitudDAO extends DAO
                 }
 
                 insert_bitacora = getConexion().prepareStatement(
-                        "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario) VALUES (?,?,?,?,?);"
+                        "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario, fecha, observaciones) VALUES (?,?,?,?,?,?,?);"
                 );
 
                 for (InventarioSubBodega inventario_sub_bodega : inventarios_sub_bodegas) {
@@ -598,6 +598,9 @@ public class SolicitudDAO extends DAO
                     insert_bitacora.setInt(3, inventario_sub_bodega.getProducto().getId_producto());
                     insert_bitacora.setInt(4, inventario_sub_bodega.getCantidad());
                     insert_bitacora.setInt(5, id_usuario_recibo);
+                    insert_bitacora.setDate(6, hoysql);
+                    insert_bitacora.setString(7, "Sin observaciones.");
+                    
 
                     insert_bitacora.addBatch();
                 }
