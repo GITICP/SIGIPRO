@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<analisis>
+    <campo>
+        <tipo>number</tipo>
+        <nombre-campo>numero1</nombre-campo>
+        <etiqueta>Número 1</etiqueta>
+    </campo>
+    <campo>
+        <tipo>text</tipo>
+        <nombre-campo>texto1</nombre-campo>
+        <etiqueta>Texto 1</etiqueta>
+    </campo>
+    <campo>
+        <tipo>text</tipo>
+        <nombre-campo>texto2</nombre-campo>
+        <etiqueta>Texto 2</etiqueta>
+    </campo>
+    <campo>
+        <tipo>number</tipo>
+        <nombre-campo>numero2</nombre-campo>
+        <etiqueta>Número 2</etiqueta>
+    </campo>
+    <campo>
+        <tipo>textarea</tipo>
+        <nombre-campo>area1</nombre-campo>
+        <etiqueta>Área 1</etiqueta>
+    </campo>
+    <campo>
+        <tipo>fecha</tipo>
+        <nombre-campo>fecha1</nombre-campo>
+        <etiqueta>Fecha de Ingreso</etiqueta>
+    </campo>
+    <campo>
+        <tipo>table</tipo>
+        <columnas>
+            <columna>
+                <nombre>Columna nombres</nombre>
+            </columna>
+            <columna>
+                <nombre>Columna 1</nombre>
+            </columna>
+            <columna>
+                <nombre>Columna 2</nombre>
+            </columna>
+            <columna>
+                <nombre>Columna 3</nombre>
+            </columna>
+        </columnas>
+        <filas>
+            <fila>
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Nombre 1</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila1</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila2</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila3</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Nombre 2</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila4</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila5</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila6</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila tipo="especial">
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Total</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila1</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila2</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila3</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+        </filas>
+    </campo>
+    <campo>
+        <tipo>table</tipo>
+        <columnas>
+            <columna>
+                <nombre>Columna 1</nombre>
+            </columna>
+            <columna>
+                <nombre>Columna 2</nombre>
+            </columna>
+            <columna tipo="especial">
+                <nombre>Columna 3</nombre>
+                <funcion>promedio</funcion>
+            </columna>
+        </columnas>
+        <filas>
+            <fila>
+                <celdas>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila5</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila6</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda tipo="especial">
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila7</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila5</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila6</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda tipo="especial">
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila7</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila5</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila6</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda tipo="especial">
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila7</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila5</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>fila6</nombre-campo>
+                        </campo>
+                    </celda>
+                    <celda tipo="especial">
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>fila7</nombre-campo>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+        </filas>
+    </campo>
+</analisis>

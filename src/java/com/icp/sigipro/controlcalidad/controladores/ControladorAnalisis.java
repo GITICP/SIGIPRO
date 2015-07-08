@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -306,6 +307,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         Analisis a = new Analisis();
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
+        HashMap<Integer, HashMap> dictionary = new HashMap<Integer, HashMap>();
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -336,6 +338,61 @@ public class ControladorAnalisis extends SIGIPROServlet
                         tiporeactivo.setId_tipo_reactivo(Integer.parseInt(fieldValue));
                         a.getTipos_reactivos_analisis().add(tiporeactivo);
                         break;
+                    default:
+                        String[] values = fieldName.split("_");
+                        if (values.length > 1) {
+                            int id = Integer.parseInt(values[2]);
+                            if (!dictionary.containsKey(id)) {
+                                HashMap<String, String> llaves = new HashMap<String, String>();
+                                dictionary.put(id, llaves);
+                            }
+                            switch (values[1]) {
+                                case "tipocampo":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "nombre":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "campovisible":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "celda":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "manual":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "tablavisible":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "nombrecolumna":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "tipocampocolumna":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "cantidadfilas":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "nombrefilacolumna":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "connombre":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "nombresfilas":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "nombrefilaespecial":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                                case "tipocampofilaespecial":
+                                    dictionary.get(id).put(values[1], fieldValue);
+                                    break;
+                            }
+
+                            break;
+                        }
                 }
             }
             else {
@@ -360,6 +417,7 @@ public class ControladorAnalisis extends SIGIPROServlet
 
             }
         }
+        System.out.println(dictionary);
         return a;
     }
 
