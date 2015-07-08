@@ -24,7 +24,9 @@ var FilaEspecial = function (elemento_fila) {
     this.elemento = elemento_fila;
     this.celdas = new Array();
     this.obtener_celdas();
+    this.funcion = elemento_fila.data("funcion");
     this.asignar_funciones();
+    
 };
 
 // Métodos
@@ -40,8 +42,10 @@ FilaEspecial.prototype.obtener_celdas = function () {
 
 FilaEspecial.prototype.asignar_funciones = function() {
     
+    var fila_especial = this;
+    
     $.each(this.celdas, function(){
-        this.asignar_evento_objeto("promedio");
+        this.asignar_evento_objeto(fila_especial.funcion);
     });
   
 };
@@ -99,31 +103,25 @@ CeldaEspecial.prototype.actualizar = function() {
 };
 
 CeldaEspecial.prototype.sumatoria = function() {
-    var sumatoria = 0;
-    $.each(this.campos_superiores, function() {
-        var valor_campo = this.find("input").val();
-        var esNaN = isNaN(valor_campo);
-        if (!esNaN && valor_campo !== "") {
-            sumatoria += parseInt(valor_campo);
-        } else {
-            sumatoria += 0;
-        }
-    });
+    var sumatoria = this.sumatoria_elementos();
     this.elemento.find("input").val(sumatoria);
 };
 
 CeldaEspecial.prototype.promedio = function() {
+    var sumatoria = this.sumatoria_elementos();
+    this.elemento.find("input").val(sumatoria / this.campos_superiores.length);
+};
+
+CeldaEspecial.prototype.sumatoria_elementos = function() {
     var sumatoria = 0;
     $.each(this.campos_superiores, function() {
         var valor_campo = this.find("input").val();
         var esNaN = isNaN(valor_campo);
         if (!esNaN && valor_campo !== "") {
-            sumatoria += parseInt(valor_campo);
+            sumatoria += parseFloat(valor_campo);
         } else {
             sumatoria += 0;
         }
     });
-    this.elemento.find("input").val(sumatoria / this.campos_superiores.length);
+    return sumatoria;
 };
-
-
