@@ -14,6 +14,8 @@ import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.utilidades.HelpersHTML;
+import com.icp.sigipro.utilidades.HelperXML;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
 import java.io.File;
@@ -31,12 +33,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -46,6 +59,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -310,6 +326,8 @@ public class ControladorAnalisis extends SIGIPROServlet
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
         HashMap<Integer, HashMap> dictionary = new HashMap<Integer, HashMap>();
+        String orden = "";
+        int contador = 0;
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -340,59 +358,35 @@ public class ControladorAnalisis extends SIGIPROServlet
                         tiporeactivo.setId_tipo_reactivo(Integer.parseInt(fieldValue));
                         a.getTipos_reactivos_analisis().add(tiporeactivo);
                         break;
+                    case "orden":
+                        orden = fieldValue;
+                        break;
                     default:
+                        //Se crea un diccionario con los elementos del Formulario
                         String[] values = fieldName.split("_");
                         if (values.length > 1) {
                             int id = Integer.parseInt(values[2]);
                             if (!dictionary.containsKey(id)) {
                                 HashMap<String, String> llaves = new HashMap<String, String>();
+                                if (values[0].equals("c")) {
+                                    llaves.put("tipo", "campo");
+                                } else {
+                                    llaves.put("tipo", "tabla");
+                                }
                                 dictionary.put(id, llaves);
                             }
                             switch (values[1]) {
-                                case "tipocampo":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "nombre":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "campovisible":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "celda":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "manual":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "tablavisible":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
                                 case "nombrecolumna":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
                                 case "tipocampocolumna":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "cantidadfilas":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "nombrefilacolumna":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "connombre":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
-                                case "nombresfilas":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
                                 case "nombrefilaespecial":
-                                    dictionary.get(id).put(values[1], fieldValue);
-                                    break;
                                 case "tipocampofilaespecial":
+                                    dictionary.get(id).put(values[1] + "_" + contador, fieldValue);
+                                    contador++;
+                                    break;
+                                default:
                                     dictionary.get(id).put(values[1], fieldValue);
                                     break;
                             }
-
                             break;
                         }
                 }
@@ -420,9 +414,47 @@ public class ControladorAnalisis extends SIGIPROServlet
             }
         }
         System.out.println(dictionary);
+        System.out.println(this.parseDictXML(dictionary, orden));
         return a;
     }
 
+    private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden) {
+
+        String[] keys = orden.split(",");
+
+        HelperXML xml = new HelperXML();
+
+        for (String i : keys) {
+            int key = Integer.parseInt(i);
+            //Elemento XML del campo
+            Element campo = xml.agregarElemento("campo");
+            //-----------------------
+            HashMap<String, String> hash = dictionary.get(key);
+            if (hash.get("tipo").equals("campo")) {
+                xml.agregarSubelemento("nombre-campo", hash.get("nombre"), campo);
+                xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
+                xml.agregarSubelemento("valor", "", campo);
+                if (hash.containsKey("manual")){
+                    xml.agregarSubelemento("tipo", "Excel", campo);
+                    xml.agregarSubelemento("celda", hash.get("celda"), campo);
+                }else{
+                    xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+                }
+                if (hash.containsKey("visible")){
+                    xml.agregarSubelemento("visible", "True", campo);
+                }else{
+                    xml.agregarSubelemento("visible", "False", campo);
+                }
+            }else{
+                
+            }
+
+        }
+        
+        return xml.imprimirXML();
+    }
+
+    private boolean crearDirectorio(String path) {
     private boolean crearDirectorio(String path)
     {
         boolean resultado = false;
