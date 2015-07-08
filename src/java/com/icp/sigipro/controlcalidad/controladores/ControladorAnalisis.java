@@ -454,7 +454,6 @@ public class ControladorAnalisis extends SIGIPROServlet
         return xml.imprimirXML();
     }
 
-    private boolean crearDirectorio(String path) {
     private boolean crearDirectorio(String path)
     {
         boolean resultado = false;
