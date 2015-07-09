@@ -20,6 +20,7 @@ public class SolicitudCC {
     private String numero_solicitud;
     private Usuario usuario_solicitante;
     private Usuario usuario_recibido;
+    private Date fecha_solicitud;
     private Date fecha_recibido;
     private String estado;
     
@@ -34,6 +35,14 @@ public class SolicitudCC {
 
     public void setId_solicitud(int id_solicitud) {
         this.id_solicitud = id_solicitud;
+    }
+
+    public Date getFecha_solicitud() {
+        return fecha_solicitud;
+    }
+
+    public void setFecha_solicitud(Date fecha_solicitud) {
+        this.fecha_solicitud = fecha_solicitud;
     }
 
     public String getNumero_solicitud() {

@@ -81,8 +81,8 @@ CREATE TABLE control_calidad.muestras (
     id_muestra serial  NOT NULL,
     identificador varchar(20)  NOT NULL,
     id_tipo_muestra int  NOT NULL,
-    fecha_descarte_estimada date  NOT NULL,
-    fecha_descarte_real date  NOT NULL,
+    fecha_descarte_estimada date,
+    fecha_descarte_real date,
     CONSTRAINT muestras_pk PRIMARY KEY (id_muestra)
 );
 
@@ -122,7 +122,7 @@ CREATE TABLE control_calidad.reactivos (
 CREATE TABLE control_calidad.resultados (
     id_resultado serial  NOT NULL,
     id_analisis_grupo_solicitud int  NOT NULL,
-    path varchar(500) NULL,
+    path varchar(500),
     datos xml  NOT NULL,
     id_usuario int NOT NULL,
     CONSTRAINT resultados_pk PRIMARY KEY (id_resultado)
@@ -135,9 +135,10 @@ CREATE TABLE control_calidad.solicitudes (
     id_solicitud serial  NOT NULL,
     numero_solicitud varchar(20)  NOT NULL,
     id_usuario_solicitante int  NOT NULL,
-    id_usuario_recibido int  NOT NULL,
-    fecha_recibido date  NOT NULL,
-    estado varchar(50)  NOT NULL,
+    fecha_solicitud date NOT NULL,
+    id_usuario_recibido int,
+    fecha_recibido date,
+    estado varchar(50),
     CONSTRAINT solicitudes_pk PRIMARY KEY (id_solicitud)
 );
 

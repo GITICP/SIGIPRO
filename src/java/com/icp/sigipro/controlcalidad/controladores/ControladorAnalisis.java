@@ -458,9 +458,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 //------------
                 contadorTablas++;
             }
-
         }
-
         return xml.imprimirXML();
     }
 
