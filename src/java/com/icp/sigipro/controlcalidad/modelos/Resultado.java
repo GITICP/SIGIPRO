@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.sql.SQLXML;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -17,7 +18,7 @@ public class Resultado {
     private int id_resultado;
     private String path;
     //Debe ser de tipo XML pero por ahora lo dejo asi
-    private String datos;
+    private SQLXML datos;
     
     private List<Reactivo> reactivos_resultado;
     private List<Equipo> equipos_resultado;
@@ -41,11 +42,11 @@ public class Resultado {
         this.path = path;
     }
 
-    public String getDatos() {
+    public SQLXML getDatos() {
         return datos;
     }
 
-    public void setDatos(String datos) {
+    public void setDatos(SQLXML datos) {
         this.datos = datos;
     }
 

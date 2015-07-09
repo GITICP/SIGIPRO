@@ -10,11 +10,11 @@ import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import com.icp.sigipro.utilidades.HelperXML;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
@@ -33,23 +33,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -59,8 +50,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -96,6 +85,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     {
         {
             add("agregareditar");
+            add("realizar");
         }
     };
 
@@ -258,6 +248,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -312,6 +303,35 @@ public class ControladorAnalisis extends SIGIPROServlet
             }
         }
         catch (FileUploadException e) {
+            throw new ServletException("Cannot parse multipart request.", e);
+        }
+
+    }
+    
+    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        boolean resultado = false;
+        try {
+            //Se crea el Path en la carpeta del Proyecto
+            String path = this.getClass().getClassLoader().getResource("").getPath();
+            String fullPath = URLDecoder.decode(path, "UTF-8");
+            String pathArr[] = fullPath.split("/WEB-INF/classes/");
+            fullPath = pathArr[0];
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Analisis" + File.separatorChar + "Realizados";
+            //-------------------------------------------
+            //Crea los directorios si no están creados aún
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //List<FileItem> items = upload.parseRequest(request);
+            Resultado a = construirResultado(request, ubicacion);
+            
+            
+            
+        }
+        catch (Exception e) {
             throw new ServletException("Cannot parse multipart request.", e);
         }
 
@@ -416,6 +436,22 @@ public class ControladorAnalisis extends SIGIPROServlet
         System.out.println(dictionary);
         System.out.println(this.parseDictXML(dictionary, orden));
         return a;
+    }
+    
+    private Resultado construirResultado(HttpServletRequest request, String ubicacion) {
+        String a = "a";
+        
+        Map<String, String[]> mapa_parametros = request.getParameterMap();
+        
+        Set<String> set = mapa_parametros.keySet();
+        
+        for (String parametro : set ) {
+            if (parametro.startsWith("excel")) {
+                
+            }
+        }
+        
+        return new Resultado();
     }
 
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden) {

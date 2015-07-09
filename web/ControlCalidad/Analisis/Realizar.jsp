@@ -41,7 +41,8 @@
                         <div class="widget-content">
 
                             <form method="post" class="form-horizontal" action="Analisis">
-                                <input type="hidden" value="realizar" />
+                                <input type="hidden" value="realizar" name="accion" />
+                                
                                 ${cuerpo_formulario}
 
                                 <div class="form-group">
