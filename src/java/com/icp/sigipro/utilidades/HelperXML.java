@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -53,7 +54,23 @@ public class HelperXML {
         root.appendChild(elemento);
         return elemento;
     }
+    
+    public Element agregarElemento(String nombre, Element primario) {
+        Element elemento = doc.createElement(nombre);
+        primario.appendChild(elemento);
+        return elemento;
+    }
 
+    public Attr definirAtributo(String nombre, String valor){
+        Attr attrType = doc.createAttribute(nombre);
+        attrType.setValue(valor);
+        return attrType;
+    }
+    
+    public void agregarAtributo(Element elemento, Attr atributo){
+        elemento.setAttributeNode(atributo);
+    }
+    
     public void agregarSubelemento(String nombre, String valor, Element elemento) {
         Element sub = doc.createElement(nombre);
         sub.appendChild(doc.createTextNode(valor));

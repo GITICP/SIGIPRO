@@ -340,3 +340,33 @@
         </filas>
     </campo>
 </analisis>
+
+
+<analisis>
+    <campo>
+        <tipo>entero</tipo>
+        <nombre-campo>Campo1</nombre-campo>
+        <etiqueta>Campo1</etiqueta>
+        <valor/>
+        <celda>B3-03</celda>
+    </campo>
+    <campo>
+        <tipo>entero</tipo>
+        <nombre-campo>Campo2</nombre-campo>
+        <etiqueta>Campo2</etiqueta>
+        <valor/>
+    </campo>
+    <campo>
+        <tipo>texto</tipo>
+        <nombre-campo>Campo3</nombre-campo>
+        <etiqueta>Campo3</etiqueta>
+        <valor/>
+    </campo>
+    <campo>
+        <tipo>entero</tipo>
+        <nombre-campo>Campo4</nombre-campo>
+        <etiqueta>Campo4</etiqueta>
+        <valor/>
+        <celda>B5-04</celda>
+    </campo>
+</analisis>

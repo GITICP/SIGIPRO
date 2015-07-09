@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,29 +29,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -266,7 +253,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
         HashMap<Integer, HashMap> dictionary = new HashMap<Integer, HashMap>();
         String orden = "";
-        int contador = 0;
+        //Contadores para clasificar las columnas y filas
+        HashMap <Integer,HashMap> columnasfilas = new HashMap<Integer,HashMap>();
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -313,13 +301,32 @@ public class ControladorAnalisis extends SIGIPROServlet {
                                 }
                                 dictionary.put(id, llaves);
                             }
+                            if (!columnasfilas.containsKey(id)) {
+                                HashMap<String, Integer> columnafila = new HashMap<String, Integer>();
+                                columnafila.put("columnas", 1);
+                                columnafila.put("filas", 1);
+                                columnasfilas.put(id, columnafila);
+                            }
                             switch (values[1]) {
                                 case "nombrecolumna":
+                                    int cantidadColumnas1 = (int) columnasfilas.get(id).get("columnas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas1, fieldValue);
+                                    break;
                                 case "tipocampocolumna":
+                                    int cantidadColumnas2 = (int) columnasfilas.get(id).get("columnas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas2, fieldValue);
+                                    cantidadColumnas2++;
+                                    columnasfilas.get(id).put("columnas", cantidadColumnas2);
+                                    break;
                                 case "nombrefilaespecial":
+                                    int cantidadFilas1 = (int) columnasfilas.get(id).get("filas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadFilas1, fieldValue);
+                                    break;
                                 case "tipocampofilaespecial":
-                                    dictionary.get(id).put(values[1] + "_" + contador, fieldValue);
-                                    contador++;
+                                    int cantidadFilas2 = (int) columnasfilas.get(id).get("filas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadFilas2, fieldValue);
+                                    cantidadFilas2++;
+                                    columnasfilas.get(id).put("filas", cantidadFilas2);
                                     break;
                                 default:
                                     dictionary.get(id).put(values[1], fieldValue);
@@ -350,18 +357,20 @@ public class ControladorAnalisis extends SIGIPROServlet {
             }
         }
         System.out.println(dictionary);
-        System.out.println(this.parseDictXML(dictionary, orden));
+        System.out.println(this.parseDictXML(dictionary, orden, columnasfilas));
         return a;
     }
 
-    private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden) {
+    private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer,HashMap> columnasfilas) {
 
         String[] keys = orden.split(",");
+        int contadorTablas = 0;
 
         HelperXML xml = new HelperXML();
 
         for (String i : keys) {
             int key = Integer.parseInt(i);
+            System.out.println(key);
             //Elemento XML del campo
             Element campo = xml.agregarElemento("campo");
             //-----------------------
@@ -370,23 +379,119 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 xml.agregarSubelemento("nombre-campo", hash.get("nombre"), campo);
                 xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
                 xml.agregarSubelemento("valor", "", campo);
-                if (hash.containsKey("manual")){
+                if (hash.containsKey("manual")) {
                     xml.agregarSubelemento("tipo", "Excel", campo);
                     xml.agregarSubelemento("celda", hash.get("celda"), campo);
-                }else{
+                } else {
                     xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
                 }
-                if (hash.containsKey("visible")){
+                if (hash.containsKey("visible")) {
                     xml.agregarSubelemento("visible", "True", campo);
-                }else{
+                } else {
                     xml.agregarSubelemento("visible", "False", campo);
                 }
-            }else{
+            } else {
+
+                xml.agregarSubelemento("tipo", "table", campo);
+                if (hash.containsKey("tablavisible")) {
+                    xml.agregarSubelemento("visible", "True", campo);
+                } else {
+                    xml.agregarSubelemento("visible", "False", campo);
+                }
+                Element columnas = xml.agregarElemento("columnas", campo);
+                Element filas = xml.agregarElemento("filas", campo);
+
+                List<String> tiposcolumnas = new ArrayList<String>();
                 
+                //Columnas
+                Element primeraColumna = xml.agregarElemento("columna", columnas);
+                xml.agregarSubelemento("nombre", hash.get("nombrefilacolumna"), primeraColumna);
+                System.out.println(columnasfilas);
+                int cantidadColumnas =(int) columnasfilas.get(key).get("columnas") - 1;
+                for (int it = 0; it < cantidadColumnas; it++) {
+                    int col = it + 1;
+                    String keycol = "nombrecolumna_" + col;
+                    String valorCol = hash.get(keycol);
+                    System.out.println(valorCol);
+                    String keytipo = "tipocampocolumna_" + col;
+                    String valorTipo = hash.get(keytipo);
+                    System.out.println(valorTipo);
+                    tiposcolumnas.add(valorTipo);
+
+                    Element columna = xml.agregarElemento("columna", columnas);
+                    xml.agregarSubelemento("nombre", valorCol, columna);
+                }
+                //------------
+
+                //Filas
+                String[] nombresfilas = "".split("");
+                if (hash.containsKey("connombre")) {
+                    nombresfilas = hash.get("nombresfilas").split(",");
+                }
+                int cantidadFilas = Integer.parseInt(hash.get("cantidadfilas"));
+                System.out.println(nombresfilas[0]);
+                System.out.println(cantidadFilas);
+                for (int it = 0; it < cantidadFilas; it++) {
+                    Element fila = xml.agregarElemento("fila", filas);
+                    Element celdas = xml.agregarElemento("celdas", fila);
+                    if (nombresfilas.length > 1) {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
+                        xml.agregarSubelemento("nombre", nombresfilas[it], fila_nombre);
+                    } else {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
+                        xml.agregarSubelemento("nombre", "", fila_nombre);
+                    }
+                    for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element campo_fila = xml.agregarElemento("campo", celda);
+                        xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
+                        String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
+                        xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                        xml.agregarSubelemento("valor", "", campo_fila);
+                    }
+                }
+                //Filas especiales
+                int cantidadFilasEspeciales = (int) columnasfilas.get(key).get("filas") - 1;
+                for (int it = 0; it < cantidadFilasEspeciales; it++) {
+                    int fil = it + 1;
+                    String keycol = "nombrefilaespecial_" + fil;
+                    String valorFil = hash.get(keycol);
+
+                    String keytipo = "tipocampofilaespecial_" + fil;
+                    String valorTipo = hash.get(keytipo);
+
+                    Element fila = xml.agregarElemento("fila", columnas);
+                    Attr tipo = xml.definirAtributo("tipo", "especial");
+                    Attr funcion = xml.definirAtributo("funcion", valorTipo);
+                    xml.agregarAtributo(fila, tipo);
+                    xml.agregarAtributo(fila, funcion);
+                    Element celdas = xml.agregarElemento("celdas", fila);
+                    Element celda_primera = xml.agregarElemento("celdas", fila);
+                    xml.agregarSubelemento("nombre", valorFil, celda_primera);
+                    for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element campo_fila = xml.agregarElemento("campo", celda);
+                        xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
+                        String nombre_celda = "Tabla_" + contadorTablas + "_"+valorTipo+"_" + jt;
+                        xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                        xml.agregarSubelemento("valor", "", campo_fila);
+                    }
+                }
+                //------------
+                for (String subkeys : hash.keySet()) {
+                    String[] subkey = subkeys.split("_");
+
+                    if (subkey[0].equals("nombrecolumna")) {
+
+                    }
+                }
+                contadorTablas++;
             }
 
         }
-        
+
         return xml.imprimirXML();
     }
 
@@ -431,7 +536,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
-            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class
+            );
             metodo.invoke(this, request, response);
         } else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
