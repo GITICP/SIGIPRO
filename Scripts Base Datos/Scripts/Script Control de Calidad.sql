@@ -412,27 +412,54 @@ ALTER TABLE control_calidad.tipos_muestras_analisis ADD CONSTRAINT tipos_muestra
     INITIALLY IMMEDIATE 
 ;
 
-ALTER TABLE control_calidad.tipos_equipos
-ADD COLUMN descripcion varchar(500);
-
 ALTER TABLE control_calidad.tipos_reactivos
 ADD COLUMN descripcion varchar(500);
-
-
-ALTER TABLE control_calidad.tipos_reactivos
-ADD COLUMN machote varchar(500);
 
 ALTER TABLE control_calidad.analisis
 ADD COLUMN nombre varchar(50);
 
---500
+-- MENÚ PRINCIPAL
+
+    -- Solicitudes
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (501, 500, 'Solicitudes', '/ControlCalidad/Solicitudes');
+
+    -- Reactivos
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (502, 500, 'Reactivos', null);
+
+        -- Submenús
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (510, 502, 'Tipos de Reactivos', '/ControlCalidad/TipoReactivo');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (530, 502, 'Reactivos', '/ControlCalidad/Reactivo');
+
+    -- Análisis    
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (503, 500, 'Análisis', null);
+
+        -- Submenús
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (540, 503, 'Análisis', '/ControlCalidad/Analisis');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (550, 503, 'Tipos de Muestra', '/ControlCalidad/TiposMuestra');
+
+    -- Equipos
+    
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (504, 500, 'Equipos', null);
+
+        -- Submenús
+    
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (520, 504, 'Equipos', '/ControlCalidad/Equipo');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (521, 504, 'Tipos de Equipo', '/ControlCalidad/TipoEquipo');
+
+
+-- PERMISOS
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (500, '[ControlCalidad]AdministrarTipoEquipo', 'Permite agregar, editar y eliminar un tipo de equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (510, '[ControlCalidad]AdministrarTipoReactivo', 'Permite agregar, editar y eliminar un tipo de reactivo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (520, '[ControlCalidad]AdministrarEquipo', 'Permite agregar, editar y eliminar un equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (521, '[ControlCalidad]AdministrarCertificadoEquipo', 'Permite agregar y eliminar un certificado de equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[ControlCalidad]AdministrarReactivo', 'Permite agregar, editar y eliminar un reactivo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdministrarCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdminCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
 
 
 

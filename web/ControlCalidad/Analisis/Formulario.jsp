@@ -128,9 +128,10 @@
                     <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Analisis</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Análisis</button>
                 </c:otherwise>
-            </c:choose>    </div>
+            </c:choose>    
+        </div>
     </div>
 
 
