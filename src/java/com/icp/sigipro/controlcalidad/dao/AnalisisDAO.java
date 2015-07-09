@@ -11,6 +11,7 @@ import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,11 @@ public class AnalisisDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis (nombre,estructura,machote) "
                     + " VALUES (?,?,?) RETURNING id_analisis");
+            
+            SQLXML xmlVal = getConexion().createSQLXML();
+            xmlVal.setString(analisis.getEstructuraString());
             consulta.setString(1, analisis.getNombre());
-            consulta.setSQLXML(2, analisis.getEstructura());
+            consulta.setSQLXML(2, xmlVal);
             consulta.setString(3, analisis.getMachote());
             ResultSet rs = consulta.executeQuery();
             System.out.println(consulta);

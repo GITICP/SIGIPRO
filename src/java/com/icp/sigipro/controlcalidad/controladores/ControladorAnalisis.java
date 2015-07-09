@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
@@ -13,21 +14,17 @@ import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
-import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.utilidades.HelperXML;
-import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
-import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
-import java.sql.SQLException;
+import java.sql.SQLXML;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +47,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /**
@@ -57,20 +55,20 @@ import org.w3c.dom.Element;
  * @author ld.conejo
  */
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
-public class ControladorAnalisis extends SIGIPROServlet
-{
+public class ControladorAnalisis extends SIGIPROServlet {
 
     //Falta implementar
     private final int[] permisos = {1, 540};
     //-----------------
-    private final AnalisisDAO dao = new AnalisisDAO();
-    private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
-    private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
-    private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
+    private AnalisisDAO dao = new AnalisisDAO();
+    private TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
+    private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
+
+    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    BitacoraDAO bitacora = new BitacoraDAO();
 
     protected final Class clase = ControladorAnalisis.class;
-    protected final List<String> accionesGet = new ArrayList<String>()
-    {
+    protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
             add("ver");
@@ -78,11 +76,9 @@ public class ControladorAnalisis extends SIGIPROServlet
             add("eliminar");
             add("editar");
             add("archivo");
-            add("realizar");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>()
-    {
+    protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregareditar");
             add("realizar");
@@ -90,8 +86,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
 
@@ -125,8 +120,7 @@ public class ControladorAnalisis extends SIGIPROServlet
 
     }
 
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
 
@@ -141,8 +135,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Analisis/index.jsp";
@@ -151,8 +144,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Analisis/Ver.jsp";
@@ -161,15 +153,13 @@ public class ControladorAnalisis extends SIGIPROServlet
             Analisis a = dao.obtenerAnalisis(id_analisis);
             request.setAttribute("analisis", a);
             redireccionar(request, response, redireccion);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         String redireccion = "Analisis/Editar.jsp";
@@ -185,8 +175,7 @@ public class ControladorAnalisis extends SIGIPROServlet
 
     }
 
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -198,13 +187,11 @@ public class ControladorAnalisis extends SIGIPROServlet
                 bitacora.setBitacora(id_analisis, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //----------------------------
                 request.setAttribute("mensaje", helper.mensajeDeExito("Analisis eliminado correctamente"));
-            }
-            else {
+            } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             }
             this.getIndex(request, response);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             this.getIndex(request, response);
@@ -212,46 +199,10 @@ public class ControladorAnalisis extends SIGIPROServlet
 
     }
 
-    protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
-        String redireccion = "Analisis/Realizar.jsp";
-        
-        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
-        
-        ControlXSLT xslt;
-        Analisis analisis;
-        
-        try {
-            xslt = controlxsltdao.obtenerControlXSLT();
-            analisis = dao.obtenerAnalisis(id_analisis);
-            
-            TransformerFactory tff = TransformerFactory.newInstance();
-            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
-            InputStream streamXML = analisis.getEstructura().getBinaryStream();
-            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
-            StreamSource stream_source = new StreamSource(streamXML);
-            StreamResult stream_result = new StreamResult(new StringWriter());
-            transformador.transform(stream_source, stream_result);
-            
-            String formulario = stream_result.getWriter().toString();
-            
-            request.setAttribute("cuerpo_formulario", formulario);
-            request.setAttribute("accion_especifica", "Agregar");
-        } catch ( TransformerException | SIGIPROException | SQLException ex ) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
-        }
-
-        redireccionar(request, response, redireccion);
-    }
-
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
         try {
             //Se crea el Path en la carpeta del Proyecto
@@ -272,6 +223,7 @@ public class ControladorAnalisis extends SIGIPROServlet
 
             if (a.getId_analisis() == 0) {
                 resultado = dao.insertarAnalisis(a);
+                System.out.println(a.getEstructuraString());
                 if (resultado) {
                     dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
                     dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
@@ -280,13 +232,11 @@ public class ControladorAnalisis extends SIGIPROServlet
                     bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                     //*----------------------------*
                     this.getIndex(request, response);
-                }
-                else {
+                } else {
                     request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
                     this.getAgregar(request, response);
                 }
-            }
-            else {
+            } else {
                 resultado = dao.editarAnalisis(a);
                 if (resultado) {
                     //Funcion que genera la bitacora
@@ -294,60 +244,28 @@ public class ControladorAnalisis extends SIGIPROServlet
                     //*----------------------------*
                     request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
                     this.getIndex(request, response);
-                }
-                else {
+                } else {
                     request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
                     request.setAttribute("id_analisis", a.getId_analisis());
                     this.getEditar(request, response);
                 }
             }
-        }
-        catch (FileUploadException e) {
-            throw new ServletException("Cannot parse multipart request.", e);
-        }
-
-    }
-    
-    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        boolean resultado = false;
-        try {
-            //Se crea el Path en la carpeta del Proyecto
-            String path = this.getClass().getClassLoader().getResource("").getPath();
-            String fullPath = URLDecoder.decode(path, "UTF-8");
-            String pathArr[] = fullPath.split("/WEB-INF/classes/");
-            fullPath = pathArr[0];
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Analisis" + File.separatorChar + "Realizados";
-            //-------------------------------------------
-            //Crea los directorios si no están creados aún
-            this.crearDirectorio(ubicacion);
-            //--------------------------------------------
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            factory.setRepository(new File(ubicacion));
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            //List<FileItem> items = upload.parseRequest(request);
-            Resultado a = construirResultado(request, ubicacion);
-            
-            
-            
-        }
-        catch (Exception e) {
+        } catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
         }
 
     }
 
     // </editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-    private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion)
-    {
+    private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
         Analisis a = new Analisis();
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
         HashMap<Integer, HashMap> dictionary = new HashMap<Integer, HashMap>();
         String orden = "";
-        int contador = 0;
+        //Contadores para clasificar las columnas y filas
+        HashMap<Integer, HashMap> columnasfilas = new HashMap<Integer, HashMap>();
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -355,8 +273,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                 String fieldValue;
                 try {
                     fieldValue = item.getString("UTF-8").trim();
-                }
-                catch (UnsupportedEncodingException ex) {
+                } catch (UnsupportedEncodingException ex) {
                     fieldValue = item.getString();
                 }
                 //Todavia falta la estructura
@@ -395,13 +312,32 @@ public class ControladorAnalisis extends SIGIPROServlet
                                 }
                                 dictionary.put(id, llaves);
                             }
+                            if (!columnasfilas.containsKey(id)) {
+                                HashMap<String, Integer> columnafila = new HashMap<String, Integer>();
+                                columnafila.put("columnas", 1);
+                                columnafila.put("filas", 1);
+                                columnasfilas.put(id, columnafila);
+                            }
                             switch (values[1]) {
                                 case "nombrecolumna":
+                                    int cantidadColumnas1 = (int) columnasfilas.get(id).get("columnas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas1, fieldValue);
+                                    break;
                                 case "tipocampocolumna":
+                                    int cantidadColumnas2 = (int) columnasfilas.get(id).get("columnas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas2, fieldValue);
+                                    cantidadColumnas2++;
+                                    columnasfilas.get(id).put("columnas", cantidadColumnas2);
+                                    break;
                                 case "nombrefilaespecial":
+                                    int cantidadFilas1 = (int) columnasfilas.get(id).get("filas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadFilas1, fieldValue);
+                                    break;
                                 case "tipocampofilaespecial":
-                                    dictionary.get(id).put(values[1] + "_" + contador, fieldValue);
-                                    contador++;
+                                    int cantidadFilas2 = (int) columnasfilas.get(id).get("filas");
+                                    dictionary.get(id).put(values[1] + "_" + cantidadFilas2, fieldValue);
+                                    cantidadFilas2++;
+                                    columnasfilas.get(id).put("filas", cantidadFilas2);
                                     break;
                                 default:
                                     dictionary.get(id).put(values[1], fieldValue);
@@ -410,8 +346,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                             break;
                         }
                 }
-            }
-            else {
+            } else {
                 try {
                     if (item.getSize() != 0) {
                         this.crearDirectorio(ubicacion);
@@ -426,15 +361,14 @@ public class ControladorAnalisis extends SIGIPROServlet
                         item.write(archivo);
                         a.setMachote(archivo.getAbsolutePath());
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
             }
         }
-        System.out.println(dictionary);
-        System.out.println(this.parseDictXML(dictionary, orden));
+        String xml = this.parseDictXML(dictionary, orden, columnasfilas);
+        a.setEstructuraString(xml);
         return a;
     }
     
@@ -454,44 +388,125 @@ public class ControladorAnalisis extends SIGIPROServlet
         return new Resultado();
     }
 
-    private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden) {
+    private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
 
         String[] keys = orden.split(",");
+        int contadorTablas = 0;
 
         HelperXML xml = new HelperXML();
 
         for (String i : keys) {
             int key = Integer.parseInt(i);
-            //Elemento XML del campo
             Element campo = xml.agregarElemento("campo");
-            //-----------------------
             HashMap<String, String> hash = dictionary.get(key);
             if (hash.get("tipo").equals("campo")) {
-                xml.agregarSubelemento("nombre-campo", hash.get("nombre"), campo);
-                xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
-                xml.agregarSubelemento("valor", "", campo);
-                if (hash.containsKey("manual")){
-                    xml.agregarSubelemento("tipo", "Excel", campo);
-                    xml.agregarSubelemento("celda", hash.get("celda"), campo);
-                }else{
-                    xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
-                }
-                if (hash.containsKey("visible")){
+                this.crearCampo(xml, hash, campo);
+            } else {
+                xml.agregarSubelemento("tipo", "table", campo);
+                if (hash.containsKey("tablavisible")) {
                     xml.agregarSubelemento("visible", "True", campo);
-                }else{
+                } else {
                     xml.agregarSubelemento("visible", "False", campo);
                 }
-            }else{
-                
+                Element columnas = xml.agregarElemento("columnas", campo);
+                Element filas = xml.agregarElemento("filas", campo);
+
+                List<String> tiposcolumnas = new ArrayList<String>();
+                //Columnas
+                Element primeraColumna = xml.agregarElemento("columna", columnas);
+                xml.agregarSubelemento("nombre", hash.get("nombrefilacolumna"), primeraColumna);
+                int cantidadColumnas = (int) columnasfilas.get(key).get("columnas") - 1;
+                for (int it = 0; it < cantidadColumnas; it++) {
+                    int col = it + 1;
+                    String keycol = "nombrecolumna_" + col;
+                    String valorCol = hash.get(keycol);
+                    String keytipo = "tipocampocolumna_" + col;
+                    String valorTipo = hash.get(keytipo);
+                    tiposcolumnas.add(valorTipo);
+                    Element columna = xml.agregarElemento("columna", columnas);
+                    xml.agregarSubelemento("nombre", valorCol, columna);
+                }
+                //------------
+                //Filas
+                String[] nombresfilas = "".split("");
+                if (hash.containsKey("connombre")) {
+                    nombresfilas = hash.get("nombresfilas").split(",");
+                }
+                int cantidadFilas = Integer.parseInt(hash.get("cantidadfilas"));
+                for (int it = 0; it < cantidadFilas; it++) {
+                    Element fila = xml.agregarElemento("fila", filas);
+                    Element celdas = xml.agregarElemento("celdas", fila);
+                    if (nombresfilas.length > 1) {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
+                        xml.agregarSubelemento("nombre", nombresfilas[it], fila_nombre);
+                    } else {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
+                        xml.agregarSubelemento("nombre", "", fila_nombre);
+                    }
+                    for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element campo_fila = xml.agregarElemento("campo", celda);
+                        xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
+                        String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
+                        xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                        xml.agregarSubelemento("valor", "", campo_fila);
+                    }
+                }
+                //Filas especiales
+                int cantidadFilasEspeciales = (int) columnasfilas.get(key).get("filas") - 1;
+                for (int it = 0; it < cantidadFilasEspeciales; it++) {
+                    int fil = it + 1;
+                    String keycol = "nombrefilaespecial_" + fil;
+                    String valorFil = hash.get(keycol);
+                    String keytipo = "tipocampofilaespecial_" + fil;
+                    String valorTipo = hash.get(keytipo);
+                    Element fila = xml.agregarElemento("fila", filas);
+                    Attr tipo = xml.definirAtributo("tipo", "especial");
+                    Attr funcion = xml.definirAtributo("funcion", valorTipo);
+                    xml.agregarAtributo(fila, tipo);
+                    xml.agregarAtributo(fila, funcion);
+                    Element celdas = xml.agregarElemento("celdas", fila);
+                    Element celda_primera = xml.agregarElemento("celda", celdas);
+                    Element celda_nombre = xml.agregarElemento("celda-nombre", celda_primera);
+                    xml.agregarSubelemento("nombre", valorFil, celda_nombre);
+                    for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
+                        Element celda = xml.agregarElemento("celda", celdas);
+                        Element campo_fila = xml.agregarElemento("campo", celda);
+                        xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
+                        String nombre_celda = "Tabla_" + contadorTablas + "_" + valorTipo + "_" + jt;
+                        xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                        xml.agregarSubelemento("valor", "", campo_fila);
+                    }
+                }
+                //------------
+                contadorTablas++;
             }
 
         }
-        
+
         return xml.imprimirXML();
     }
 
-    private boolean crearDirectorio(String path)
-    {
+    private void crearCampo(HelperXML xml, HashMap<String, String> hash, Element campo) {
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre"), campo);
+        xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
+        xml.agregarSubelemento("valor", "", campo);
+        if (hash.containsKey("manual")) {
+            xml.agregarSubelemento("tipo", "Excel", campo);
+            xml.agregarSubelemento("celda", hash.get("celda"), campo);
+        } else {
+            xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+        }
+        if (hash.containsKey("visible")) {
+            xml.agregarSubelemento("visible", "True", campo);
+        } else {
+            xml.agregarSubelemento("visible", "False", campo);
+        }
+    }
+
+    private boolean crearDirectorio(String path) {
         boolean resultado = false;
         File directorio = new File(path);
         if (!directorio.exists()) {
@@ -500,57 +515,49 @@ public class ControladorAnalisis extends SIGIPROServlet
             try {
                 directorio.mkdirs();
                 resultado = true;
-            }
-            catch (SecurityException se) {
+            } catch (SecurityException se) {
                 se.printStackTrace();
             }
             if (resultado) {
                 System.out.println("Directorio Creado");
             }
-        }
-        else {
+        } else {
             resultado = true;
         }
         return resultado;
     }
 
-    private String getFileExtension(String fileName)
-    {
+    private String getFileExtension(String fileName) {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
-        }
-        else {
+        } else {
             return "";
         }
     }
 
     // </editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
-    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
-    {
+    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<String> lista_acciones;
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
-        }
-        else {
+        } else {
             lista_acciones = accionesPost;
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
-            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+            Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class
+            );
             metodo.invoke(this, request, response);
-        }
-        else {
+        } else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
         }
     }
 
     @Override
-    protected int getPermiso()
-    {
+    protected int getPermiso() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

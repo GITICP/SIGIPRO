@@ -21,6 +21,7 @@ public class Analisis {
     private int cantidad_pendiente;
     //Debe ser de tipo XML pero se define luego
     private SQLXML estructura; 
+    private String estructuraString;
     //PATH de la ubicacion del archivo XSL
     private String machote;
     private Usuario encargado;
@@ -30,6 +31,14 @@ public class Analisis {
     private List<TipoMuestra> tipos_muestras_analisis;
 
     public Analisis() {
+    }
+
+    public String getEstructuraString() {
+        return estructuraString;
+    }
+
+    public void setEstructuraString(String estructuraString) {
+        this.estructuraString = estructuraString;
     }
 
     public int getCantidad_pendiente() {
