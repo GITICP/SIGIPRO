@@ -9,8 +9,10 @@ import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +122,42 @@ public class EquipoDAO extends DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return resultado;
+    }
+    
+    public List<Equipo> obtenerEquiposTipo(int[] ids_tipos) throws SIGIPROException {
+        
+        List<Equipo> resultado = new ArrayList<Equipo>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            String ids_parseados = this.pasar_ids_a_parentesis(ids_tipos);
+            consulta = getConexion().prepareStatement(
+                    " SELECT id_equipo, nombre FROM control_calidad.equipos WHERE id_tipo_equipo in " + ids_parseados + "; "
+            );
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Equipo equipo = new Equipo();
+                equipo.setNombre(rs.getString("nombre"));
+                equipo.setId_equipo(rs.getInt("id_equipo"));
+                
+                resultado.add(equipo);
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener el listado de equipos.");
+        }
+        finally {
+            cerrarSilencioso(consulta);
+            cerrarSilencioso(rs);
+            cerrarConexion();
+        }
+        
         return resultado;
     }
 

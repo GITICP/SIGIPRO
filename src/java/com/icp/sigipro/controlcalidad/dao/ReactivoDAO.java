@@ -6,11 +6,14 @@
 package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.CertificadoReactivo;
+import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,6 +201,44 @@ public class ReactivoDAO extends DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return resultado;
+    }
+
+    public List<Reactivo> obtenerReactivosTipo(int[] ids_tipos) throws SIGIPROException
+    {
+        List<Reactivo> resultado = new ArrayList<Reactivo>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            String ids_parseados = this.pasar_ids_a_parentesis(ids_tipos);
+            
+            consulta = getConexion().prepareStatement(
+                    " SELECT id_reactivo, nombre FROM control_calidad.reactivos WHERE id_tipo_reactivo in " + ids_parseados + "; "
+            );
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Reactivo reactivo = new Reactivo();
+                
+                reactivo.setNombre(rs.getString("nombre"));
+                reactivo.setId_reactivo(rs.getInt("id_reactivo"));
+                
+                resultado.add(reactivo);
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener el listado de reactivos.");
+        }
+        finally {
+            cerrarSilencioso(consulta);
+            cerrarSilencioso(rs);
+            cerrarConexion();
+        }
+        
         return resultado;
     }
 
