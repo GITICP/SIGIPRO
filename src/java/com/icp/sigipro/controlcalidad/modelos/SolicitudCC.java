@@ -8,6 +8,8 @@ package com.icp.sigipro.controlcalidad.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -16,6 +18,7 @@ import org.json.JSONObject;
  * @author ld.conejo
  */
 public class SolicitudCC {
+
     private int id_solicitud;
     private String numero_solicitud;
     private Usuario usuario_solicitante;
@@ -23,7 +26,7 @@ public class SolicitudCC {
     private Date fecha_solicitud;
     private Date fecha_recibido;
     private String estado;
-    
+
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
 
     public SolicitudCC() {
@@ -85,6 +88,14 @@ public class SolicitudCC {
         this.estado = estado;
     }
 
+    public String getFecha_solicitudAsString() {
+        return formatearFecha(fecha_solicitud);
+    }
+
+    public String getFecha_recibidoAsString() {
+        return formatearFecha(fecha_recibido);
+    }
+
     public List<AnalisisGrupoSolicitud> getAnalisis_solicitud() {
         return analisis_solicitud;
     }
@@ -92,25 +103,31 @@ public class SolicitudCC {
     public void setAnalisis_solicitud(List<AnalisisGrupoSolicitud> analisis_solicitud) {
         this.analisis_solicitud = analisis_solicitud;
     }
-    
-    public String parseJSON(){
+
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
-        try{
+        try {
             Field properties[] = _class.getDeclaredFields();
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
-                if (i != 0){
+                if (i != 0) {
                     JSON.put(field.getName(), field.get(this));
-                }else{
+                } else {
                     JSON.put("id_objeto", field.get(this));
                 }
-            }JSON.put("id_usuario_solicitante", this.getUsuario_solicitante().getId_usuario());
-            JSON.put("id_usuario_recibido",this.getUsuario_recibido().getId_usuario());
-                    
-        }catch (Exception e){
-            
+            }
+            JSON.put("id_usuario_solicitante", this.getUsuario_solicitante().getId_usuario());
+            JSON.put("id_usuario_recibido", this.getUsuario_recibido().getId_usuario());
+
+        } catch (Exception e) {
+
         }
         return JSON.toString();
+    }
+
+    private String formatearFecha(Date fecha) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
 }

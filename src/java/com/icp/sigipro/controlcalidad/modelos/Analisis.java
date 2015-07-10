@@ -28,7 +28,6 @@ public class Analisis {
     
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
-    private List<TipoMuestra> tipos_muestras_analisis;
 
     public Analisis() {
     }
@@ -107,13 +106,6 @@ public class Analisis {
         this.tipos_reactivos_analisis = tipos_reactivos_analisis;
     }
 
-    public List<TipoMuestra> getTipos_muestras_analisis() {
-        return tipos_muestras_analisis;
-    }
-
-    public void setTipos_muestras_analisis(List<TipoMuestra> tipos_muestras_analisis) {
-        this.tipos_muestras_analisis = tipos_muestras_analisis;
-    }
     
     public String parseJSON(){
         Class _class = this.getClass();
