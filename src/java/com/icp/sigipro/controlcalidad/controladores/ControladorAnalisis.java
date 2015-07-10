@@ -5,26 +5,34 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
+import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
+import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
+import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.Equipo;
+import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
+import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
-import java.sql.SQLXML;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,9 +46,13 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.fileupload.FileItem;
@@ -48,7 +60,10 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -60,12 +75,13 @@ public class ControladorAnalisis extends SIGIPROServlet {
     //Falta implementar
     private final int[] permisos = {1, 540};
     //-----------------
-    private AnalisisDAO dao = new AnalisisDAO();
-    private TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
-    private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
-
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
+    private final AnalisisDAO dao = new AnalisisDAO();
+    private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
+    private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
+    private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
+    private final EquipoDAO equipodao = new EquipoDAO();
+    private final ReactivoDAO reactivodao = new ReactivoDAO();
+    private final ResultadoDAO resultadodao = new ResultadoDAO();
 
     protected final Class clase = ControladorAnalisis.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -76,6 +92,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             add("eliminar");
             add("editar");
             add("archivo");
+            add("realizar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -198,6 +215,44 @@ public class ControladorAnalisis extends SIGIPROServlet {
         }
 
     }
+    
+    protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "Analisis/Realizar.jsp";
+        
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        request.setAttribute("id_analisis", id_analisis);
+        
+        ControlXSLT xslt;
+        Analisis analisis;
+        
+        try {
+            xslt = controlxsltdao.obtenerControlXSLT();
+            analisis = dao.obtenerAnalisis(id_analisis);
+            
+            TransformerFactory tff = TransformerFactory.newInstance();
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = analisis.getEstructura().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+            
+            String formulario = stream_result.getWriter().toString();          
+            
+            request.setAttribute("cuerpo_formulario", formulario);
+            List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
+            List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
+            request.setAttribute("equipos", equipos);
+            request.setAttribute("reactivos", reactivos);
+        } catch (TransformerException | SIGIPROException | SQLException ex ) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+        redireccionar(request, response, redireccion);
+    }
 
     // </editor-fold>
     
@@ -256,7 +311,70 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     }
 
+    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        
+        Analisis analisis = dao.obtenerAnalisis(id_analisis);
+        
+        Resultado resultado = new Resultado();
+        
+        try {
+            InputStream binary_stream = analisis.getEstructura().getBinaryStream();
+            
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document documento_resultado = parser.parse(binary_stream);
+            Element elemento_resultado = documento_resultado.getDocumentElement();
+            
+            NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
+            
+            for (int i = 0; i < lista_nodos.getLength(); i++) {
+                
+                Node nodo = lista_nodos.item(i);
+                
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    
+                    String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
+                    
+                    if (!tipo_campo.equals("table")) {
+                        
+                        String nombre_campo = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        Node nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        String valor = request.getParameter(nombre_campo);
+                        nodo_valor.setTextContent(valor);
+                        
+                    }
+                }
+            }
+            
+            String string_xml_resultado;
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
+            string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            
+            resultado.setDatos_string(string_xml_resultado);
+            
+            String[] equipos_utilizados = request.getParameterValues("equipos");
+            String[] reactivos_utilizados = request.getParameterValues("reactivos");
+            
+            resultado.setEquipos(equipos_utilizados);
+            resultado.setReactivos(reactivos_utilizados);
+            
+            resultadodao.insertarResultado(resultado);
+            
+            // Quedé probando la inserción del resultado.
+            
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }       
+    }
+    
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
         Analisis a = new Analisis();
@@ -536,6 +654,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

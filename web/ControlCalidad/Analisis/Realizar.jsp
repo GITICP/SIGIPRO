@@ -42,7 +42,49 @@
 
                             <form method="post" class="form-horizontal" action="Analisis">
                                 <input type="hidden" value="realizar" name="accion" />
-                                
+                                <input type="hidden" value="${id_analisis}" name="id_analisis" />
+
+                                <c:if test="${!reactivos.isEmpty()}">
+                                    <div class="col-md-6">
+                                        <label for="especie" class="control-label"> *Reactivos Utilizados</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <select id="seleccion-reactivos" class="select2" name="reactivos" multiple="multiple"
+                                                            style='background-color: #fff;' required
+                                                            oninvalid="setCustomValidity('Este campo es requerido')"
+                                                            onchange="setCustomValidity('')">
+                                                        <option value=''></option>
+                                                        <c:forEach items="${reactivos}" var="reactivo">
+                                                            <option value=${reactivo.getId_reactivo()}>${reactivo.getNombre()}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${!reactivos.isEmpty()}">
+                                    <div class="col-md-6">
+                                        <label for="especie" class="control-label"> *Equipos de Medición Utilizados</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <select id="seleccion-equipo" class="select2" name="equipos" multiple="multiple"
+                                                            style='background-color: #fff;' required
+                                                            oninvalid="setCustomValidity('Este campo es requerido')"
+                                                            onchange="setCustomValidity('')">
+                                                        <option value=''></option>
+                                                        <c:forEach items="${equipos}" var="equipo">
+                                                            <option value=${equipo.getId_equipo()}>${equipo.getNombre()}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+
                                 ${cuerpo_formulario}
 
                                 <div class="form-group">
