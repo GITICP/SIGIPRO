@@ -119,4 +119,46 @@ public class ResultadoDAO extends DAO
         return resultado;
     }
 
+    public Resultado obtenerResultado(int id_resultado) throws SIGIPROException {
+        Resultado resultado = null;
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT * FROM control_calidad.resultados r "
+                            + " WHERE r.id_resultado = ? "
+                  //+ " LEFT JOIN equipos_resultados ON r.id_resultado = "
+                            
+                  
+            );
+            
+            consulta.setInt(1, id_resultado);
+            
+            rs = consulta.executeQuery();
+            
+            if(rs.next()) {
+                resultado = new Resultado();
+                
+                resultado.setId_resultado(rs.getInt("id_resultado"));
+                resultado.setDatos(rs.getSQLXML("datos"));
+                resultado.setPath(rs.getString("path"));
+                
+            } else {
+                throw new SIGIPROException("El resultado que está intentando buscar no existe.");
+            }
+            
+            
+        } catch (SQLException ex) {
+            throw new SIGIPROException("Error al obtener el resultado. Notifique al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return resultado;
+    }
+
 }

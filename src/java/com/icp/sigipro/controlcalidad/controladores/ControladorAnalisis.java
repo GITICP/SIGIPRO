@@ -6,7 +6,6 @@
 package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
@@ -23,6 +22,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
+import com.icp.sigipro.utilidades.HelperExcel;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,12 +39,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.security.sasl.AuthenticationException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -72,7 +66,7 @@ import org.w3c.dom.NodeList;
 
 /**
  *
- * @author ld.conejo
+ * @author ld.conejo, boga
  */
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
 public class ControladorAnalisis extends SIGIPROServlet
@@ -179,8 +173,7 @@ public class ControladorAnalisis extends SIGIPROServlet
             Analisis a = dao.obtenerAnalisis(id_analisis);
             request.setAttribute("analisis", a);
             redireccionar(request, response, redireccion);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -214,13 +207,11 @@ public class ControladorAnalisis extends SIGIPROServlet
                 bitacora.setBitacora(id_analisis, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //----------------------------
                 request.setAttribute("mensaje", helper.mensajeDeExito("Analisis eliminado correctamente"));
-            }
-            else {
+            } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             }
             this.getIndex(request, response);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser eliminado ya que tiene otras asociaciones."));
             this.getIndex(request, response);
@@ -240,7 +231,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         Analisis analisis;
 
         try {
-            xslt = controlxsltdao.obtenerControlXSLT();
+            xslt = controlxsltdao.obtenerControlXSLTFormulario();
             analisis = dao.obtenerAnalisis(id_analisis);
 
             TransformerFactory tff = TransformerFactory.newInstance();
@@ -260,8 +251,41 @@ public class ControladorAnalisis extends SIGIPROServlet
             request.setAttribute("equipos", equipos);
             request.setAttribute("reactivos", reactivos);
             request.setAttribute("analisis", analisis);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
         }
-        catch (TransformerException | SIGIPROException | SQLException ex) {
+
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "VerResultado.jsp";
+        
+        int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
+        
+        ControlXSLT xslt;
+        Resultado resultado;
+        
+        try {
+            xslt = controlxsltdao.obtenerControlXSLTResultado();
+            resultado = resultadodao.obtenerResultado(id_resultado);
+
+            TransformerFactory tff = TransformerFactory.newInstance();
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = resultado.getDatos().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+
+            String formulario = stream_result.getWriter().toString();
+
+            request.setAttribute("resultado", formulario);
+            request.setAttribute("cuerpo_datos", formulario);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
         }
@@ -286,13 +310,11 @@ public class ControladorAnalisis extends SIGIPROServlet
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
                 this.getIndex(request, response);
-            }
-            else {
+            } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
                 this.getAgregar(request, response);
             }
-        }
-        else {
+        } else {
             resultado = dao.editarAnalisis(a);
             if (resultado) {
                 //Funcion que genera la bitacora
@@ -300,8 +322,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                 //*----------------------------*
                 request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
                 this.getIndex(request, response);
-            }
-            else {
+            } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
                 request.setAttribute("id_analisis", a.getId_analisis());
                 this.getEditar(request, response);
@@ -319,7 +340,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         String[] equipos_utilizados = this.obtenerParametros("equipos");
         String[] reactivos_utilizados = this.obtenerParametros("reactivos");
 
-        this.guardarArchivoResultado(resultado, analisis, ubicacion);
+        HelperExcel excel = this.guardarArchivoResultado(resultado, analisis, ubicacion);
 
         try {
             InputStream binary_stream = analisis.getEstructura().getBinaryStream();
@@ -339,9 +360,16 @@ public class ControladorAnalisis extends SIGIPROServlet
                     String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
 
                     if (!tipo_campo.equals("table")) {
+                        String valor;
                         String nombre_campo = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         Node nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        String valor = this.obtenerParametro(nombre_campo);
+                        if (tipo_campo.equalsIgnoreCase("excel")) {
+                            Node nodo_celda = elemento.getElementsByTagName("celda").item(0);
+                            String celda = nodo_celda.getTextContent();
+                            valor = excel.obtenerCelda(celda);
+                        } else {
+                            valor = this.obtenerParametro(nombre_campo);
+                        }
                         nodo_valor.setTextContent(valor);
                     }
                 }
@@ -361,9 +389,7 @@ public class ControladorAnalisis extends SIGIPROServlet
             resultado.setReactivos(reactivos_utilizados);
 
             resultadodao.insertarResultado(resultado);
-
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -385,8 +411,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                 String fieldValue;
                 try {
                     fieldValue = item.getString("UTF-8").trim();
-                }
-                catch (UnsupportedEncodingException ex) {
+                } catch (UnsupportedEncodingException ex) {
                     fieldValue = item.getString();
                 }
                 //Todavia falta la estructura
@@ -420,8 +445,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                                 HashMap<String, String> llaves = new HashMap<String, String>();
                                 if (values[0].equals("c")) {
                                     llaves.put("tipo", "campo");
-                                }
-                                else {
+                                } else {
                                     llaves.put("tipo", "tabla");
                                 }
                                 dictionary.put(id, llaves);
@@ -460,8 +484,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                             break;
                         }
                 }
-            }
-            else {
+            } else {
                 try {
                     if (item.getSize() != 0) {
                         ubicacion += File.separatorChar + "Machotes";
@@ -477,8 +500,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                         item.write(archivo);
                         a.setMachote(archivo.getAbsolutePath());
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
@@ -488,8 +510,10 @@ public class ControladorAnalisis extends SIGIPROServlet
         a.setEstructuraString(xml);
         return a;
     }
-    
-    private void guardarArchivoResultado(Resultado resultado, Analisis analisis, String ubicacion) {
+
+    private HelperExcel guardarArchivoResultado(Resultado resultado, Analisis analisis, String ubicacion) {
+
+        HelperExcel excel = null;
 
         FileItem item = this.obtenerParametroFileItem("resultado");
 
@@ -507,11 +531,14 @@ public class ControladorAnalisis extends SIGIPROServlet
                 File archivo = new File(ubicacion, nombre);
                 item.write(archivo);
                 resultado.setPath(archivo.getAbsolutePath());
+
+                excel = new HelperExcel(resultado.getPath());
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        return excel;
     }
 
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
@@ -527,13 +554,11 @@ public class ControladorAnalisis extends SIGIPROServlet
             HashMap<String, String> hash = dictionary.get(key);
             if (hash.get("tipo").equals("campo")) {
                 this.crearCampo(xml, hash, campo);
-            }
-            else {
+            } else {
                 xml.agregarSubelemento("tipo", "table", campo);
                 if (hash.containsKey("tablavisible")) {
                     xml.agregarSubelemento("visible", "True", campo);
-                }
-                else {
+                } else {
                     xml.agregarSubelemento("visible", "False", campo);
                 }
                 Element columnas = xml.agregarElemento("columnas", campo);
@@ -568,8 +593,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                         Element celda = xml.agregarElemento("celda", celdas);
                         Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
                         xml.agregarSubelemento("nombre", nombresfilas[it], fila_nombre);
-                    }
-                    else {
+                    } else {
                         Element celda = xml.agregarElemento("celda", celdas);
                         Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
                         xml.agregarSubelemento("nombre", "", fila_nombre);
@@ -625,14 +649,12 @@ public class ControladorAnalisis extends SIGIPROServlet
         if (hash.containsKey("manual")) {
             xml.agregarSubelemento("tipo", "Excel", campo);
             xml.agregarSubelemento("celda", hash.get("celda"), campo);
-        }
-        else {
+        } else {
             xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
         }
         if (hash.containsKey("visible")) {
             xml.agregarSubelemento("visible", "True", campo);
-        }
-        else {
+        } else {
             xml.agregarSubelemento("visible", "False", campo);
         }
     }
@@ -641,20 +663,16 @@ public class ControladorAnalisis extends SIGIPROServlet
         boolean resultado = false;
         File directorio = new File(path);
         if (!directorio.exists()) {
-            System.out.println("Creando directorio: " + path);
             resultado = false;
             try {
                 directorio.mkdirs();
                 resultado = true;
-            }
-            catch (SecurityException se) {
+            } catch (SecurityException se) {
                 se.printStackTrace();
             }
             if (resultado) {
-                System.out.println("Directorio Creado");
             }
-        }
-        else {
+        } else {
             resultado = true;
         }
         return resultado;
@@ -663,8 +681,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     private String getFileExtension(String fileName) {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
-        }
-        else {
+        } else {
             return "";
         }
     }
@@ -676,8 +693,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         List<String> lista_acciones;
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
-        }
-        else {
+        } else {
             lista_acciones = accionesPost;
             this.obtenerParametros(request);
             if (this.obtenerParametro("accion").equals("realizar")) {
@@ -689,8 +705,7 @@ public class ControladorAnalisis extends SIGIPROServlet
             Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class
             );
             metodo.invoke(this, request, response);
-        }
-        else {
+        } else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
         }
@@ -700,7 +715,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     protected int getPermiso() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     private void obtenerParametros(HttpServletRequest request) {
         try {
             //Se crea el Path en la carpeta del Proyecto
@@ -717,14 +732,10 @@ public class ControladorAnalisis extends SIGIPROServlet
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             parametros = upload.parseRequest(request);
-        }
-        catch (FileUploadException | UnsupportedEncodingException ex) {
+        } catch (FileUploadException | UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
     }
 
     // </editor-fold>
-    
-
-    
 }
