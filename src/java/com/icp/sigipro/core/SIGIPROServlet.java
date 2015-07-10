@@ -9,7 +9,9 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +23,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
@@ -29,28 +34,27 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  */
 @WebServlet(name = "SIGIPROServlet", urlPatterns = {"/SIGIPROServlet"})
 public abstract class SIGIPROServlet extends HttpServlet
-{   
+{
+
     protected final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     protected final BitacoraDAO bitacora = new BitacoraDAO();
+    protected List<FileItem> parametros;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         procesarSolicitud(request, response, "get");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         procesarSolicitud(request, response, "post");
     }
-
+    
     protected void procesarSolicitud(HttpServletRequest request, HttpServletResponse response, String accionHTTP)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         String accion = request.getParameter("accion");
         if (accion == null) {
             accion = "index";
@@ -86,13 +90,11 @@ public abstract class SIGIPROServlet extends HttpServlet
 
     protected abstract int getPermiso();
 
-    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
-    {
+    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    protected void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException, NullPointerException
-    {
+    protected void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException, NullPointerException {
         try {
             if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
@@ -103,8 +105,7 @@ public abstract class SIGIPROServlet extends HttpServlet
         }
     }
 
-    protected void validarPermisos(int[] permisos, List<Integer> permisosUsuario) throws AuthenticationException
-    {
+    protected void validarPermisos(int[] permisos, List<Integer> permisosUsuario) throws AuthenticationException {
         try {
             if (!(permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(permisos[1]) || permisosUsuario.contains(permisos[2]) || permisosUsuario.contains(1))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
@@ -115,8 +116,7 @@ public abstract class SIGIPROServlet extends HttpServlet
         }
     }
 
-    protected boolean validarPermiso(List<Integer> permisosUsuario) throws AuthenticationException
-    {
+    protected boolean validarPermiso(List<Integer> permisosUsuario) throws AuthenticationException {
         try {
             return permisosUsuario.contains(getPermiso()) || permisosUsuario.contains(1);
         }
@@ -125,8 +125,7 @@ public abstract class SIGIPROServlet extends HttpServlet
         }
     }
 
-    protected boolean verificarPermiso(Integer p, List<Integer> permisosUsuario) throws AuthenticationException
-    {
+    protected boolean verificarPermiso(Integer p, List<Integer> permisosUsuario) throws AuthenticationException {
         try {
             return permisosUsuario.contains(p) || permisosUsuario.contains(1);
         }
@@ -135,20 +134,78 @@ public abstract class SIGIPROServlet extends HttpServlet
         }
     }
 
-    protected void redireccionar(HttpServletRequest request, HttpServletResponse response, String redireccion) throws ServletException, IOException
-    {
+    protected void redireccionar(HttpServletRequest request, HttpServletResponse response, String redireccion) throws ServletException, IOException {
         RequestDispatcher vista = request.getRequestDispatcher(redireccion);
         vista.forward(request, response);
     }
 
-    protected List<Integer> getPermisosUsuario(HttpServletRequest request)
-    {
+    protected List<Integer> getPermisosUsuario(HttpServletRequest request) {
         HttpSession sesion = request.getSession();
         return (List<Integer>) sesion.getAttribute("listaPermisos");
     }
 
-    protected int getIdUsuario(HttpServletRequest request) throws AuthenticationException
-    {
+    protected String obtenerParametro(String nombre_parametro) {
+        FileItem resultado = null;
+        for (FileItem file_item : parametros) {
+            if (file_item.getFieldName().equals(nombre_parametro)) {
+                resultado = file_item;
+                break;
+            }
+        }
+        String valor;
+        if (resultado != null) {
+            try {
+                valor = resultado.getString("UTF-8").trim();
+            }
+            catch (UnsupportedEncodingException ex) {
+                valor = resultado.getString();
+            }
+            parametros.remove(resultado);
+        }
+        else {
+            valor = "";
+        }
+        return valor;
+    }
+    
+    protected FileItem obtenerParametroFileItem(String nombre_parametro) {
+        FileItem resultado = null;
+        for (FileItem file_item : parametros) {
+            if (file_item.getFieldName().equals(nombre_parametro)) {
+                resultado = file_item;
+                break;
+            }
+        }
+        if (resultado != null) {
+            parametros.remove(resultado);
+        }
+        return resultado;
+    }
+
+    protected String[] obtenerParametros(String nombre_parametro) {
+        List<FileItem> lista_items = new ArrayList<FileItem>();
+        List<String> resultado = new ArrayList<String>();
+        for (FileItem file_item : parametros) {
+            if (file_item.getFieldName().equals(nombre_parametro)) {
+                lista_items.add(file_item);
+                try {
+                    resultado.add(file_item.getString("UTF-8").trim());
+                }
+                catch (UnsupportedEncodingException ex) {
+                    resultado.add(file_item.getString());
+                }
+            }
+        }
+        
+        if (!lista_items.isEmpty()) {
+            for (FileItem item : lista_items) {
+                parametros.remove(item);
+            }
+        }
+        return resultado.toArray(new String[]{});
+    }
+
+    protected int getIdUsuario(HttpServletRequest request) throws AuthenticationException {
         try {
             HttpSession sesion = request.getSession();
             return (int) sesion.getAttribute("idusuario");

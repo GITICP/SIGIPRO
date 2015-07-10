@@ -203,4 +203,12 @@ public class Analisis
             }
         }
     }
+    
+    public boolean tieneMachote() {
+        boolean resultado = false;
+        if (this.machote != null) {
+            resultado = !this.machote.isEmpty();
+        }
+        return resultado;
+    }
 }

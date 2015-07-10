@@ -109,6 +109,7 @@ public class ResultadoDAO extends DAO
                 ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Inténtelo nuevamente o notifique al administrador del sistema.");
             }
+            cerrarSilencioso(rs_insert_resultado);
             cerrarSilencioso(insert_resultado);
             cerrarSilencioso(insert_reactivos);
             cerrarSilencioso(insert_equipos);
