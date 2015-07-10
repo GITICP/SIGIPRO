@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -59,10 +60,12 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -336,6 +339,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
         Analisis analisis = dao.obtenerAnalisis(id_analisis);
         Resultado resultado = new Resultado();
+        String redireccion = "Analisis/index.jsp";
 
         String[] equipos_utilizados = this.obtenerParametros("equipos");
         String[] reactivos_utilizados = this.obtenerParametros("reactivos");
@@ -389,9 +393,20 @@ public class ControladorAnalisis extends SIGIPROServlet
             resultado.setReactivos(reactivos_utilizados);
 
             resultadodao.insertarResultado(resultado);
-        } catch (Exception ex) {
+            
+            request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
+            
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
+            request.setAttribute("mensaje", "Ha ocurrido un error inesperado. Contacte al administrador del sistema.");
         }
+        
+        List<Analisis> lista_analisis = dao.obtenerAnalisis();
+        request.setAttribute("listaAnalisis", lista_analisis);
+        
+        this.redireccionar(request, response, redireccion);
     }
 
     // </editor-fold>

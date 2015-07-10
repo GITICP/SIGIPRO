@@ -8,6 +8,8 @@ package com.icp.sigipro.controlcalidad.dao;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
+import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.utilidades.HelperFechas;
@@ -15,6 +17,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLXML;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -124,16 +128,18 @@ public class ResultadoDAO extends DAO
         
         PreparedStatement consulta = null;
         ResultSet rs = null;
+        PreparedStatement consulta_reactivos = null;
+        ResultSet rs_reactivos = null;
+        PreparedStatement consulta_equipos = null;
+        ResultSet rs_equipos = null;
         
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT * FROM control_calidad.resultados r "
-                            + " WHERE r.id_resultado = ? "
-                  //+ " LEFT JOIN equipos_resultados ON r.id_resultado = "
-                            
-                  
+                    " SELECT * "
+                  + " FROM control_calidad.resultados "
+                  + " WHERE id_resultado = ? "
             );
-            
+                        
             consulta.setInt(1, id_resultado);
             
             rs = consulta.executeQuery();
@@ -144,17 +150,90 @@ public class ResultadoDAO extends DAO
                 resultado.setId_resultado(rs.getInt("id_resultado"));
                 resultado.setDatos(rs.getSQLXML("datos"));
                 resultado.setPath(rs.getString("path"));
-                
             } else {
                 throw new SIGIPROException("El resultado que está intentando buscar no existe.");
             }
             
+            consulta_reactivos = getConexion().prepareStatement(
+                   " SELECT r.id_reactivo, r.nombre, tr.id_tipo_reactivo, tr.nombre as nombre_tipo " 
+                 + " FROM control_calidad.reactivos_resultado rr "  
+                 + "      INNER JOIN control_calidad.reactivos r ON rr.id_reactivo = r.id_reactivo "  
+                 + "      INNER JOIN control_calidad.tipos_reactivos tr ON tr.id_tipo_reactivo = r.id_tipo_reactivo " 
+                 + "      WHERE rr.id_resultado = ?; "
+            );
             
+            consulta_reactivos.setInt(1, id_resultado);
+            rs_reactivos = consulta_reactivos.executeQuery();
+            
+            List<Reactivo> reactivos_resultado = new ArrayList<Reactivo>();            
+            
+            if (rs_reactivos.next()) {
+                do {
+                    
+                    Reactivo r = new Reactivo();
+                    
+                    r.setId_reactivo(rs_reactivos.getInt("id_reactivo"));
+                    r.setNombre(rs_reactivos.getString("nombre"));
+                    
+                    TipoReactivo tr = new TipoReactivo();
+                    
+                    tr.setId_tipo_reactivo(rs_reactivos.getInt("id_tipo_reactivo"));
+                    tr.setNombre(rs_reactivos.getString("nombre_tipo"));
+                    
+                    r.setTipo_reactivo(tr);
+                    
+                    reactivos_resultado.add(r);
+                    
+                } while(rs_reactivos.next());
+            }
+            
+            resultado.setReactivos_resultado(reactivos_resultado);
+            
+            consulta_equipos = getConexion().prepareStatement(
+                    " SELECT e.id_equipo, e.nombre, te.id_tipo_equipo, te.nombre as nombre_tipo "
+                  + " FROM control_calidad.equipos_resultado er " 
+                  + "   INNER JOIN control_calidad.equipos e ON er.id_equipo = e.id_equipo " 
+                  + "   INNER JOIN control_calidad.tipos_equipos te ON te.id_tipo_equipo = e.id_tipo_equipo "
+                  + "   WHERE er.id_resultado = ?; "
+            );
+            
+            consulta_equipos.setInt(1, id_resultado);
+            rs_equipos = consulta_equipos.executeQuery();
+            
+            List<Equipo> equipos_resultado = new ArrayList<Equipo>();
+            
+            if (rs_equipos.next()) {
+                
+                do {
+                    
+                    Equipo e = new Equipo();
+                    
+                    e.setId_equipo(rs_equipos.getInt("id_equipo"));
+                    e.setNombre(rs_equipos.getString("nombre"));
+                    
+                    TipoEquipo te = new TipoEquipo();
+                    
+                    te.setId_tipo_equipo(rs_equipos.getInt("id_tipo_equipo"));
+                    te.setNombre(rs_equipos.getString("nombre_tipo"));
+                    
+                    e.setTipo_equipo(te);
+                    
+                    equipos_resultado.add(e);
+                    
+                } while(rs_equipos.next());
+            }
+            
+            resultado.setEquipos_resultado(equipos_resultado);
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("Error al obtener el resultado. Notifique al administrador del sistema.");
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
+            cerrarSilencioso(rs_equipos);
+            cerrarSilencioso(consulta_equipos);
+            cerrarSilencioso(rs_reactivos);
+            cerrarSilencioso(consulta_reactivos);
             cerrarConexion();
         }
         
