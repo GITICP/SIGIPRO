@@ -56,6 +56,7 @@ public class ControladorCalendario extends SIGIPROServlet {
   protected final List<String> accionesPost = new ArrayList<String>() {
     {
       add("agregar");
+      add("eliminar");
     }
   };
   protected final List<String> opcionesCompartir = new ArrayList<String>() {
@@ -163,7 +164,37 @@ public class ControladorCalendario extends SIGIPROServlet {
     response.sendRedirect(redireccion);
     //redireccionar(request, response, redireccion);
   }
+ protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    //index
+    String redireccion = "Calendario/index.jsp";
+    HttpSession sesion = request.getSession();
+    String nombre_usr = (String) sesion.getAttribute("usuario");
+    Usuario us = dao_us.obtenerUsuario(nombre_usr);
+    try {
+      String json = dao.getEventos(us);
+      request.setAttribute("eventos", json);
+    } catch (SIGIPROException e) {
+      request.setAttribute("mensaje", helper.mensajeDeError(e.getMessage()));
+    }
+    List<Seccion> secciones = dao_sec.obtenerSecciones();
+    List<Usuario> usuarios = dao_us.obtenerUsuarios();
+    List<Rol> roles = dao_rol.obtenerRoles();
 
+   //index
+    int id_evento = Integer.parseInt(request.getParameter("id_evento_eliminar"));
+    try {
+      dao.eliminarEvento(id_evento);
+      //Funcion que genera la bitacora
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(id_evento, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO, request.getRemoteAddr());
+      //*----------------------------*
+      redireccion= "Calendario?&tipo=exito&mensaje=" + "Evento eliminado correctamente";
+    } catch (SIGIPROException ex) {
+      redireccion= "Calendario?&tipo=error&mensaje=" + "Hubo un error al eliminar el evento";
+    }
+    response.sendRedirect(redireccion);
+    //redireccionar(request, response, redireccion);
+  }
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   private Evento construirObjeto(HttpServletRequest request) throws SIGIPROException {
@@ -173,23 +204,39 @@ public class ControladorCalendario extends SIGIPROServlet {
     evento.setTitle(request.getParameter("title"));
     evento.setDescription(request.getParameter("description"));
     
-    String timestamp_start = request.getParameter("start_date") + " " + request.getParameter("start_time") + ":00";
-    String timestamp_end = request.getParameter("end_date") + " " + request.getParameter("end_time") + ":00";
+    if (!evento.getAllDay()) {
+
+      String timestamp_start = request.getParameter("start_date") + " " + request.getParameter("start_time") + ":00";
+      String timestamp_end = request.getParameter("end_date") + " " + request.getParameter("end_time") + ":00";
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+      try {
+        Date parsedDate = dateFormat.parse(timestamp_start);
+        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+        evento.setStart_date(timestamp);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      try {
+        Date parsedDate2 = dateFormat.parse(timestamp_end);
+        Timestamp timestamp2 = new java.sql.Timestamp(parsedDate2.getTime());
+        evento.setEnd_date(timestamp2);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else {
+    String timestamp_start = request.getParameter("start_date") + " " + "00:00:00"; 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    
-    try{
-    Date parsedDate = dateFormat.parse(timestamp_start);
-    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-    evento.setStart_date(timestamp);
+
+      try {
+        Date parsedDate = dateFormat.parse(timestamp_start);
+        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+        evento.setStart_date(timestamp);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
-    catch (Exception e){e.printStackTrace();}
-    
-     try{
-    Date parsedDate2 = dateFormat.parse(timestamp_end);
-    Timestamp timestamp2 = new java.sql.Timestamp(parsedDate2.getTime());
-    evento.setEnd_date(timestamp2);}
-    catch (Exception e){e.printStackTrace();}
-   
 
     return evento;
     }

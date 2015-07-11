@@ -46,7 +46,24 @@
       </div>
       <!-- /main -->
     </div>
-    <t:modal idModal="ModalNuevoEvento" titulo="Nuevo Evento">
+
+    <t:modal idModal="ModalEliminarEvento" titulo="Eliminar Evento">
+      <jsp:attribute name="form">
+      <form id="form-eliminar-evento" method="post" action="Calendario">
+        <h5>¿Está seguro que desea eliminar este evento? </h5>
+        <input name="accion" value="eliminar" hidden> 
+        <input name="id_evento_eliminar" id="id_evento_eliminar" type="text" value="kjhkh" hidden>
+        <div class="form-group">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar </button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Confirmar </button>
+          </div>
+        </div>
+      </form>
+      </jsp:attribute>
+    </t:modal>
+
+      <t:modal idModal="ModalNuevoEvento" titulo="Nuevo Evento">
 
       <jsp:attribute name="form">
         <form name="modal" id="nuevo-evento-form" action="Calendario" method="POST">
@@ -160,5 +177,7 @@
     <script src="/SIGIPRO/recursos/js/fullcalendar/fullcalendar.js"></script>
     <script src="/SIGIPRO/recursos/js/fullcalendar/es.js"></script>
     <script src="/SIGIPRO/recursos/js/sigipro/calendario.js"></script>
+    <link rel='stylesheet' href="/SIGIPRO/recursos/css/jquery.timepicker.css" />
+    <script src="/SIGIPRO/recursos/js/timepicker/jquery.timepicker.js"></script>
   </jsp:attribute>
 </t:plantilla_general>

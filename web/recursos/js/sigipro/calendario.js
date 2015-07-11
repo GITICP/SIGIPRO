@@ -11,6 +11,8 @@ $(document).ready(function () {
     },
     events: eventos,
     eventClick: function (calEvent, jsEvent, view) {
+      var todo_el_dia="";
+      if (calEvent.allDay) {todo_el_dia = "\<tr><td> <strong>Evento de todo el d&iacute;a</strong> <td></td></tr>";}
       $('#ModalEvento').remove();
       $('body').append("<div class='modal fade' id='ModalEvento' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='display: none;'>\
           <div class='modal-dialog'>\
@@ -20,15 +22,17 @@ $(document).ready(function () {
                 <h4 class='modal-title' id='myModalLabel'>Evento</h4>\
               </div>\
               <div class='modal-body'>\
-                  <h5 class='title'> Informaci&oacute;n del Evento</h5>\
+                  <h4 class='title'> Informaci&oacute;n del Evento</h4>\
                   <br>\
                   \<table class='tabla-ver'>\
                     <tr><td> <strong>Nombre del Evento:</strong> <td> "+ calEvent.title +" </td></tr>\
                     <tr><td> <strong>Descripci&oacute;n:</strong> <td> "+ calEvent.description +"</td></tr>\
+                   "+todo_el_dia+"\
                   </table>\
                   <div class='form-group'>\
                     <div class='modal-footer'>\
                       <button type='button' class='btn btn-primary' data-dismiss='modal'><i class='fa fa-times-circle'></i> Aceptar</button>\
+                      <button type='button' class='btn btn-danger' data-dismiss='modal' onclick='eliminar_evento("+calEvent.id+")'><i class='fa fa-times-circle'></i> Eliminar Evento</button>\
                     </div>\
                   </div>\
               </div>\
@@ -41,6 +45,11 @@ $(document).ready(function () {
      // alert('View: ' + view.name);
     }
   })
+
+//timepicker
+$('#start_time').timepicker({ 'timeFormat': 'H:i', 'step': 15 });
+$('#end_time').timepicker({ 'timeFormat': 'H:i', 
+                            'step': 15 });
 });
 $('td:contains("Todo")').html('<span> Todo <br> el d\u00eda </span>'); // --Intento de arreglar el Todo el DÁa
 
@@ -110,4 +119,10 @@ function validar() {
   else {
     $('#nuevo-evento-form').submit();
   }
+};
+
+//funcion eliminar evento
+function eliminar_evento(id) {
+$("#id_evento_eliminar").val(id);
+$("#ModalEliminarEvento").modal('show');
 };
