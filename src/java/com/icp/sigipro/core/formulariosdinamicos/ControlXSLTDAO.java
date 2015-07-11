@@ -20,7 +20,23 @@ public class ControlXSLTDAO extends DAO
     
     public ControlXSLTDAO(){}
     
-    public ControlXSLT obtenerControlXSLT() throws SIGIPROException{
+    public ControlXSLT obtenerControlXSLTFormulario() throws SIGIPROException {
+        return obtenerControlXSLT(1);
+    }
+    
+    public ControlXSLT obtenerControlXSLTResultado() throws SIGIPROException {
+        return obtenerControlXSLT(2);
+    }
+    
+    public ControlXSLT obtenerControlXSLTResultadoReducido() throws SIGIPROException {
+        return obtenerControlXSLT(3);
+    }
+    
+    public ControlXSLT obtenerControlXSLTVerFormulario() throws SIGIPROException {
+        return obtenerControlXSLT(4);
+    }
+    
+    public ControlXSLT obtenerControlXSLT(int id_control) throws SIGIPROException{
         
         ControlXSLT resultado = new ControlXSLT();
         
@@ -29,8 +45,10 @@ public class ControlXSLTDAO extends DAO
         
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT * FROM control_xslt.control_xslt; "
+                    " SELECT * FROM control_xslt.control_xslt where id_control_xslt = ?; "
             );
+            
+            consulta.setInt(1, id_control);
             
             rs = consulta.executeQuery();
             

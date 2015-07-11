@@ -5,26 +5,35 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
+import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
+import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
+import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.Equipo;
+import com.icp.sigipro.controlcalidad.modelos.Reactivo;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
+import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
+import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
+import com.icp.sigipro.utilidades.HelperExcel;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
-import java.sql.SQLXML;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,32 +45,51 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
- * @author ld.conejo
+ * @author ld.conejo, boga
  */
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
-public class ControladorAnalisis extends SIGIPROServlet {
+public class ControladorAnalisis extends SIGIPROServlet
+{
 
     //Falta implementar
     private final int[] permisos = {1, 540};
     //-----------------
-    private AnalisisDAO dao = new AnalisisDAO();
-    private TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
-    private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
-
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
+    private final AnalisisDAO dao = new AnalisisDAO();
+    private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
+    private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
+    private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
+    private final EquipoDAO equipodao = new EquipoDAO();
+    private final ReactivoDAO reactivodao = new ReactivoDAO();
+    private final ResultadoDAO resultadodao = new ResultadoDAO();
+    private String ubicacion;
 
     protected final Class clase = ControladorAnalisis.class;
-    protected final List<String> accionesGet = new ArrayList<String>() {
+    protected final List<String> accionesGet = new ArrayList<String>()
+    {
         {
             add("index");
             add("ver");
@@ -69,11 +97,14 @@ public class ControladorAnalisis extends SIGIPROServlet {
             add("eliminar");
             add("editar");
             add("archivo");
+            add("realizar");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>() {
+    protected final List<String> accionesPost = new ArrayList<String>()
+    {
         {
             add("agregareditar");
+            add("realizar");
         }
     };
 
@@ -141,12 +172,29 @@ public class ControladorAnalisis extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Analisis/Ver.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        ControlXSLT xslt;
+        Analisis analisis;
+        
         try {
-            Analisis a = dao.obtenerAnalisis(id_analisis);
-            request.setAttribute("analisis", a);
+            analisis = dao.obtenerAnalisis(id_analisis);
+            xslt = controlxsltdao.obtenerControlXSLTVerFormulario();
+            
+            TransformerFactory tff = TransformerFactory.newInstance();
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = analisis.getEstructura().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+
+            String formulario = stream_result.getWriter().toString();
+
+            request.setAttribute("cuerpo_datos", formulario);
+            request.setAttribute("analisis", analisis);
             redireccionar(request, response, redireccion);
-        } catch (Exception ex) {
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
         }
 
     }
@@ -191,60 +239,191 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     }
 
+    protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "Analisis/Realizar.jsp";
+
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        request.setAttribute("id_analisis", id_analisis);
+
+        ControlXSLT xslt;
+        Analisis analisis;
+
+        try {
+            xslt = controlxsltdao.obtenerControlXSLTFormulario();
+            analisis = dao.obtenerAnalisis(id_analisis);
+
+            TransformerFactory tff = TransformerFactory.newInstance();
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = analisis.getEstructura().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+
+            String formulario = stream_result.getWriter().toString();
+
+            request.setAttribute("cuerpo_formulario", formulario);
+            List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
+            List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
+
+            request.setAttribute("equipos", equipos);
+            request.setAttribute("reactivos", reactivos);
+            request.setAttribute("analisis", analisis);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "VerResultado.jsp";
+        
+        int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
+        
+        ControlXSLT xslt;
+        Resultado resultado;
+        
+        try {
+            xslt = controlxsltdao.obtenerControlXSLTResultado();
+            resultado = resultadodao.obtenerResultado(id_resultado);
+
+            TransformerFactory tff = TransformerFactory.newInstance();
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = resultado.getDatos().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+
+            String formulario = stream_result.getWriter().toString();
+
+            request.setAttribute("resultado", formulario);
+            request.setAttribute("cuerpo_datos", formulario);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+        redireccionar(request, response, redireccion);
+    }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
-        try {
-            //Se crea el Path en la carpeta del Proyecto
-            String path = this.getClass().getClassLoader().getResource("").getPath();
-            String fullPath = URLDecoder.decode(path, "UTF-8");
-            String pathArr[] = fullPath.split("/WEB-INF/classes/");
-            fullPath = pathArr[0];
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Analisis" + File.separatorChar + "Machotes";
-            //-------------------------------------------
-            //Crea los directorios si no estan creados aun
-            this.crearDirectorio(ubicacion);
-            //--------------------------------------------
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            factory.setRepository(new File(ubicacion));
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            List<FileItem> items = upload.parseRequest(request);
-            Analisis a = construirObjeto(items, request, ubicacion);
 
-            if (a.getId_analisis() == 0) {
-                resultado = dao.insertarAnalisis(a);
-                System.out.println(a.getEstructuraString());
-                if (resultado) {
-                    dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
-                    dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Analisis agregado correctamente"));
-                    //Funcion que genera la bitacora
-                    bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
-                    //*----------------------------*
-                    this.getIndex(request, response);
-                } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
-                    this.getAgregar(request, response);
-                }
+        Analisis a = construirObjeto(parametros, request, ubicacion);
+
+        if (a.getId_analisis() == 0) {
+            resultado = dao.insertarAnalisis(a);
+            if (resultado) {
+                dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
+                dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
+                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis agregado correctamente"));
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
+                //*----------------------------*
+                this.getIndex(request, response);
             } else {
-                resultado = dao.editarAnalisis(a);
-                if (resultado) {
-                    //Funcion que genera la bitacora
-                    bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
-                    //*----------------------------*
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
-                    this.getIndex(request, response);
-                } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
-                    request.setAttribute("id_analisis", a.getId_analisis());
-                    this.getEditar(request, response);
-                }
+                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
+                this.getAgregar(request, response);
             }
-        } catch (FileUploadException e) {
-            throw new ServletException("Cannot parse multipart request.", e);
+        } else {
+            resultado = dao.editarAnalisis(a);
+            if (resultado) {
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
+                //*----------------------------*
+                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
+                this.getIndex(request, response);
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
+                request.setAttribute("id_analisis", a.getId_analisis());
+                this.getEditar(request, response);
+            }
         }
 
+    }
+
+    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
+        Analisis analisis = dao.obtenerAnalisis(id_analisis);
+        Resultado resultado = new Resultado();
+        String redireccion = "Analisis/index.jsp";
+
+        String[] equipos_utilizados = this.obtenerParametros("equipos");
+        String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+
+        HelperExcel excel = this.guardarArchivoResultado(resultado, analisis, ubicacion);
+
+        try {
+            InputStream binary_stream = analisis.getEstructura().getBinaryStream();
+
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document documento_resultado = parser.parse(binary_stream);
+            Element elemento_resultado = documento_resultado.getDocumentElement();
+
+            NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
+
+            for (int i = 0; i < lista_nodos.getLength(); i++) {
+                Node nodo = lista_nodos.item(i);
+
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element elemento = (Element) nodo;
+                    String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
+
+                    if (!tipo_campo.equals("table")) {
+                        String valor;
+                        String nombre_campo = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        Node nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        if (tipo_campo.equalsIgnoreCase("excel")) {
+                            Node nodo_celda = elemento.getElementsByTagName("celda").item(0);
+                            String celda = nodo_celda.getTextContent();
+                            valor = excel.obtenerCelda(celda);
+                        } else {
+                            valor = this.obtenerParametro(nombre_campo);
+                        }
+                        nodo_valor.setTextContent(valor);
+                    }
+                }
+            }
+
+            String string_xml_resultado;
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
+            string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
+
+            resultado.setDatos_string(string_xml_resultado);
+
+            resultado.setEquipos(equipos_utilizados);
+            resultado.setReactivos(reactivos_utilizados);
+
+            resultadodao.insertarResultado(resultado);
+            
+            request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
+            
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", "Ha ocurrido un error inesperado. Contacte al administrador del sistema.");
+        }
+        
+        List<Analisis> lista_analisis = dao.obtenerAnalisis();
+        request.setAttribute("listaAnalisis", lista_analisis);
+        
+        this.redireccionar(request, response, redireccion);
     }
 
     // </editor-fold>
@@ -340,6 +519,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             } else {
                 try {
                     if (item.getSize() != 0) {
+                        ubicacion += File.separatorChar + "Machotes";
                         this.crearDirectorio(ubicacion);
                         //Creacion del nombre
                         Date dNow = new Date();
@@ -363,6 +543,36 @@ public class ControladorAnalisis extends SIGIPROServlet {
             a.setEstructuraString(xml);
         }
         return a;
+    }
+
+    private HelperExcel guardarArchivoResultado(Resultado resultado, Analisis analisis, String ubicacion) {
+
+        HelperExcel excel = null;
+
+        FileItem item = this.obtenerParametroFileItem("resultado");
+
+        try {
+            if (item.getSize() != 0) {
+                ubicacion += File.separatorChar + "Resultados";
+                this.crearDirectorio(ubicacion);
+                //Creacion del nombre
+                Date dNow = new Date();
+                SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+                String fecha = ft.format(dNow);
+                String extension = this.getFileExtension(item.getName());
+                String nombre = analisis.getNombre() + "-" + fecha + "." + extension;
+                //---------------------
+                File archivo = new File(ubicacion, nombre);
+                item.write(archivo);
+                resultado.setPath(archivo.getAbsolutePath());
+
+                excel = new HelperExcel(resultado.getPath());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return excel;
     }
 
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
@@ -485,7 +695,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
         boolean resultado = false;
         File directorio = new File(path);
         if (!directorio.exists()) {
-            System.out.println("Creando directorio: " + path);
             resultado = false;
             try {
                 directorio.mkdirs();
@@ -494,7 +703,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 se.printStackTrace();
             }
             if (resultado) {
-                System.out.println("Directorio Creado");
             }
         } else {
             resultado = true;
@@ -519,6 +727,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
             lista_acciones = accionesGet;
         } else {
             lista_acciones = accionesPost;
+            this.obtenerParametros(request);
+            if (this.obtenerParametro("accion").equals("realizar")) {
+                accion = "realizar";
+            }
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
@@ -536,5 +748,26 @@ public class ControladorAnalisis extends SIGIPROServlet {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-  // </editor-fold>
+    private void obtenerParametros(HttpServletRequest request) {
+        try {
+            //Se crea el Path en la carpeta del Proyecto
+            String path = this.getClass().getClassLoader().getResource("").getPath();
+            String fullPath = URLDecoder.decode(path, "UTF-8");
+            String pathArr[] = fullPath.split("/WEB-INF/classes/");
+            fullPath = pathArr[0];
+            this.ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Analisis";
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            parametros = upload.parseRequest(request);
+        } catch (FileUploadException | UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // </editor-fold>
 }

@@ -6,6 +6,8 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.sql.SQLXML;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -17,10 +19,14 @@ public class Resultado {
     private int id_resultado;
     private String path;
     //Debe ser de tipo XML pero por ahora lo dejo asi
-    private String datos;
+    private SQLXML datos;
+    private String datos_string;
     
     private List<Reactivo> reactivos_resultado;
     private List<Equipo> equipos_resultado;
+    
+    private String[] ids_reactivos;
+    private String[] ids_equipos;
 
     public Resultado() {
     }
@@ -41,12 +47,22 @@ public class Resultado {
         this.path = path;
     }
 
-    public String getDatos() {
+    public SQLXML getDatos() {
         return datos;
     }
 
-    public void setDatos(String datos) {
+    public void setDatos(SQLXML datos) {
         this.datos = datos;
+    }
+
+    public String getDatos_string()
+    {
+        return datos_string;
+    }
+
+    public void setDatos_string(String datos_string)
+    {
+        this.datos_string = datos_string;
     }
 
     public List<Reactivo> getReactivos_resultado() {
@@ -83,5 +99,43 @@ public class Resultado {
             
         }
         return JSON.toString();
+    }
+
+    public void setEquipos(String[] ids) {
+        
+        this.equipos_resultado = new ArrayList<Equipo>();
+        
+        for (String id : ids) {
+            Equipo equipo = new Equipo();
+            equipo.setId_equipo(Integer.parseInt(id));
+            this.equipos_resultado.add(equipo);
+        }
+    }
+    
+    public void setReactivos(String[] ids) {
+        
+        this.reactivos_resultado = new ArrayList<Reactivo>();
+        
+        for (String id : ids) {
+            Reactivo reactivo = new Reactivo();
+            reactivo.setId_reactivo(Integer.parseInt(id));
+            this.reactivos_resultado.add(reactivo);
+        }
+    }
+    
+    public boolean tieneEquipos() {
+        boolean resultado = false;
+        if (this.equipos_resultado != null) {
+            resultado = !this.equipos_resultado.isEmpty();
+        }
+        return resultado;
+    }
+    
+    public boolean tieneReactivos() {
+        boolean resultado = false;
+        if (this.reactivos_resultado != null) {
+            resultado = !this.reactivos_resultado.isEmpty();
+        }
+        return resultado;
     }
 }

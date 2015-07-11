@@ -209,10 +209,10 @@ public class TipoMuestraDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT tm.id_tipo_muestra, tm.nombre, tm.descripcion, a.id_analisis, a.nombre as nombreanalisis "
-                    + "FROM control_calidad.tipos_muestras as tm LEFT OUTER JOIN control_calidad.tipos_muestras_analisis as tma ON tma.id_tipo_muestra = tm.id_tipo_muestra "
-                    + "INNER JOIN control_calidad.analisis as analisis ON analisis.id_analisis = tma.id_analisis "
-                    + "WHERE id_tipo_muestra = ?"
+                      " SELECT tm.id_tipo_muestra, tm.nombre, tm.descripcion, a.id_analisis, a.nombre as nombreanalisis "
+                    + " FROM control_calidad.tipos_muestras as tm LEFT OUTER JOIN control_calidad.tipos_muestras_analisis as tma ON tma.id_tipo_muestra = tm.id_tipo_muestra "
+                    + " LEFT JOIN control_calidad.analisis as a ON a.id_analisis = tma.id_analisis "
+                    + " WHERE tm.id_tipo_muestra = ?"
             );
 
             consulta.setInt(1, id_tipo_muestra);
@@ -230,8 +230,8 @@ public class TipoMuestraDAO extends DAO {
                 analisis.setNombre(rs.getString("nombreanalisis"));
                 resultado.getTipos_muestras_analisis().add(analisis);
             }
-
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new SIGIPROException("No se pudo obtener el tipo de muestra. Inténtelo nuevamente y de persistir el problema notifique al adminstrador del sistema.");
         } finally {
             cerrarSilencioso(rs);

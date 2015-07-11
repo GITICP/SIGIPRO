@@ -125,6 +125,7 @@ CREATE TABLE control_calidad.resultados (
     path varchar(500),
     datos xml  NOT NULL,
     id_usuario int NOT NULL,
+    fecha date NOT NULL,
     CONSTRAINT resultados_pk PRIMARY KEY (id_resultado)
 );
 

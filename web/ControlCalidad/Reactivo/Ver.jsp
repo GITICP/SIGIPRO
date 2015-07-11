@@ -68,7 +68,6 @@
                                 <tr><td> <strong>Nombre del Reactivo: </strong></td> <td>${reactivo.getNombre()} </td></tr>
                                 <tr><td> <strong>Tipo de Reactivo: </strong></td> <td>${reactivo.getTipo_reactivo().getNombre()} </td></tr>
                                 <tr><td> <strong>Preparación: </strong> <td><a href="/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=${reactivo.getId_reactivo()}">Descargar Preparación</a></td></tr>
-
                             </table>
                             <br>
                         </div>

@@ -19,9 +19,8 @@ function agregarCampo() {
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           onchange=\"setCustomValidity(\'\')\">";
     fila += "                           <option value=\'\'></option>";
-    fila += "                           <option value=\"entero\">Entero</option>";
-    fila += "                           <option value=\"decimal\">Decimal</option>";
-    fila += "                           <option value=\"texto\">Campo de Texto</option>";
+    fila += "                           <option value=\"number\">Número</option>";
+    fila += "                           <option value=\"text\">Campo de Texto</option>";
     fila += "                       </select>";
     fila += "                   </div>";
     fila += "               </div>";
@@ -44,7 +43,7 @@ function agregarCampo() {
     fila += "               <div class=\"form-group\">";
     fila += "                   <div class=\"col-sm-12\">";
     fila += "                       <div class=\"input-group\">";
-    fila += "                           <input id=\"manual_" + contador + "\" onchange=\"checkManual(this," + contador + ")\" type=\"checkbox\" name=\"c_manual_" + contador + "\" style=\"width:20px; height:20px;\"><span>  Manual</span>";
+    fila += "                           <input id=\"manual_" + contador + "\" onchange=\"checkManual(this," + contador + ")\" type=\"checkbox\" name=\"c_manual_" + contador + "\" style=\"width:20px; height:20px;\"><span>  Automático</span>";
     fila += "                       </div>";
     fila += "                   </div>";
     fila += "               </div>";
@@ -134,9 +133,8 @@ function agregarColumna(id) {
     fila += "                                                                    oninvalid=\"setCustomValidity('Este campo es requerido')\"";
     fila += "                                                                    onchange=\"setCustomValidity('')\">";
     fila += "                                                                <option value=''></option>";
-    fila += "                                                                <option value=\"entero\">Entero</option>";
-    fila += "                                                                <option value=\"decimal\">Decimal</option>";
-    fila += "                                                                <option value=\"texto\">Campo de Texto</option>";
+    fila += "                                                                <option value=\"number_tabla\">Número</option>";
+    fila += "                                                                <option value=\"text_tabla\">Campo de Texto</option>";
     fila += "                                                            </select>";
     fila += "                                                        </div>";
     fila += "                                                    </div>";
@@ -173,7 +171,6 @@ function agregarFilaEspecial(id) {
     fila += "                        oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                        onchange=\"setCustomValidity(\'\')\">";
     fila += "                    <option value=\'\'></option>";
-    fila += "                    <option value=\"total\">Total</option>";
     fila += "                    <option value=\"promedio\">Promedio</option>";
     fila += "                    <option value=\"sumatoria\">Sumatoria</option>";
     fila += "                </select>";
