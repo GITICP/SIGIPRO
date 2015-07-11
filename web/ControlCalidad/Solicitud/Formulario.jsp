@@ -8,17 +8,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form class="form-horizontal" autocomplete="off" enctype='multipart/form-data' method="post" action="Solicitud">
+<form class="form-horizontal" autocomplete="off" method="post" action="Solicitud">
     <div class="row">
         <div class="col-md-12">
             <input hidden="true" name="id_solicitud" value="${analisis.getId_analisis()}">
             <input hidden="true" name="accion" value="${accion}">
+            <c:forEach items="${tipomuestras}" var="tipomuestra">
+                <input hidden="true" id="listaAnalisis_${tipomuestra.getId_tipo_muestra()}" value='${tipomuestra.parseListaAnalisis()}'>
+            </c:forEach>
+            <input hidden="true" id="listaTipoMuestra" value='${tipomuestraparse}'>
+            <input hidden="true" id="listaMuestras" name="listaMuestras" value="">
+
 
             <label for="nombre" class="control-label">*Número de Solicitud</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Nombre/Código/Identificador del Analisis" class="form-control" name="nombre" value="${analisis.getNombre()}"
+                        <input type="text" maxlength="45" placeholder="Identificador de la Solicitud" class="form-control" name="numero_solicitud" value="${solicitud.getNumero_solicitud()}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido')"
                                oninput="setCustomValidity('')" > 

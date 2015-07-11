@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -82,5 +83,17 @@ public class TipoMuestra {
 
         }
         return JSON.toString();
+    }
+    
+    public List<String> parseListaAnalisis(){
+        List<String> respuesta = new ArrayList<String>();
+        for (Analisis a : this.getTipos_muestras_analisis()){
+            String analisis = "[";
+            analisis += a.getId_analisis() +",";
+            analisis += "\""+a.getNombre()+"\""+ ",";
+            analisis += "\""+a.isIsTipoMuestra()+"\"]";
+            respuesta.add(analisis);
+        }
+        return respuesta;
     }
 }

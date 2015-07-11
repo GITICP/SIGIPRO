@@ -29,6 +29,7 @@ public class SolicitudCC {
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
 
+
     public SolicitudCC() {
     }
 
@@ -39,6 +40,8 @@ public class SolicitudCC {
     public void setId_solicitud(int id_solicitud) {
         this.id_solicitud = id_solicitud;
     }
+
+  
 
     public Date getFecha_solicitud() {
         return fecha_solicitud;
@@ -109,19 +112,22 @@ public class SolicitudCC {
         JSONObject JSON = new JSONObject();
         try {
             Field properties[] = _class.getDeclaredFields();
+            System.out.println(properties.length);
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
                 if (i != 0) {
-                    JSON.put(field.getName(), field.get(this));
+                    if(!field.getName().equals("analisis_solicitud")){
+                        JSON.put(field.getName(), field.get(this));
+                    }
                 } else {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
             JSON.put("id_usuario_solicitante", this.getUsuario_solicitante().getId_usuario());
-            JSON.put("id_usuario_recibido", this.getUsuario_recibido().getId_usuario());
+            //JSON.put("id_usuario_recibido", this.getUsuario_recibido().getId_usuario());
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return JSON.toString();
     }

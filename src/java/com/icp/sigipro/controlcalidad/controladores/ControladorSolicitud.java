@@ -10,17 +10,21 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoMuestraDAO;
+import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
+import com.icp.sigipro.controlcalidad.modelos.Grupo;
+import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.serpentario.modelos.Solicitud;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,8 +81,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
         SolicitudCC s = new SolicitudCC();
         request.setAttribute("solicitud", s);
 
-        List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestra();
+        List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
         request.setAttribute("tipomuestras", tipomuestras);
+        request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(tipomuestras));
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
 
@@ -159,6 +164,18 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         resultado = dao.entregarSolicitud(s);
         if (resultado) {
+            for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
+                ags.getGrupo().setSolicitud(s);
+                dao.insertarMuestrasGrupo(ags.getGrupo());
+                bitacora.setBitacora(ags.getGrupo().parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO, request.getRemoteAddr());
+                for (String a : ags.getLista_analisis()) {
+                    Analisis analisis = new Analisis();
+                    analisis.setId_analisis(Integer.parseInt(a));
+                    ags.setAnalisis(analisis);
+                    dao.insertarAnalisisGrupoSolicitud(ags);
+                    bitacora.setBitacora(ags.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISISGRUPOSOLICITUD, request.getRemoteAddr());
+                }
+            }
             request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada correctamente"));
             //Funcion que genera la bitacora
             bitacora.setBitacora(s.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
@@ -199,6 +216,55 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         java.sql.Date fecha_solicitud = new java.sql.Date(new Date().getTime());
         s.setFecha_solicitud(fecha_solicitud);
+
+        String lista = request.getParameter("listaMuestras");
+        String[] listaMuestras = lista.split(",");
+
+        s.setAnalisis_solicitud(new ArrayList<AnalisisGrupoSolicitud>());
+
+        if (listaMuestras.length > 0 && !listaMuestras[0].equals("")) {
+            for (String i : listaMuestras) {
+                String tipo_muestra = request.getParameter("tipomuestra_" + i);
+                String identificadores = request.getParameter("identificadores_" + i);
+                String fecha = request.getParameter("fechadescarte_" + i).replace(" ", "");
+                String[] analisis = request.getParameterValues("analisis_" + i);
+
+                TipoMuestra tm = new TipoMuestra();
+                tm.setId_tipo_muestra(Integer.parseInt(tipo_muestra));
+                String[] listaIdentificadores = identificadores.split(",");
+
+                for (String l : listaIdentificadores) {
+                    AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+
+                    Muestra muestra = new Muestra();
+
+                    Grupo grupo = new Grupo();
+
+                    muestra.setIdentificador(l);
+                    muestra.setTipo_muestra(tm);
+                    if (!fecha.equals("")) {
+                        SimpleDateFormat formatoFechaDescarte = new SimpleDateFormat("dd/MM/yyyy");
+                        java.util.Date fecha_descarte;
+                        java.sql.Date fecha_descarteSQL;
+                        try {
+                            fecha_descarte = formatoFechaDescarte.parse(fecha);
+                            fecha_descarteSQL = new java.sql.Date(fecha_descarte.getTime());
+                            muestra.setFecha_descarte_estimada(fecha_descarteSQL);
+                        } catch (ParseException ex) {
+
+                        }
+                    }
+                    List<Muestra> muestras = new ArrayList<Muestra>();
+                    muestras.add(muestra);
+                    grupo.setGrupos_muestras(muestras);
+                    ags.setGrupo(grupo);
+                    ags.setLista_analisis(analisis);
+                    s.getAnalisis_solicitud().add(ags);
+                }
+
+            }
+        }
+
         return s;
     }
 
@@ -210,6 +276,17 @@ public class ControladorSolicitud extends SIGIPROServlet {
     private boolean verificarRealizarSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(552, listaPermisos);
+    }
+
+    public List<String> parseListaTipoMuestra(List<TipoMuestra> tipomuestra) {
+        List<String> respuesta = new ArrayList<String>();
+        for (TipoMuestra tm : tipomuestra) {
+            String tipo = "[";
+            tipo += tm.getId_tipo_muestra() + ",";
+            tipo += "\"" + tm.getNombre() + "\"]";
+            respuesta.add(tipo);
+        }
+        return respuesta;
     }
 
     // </editor-fold>

@@ -58,8 +58,6 @@
                                         <th>Número de Solicitud</th>
                                         <th>Usuario Solicitante</th>
                                         <th>Fecha de Solicitud</th>
-                                        <th>Usuario Receptor</th>
-                                        <th>Fecha de Recepción</th>
                                         <th>Estado</th>
                                         <th>Acción</th>
                                     </tr>
@@ -77,8 +75,8 @@
                                             </td>
                                             <td>${solicitud.getUsuario_solicitante().getNombre_completo()}</td>
                                             <td>${solicitud.getFecha_solicitudAsString()}</td>
-                                            <c:choose>
-                                                <c:when test="${solicitud.getUsuario()!=null}">
+                                         <%--   <c:choose>
+                                                <c:when test="${solicitud.getUsuario_recibido().getId_usuario_recibido()!=0}">
                                                     <td>${solicitud.getUsuario_recibido().getNombre_completo()}</td>
                                                     <td>${solicitud.getFecha_recibidoAsString()}</td>
                                                 </c:when>
@@ -86,7 +84,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </c:otherwise>
-                                            </c:choose>
+                                            </c:choose> --%>
                                             <td>${solicitud.getEstado()}</td>
                                             <c:choose>
                                                 <c:when test="${solicitud.getEstado().equals('Solicitado')}">
@@ -158,7 +156,7 @@
 
         </jsp:attribute>
         <jsp:attribute name="scripts">
-            <script src="/SIGIPRO/recursos/js/sigipro/SolicitudSerpentario.js"></script>
+            <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC.js"></script>
         </jsp:attribute>
 
     </t:plantilla_general>
@@ -183,41 +181,6 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                             <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Anular Solicitud</button>            </div>
-                    </div>
-                </form>
-            </div>
-
-        </jsp:attribute>
-
-    </t:modal>
-
-    <t:modal idModal="modalAgregarSolicitud" titulo="Agregar Solicitud de Veneno">
-        <jsp:attribute name="form">
-            <div class="widget-content">
-                <form class="form-horizontal" id="agregarSolicitud" autocomplete="off" method="get" action="SolicitudVeneno">
-                    <input hidden="true" name="accion" value="Agregar">
-                    <label for="veneno" class="control-label">*Primero, elija el Tipo de Veneno que va a solicitar.</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <br>
-                                <select id="seleccionEspecie" class="select2" name="id_veneno"
-                                        style='background-color: #fff;' required
-                                        oninvalid="setCustomValidity('Este campo es requerido')"
-                                        onchange="setCustomValidity('')">
-                                    <option value=''></option>
-                                    <c:forEach items="${venenos}" var="veneno">
-                                        <option value=${veneno.getId_veneno()}>${veneno.getEspecie().getGenero_especie()}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Ir a Agregar Solicitud</button>            </div>
                     </div>
                 </form>
             </div>

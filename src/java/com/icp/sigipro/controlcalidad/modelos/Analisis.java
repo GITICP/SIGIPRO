@@ -28,12 +28,22 @@ public class Analisis {
     
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
+    
+    private boolean isTipoMuestra;
 
     public Analisis() {
     }
 
     public String getEstructuraString() {
         return estructuraString;
+    }
+
+    public boolean isIsTipoMuestra() {
+        return isTipoMuestra;
+    }
+
+    public void setIsTipoMuestra(boolean isTipoMuestra) {
+        this.isTipoMuestra = isTipoMuestra;
     }
 
     public void setEstructuraString(String estructuraString) {
@@ -126,4 +136,7 @@ public class Analisis {
         }
         return JSON.toString();
     }
+    
+    
+    
 }
