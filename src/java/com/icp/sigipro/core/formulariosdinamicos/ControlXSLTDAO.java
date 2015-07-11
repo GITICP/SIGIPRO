@@ -32,6 +32,10 @@ public class ControlXSLTDAO extends DAO
         return obtenerControlXSLT(3);
     }
     
+    public ControlXSLT obtenerControlXSLTVerFormulario() throws SIGIPROException {
+        return obtenerControlXSLT(4);
+    }
+    
     public ControlXSLT obtenerControlXSLT(int id_control) throws SIGIPROException{
         
         ControlXSLT resultado = new ControlXSLT();

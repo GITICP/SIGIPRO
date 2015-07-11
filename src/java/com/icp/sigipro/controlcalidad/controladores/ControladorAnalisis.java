@@ -172,12 +172,29 @@ public class ControladorAnalisis extends SIGIPROServlet
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Analisis/Ver.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        ControlXSLT xslt;
+        Analisis analisis;
+        
         try {
-            Analisis a = dao.obtenerAnalisis(id_analisis);
-            request.setAttribute("analisis", a);
+            analisis = dao.obtenerAnalisis(id_analisis);
+            xslt = controlxsltdao.obtenerControlXSLTVerFormulario();
+            
+            TransformerFactory tff = TransformerFactory.newInstance();
+            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+            InputStream streamXML = analisis.getEstructura().getBinaryStream();
+            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+            StreamSource stream_source = new StreamSource(streamXML);
+            StreamResult stream_result = new StreamResult(new StringWriter());
+            transformador.transform(stream_source, stream_result);
+
+            String formulario = stream_result.getWriter().toString();
+
+            request.setAttribute("cuerpo_datos", formulario);
+            request.setAttribute("analisis", analisis);
             redireccionar(request, response, redireccion);
-        } catch (Exception ex) {
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
         }
 
     }

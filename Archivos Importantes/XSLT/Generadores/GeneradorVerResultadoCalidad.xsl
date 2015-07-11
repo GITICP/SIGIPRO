@@ -10,12 +10,13 @@
         
         <table>
             <!-- Campos diferentes de tablas -->
-            <xsl:apply-templates select="campo[tipo != 'table' and visible = 'True']"/>
+            <xsl:apply-templates select="campo[tipo != 'table']"/>
         </table>
         
         <br>
-            <!-- Campos de tablas --></br>
-        <xsl:apply-templates select="campo[tipo = 'table' and visible = 'True']"/>
+            <!-- Campos de tablas -->
+        </br>
+        <xsl:apply-templates select="campo[tipo = 'table']"/>
         
     </xsl:template>
        
@@ -31,7 +32,9 @@
         
         <tr>
             <td>
-                <strong><xsl:value-of select="$etiqueta" /></strong>
+                <strong>
+                    <xsl:value-of select="$etiqueta" />
+                </strong>
             </td>
             <td>
                 <xsl:value-of select="$valor" />
@@ -42,16 +45,26 @@
     
     <!-- Campo de tipos de tabla -->
     <xsl:template match="campo[tipo = 'table']">
-        <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-            <thead>
-                <tr>
-                    <xsl:apply-templates select="columnas" />
-                </tr>
-            </thead>
-            <tbody>
-                <xsl:apply-templates select="filas" />
-            </tbody>
-        </table>
+        <div class="widget widget-table">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-table"></i> 
+                    <xsl:value-of select="nombre" /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <xsl:apply-templates select="columnas" />
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="filas" />
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </xsl:template>
     
     <xsl:template match="columna">

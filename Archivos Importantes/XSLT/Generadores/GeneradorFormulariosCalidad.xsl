@@ -1,5 +1,3 @@
-
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
     
     <xsl:output method="html" indent="yes"/>
@@ -149,18 +147,29 @@
     
     <!-- Plantilla general de una tabla -->
     <xsl:template match="campo[tipo = 'table']">
-        <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-            <thead>
-                <tr>
-                    <!-- Aplicación de plantillas para las columnas de la tabla -->
-                    <xsl:apply-templates select="columnas" />
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Aplicación de plantillas para las filas de la tabla -->
-                <xsl:apply-templates select="filas" />
-            </tbody>
-        </table>
+        <div class="widget widget-table">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-table"></i> 
+                    <xsl:value-of select="nombre" /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+            
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <!-- Aplicación de plantillas para las columnas de la tabla -->
+                            <xsl:apply-templates select="columnas" />
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aplicación de plantillas para las filas de la tabla -->
+                        <xsl:apply-templates select="filas" />
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </xsl:template>
     
     <!-- Campo de tipo texto_tabla -->
