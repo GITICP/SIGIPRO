@@ -22,12 +22,14 @@ public class TipoEquipoDAO extends DAO {
     public boolean insertarTipoEquipo(TipoEquipo tipoequipo)
     {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_equipos (nombre,descripcion) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_equipos (nombre,descripcion) "
                                                                         + " VALUES (?,?) RETURNING id_tipo_equipo");
             consulta.setString(1, tipoequipo.getNombre());
             consulta.setString(2, tipoequipo.getDescripcion());
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 tipoequipo.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
@@ -38,14 +40,20 @@ public class TipoEquipoDAO extends DAO {
         catch (Exception ex) {
             ex.printStackTrace();
         }
+        finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return resultado;
     }
     
     public boolean editarTipoEquipo(TipoEquipo tipoequipo)
     {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_equipos "
+            consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_equipos "
                     + "SET nombre=?, descripcion=? "
                     + "WHERE id_tipo_equipo = ?; ");
             consulta.setString(1, tipoequipo.getNombre());
@@ -59,6 +67,9 @@ public class TipoEquipoDAO extends DAO {
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
@@ -66,20 +77,24 @@ public class TipoEquipoDAO extends DAO {
     public List<TipoEquipo> obtenerTipoEquipos()
     {
         List<TipoEquipo> resultado = new ArrayList<TipoEquipo>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT id_tipo_equipo, nombre FROM control_calidad.tipos_equipos; ");
-            ResultSet rs = consulta.executeQuery();
+            consulta = getConexion().prepareStatement(" SELECT id_tipo_equipo, nombre FROM control_calidad.tipos_equipos; ");
+            rs = consulta.executeQuery();
             while (rs.next()) {
                 TipoEquipo tipoequipo = new TipoEquipo();
                 tipoequipo.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
                 tipoequipo.setNombre(rs.getString("nombre"));
                 resultado.add(tipoequipo);
             }
-            consulta.close();
-            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
@@ -87,20 +102,24 @@ public class TipoEquipoDAO extends DAO {
     public TipoEquipo obtenerTipoEquipo(int id_tipo_equipo)
     {
         TipoEquipo resultado = new TipoEquipo();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM control_calidad.tipos_equipos WHERE id_tipo_equipo=?; ");
+            consulta = getConexion().prepareStatement(" SELECT * FROM control_calidad.tipos_equipos WHERE id_tipo_equipo=?; ");
             consulta.setInt(1, id_tipo_equipo);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
             }
-            consulta.close();
-            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
@@ -108,17 +127,19 @@ public class TipoEquipoDAO extends DAO {
     public boolean eliminarTipoEquipo(int id_tipo_equipo)
     {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_equipos WHERE id_tipo_equipo=?; ");
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_equipos WHERE id_tipo_equipo=?; ");
             consulta.setInt(1, id_tipo_equipo);
             if (consulta.executeUpdate() == 1) {
                 resultado=true;
             }
-            consulta.close();
-            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }

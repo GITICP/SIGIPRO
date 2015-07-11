@@ -135,9 +135,14 @@ public class AnalisisDAO extends DAO {
         List<Analisis> resultado = new ArrayList<Analisis>();
         try {
             consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre, count(ags.id_analisis) as cantidad "
-                    + "FROM control_calidad.analisis as analisis LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
+                    + "FROM control_calidad.analisis as analisis "
+                    + "LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
                     + "WHERE ags.id_analisis_grupo_solicitud not in (SELECT id_analisis_grupo_solicitud FROM control_calidad.resultados) "
-                    + "GROUP BY analisis.id_analisis");
+                    + "GROUP BY analisis.id_analisis "
+                    + "UNION "
+                    + "SELECT analisis.id_analisiS, analisis.nombre, 0 as cantidad "
+                    + "FROM CONTROL_CALIDAD.ANALISIS AS ANALISIS "
+                    + "WHERE analisis.id_analisis not in (SELECT ags.id_analisis FROM control_calidad.analisis as a INNER JOIN control_calidad.analisis_grupo_solicitud as ags ON a.id_analisis = ags.id_analisis);");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 Analisis analisis = new Analisis();
@@ -248,8 +253,6 @@ public class AnalisisDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

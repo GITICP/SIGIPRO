@@ -22,50 +22,58 @@ public class ReactivoDAO extends DAO {
 
     public boolean insertarCertificado(CertificadoReactivo certificado, int id_reactivo) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.certificados_reactivos (id_reactivo,fecha_certificado,path) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.certificados_reactivos (id_reactivo,fecha_certificado,path) "
                     + " VALUES (?,?,?) RETURNING id_certificado_reactivo");
             consulta.setInt(1, id_reactivo);
             consulta.setDate(2, certificado.getFecha_certificado());
             consulta.setString(3, certificado.getPath());
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 certificado.setId_certificado_reactivo(rs.getInt("id_certificado_reactivo"));
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean insertarReactivo(Reactivo reactivo) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.reactivos (nombre,id_tipo_reactivo,preparacion) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.reactivos (nombre,id_tipo_reactivo,preparacion) "
                     + " VALUES (?,?,?) RETURNING id_reactivo");
             consulta.setString(1, reactivo.getNombre());
             consulta.setInt(2, reactivo.getTipo_reactivo().getId_tipo_reactivo());
             consulta.setString(3, reactivo.getPreparacion());
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 reactivo.setId_reactivo(rs.getInt("id_reactivo"));
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean editarReactivo(Reactivo reactivo) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta;
             if (reactivo.getPreparacion().equals("")) {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.reactivos "
                         + "SET nombre=? "
@@ -83,38 +91,45 @@ public class ReactivoDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public CertificadoReactivo obtenerCertificado(int id_certificado_reactivo) {
         CertificadoReactivo resultado = new CertificadoReactivo();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT path FROM control_calidad.certificados_reactivos WHERE id_certificado_reactivo=? ");
+            consulta = getConexion().prepareStatement(" SELECT path FROM control_calidad.certificados_reactivos WHERE id_certificado_reactivo=? ");
             consulta.setInt(1, id_certificado_reactivo);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado.setId_certificado_reactivo(id_certificado_reactivo);
                 resultado.setPath(rs.getString("path"));
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public List<Reactivo> obtenerReactivos() {
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         List<Reactivo> resultado = new ArrayList<Reactivo>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT reactivo.id_reactivo, reactivo.nombre, tipo.nombre as nombre_tipo "
+            consulta = getConexion().prepareStatement(" SELECT reactivo.id_reactivo, reactivo.nombre, tipo.nombre as nombre_tipo "
                     + "FROM control_calidad.reactivos as reactivo INNER JOIN control_calidad.tipos_reactivos as tipo ON reactivo.id_tipo_reactivo = tipo.id_tipo_reactivo; ");
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             while (rs.next()) {
                 Reactivo reactivo = new Reactivo();
                 TipoReactivo tipo = new TipoReactivo();
@@ -124,23 +139,27 @@ public class ReactivoDAO extends DAO {
                 reactivo.setNombre(rs.getString("nombre"));
                 resultado.add(reactivo);
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public Reactivo obtenerReactivo(int id_reactivo) {
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         Reactivo resultado = new Reactivo();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT reactivo.id_reactivo, reactivo.nombre, reactivo.preparacion, tipo.id_tipo_reactivo, tipo.nombre as nombre_tipo, cert.id_certificado_reactivo, cert.fecha_certificado, cert.path "
+            consulta = getConexion().prepareStatement(" SELECT reactivo.id_reactivo, reactivo.nombre, reactivo.preparacion, tipo.id_tipo_reactivo, tipo.nombre as nombre_tipo, cert.id_certificado_reactivo, cert.fecha_certificado, cert.path "
                     + "FROM control_calidad.reactivos as reactivo INNER JOIN control_calidad.tipos_reactivos as tipo ON reactivo.id_tipo_reactivo = tipo.id_tipo_reactivo "
                     + "LEFT OUTER JOIN control_calidad.certificados_reactivos as cert ON cert.id_reactivo = reactivo.id_reactivo "
                     + "WHERE reactivo.id_reactivo = ?; ");
             consulta.setInt(1, id_reactivo);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             List<CertificadoReactivo> certificados = new ArrayList<CertificadoReactivo>();
             while (rs.next()) {
                 if (resultado.getId_reactivo() == 0) {
@@ -161,18 +180,21 @@ public class ReactivoDAO extends DAO {
                 }
             }
             resultado.setCertificados(certificados);
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean eliminarReactivo(int id_reactivo) {
+        PreparedStatement consulta = null;
         boolean resultado = false;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.reactivos WHERE id_reactivo=?; ");
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.reactivos WHERE id_reactivo=?; ");
             consulta.setInt(1, id_reactivo);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -181,14 +203,18 @@ public class ReactivoDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean eliminarCertificado(int id_certificado) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.certificados_reactivos WHERE id_certificado_reactivo=?; ");
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.certificados_reactivos WHERE id_certificado_reactivo=?; ");
             consulta.setInt(1, id_certificado);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -197,6 +223,9 @@ public class ReactivoDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
