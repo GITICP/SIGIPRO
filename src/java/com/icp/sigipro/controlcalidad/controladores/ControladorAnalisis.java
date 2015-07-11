@@ -538,8 +538,10 @@ public class ControladorAnalisis extends SIGIPROServlet
 
             }
         }
-        String xml = this.parseDictXML(dictionary, orden, columnasfilas);
-        a.setEstructuraString(xml);
+        if (!dictionary.isEmpty()) {
+            String xml = this.parseDictXML(dictionary, orden, columnasfilas);
+            a.setEstructuraString(xml);
+        }
         return a;
     }
 
@@ -668,9 +670,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                 //------------
                 contadorTablas++;
             }
-
         }
-
         return xml.imprimirXML();
     }
 

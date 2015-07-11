@@ -6,6 +6,8 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -13,11 +15,22 @@ import org.json.JSONObject;
  * @author ld.conejo
  */
 public class TipoMuestra {
+
     private int id_tipo_muestra;
     private String nombre;
     private String descripcion;
 
+    private List<Analisis> tipos_muestras_analisis;
+
     public TipoMuestra() {
+    }
+
+    public List<Analisis> getTipos_muestras_analisis() {
+        return tipos_muestras_analisis;
+    }
+
+    public void setTipos_muestras_analisis(List<Analisis> tipos_muestras_analisis) {
+        this.tipos_muestras_analisis = tipos_muestras_analisis;
     }
 
     public int getId_tipo_muestra() {
@@ -49,26 +62,38 @@ public class TipoMuestra {
             } else {
                 this.descripcion = descripcion;
             }
-        }   
+        }
     }
-    
-    public String parseJSON(){
+
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
-        try{
+        try {
             Field properties[] = _class.getDeclaredFields();
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
-                if (i != 0){
+                if (i != 0) {
                     JSON.put(field.getName(), field.get(this));
-                }else{
+                } else {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-                    
-        }catch (Exception e){
-            
+
+        } catch (Exception e) {
+
         }
         return JSON.toString();
+    }
+    
+    public List<String> parseListaAnalisis(){
+        List<String> respuesta = new ArrayList<String>();
+        for (Analisis a : this.getTipos_muestras_analisis()){
+            String analisis = "[";
+            analisis += a.getId_analisis() +",";
+            analisis += "\""+a.getNombre()+"\""+ ",";
+            analisis += "\""+a.isIsTipoMuestra()+"\"]";
+            respuesta.add(analisis);
+        }
+        return respuesta;
     }
 }

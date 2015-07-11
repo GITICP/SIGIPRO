@@ -13,9 +13,12 @@ import org.json.JSONObject;
  * @author ld.conejo
  */
 public class AnalisisGrupoSolicitud {
+
     private int id_analisis_grupo_solicitud;
     private Analisis analisis;
     private Grupo grupo;
+
+    private String[] lista_analisis;
 
     public AnalisisGrupoSolicitud() {
     }
@@ -26,6 +29,14 @@ public class AnalisisGrupoSolicitud {
 
     public void setId_analisis_grupo_solicitud(int id_analisis_grupo_solicitud) {
         this.id_analisis_grupo_solicitud = id_analisis_grupo_solicitud;
+    }
+
+    public String[] getLista_analisis() {
+        return lista_analisis;
+    }
+
+    public void setLista_analisis(String[] analisis) {
+        this.lista_analisis = analisis;
     }
 
     public Analisis getAnalisis() {
@@ -43,27 +54,27 @@ public class AnalisisGrupoSolicitud {
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
     }
-    
-    public String parseJSON(){
+
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
-        try{
+        try {
             Field properties[] = _class.getDeclaredFields();
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
-                if (i != 0){
+                if (i != 0) {
                     JSON.put(field.getName(), field.get(this));
-                }else{
+                } else {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_analisis",this.getAnalisis().getId_analisis());
-            JSON.put("id_grupo",this.getGrupo().getId_grupo());
-                    
-        }catch (Exception e){
-            
+            JSON.put("id_analisis", this.getAnalisis().getId_analisis());
+            JSON.put("id_grupo", this.getGrupo().getId_grupo());
+
+        } catch (Exception e) {
+
         }
         return JSON.toString();
     }
-    
+
 }

@@ -1,71 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <analisis>
     <campo>
-        <tipo>number</tipo>
-        <nombre-campo>numero1</nombre-campo>
-        <etiqueta>Número 1</etiqueta>
-        <visible>True</visible>
-        <valor></valor>
-    </campo>
-    <campo>
-        <tipo>Excel</tipo>
-        <nombre-campo>excel_1</nombre-campo>
-        <celda>A27</celda>
-        <etiqueta>Excel 1</etiqueta>
-        <visible>True</visible>
-        <valor></valor>
-    </campo>
-    <campo>
-        <tipo>text</tipo>
-        <nombre-campo>texto1</nombre-campo>
-        <etiqueta>Texto 1</etiqueta>
+        <nombre-campo>Decimal1</nombre-campo>
+        <etiqueta>Decimal1</etiqueta>
+        <valor/>
+        <tipo>decimal</tipo>
         <visible>False</visible>
-        <valor></valor>
-    </campo>
-    <campo>
-        <tipo>text</tipo>
-        <nombre-campo>texto2</nombre-campo>
-        <etiqueta>Texto 2</etiqueta>
-        <visible>False</visible>
-        <valor></valor>
-    </campo>
-    <campo>
-        <tipo>number</tipo>
-        <nombre-campo>numero2</nombre-campo>
-        <etiqueta>Número 2</etiqueta>
-        <visible>False</visible>
-        <valor></valor>
-    </campo>
-    <campo>
-        <tipo>textarea</tipo>
-        <nombre-campo>area1</nombre-campo>
-        <etiqueta>Área 1</etiqueta>
-        <visible>False</visible>
-        <valor></valor>
-    </campo>
-    <campo>
-        <tipo>fecha</tipo>
-        <nombre-campo>fecha1</nombre-campo>
-        <etiqueta>Fecha de Ingreso</etiqueta>
-        <visible>True</visible>
-        <valor></valor>
     </campo>
     <campo>
         <tipo>table</tipo>
         <visible>True</visible>
         <columnas>
             <columna>
-                <nombre>Columna nombres</nombre>
+                <nombre>Filas</nombre>
             </columna>
             <columna>
-                <nombre>Columna 1</nombre>
+                <nombre>Columna1</nombre>
             </columna>
             <columna>
-                <nombre>Columna 2</nombre>
-            </columna>
-            <columna>
-                <nombre>Columna 3</nombre>
+                <nombre>Columna2</nombre>
             </columna>
         </columnas>
         <filas>
@@ -73,28 +25,21 @@
                 <celdas>
                     <celda>
                         <celda-nombre>
-                            <nombre>Nombre 1</nombre>
+                            <nombre>Fila1</nombre>
                         </celda-nombre>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_1_1</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_0_0</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_1_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_1_3</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_0_1</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                 </celdas>
@@ -103,270 +48,94 @@
                 <celdas>
                     <celda>
                         <celda-nombre>
-                            <nombre>Nombre 2</nombre>
+                            <nombre>Fila2</nombre>
                         </celda-nombre>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_1</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_1_0</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_3</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_1_1</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                 </celdas>
             </fila>
-            <fila tipo="especial" funcion="sumatoria">
+            <fila>
                 <celdas>
                     <celda>
                         <celda-nombre>
-                            <nombre>Total</nombre>
+                            <nombre>Fila3</nombre>
                         </celda-nombre>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Sumatoria_1</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_2_0</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Sumatoria_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Sumatoria_3</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_2_1</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                 </celdas>
             </fila>
-            <fila tipo="especial" funcion="promedio">
+            <fila>
                 <celdas>
                     <celda>
                         <celda-nombre>
-                            <nombre>Promedio</nombre>
+                            <nombre>Fila4</nombre>
                         </celda-nombre>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Promedio_1</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_3_0</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Promedio_2</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_Celda_3_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila funcion="promedio" tipo="especial">
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Fila Especial</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_promedio_0</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Promedio_3</nombre-campo>
-                            <valor></valor>
+                            <tipo>entero</tipo>
+                            <nombre-campo>Tabla_0_promedio_1</nombre-campo>
+                            <valor/>
                         </campo>
                     </celda>
                 </celdas>
             </fila>
         </filas>
-    </campo>
-    <campo>
-        <tipo>table</tipo>
-        <visible>True</visible>
-        <columnas>
-            <columna>
-                <nombre>Columna 1</nombre>
-            </columna>
-            <columna>
-                <nombre>Columna 2</nombre>
-            </columna>
-            <columna>
-                <nombre>Columna 3</nombre>
-            </columna>
-            <columna>
-                <nombre>Columna 4</nombre>
-            </columna>
-        </columnas>
-        <filas>
-            <fila>
-                <celdas>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_1_1</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_1_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_1_3</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_1_4</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_2_1</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_2_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_2_3</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_2_4</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_3_1</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_3_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_3_3</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_3_4</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_4_1</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_4_2</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_4_3</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_2_Celda_4_4</nombre-campo>
-                            <valor></valor>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-        </filas>
-    </campo>
-</analisis>
-
-
-<analisis>
-    <campo>
-        <tipo>entero</tipo>
-        <nombre-campo>Campo1</nombre-campo>
-        <etiqueta>Campo1</etiqueta>
-        <valor/>
-        <celda>B3-03</celda>
-    </campo>
-    <campo>
-        <tipo>entero</tipo>
-        <nombre-campo>Campo2</nombre-campo>
-        <etiqueta>Campo2</etiqueta>
-        <valor/>
-    </campo>
-    <campo>
-        <tipo>texto</tipo>
-        <nombre-campo>Campo3</nombre-campo>
-        <etiqueta>Campo3</etiqueta>
-        <valor/>
-    </campo>
-    <campo>
-        <tipo>entero</tipo>
-        <nombre-campo>Campo4</nombre-campo>
-        <etiqueta>Campo4</etiqueta>
-        <valor/>
-        <celda>B5-04</celda>
     </campo>
 </analisis>
