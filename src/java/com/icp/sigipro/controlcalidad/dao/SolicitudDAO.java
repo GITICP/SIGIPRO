@@ -28,69 +28,82 @@ public class SolicitudDAO extends DAO {
 
     public boolean entregarSolicitud(SolicitudCC solicitud) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado) "
                     + " VALUES (?,?,?,?) RETURNING id_solicitud");
             consulta.setString(1, solicitud.getNumero_solicitud());
             consulta.setInt(2, solicitud.getUsuario_solicitante().getId_usuario());
             consulta.setDate(3, solicitud.getFecha_solicitud());
             consulta.setString(4, solicitud.getEstado());
-            ResultSet rs = consulta.executeQuery();
-            System.out.println(consulta);
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
+
         return resultado;
     }
 
     public boolean insertarGrupo(Grupo g) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.grupos (id_solicitud) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.grupos (id_solicitud) "
                     + "VALUES (?) RETURNING id_grupo; ");
             consulta.setInt(1, g.getSolicitud().getId_solicitud());
-            System.out.println(consulta);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 g.setId_grupo(rs.getInt("id_grupo"));
-                System.out.println(g.getId_grupo());
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean insertarMuestra(Muestra m) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.muestras (identificador, id_tipo_muestra, fecha_descarte_estimada) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.muestras (identificador, id_tipo_muestra, fecha_descarte_estimada) "
                     + "VALUES (?,?,?) RETURNING id_muestra; ");
             consulta.setString(1, m.getIdentificador());
             consulta.setInt(2, m.getTipo_muestra().getId_tipo_muestra());
             consulta.setDate(3, m.getFecha_descarte_estimada());
-            System.out.println(consulta);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 m.setId_muestra(rs.getInt("id_muestra"));
-                System.out.println(m.getId_muestra());
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean insertarMuestrasGrupo(Grupo g) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
             this.insertarGrupo(g);
 
@@ -101,36 +114,39 @@ public class SolicitudDAO extends DAO {
                 this.insertarMuestra(muestra);
                 consultaBatch.setInt(1, g.getId_grupo());
                 consultaBatch.setInt(2, muestra.getId_muestra());
-                System.out.println(consultaBatch);
                 consultaBatch.addBatch();
             }
             consultaBatch.executeBatch();
             resultado = true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean insertarAnalisisGrupoSolicitud(AnalisisGrupoSolicitud ags) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis_grupo_solicitud (id_grupo, id_analisis) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis_grupo_solicitud (id_grupo, id_analisis) "
                     + "VALUES (?,?) RETURNING id_analisis_grupo_solicitud");
             consulta.setInt(1, ags.getGrupo().getId_grupo());
             consulta.setInt(2, ags.getAnalisis().getId_analisis());
-            System.out.println(consulta);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
                 ags.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
             }
-
-            consulta.close();
-            cerrarConexion();
-
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
@@ -138,8 +154,9 @@ public class SolicitudDAO extends DAO {
     //PENDIENTE
     public boolean editarSolicitud(SolicitudCC solicitud) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
+            consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
                     + "SET id_usuario_recibido=?, fecha_recibido=?, estado=? "
                     + "WHERE id_solicitud = ?; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
@@ -149,18 +166,20 @@ public class SolicitudDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean recibirSolicitud(SolicitudCC solicitud) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
+            consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
                     + "SET id_usuario_recibido=?, fecha_recibido=?, estado='Pendiente' "
                     + "WHERE id_solicitud = ?; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
@@ -169,20 +188,23 @@ public class SolicitudDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public List<SolicitudCC> obtenerSolicitudes() {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
+            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
                     + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante ; ");
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             while (rs.next()) {
                 SolicitudCC solicitud = new SolicitudCC();
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
@@ -195,22 +217,26 @@ public class SolicitudDAO extends DAO {
                 solicitud.setEstado(rs.getString("estado"));
                 resultado.add(solicitud);
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public SolicitudCC obtenerSolicitud(int id_solicitud) {
         SolicitudCC resultado = new SolicitudCC();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado "
+            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado "
                     + "FROM control_calidad.solicitudes as solicitud  "
                     + "WHERE id_solicitud=?; ");
             consulta.setInt(1, id_solicitud);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             UsuarioDAO usuariodao = new UsuarioDAO();
             if (rs.next()) {
                 resultado.setId_solicitud(rs.getInt("id_solicitud"));
@@ -234,11 +260,10 @@ public class SolicitudDAO extends DAO {
             consulta.setInt(1, id_solicitud);
             rs = consulta.executeQuery();
             resultado.setAnalisis_solicitud(new ArrayList<AnalisisGrupoSolicitud>());
-            System.out.println(consulta);
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             while (rs.next()) {
                 if (ags.getId_analisis_grupo_solicitud() == 0 || ags.getId_analisis_grupo_solicitud() != rs.getInt("id_analisis_grupo_solicitud")) {
-                    if (ags.getId_analisis_grupo_solicitud() != 0){
+                    if (ags.getId_analisis_grupo_solicitud() != 0) {
                         resultado.getAnalisis_solicitud().add(ags);
                     }
                     ags = new AnalisisGrupoSolicitud();
@@ -262,28 +287,33 @@ public class SolicitudDAO extends DAO {
                 ags.getGrupo().getGrupos_muestras().add(m);
             }
             resultado.getAnalisis_solicitud().add(ags);
-            consulta.close();
-            cerrarConexion();
+
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
 
     public boolean anularSolicitud(int id_solicitud) {
         boolean resultado = false;
+        PreparedStatement consulta = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
+            consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
                     + "SET estado='Anulada' "
                     + "WHERE id_solicitud = ?; ");
             consulta.setInt(1, id_solicitud);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
