@@ -165,6 +165,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
         resultado = dao.entregarSolicitud(s);
         if (resultado) {
             for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
+                
                 ags.getGrupo().setSolicitud(s);
                 dao.insertarMuestrasGrupo(ags.getGrupo());
                 bitacora.setBitacora(ags.getGrupo().parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO, request.getRemoteAddr());

@@ -423,7 +423,7 @@ ADD COLUMN nombre varchar(50);
 
     -- Solicitudes
 
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (501, 500, 'Solicitudes', '/ControlCalidad/Solicitudes');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (501, 500, 'Solicitudes', '/ControlCalidad/Solicitud');
 
     -- Reactivos
 
