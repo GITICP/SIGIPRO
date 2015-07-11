@@ -33,7 +33,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i>  </h3>
+                            <h3><i class="fa fa-gears"></i> ${analisis.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEliminar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
