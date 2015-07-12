@@ -7,9 +7,11 @@ package com.icp.sigipro.caballeriza.dao;
 
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.EventoClinico;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Imagen;
 import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.caballeriza.modelos.Peso;
+import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
@@ -60,6 +62,7 @@ public class CaballoDAO extends DAO
                 resultado = true;
                 c.setId_caballo(resultadoConsulta.getInt("id_caballo"));
             }
+            resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
         }
@@ -96,35 +99,6 @@ public class CaballoDAO extends DAO
             consulta.setDate(8, c.getFecha_nacimiento());
             consulta.setDate(9, c.getFecha_ingreso());
             consulta.setInt(10, c.getId_caballo());
-
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
-            }
-            consulta.close();
-            cerrarConexion();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return resultado;
-
-    }
-
-    public boolean eliminarCaballoDeGrupos(int id_caballo)
-    {
-        boolean resultado = false;
-
-        try {
-            //IMPLEMENTAR EL INSERT DE EVENTOS CADA VEZ QUE CAMBIA UN DATO
-            //Caballo caballo = this.obtenerCaballo(c.getId_caballo());
-            //------------------------------------------------------------
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " UPDATE caballeriza.caballos "
-                    + " SET id_grupo_de_caballo=?,"
-                    + " WHERE id_caballo=?; "
-            );
-            consulta.setInt(1, 0);
-            consulta.setInt(2, id_caballo);
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -181,39 +155,6 @@ public class CaballoDAO extends DAO
         return resultado;
     }
 
-    public List<Caballo> obtenerCaballosGrupo(int id_grupo_de_caballo)
-    {
-        List<Caballo> resultado = new ArrayList<Caballo>();
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos where id_grupo_de_caballo = ?");
-            consulta.setInt(1, id_grupo_de_caballo);
-            ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
-            while (rs.next()) {
-                Caballo caballo = new Caballo();
-                caballo.setId_caballo(rs.getInt("id_caballo"));
-                caballo.setNombre(rs.getString("nombre"));
-                caballo.setNumero_microchip(rs.getString("numero_microchip"));
-                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
-                caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
-                caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                caballo.setSexo(rs.getString("sexo"));
-                caballo.setColor(rs.getString("color"));
-                caballo.setOtras_sennas(rs.getString("otras_sennas"));
-                caballo.setEstado(rs.getString("estado"));
-                caballo.setNumero(rs.getInt("numero"));
-                resultado.add(caballo);
-            }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return resultado;
-    }
-
     public List<Caballo> obtenerCaballosRestantes()
     {
         List<Caballo> resultado = new ArrayList<Caballo>();
@@ -223,7 +164,6 @@ public class CaballoDAO extends DAO
             consulta.setString(1, Caballo.VIVO);
 
             ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
 
             while (rs.next()) {
                 Caballo caballo = new Caballo();
@@ -249,20 +189,19 @@ public class CaballoDAO extends DAO
         Caballo caballo = new Caballo();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT c.*, pc.id_peso, pc.peso, pc.fecha "
+                    " SELECT c.*, g.nombre as nombre_grupo, g.descripcion as descripcion_grupo, pc.id_peso, pc.peso, pc.fecha "
                     + " FROM caballeriza.caballos c "
-                    + "           LEFT JOIN caballeriza.pesos_caballos pc ON pc.id_caballo = ? "
+                    + "     LEFT JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = c.id_grupo_de_caballo "
+                    + "     LEFT JOIN caballeriza.pesos_caballos pc ON pc.id_caballo = ? "
                     + " WHERE c.id_caballo = ? "
             );
             consulta.setInt(1, id_caballo);
             consulta.setInt(2, id_caballo);
             ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
             if (rs.next()) {
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getString("numero_microchip"));
-                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
                 caballo.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 caballo.setSexo(rs.getString("sexo"));
@@ -270,6 +209,12 @@ public class CaballoDAO extends DAO
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setNumero(rs.getInt("numero"));
+
+                GrupoDeCaballos grupo = new GrupoDeCaballos();
+                grupo.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                grupo.setNombre(rs.getString("nombre_grupo"));
+                grupo.setDescripcion(rs.getString("descripcion_grupo"));
+                caballo.setGrupo_de_caballos(grupo);
 
                 if (rs.getDate("fecha") != null) {
                     do {
@@ -374,15 +319,18 @@ public class CaballoDAO extends DAO
     {
         List<Caballo> resultado = new ArrayList<Caballo>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.caballos ");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT c.*, g.nombre as nombre_grupo, g.descripcion as descripcion_grupo "
+                    + " FROM caballeriza.caballos c "
+                    + " LEFT JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = c.id_grupo_de_caballo; "
+            );
+
             ResultSet rs = consulta.executeQuery();
-            GrupoDeCaballosDAO dao = new GrupoDeCaballosDAO();
             while (rs.next()) {
                 Caballo caballo = new Caballo();
                 caballo.setId_caballo(rs.getInt("id_caballo"));
                 caballo.setNombre(rs.getString("nombre"));
                 caballo.setNumero_microchip(rs.getString("numero_microchip"));
-                caballo.setGrupo_de_caballos(dao.obtenerGrupoDeCaballos(rs.getInt("id_grupo_de_caballo")));
                 caballo.setFecha_ingreso(rs.getDate("fecha_nacimiento"));
                 caballo.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 caballo.setSexo(rs.getString("sexo"));
@@ -390,59 +338,24 @@ public class CaballoDAO extends DAO
                 caballo.setOtras_sennas(rs.getString("otras_sennas"));
                 caballo.setEstado(rs.getString("estado"));
                 caballo.setNumero(rs.getInt("numero"));
+
+                int id_grupo_caballo = rs.getInt("id_grupo_de_caballo");
+                if (id_grupo_caballo != 0) {
+                    GrupoDeCaballos grupo = new GrupoDeCaballos();
+                    grupo.setId_grupo_caballo(id_grupo_caballo);
+                    grupo.setDescripcion(rs.getString("descripcion_grupo"));
+                    grupo.setNombre(rs.getString("nombre_grupo"));
+                    caballo.setGrupo_de_caballos(grupo);
+                }
+
                 resultado.add(caballo);
             }
+            rs.close();
             consulta.close();
             cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
-        }
-        return resultado;
-    }
-
-    public List<EventoClinico> ObtenerEventosCaballo(int id_caballo) throws SIGIPROException
-    {
-        List<EventoClinico> resultado = new ArrayList<EventoClinico>();
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT ec.id_evento, ec.fecha, ec.responsable, ec.descripcion, u.id_usuario, u.nombre_completo, te.id_tipo_evento, te.nombre "
-                    + " FROM (SELECT * FROM caballeriza.eventos_clinicos_caballos WHERE id_caballo = ?) as eventos "
-                    + "   INNER JOIN caballeriza.eventos_clinicos ec ON ec.id_evento = eventos.id_evento "
-                    + "   INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario "
-                    + "   INNER JOIN caballeriza.tipos_eventos te ON ec.id_tipo_evento = te.id_tipo_evento "
-            );
-            consulta.setInt(1, id_caballo);
-            ResultSet rs = consulta.executeQuery();
-
-            while (rs.next()) {
-                EventoClinico evento = new EventoClinico();
-                evento.setId_evento(rs.getInt("id_evento"));
-                evento.setFecha(rs.getDate("fecha"));
-                evento.setDescripcion(rs.getString("descripcion"));
-
-                Usuario responsable = new Usuario();
-                responsable.setId_usuario(rs.getInt("id_usuario"));
-                responsable.setNombre_completo(rs.getString("nombre_completo"));
-                evento.setResponsable(responsable);
-
-                TipoEvento tipo_evento = new TipoEvento();
-
-                tipo_evento.setId_tipo_evento(rs.getInt("id_tipo_evento"));
-                tipo_evento.setNombre(rs.getString("nombre"));
-                evento.setTipo_evento(tipo_evento);
-
-                resultado.add(evento);
-            }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
-
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
         return resultado;
     }
@@ -522,19 +435,41 @@ public class CaballoDAO extends DAO
     {
         List<SangriaCaballo> resultado = new ArrayList<SangriaCaballo>();
 
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement("select s.id_sangria, fecha_dia1, sangre_dia1, sangre_dia2, sangre_dia3, plasma_dia1, plasma_dia2, plasma_dia3, lal_dia1, lal_dia2, lal_dia3 "
-                                                                        + " from caballeriza.sangrias s "
-                                                                        + " left outer join caballeriza.sangrias_caballos sc "
-                                                                        + " on s.id_sangria= sc.id_sangria "
-                                                                        + " where id_caballo=?; ");
-            consulta.setInt(1, id_caballo);
-            ResultSet rs = consulta.executeQuery();
-            SangriaDAO sdao = new SangriaDAO();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
 
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT s.id_sangria, s.fecha, s.fecha_dia1, s.fecha_dia2, s.fecha_dia3, "
+                    + " g.id_grupo_de_caballo, g.nombre, "
+                    + " sc.sangre_dia1, sc.sangre_dia2, sc.sangre_dia3, sc.plasma_dia1, sc.plasma_dia2, sc.plasma_dia3, sc.lal_dia1, sc.lal_dia2, sc.lal_dia3, sc.participo_dia1, sc.participo_dia2, sc.participo_dia3 "
+                    + " FROM caballeriza.sangrias s "
+                    + "     INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos "
+                    + "     LEFT OUTER JOIN caballeriza.sangrias_caballos sc ON s.id_sangria= sc.id_sangria"
+                    + " WHERE id_caballo=?; "
+            );
+
+            consulta.setInt(1, id_caballo);
+
+            rs = consulta.executeQuery();
+
+            
             while (rs.next()) {
+                Sangria s = new Sangria();
+                
+                s.setId_sangria(rs.getInt("id_sangria"));
+                s.setFecha(rs.getDate("fecha"));
+                s.setFecha_dia1(rs.getDate("fecha_dia1"));
+                s.setFecha_dia2(rs.getDate("fecha_dia2"));
+                s.setFecha_dia3(rs.getDate("fecha_dia3"));
+
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setNombre(rs.getString("nombre"));
+                g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                s.setGrupo(g);
+
                 SangriaCaballo sangriac = new SangriaCaballo();
-                sangriac.setSangria(sdao.obtenerSangria(rs.getInt("id_sangria")));
+                sangriac.setSangria(s);
                 sangriac.setSangre_dia1(rs.getFloat("sangre_dia1"));
                 sangriac.setSangre_dia2(rs.getFloat("sangre_dia2"));
                 sangriac.setSangre_dia3(rs.getFloat("sangre_dia3"));
@@ -544,58 +479,24 @@ public class CaballoDAO extends DAO
                 sangriac.setLal_dia1(rs.getFloat("lal_dia1"));
                 sangriac.setLal_dia2(rs.getFloat("lal_dia2"));
                 sangriac.setLal_dia3(rs.getFloat("lal_dia3"));
+                sangriac.setParticipo_dia1(rs.getBoolean("participo_dia1"));
+                sangriac.setParticipo_dia2(rs.getBoolean("participo_dia2"));
+                sangriac.setParticipo_dia3(rs.getBoolean("participo_dia3"));
+                
                 resultado.add(sangriac);
-            }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
 
+            }
         }
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error de comunicación con la base de datos.");
         }
-        return resultado;
-    }
-
-    public List<EventoClinico> ObtenerEventosCaballoRestantes(int id_caballo) throws SIGIPROException
-    {
-        List<EventoClinico> resultado = new ArrayList<EventoClinico>();
-        TipoEventoDAO dao = new TipoEventoDAO();
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT  ec.id_evento, ec.id_tipo_evento, ec.fecha, ec.descripcion, u.id_usuario, u.nombre_completo "
-                    + " FROM caballeriza.eventos_clinicos ec "
-                    + "      INNER JOIN seguridad.usuarios u ON u.id_usuario = ec.responsable "
-                    + "      LEFT OUTER JOIN caballeriza.tipos_eventos tp ON ec.id_tipo_evento = tp.id_tipo_evento "
-                    + " WHERE id_evento NOT IN (SELECT id_evento FROM caballeriza.eventos_clinicos_caballos ecc where id_caballo =?) order by ec.id_tipo_evento;");
-            consulta.setInt(1, id_caballo);
-            ResultSet rs = consulta.executeQuery();
-
-            while (rs.next()) {
-                EventoClinico evento = new EventoClinico();
-                evento.setId_evento(rs.getInt("id_evento"));
-                evento.setFecha(rs.getDate("fecha"));
-                evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
-                evento.setDescripcion(rs.getString("descripcion"));
-
-                Usuario responsable = new Usuario();
-                responsable.setId_usuario(rs.getInt("id_usuario"));
-                responsable.setNombre_completo(rs.getString("nombre_completo"));
-                evento.setResponsable(responsable);
-
-                resultado.add(evento);
-            }
-            rs.close();
-            consulta.close();
+        finally {
+            cerrarSilencioso(consulta);
+            cerrarSilencioso(rs);
             cerrarConexion();
+        }
 
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Error de comunicación con la base de datos.");
-        }
         return resultado;
     }
 
@@ -668,6 +569,34 @@ public class CaballoDAO extends DAO
             PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM caballeriza.pesos_caballos WHERE id_peso = ?;");
 
             consulta.setInt(1, id_peso);
+
+            if (consulta.executeUpdate() != 1) {
+                throw new SQLException();
+            }
+            else {
+                resultado = true;
+            }
+
+            consulta.close();
+            cerrarConexion();
+
+            return resultado;
+
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al elimianr el peso.");
+        }
+    }
+    
+    public boolean eliminarImagen(int id_imagen) throws SIGIPROException
+    {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("DELETE FROM caballeriza.imagenes WHERE id_imagen = ?;");
+
+            consulta.setInt(1, id_imagen);
 
             if (consulta.executeUpdate() != 1) {
                 throw new SQLException();

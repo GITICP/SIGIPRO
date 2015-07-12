@@ -97,7 +97,7 @@
                 <c:forEach items="${lista_grupos}" var="grupo_caballo">
                     <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${grupo_caballo.getId_grupo_caballo()}" hidden>
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> Caballos del Grupo ${grupo_caballo.getNombre()} para la sangría</h3>
+                            <h3><i class="sigipro-horse-1"></i> Caballos del Grupo ${grupo_caballo.getNombre()} para la sangría</h3>
                             <div class="widget-header-toolbar">
                                 <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Marcar Todos</a>
                             </div>
@@ -120,7 +120,7 @@
                     <c:when test="${sangria.getFecha_dia1() == null}">
                         <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${sangria.getGrupo().getId_grupo_caballo()}">
                             <div class="widget-header">
-                                <h3><i class="fa fa-flask"></i> Caballos del grupo ${sangria.getGrupo().getNombre()} </h3>
+                                <h3><i class="sigipro-horse-1"></i> Caballos del grupo ${sangria.getGrupo().getNombre()} </h3>
                                 <div class="widget-header-toolbar">
                                     <a class="btn btn-primary btn-sm boton-accion seleccionar-todo">Desmarcar Todos</a>
                                 </div>
@@ -140,7 +140,7 @@
                     <c:otherwise>
                         <div class="widget widget-table cuadro-opciones caballos-grupo" id="grupo-${sangria.getGrupo().getId_grupo_caballo()}">
                             <div class="widget-header">
-                                <h3><i class="fa fa-flask"></i> Caballos del grupo (No modificable debido a que la sangría ya comenzó)</h3>
+                                <h3><i class="sigipro-horse-1"></i> Caballos del grupo (No modificable debido a que la sangría ya comenzó)</h3>
                             </div>
                             <div class="widget-content">
                                 <c:forEach items="${sangria.getGrupo().getCaballos()}" var="caballo">

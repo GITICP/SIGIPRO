@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ public class SolicitudCC {
     private String estado;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
+    private ControlSolicitud control_solicitud;
 
 
     public SolicitudCC() {
@@ -40,8 +42,6 @@ public class SolicitudCC {
     public void setId_solicitud(int id_solicitud) {
         this.id_solicitud = id_solicitud;
     }
-
-  
 
     public Date getFecha_solicitud() {
         return fecha_solicitud;
@@ -105,6 +105,30 @@ public class SolicitudCC {
 
     public void setAnalisis_solicitud(List<AnalisisGrupoSolicitud> analisis_solicitud) {
         this.analisis_solicitud = analisis_solicitud;
+    }
+
+    public ControlSolicitud getControl_solicitud() {
+        return control_solicitud;
+    }
+
+    public void setControl_solicitud(ControlSolicitud control_solicitud) {
+        this.control_solicitud = control_solicitud;
+    }
+    
+    public List<Muestra> obtenerMuestras() {
+        List<Muestra> lista_muestras = new ArrayList<Muestra>();
+        List<Integer> ids_muestras = new ArrayList<Integer>();
+        
+        for (AnalisisGrupoSolicitud ags : this.analisis_solicitud) {
+            for (Muestra m : ags.obtenerMuestras()) {
+                if (!ids_muestras.contains(m.getId_muestra())) {
+                    ids_muestras.add(m.getId_muestra());
+                    lista_muestras.add(m);
+                }
+            }
+        }
+        
+        return lista_muestras;
     }
 
     public String parseJSON() {

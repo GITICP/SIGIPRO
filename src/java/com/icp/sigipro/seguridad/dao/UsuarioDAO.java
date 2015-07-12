@@ -6,6 +6,7 @@
 package com.icp.sigipro.seguridad.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.*;
 import com.icp.sigipro.utilidades.UtilidadEmail;
@@ -27,8 +28,10 @@ import java.util.UUID;
  *
  * @author Boga
  */
-public class UsuarioDAO
+public class UsuarioDAO extends DAO
 {
+    
+    public UsuarioDAO(){}
 
     @SuppressWarnings("Convert2Diamond")
     private List<Usuario> llenarUsuarios(ResultSet resultadoConsulta) throws SQLException
@@ -85,41 +88,47 @@ public class UsuarioDAO
         SingletonBD s = SingletonBD.getSingletonBD();
         Connection conexion = s.conectar();
         int resultado = -1;
+        
+        PreparedStatement consultaContrasena = null;
+        ResultSet resultadoConsulta = null;
+        PreparedStatement consultaEstado = null;
+        ResultSet resultadoConsultaEstado = null;
+                          
 
         if (conexion != null) {
             try {
-                PreparedStatement consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
+                consultaContrasena = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
                                                                                  + "FROM seguridad.usuarios us "
                                                                                  + "WHERE us.nombre_usuario = ? and us.contrasena = ? ");
 
                 consultaContrasena.setString(1, usuario);
                 String hash = md5(contrasenna);
                 consultaContrasena.setString(2, hash);
-                ResultSet resultadoConsulta = consultaContrasena.executeQuery();
+                resultadoConsulta = consultaContrasena.executeQuery();
                 resultadoConsulta.next();
                 resultado = resultadoConsulta.getInt("id_usuario");
                 if (resultadoConsulta.getBoolean("contrasena_caducada")) {
                     resultado = 0;
                 }
-                PreparedStatement consultaEstado = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
+                consultaEstado = conexion.prepareStatement("SELECT id_usuario, contrasena_caducada "
                                                                              + "FROM seguridad.usuarios us "
                                                                              + "WHERE us.nombre_usuario = ? AND us.estado = false ");
 
                 consultaEstado.setString(1, usuario);
-                ResultSet resultadoConsultaEstado = consultaEstado.executeQuery();
+                resultadoConsultaEstado = consultaEstado.executeQuery();
 
                 if (resultadoConsultaEstado.next()) {
                     resultado = -2;
                 }
-
-                resultadoConsulta.close();
-                resultadoConsultaEstado.close();
-                consultaContrasena.close();
-                consultaEstado.close();
-                conexion.close();
             }
             catch (SQLException ex) {
                 ex.printStackTrace();
+            } finally {
+                cerrarSilencioso(resultadoConsultaEstado);
+                cerrarSilencioso(consultaEstado);
+                cerrarSilencioso(resultadoConsulta);
+                cerrarSilencioso(consultaContrasena);
+                cerrarSilencioso(conexion);
             }
         }
         return resultado;
@@ -255,8 +264,11 @@ public class UsuarioDAO
                 resultado.setNombre_usuario(nombre_usuario);
                 resultado.setId_seccion(id_seccion);
                 resultado.setNombre_completo(resultadoConsulta.getString("nombre_completo"));
-
             }
+            
+            resultadoConsulta.close();
+            consulta.close();
+            conexion.close();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -988,13 +1000,13 @@ public class UsuarioDAO
             }
             finally {
                 try {
-                    conexion.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
                     if (consulta != null) {
                         consulta.close();
                     }
-                    if (rs != null) {
-                        consulta.close();
-                    }
+                    conexion.close();
                 }
                 catch (SQLException sql_ex) {
                     sql_ex.printStackTrace();

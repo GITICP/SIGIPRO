@@ -5,9 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoMuestraDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
@@ -20,7 +18,6 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,13 +42,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
     //Solicitar, Recibir, Anular
     private final int[] permisos = {1, 550, 551, 552};
     //-----------------
-    private SolicitudDAO dao = new SolicitudDAO();
-    private TipoMuestraDAO tipomuestradao = new TipoMuestraDAO();
-    private AnalisisDAO analisisdao = new AnalisisDAO();
-    private UsuarioDAO usuariodao = new UsuarioDAO();
-
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
+    private final SolicitudDAO dao = new SolicitudDAO();
+    private final TipoMuestraDAO tipomuestradao = new TipoMuestraDAO();
+    private final UsuarioDAO usuariodao = new UsuarioDAO();
 
     protected final Class clase = ControladorSolicitud.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -68,6 +61,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("recibir");
+            add("agregargrupo");
         }
     };
 
@@ -108,11 +102,13 @@ public class ControladorSolicitud extends SIGIPROServlet {
         try {
             SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
-            redireccionar(request, response, redireccion);
+            
         } catch (Exception ex) {
             ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
         }
-
+        
+        redireccionar(request, response, redireccion);
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
@@ -207,6 +203,31 @@ public class ControladorSolicitud extends SIGIPROServlet {
             this.getEditar(request, response);
         }
     }
+    
+    protected void postAgregargrupo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        String redireccion = "Solicitud/Ver.jsp";
+        
+        Grupo grupo = construirGrupo(request);
+        
+        try {
+            dao.insertarGrupoConAnalisis(grupo);
+            
+            request.setAttribute("mensaje", helper.mensajeDeExito("Agrupación creada con éxito."));
+        } catch(SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        
+        try {
+            SolicitudCC s = dao.obtenerSolicitud(grupo.getSolicitud().getId_solicitud());
+            request.setAttribute("solicitud", s);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
+        }
+        
+        redireccionar(request, response, redireccion);        
+    }
   // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
@@ -268,6 +289,40 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         return s;
     }
+    
+    private Grupo construirGrupo(HttpServletRequest request) {
+        
+        Grupo grupo = new Grupo();
+        
+        SolicitudCC solicitud = new SolicitudCC();
+        solicitud.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        
+        grupo.setSolicitud(solicitud);
+        
+        List<Muestra> muestras = new ArrayList<Muestra>();
+        String[] ids_muestras = request.getParameterValues("ids_muestras");
+        
+        for(String id_muestra : ids_muestras) {
+            Muestra m = new Muestra();
+            m.setId_muestra(Integer.parseInt(id_muestra));
+            muestras.add(m);
+        }
+        
+        grupo.setGrupos_muestras(muestras);
+        
+        List<Analisis> analisis = new ArrayList<Analisis>();
+        String[] ids_analisis = request.getParameter("ids_analisis").split(",");
+        
+        for(String id_analisis : ids_analisis) {
+            Analisis a = new Analisis();
+            a.setId_analisis(Integer.parseInt(id_analisis));
+            analisis.add(a);
+        }
+        
+        grupo.setAnalisis(analisis);
+        
+        return grupo;
+    }
 
     private boolean verificarRecibirSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -278,7 +333,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(552, listaPermisos);
     }
-
+    
     public List<String> parseListaTipoMuestra(List<TipoMuestra> tipomuestra) {
         List<String> respuesta = new ArrayList<String>();
         for (TipoMuestra tm : tipomuestra) {

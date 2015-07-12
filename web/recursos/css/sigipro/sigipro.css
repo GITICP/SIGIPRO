@@ -29,6 +29,7 @@
   margin-right:5px !important;
   color:#fff !important;
   padding-top: 3px !important;
+  font-family: "Helvetica Neue";
 }
 
 .campos-requeridos {
@@ -95,4 +96,8 @@
 
 #tabla_informacion {
     width: 100%;
+}
+
+.opcion-escondida {
+    display: none !important;
 }

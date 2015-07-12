@@ -43,6 +43,10 @@ public class SingletonBD
             cpds.setMaxIdleTime(30);
             cpds.setMaxIdleTimeExcessConnections(60);
             cpds.setCheckoutTimeout(5000);
+            
+            // Configuración de errores
+            cpds.setUnreturnedConnectionTimeout(120);
+            cpds.setDebugUnreturnedConnectionStackTraces(true);
         }
         catch (PropertyVetoException pvx) {
             pvx.printStackTrace();

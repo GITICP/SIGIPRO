@@ -76,7 +76,10 @@
                                 <div class="col-md-6" align="right">
                                     <div class="widget-content">
                                         <c:if test="${!imagenEvento.equals('')}">
-                                            <img src="${imagenEvento}" height="250" width="250">
+                                            <span style="cursor:zoom-in">
+                                               <img title="Click para ampliar imagen." src="${imagenEvento}" height="250" width="250" onclick="mostrarGrande(this)"> 
+                                            </span>
+                                            
                                         </c:if>
                                     </div>
                                 </div>
@@ -117,5 +120,19 @@
     </div>
 
 </jsp:attribute>
+            <jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/Caballeriza.js"></script>
+    </jsp:attribute>
 
 </t:plantilla_general>
+
+<t:modal idModal="modalVerImagen" titulo="Ver Imagen">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <img id="imagenGrande" src="" height="540" width="540">
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+    

@@ -94,15 +94,9 @@ public class EventoClinicoDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (resultadoConsulta != null) {
-                    resultadoConsulta.close();
-                }
-                if (consulta != null) {
-                    consulta.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
+                cerrarSilencioso(resultadoConsulta);
+                cerrarSilencioso(consulta);
+                cerrarSilencioso(consulta_caballos);
                 cerrarConexion();
             }
             catch (SQLException sql_ex) {
@@ -172,8 +166,6 @@ public class EventoClinicoDAO extends DAO
                 if (iteracion_completa) {
                     resultado_asociacion_caballos = true;
                 }
-
-                consulta_caballos.close();
             }
             else {
                 resultado_asociacion_caballos = true;
@@ -191,15 +183,9 @@ public class EventoClinicoDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (consulta != null) {
-                    consulta.close();
-                }
-                if (delete_caballos != null) {
-                    delete_caballos.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
+                cerrarSilencioso(consulta);
+                cerrarSilencioso(delete_caballos);
+                cerrarSilencioso(consulta_caballos);
                 cerrarConexion();
             }
             catch (SQLException sql_ex) {
@@ -237,13 +223,13 @@ public class EventoClinicoDAO extends DAO
         EventoClinico evento = new EventoClinico();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT ec.*, u.id_usuario, u.nombre_completo "
+                    " SELECT ec.*, u.id_usuario, u.nombre_completo, te.nombre as nombre_tipo_evento, te.descripcion as descripcion_tipo_evento "
                     + " FROM caballeriza.eventos_clinicos ec "
+                    + "   INNER JOIN caballeriza.tipos_eventos te ON te.id_tipo_evento = ec.id_tipo_evento"
                     + "   INNER JOIN seguridad.usuarios u on ec.responsable = u.id_usuario "
                     + " WHERE id_evento = ?");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
-            TipoEventoDAO dao = new TipoEventoDAO();
             if (rs.next()) {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
@@ -254,16 +240,18 @@ public class EventoClinicoDAO extends DAO
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));
                 evento.setResponsable(responsable);
-                evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
+                TipoEvento tipo_evento = new TipoEvento();
+                tipo_evento.setNombre(rs.getString("nombre_tipo_evento"));
+                tipo_evento.setDescripcion(rs.getString("descripcion_tipo_evento"));
+                evento.setTipo_evento(tipo_evento);
             }
             rs.close();
             consulta.close();
             cerrarConexion();
-
         }
         catch (SQLException ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("El evento clinico no puede ser obtenido.");
+            throw new SIGIPROException("El evento clínico no pudo ser obtenido.");
         }
         return evento;
     }
@@ -273,13 +261,13 @@ public class EventoClinicoDAO extends DAO
         EventoClinico evento = new EventoClinico();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    "SELECT evento.*, c.nombre, c.id_caballo "
+                    "SELECT evento.*, c.nombre, c.id_caballo, te.nombre as nombre_tipo_evento "
                     + "FROM (SELECT ec.*, u.id_usuario, u.nombre_completo FROM caballeriza.eventos_clinicos ec INNER JOIN seguridad.usuarios u ON ec.responsable = u.id_usuario WHERE id_evento = ?) as evento "
+                    + " INNER JOIN caballeriza.tipos_eventos te ON te.id_tipo_evento = evento.id_tipo_evento "
                     + "	LEFT JOIN caballeriza.eventos_clinicos_caballos ecc ON ecc.id_evento = evento.id_evento "
                     + "	LEFT JOIN caballeriza.caballos c ON c.id_caballo = ecc.id_caballo");
             consulta.setInt(1, id_evento);
             ResultSet rs = consulta.executeQuery();
-            TipoEventoDAO dao = new TipoEventoDAO();
             if (rs.next()) {
                 evento.setId_evento(rs.getInt("id_evento"));
                 evento.setFecha(rs.getDate("fecha"));
@@ -290,7 +278,10 @@ public class EventoClinicoDAO extends DAO
                 responsable.setId_usuario(rs.getInt("id_usuario"));
                 responsable.setNombreCompleto(rs.getString("nombre_completo"));
                 evento.setResponsable(responsable);
-                evento.setTipo_evento(dao.obtenerTipoEvento(rs.getInt("id_tipo_evento")));
+                TipoEvento t = new TipoEvento();
+                t.setId_tipo_evento(rs.getInt("id_tipo_evento"));
+                t.setNombre(rs.getString("nombre_tipo_evento"));
+                evento.setTipo_evento(t);
                 int id_caballo = rs.getInt("id_caballo");
                 if (id_caballo != 0) {
                     do {
@@ -369,9 +360,9 @@ public class EventoClinicoDAO extends DAO
                     evento.agregarGrupo(g);
                 }
             }
+            rs.close();
             consulta.close();
             cerrarConexion();
-            rs.close();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -421,12 +412,12 @@ public class EventoClinicoDAO extends DAO
 
             consulta.setInt(1, id_tipo_evento);
             ResultSet rs = consulta.executeQuery();
-            TipoEventoDAO daoTipo = new TipoEventoDAO();
             while (rs.next()) {
                 EventoClinico eventoclinico = new EventoClinico();
                 eventoclinico.setId_evento(rs.getInt("id_evento"));
                 eventoclinico.setFecha(rs.getDate("fecha"));
                 eventoclinico.setDescripcion(rs.getString("descripcion"));
+                eventoclinico.setObservaciones(rs.getString("observaciones"));
 
                 Usuario responsable = new Usuario();
                 responsable.setId_usuario(rs.getInt("id_usuario"));
