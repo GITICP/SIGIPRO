@@ -283,6 +283,13 @@ function agregarTabla() {
     contador++;
 }
 
+/*
+ * 
+ * Definición de código para la función de realizar análisis
+ * 
+ * 
+ */
+
 $(document).ready(function () {
 
     $(".fila-especial").each(function () {

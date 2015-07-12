@@ -97,3 +97,7 @@
 #tabla_informacion {
     width: 100%;
 }
+
+.opcion-escondida {
+    display: none !important;
+}
