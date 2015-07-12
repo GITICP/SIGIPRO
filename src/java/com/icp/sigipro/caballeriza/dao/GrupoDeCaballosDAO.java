@@ -85,12 +85,9 @@ public class GrupoDeCaballosDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (consulta != null) {
-                    consulta.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
+                cerrarSilencioso(resultadoConsulta);
+                cerrarSilencioso(consulta);
+                cerrarSilencioso(consulta_caballos);
                 cerrarConexion();
             }
             catch (SQLException ex_operaciones) {
@@ -177,12 +174,8 @@ public class GrupoDeCaballosDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (consulta != null) {
-                    consulta.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
+                cerrarSilencioso(consulta);
+                cerrarSilencioso(consulta_caballos);
                 cerrarConexion();
             }
             catch (SQLException ex_operaciones) {
@@ -197,10 +190,12 @@ public class GrupoDeCaballosDAO extends DAO
     public GrupoDeCaballos obtenerGrupoDeCaballos(int id_grupo_caballo)
     {
         GrupoDeCaballos grupodecaballos = new GrupoDeCaballos();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.grupos_de_caballos where id_grupo_de_caballo = ?");
+            consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.grupos_de_caballos where id_grupo_de_caballo = ?");
             consulta.setInt(1, id_grupo_caballo);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
             if (rs.next()) {
                 grupodecaballos.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
                 grupodecaballos.setNombre(rs.getString("nombre"));
@@ -210,7 +205,55 @@ public class GrupoDeCaballosDAO extends DAO
         catch (Exception ex) {
             ex.printStackTrace();
         }
+        finally{
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return grupodecaballos;
+    }
+
+    public GrupoDeCaballos obtenerGruposDeCaballosConCaballos(int id_grupo_caballo)
+    {
+        GrupoDeCaballos resultado = new GrupoDeCaballos();
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, gc.descripcion, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
+                    + " FROM (SELECT * FROM caballeriza.grupos_de_caballos WHERE id_grupo_de_caballo = ?) gc "
+                    + "     LEFT JOIN caballeriza.caballos c "
+                    + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ? "
+                    + " ORDER BY gc.id_grupo_de_caballo;");
+
+            consulta.setInt(1, id_grupo_caballo);
+            consulta.setString(2, Caballo.VIVO);
+
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_grupo_caballo(id_grupo_caballo);
+                resultado.setNombre(rs.getString("nombre_grupo"));
+                resultado.setDescripcion(rs.getString("descripcion"));
+
+                if (rs.getInt("id_caballo") != 0) {
+                    do {
+                        Caballo c = new Caballo();
+
+                        c.setId_caballo(rs.getInt("id_caballo"));
+                        c.setNombre(rs.getString("nombre_caballo"));
+                        c.setNumero_microchip(rs.getString("numero_microchip"));
+                        c.setNumero(rs.getInt("numero"));
+
+                        resultado.agregarCaballo(c);
+                    } while(rs.next());
+                }
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
     }
 
     public List<GrupoDeCaballos> obtenerGruposDeCaballos()
@@ -241,7 +284,7 @@ public class GrupoDeCaballosDAO extends DAO
         List<GrupoDeCaballos> resultado = new ArrayList<GrupoDeCaballos>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
+                    " SELECT gc.id_grupo_de_caballo, gc.nombre as nombre_grupo, c.id_caballo, c.nombre as nombre_caballo, numero_microchip, c.numero "
                     + " FROM caballeriza.grupos_de_caballos gc "
                     + "     INNER JOIN caballeriza.caballos c "
                     + "         ON gc.id_grupo_de_caballo = c.id_grupo_de_caballo AND c.estado = ? "

@@ -35,8 +35,8 @@
                             <h3><i class="sigipro-horse-1"></i> Caballo número ${caballo.getNumero()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <%--<a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=inoculo&id_caballo=${caballo.getId_caballo()}">Inóculos</a>
-                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=sangriap&id_caballo=${caballo.getId_caballo()}">Sangrías de Prueba</a>
-                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=sangria&id_caballo=${caballo.getId_caballo()}">Sangrías</a>--%>
+                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=sangriap&id_caballo=${caballo.getId_caballo()}">Sangrías de Prueba</a>--%>
+                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Caballo?accion=sangria&id_caballo=${caballo.getId_caballo()}">Sangrías</a>
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                                     <c:if test="${permiso == 1 || permiso == 50}">

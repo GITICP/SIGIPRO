@@ -28,6 +28,16 @@
                     </div>
                 </div>
             </div>
+            <label id="label-fecha" for="fecha" class="control-label">* Fecha de Ingreso</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="text" value="${helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha" class="form-control sigiproDatePicker" name="fecha" data-date-format="dd/mm/yyyy" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               onchange="setCustomValidity('')">
+                    </div>
+                </div>
+            </div>
             <label id="label-fecha-vencimiento" for="fechaVencimiento" class="control-label">* Fecha de Vencimiento</label>
             <div id="campo-fecha-vencimiento" class="form-group">
                 <div class="col-sm-12">
@@ -49,6 +59,14 @@
                                required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                oninput="setCustomValidity('')" ><p id="errorCantidad" class="error-form"></p>
+                    </div>
+                </div>
+            </div>
+            <label for="observaciones" class="control-label">Observaciones</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones" >${ingreso.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>

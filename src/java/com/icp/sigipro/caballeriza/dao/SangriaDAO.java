@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class SangriaDAO extends DAO
 {
+
     public SangriaDAO()
     {
     }
@@ -39,6 +40,7 @@ public class SangriaDAO extends DAO
         PreparedStatement consulta_sangria = null;
         PreparedStatement consulta_caballos = null;
         ResultSet rs_sangria = null;
+        CallableStatement actualizar_estadisticas = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -50,7 +52,7 @@ public class SangriaDAO extends DAO
 
             consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
             consulta_sangria.setInt(2, s.getSangrias_caballos().size());
-            
+
             if (s.getNum_inf_cc() == 0) {
                 consulta_sangria.setNull(3, java.sql.Types.INTEGER);
             }
@@ -63,7 +65,7 @@ public class SangriaDAO extends DAO
             else {
                 consulta_sangria.setFloat(4, s.getPotencia());
             }
-            if (s.getVolumen_plasma_total()== 0.0f) {
+            if (s.getVolumen_plasma_total() == 0.0f) {
                 consulta_sangria.setNull(5, java.sql.Types.FLOAT);
             }
             else {
@@ -79,7 +81,6 @@ public class SangriaDAO extends DAO
             else {
                 resultado_sangria = false;
             }
-            rs_sangria.close();
 
             consulta_caballos = getConexion().prepareStatement(
                     " INSERT INTO caballeriza.sangrias_caballos (id_sangria, id_caballo) "
@@ -106,12 +107,11 @@ public class SangriaDAO extends DAO
             if (iteracion_completa) {
                 resultado_caballos = true;
             }
-            
-            CallableStatement actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
-            
+
+            actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
+
             actualizar_estadisticas.setInt(1, s.getId_sangria());
             actualizar_estadisticas.execute();
-            actualizar_estadisticas.close();
 
         }
         catch (SQLException ex) {
@@ -126,21 +126,16 @@ public class SangriaDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (rs_sangria != null) {
-                    rs_sangria.close();
-                }
-                if (consulta_sangria != null) {
-                    consulta_sangria.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
-                cerrarConexion();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos");
             }
+            cerrarSilencioso(actualizar_estadisticas);
+            cerrarSilencioso(rs_sangria);
+            cerrarSilencioso(consulta_sangria);
+            cerrarSilencioso(consulta_caballos);
+            cerrarConexion();
         }
 
         return s;
@@ -152,7 +147,7 @@ public class SangriaDAO extends DAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario, fecha, gc.nombre as nombre_grupo "
+                    " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario, fecha, gc.nombre as nombre_grupo "
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
                     + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
@@ -235,17 +230,17 @@ public class SangriaDAO extends DAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario," +
-"                             s.potencia, fecha," +
-"                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, " +
-"                             CASE " +
-"                                  WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true " +
-"                                  ELSE false " +
-"                              END AS incluido " +
-"                      FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s " +
-"                      INNER JOIN seguridad.usuarios u ON u.id_usuario = s.responsable " +
-"                      INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos" +
-"                      INNER JOIN caballeriza.caballos c ON c.id_grupo_de_caballo = g.id_grupo_de_caballo; "
+                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre as nombre_grupo, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario,"
+                    + "                             s.potencia, fecha,"
+                    + "                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, "
+                    + "                             CASE "
+                    + "                                  WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true "
+                    + "                                  ELSE false "
+                    + "                              END AS incluido "
+                    + "                      FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
+                    + "                      INNER JOIN seguridad.usuarios u ON u.id_usuario = s.responsable "
+                    + "                      INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos"
+                    + "                      INNER JOIN caballeriza.caballos c ON c.id_grupo_de_caballo = g.id_grupo_de_caballo; "
             );
 
             consulta.setInt(1, id_sangria);
@@ -265,11 +260,11 @@ public class SangriaDAO extends DAO
                 u.setId_usuario(rs.getInt("id_usuario"));
                 sangria.setResponsable(u);
                 sangria.setVolumen_plasma_total(rs.getFloat("volumen_plasma_total"));
-                
+
                 GrupoDeCaballos g = new GrupoDeCaballos();
                 g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
-                g.setNombre(rs.getString("nombre"));
-                
+                g.setNombre(rs.getString("nombre_grupo"));
+
                 do {
                     Caballo caballo = new Caballo();
                     caballo.setId_caballo(rs.getInt("id_caballo"));
@@ -285,7 +280,7 @@ public class SangriaDAO extends DAO
                     }
                 }
                 while (rs.next());
-                
+
                 sangria.setGrupo(g);
             }
             else {
@@ -310,12 +305,11 @@ public class SangriaDAO extends DAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT s.*, u.nombre_completo, u.id_usuario, gc.nombre "
-                  + " FROM caballeriza.sangrias s "
-                  + " INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario"
-                  + " INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos;"
+                    + " FROM caballeriza.sangrias s "
+                    + " INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario"
+                    + " INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos;"
             );
             ResultSet rs = consulta.executeQuery();
-            SangriaPruebaDAO dao = new SangriaPruebaDAO();
             while (rs.next()) {
                 Sangria sangria = new Sangria();
                 sangria.setId_sangria(rs.getInt("id_sangria"));
@@ -339,9 +333,10 @@ public class SangriaDAO extends DAO
                 g.setNombre(rs.getString("nombre"));
                 sangria.setGrupo(g);
             }
+            rs.close();
             consulta.close();
             cerrarConexion();
-            rs.close();
+
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -362,6 +357,7 @@ public class SangriaDAO extends DAO
         PreparedStatement consulta_preparacion = null;
         PreparedStatement consulta_sangrias_caballos = null;
         PreparedStatement update_sangria = null;
+        CallableStatement actualizar_estadisticas = null;
 
         try {
             get_fecha = Sangria.class.getDeclaredMethod("getFecha_dia" + dia, (Class<?>[]) null);
@@ -435,12 +431,11 @@ public class SangriaDAO extends DAO
             if (update_sangria.executeUpdate() == 1) {
                 resultado_sangria = true;
             }
-            
-            CallableStatement actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
-            
+
+            actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
+
             actualizar_estadisticas.setInt(1, sangria.getId_sangria());
             actualizar_estadisticas.execute();
-            actualizar_estadisticas.close();
 
             resultado = resultado_sangrias_caballos && resultado_preparacion && resultado_sangria;
         }
@@ -458,21 +453,16 @@ public class SangriaDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if( consulta_preparacion != null ) {
-                    consulta_preparacion.close();
-                }
-                if( consulta_sangrias_caballos != null ) {
-                    consulta_sangrias_caballos.close();
-                }
-                if( update_sangria != null ) {
-                    update_sangria.close();
-                }
-                cerrarConexion();
             }
             catch (SQLException ex) {
                 ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
             }
+            cerrarSilencioso(actualizar_estadisticas);
+            cerrarSilencioso(consulta_preparacion);
+            cerrarSilencioso(consulta_sangrias_caballos);
+            cerrarSilencioso(update_sangria);
+            cerrarConexion();
         }
         return sangria;
     }
@@ -490,14 +480,14 @@ public class SangriaDAO extends DAO
         try {
             getConexion().setAutoCommit(false);
             boolean edicion_caballos = s.getSangrias_caballos() != null;
-            
+
             String consulta = " UPDATE caballeriza.sangrias"
-                    + " SET responsable = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? ";
+                              + " SET responsable = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? ";
             if (edicion_caballos) {
                 consulta += ", cantidad_de_caballos = ? ";
-            }           
+            }
             consulta += " WHERE id_sangria = ? RETURNING fecha_dia1;";
-            
+
             consulta_sangria = getConexion().prepareStatement(consulta);
 
             consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
@@ -514,7 +504,7 @@ public class SangriaDAO extends DAO
             else {
                 consulta_sangria.setFloat(3, s.getPotencia());
             }
-            if (s.getVolumen_plasma_total()== 0.0f) {
+            if (s.getVolumen_plasma_total() == 0.0f) {
                 consulta_sangria.setNull(4, java.sql.Types.FLOAT);
             }
             else {
@@ -523,11 +513,11 @@ public class SangriaDAO extends DAO
             if (edicion_caballos) {
                 consulta_sangria.setInt(5, s.getSangrias_caballos().size());
                 consulta_sangria.setInt(6, s.getId_sangria());
-            } else {
+            }
+            else {
                 consulta_sangria.setInt(5, s.getId_sangria());
             }
-            
-            
+
             rs_sangria = consulta_sangria.executeQuery();
 
             boolean realizar_insercion_caballos;
@@ -550,14 +540,14 @@ public class SangriaDAO extends DAO
             rs_sangria.close();
 
             if (realizar_insercion_caballos) {
-                
+
                 eliminar_caballos = getConexion().prepareStatement(
                         " DELETE FROM caballeriza.sangrias_caballos WHERE id_sangria = ?; "
                 );
-                
+
                 eliminar_caballos.setInt(1, s.getId_sangria());
                 eliminar_caballos.executeUpdate();
-                
+
                 consulta_caballos = getConexion().prepareStatement(
                         " INSERT INTO caballeriza.sangrias_caballos (id_sangria, id_caballo) "
                         + " VALUES (?,?); "
@@ -583,7 +573,8 @@ public class SangriaDAO extends DAO
                 if (iteracion_completa) {
                     resultado_caballos = true;
                 }
-            } else {
+            }
+            else {
                 resultado_caballos = true;
             }
         }
@@ -599,24 +590,16 @@ public class SangriaDAO extends DAO
                 else {
                     getConexion().rollback();
                 }
-                if (rs_sangria != null) {
-                    rs_sangria.close();
-                }
-                if (consulta_sangria != null) {
-                    consulta_sangria.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
-                if (eliminar_caballos != null) {
-                    eliminar_caballos.close();
-                }
-                cerrarConexion();
             }
             catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos");
             }
+            cerrarSilencioso(rs_sangria);
+            cerrarSilencioso(consulta_sangria);
+            cerrarSilencioso(consulta_caballos);
+            cerrarSilencioso(eliminar_caballos);
+            cerrarConexion();
         }
         return s;
     }

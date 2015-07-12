@@ -17,23 +17,18 @@
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
             <div class="row">
-                <div class="col-md-8 ">
+                <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangría</a>
+                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getId_sangria()}">Sangría ${sangria.getId_sangria_especial()}</a>
                         </li>
-                        <li class="active"> Agregar Extracción</li>
+                        <li class="active"> ${(editar == true) ? "Editar" : "Registrar"} Extracción</li>
 
                     </ul>
-                </div>
-                <div class="col-md-4 ">
-                    <div class="top-content">
-
-                    </div>
                 </div>
             </div>
 
@@ -43,7 +38,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-tint"></i> Agregar Extracción del día ${dia} para la sangría ${sangria.getId_sangria_especial()}</h3>
+                            <h3><i class="fa fa-tint"></i> ${(editar == true) ? "Editar" : "Registrar"} Extracción del día ${dia} para la sangría ${sangria.getId_sangria_especial()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
