@@ -7,11 +7,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
 <form class="form-horizontal" autocomplete="off" method="post" action="Solicitud">
     <div class="row">
         <div class="col-md-12">
-            <input hidden="true" name="id_solicitud" value="${analisis.getId_analisis()}">
+            <input hidden="true"  name="id_solicitud" value="${analisis.getId_analisis()}">
             <input hidden="true" name="accion" value="${accion}">
             <c:forEach items="${tipomuestras}" var="tipomuestra">
                 <input hidden="true" id="listaAnalisis_${tipomuestra.getId_tipo_muestra()}" value='${tipomuestra.parseListaAnalisis()}'>
@@ -24,7 +23,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Identificador de la Solicitud" class="form-control" name="numero_solicitud" value="${solicitud.getNumero_solicitud()}"
+                        <input type="text" maxlength="45" placeholder="Identificador de la Solicitud" class="form-control" name="numero_solicitud" value="${numero_solicitud}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido')"
                                oninput="setCustomValidity('')" > 
@@ -70,7 +69,7 @@
                     <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Análisis</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Solicitud</button>
                 </c:otherwise>
             </c:choose>    
         </div>

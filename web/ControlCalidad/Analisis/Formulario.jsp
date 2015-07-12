@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form class="form-horizontal" autocomplete="off" enctype='multipart/form-data' method="post" action="Analisis">
+<form class="form-horizontal" id="agregarAnalisis" autocomplete="off" enctype='multipart/form-data' method="post" action="Analisis">
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_analisis" value="${analisis.getId_analisis()}">
@@ -128,7 +128,7 @@
                     <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Análisis</button>
+                    <button type="button" class="btn btn-primary" onclick="agregarAnalisis()"><i class="fa fa-check-circle"></i> ${accion} Análisis</button>
                 </c:otherwise>
             </c:choose>    
         </div>

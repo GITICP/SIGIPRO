@@ -3,14 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+$(document).on("click", ".anular-Modal", function () {
+    var id_solicitud = $(this).data('id');
+    $("#id_solicitud_anular").val(id_solicitud);
+});
+
+$(document).on("click", ".recibir-Modal", function () {
+    var id_solicitud = $(this).data('id');
+    $("#id_solicitud_recibir").val(id_solicitud);
+});
+
 contador = 1;
+
+Array.prototype.remove = function (x) {
+    var i;
+    for (i in this) {
+        if (this[i].toString() === x.toString()) {
+            this.splice(i, 1)
+        }
+    }
+}
 
 function seleccionTipoMuestra(tipomuestra, id_formulario) {
     var id = $(tipomuestra).val();
     $("#seleccionAnalisis_" + id_formulario).empty();
     var listaAnalisis = $("#listaAnalisis_" + id).val();
     var parseLista = JSON.parse(listaAnalisis);
-    $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr1_' + id_formulario + '" label="Análisis Asociados"></optgroup>');
+    $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr1_' + id_formulario + '" label="An&aacute;lisis Asociados"></optgroup>');
     $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr2_' + id_formulario + '" label="Otros"></optgroup>');
     $.each(parseLista, function (index, value) {
         if (value[2] === "true") {
@@ -48,20 +68,20 @@ function agregarMuestra() {
     fila += "    </div>";
     fila += "</div>";
     fila += "</div>";
-    fila += "<div class=\"col-sm-3\">";
+    fila += "<div class=\"col-sm-2\">";
     fila += "<label for=\"nombre\" class=\"control-label\">*Identificadores</label>";
     fila += "<div class=\"form-group\">";
     fila += "<div class=\"col-sm-12\">";
     fila += "<div class=\"input-group\">";
-    fila += "            <input type=\"text\" placeholder=\"Separados, por, comas\" class=\"identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
-    fila += "          required";
+    fila += "            <input type=\"text\" placeholder=\"Separados, por, comas\" id=\"identificadores_" + contador + "\" class=\"identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
+    fila += "          required ";
     fila += "          oninvalid=\"setCustomValidity('Este campo es requerido')\"";
-    fila += "          oninput=\"setCustomValidity('')\" > ";
+    fila += "          oninput=\"setCustomValidity('')\" onfocus=\"eliminarBusqueda()\" > ";
     fila += "</div>";
     fila += "    </div>";
     fila += "</div>";
     fila += "</div>";
-    fila += "<div class=\"col-sm-3\">";
+    fila += "<div class=\"col-sm-2\">";
     fila += "<label for=\"fecha_ingreso\" class=\"control-label\">Fecha de Descarte</label>";
     fila += "<div class=\"form-group\">";
     fila += "    <div class=\"col-sm-12\">";
@@ -74,7 +94,7 @@ function agregarMuestra() {
     fila += "</div>";
     fila += "</div> ";
     fila += "<div class=\"col-sm-3\">";
-    fila += "    <label for=\"analisis\" class = \"control-label\" > *Análisis </label>";
+    fila += "    <label for=\"analisis\" class = \"control-label\" > *An&aacute;lisis </label>";
     fila += "<div class=\"form-group\">";
     fila += "        <div class=\"col-sm-12\">";
     fila += "   <div class=\"input-group\">";
@@ -88,17 +108,24 @@ function agregarMuestra() {
     fila += "        </div>";
     fila += "    </div>";
     fila += "</div>";
+    fila += "<div class=\"col-sm-2\"> <br>";
+    fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarMuestra(\'' + contador + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+    fila += "</div>";
     fila += "</div>";
 
     $(".muestras").append(fila);
     $(".analisis_" + contador).select2();
-    $(".identificadores_" + contador).select2({
-        minimumResultsForSearch: -1,
+    $("#identificadores_" + contador).select2({
+        minimumResultsForSearch:-1,
         tags: true,
         tokenSeparators: [',', ' ']
+    }).on("change", function (e) {
+        $(".select2-drop").hide();
+    }).on("select2-opening", function () {
+        $(".select2-drop").hide();
+    }).on("select2-open", function () {
+        $(".select2-drop").hide();
     });
-    
-    $(".identificadores_" + contador)
     
     $(".tipomuestra_" + contador).select2();
 
@@ -127,9 +154,22 @@ function agregarMuestra() {
     } else {
         $("#listaMuestras").val(muestras + ',' + contador);
     }
+
     contador++;
 }
 
+function eliminarBusqueda() {
+    alert("holi");
+}
+;
+
+function eliminarMuestra(id) {
+    var lista = $("#listaMuestras").val().split(",");
+    $("div > #" + id).remove();
+    lista.remove(id.toString());
+    lista = lista.join();
+    $("#listaMuestras").val(lista);
+}
 
 
 

@@ -72,8 +72,7 @@ import org.xml.sax.SAXException;
  * @author ld.conejo, boga
  */
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
-public class ControladorAnalisis extends SIGIPROServlet
-{
+public class ControladorAnalisis extends SIGIPROServlet {
 
     //Falta implementar
     private final int[] permisos = {1, 540};
@@ -87,9 +86,10 @@ public class ControladorAnalisis extends SIGIPROServlet
     private final ResultadoDAO resultadodao = new ResultadoDAO();
     private String ubicacion;
 
+    private int nombre_campo;
+    
     protected final Class clase = ControladorAnalisis.class;
-    protected final List<String> accionesGet = new ArrayList<String>()
-    {
+    protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
             add("ver");
@@ -100,8 +100,7 @@ public class ControladorAnalisis extends SIGIPROServlet
             add("realizar");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>()
-    {
+    protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregareditar");
             add("realizar");
@@ -174,22 +173,25 @@ public class ControladorAnalisis extends SIGIPROServlet
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         ControlXSLT xslt;
         Analisis analisis;
-        
+
         try {
             analisis = dao.obtenerAnalisis(id_analisis);
             xslt = controlxsltdao.obtenerControlXSLTVerFormulario();
-            
-            TransformerFactory tff = TransformerFactory.newInstance();
-            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
-            InputStream streamXML = analisis.getEstructura().getBinaryStream();
-            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
-            StreamSource stream_source = new StreamSource(streamXML);
-            StreamResult stream_result = new StreamResult(new StringWriter());
-            transformador.transform(stream_source, stream_result);
+            if (analisis.getEstructura() != null) {
+                TransformerFactory tff = TransformerFactory.newInstance();
+                InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+                InputStream streamXML = analisis.getEstructura().getBinaryStream();
+                Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+                StreamSource stream_source = new StreamSource(streamXML);
+                StreamResult stream_result = new StreamResult(new StringWriter());
+                transformador.transform(stream_source, stream_result);
 
-            String formulario = stream_result.getWriter().toString();
+                String formulario = stream_result.getWriter().toString();
 
-            request.setAttribute("cuerpo_datos", formulario);
+                request.setAttribute("cuerpo_datos", formulario);
+            }else{
+                request.setAttribute("cuerpo_datos", null);
+            }
             request.setAttribute("analisis", analisis);
             redireccionar(request, response, redireccion);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
@@ -278,17 +280,17 @@ public class ControladorAnalisis extends SIGIPROServlet
 
         redireccionar(request, response, redireccion);
     }
-    
+
     protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         String redireccion = "VerResultado.jsp";
-        
+
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
-        
+
         ControlXSLT xslt;
         Resultado resultado;
-        
+
         try {
             xslt = controlxsltdao.obtenerControlXSLTResultado();
             resultado = resultadodao.obtenerResultado(id_resultado);
@@ -410,19 +412,19 @@ public class ControladorAnalisis extends SIGIPROServlet
             resultado.setReactivos(reactivos_utilizados);
 
             resultadodao.insertarResultado(resultado);
-            
+
             request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
-            
+
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", "Ha ocurrido un error inesperado. Contacte al administrador del sistema.");
         }
-        
+
         List<Analisis> lista_analisis = dao.obtenerAnalisis();
         request.setAttribute("listaAnalisis", lista_analisis);
-        
+
         this.redireccionar(request, response, redireccion);
     }
 
@@ -577,105 +579,116 @@ public class ControladorAnalisis extends SIGIPROServlet
 
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
 
+        this.nombre_campo = 1;
+        
         String[] keys = orden.split(",");
         int contadorTablas = 0;
 
         HelperXML xml = new HelperXML();
 
         for (String i : keys) {
-            int key = Integer.parseInt(i);
-            Element campo = xml.agregarElemento("campo");
-            HashMap<String, String> hash = dictionary.get(key);
-            if (hash.get("tipo").equals("campo")) {
-                this.crearCampo(xml, hash, campo);
-            } else {
-                xml.agregarSubelemento("tipo", "table", campo);
-                if (hash.containsKey("tablavisible")) {
-                    xml.agregarSubelemento("visible", "True", campo);
+            if (!i.equals("")) {
+                int key = Integer.parseInt(i);
+                Element campo = xml.agregarElemento("campo");
+                HashMap<String, String> hash = dictionary.get(key);
+                if (hash.get("tipo").equals("campo")) {
+                    this.crearCampo(xml, hash, campo);
                 } else {
-                    xml.agregarSubelemento("visible", "False", campo);
-                }
-                Element columnas = xml.agregarElemento("columnas", campo);
-                Element filas = xml.agregarElemento("filas", campo);
-
-                List<String> tiposcolumnas = new ArrayList<String>();
-                //Columnas
-                Element primeraColumna = xml.agregarElemento("columna", columnas);
-                xml.agregarSubelemento("nombre", hash.get("nombrefilacolumna"), primeraColumna);
-                int cantidadColumnas = (int) columnasfilas.get(key).get("columnas") - 1;
-                for (int it = 0; it < cantidadColumnas; it++) {
-                    int col = it + 1;
-                    String keycol = "nombrecolumna_" + col;
-                    String valorCol = hash.get(keycol);
-                    String keytipo = "tipocampocolumna_" + col;
-                    String valorTipo = hash.get(keytipo);
-                    tiposcolumnas.add(valorTipo);
-                    Element columna = xml.agregarElemento("columna", columnas);
-                    xml.agregarSubelemento("nombre", valorCol, columna);
-                }
-                //------------
-                //Filas
-                String[] nombresfilas = "".split("");
-                if (hash.containsKey("connombre")) {
-                    nombresfilas = hash.get("nombresfilas").split(",");
-                }
-                int cantidadFilas = Integer.parseInt(hash.get("cantidadfilas"));
-                for (int it = 0; it < cantidadFilas; it++) {
-                    Element fila = xml.agregarElemento("fila", filas);
-                    Element celdas = xml.agregarElemento("celdas", fila);
-                    if (nombresfilas.length > 1) {
-                        Element celda = xml.agregarElemento("celda", celdas);
-                        Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
-                        xml.agregarSubelemento("nombre", nombresfilas[it], fila_nombre);
+                    xml.agregarSubelemento("tipo", "table", campo);
+                    if (hash.containsKey("tablavisible")) {
+                        xml.agregarSubelemento("visible", "True", campo);
                     } else {
-                        Element celda = xml.agregarElemento("celda", celdas);
-                        Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
-                        xml.agregarSubelemento("nombre", "", fila_nombre);
+                        xml.agregarSubelemento("visible", "False", campo);
                     }
-                    for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
-                        Element celda = xml.agregarElemento("celda", celdas);
-                        Element campo_fila = xml.agregarElemento("campo", celda);
-                        xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
-                        String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
-                        xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
-                        xml.agregarSubelemento("valor", "", campo_fila);
+                    String nombretabla = hash.get("nombretabla");
+                    
+                    xml.agregarSubelemento("nombre", nombretabla, campo);
+                    
+                    Element columnas = xml.agregarElemento("columnas", campo);
+                    Element filas = xml.agregarElemento("filas", campo);
+
+                    List<String> tiposcolumnas = new ArrayList<String>();
+                    //Columnas
+                    Element primeraColumna = xml.agregarElemento("columna", columnas);
+                    xml.agregarSubelemento("nombre", hash.get("nombrefilacolumna"), primeraColumna);
+                    int cantidadColumnas = (int) columnasfilas.get(key).get("columnas") - 1;
+                    for (int it = 0; it < cantidadColumnas; it++) {
+                        int col = it + 1;
+                        String keycol = "nombrecolumna_" + col;
+                        String valorCol = hash.get(keycol);
+                        String keytipo = "tipocampocolumna_" + col;
+                        String valorTipo = hash.get(keytipo);
+                        tiposcolumnas.add(valorTipo);
+                        Element columna = xml.agregarElemento("columna", columnas);
+                        xml.agregarSubelemento("nombre", valorCol, columna);
                     }
+                    //------------
+                    //Filas
+                    String[] nombresfilas = "".split("");
+                    if (hash.containsKey("connombre")) {
+                        nombresfilas = hash.get("nombresfilas").split(",");
+                    }
+                    int cantidadFilas = Integer.parseInt(hash.get("cantidadfilas"));
+                    for (int it = 0; it < cantidadFilas; it++) {
+                        Element fila = xml.agregarElemento("fila", filas);
+                        Element celdas = xml.agregarElemento("celdas", fila);
+                        if (nombresfilas.length > 1) {
+                            Element celda = xml.agregarElemento("celda", celdas);
+                            Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
+                            xml.agregarSubelemento("nombre", nombresfilas[it], fila_nombre);
+                        } else {
+                            Element celda = xml.agregarElemento("celda", celdas);
+                            Element fila_nombre = xml.agregarElemento("celda-nombre", celda);
+                            xml.agregarSubelemento("nombre", "", fila_nombre);
+                        }
+                        for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
+                            Element celda = xml.agregarElemento("celda", celdas);
+                            Element campo_fila = xml.agregarElemento("campo", celda);
+                            xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
+                            String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
+                            xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                            xml.agregarSubelemento("valor", "", campo_fila);
+                        }
+                    }
+                    //Filas especiales
+                    int cantidadFilasEspeciales = (int) columnasfilas.get(key).get("filas") - 1;
+                    for (int it = 0; it < cantidadFilasEspeciales; it++) {
+                        int fil = it + 1;
+                        String keycol = "nombrefilaespecial_" + fil;
+                        String valorFil = hash.get(keycol);
+                        String keytipo = "tipocampofilaespecial_" + fil;
+                        String valorTipo = hash.get(keytipo);
+                        Element fila = xml.agregarElemento("fila", filas);
+                        Attr tipo = xml.definirAtributo("tipo", "especial");
+                        Attr funcion = xml.definirAtributo("funcion", valorTipo);
+                        xml.agregarAtributo(fila, tipo);
+                        xml.agregarAtributo(fila, funcion);
+                        Element celdas = xml.agregarElemento("celdas", fila);
+                        Element celda_primera = xml.agregarElemento("celda", celdas);
+                        Element celda_nombre = xml.agregarElemento("celda-nombre", celda_primera);
+                        xml.agregarSubelemento("nombre", valorFil, celda_nombre);
+                        for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
+                            Element celda = xml.agregarElemento("celda", celdas);
+                            Element campo_fila = xml.agregarElemento("campo", celda);
+                            xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
+                            String nombre_celda = "Tabla_" + contadorTablas + "_" + valorTipo + "_" + jt;
+                            xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                            xml.agregarSubelemento("valor", "", campo_fila);
+                        }
+                    }
+                    //------------
+                    contadorTablas++;
                 }
-                //Filas especiales
-                int cantidadFilasEspeciales = (int) columnasfilas.get(key).get("filas") - 1;
-                for (int it = 0; it < cantidadFilasEspeciales; it++) {
-                    int fil = it + 1;
-                    String keycol = "nombrefilaespecial_" + fil;
-                    String valorFil = hash.get(keycol);
-                    String keytipo = "tipocampofilaespecial_" + fil;
-                    String valorTipo = hash.get(keytipo);
-                    Element fila = xml.agregarElemento("fila", filas);
-                    Attr tipo = xml.definirAtributo("tipo", "especial");
-                    Attr funcion = xml.definirAtributo("funcion", valorTipo);
-                    xml.agregarAtributo(fila, tipo);
-                    xml.agregarAtributo(fila, funcion);
-                    Element celdas = xml.agregarElemento("celdas", fila);
-                    Element celda_primera = xml.agregarElemento("celda", celdas);
-                    Element celda_nombre = xml.agregarElemento("celda-nombre", celda_primera);
-                    xml.agregarSubelemento("nombre", valorFil, celda_nombre);
-                    for (int jt = 0; jt < tiposcolumnas.size(); jt++) {
-                        Element celda = xml.agregarElemento("celda", celdas);
-                        Element campo_fila = xml.agregarElemento("campo", celda);
-                        xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
-                        String nombre_celda = "Tabla_" + contadorTablas + "_" + valorTipo + "_" + jt;
-                        xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
-                        xml.agregarSubelemento("valor", "", campo_fila);
-                    }
-                }
-                //------------
-                contadorTablas++;
             }
         }
+
         return xml.imprimirXML();
     }
 
     private void crearCampo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre"), campo);
+        System.out.println( hash.get("nombre")+"_"+this.nombre_campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre")+"_"+this.nombre_campo, campo);
+        this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
         if (hash.containsKey("manual")) {
