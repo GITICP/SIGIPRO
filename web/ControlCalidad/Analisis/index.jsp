@@ -52,6 +52,7 @@
                   <tr>
                     <th>Nombre</th>
                     <th>Análisis Pendientes</th>
+                    <th>Acción</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -66,6 +67,7 @@
                         </a>
                       </td>
                       <td>${analisis.getCantidad_pendiente()}</td>
+                      <td><a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=agregar">Realizar</a></td>
                     </tr>
                   </c:forEach>
                 </tbody>
