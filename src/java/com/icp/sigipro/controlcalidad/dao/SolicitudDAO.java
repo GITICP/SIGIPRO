@@ -10,6 +10,7 @@ import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.ControlSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Grupo;
 import com.icp.sigipro.controlcalidad.modelos.Muestra;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.core.DAO;
@@ -311,9 +312,31 @@ public class SolicitudDAO extends DAO
                 
                 cs.agregarCombinacion(ags.getAnalisis(), tm, m);
             }
-
+            
             resultado.setAnalisis_solicitud(lista_grupos_analisis_solicitud);
             resultado.setControl_solicitud(cs);
+            
+            consulta = getConexion().prepareStatement(
+                  " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado FROM control_calidad.analisis_grupo_solicitud ags "
+                + " LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
+                + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
+                + " ORDER BY ags.id_analisis_grupo_solicitud; "
+            );
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                int id_resultado = rs.getInt("id_resultado");
+                if (id_resultado != 0) {
+                    Resultado r = new Resultado();
+                    r.setId_resultado(rs.getInt("id_resultado"));
+                    AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
+                    ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
+                    r.setAgs(ags_iter);
+                    resultado.agregarResultadoAnalisisGrupoSolicitud(r);
+                }
+            }          
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -416,5 +439,16 @@ public class SolicitudDAO extends DAO
         }
         
         return resultado;
+    }
+    
+    private String pasarIdsAGSAParentesis(List<AnalisisGrupoSolicitud> lista_ags) {
+        
+        String resultado = "(";
+        
+        for (AnalisisGrupoSolicitud ags : lista_ags) {
+            resultado = resultado + String.valueOf(ags.getId_analisis_grupo_solicitud()) + ",";
+        }
+        
+        return resultado.substring(0, resultado.length() - 1) + ")";
     }
 }

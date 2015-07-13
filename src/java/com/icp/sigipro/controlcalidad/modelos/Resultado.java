@@ -27,6 +27,7 @@ public class Resultado
     private String datos_string;
     private Date fecha;
     private Usuario usuario;
+    private int repeticion;
 
     private List<Reactivo> reactivos_resultado;
     private List<Equipo> equipos_resultado;
@@ -65,6 +66,14 @@ public class Resultado
 
     public void setDatos_string(String datos_string) {
         this.datos_string = datos_string;
+    }
+
+    public int getRepeticion() {
+        return repeticion;
+    }
+
+    public void setRepeticion(int repeticion) {
+        this.repeticion = repeticion;
     }
 
     public List<Reactivo> getReactivos_resultado() {

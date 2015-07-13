@@ -118,9 +118,7 @@
                                         <!-- Columnas -->
                                         <thead> 
                                             <tr>
-                                                <th>Grupo</th>
-                                                <th>Tipo de Muestras</th>
-                                                <th>Identificadores de Muestras</th>
+                                                <th>Identificadores de Muestras (Tipo)</th>
                                                 <th>Análisis Solicitado</th>
                                                 <th>Acción</th>
                                             </tr>
@@ -129,21 +127,32 @@
                                             <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
                                                 <tr id='${ags.getId_analisis_grupo_solicitud()}'>
                                                     <td>
-                                                        ${ags.getGrupo().getId_grupo()}
-                                                    </td>
-                                                    <td>
-                                                        ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
-                                                    </td>
-                                                    <td>
                                                         <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
-                                                            ${muestra.getIdentificador()} <br>
+                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
                                                         </c:forEach>
                                                     </td>
                                                     <td>
                                                         ${ags.getAnalisis().getNombre()}
                                                     </td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                        <c:choose>
+                                                            <c:when test="${ags.getResultados() == null}">
+                                                                <a class="btn btn-primary btn-sm boton-accion" 
+                                                                    href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                    Realizar
+                                                                </a>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <a class="btn btn-primary btn-sm boton-accion" 
+                                                                    href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                    Repetir
+                                                                </a>
+                                                                <a class="btn btn-primary btn-sm boton-accion" 
+                                                                    href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
+                                                                    Ver Resultados (${ags.getResultados().size()})
+                                                                </a>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

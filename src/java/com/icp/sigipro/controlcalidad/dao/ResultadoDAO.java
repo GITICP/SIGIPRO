@@ -14,6 +14,7 @@ import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -257,6 +258,54 @@ public class ResultadoDAO extends DAO
         }
         
         return resultado;
+    }
+
+    public List<Resultado> obtenerResultadosAGS(int id_ags) throws SIGIPROException {
+        
+        List<Resultado> lista_resultados = new ArrayList<Resultado>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            consulta = getConexion().prepareStatement(
+                  " SELECT r.id_resultado, r.fecha, r.repeticion, u.id_usuario, u.nombre_completo "
+                + " FROM control_calidad.resultados r "
+                + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
+                + " WHERE r.id_analisis_grupo_solicitud = ? "
+                + " ORDER BY repeticion ASC"
+            );
+            
+            consulta.setInt(1, id_ags);
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Resultado r = new Resultado();
+                
+                r.setId_resultado(rs.getInt("id_resultado"));
+                r.setFecha(rs.getDate("fecha"));
+                r.setRepeticion(rs.getInt("repeticion"));
+                
+                Usuario u = new Usuario();
+                u.setId_usuario(rs.getInt("id_usuario"));
+                u.setNombreCompleto(rs.getString("nombre_completo"));
+                
+                r.setUsuario(u);
+                
+                lista_resultados.add(r);
+            }
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("<Mensaje>");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return lista_resultados;
     }
 
 }

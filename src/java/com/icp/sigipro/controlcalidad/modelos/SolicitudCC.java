@@ -130,6 +130,16 @@ public class SolicitudCC {
         
         return lista_muestras;
     }
+    
+    public void agregarResultadoAnalisisGrupoSolicitud (Resultado r) {
+        for (AnalisisGrupoSolicitud ags : this.analisis_solicitud) {
+            if (r.getAgs().getId_analisis_grupo_solicitud() == ags.getId_analisis_grupo_solicitud()) {
+                r.setAgs(ags);
+                ags.agregarResultado(r);
+                break;
+            }
+        }
+    }
 
     public String parseJSON() {
         Class _class = this.getClass();

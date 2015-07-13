@@ -55,6 +55,7 @@ public class ControladorResultado extends SIGIPROServlet
     {
         {
             add("ver");
+            add("vermultiple");
             add("verprueba");
             add("archivo");
         }
@@ -167,6 +168,28 @@ public class ControladorResultado extends SIGIPROServlet
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
         }
 
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getVermultiple(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(540, listaPermisos);
+        String redireccion = "Resultado/VerMultiple.jsp";
+        
+        int id_ags = Integer.parseInt(request.getParameter("id_ags"));
+        String id_solicitud = request.getParameter("id_solicitud");
+        String numero_solicitud = request.getParameter("numero_solicitud");
+        request.setAttribute("id_solicitud", id_solicitud);
+        request.setAttribute("numero_solicitud", numero_solicitud);
+        
+        try {
+            List<Resultado> resultados = resultadodao.obtenerResultadosAGS(id_ags);
+            
+            request.setAttribute("resultados", resultados);
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", sig_ex.getMessage());
+        }
+        
         redireccionar(request, response, redireccion);
     }
 
