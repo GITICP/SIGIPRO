@@ -10,18 +10,22 @@ import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
+import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperExcel;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.File;
@@ -72,7 +76,8 @@ import org.xml.sax.SAXException;
  * @author ld.conejo, boga
  */
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
-public class ControladorAnalisis extends SIGIPROServlet {
+public class ControladorAnalisis extends SIGIPROServlet
+{
 
     //Falta implementar
     private final int[] permisos = {1, 540};
@@ -84,12 +89,14 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final EquipoDAO equipodao = new EquipoDAO();
     private final ReactivoDAO reactivodao = new ReactivoDAO();
     private final ResultadoDAO resultadodao = new ResultadoDAO();
+    private final SolicitudDAO solicituddao = new SolicitudDAO();
     private String ubicacion;
 
     private int nombre_campo;
-    
+
     protected final Class clase = ControladorAnalisis.class;
-    protected final List<String> accionesGet = new ArrayList<String>() {
+    protected final List<String> accionesGet = new ArrayList<String>()
+    {
         {
             add("index");
             add("ver");
@@ -100,7 +107,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
             add("realizar");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>() {
+    protected final List<String> accionesPost = new ArrayList<String>()
+    {
         {
             add("agregareditar");
             add("realizar");
@@ -189,7 +197,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 String formulario = stream_result.getWriter().toString();
 
                 request.setAttribute("cuerpo_datos", formulario);
-            }else{
+            } else {
                 request.setAttribute("cuerpo_datos", null);
             }
             request.setAttribute("analisis", analisis);
@@ -248,6 +256,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         request.setAttribute("id_analisis", id_analisis);
+        request.setAttribute("id_ags", request.getParameter("id_ags"));
 
         ControlXSLT xslt;
         Analisis analisis;
@@ -356,8 +365,21 @@ public class ControladorAnalisis extends SIGIPROServlet {
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
+        int id_ags = Integer.parseInt(this.obtenerParametro("id_ags"));
+
         Analisis analisis = dao.obtenerAnalisis(id_analisis);
+
         Resultado resultado = new Resultado();
+        AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+        ags.setId_analisis_grupo_solicitud(id_ags);
+        resultado.setAgs(ags);
+
+        Usuario u = new Usuario();
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        u.setIdUsuario(id_usuario);
+
+        resultado.setUsuario(u);
+
         String redireccion = "Analisis/index.jsp";
 
         String[] equipos_utilizados = this.obtenerParametros("equipos");
@@ -413,6 +435,17 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
             resultadodao.insertarResultado(resultado);
 
+            redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
+
+            try {
+                SolicitudCC s = solicituddao.obtenerSolicitud(resultado.getAgs().getGrupo().getSolicitud().getId_solicitud());
+                request.setAttribute("solicitud", s);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
+            }
+            
             request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
 
         } catch (SIGIPROException sig_ex) {
@@ -421,9 +454,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
             ex.printStackTrace();
             request.setAttribute("mensaje", "Ha ocurrido un error inesperado. Contacte al administrador del sistema.");
         }
-
-        List<Analisis> lista_analisis = dao.obtenerAnalisis();
-        request.setAttribute("listaAnalisis", lista_analisis);
 
         this.redireccionar(request, response, redireccion);
     }
@@ -580,7 +610,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
 
         this.nombre_campo = 1;
-        
+
         String[] keys = orden.split(",");
         int contadorTablas = 0;
 
@@ -601,9 +631,9 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         xml.agregarSubelemento("visible", "False", campo);
                     }
                     String nombretabla = hash.get("nombretabla");
-                    
+
                     xml.agregarSubelemento("nombre", nombretabla, campo);
-                    
+
                     Element columnas = xml.agregarElemento("columnas", campo);
                     Element filas = xml.agregarElemento("filas", campo);
 
@@ -686,8 +716,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     private void crearCampo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        System.out.println( hash.get("nombre")+"_"+this.nombre_campo);
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre")+"_"+this.nombre_campo, campo);
+        System.out.println(hash.get("nombre") + "_" + this.nombre_campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);

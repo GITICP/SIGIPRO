@@ -99,6 +99,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Solicitud/Ver.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        
         try {
             SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);

@@ -6,13 +6,14 @@
 package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
+import com.icp.sigipro.controlcalidad.modelos.Grupo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,9 +27,6 @@ import java.util.List;
  */
 public class ResultadoDAO extends DAO
 {
-
-    HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
-
     public ResultadoDAO()
     {
     }
@@ -40,6 +38,9 @@ public class ResultadoDAO extends DAO
         ResultSet rs_insert_resultado = null;
         PreparedStatement insert_reactivos = null;
         PreparedStatement insert_equipos = null;
+        
+        PreparedStatement consulta_solicitud = null;
+        ResultSet rs_solicitud = null;
 
         try {
 
@@ -55,9 +56,9 @@ public class ResultadoDAO extends DAO
 
             insert_resultado.setString(1, resultado.getPath());
             insert_resultado.setSQLXML(2, datos);
-            insert_resultado.setInt(3, 1);
+            insert_resultado.setInt(3, resultado.getUsuario().getId_usuario());
             insert_resultado.setDate(4, helper_fechas.getFecha_hoy());
-            insert_resultado.setInt(5, 1);
+            insert_resultado.setInt(5, resultado.getAgs().getId_analisis_grupo_solicitud());
 
             rs_insert_resultado = insert_resultado.executeQuery();
             
@@ -93,12 +94,30 @@ public class ResultadoDAO extends DAO
                 insert_equipos.executeBatch();
             }
             
+            consulta_solicitud = getConexion().prepareStatement(
+                  " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
+                + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+            );
+            
+            consulta_solicitud.setInt(1, resultado.getAgs().getId_analisis_grupo_solicitud());
+            
+            rs_solicitud = consulta_solicitud.executeQuery();
+            
+            if (rs_solicitud.next()) {
+                Grupo g = new Grupo();
+                SolicitudCC s = new SolicitudCC();
+                s.setId_solicitud(rs_solicitud.getInt("id_solicitud"));
+                g.setSolicitud(s);
+                resultado.getAgs().setGrupo(g);
+                resultado.getAgs().getGrupo().setSolicitud(s);
+            }
+            
             commit = true;
-
         }
         catch (SQLException ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("<Mensaje>");
+            throw new SIGIPROException("Error al ingresar el resultado. Inténtelo nuevamente.");
         }
         finally {
             try {
