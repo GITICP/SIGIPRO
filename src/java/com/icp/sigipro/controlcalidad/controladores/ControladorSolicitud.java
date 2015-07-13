@@ -61,6 +61,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("recibir");
+            add("anular");
             add("agregargrupo");
         }
     };
@@ -111,6 +112,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
         try {
             SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
+            request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
+            request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
+            request.setAttribute("booleditar", this.verificarEditarSolicitud(request));
             
         } catch (Exception ex) {
             ex.printStackTrace();

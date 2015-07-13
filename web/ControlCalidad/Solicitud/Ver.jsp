@@ -142,7 +142,9 @@
                                                         ${ags.getAnalisis().getNombre()}
                                                     </td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                        <c:if test="${solicitud.getEstado().equals('Recibido')}">
+                                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                        </c:if>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -164,6 +166,50 @@
         <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
+
+
+<t:modal idModal="modal-agregar-grupo" titulo="Agregar Grupo">
+
+    <jsp:attribute name="form">
+
+        <form name="form-agregar-agrupaciones" id="form-agregar-agrupaciones" class="form-horizontal" action="Solicitud" method="post">
+
+            <input hidden="true" name="accion" value="agregargrupo" />
+            <input hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
+
+            <label for="ids-muestras" class="control-label">Seleccione el tipo de muestra</label>
+            <select id="seleccion-tipo-muestra" class="select2" style="background-color: #fff" name="ids_analisis" required
+                    oninvalid="setCustomValidity('El campo de tipo de muestra es requerido.')">
+                <option></option>
+                <c:forEach items="${solicitud.getControl_solicitud().getAnalisis_tipo_muestras()}" var="atm">
+                    <option value="${atm.getAnalisisAsString()}" data-tipo="${atm.getTipo_muestra().getId_tipo_muestra()}">${atm.getTipo_muestra().getNombre()}</option>                       
+                </c:forEach>
+            </select>
+
+            <br/><br/>
+
+            <label for="ids-muestras" class="control-label">Seleccione las muestras</label>
+            <select id="seleccion-muestras" class="select2" style="background-color: #fff" name="ids_muestras" multiple="multiple" required disabled
+                    oninvalid="setCustomValidity('El campo de muestras es requerido.')">
+                <c:forEach items="${solicitud.obtenerMuestras()}" var="muestra">
+                    <option class="opcion-escondida" value="${muestra.getId_muestra()}" data-tipo="${muestra.getTipo_muestra().getId_tipo_muestra()}" hidden>${muestra.getIdentificador()}</option>
+                </c:forEach>                
+            </select>
+
+            <br/>
+
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button id="btn-agregarRol" type="submit" class="btn btn-primary" onclick="agregarProductoInterno()"><i class="fa fa-check-circle"></i> Crear Agrupación</button>
+                </div>
+            </div>
+
+        </form>
+
+    </jsp:attribute>
+
+</t:modal>
 
 <t:modal idModal="modalAnularSolicitud" titulo="Anular Solicitud">
     <jsp:attribute name="form">
