@@ -285,7 +285,7 @@ public class SolicitudDAO extends DAO {
 
             consulta.setInt(1, id_solicitud);
             rs = consulta.executeQuery();
-            
+
             List<AnalisisGrupoSolicitud> lista_grupos_analisis_solicitud = new ArrayList<AnalisisGrupoSolicitud>();
             ControlSolicitud cs = new ControlSolicitud();
 
@@ -295,7 +295,7 @@ public class SolicitudDAO extends DAO {
             while (rs.next()) {
                 //Pregunta si el ags es nuevo o si es el mismo del while pasado
                 id_ags = rs.getInt("id_analisis_grupo_solicitud");
-                
+
                 if (id_ags != ags.getId_analisis_grupo_solicitud()) {
                     ags = new AnalisisGrupoSolicitud();
                     ags.setId_analisis_grupo_solicitud(id_ags);
@@ -339,6 +339,50 @@ public class SolicitudDAO extends DAO {
             cerrarConexion();
         }
         return resultado;
+    }
+
+    public List<List<String>> obtenerSolicitudEditar(int id_solicitud) {
+        List<List<String>> resultado = new ArrayList<List<String>>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement("SELECT tm.id_tipo_muestra, string_agg(CAST (m.identificador as text), ', ') AS identificador, string_agg(DISTINCT CAST ( m.fecha_descarte_estimada as text), ', ') as fecha_descarte, string_agg(DISTINCT CAST ( a.id_analisis as text), ', ') as id_analisis "
+                    + "FROM control_calidad.analisis_grupo_solicitud as ags "
+                    + "LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
+                    + "LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
+                    + "WHERE g.id_solicitud = ? "
+                    + "GROUP BY tm.id_tipo_muestra; ");
+            consulta.setInt(1, id_solicitud);
+            rs = consulta.executeQuery();
+            int contador = 1;
+            while (rs.next()) {
+                List<String> filaSolicitud = new ArrayList<String>();
+                filaSolicitud.add(contador + "");
+                filaSolicitud.add(rs.getString("id_tipo_muestra"));
+                filaSolicitud.add(rs.getString("identificador"));
+                Muestra m = new Muestra();
+                m.setFecha_descarte_estimada(rs.getDate("fecha_descarte"));
+                if (m.getFecha_descarte_estimada() != null) {
+                    filaSolicitud.add(m.getFecha_descarte_estimadaAsString());
+                }else{
+                    filaSolicitud.add("");
+                }
+                filaSolicitud.add(rs.getString("id_analisis"));
+                resultado.add(filaSolicitud);
+                contador++;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+
     }
 
     public boolean anularSolicitud(int id_solicitud, String observaciones) {

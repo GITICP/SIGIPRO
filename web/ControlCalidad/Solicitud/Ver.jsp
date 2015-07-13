@@ -31,6 +31,8 @@
             <div class="content">
                 <div class="main-content">
                     <!-- COLUMN FILTER DATA TABLE -->
+                    <input hidden="true" id="listaIds" value="${listaIds}">
+
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> ${solicitud.getNumero_solicitud()} </h3>

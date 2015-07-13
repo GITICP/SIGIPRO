@@ -108,19 +108,19 @@ public class ControladorSolicitud extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Solicitud/Ver.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-        
+
         try {
             SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
             request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
             request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
             request.setAttribute("booleditar", this.verificarEditarSolicitud(request));
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
         }
-        
+
         redireccionar(request, response, redireccion);
     }
 
@@ -131,8 +131,27 @@ public class ControladorSolicitud extends SIGIPROServlet {
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         SolicitudCC solicitud = dao.obtenerSolicitud(id_solicitud);
         request.setAttribute("solicitud", solicitud);
-        List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestra();
+
+        List<List<String>> listaSolicitud = dao.obtenerSolicitudEditar(id_solicitud);
+        //Lista los ids de las muestras ya solicitadas
+        String ids = "";
+        for (List<String> s : listaSolicitud) {
+            ids += s.get(0);
+            ids += ",";
+        }
+        if (!ids.equals("")) {
+            ids = ids.substring(0, ids.length() - 1);
+        }
+
+        request.setAttribute("listaSolicitud", listaSolicitud);
+        request.setAttribute("listaIds", ids);
+        
+
+        List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
         request.setAttribute("tipomuestras", tipomuestras);
+
+        request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(tipomuestras));
+        request.setAttribute("numero_solicitud", solicitud.getNumero_solicitud());
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -264,21 +283,21 @@ public class ControladorSolicitud extends SIGIPROServlet {
             this.getEditar(request, response);
         }
     }
-    
+
     protected void postAgregargrupo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         String redireccion = "Solicitud/Ver.jsp";
-        
+
         Grupo grupo = construirGrupo(request);
-        
+
         try {
             dao.insertarGrupoConAnalisis(grupo);
-            
+
             request.setAttribute("mensaje", helper.mensajeDeExito("Agrupación creada con éxito."));
-        } catch(SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
-        
+
         try {
             SolicitudCC s = dao.obtenerSolicitud(grupo.getSolicitud().getId_solicitud());
             request.setAttribute("solicitud", s);
@@ -286,8 +305,8 @@ public class ControladorSolicitud extends SIGIPROServlet {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
         }
-        
-        redireccionar(request, response, redireccion);        
+
+        redireccionar(request, response, redireccion);
     }
   // </editor-fold>
 
@@ -350,38 +369,38 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         return s;
     }
-    
+
     private Grupo construirGrupo(HttpServletRequest request) {
-        
+
         Grupo grupo = new Grupo();
-        
+
         SolicitudCC solicitud = new SolicitudCC();
         solicitud.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
-        
+
         grupo.setSolicitud(solicitud);
-        
+
         List<Muestra> muestras = new ArrayList<Muestra>();
         String[] ids_muestras = request.getParameterValues("ids_muestras");
-        
-        for(String id_muestra : ids_muestras) {
+
+        for (String id_muestra : ids_muestras) {
             Muestra m = new Muestra();
             m.setId_muestra(Integer.parseInt(id_muestra));
             muestras.add(m);
         }
-        
+
         grupo.setGrupos_muestras(muestras);
-        
+
         List<Analisis> analisis = new ArrayList<Analisis>();
         String[] ids_analisis = request.getParameter("ids_analisis").split(",");
-        
-        for(String id_analisis : ids_analisis) {
+
+        for (String id_analisis : ids_analisis) {
             Analisis a = new Analisis();
             a.setId_analisis(Integer.parseInt(id_analisis));
             analisis.add(a);
         }
-        
+
         grupo.setAnalisis(analisis);
-        
+
         return grupo;
     }
 
@@ -394,7 +413,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(552, listaPermisos);
     }
-    
+
     private boolean verificarEditarSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(550, listaPermisos);
