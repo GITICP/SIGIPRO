@@ -401,6 +401,13 @@ function eliminarCampo(campo) {
 
 
 
+/*
+ * 
+ * Definición de código para la función de realizar análisis
+ * 
+ * 
+ */
+
 $(document).ready(function () {
     
     $(".select2-tags").select2({

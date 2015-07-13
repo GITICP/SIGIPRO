@@ -43,6 +43,7 @@
                             <form method="post" class="form-horizontal" action="Analisis" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="realizar" name="accion" />
                                 <input type="hidden" value="${id_analisis}" name="id_analisis" />
+                                <input type="hidden" value="${id_ags}" name="id_ags" />
 
                                 <div class="row">
                                     <c:if test="${!reactivos.isEmpty()}">

@@ -17,7 +17,7 @@ CREATE TABLE serpentario.serpientes(
     id_serpiente serial NOT NULL,
     id_especie integer NOT NULL,
     fecha_ingreso date NOT NULL,
-    localidad_origen character varying (45) NOT NULL,
+    localidad_origen character varying (200) NOT NULL,
     colectada character varying (45) NOT NULL,
     recibida character varying (45) NOT NULL,
     sexo character varying(10) NOT NULL,

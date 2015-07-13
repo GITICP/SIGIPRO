@@ -26,7 +26,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/EventoClinico?">Eventos Clínicos</a>
                         </li>
-                        <li class="active">Evento Clínico ${evento.getId_evento()}</li>
+                        <li class="active">Editar Evento Clínico ${evento.getId_evento()}</li>
 
                     </ul>
                 </div>
@@ -43,7 +43,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> Editar Evento Clínico </h3>
+                            <h3><i class="fa fa-book"></i> Editar Evento Clínico ${evento.getId_evento()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

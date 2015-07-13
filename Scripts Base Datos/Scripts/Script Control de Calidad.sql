@@ -126,6 +126,7 @@ CREATE TABLE control_calidad.resultados (
     datos xml  NOT NULL,
     id_usuario int NOT NULL,
     fecha date NOT NULL,
+    repeticion integer NOT NULL,
     CONSTRAINT resultados_pk PRIMARY KEY (id_resultado)
 );
 
@@ -465,6 +466,17 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdminCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
 
 
-
 -- End of file.
+
+/*
+ *  Trigger de las repeticiones de los análisis
+ */
+
+CREATE FUNCTION control_calidad.consecutivo_repeticiones_resultados() RETURNS TRIGGER as $numero_repeticion$
+
+    BEGIN
+        NEW.repeticion = (SELECT count(id_resultado) FROM control_calidad.resultados where id_analisis_grupo_solicitud = NEW.id_analisis_grupo_solicitud);
+        RETURN NEW;
+    END;
+$numero_repeticion$ LANGUAGE plpgsql;
 

@@ -79,9 +79,48 @@
                                         <!-- Columnas -->
                                         <thead> 
                                             <tr>
-                                                <th>Nombre del Análisis</th>
                                                 <th>Tipo de Muestras</th>
-                                                <th>Muestras</th>
+                                                <th>Cantidad de Muestras</th>
+                                                <th>Análisis Solicitado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${solicitud.getControl_solicitud().getAnalisis_tipo_muestras()}" var="atm">
+                                                <tr>
+                                                    <td>
+                                                        ${atm.getTipo_muestra().getNombre()}
+                                                    </td>
+                                                    <td>
+                                                        ${atm.getCantidad_muestras()}
+                                                    </td>
+                                                    <td>
+                                                        <c:forEach items="${atm.getAnalisis()}" var="analisis">
+                                                            ${analisis.getNombre()} <br>
+                                                        </c:forEach>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="widget widget-table">
+                                <div class="widget-header">
+                                    <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
+                                    <div class="btn-group widget-header-toolbar">                                    
+                                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
+                                    </div>
+                                </div>
+
+                                <div class="widget-content">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                        <!-- Columnas -->
+                                        <thead> 
+                                            <tr>
+                                                <th>Grupo</th>
+                                                <th>Tipo de Muestras</th>
+                                                <th>Identificadores de Muestras</th>
+                                                <th>Análisis Solicitado</th>
                                                 <th>Acción</th>
                                             </tr>
                                         </thead>
@@ -89,7 +128,7 @@
                                             <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
                                                 <tr id='${ags.getId_analisis_grupo_solicitud()}'>
                                                     <td>
-                                                        ${ags.getAnalisis().getNombre()}
+                                                        ${ags.getGrupo().getId_grupo()}
                                                     </td>
                                                     <td>
                                                         ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
@@ -100,19 +139,13 @@
                                                         </c:forEach>
                                                     </td>
                                                     <td>
-                                                        <c:if test="${solicitud.getEstado().equals('Recibido')}">
-                                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=realizar&id_solicitud=${solicitud.getId_solicitud()}">Realizar</a>
-
-                                                        </c:if>
-
+                                                        ${ags.getAnalisis().getNombre()}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
                                                     </td>
                                                 </tr>
-
-
-
                                             </c:forEach>
-
-
                                         </tbody>
                                     </table>
                                 </div>

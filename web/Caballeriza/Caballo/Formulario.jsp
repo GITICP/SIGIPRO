@@ -28,7 +28,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input type="number" placeholder="Número de Caballo" class="form-control" name="numero_caballo" value=${(caballo.getNumero()!=0) ? caballo.getNumero() : ""} required
-                               oninvalid="setCustomValidity('Este campo es requerido ')" ${(caballo.getNumero()!=0) ? "disabled" : ""}
+                               oninvalid="setCustomValidity('Este campo es requerido ')" ${(caballo.getNumero()!=0 && accion=='Editar') ? "disabled" : ""}
                                oninput="setCustomValidity('')"> 
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" placeholder="Ej: Negro" class="form-control" name="color"
+                        <input type="text" placeholder="Ej: Negro" class="form-control" name="color" value="${caballo.getColor()}"
                                oninput="setCustomValidity('')"> 
                     </div>
                 </div>
@@ -191,14 +191,16 @@
                                             <div class="col-sm-12">
                                                 <div class="input-group">                
                                                     <input class='clearable' type="file" id="imagen${imagen.getId_imagen()}" name="${imagen.getId_imagen()}" accept="image/*" 
-                                                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                                           oninvalid="setCustomValidity('El tamaño debe ser de 300KB o menos. ')" 
                                                            onchange="previstaImagen(this, ${imagen.getId_imagen()})" /> <button type="button" id='botonCancelar${imagen.getId_imagen()}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${imagen.getId_imagen()})"> Borrar</button>
                                                     <div><img name='imagenSubida' id="imagenSubida${imagen.getId_imagen()}" src='' height="100" alt=""></div>
 
                                                 </div>
                                             </div>
                                         </div>
-                                        Imagen Actual: <img src="${imagen.getImagen_ver()}" height="50">
+                                                    <label id="labelImagen${imagen.getId_imagen()}"> Imagen Actual: </label>
+                                                    <img id="imagenActual${imagen.getId_imagen()}" src="${imagen.getImagen_ver()}" height="50">
+                                        <button type="button" id='botonBorrar${imagen.getId_imagen()}' class="btn btn-danger" onclick="borrarImagen(${imagen.getId_imagen()})"> Borrar</button>
                                     </div>
                                 </div>
                             </c:forEach>
@@ -210,7 +212,7 @@
                                             <div class="col-sm-12">
                                                 <div class="input-group">                
                                                     <input class='clearable' type="file" id="imagen${numero}" name="imagen" accept="image/*" 
-                                                           oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                                           oninvalid="setCustomValidity('El tamaño debe ser de 300KB o menos. ')" 
                                                            onchange="previstaImagen(this, ${numero})" /> <button type="button" id='botonCancelar${numero}' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(${numero})"> Borrar</button>
                                                     <div><img name='imagenSubida' id="imagenSubida${numero}" src='' height="100" alt=""></div>
 

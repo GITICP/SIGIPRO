@@ -145,7 +145,7 @@ function agregarMuestra() {
     var parseLista = JSON.parse(listaTipoMuestra);
     $("#seleccionTipo_" + contador).append('<optgroup id="seleccionmuestras_' + contador + '" label="Tipos de Muestra"></optgroup>');
     $.each(parseLista, function (index, value) {
-        $("#seleccionmuestras_" + contador).append("<option value=" + value[0] + ">" + value[1] + "</option>")
+        $("#seleccionmuestras_" + contador).append("<option value=" + value[0] + ">" + value[1] + "</option>");
     });
 
     var muestras = $("#listaMuestras").val();
@@ -170,3 +170,34 @@ function eliminarMuestra(id) {
     lista = lista.join();
     $("#listaMuestras").val(lista);
 }
+
+
+
+/*
+ * 
+ * Código para la funcionalidad de ver solicitud
+ * 
+ */
+
+$(document).ready(function(){
+    
+    $("#seleccion-tipo-muestra").change(function(){
+        
+        var select_muestras = $("#seleccion-muestras");
+        select_muestras.attr("disabled", false);
+        var id_tipo_muestra_seleccionada = $(this).find("option:selected").data("tipo");
+        
+        select_muestras.find("option").each(function(){
+            $(this).attr("selected", false);
+            var id_tipo_muestra_opcion = $(this).data("tipo");
+            if (id_tipo_muestra_opcion=== id_tipo_muestra_seleccionada) {
+                $(this).removeClass("opcion-escondida");
+            } else {
+                $(this).addClass("opcion-escondida");
+            }
+        });
+        
+        select_muestras.select2();
+    });
+    
+});

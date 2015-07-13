@@ -1,3 +1,5 @@
+/* global tIngresos, tEgresos, tVer */
+
 // Variables globales de tablas
 tIngresos = null;
 tEgresos = null;
@@ -10,7 +12,6 @@ T_VER_SELECTOR = "#ver-sub-bodegas";
 SELECCION_INGRESOS = "#seleccion-usuario-ingreso";
 SELECCION_EGRESOS = "#seleccion-usuario-egreso";
 SELECCION_VER = "#seleccion-usuario-ver";
-
 
 MODAL_INGRESOS = "#modalAgregarUsuarioIngresos";
 MODAL_EGRESOS = "#modalAgregarUsuarioEgresos";

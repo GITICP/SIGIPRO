@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -53,6 +54,10 @@ public class AnalisisGrupoSolicitud {
 
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
+    }
+    
+    public List<Muestra> obtenerMuestras() {
+        return this.grupo.getGrupos_muestras();
     }
 
     public String parseJSON() {

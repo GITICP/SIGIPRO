@@ -23,7 +23,7 @@
           <ul class="breadcrumb">
             <li>Caballeriza</li>
             <li> 
-              <a href="/SIGIPRO/Caballeriza/EventoClinico?">Evento Clínico</a>
+              <a href="/SIGIPRO/Caballeriza/EventoClinico?">Eventos Clínicos</a>
             </li>
             <li class="active"> Agregar Evento Clínico</li>
 
