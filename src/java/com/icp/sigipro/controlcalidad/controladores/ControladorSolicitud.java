@@ -24,6 +24,7 @@ import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +60,6 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("index");
             add("ver");
             add("agregar");
-            add("anular");
             add("editar");
         }
     };
@@ -68,6 +68,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("recibir");
+            add("anular");
         }
     };
 
@@ -81,9 +82,17 @@ public class ControladorSolicitud extends SIGIPROServlet {
         SolicitudCC s = new SolicitudCC();
         request.setAttribute("solicitud", s);
 
+        int id = dao.obtenerProximoId();
+
+        Date fechaActual = new Date();
+        DateFormat formatoFecha = new SimpleDateFormat("yyyy");
+
+        String numero_solicitud = id + "-" + formatoFecha.format(fechaActual);
+
         List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
         request.setAttribute("tipomuestras", tipomuestras);
         request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(tipomuestras));
+        request.setAttribute("numero_solicitud", numero_solicitud);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
 
@@ -108,6 +117,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
         try {
             SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
+            request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
+            request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
+            request.setAttribute("booleditar", this.verificarEditarSolicitud(request));
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -129,13 +141,16 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
     }
 
-    protected void getAnular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    protected void postAnular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(552, listaPermisos);
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_anular"));
+        String observaciones = request.getParameter("observaciones");
         boolean resultado = false;
         try {
-            resultado = dao.anularSolicitud(id_solicitud);
+            resultado = dao.anularSolicitud(id_solicitud, observaciones);
             if (resultado) {
                 //Funcion que genera la bitacora 
                 bitacora.setBitacora(id_solicitud, Bitacora.ACCION_ANULAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
@@ -152,9 +167,54 @@ public class ControladorSolicitud extends SIGIPROServlet {
         }
 
     }
-    // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    protected void postRecibir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resultado = false;
+        String redireccion = "SolicitudVeneno/index.jsp";
+        String usuario = request.getParameter("usuario_recibo");
+        String contrasenna = request.getParameter("passw");
+
+        boolean autenticacion = usuariodao.autorizarRecibo(usuario, contrasenna);
+
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_recibir"));
+
+        if (autenticacion) {
+            try {
+                SolicitudCC solicitud = new SolicitudCC();
+
+                solicitud.setId_solicitud(id_solicitud);
+                Usuario usuario_recibido = usuariodao.obtenerUsuario(usuario);
+                solicitud.setUsuario_recibido(usuario_recibido);
+
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+                java.sql.Date fecha_recibido = new java.sql.Date(new Date().getTime());
+                solicitud.setFecha_recibido(fecha_recibido);
+
+                resultado = dao.recibirSolicitud(solicitud);
+
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_RECIBIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud recibida correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser recibida por un error del sistema."));
+                }
+                this.getIndex(request, response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser recibida por un error del sistema."));
+                this.getIndex(request, response);
+
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("El usuario o contraseña son incorrectos."));
+            this.getIndex(request, response);
+        }
+
+    }
+
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         boolean resultado = false;
         SolicitudCC s = construirObjeto(request);
@@ -165,7 +225,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
         resultado = dao.entregarSolicitud(s);
         if (resultado) {
             for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
-                
+
                 ags.getGrupo().setSolicitud(s);
                 dao.insertarMuestrasGrupo(ags.getGrupo());
                 bitacora.setBitacora(ags.getGrupo().parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO, request.getRemoteAddr());
@@ -277,6 +337,11 @@ public class ControladorSolicitud extends SIGIPROServlet {
     private boolean verificarRealizarSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(552, listaPermisos);
+    }
+    
+    private boolean verificarEditarSolicitud(HttpServletRequest request) throws AuthenticationException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        return verificarPermiso(550, listaPermisos);
     }
 
     public List<String> parseListaTipoMuestra(List<TipoMuestra> tipomuestra) {

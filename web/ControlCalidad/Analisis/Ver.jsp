@@ -42,7 +42,7 @@
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEliminar}">
-                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el equipo" data-href="/SIGIPRO/ControlCalidad/Equipo?accion=eliminar&id_equipo=${equipo.getId_equipo()}">Eliminar</a>
+                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el equipo" data-href="/SIGIPRO/ControlCalidad/Analisis?accion=eliminar&id_analisis=${analisis.getId_analisis()}">Eliminar</a>
                                 </c:if>
 
                                 <c:set var="contienePermisoEditar" value="false" />
@@ -52,7 +52,7 @@
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Equipo?accion=editar&id_equipo=${equipo.getId_equipo()}">Editar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=editar&id_analisis=${analisis.getId_analisis()}">Editar</a>
                                 </c:if>
                                 <c:set var="contienePermisoEliminarCertificado" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">

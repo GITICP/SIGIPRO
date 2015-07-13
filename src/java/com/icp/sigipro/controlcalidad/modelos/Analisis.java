@@ -46,6 +46,31 @@ public class Analisis
         return isTipoMuestra;
     }
 
+    public String getListaTiposReactivo(){
+        String respuesta = "";
+        for (TipoReactivo tr : tipos_reactivos_analisis){
+            respuesta += tr.getId_tipo_reactivo();
+            respuesta+= ",";
+            
+        }
+        respuesta = respuesta.substring(0, respuesta.length()-1); 
+        
+        return respuesta;
+    }
+    
+    public String getListaTiposEquipo(){
+        String respuesta = "";
+        for (TipoEquipo tr : tipos_equipos_analisis){
+            respuesta += tr.getId_tipo_equipo();
+            respuesta+= ",";
+            
+        }
+        respuesta = respuesta.substring(0, respuesta.length()-1); 
+        
+        return respuesta;
+    }
+    
+    
     public void setIsTipoMuestra(boolean isTipoMuestra) {
         this.isTipoMuestra = isTipoMuestra;
     }

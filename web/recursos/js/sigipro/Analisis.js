@@ -156,6 +156,7 @@ function agregarColumna(id) {
     $(".columnas_" + id).append(fila);
 
     $("#tipocampocolumna_" + id + "_" + columnas).select2();
+    alert("#tipocampocolumna_" + id + "_" + columnas);
 
     columnas++;
 
@@ -322,7 +323,7 @@ function agregarTabla() {
         minimumResultsForSearch: -1,
         tags: true,
         tokenSeparators: [',', ' ']
-    })
+    });
 
     contador++;
 }
@@ -387,8 +388,10 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
+    alert (nombres);
     if (nombres[0] === "campo" || nombres[0] === "tabla") {
         alert (o);
+        alert(nombres[1].toString());
         o.remove(nombres[1].toString());
         o = o.join();
         alert (o);
@@ -399,6 +402,26 @@ function eliminarCampo(campo) {
 
 
 $(document).ready(function () {
+    
+    $(".select2-tags").select2({
+        minimumResultsForSearch: -1,
+        tags: true,
+        tokenSeparators: [',', ' ']
+    });
+    
+    var tiposequipo = $("#listaTiposEquipo").val();
+    var tiposreactivo = $("#listaTiposReactivo").val();
+    
+    
+    $("#seleccionTipoReactivo").select2("val",tiposreactivo.split(","));
+    $("#seleccionTipoEquipo").select2("val",tiposequipo.split(","));
+    
+    var orden = $("#orden").val();
+    
+    var lista = orden.split(",");
+    var len = lista.length;
+    
+    contador = len +1;
 
     $(".fila-especial").each(function () {
         new FilaEspecial($(this));
