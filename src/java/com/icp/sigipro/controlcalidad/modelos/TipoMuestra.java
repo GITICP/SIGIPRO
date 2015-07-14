@@ -19,6 +19,7 @@ public class TipoMuestra {
     private int id_tipo_muestra;
     private String nombre;
     private String descripcion;
+    private int dias_descarte;
 
     private List<Analisis> tipos_muestras_analisis;
 
@@ -63,6 +64,14 @@ public class TipoMuestra {
                 this.descripcion = descripcion;
             }
         }
+    }
+
+    public int getDias_descarte() {
+        return dias_descarte;
+    }
+
+    public void setDias_descarte(int dias_descarte) {
+        this.dias_descarte = dias_descarte;
     }
 
     public String parseJSON() {

@@ -30,12 +30,13 @@ public class TipoMuestraDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.tipos_muestras (nombre, descripcion) "
-                    + " VALUES (?,?) RETURNING id_tipo_muestra; "
+                    " INSERT INTO control_calidad.tipos_muestras (nombre, descripcion, dias_descarte) "
+                    + " VALUES (?,?,?) RETURNING id_tipo_muestra; "
             );
 
             consulta.setString(1, m.getNombre());
             consulta.setString(2, m.getDescripcion());
+            consulta.setInt(3, m.getDias_descarte());
 
             rs = consulta.executeQuery();
 
@@ -74,6 +75,7 @@ public class TipoMuestraDAO extends DAO {
                 m.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
                 m.setNombre(rs.getString("nombre"));
                 m.setDescripcion(rs.getString("descripcion"));
+                m.setDias_descarte(rs.getInt("dias_descarte"));
 
                 resultado.add(m);
             }
@@ -107,6 +109,7 @@ public class TipoMuestraDAO extends DAO {
                 m.setId_tipo_muestra(res.getInt("id_tipo_muestra"));
                 m.setNombre(res.getString("nombre"));
                 m.setDescripcion(res.getString("descripcion"));
+                m.setDias_descarte(res.getInt("dias_descarte"));
                 resultado.add(m);
             }
 
@@ -181,13 +184,14 @@ public class TipoMuestraDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " UPDATE control_calidad.tipos_muestras"
-                    + " SET nombre = ?, descripcion = ?"
+                    + " SET nombre = ?, descripcion = ?, set dias_descarte = ?"
                     + " WHERE id_tipo_muestra = ?;"
             );
 
             consulta.setString(1, m.getNombre());
             consulta.setString(2, m.getDescripcion());
-            consulta.setInt(3, m.getId_tipo_muestra());
+            consulta.setInt(3, m.getDias_descarte());
+            consulta.setInt(4, m.getId_tipo_muestra());
 
             resultado = consulta.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -209,7 +213,7 @@ public class TipoMuestraDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                      " SELECT tm.id_tipo_muestra, tm.nombre, tm.descripcion, a.id_analisis, a.nombre as nombreanalisis "
+                      " SELECT tm.id_tipo_muestra, tm.nombre, tm.descripcion, tm.dias_descarte, a.id_analisis, a.nombre as nombreanalisis "
                     + " FROM control_calidad.tipos_muestras as tm LEFT OUTER JOIN control_calidad.tipos_muestras_analisis as tma ON tma.id_tipo_muestra = tm.id_tipo_muestra "
                     + " LEFT JOIN control_calidad.analisis as a ON a.id_analisis = tma.id_analisis "
                     + " WHERE tm.id_tipo_muestra = ?"
@@ -224,6 +228,7 @@ public class TipoMuestraDAO extends DAO {
                     resultado.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
                     resultado.setNombre(rs.getString("nombre"));
                     resultado.setDescripcion(rs.getString("descripcion"));
+                    resultado.setDias_descarte(rs.getInt("dias_descarte"));
                 }
                 Analisis analisis = new Analisis();
                 analisis.setId_analisis(rs.getInt("id_analisis"));

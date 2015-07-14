@@ -93,6 +93,7 @@ CREATE TABLE control_calidad.tipos_muestras (
     id_tipo_muestra serial NOT NULL,
     nombre varchar(50) NOT NULL,
     descripcion varchar(500) NOT NULL,
+    dias_descarte integer NULL,
     CONSTRAINT tipos_muestras_pk PRIMARY KEY (id_tipo_muestra)
 );
 

@@ -25,6 +25,18 @@
                     </div>
                 </div>
             </div>
+
+            <label for="dias_descarte" class="control-label">* Descarte Habitual (días)</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="number" maxlength="50" placeholder="Cantidad de días de descarte después de recibida la muestra" class="form-control" name="dias_descarte" value="${tipo_muestra.getDias_descarte()}"
+                               required
+                               oninvalid="setCustomValidity('Este campo es requerido')"
+                               oninput="setCustomValidity('')" > 
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <label for="descripcion" class="control-label">Descripción</label>
