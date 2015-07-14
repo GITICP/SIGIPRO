@@ -7,10 +7,12 @@ package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
+import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +91,32 @@ public class AnalisisDAO extends DAO {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+        finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean insertarTipoMuestra(List<TipoMuestra> tipos_muestras_analisis, int id_analisis) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_muestras_analisis (id_analisis,id_tipo_muestra) "
+                    + " VALUES (?,?);");
+
+            for (TipoMuestra tipo : tipos_muestras_analisis) {
+                consulta.setInt(1, id_analisis);
+                consulta.setInt(2, tipo.getId_tipo_muestra());
+                consulta.addBatch();
+            }
+            consulta.executeBatch();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            SQLException ex2 = ex.getNextException();
+            ex2.printStackTrace();
         }
         finally {
             cerrarSilencioso(consulta);

@@ -48,7 +48,7 @@
                                 <div class="row">
                                     <c:if test="${!reactivos.isEmpty()}">
                                         <div class="col-md-6">
-                                            <label for="especie" class="control-label"> *Reactivos Utilizados</label>
+                                            <label for="reactivos" class="control-label"> *Reactivos Utilizados</label>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="input-group">
@@ -58,12 +58,23 @@
                                                                 onchange="setCustomValidity('')">
                                                             <option value=''></option>
                                                             <c:forEach items="${reactivos}" var="reactivo">
-                                                                <option value=${reactivo.getId_reactivo()}>${reactivo.getNombre()}</option>
+                                                                <option value=${reactivo.getId_reactivo()}>
+                                                                    ${reactivo.getNombre()}
+                                                                </option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <label for="preparacion-reactivos" class="control-label" hidden="true">Preparación Reactivo</label>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div id="espacio-preparacion-reactivos" class="input-group">
+                                                        <div></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </c:if>
                                     <c:if test="${!reactivos.isEmpty()}">
@@ -114,7 +125,11 @@
                                     </div>
                                 </c:if>
 
-                                ${cuerpo_formulario}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        ${cuerpo_formulario}
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div class="modal-footer">

@@ -1,39 +1,69 @@
-<table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-    <thead>
-        <tr>
-            <th>Nombre de Campo</th><th>Tipo</th><th>Visible para Usuarios</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>N&uacute;mero 1</td><td>N&uacute;mero</td><td>S&iacute;</td>
-        </tr>
-        <tr>
-            <td>Excel 1</td><td>Excel (A27)</td><td>S&iacute;</td>
-        </tr>
-        <tr>
-            <td>Texto 1</td><td>Texto</td><td>No</td>
-        </tr>
-        <tr>
-            <td>Texto 2</td><td>Texto</td><td>No</td>
-        </tr>
-        <tr>
-            <td>N&uacute;mero 2</td><td>N&uacute;mero</td><td>No</td>
-        </tr>
-        <tr>
-            <td>&Aacute;rea 1</td><td>&Aacute;rea de Texto</td><td>No</td>
-        </tr>
-        <tr>
-            <td>Fecha de Ingreso</td><td>Fecha</td><td>No</td>
-        </tr>
-    </tbody>
-</table><br><div class="widget widget-table">
+
+<div class="col-md-12">
+    <label for="numero1" class="control-label">N&uacute;mero 1</label>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="number" name="numero1" class="form-control" value="">
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="A27" name="excel_1">
+<div class="col-md-12">
+    <label for="texto1" class="control-label">Texto 1</label>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="text" name="texto1" class="form-control" value="">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <label for="texto2" class="control-label">Texto 2</label>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="text" name="texto2" class="form-control" value="">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <label for="numero2" class="control-label">N&uacute;mero 2</label>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="number" name="numero2" class="form-control" value="">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <label for="area1" class="control-label">&Aacute;rea 1</label>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <textarea rows="5" cols="50" maxlength="500" class="form-control" name="area1" valor=""></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <label for="fecha1" class="control-label">Fecha de Ingreso</label>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="text" class="form-control sigiproDatePicker" name="fecha1" data-date-format="dd/mm/yyyy" value="">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="widget widget-table">
     <div class="widget-header">
         <h3>
             <i class="fa fa-table"></i>Nombre Tabla</h3>
-    </div>
-    <div class="btn-group widget-header-toolbar">
-        <h5>No visible</h5>
     </div>
     <div class="widget-content">
         <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
@@ -43,39 +73,65 @@
                     <th>Columna nombres</th>
                     <th>Columna 1</th>
                     <th>Columna 2</th>
-                    <th>Columna 3</th>
+
 
                 </tr>
             </thead>
             <tbody>
 
                 <tr>
-                    <td>Nombre 1</td><td>N&uacute;mero</td><td>Texto</td><td>Texto</td>
+                    <td>
+                        Nombre 1
+                    </td><td>
+                        <input type="number" name="Tabla_1_Celda_1_1" class="form-control" value="">
+                    </td><td>
+                        <input type="text" name="Tabla_1_Celda_1_2" class="form-control" value="">
+                    </td>
                 </tr>
 
                 <tr>
-                    <td>Nombre 2</td><td>N&uacute;mero</td><td>Texto</td><td>Texto</td>
+                    <td>
+                        Nombre 2
+                    </td><td>
+                        <input type="number" name="Tabla_1_Celda_2_1" class="form-control" value="">
+                    </td><td>
+                        <input type="text" name="Tabla_1_Celda_2_2" class="form-control" value="">
+                    </td>
                 </tr>
 
-                <tr>
-                    <td>Total</td><td>Sumatoria</td><td>Sumatoria</td><td>Sumatoria</td>
+                <tr class="fila-especial" data-funcion="sumatoria">
+                    <td class="especial-fila">
+                        Total
+                    </td><td class="especial-fila">
+                        <input type="number" name="Tabla_1_Sumatoria_1" class="form-control" value="">
+                    </td><td class="especial-fila">
+                        <input type="text" name="Tabla_1_Sumatoria_2" class="form-control" value="">
+                    </td><td class="especial-fila">
+                        <input type="hidden" value="A30" name="Tabla_1_Excel_Sumatoria_3">
+                    </td>
                 </tr>
 
-                <tr>
-                    <td>Promedio</td><td>Promedio</td><td>Promedio</td><td>Promedio</td>
+                <tr class="fila-especial" data-funcion="promedio">
+                    <td class="especial-fila">
+                        Promedio
+                    </td><td class="especial-fila">
+                        <input type="number" name="Tabla_1_Promedio_1" class="form-control" value="">
+                    </td><td class="especial-fila">
+                        <input type="text" name="Tabla_1_Promedio_2" class="form-control" value="">
+                    </td><td class="especial-fila">
+                        <input type="hidden" value="A29" name="Tabla_1_Excel_Promedio_3">
+                    </td>
                 </tr>
 
             </tbody>
         </table>
     </div>
-</div><div class="widget widget-table">
+</div>
+<div class="widget widget-table">
     <div class="widget-header">
         <h3>
             <i class="fa fa-table"></i>
         </h3>
-    </div>
-    <div class="btn-group widget-header-toolbar">
-        <h5>Visible</h5>
     </div>
     <div class="widget-content">
         <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
@@ -92,19 +148,51 @@
             <tbody>
 
                 <tr>
-                    <td>N&uacute;mero</td><td>Texto</td><td>N&uacute;mero</td><td>N&uacute;mero</td>
+                    <td>
+                        <input type="number" name="Tabla_2_Celda_1_1" class="form-control" value="">
+                    </td><td>
+                        <input type="text" name="Tabla_2_Celda_1_2" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_1_3" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_1_4" class="form-control" value="">
+                    </td>
                 </tr>
 
                 <tr>
-                    <td>N&uacute;mero</td><td>Texto</td><td>N&uacute;mero</td><td>N&uacute;mero</td>
+                    <td>
+                        <input type="number" name="Tabla_2_Celda_2_1" class="form-control" value="">
+                    </td><td>
+                        <input type="text" name="Tabla_2_Celda_2_2" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_2_3" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_2_4" class="form-control" value="">
+                    </td>
                 </tr>
 
                 <tr>
-                    <td>N&uacute;mero</td><td>Texto</td><td>N&uacute;mero</td><td>N&uacute;mero</td>
+                    <td>
+                        <input type="number" name="Tabla_2_Celda_3_1" class="form-control" value="">
+                    </td><td>
+                        <input type="text" name="Tabla_2_Celda_3_2" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_3_3" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_3_4" class="form-control" value="">
+                    </td>
                 </tr>
 
                 <tr>
-                    <td>N&uacute;mero</td><td>Texto</td><td>N&uacute;mero</td><td>N&uacute;mero</td>
+                    <td>
+                        <input type="number" name="Tabla_2_Celda_4_1" class="form-control" value="">
+                    </td><td>
+                        <input type="text" name="Tabla_2_Celda_4_2" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_4_3" class="form-control" value="">
+                    </td><td>
+                        <input type="number" name="Tabla_2_Celda_4_4" class="form-control" value="">
+                    </td>
                 </tr>
 
             </tbody>

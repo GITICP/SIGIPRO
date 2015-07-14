@@ -410,9 +410,28 @@ $(document).ready(function () {
     $(".fila-especial").each(function () {
         new FilaEspecial($(this));
     });
+    
+    $("#seleccion-reactivos").change(function() {
+        var espacio_reactivos = $("#espacio-preparacion-reactivos");
+        
+        espacio_reactivos.children().each(function(){
+            $(this).remove();
+            $("label[for=preparacion-reactivos]").hide();
+        });
+        
+        $(this).find("option:selected").each(function() {
+            var enlace = "/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=" + $(this).val();
+            var objeto_enlace = $("<a href=\"" + enlace + "\">");
+            var quiebre = $("<br>");
+            objeto_enlace.text("Descargar preparación de reactivo " + $(this).text());
+            
+            espacio_reactivos.append(objeto_enlace);
+            espacio_reactivos.append(quiebre);
+            espacio_reactivos.show();
+            $("label[for=preparacion-reactivos]").show();
+        });
+    });
 });
-
-
 
 
 /*

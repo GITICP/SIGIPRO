@@ -30,6 +30,7 @@ public class Analisis
 
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
+    private List<TipoMuestra> tipos_muestras_analisis;
     
     private boolean isTipoMuestra;
 
@@ -133,6 +134,14 @@ public class Analisis
     public void setTipos_reactivos_analisis(List<TipoReactivo> tipos_reactivos_analisis)
     {
         this.tipos_reactivos_analisis = tipos_reactivos_analisis;
+    }
+
+    public List<TipoMuestra> getTipos_muestras_analisis() {
+        return tipos_muestras_analisis;
+    }
+
+    public void setTipos_muestras_analisis(List<TipoMuestra> tipos_muestras_analisis) {
+        this.tipos_muestras_analisis = tipos_muestras_analisis;
     }
 
     

@@ -206,9 +206,11 @@
     
     <!-- Plantilla para las columnas de la tabla -->
     <xsl:template match="columna">
-        <th>
-            <xsl:value-of select="nombre" />
-        </th>
+        <xsl:if test="not(@tipo = 'Excel')">
+            <th>
+                <xsl:value-of select="nombre" />
+            </th>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="fila[@tipo = 'especial']">
@@ -226,9 +228,11 @@
     <xsl:template match="fila">
         <tr>
             <xsl:for-each select="celdas/celda">
-                <td>
-                    <xsl:apply-templates />
-                </td>                
+                <xsl:if test="not(campo/tipo = 'Excel')">
+                    <td>
+                        <xsl:apply-templates />
+                    </td>                
+                </xsl:if>
             </xsl:for-each>
         </tr>
     </xsl:template>
