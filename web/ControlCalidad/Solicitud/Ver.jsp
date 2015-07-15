@@ -136,25 +136,29 @@
                                                         ${ags.getAnalisis().getNombre()}
                                                     </td>
                                                     <td>
-                                                        <c:if test="${solicitud.getEstado().equals('Recibido')}">
-                                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
-                                                        </c:if>
                                                         <c:choose>
-                                                            <c:when test="${ags.getResultados() == null}">
-                                                                <a class="btn btn-primary btn-sm boton-accion" 
-                                                                    href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
-                                                                    Realizar
-                                                                </a>
+                                                            <c:when test="${solicitud.getEstado().equals('Recibido')}">
+                                                                <c:choose>
+                                                                    <c:when test="${ags.getResultados() == null}">
+                                                                        <a class="btn btn-primary btn-sm boton-accion" 
+                                                                           href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                            Realizar
+                                                                        </a>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <a class="btn btn-primary btn-sm boton-accion" 
+                                                                           href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                            Repetir
+                                                                        </a>
+                                                                        <a class="btn btn-primary btn-sm boton-accion" 
+                                                                           href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
+                                                                            Ver Resultados (${ags.getResultados().size()})
+                                                                        </a>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <a class="btn btn-primary btn-sm boton-accion" 
-                                                                    href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
-                                                                    Repetir
-                                                                </a>
-                                                                <a class="btn btn-primary btn-sm boton-accion" 
-                                                                    href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
-                                                                    Ver Resultados (${ags.getResultados().size()})
-                                                                </a>
+                                                                Solicitud aún no ha sido recibida.
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
