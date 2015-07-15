@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -220,17 +221,31 @@ public class ControladorAnalisis extends SIGIPROServlet
 
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(540, listaPermisos);
         String redireccion = "Analisis/Editar.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         Analisis a = dao.obtenerAnalisis(id_analisis);
+        
+        HelperXML xml = new HelperXML(a.getEstructura());
+        
+        HashMap<Integer,HashMap> dictionary = xml.getDictionary();
+        
+        System.out.println(dictionary.get(2).get("nombrefilas"));
+        
+        Set<Integer> it = dictionary.keySet();
+        List<Integer> lista = new ArrayList<Integer>();
+        lista.addAll(it);
+                
         List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
+        
         List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
         request.setAttribute("analisis", a);
-        request.setAttribute("tipoequipo", tipoequipo);
-        request.setAttribute("tiporeactivo", tiporeactivo);
+        request.setAttribute("tipoequipos", tipoequipo);
+        request.setAttribute("tiporeactivos", tiporeactivo);
+        request.setAttribute("lista", lista);
+        request.setAttribute("diccionario", dictionary);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -337,7 +352,7 @@ public class ControladorAnalisis extends SIGIPROServlet
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
 
         Analisis a = construirObjeto(parametros, request, ubicacion);
@@ -360,6 +375,12 @@ public class ControladorAnalisis extends SIGIPROServlet
         } else {
             resultado = dao.editarAnalisis(a);
             if (resultado) {
+                //Se vacian por si hubo cambios
+                dao.eliminarTiposEquiposAnalisis(a.getId_analisis());
+                dao.eliminarTiposReactivosAnalisis(a.getId_analisis());
+                //------------------------------
+                dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
+                dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
@@ -588,6 +609,7 @@ public class ControladorAnalisis extends SIGIPROServlet
 
             }
         }
+        System.out.println(dictionary);
         if (!dictionary.isEmpty()) {
             String xml = this.parseDictXML(dictionary, orden, columnasfilas);
             a.setEstructuraString(xml);
@@ -745,7 +767,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         } else {
             xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
         }
-        if (hash.containsKey("visible")) {
+        if (hash.containsKey("campovisible")) {
             xml.agregarSubelemento("visible", "True", campo);
         } else {
             xml.agregarSubelemento("visible", "False", campo);

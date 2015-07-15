@@ -1,6 +1,6 @@
 <%-- 
     Document   : Editar
-    Created on : Jul 5, 2015, 8:19:09 PM
+    Created on : Jul 13, 2015, 12:22:15 AM
     Author     : ld.conejo
 --%>
 
@@ -23,9 +23,9 @@
           <ul class="breadcrumb">
             <li>Control de Calidad</li>
             <li> 
-              <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
+              <a href="/SIGIPRO/ControlCalidad/Solicitud?">Solicitudes de Control de Calidad</a>
             </li>
-            <li class="active"> Editar Análisis </li>
+            <li class="active"> Editar Solicitud </li>
 
           </ul>
         </div>
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Editar Análisis ${analisis.getNombre()} </h3>
+              <h3><i class="fa fa-gears"></i> Editar Solicitud ${solicitud.getNumero_solicitud()} </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -55,7 +55,7 @@
 
   </jsp:attribute>
 <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/Analisis.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC.js"></script>   
     </jsp:attribute>
 </t:plantilla_general>
 

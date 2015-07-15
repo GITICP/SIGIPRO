@@ -67,11 +67,47 @@ public class AnalisisDAO extends DAO {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
 
+        return resultado;
+    }
+
+    public boolean eliminarTiposEquiposAnalisis(int id_analisis) {
+        PreparedStatement consulta = null;
+        boolean resultado = false;
+        try {
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_equipos_analisis WHERE id_analisis=?; ");
+            consulta.setInt(1, id_analisis);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean eliminarTiposReactivosAnalisis(int id_analisis) {
+        PreparedStatement consulta = null;
+        boolean resultado = false;
+        try {
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_reactivos_analisis WHERE id_analisis=?; ");
+            consulta.setInt(1, id_analisis);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return resultado;
     }
 
@@ -91,8 +127,7 @@ public class AnalisisDAO extends DAO {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
@@ -129,19 +164,24 @@ public class AnalisisDAO extends DAO {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
-            if (analisis.getMachote().equals("")) {
+            if (analisis.getMachote() == null) {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
                         + "SET nombre=?, estructura=? "
                         + "WHERE id_analisis = ?; ");
+                SQLXML xmlVal = getConexion().createSQLXML();
+                xmlVal.setString(analisis.getEstructuraString());
                 consulta.setString(1, analisis.getNombre());
-                consulta.setSQLXML(2, analisis.getEstructura());
+                consulta.setSQLXML(2, xmlVal);
                 consulta.setInt(3, analisis.getId_analisis());
+                System.out.println(consulta);
             } else {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
                         + "SET nombre=?, estructura=?, machote=? "
                         + "WHERE id_analisis = ?; ");
+                SQLXML xmlVal = getConexion().createSQLXML();
+                xmlVal.setString(analisis.getEstructuraString());
                 consulta.setString(1, analisis.getNombre());
-                consulta.setSQLXML(2, analisis.getEstructura());
+                consulta.setSQLXML(2, xmlVal);
                 consulta.setString(3, analisis.getMachote());
                 consulta.setInt(4, analisis.getId_analisis());
             }
@@ -150,7 +190,7 @@ public class AnalisisDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
@@ -181,8 +221,7 @@ public class AnalisisDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
@@ -210,8 +249,7 @@ public class AnalisisDAO extends DAO {
             resultado.setTipos_reactivos_analisis(this.obtenerTipoReactivos(id_analisis));
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
@@ -237,8 +275,7 @@ public class AnalisisDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
@@ -264,7 +301,7 @@ public class AnalisisDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
@@ -283,8 +320,7 @@ public class AnalisisDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

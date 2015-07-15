@@ -17,7 +17,7 @@
             </c:forEach>
             <input hidden="true" id="listaTipoMuestra" value='${tipomuestraparse}'>
             <input hidden="true" id="listaMuestras" name="listaMuestras" value="">
-
+            <input hidden="true" id="listaIds" value="${listaIds}">
 
             <label for="nombre" class="control-label">*Número de Solicitud</label>
             <div class="form-group">
@@ -42,6 +42,76 @@
                 </div>
                 <div class="widget-content">
                     <div class="muestras">
+                        <c:forEach items="${listaSolicitud}" var="muestra">
+                            <div id="${muestra.get(0)}" class="col-sm-12">
+                                <div class="col-sm-3">
+                                    <label for="tipo_muestra" class="control-label">*Tipo de Muestra</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input hidden="true" id="editartipomuestra_${muestra.get(0)}" value="${muestra.get(1)}">
+                                                <select id="seleccionTipo_${muestra.get(0)}" class="tipomuestra tipomuestra_${muestra.get(0)}" name="tipomuestra_${muestra.get(0)}"
+                                                        style='background-color: #fff;' required
+                                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                                        onchange="seleccionTipoMuestra(this,'${muestra.get(0)}')">
+                                                        <option value=''></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="nombre" class="control-label">*Identificadores</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="Separados, por, comas" id="identificadores_${muestra.get(0)}" class="identificadores_${muestra.get(0)}" name="identificadores_${muestra.get(0)}" value="${muestra.get(2)}"
+                                                       required 
+                                                       oninvalid="setCustomValidity('Este campo es requerido')"
+                                                       oninput="setCustomValidity('')" onfocus="eliminarBusqueda()" > 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="fecha_ingreso" class="control-label">Fecha de Descarte</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input type="text" id="datepicker_${muestra.get(0)}" class="form-control" name="fechadescarte_${muestra.get(0)}" value="${muestra.get(3)}"
+                                                       oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                                       onchange="setCustomValidity('')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label for="analisis" class = "control-label" > *An&aacute;lisis </label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input hidden="true" id="editaranalisis_${muestra.get(0)}" value="${muestra.get(4)}">
+                                                <select id="seleccionAnalisis_${muestra.get(0)}" class="analisis_${muestra.get(0)}" multiple="multiple" name="analisis_${muestra.get(0)}"
+                                                        style='background-color: #fff;' required
+                                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                                        onchange="setCustomValidity('')">
+                                                        <option value=''></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2"> <br>
+                                    <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarMuestra('${muestra.get(0)}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
+                                </div>
+                            </div>
+
+
+
+                        </c:forEach>
+
+
+
 
                     </div>
                     <div class="form-group">

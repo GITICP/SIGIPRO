@@ -141,6 +141,7 @@ CREATE TABLE control_calidad.solicitudes (
     fecha_solicitud date NOT NULL,
     id_usuario_recibido int,
     fecha_recibido date,
+    observaciones varchar(500),
     estado varchar(50),
     CONSTRAINT solicitudes_pk PRIMARY KEY (id_solicitud)
 );

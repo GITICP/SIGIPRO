@@ -7,6 +7,8 @@ package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
 /**
@@ -63,6 +65,10 @@ public class Muestra {
         this.fecha_descarte_real = fecha_descarte_real;
     }
     
+    public String getFecha_descarte_estimadaAsString() {
+        return formatearFecha(fecha_descarte_estimada);
+    }
+    
     public String parseJSON(){
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
@@ -81,6 +87,11 @@ public class Muestra {
             
         }
         return JSON.toString();
+    }
+    
+    private String formatearFecha(Date fecha) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
     }
     
 }

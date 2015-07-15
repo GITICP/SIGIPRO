@@ -27,8 +27,7 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class SolicitudDAO extends DAO
-{
+public class SolicitudDAO extends DAO {
 
     public boolean entregarSolicitud(SolicitudCC solicitud) {
         boolean resultado = false;
@@ -36,7 +35,7 @@ public class SolicitudDAO extends DAO
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado) "
-                                                      + " VALUES (?,?,?,?) RETURNING id_solicitud");
+                    + " VALUES (?,?,?,?) RETURNING id_solicitud");
             consulta.setString(1, solicitud.getNumero_solicitud());
             consulta.setInt(2, solicitud.getUsuario_solicitante().getId_usuario());
             consulta.setDate(3, solicitud.getFecha_solicitud());
@@ -57,13 +56,31 @@ public class SolicitudDAO extends DAO
         return resultado;
     }
 
+    public int obtenerProximoId() {
+        int nextval = 0;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT MAX(ID_SOLICITUD) AS LAST_VALUE FROM control_calidad.solicitudes;");
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                int currval = resultadoConsulta.getInt("last_value");
+                nextval = currval + 1;
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nextval;
+    }
+
     public boolean insertarGrupo(Grupo g) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.grupos (id_solicitud) "
-                                                      + "VALUES (?) RETURNING id_grupo; ");
+                    + "VALUES (?) RETURNING id_grupo; ");
             consulta.setInt(1, g.getSolicitud().getId_solicitud());
             rs = consulta.executeQuery();
             if (rs.next()) {
@@ -86,7 +103,7 @@ public class SolicitudDAO extends DAO
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.muestras (identificador, id_tipo_muestra, fecha_descarte_estimada) "
-                                                      + "VALUES (?,?,?) RETURNING id_muestra; ");
+                    + "VALUES (?,?,?) RETURNING id_muestra; ");
             consulta.setString(1, m.getIdentificador());
             consulta.setInt(2, m.getTipo_muestra().getId_tipo_muestra());
             consulta.setDate(3, m.getFecha_descarte_estimada());
@@ -112,7 +129,7 @@ public class SolicitudDAO extends DAO
             this.insertarGrupo(g);
 
             PreparedStatement consultaBatch = getConexion().prepareStatement(" INSERT INTO control_calidad.grupos_muestras (id_grupo, id_muestra) "
-                                                                             + "VALUES (?,?)");
+                    + "VALUES (?,?)");
 
             for (Muestra muestra : g.getGrupos_muestras()) {
                 this.insertarMuestra(muestra);
@@ -137,7 +154,7 @@ public class SolicitudDAO extends DAO
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis_grupo_solicitud (id_grupo, id_analisis) "
-                                                      + "VALUES (?,?) RETURNING id_analisis_grupo_solicitud");
+                    + "VALUES (?,?) RETURNING id_analisis_grupo_solicitud");
             consulta.setInt(1, ags.getGrupo().getId_grupo());
             consulta.setInt(2, ags.getAnalisis().getId_analisis());
             rs = consulta.executeQuery();
@@ -161,8 +178,8 @@ public class SolicitudDAO extends DAO
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
-                                                      + "SET id_usuario_recibido=?, fecha_recibido=?, estado=? "
-                                                      + "WHERE id_solicitud = ?; ");
+                    + "SET id_usuario_recibido=?, fecha_recibido=?, estado=? "
+                    + "WHERE id_solicitud = ?; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
             consulta.setDate(2, solicitud.getFecha_recibido());
             consulta.setString(3, solicitud.getEstado());
@@ -184,8 +201,8 @@ public class SolicitudDAO extends DAO
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
-                                                      + "SET id_usuario_recibido=?, fecha_recibido=?, estado='Pendiente' "
-                                                      + "WHERE id_solicitud = ?; ");
+                    + "SET id_usuario_recibido=?, fecha_recibido=?, estado='Recibido' "
+                    + "WHERE id_solicitud = ?; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
             consulta.setDate(2, solicitud.getFecha_recibido());
             consulta.setInt(3, solicitud.getId_solicitud());
@@ -207,7 +224,7 @@ public class SolicitudDAO extends DAO
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
-                                                      + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante ; ");
+                    + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante ; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 SolicitudCC solicitud = new SolicitudCC();
@@ -236,9 +253,9 @@ public class SolicitudDAO extends DAO
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado "
-                                                      + "FROM control_calidad.solicitudes as solicitud  "
-                                                      + "WHERE id_solicitud=?; ");
+            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado, solicitud.observaciones "
+                    + "FROM control_calidad.solicitudes as solicitud  "
+                    + "WHERE id_solicitud=?; ");
             consulta.setInt(1, id_solicitud);
             rs = consulta.executeQuery();
             UsuarioDAO usuariodao = new UsuarioDAO();
@@ -253,6 +270,7 @@ public class SolicitudDAO extends DAO
                 resultado.setFecha_recibido(rs.getDate("fecha_recibido"));
                 resultado.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 resultado.setNumero_solicitud(rs.getString("numero_solicitud"));
+                resultado.setObservaciones(rs.getString("observaciones"));
             }
 
             consulta = getConexion().prepareStatement(
@@ -276,9 +294,9 @@ public class SolicitudDAO extends DAO
             int id_ags;
 
             while (rs.next()) {
-
+                //Pregunta si el ags es nuevo o si es el mismo del while pasado
                 id_ags = rs.getInt("id_analisis_grupo_solicitud");
-                
+
                 if (id_ags != ags.getId_analisis_grupo_solicitud()) {
                     ags = new AnalisisGrupoSolicitud();
                     ags.setId_analisis_grupo_solicitud(id_ags);
@@ -293,7 +311,7 @@ public class SolicitudDAO extends DAO
 
                     ags.setGrupo(g);
                     ags.setAnalisis(a);
-                    
+
                     lista_grupos_analisis_solicitud.add(ags);
                 }
 
@@ -309,7 +327,7 @@ public class SolicitudDAO extends DAO
 
                 ags.getGrupo().agregarMuestra(m);
                 ags.setId_analisis_grupo_solicitud(id_ags);
-                
+
                 cs.agregarCombinacion(ags.getAnalisis(), tm, m);
             }
             
@@ -347,14 +365,59 @@ public class SolicitudDAO extends DAO
         return resultado;
     }
 
-    public boolean anularSolicitud(int id_solicitud) {
+    public List<List<String>> obtenerSolicitudEditar(int id_solicitud) {
+        List<List<String>> resultado = new ArrayList<List<String>>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement("SELECT tm.id_tipo_muestra, string_agg(CAST (m.identificador as text), ', ') AS identificador, string_agg(DISTINCT CAST ( m.fecha_descarte_estimada as text), ', ') as fecha_descarte, string_agg(DISTINCT CAST ( a.id_analisis as text), ', ') as id_analisis "
+                    + "FROM control_calidad.analisis_grupo_solicitud as ags "
+                    + "LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
+                    + "LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
+                    + "WHERE g.id_solicitud = ? "
+                    + "GROUP BY tm.id_tipo_muestra; ");
+            consulta.setInt(1, id_solicitud);
+            rs = consulta.executeQuery();
+            int contador = 1;
+            while (rs.next()) {
+                List<String> filaSolicitud = new ArrayList<String>();
+                filaSolicitud.add(contador + "");
+                filaSolicitud.add(rs.getString("id_tipo_muestra"));
+                filaSolicitud.add(rs.getString("identificador"));
+                Muestra m = new Muestra();
+                m.setFecha_descarte_estimada(rs.getDate("fecha_descarte"));
+                if (m.getFecha_descarte_estimada() != null) {
+                    filaSolicitud.add(m.getFecha_descarte_estimadaAsString());
+                }else{
+                    filaSolicitud.add("");
+                }
+                filaSolicitud.add(rs.getString("id_analisis"));
+                resultado.add(filaSolicitud);
+                contador++;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+
+    }
+
+    public boolean anularSolicitud(int id_solicitud, String observaciones) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
-                                                      + "SET estado='Anulada' "
-                                                      + "WHERE id_solicitud = ?; ");
-            consulta.setInt(1, id_solicitud);
+                    + "SET estado='Anulada', observaciones=? "
+                    + "WHERE id_solicitud = ?; ");
+            consulta.setString(1, observaciones);
+            consulta.setInt(2, id_solicitud);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
@@ -366,56 +429,56 @@ public class SolicitudDAO extends DAO
         }
         return resultado;
     }
-    
+
     public boolean insertarGrupoConAnalisis(Grupo grupo) throws SIGIPROException {
-        
+
         boolean resultado = false;
-        
+
         PreparedStatement consulta_grupo = null;
         ResultSet rs_grupo = null;
-        
+
         PreparedStatement consulta_muestras_grupo = null;
         PreparedStatement consulta_ags = null;
-        
+
         try {
             getConexion().setAutoCommit(false);
-            
+
             consulta_grupo = getConexion().prepareStatement(
-                " INSERT INTO control_calidad.grupos (id_solicitud) VALUES (?) RETURNING id_grupo"
+                    " INSERT INTO control_calidad.grupos (id_solicitud) VALUES (?) RETURNING id_grupo"
             );
-            
+
             consulta_grupo.setInt(1, grupo.getSolicitud().getId_solicitud());
-            
+
             rs_grupo = consulta_grupo.executeQuery();
-            
+
             if (rs_grupo.next()) {
                 grupo.setId_grupo(rs_grupo.getInt("id_grupo"));
             }
-            
+
             consulta_muestras_grupo = getConexion().prepareStatement(
-                " INSERT INTO control_calidad.grupos_muestras (id_muestra, id_grupo) VALUES (?,?);"
+                    " INSERT INTO control_calidad.grupos_muestras (id_muestra, id_grupo) VALUES (?,?);"
             );
-            
-            for(Muestra m : grupo.getGrupos_muestras()) {
+
+            for (Muestra m : grupo.getGrupos_muestras()) {
                 consulta_muestras_grupo.setInt(1, m.getId_muestra());
                 consulta_muestras_grupo.setInt(2, grupo.getId_grupo());
                 consulta_muestras_grupo.addBatch();
             }
-            
+
             consulta_muestras_grupo.executeBatch();
-            
+
             consulta_ags = getConexion().prepareStatement(
-                " INSERT INTO control_calidad.analisis_grupo_solicitud (id_analisis, id_grupo) VALUES (?, ?); "
+                    " INSERT INTO control_calidad.analisis_grupo_solicitud (id_analisis, id_grupo) VALUES (?, ?); "
             );
-            
-            for(Analisis a : grupo.getAnalisis()) {
+
+            for (Analisis a : grupo.getAnalisis()) {
                 consulta_ags.setInt(1, a.getId_analisis());
                 consulta_ags.setInt(2, grupo.getId_grupo());
                 consulta_ags.addBatch();
             }
-            
+
             consulta_ags.executeBatch();
-            
+
             resultado = true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -437,7 +500,7 @@ public class SolicitudDAO extends DAO
             cerrarSilencioso(consulta_ags);
             cerrarConexion();
         }
-        
+
         return resultado;
     }
     

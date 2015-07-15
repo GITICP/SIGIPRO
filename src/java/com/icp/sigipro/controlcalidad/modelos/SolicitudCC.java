@@ -27,6 +27,7 @@ public class SolicitudCC {
     private Date fecha_solicitud;
     private Date fecha_recibido;
     private String estado;
+    private String observaciones;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private ControlSolicitud control_solicitud;
@@ -42,6 +43,16 @@ public class SolicitudCC {
     public void setId_solicitud(int id_solicitud) {
         this.id_solicitud = id_solicitud;
     }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+  
 
     public Date getFecha_solicitud() {
         return fecha_solicitud;

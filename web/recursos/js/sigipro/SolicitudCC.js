@@ -20,7 +20,7 @@ Array.prototype.remove = function (x) {
     var i;
     for (i in this) {
         if (this[i].toString() === x.toString()) {
-            this.splice(i, 1)
+            this.splice(i, 1);
         }
     }
 }
@@ -42,12 +42,18 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
         }
     });
 
-    var seleccionados = $(".analisis_" + id_formulario).find("#opt-gr1_" + id_formulario + " > option");
-    var selected = [];
-    $.each(seleccionados, function (i, e) {
-        selected[selected.length] = $(e).attr("value");
-    });
-    $(".analisis_" + id_formulario).select2("val", selected);
+    var analisis = $("#editaranalisis_" + id_formulario).val();
+
+    if (analisis === "") {
+        var seleccionados = $(".analisis_" + id_formulario).find("#opt-gr1_" + id_formulario + " > option");
+        var selected = [];
+        $.each(seleccionados, function (i, e) {
+            selected[selected.length] = $(e).attr("value");
+        });
+        $(".analisis_" + id_formulario).select2("val", selected);
+    } else {
+        $(".analisis_" + id_formulario).select2("val", analisis.replace(" ", "").split(","));
+    }
 }
 ;
 
@@ -114,9 +120,10 @@ function agregarMuestra() {
     fila += "</div>";
 
     $(".muestras").append(fila);
+
     $(".analisis_" + contador).select2();
     $("#identificadores_" + contador).select2({
-        minimumResultsForSearch:-1,
+        minimumResultsForSearch: -1,
         tags: true,
         tokenSeparators: [',', ' ']
     }).on("change", function (e) {
@@ -126,7 +133,7 @@ function agregarMuestra() {
     }).on("select2-open", function () {
         $(".select2-drop").hide();
     });
-    
+
     $(".tipomuestra_" + contador).select2();
 
     $('#datepicker_' + contador).datepicker({startDate: '-0d', format: 'dd/mm/yyyy'})
@@ -179,25 +186,85 @@ function eliminarMuestra(id) {
  * 
  */
 
-$(document).ready(function(){
-    
-    $("#seleccion-tipo-muestra").change(function(){
-        
+$(document).ready(function () {
+
+    $("#seleccion-tipo-muestra").change(function () {
+
         var select_muestras = $("#seleccion-muestras");
         select_muestras.attr("disabled", false);
         var id_tipo_muestra_seleccionada = $(this).find("option:selected").data("tipo");
-        
-        select_muestras.find("option").each(function(){
+
+        select_muestras.find("option").each(function () {
             $(this).attr("selected", false);
             var id_tipo_muestra_opcion = $(this).data("tipo");
-            if (id_tipo_muestra_opcion=== id_tipo_muestra_seleccionada) {
+            if (id_tipo_muestra_opcion === id_tipo_muestra_seleccionada) {
                 $(this).removeClass("opcion-escondida");
             } else {
                 $(this).addClass("opcion-escondida");
             }
         });
-        
+
         select_muestras.select2();
     });
-    
+
+    //Formatea las solicitudes ya antes agregadas
+    var ids = $("#listaIds").val().split(",");
+    var cantidad = ids.length;
+    contador = cantidad + 1;
+    $.each(ids, function (i, contador) {
+
+        var tipomuestra = $("#editartipomuestra_" + contador).val();
+
+        $(".analisis_" + contador).select2();
+        $("#identificadores_" + contador).select2({
+            minimumResultsForSearch: -1,
+            tags: true,
+            tokenSeparators: [',', ' ']
+        }).on("change", function (e) {
+            $(".select2-drop").hide();
+        }).on("select2-opening", function () {
+            $(".select2-drop").hide();
+        }).on("select2-open", function () {
+            $(".select2-drop").hide();
+        });
+
+        $(".tipomuestra_" + contador).select2();
+
+        $('#datepicker_' + contador).datepicker({startDate: '-0d', format: 'dd/mm/yyyy'})
+                .on('changeDate', function () {
+                    $(this).datepicker('hide');
+                    var indice = ($(':input').index(this) + 1);
+                    var proximo_elemento = $(':input:eq(' + indice + ')');
+                    while (proximo_elemento.attr('hidden') === "hidden") {
+                        indice++;
+                        proximo_elemento = $(':input:eq(' + indice + ')');
+                    }
+                    proximo_elemento.focus();
+                });
+
+        var listaTipoMuestra = $("#listaTipoMuestra").val();
+        var parseLista = JSON.parse(listaTipoMuestra);
+        $("#seleccionTipo_" + contador).append('<optgroup id="seleccionmuestras_' + contador + '" label="Tipos de Muestra"></optgroup>');
+        $.each(parseLista, function (index, value) {
+            if (tipomuestra.toString() === value[0].toString()) {
+                $("#seleccionmuestras_" + contador).append("<option value='" + value[0] + "' selected=\"selected\">" + value[1] + "</option>");
+                $("#seleccionTipo_" + contador).select2("val", value[0]);
+                seleccionTipoMuestra($("#seleccionTipo_" + contador), contador);
+
+            } else {
+                $("#seleccionmuestras_" + contador).append("<option value=" + value[0] + ">" + value[1] + "</option>");
+
+            }
+        });
+
+        var muestras = $("#listaMuestras").val();
+        if (muestras === '') {
+            $("#listaMuestras").val(contador);
+        } else {
+            $("#listaMuestras").val(muestras + ',' + contador);
+        }
+    });
+
+
+
 });

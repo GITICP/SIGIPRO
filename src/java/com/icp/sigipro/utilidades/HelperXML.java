@@ -5,7 +5,14 @@
  */
 package com.icp.sigipro.utilidades;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.sql.SQLException;
+import java.sql.SQLXML;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -21,6 +28,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -32,6 +43,11 @@ public class HelperXML {
     DocumentBuilder dBuilder;
     Document doc;
     Element root;
+    int contador;
+    //int columnas;
+    //int filasespeciales;
+    //int filas;
+    HashMap<Integer, HashMap> dictionary;
 
     public HelperXML() {
         try {
@@ -49,28 +65,207 @@ public class HelperXML {
 
     }
 
+    public HelperXML(SQLXML xml) throws SQLException, ParserConfigurationException, SAXException, IOException {
+        InputStream binaryStream = xml.getBinaryStream();
+        DocumentBuilder parser
+                = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        doc = parser.parse(binaryStream);
+
+        dictionary = new HashMap<Integer, HashMap>();
+        contador = 0;
+        //columnas = 0;
+        //filasespeciales = 0;
+        //filas = 0;
+
+        leerXML(doc.getDocumentElement().getFirstChild());
+
+        System.out.println(dictionary);
+
+    }
+
+    public void leerXML(Node node) {
+        String name = node.getNodeName();
+        String text = node.getTextContent();
+
+        NodeList nodosTipo = node.getChildNodes();
+
+        boolean isCampo = true;
+        for (int i = 0, len = nodosTipo.getLength(); i < len; i++) {
+            Node nodo = nodosTipo.item(i);
+            if (nodo.getNodeName().equals("tipo") && nodo.getTextContent().equals("table")) {
+                isCampo = false;
+                break;
+            }
+        }
+        if (isCampo) {
+            parseCampos(node.getChildNodes());
+        } else {
+            parseTabla(node.getChildNodes());
+        }
+
+        Node nextNode = node.getNextSibling();
+        if (nextNode != null) {
+            leerXML(nextNode);
+        }
+
+    }
+
+    private void parseCampos(NodeList nodos) {
+        contador++;
+        HashMap<String, Object> hash = new HashMap<String, Object>();
+        dictionary.put(contador, hash);
+        dictionary.get(contador).put("tipocampo", "campo");
+
+        for (int i = 0, len = nodos.getLength(); i < len; i++) {
+            Node currentNode = nodos.item(i);
+            String name = currentNode.getNodeName();
+            String text = currentNode.getTextContent();
+            switch (name) {
+                case "tipo":
+                    dictionary.get(contador).put(name, text);
+                    if (text.equals("Excel")) {
+                        dictionary.get(contador).put("manual", "True");
+                    } else {
+                        dictionary.get(contador).put("manual", "False");
+                    }
+                    break;
+                case "visible":
+                    dictionary.get(contador).put(name, text);
+                    break;
+                case "etiqueta":
+                    dictionary.get(contador).put(name, text);
+                case "celda":
+                    dictionary.get(contador).put(name, text);
+
+            }
+        }
+    }
+
+    public void parseTabla(NodeList nodos) {
+        contador++;
+        HashMap<String, Object> hash = new HashMap<String, Object>();
+        dictionary.put(contador, hash);
+        dictionary.get(contador).put("tipocampo", "tabla");
+
+        for (int i = 0, len = nodos.getLength(); i < len; i++) {
+            Node currentNode = nodos.item(i);
+            String name = currentNode.getNodeName();
+            String text = currentNode.getTextContent();
+            switch (name) {
+                case "visible":
+                    dictionary.get(contador).put(name, text);
+                    break;
+                case "nombre":
+                    dictionary.get(contador).put(name, text);
+                    break;
+                case "columnas":
+                    NodeList nodosColumnas = currentNode.getChildNodes();
+                    parseColumnas(nodosColumnas);
+                    break;
+                case "filas":
+                    NodeList nodosFilas = currentNode.getChildNodes();
+                    parseFilas(nodosFilas);
+                    break;
+            }
+        }
+
+    }
+
+    private void parseColumnas(NodeList nodosColumnas) {
+
+        List<String> columnas = new ArrayList<String>();
+        for (int j = 0, lenColumnas = nodosColumnas.getLength(); j < lenColumnas; j++) {
+            Node columna = nodosColumnas.item(j);
+            Node nombre = columna.getFirstChild();
+            if (j == 0) {
+                dictionary.get(contador).put("nombrefilacolumna", nombre.getTextContent());
+            } else {
+                columnas.add(nombre.getTextContent());
+            }
+        }
+        dictionary.get(contador).put("columnas", columnas);
+
+    }
+
+    private void parseFilas(NodeList nodosFilas) {
+        List<String> filasespeciales = new ArrayList<String>();
+        List<String> tipofilasespeciales = new ArrayList<String>();
+        List<String> nombrefilas = new ArrayList<String>();
+        List<String> tipocolumnas = new ArrayList<String>();
+        boolean isNombreFilas = true;
+        int cantidadFilas = nodosFilas.getLength();
+        for (int j = 0, lenColumnas = nodosFilas.getLength(); j < lenColumnas; j++) {
+            Node fila = nodosFilas.item(j);
+            NamedNodeMap atributos = fila.getAttributes();
+            if (atributos.getLength() != 0) {
+                cantidadFilas = cantidadFilas - 1;
+                Node nombre = fila.getFirstChild().getFirstChild();
+                tipofilasespeciales.add(atributos.getNamedItem("funcion").getTextContent());
+                filasespeciales.add(nombre.getTextContent());
+            } else {
+                NodeList nodosFila = fila.getChildNodes();
+                Node celdas = nodosFila.item(0);
+                NodeList nodosCeldas = celdas.getChildNodes();
+                for (int x = 0, lenCelda = nodosCeldas.getLength(); x < lenCelda; x++) {
+                    Node celda = nodosCeldas.item(x);
+                    Node etiqueta = celda.getFirstChild();
+                    String nameCelda = etiqueta.getNodeName();
+                    if (nameCelda.equals("celda-nombre")) {
+                        Node nombre = etiqueta.getFirstChild();
+                        String nombrefila = nombre.getTextContent();
+                        if (nombrefila.equals("")) {
+                            isNombreFilas = false;
+                        }
+                        nombrefilas.add(nombre.getTextContent());
+                    } else {
+                        Node campos = etiqueta.getFirstChild();
+                        Node tipo = campos.getFirstChild();
+                        tipocolumnas.add(tipo.getTextContent().split("_")[0]);
+                    }
+                }
+            }
+        }
+        dictionary.get(contador).put("cantidadfilas", cantidadFilas);
+        dictionary.get(contador).put("filasespeciales", filasespeciales);
+        dictionary.get(contador).put("tipofilasespeciales", tipofilasespeciales);
+        dictionary.get(contador).put("tipocolumnas", tipocolumnas);
+        if (isNombreFilas) {
+            dictionary.get(contador).put("nombrefilas", nombrefilas);
+        }else{
+            dictionary.get(contador).put("nombrefilas", null);
+        }
+    }
+
+    public HashMap<Integer, HashMap> getDictionary() {
+        return dictionary;
+    }
+
+    public void setDictionary(HashMap<Integer, HashMap> dictionary) {
+        this.dictionary = dictionary;
+    }
+
     public Element agregarElemento(String nombre) {
         Element elemento = doc.createElement(nombre);
         root.appendChild(elemento);
         return elemento;
     }
-    
+
     public Element agregarElemento(String nombre, Element primario) {
         Element elemento = doc.createElement(nombre);
         primario.appendChild(elemento);
         return elemento;
     }
 
-    public Attr definirAtributo(String nombre, String valor){
+    public Attr definirAtributo(String nombre, String valor) {
         Attr attrType = doc.createAttribute(nombre);
         attrType.setValue(valor);
         return attrType;
     }
-    
-    public void agregarAtributo(Element elemento, Attr atributo){
+
+    public void agregarAtributo(Element elemento, Attr atributo) {
         elemento.setAttributeNode(atributo);
     }
-    
+
     public void agregarSubelemento(String nombre, String valor, Element elemento) {
         Element sub = doc.createElement(nombre);
         sub.appendChild(doc.createTextNode(valor));

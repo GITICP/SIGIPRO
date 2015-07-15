@@ -31,29 +31,27 @@
             <div class="content">
                 <div class="main-content">
                     <!-- COLUMN FILTER DATA TABLE -->
+                    <input hidden="true" id="listaIds" value="${listaIds}">
+
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> ${solicitud.getNumero_solicitud()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoAnular" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 552}">
-                                        <c:set var="contienePermisoAnular" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoAnular}">
-                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="anular la solicitud" data-href="/SIGIPRO/ControlCalidad/Solicitud?accion=anular&id_solicitud=${solicitud.getId_solicitud()}">Anular</a>
-                                </c:if>
+                                <c:choose>
+                                    <c:when test="${solicitud.getEstado().equals('Solicitado')}">
+                                        <c:if test="${booleditar}">
+                                            <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar</a>
 
-                                <c:set var="contienePermisoEditar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 550}">
-                                        <c:set var="contienePermisoEditar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar</a>
-                                </c:if>
+                                        </c:if>
+                                        <c:if test="${boolrecibir}">
+                                            <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
+                                            <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
+                                        </c:if>
+                                    </c:when>
+                                    <c:otherwise>
+
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                         ${mensaje}
@@ -67,6 +65,9 @@
                                     <tr><td> <strong>Fecha de Recepción: </strong> <td>${solicitud.getFecha_recibidoAsString()} </td></tr>
                                 </c:if>
                                 <tr><td> <strong>Estado: </strong> <td>${solicitud.getEstado()} </td></tr>
+                                <c:if test="${!solicitud.getObservaciones().equals('')}">
+                                    <tr><td> <strong>Observaciones: </strong> <td>${solicitud.getObservaciones()} </td></tr>
+                                </c:if>
                             </table>
                             <br>
                         </div>
@@ -135,6 +136,9 @@
                                                         ${ags.getAnalisis().getNombre()}
                                                     </td>
                                                     <td>
+                                                        <c:if test="${solicitud.getEstado().equals('Recibido')}">
+                                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                        </c:if>
                                                         <c:choose>
                                                             <c:when test="${ags.getResultados() == null}">
                                                                 <a class="btn btn-primary btn-sm boton-accion" 
@@ -170,12 +174,11 @@
         </div>
 
     </jsp:attribute>
-
     <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC.js"></script>
     </jsp:attribute>
-
 </t:plantilla_general>
+
 
 <t:modal idModal="modal-agregar-grupo" titulo="Agregar Grupo">
 
@@ -220,5 +223,77 @@
 
 </t:modal>
 
+<t:modal idModal="modalAnularSolicitud" titulo="Anular Solicitud">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="anularSolicitud" autocomplete="off" method="post" action="Solicitud">
+                <input hidden="true" name="accion" value="Anular">
+                <input hidden="true" id='id_solicitud_anular' name='id_solicitud_anular' value="">
+                <label for="observaciones" class="control-label">¿Razones por las cuales anula la solicitud?</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones" ></textarea>
+                        </div>
+                    </div>
+                </div>
 
 
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Anular Solicitud</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalRecibirSolicitud" titulo="Recibir Solicitud">
+
+    <jsp:attribute name="form">
+        <form class="form-horizontal" id="form_modalautorizar" method="post" data-show-auth="${show_modal_auth}" action="Solicitud">
+            ${mensaje_auth}
+            <h4> Información sobre la solicitud </h4>
+
+            <h5>Para validar la recepción, el usuario que recibe la solicitud debe iniciar sesión. </h5>
+
+            <input hidden="true" name="id_solicitud_recibir" id="id_solicitud_recibir">
+            <input hidden="true" name="accion" id="accion" value="Recibir">
+
+            <label for="usr" class="control-label">Usuario</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group" style="display:table;">
+                        <input type="text" id="usr"  name="usuario_recibo" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               onchange="setCustomValidity('')">
+                    </div>
+                </div>
+            </div>
+            <label for="passw" class="control-label">Contraseña</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group" style="display:table;">
+                        <input type="password" id="passw" name="passw" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               onchange="setCustomValidity('')">
+                    </div>
+                    <p id='mensajeValidación' style='color:red;'><p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Recibir Solicitud</button>
+                </div>
+            </div>
+        </form>
+
+
+    </jsp:attribute>
+
+</t:modal>
