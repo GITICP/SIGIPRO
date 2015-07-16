@@ -1,15 +1,20 @@
 $(document).ready(function () {
     $.fn.dataTable.moment('DD/MM/YYYY');
-    
+
+    var configuracion_tablas = {
+        sDom:
+                "<'row'<'col-xs-6'><'col-xs-6'l>>" +
+                "t" +
+                "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        lengthMenu: [10, 25, 50, 75, 100],
+        oLanguage: {"sLengthMenu": "Registros por p&aacute;gina:  _MENU_"}
+    };
+
     var cantidadTablas = $('.sigipro-tabla-filter').length;
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-tabla-filter';
         $(selectorTabla).each(function () {
-            var dtTable = $(this).DataTable({// use DataTable, not dataTable
-                sDom:
-                        "t" +
-                        "<'row'<'col-sm-6'i><'col-sm-6'p>>"
-            });
+            var dtTable = $(this).DataTable(configuracion_tablas);
             var ths = '';
             var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
 
@@ -35,16 +40,14 @@ $(document).ready(function () {
         var selectorTabla = '.sigipro-desc-filter';
         $(selectorTabla).each(function () {
             var columna_filtro = 0;
-            if($(this).data("columna-filtro")){
+            if ($(this).data("columna-filtro")) {
                 columna_filtro = $(this).data("columna-filtro");
             }
             
-            var dtTable = $(this).DataTable({
-                sDom:
-                        "t" +
-                        "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-                "order": [[columna_filtro, "desc"]]
-            });
+            var configuracion_especifica = {"order": [[columna_filtro, "desc"]]};
+            var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
+
+            var dtTable = $(this).DataTable(configuracion_final);
             var ths = '';
             var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
 
@@ -65,22 +68,20 @@ $(document).ready(function () {
             });
         });
     }
-    
+
     var cantidadTablas = $('.sigipro-asc-filter').length;
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-asc-filter';
         $(selectorTabla).each(function () {
             var columna_filtro = 0;
-            if($(this).data("columna-filtro")){
+            if ($(this).data("columna-filtro")) {
                 columna_filtro = $(this).data("columna-filtro");
             }
             
-            var dtTable = $(this).DataTable({
-                sDom:
-                        "t" +
-                        "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-                "order": [[columna_filtro, "asc"]]
-            });
+            var configuracion_especifica = {"order": [[columna_filtro, "asc"]]};
+            var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
+
+            var dtTable = $(this).DataTable(configuracion_final);
             var ths = '';
             var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
 
