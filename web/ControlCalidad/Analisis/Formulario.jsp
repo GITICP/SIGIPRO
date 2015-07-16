@@ -16,6 +16,7 @@
             <input hidden="true" name="orden" id="orden" value="${lista.toString().replace("]","").replace("[","").replace(" ","")}">
             <input hidden="true" id="listaTiposReactivo" value="${analisis.getListaTiposReactivo()}">
             <input hidden="true" id="listaTiposEquipo" value="${analisis.getListaTiposEquipo()}">
+            <input hidden="true" id="listaColumnasExcel">
 
             <label for="nombre" class="control-label">*Nombre/Código/Identificador</label>
             <div class="form-group">
@@ -170,11 +171,11 @@
                                                         <div class="col-sm-12">
                                                             <div class="input-group">
                                                                 <c:choose>
-                                                                    <c:when test="${diccionario.get(i).get('visible').equals('True')}">
-                                                                        <input id="visible_${i}" type="checkbox" name="c_campovisible_${i}" style="width:20px; height:20px;" checked><span>  Visible para Usuarios</span>
+                                                                    <c:when test="${diccionario.get(i).get('resultado').equals('True')}">
+                                                                        <input id="visible_${i}" type="radio" name="c_camporesultado_0" style="width:20px; height:20px;" checked><span>  Resultado</span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <input id="visible_${i}" type="checkbox" name="c_campovisible_${i}" style="width:20px; height:20px;"><span>  Visible para Usuarios</span>
+                                                                        <input id="visible_${i}" type="radio" name="c_camporesultado_0" style="width:20px; height:20px;"><span>  Resultado</span>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </div>
@@ -213,14 +214,14 @@
                                             <h3><i class="fa fa-table"></i> Tabla #${i}</h3>
                                             <div class="btn-group widget-header-toolbar">
                                                 <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo('tabla_${i}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
-                                                <c:choose>
+                                                <%--<c:choose>
                                                     <c:when test="${diccionario.get(i).get('visible').equals('True')}">
                                                         <input id="visible_${i}" type="checkbox" name="t_tablavisible_${i}" checked style="width:20px; height:20px; alignment-baseline: central"><span>  Visible para Usuarios</span>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <input id="visible_${i}" type="checkbox" name="t_tablavisible_${i}" style="width:20px; height:20px; alignment-baseline: central"><span>  Visible para Usuarios</span>
                                                     </c:otherwise>
-                                                </c:choose>
+                                                </c:choose>--%>
                                             </div>
                                         </div>
                                         <div class="widget-content">

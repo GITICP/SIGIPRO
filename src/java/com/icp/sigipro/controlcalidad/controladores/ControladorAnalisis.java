@@ -486,6 +486,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
         HashMap<Integer, HashMap> dictionary = new HashMap<Integer, HashMap>();
+        int idActual = 0;
         String orden = "";
         //Contadores para clasificar las columnas y filas
         HashMap<Integer, HashMap> columnasfilas = new HashMap<Integer, HashMap>();
@@ -523,9 +524,16 @@ public class ControladorAnalisis extends SIGIPROServlet
                         break;
                     default:
                         //Se crea un diccionario con los elementos del Formulario
+                        System.out.println(fieldName);
                         String[] values = fieldName.split("_");
+                        System.out.println(values[1]);
                         if (values.length > 1) {
                             int id = Integer.parseInt(values[2]);
+                            if (id == 0){
+                                id = idActual;
+                            }else{
+                                idActual=id;
+                            }
                             if (!dictionary.containsKey(id)) {
                                 HashMap<String, String> llaves = new HashMap<String, String>();
                                 if (values[0].equals("c")) {
@@ -551,6 +559,10 @@ public class ControladorAnalisis extends SIGIPROServlet
                                     dictionary.get(id).put(values[1] + "_" + cantidadColumnas2, fieldValue);
                                     cantidadColumnas2++;
                                     columnasfilas.get(id).put("columnas", cantidadColumnas2);
+                                    break;
+                                case "columnacelda":
+                                    int cantidadColumnas3 = (int) columnasfilas.get(id).get("columnas")-1;
+                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas3, fieldValue);
                                     break;
                                 case "nombrefilaespecial":
                                     int cantidadFilas1 = (int) columnasfilas.get(id).get("filas");
@@ -595,6 +607,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         if (!dictionary.isEmpty()) {
             String xml = this.parseDictXML(dictionary, orden, columnasfilas);
             a.setEstructuraString(xml);
+            System.out.println(xml);
         }
         return a;
     }
@@ -632,6 +645,8 @@ public class ControladorAnalisis extends SIGIPROServlet
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
 
         this.nombre_campo = 1;
+        
+        System.out.println(dictionary);
 
         String[] keys = orden.split(",");
         int contadorTablas = 0;
@@ -647,11 +662,11 @@ public class ControladorAnalisis extends SIGIPROServlet
                     this.crearCampo(xml, hash, campo);
                 } else {
                     xml.agregarSubelemento("tipo", "table", campo);
-                    if (hash.containsKey("tablavisible")) {
-                        xml.agregarSubelemento("visible", "True", campo);
-                    } else {
-                        xml.agregarSubelemento("visible", "False", campo);
-                    }
+                    //if (hash.containsKey("tablavisible")) {
+                    //    xml.agregarSubelemento("visible", "True", campo);
+                    //} else {
+                    //    xml.agregarSubelemento("visible", "False", campo);
+                    //}
                     String nombretabla = hash.get("nombretabla");
 
                     xml.agregarSubelemento("nombre", nombretabla, campo);
@@ -660,6 +675,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                     Element filas = xml.agregarElemento("filas", campo);
 
                     List<String> tiposcolumnas = new ArrayList<String>();
+                    List<String> columnacelda = new ArrayList<String>();
                     //Columnas
                     Element primeraColumna = xml.agregarElemento("columna", columnas);
                     xml.agregarSubelemento("nombre", hash.get("nombrefilacolumna"), primeraColumna);
@@ -670,7 +686,15 @@ public class ControladorAnalisis extends SIGIPROServlet
                         String valorCol = hash.get(keycol);
                         String keytipo = "tipocampocolumna_" + col;
                         String valorTipo = hash.get(keytipo);
+                        String keycelda = "columnacelda_" + col;
+                        String valorCelda;
+                        if (hash.containsKey(keycelda)){
+                            valorCelda = hash.get(keycelda);
+                        }else{
+                            valorCelda = ""; 
+                        }
                         tiposcolumnas.add(valorTipo);
+                        columnacelda.add(valorCelda);
                         Element columna = xml.agregarElemento("columna", columnas);
                         xml.agregarSubelemento("nombre", valorCol, columna);
                     }
@@ -699,6 +723,17 @@ public class ControladorAnalisis extends SIGIPROServlet
                             xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
                             String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
                             xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                            String celdaColumna = columnacelda.get(jt);
+                            if (!celdaColumna.equals("")){
+                                celdaColumna = celdaColumna.replace("-", "");
+                                xml.agregarSubelemento("celda", celdaColumna, campo_fila);
+                                String[] listaCelda = columnacelda.get(jt).split("-");
+                                int numeroCelda = Integer.parseInt(listaCelda[1]);
+                                numeroCelda++;
+                                String nuevaCelda = listaCelda[0]+"-"+numeroCelda;
+                                columnacelda.remove(jt);
+                                columnacelda.add(jt, nuevaCelda);
+                            }
                             xml.agregarSubelemento("valor", "", campo_fila);
                         }
                     }
@@ -725,6 +760,17 @@ public class ControladorAnalisis extends SIGIPROServlet
                             xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
                             String nombre_celda = "Tabla_" + contadorTablas + "_" + valorTipo + "_" + jt;
                             xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
+                            String celdaColumna = columnacelda.get(jt);
+                            if (!celdaColumna.equals("")){
+                                celdaColumna = celdaColumna.replace("-", "");
+                                xml.agregarSubelemento("celda", celdaColumna, campo_fila);
+                                String[] listaCelda = columnacelda.get(jt).split("-");
+                                int numeroCelda = Integer.parseInt(listaCelda[1]);
+                                numeroCelda++;
+                                String nuevaCelda = listaCelda[0]+"-"+numeroCelda;
+                                columnacelda.remove(jt);
+                                columnacelda.add(jt, nuevaCelda);
+                            }
                             xml.agregarSubelemento("valor", "", campo_fila);
                         }
                     }
@@ -744,15 +790,17 @@ public class ControladorAnalisis extends SIGIPROServlet
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
         if (hash.containsKey("manual")) {
+            String celda =  hash.get("celda");
+            celda = celda.replace("-", "");
             xml.agregarSubelemento("tipo", "Excel", campo);
-            xml.agregarSubelemento("celda", hash.get("celda"), campo);
+            xml.agregarSubelemento("celda",celda, campo);
         } else {
             xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
         }
-        if (hash.containsKey("campovisible")) {
-            xml.agregarSubelemento("visible", "True", campo);
+        if (hash.containsKey("camporesultado")) {
+            xml.agregarSubelemento("resultado", "True", campo);
         } else {
-            xml.agregarSubelemento("visible", "False", campo);
+            xml.agregarSubelemento("resultado", "False", campo);
         }
     }
 
@@ -774,6 +822,8 @@ public class ControladorAnalisis extends SIGIPROServlet
         }
         return resultado;
     }
+    
+    
 
     private String getFileExtension(String fileName) {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {

@@ -10,14 +10,15 @@
 <form class="form-horizontal" autocomplete="off" method="post" action="Solicitud">
     <div class="row">
         <div class="col-md-12">
-            <input hidden="true"  name="id_solicitud" value="${analisis.getId_analisis()}">
+            <input hidden="true"  name="id_solicitud" value="${solicitud.getId_solicitud()}">
             <input hidden="true" name="accion" value="${accion}">
             <c:forEach items="${tipomuestras}" var="tipomuestra">
                 <input hidden="true" id="listaAnalisis_${tipomuestra.getId_tipo_muestra()}" value='${tipomuestra.parseListaAnalisis()}'>
             </c:forEach>
             <input hidden="true" id="listaTipoMuestra" value='${tipomuestraparse}'>
             <input hidden="true" id="listaMuestras" name="listaMuestras" value="">
-            <input hidden="true" id="listaIds" value="${listaIds}">
+            <input hidden="true" id="listaIds" value="${listaTM}">
+            <input hidden="true" id="listaGrupos" name="listaGrupos" value="${listaGrupos}">
 
             <label for="nombre" class="control-label">*Número de Solicitud</label>
             <div class="form-group">

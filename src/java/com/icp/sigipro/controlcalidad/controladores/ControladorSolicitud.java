@@ -130,26 +130,30 @@ public class ControladorSolicitud extends SIGIPROServlet {
         String redireccion = "Solicitud/Editar.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         SolicitudCC solicitud = dao.obtenerSolicitud(id_solicitud);
-        request.setAttribute("solicitud", solicitud);
-
         List<List<String>> listaSolicitud = dao.obtenerSolicitudEditar(id_solicitud);
-        //Lista los ids de las muestras ya solicitadas
-        String ids = "";
+        //Lista los ids de los tipos de muestras ya solicitadas
+        String idTipoMuestras = "";
+        String idGrupos = "";
         for (List<String> s : listaSolicitud) {
-            ids += s.get(0);
-            ids += ",";
+            idTipoMuestras += s.get(0);
+            idTipoMuestras += ",";
+            idGrupos += s.get(5);
+            idGrupos += ",";
         }
-        if (!ids.equals("")) {
-            ids = ids.substring(0, ids.length() - 1);
+        if (!idTipoMuestras.equals("")) {
+            idTipoMuestras = idTipoMuestras.substring(0, idTipoMuestras.length() - 1);
         }
-
-        request.setAttribute("listaSolicitud", listaSolicitud);
-        request.setAttribute("listaIds", ids);
-        
+        if (!idGrupos.equals("")) {
+            idGrupos = idGrupos.substring(0, idGrupos.length() - 1);
+        }
 
         List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
-        request.setAttribute("tipomuestras", tipomuestras);
 
+        request.setAttribute("listaSolicitud", listaSolicitud);
+        request.setAttribute("listaTM", idTipoMuestras);
+        request.setAttribute("listaGrupos", idGrupos);
+        request.setAttribute("solicitud", solicitud);
+        request.setAttribute("tipomuestras", tipomuestras);
         request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(tipomuestras));
         request.setAttribute("numero_solicitud", solicitud.getNumero_solicitud());
         request.setAttribute("accion", "Editar");
@@ -241,7 +245,6 @@ public class ControladorSolicitud extends SIGIPROServlet {
         resultado = dao.entregarSolicitud(s);
         if (resultado) {
             for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
-
                 ags.getGrupo().setSolicitud(s);
                 dao.insertarMuestrasGrupo(ags.getGrupo());
                 bitacora.setBitacora(ags.getGrupo().parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO, request.getRemoteAddr());
@@ -270,8 +273,25 @@ public class ControladorSolicitud extends SIGIPROServlet {
         SolicitudCC s = construirObjeto(request);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         s.setId_solicitud(id_solicitud);
-        resultado = dao.editarSolicitud(s);
+        
+        String idGrupos = request.getParameter("listaGrupos");
+        String[] grupos = idGrupos.replace(" ", "").split(",");
+        
+        resultado = dao.eliminarGrupo(grupos);
+        
         if (resultado) {
+            for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
+                ags.getGrupo().setSolicitud(s);
+                dao.insertarMuestrasGrupo(ags.getGrupo());
+                bitacora.setBitacora(ags.getGrupo().parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_GRUPO, request.getRemoteAddr());
+                for (String a : ags.getLista_analisis()) {
+                    Analisis analisis = new Analisis();
+                    analisis.setId_analisis(Integer.parseInt(a));
+                    ags.setAnalisis(analisis);
+                    dao.insertarAnalisisGrupoSolicitud(ags);
+                    bitacora.setBitacora(ags.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISISGRUPOSOLICITUD, request.getRemoteAddr());
+                }
+            }
             //Funcion que genera la bitacora
             bitacora.setBitacora(s.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
             //*----------------------------*
