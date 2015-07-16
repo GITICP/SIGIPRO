@@ -260,7 +260,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-5">
+                                                                    <div class="col-md-3">
                                                                         <label for="especie" class="control-label"> *Tipo del Campo</label>
                                                                         <div class="form-group">
                                                                             <div class="col-sm-12">
@@ -273,12 +273,40 @@
                                                                                         <c:if test="${diccionario.get(i).get('tipocolumnas').get(c).equals('number')}">
                                                                                             <option value="number_tabla" selected>Número</option>
                                                                                             <option value="text_tabla">Campo de Texto</option>
+                                                                                            <option value="excel_tabla">Excel</option>
                                                                                         </c:if>
                                                                                         <c:if test="${diccionario.get(i).get('tipocolumnas').get(c).equals('text')}">
                                                                                             <option value="number_tabla">Número</option>
                                                                                             <option value="text_tabla" selected>Campo de Texto</option>
+                                                                                            <option value="excel_tabla">Excel</option>
+                                                                                        </c:if>
+                                                                                        <c:if test="${diccionario.get(i).get('tipocolumnas').get(c).equals('excel')}">
+                                                                                            <option value="number_tabla">Número</option>
+                                                                                            <option value="text_tabla">Campo de Texto</option>
+                                                                                            <option value="excel_tabla" selected>Excel</option>
                                                                                         </c:if>
                                                                                     </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <br>
+                                                                        <div class="form-group">
+                                                                            <div class="col-sm-12">
+                                                                                <div class="input-group">
+                                                                                    <c:choose>
+                                                                                        <c:when test="${diccionario.get(i).get('tipocolumnas').get(c).equals('excel')}">
+                                                                                            <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" value="${diccionario.get(i).get('celdacolumna').get(c)}"
+                                                                                                   required oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido. ')"
+                                                                                                   oninput="setCustomValidity('')" >
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" disabled
+                                                                                                   required oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido. ')"
+                                                                                                   oninput="setCustomValidity('')" >
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

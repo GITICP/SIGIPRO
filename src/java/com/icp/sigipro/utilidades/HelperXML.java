@@ -129,7 +129,7 @@ public class HelperXML {
                         dictionary.get(contador).put("manual", "False");
                     }
                     break;
-                case "visible":
+                case "resultado":
                     dictionary.get(contador).put(name, text);
                     break;
                 case "etiqueta":
@@ -192,6 +192,7 @@ public class HelperXML {
         List<String> tipofilasespeciales = new ArrayList<String>();
         List<String> nombrefilas = new ArrayList<String>();
         List<String> tipocolumnas = new ArrayList<String>();
+        List<String> celdacolumna = new ArrayList<String>();
         boolean isNombreFilas = true;
         int cantidadFilas = nodosFilas.getLength();
         for (int j = 0, lenColumnas = nodosFilas.getLength(); j < lenColumnas; j++) {
@@ -218,9 +219,24 @@ public class HelperXML {
                         }
                         nombrefilas.add(nombre.getTextContent());
                     } else {
-                        Node campos = etiqueta.getFirstChild();
-                        Node tipo = campos.getFirstChild();
-                        tipocolumnas.add(tipo.getTextContent().split("_")[0]);
+                        NodeList nodosCampos = etiqueta.getChildNodes();
+                        if (nodosCampos.getLength() == 3){
+                                celdacolumna.add("");
+                            }
+                        for (int y = 0, lenCampos = nodosCampos.getLength(); y < lenCampos; y++) {
+                            Node campo = nodosCampos.item(y);
+                            switch (campo.getNodeName()) {
+                                case "tipo":
+                                    String tipocolumna = campo.getTextContent().split("_")[0];
+                                    tipocolumnas.add(tipocolumna);
+                                    break;
+                                case "celda":
+                                    System.out.println(campo.getTextContent());
+                                    celdacolumna.add(campo.getTextContent());
+                                    break;
+                            }
+
+                        }
                     }
                 }
             }
@@ -229,9 +245,10 @@ public class HelperXML {
         dictionary.get(contador).put("filasespeciales", filasespeciales);
         dictionary.get(contador).put("tipofilasespeciales", tipofilasespeciales);
         dictionary.get(contador).put("tipocolumnas", tipocolumnas);
+        dictionary.get(contador).put("celdacolumna", celdacolumna);
         if (isNombreFilas) {
             dictionary.get(contador).put("nombrefilas", nombrefilas);
-        }else{
+        } else {
             dictionary.get(contador).put("nombrefilas", null);
         }
     }
