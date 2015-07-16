@@ -113,6 +113,24 @@ public class SolicitudCC {
     public List<AnalisisGrupoSolicitud> getAnalisis_solicitud() {
         return analisis_solicitud;
     }
+    
+    public List<Resultado> getResultados() {
+        
+        List<AnalisisGrupoSolicitud> ags_solicitud = new ArrayList<AnalisisGrupoSolicitud>();
+        for (AnalisisGrupoSolicitud ags : analisis_solicitud) {
+            if (ags.getResultados() != null) {
+                ags_solicitud.add(ags);
+            }
+        }
+        
+        List<Resultado> resultados = new ArrayList<Resultado>();
+        if (!ags_solicitud.isEmpty()){
+            for (AnalisisGrupoSolicitud ags : ags_solicitud) {
+                resultados.addAll(ags.getResultados());
+            }
+        }
+        return resultados;
+    }
 
     public void setAnalisis_solicitud(List<AnalisisGrupoSolicitud> analisis_solicitud) {
         this.analisis_solicitud = analisis_solicitud;
