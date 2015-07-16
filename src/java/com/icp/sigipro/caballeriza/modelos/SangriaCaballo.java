@@ -269,7 +269,7 @@ public class SangriaCaballo
         if (dia == 1) {
             resultado = lal_dia1 + plasma_dia1 + sangre_dia1;
         } else if (dia == 2) {
-            resultado = lal_dia2 + plasma_dia2 + sangre_dia3;
+            resultado = lal_dia2 + plasma_dia2 + sangre_dia2;
         } else if (dia == 3) {
             resultado = lal_dia3 + plasma_dia3 + sangre_dia3;
         }
