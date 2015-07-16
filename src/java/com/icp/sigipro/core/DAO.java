@@ -58,4 +58,27 @@ public abstract class DAO
     {
         SingletonBD.cerrarSilencioso(s);
     }
+    
+    protected String pasar_ids_a_parentesis(String[] ids)
+    {
+        String resultado = "(";
+        for (String s : ids) {
+            resultado = resultado + s;
+            resultado = resultado + ",";
+        }
+        resultado = resultado.substring(0, resultado.length() - 1);
+        resultado = resultado + ")";
+        return resultado;
+    }
+    
+    protected String pasar_ids_a_parentesis(int[] ids)
+    {
+        String[] ids_strings = new String[ids.length];
+        
+        for (int i = 0; i < ids.length; i++) {
+            ids_strings[i] =  String.valueOf(ids[i]);
+        }
+        
+        return this.pasar_ids_a_parentesis(ids_strings);
+    }
 }

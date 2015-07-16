@@ -270,5 +270,14 @@ public class Sangria {
             resultado = "Pendiente";
         }
         return resultado;
-    }    
+    }
+    
+    public int[] obtener_ids_caballos_sangria() {
+        int[] resultado = new int[sangrias_caballos.size()];
+        
+        for (int i = 0; i < sangrias_caballos.size(); i++) {
+            resultado[i] =  sangrias_caballos.get(i).getCaballo().getId_caballo();
+        }
+        return resultado;
+    }
 }
