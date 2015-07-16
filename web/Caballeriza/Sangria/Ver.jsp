@@ -130,7 +130,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia1() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia1() == null || sangria_caballo.isParticipo_dia1() == null) ? "Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -142,7 +142,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia2() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia2() == null || sangria_caballo.isParticipo_dia2() == null) ? "Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -154,7 +154,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia3() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia3() == null || sangria_caballo.isParticipo_dia3() == null) ? "Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>

@@ -197,7 +197,7 @@ public class ControladorSangria extends SIGIPROServlet
             dao.insertarSangria(sangria);
 
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA_PRUEBA, request.getRemoteAddr());
+            bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Sangría agregada correctamente."));
             redireccion = "Sangria/index.jsp";
@@ -222,7 +222,7 @@ public class ControladorSangria extends SIGIPROServlet
             dao.editarSangria(sangria);
 
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO_CLINICO, request.getRemoteAddr());
+            bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Sangría editada correctamente."));
             List<Sangria> lista = dao.obtenerSangrias();
@@ -270,7 +270,9 @@ public class ControladorSangria extends SIGIPROServlet
                 sangria_caballo.setSangre(dia, sangre);
                 sangria_caballo.setLal(dia, lal);
 
+                
                 sangria.agregarSangriaCaballo(sangria_caballo);
+                
             }
         }
         catch (Exception ex) {
@@ -279,6 +281,8 @@ public class ControladorSangria extends SIGIPROServlet
 
         try {
             dao.registrarExtraccion(sangria, dia);
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_REGISTRAR_EXTRACCION, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción registrada correctamente."));
             request.setAttribute("lista_sangrias", dao.obtenerSangrias());

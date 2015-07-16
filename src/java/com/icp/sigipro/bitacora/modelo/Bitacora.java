@@ -22,6 +22,7 @@ public class Bitacora {
     
     //Variables de Tablas
     public static final String TABLA_SANGRIA_PRUEBA= "CABALLERIZA.SANGRIAS_PRUEBAS";
+    public static final String TABLA_SANGRIA= "CABALLERIZA.SANGRIAS";
     public static final String TABLA_INOCULO= "CABALLERIZA.INOCULOS";
     public static final String TABLA_TIPO_EVENTO= "CABALLERIZA.TIPOS_EVENTOS";
     public static final String TABLA_GRUPO_DE_CABALLOS= "CABALLERIZA.GRUPOS_DE_CABALLOS";
@@ -80,6 +81,7 @@ public class Bitacora {
     public static final String ACCION_ENTREGAR = "ENTREGAR";
     public static final String ACCION_REPONER = "REPONER";
     public static final String ACCION_ANULAR = "ANULAR";
+    public static final String ACCION_REGISTRAR_EXTRACCION = "REGISTRAR EXTRACCIÓN";
 
    
     
