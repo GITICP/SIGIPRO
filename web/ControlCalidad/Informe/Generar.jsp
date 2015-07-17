@@ -39,23 +39,6 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> ${solicitud.getNumero_solicitud()} </h3>
-                            <div class="btn-group widget-header-toolbar">
-                                <c:choose>
-                                    <c:when test="${solicitud.getEstado().equals('Solicitado')}">
-                                        <c:if test="${booleditar}">
-                                            <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar</a>
-
-                                        </c:if>
-                                        <c:if test="${boolrecibir}">
-                                            <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
-                                            <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
-                                        </c:if>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=generarinforme&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
@@ -73,70 +56,91 @@
                                 </c:if>
                             </table>
                             <br>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="widget widget-table">
-                                <div class="widget-header">
-                                    <h3><i class="fa fa-calendar"></i> Resultados por Reportar</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                        <!-- Columnas -->
-                                        <thead> 
-                                            <tr>
-                                                <th>Identificadores de Muestras (Tipo)</th>
-                                                <th>Análisis Solicitado</th>
-                                                <th>Resultado</th>
-                                                <th>Acción</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="widget widget-table">
-                                <div class="widget-header">
-                                    <h3><i class="fa fa-calendar"></i> Resultados Obtenidos</h3>
-                                </div>
+                            <form class="form-horizontal" method="post" action="Informe">
+                                <input type="hidden" value="${accion}" name="accion" />
+                                <input type="hidden" value="${solicitud.getId_solicitud()}" name="id_solicitud" />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="widget widget-table">
+                                            <div class="widget-header">
+                                                <h3><i class="fa fa-calendar"></i> Resultados por Reportar</h3>
+                                            </div>
+                                            <div class="widget-content">
+                                                <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                    <!-- Columnas -->
+                                                    <thead> 
+                                                        <tr>
+                                                            <th>Identificadores de Muestras (Tipo)</th>
+                                                            <th>Análisis Solicitado</th>
+                                                            <th>Resultado</th>
+                                                            <th>Acción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                                <div class="widget-content">
-                                    <table id="resultados-obtenidos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                        <!-- Columnas -->
-                                        <thead> 
-                                            <tr>
-                                                <th>Identificadores de Muestras (Tipo)</th>
-                                                <th>Análisis Solicitado</th>
-                                                <th>Resultado</th>
-                                                <th>Acción</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${solicitud.getResultados()}" var="resultado">
-                                                <tr id='${resultado.getId_resultado()}'>
-                                                    <td>
-                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
-                                                        </c:forEach>
-                                                    </td>
-                                                    <td>
-                                                        ${resultado.getAgs().getAnalisis().getNombre()}
-                                                    </td>
-                                                    <td>Resultado</td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="widget widget-table">
+                                            <div class="widget-header">
+                                                <h3><i class="fa fa-calendar"></i> Resultados Obtenidos</h3>
+                                            </div>
+
+                                            <div class="widget-content">
+                                                <table id="resultados-obtenidos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                    <!-- Columnas -->
+                                                    <thead> 
+                                                        <tr>
+                                                            <th>Identificadores de Muestras (Tipo)</th>
+                                                            <th>Análisis Solicitado</th>
+                                                            <th>Resultado</th>
+                                                            <th>Acción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach items="${solicitud.getResultados()}" var="resultado">
+                                                        <input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" style="display:none" />
+                                                        <tr id='${resultado.getId_resultado()}'>
+
+                                                            <td>
+                                                                <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                    ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                </c:forEach>
+                                                            </td>
+                                                            <td>
+                                                                ${resultado.getAgs().getAnalisis().getNombre()}
+                                                            </td>
+                                                            <td>Resultado</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <!-- END WIDGET TICKET TABLE -->
+                                <div class="form-group">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                                        <c:choose>
+                                            <c:when test= "${accion.equals('Editar')}">
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Informe</button>
+                                            </c:otherwise>
+                                        </c:choose>    
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <!-- END WIDGET TICKET TABLE -->
                     </div>
                     <!-- /main-content -->
                 </div>
@@ -157,8 +161,6 @@
 
         <form name="form-agregar-agrupaciones" id="form-agregar-agrupaciones" class="form-horizontal" action="Solicitud" method="post">
 
-            <input hidden="true" name="accion" value="agregargrupo" />
-            <input hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
 
             <label for="ids-muestras" class="control-label">Seleccione el tipo de muestra</label>
             <select id="seleccion-tipo-muestra" class="select2" style="background-color: #fff" name="ids_analisis" required

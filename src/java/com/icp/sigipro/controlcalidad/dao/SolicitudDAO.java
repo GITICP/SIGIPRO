@@ -9,6 +9,7 @@ import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.ControlSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Grupo;
+import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
@@ -253,9 +254,9 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado, solicitud.observaciones "
-                    + "FROM control_calidad.solicitudes as solicitud  "
-                    + "WHERE id_solicitud=?; ");
+            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado, solicitud.observaciones, i.id_informe "
+                    + "FROM control_calidad.solicitudes as solicitud LEFT JOIN control_calidad.informes i ON i.id_solicitud = solicitud.id_solicitud "
+                    + "WHERE solicitud.id_solicitud=?; ");
             consulta.setInt(1, id_solicitud);
             rs = consulta.executeQuery();
             UsuarioDAO usuariodao = new UsuarioDAO();
@@ -271,6 +272,12 @@ public class SolicitudDAO extends DAO {
                 resultado.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 resultado.setNumero_solicitud(rs.getString("numero_solicitud"));
                 resultado.setObservaciones(rs.getString("observaciones"));
+                int id_informe = rs.getInt("id_informe");
+                if (id_informe != 0) {
+                    Informe i = new Informe();
+                    i.setId_informe(id_informe);
+                    resultado.setInforme(i);
+                }
             }
 
             consulta = getConexion().prepareStatement(

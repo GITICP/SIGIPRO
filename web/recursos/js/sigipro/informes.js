@@ -24,6 +24,7 @@ funcion_eliminar = function() {
     
     var fila = $(this).parents("tr");
     var fila_data_table = obtener_fila(TABLA_RESULTADOS_POR_REPORTAR, fila);
+    $("input[value=" + fila.attr("id") + "]").prop("checked", false);
     
     var nodo_fila = fila_data_table.node();
     agregar_fila(TABLA_RESULTADOS_OBTENIDOS, nodo_fila);
@@ -42,6 +43,7 @@ funcion_reportar = function() {
     
     var fila = $(this).parents("tr");
     var fila_data_table = obtener_fila(TABLA_RESULTADOS_OBTENIDOS, fila);
+    $("input[value=" + fila.attr("id") + "]").prop("checked", true);
     
     var nodo_fila = fila_data_table.node();
     agregar_fila(TABLA_RESULTADOS_POR_REPORTAR, nodo_fila);

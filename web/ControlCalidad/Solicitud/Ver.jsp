@@ -49,7 +49,14 @@
                                         </c:if>
                                     </c:when>
                                     <c:otherwise>
-                                        <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
+                                        <c:choose>
+                                            <c:when test="${solicitud.getInforme() == null}">
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_informe=${solicitud.getInforme().getId_informe()}">Editar Informe</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:otherwise>
                                 </c:choose>
                             </div>

@@ -202,16 +202,18 @@ CREATE TABLE control_calidad.reactivos_resultado (
 -- Table: informes
 CREATE TABLE control_calidad.informes
 (
-   id_informe serial NOT NULL, 
-   id_solicitud integer, 
-   CONSTRAINT pk_informes PRIMARY KEY (id_informe)
+    id_informe serial NOT NULL, 
+    id_solicitud integer, 
+    fecha date NOT NULL,
+    realizado_por integer NOT NULL,
+    CONSTRAINT pk_informes PRIMARY KEY (id_informe)
 );
 
 -- Table: resultados_informes
 CREATE TABLE control_calidad.resultados_informes
 (
     id_informe integer NOT NULL,
-    id_resultado integer NOT NULL
+    id_resultado integer NOT NULL,
     CONSTRAINT pk_resultaods PRIMARY KEY (id_informe, id_resultado)
 );
 
@@ -221,6 +223,14 @@ CREATE TABLE control_calidad.resultados_informes
 ALTER TABLE control_calidad.informes ADD CONSTRAINT fk_informes_solicitudes
     FOREIGN KEY (id_solicitud) 
     REFERENCES control_calidad.solicitudes (id_solicitud)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Informes_Solicitudes (table: usuarios)
+ALTER TABLE control_calidad.informes ADD CONSTRAINT fk_informes_usuarios
+    FOREIGN KEY (realizado_por) 
+    REFERENCES seguridad.usuarios (id_usuario)
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;

@@ -28,6 +28,7 @@ public class SolicitudCC {
     private Date fecha_recibido;
     private String estado;
     private String observaciones;
+    private Informe informe;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private ControlSolicitud control_solicitud;
@@ -50,6 +51,14 @@ public class SolicitudCC {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public Informe getInforme() {
+        return informe;
+    }
+
+    public void setInforme(Informe informe) {
+        this.informe = informe;
     }
 
   

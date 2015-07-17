@@ -5,9 +5,14 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
+import com.icp.sigipro.controlcalidad.dao.InformeDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
+import com.icp.sigipro.controlcalidad.modelos.Informe;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,6 +35,7 @@ public class ControladorInformes extends SIGIPROServlet
     private final int[] permisos = {1, 540};
     //-----------------
     
+    private final InformeDAO dao = new InformeDAO();
     private final SolicitudDAO daosolicitud = new SolicitudDAO();
 
     protected final Class clase = ControladorInformes.class;
@@ -46,7 +52,7 @@ public class ControladorInformes extends SIGIPROServlet
     protected final List<String> accionesPost = new ArrayList<String>()
     {
         {
-
+            add("generar");
         }
     };
 
@@ -62,6 +68,7 @@ public class ControladorInformes extends SIGIPROServlet
         
         if (solicitud != null) {
             request.setAttribute("solicitud", solicitud);
+            request.setAttribute("accion", "Generar");
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Error al obtener la información de la solicitud. Inténtelo nuevamente."));
         }
@@ -71,6 +78,38 @@ public class ControladorInformes extends SIGIPROServlet
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    protected void postGenerar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        String redireccion = "Solicitud/Ver.jsp";
+        
+        String[] ids_resultados = request.getParameterValues("resultados");
+        
+        Informe informe = new Informe();
+        SolicitudCC s = new SolicitudCC();
+        s.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        informe.setSolicitud(s);
+        Usuario u = new Usuario();
+        u.setId_usuario(this.getIdUsuario(request));
+        informe.setUsuario(u);
+        
+        for (String resultado : ids_resultados) {
+            Resultado r = new Resultado();
+            r.setId_resultado(Integer.parseInt(resultado));
+            informe.agregarResultado(r);
+        }
+        
+        try {
+            informe = dao.ingresarInforme(informe);
+            // Bitácora informe
+            request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        }
+        
+        this.redireccionar(request, response, redireccion);
+        
+    }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     // </editor-fold>
