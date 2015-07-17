@@ -56,10 +56,59 @@
                                 </c:if>
                             </table>
                             <br>
-                            <form class="form-horizontal" method="post" action="Informe">
+                            <form class="form-horizontal" method="post" action="Informe" id="form-informe">
                                 <input type="hidden" value="${accion}" name="accion" />
                                 <input type="hidden" value="${solicitud.getId_solicitud()}" name="id_solicitud" />
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <select id="seleccion-objeto" class="select2" name="objeto-relacionado"
+                                                            style='background-color: #fff;'>
+                                                        <option value=''></option>
+                                                        <option value="sangria">
+                                                            Sangría
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="fila-select-sangria" class="row" hidden="true">
+                                    <div class="col-md-6">
+                                        <label for="sangria" class="control-label"> Sangría por asociar</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <select id="seleccion-sangria" name="sangria"
+                                                            style='background-color: #fff;'>
+                                                        <option value=''></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="fila-select-dia" class="row" hidden="true">
+                                    <div class="col-md-6">
+                                        <label for="sangria" class="control-label"> Día por asignar</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <select id="seleccion-dia" name="dia"
+                                                            style='background-color: #fff;'>
+                                                        <option value=''></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
                                     <div class="col-md-6">
                                         <div class="widget widget-table">
                                             <div class="widget-header">
@@ -155,30 +204,15 @@
 </t:plantilla_general>
 
 
-<t:modal idModal="modal-agregar-grupo" titulo="Agregar Grupo">
+<t:modal idModal="modal-asociar-caballo" titulo="Asociar Resultado a Caballo(s)">
 
     <jsp:attribute name="form">
 
-        <form name="form-agregar-agrupaciones" id="form-agregar-agrupaciones" class="form-horizontal" action="Solicitud" method="post">
+        <form name="form-agregar-agrupaciones" id="form-asociacion-resultados-caballos" class="form-horizontal">
 
-
-            <label for="ids-muestras" class="control-label">Seleccione el tipo de muestra</label>
-            <select id="seleccion-tipo-muestra" class="select2" style="background-color: #fff" name="ids_analisis" required
-                    oninvalid="setCustomValidity('El campo de tipo de muestra es requerido.')">
-                <option></option>
-                <c:forEach items="${solicitud.getControl_solicitud().getAnalisis_tipo_muestras()}" var="atm">
-                    <option value="${atm.getAnalisisAsString()}" data-tipo="${atm.getTipo_muestra().getId_tipo_muestra()}">${atm.getTipo_muestra().getNombre()}</option>                       
-                </c:forEach>
-            </select>
-
-            <br/><br/>
-
-            <label for="ids-muestras" class="control-label">Seleccione las muestras</label>
-            <select id="seleccion-muestras" class="select2" style="background-color: #fff" name="ids_muestras" multiple="multiple" required disabled
-                    oninvalid="setCustomValidity('El campo de muestras es requerido.')">
-                <c:forEach items="${solicitud.obtenerMuestras()}" var="muestra">
-                    <option class="opcion-escondida" value="${muestra.getId_muestra()}" data-tipo="${muestra.getTipo_muestra().getId_tipo_muestra()}" hidden>${muestra.getIdentificador()}</option>
-                </c:forEach>                
+            <label for="ids-caballos" class="control-label">Seleccione los caballos</label>
+            <select id="seleccion-caballos" class="select2" style="background-color: #fff" name="ids_caballos" multiple="multiple" required
+                    oninvalid="setCustomValidity('El campo de muestras es requerido.')">  
             </select>
 
             <br/>
@@ -186,86 +220,11 @@
             <div class="form-group">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button id="btn-agregarRol" type="submit" class="btn btn-primary" onclick="agregarProductoInterno()"><i class="fa fa-check-circle"></i> Crear Agrupación</button>
+                    <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="funcion_asociar_resultado_caballos()"><i class="fa fa-check-circle"></i> Asociar Resultados</button>
                 </div>
             </div>
 
         </form>
-
-    </jsp:attribute>
-
-</t:modal>
-
-<t:modal idModal="modalAnularSolicitud" titulo="Anular Solicitud">
-    <jsp:attribute name="form">
-        <div class="widget-content">
-            <form class="form-horizontal" id="anularSolicitud" autocomplete="off" method="post" action="Solicitud">
-                <input hidden="true" name="accion" value="Anular">
-                <input hidden="true" id='id_solicitud_anular' name='id_solicitud_anular' value="">
-                <label for="observaciones" class="control-label">¿Razones por las cuales anula la solicitud?</label>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones" ></textarea>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Anular Solicitud</button>            </div>
-                </div>
-            </form>
-        </div>
-
-    </jsp:attribute>
-
-</t:modal>
-
-<t:modal idModal="modalRecibirSolicitud" titulo="Recibir Solicitud">
-
-    <jsp:attribute name="form">
-        <form class="form-horizontal" id="form_modalautorizar" method="post" data-show-auth="${show_modal_auth}" action="Solicitud">
-            ${mensaje_auth}
-            <h4> Información sobre la solicitud </h4>
-
-            <h5>Para validar la recepción, el usuario que recibe la solicitud debe iniciar sesión. </h5>
-
-            <input hidden="true" name="id_solicitud_recibir" id="id_solicitud_recibir">
-            <input hidden="true" name="accion" id="accion" value="Recibir">
-
-            <label for="usr" class="control-label">Usuario</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group" style="display:table;">
-                        <input type="text" id="usr"  name="usuario_recibo" required
-                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                               onchange="setCustomValidity('')">
-                    </div>
-                </div>
-            </div>
-            <label for="passw" class="control-label">Contraseña</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group" style="display:table;">
-                        <input type="password" id="passw" name="passw" required
-                               oninvalid="setCustomValidity('Este campo es requerido ')"
-                               onchange="setCustomValidity('')">
-                    </div>
-                    <p id='mensajeValidación' style='color:red;'><p>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Recibir Solicitud</button>
-                </div>
-            </div>
-        </form>
-
 
     </jsp:attribute>
 

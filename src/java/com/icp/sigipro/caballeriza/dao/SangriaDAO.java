@@ -603,4 +603,98 @@ public class SangriaDAO extends DAO
         }
         return s;
     }
+
+    public List<Sangria> obtenerSangriasLALPendiente() throws SIGIPROException {
+        
+        List<Sangria> resultado = new ArrayList<Sangria>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            // fecha, nombre_grupo, id
+            consulta = getConexion().prepareStatement(
+                " SELECT distinct s.id_sangria, s.fecha, s.fecha_dia1, s.fecha_dia2, s.fecha_dia3, g.nombre, g.id_grupo_de_caballo " +
+                " FROM caballeriza.sangrias s " +
+                "	INNER JOIN caballeriza.sangrias_caballos sc ON s.id_sangria = sc.id_sangria " +
+                "       INNER JOIN caballeriza.grupos_de_caballos g ON s.id_grupo_caballos = g.id_grupo_de_caballo " +
+                " WHERE ( participo_dia1 = true AND id_resultado_lal_dia1 IS null ) OR " +
+                "       ( participo_dia2 = true AND id_resultado_lal_dia2 IS null ) OR " +
+                "       ( participo_dia3 = true AND id_resultado_lal_dia3 IS null );"
+            );
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Sangria s = new Sangria();
+                
+                s.setId_sangria(rs.getInt("id_sangria"));
+                s.setFecha(rs.getDate("fecha"));
+                s.setFecha_dia1(rs.getDate("fecha_dia1"));
+                s.setFecha_dia2(rs.getDate("fecha_dia2"));
+                s.setFecha_dia3(rs.getDate("fecha_dia3"));
+                
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                g.setNombre(rs.getString("nombre"));
+                
+                s.setGrupo(g);
+                
+                resultado.add(s);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener las sangrías.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return resultado;
+        
+    }
+
+    public List<Caballo> obtenerCaballosSangriaDia(int id_sangria, int dia) throws SIGIPROException {
+        
+        List<Caballo> caballos_sangria = new ArrayList<Caballo>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            String cuerpo_consulta = " SELECT c.nombre, c.numero, c.id_caballo " +
+                                     " FROM caballeriza.sangrias_caballos sc " +
+                                     "     INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo " +
+                                     " WHERE sc.id_sangria = ? AND sc.participo_dia" + dia + ";";
+                
+            
+            consulta = getConexion().prepareStatement(cuerpo_consulta);
+            
+            consulta.setInt(1, id_sangria);
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Caballo c = new Caballo();
+                
+                c.setId_caballo(rs.getInt("id_caballo"));
+                c.setNumero(rs.getInt("numero"));
+                c.setNombre(rs.getString("nombre"));
+                
+                caballos_sangria.add(c);
+            }
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener los caballos.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return caballos_sangria;
+        
+    }
 }
