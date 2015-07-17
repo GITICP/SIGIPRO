@@ -296,6 +296,7 @@
                                                                         <div class="form-group">
                                                                             <div class="col-sm-12">
                                                                                 <div class="input-group">
+                                                                                    <%--Ligero BUG que no valida el formato de las celdas en las tablas, que ya fueron agregadas anteriormente--%>
                                                                                     <c:choose>
                                                                                         <c:when test="${diccionario.get(i).get('tipocolumnas').get(c).equals('excel')}">
                                                                                             <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" value="${diccionario.get(i).get('celdacolumna').get(c)}"

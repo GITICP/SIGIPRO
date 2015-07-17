@@ -216,11 +216,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
         HelperXML xml = new HelperXML(a.getEstructura());
 
-        HashMap<Integer, HashMap> dictionary = xml.getDictionary();
+        HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
 
-        System.out.println(dictionary.get(2).get("nombrefilas"));
+        System.out.println(diccionario_formulario.get(2).get("nombrefilas"));
 
-        Set<Integer> it = dictionary.keySet();
+        Set<Integer> it = diccionario_formulario.keySet();
         List<Integer> lista = new ArrayList<Integer>();
         lista.addAll(it);
 
@@ -231,7 +231,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         request.setAttribute("tipoequipos", tipoequipo);
         request.setAttribute("tiporeactivos", tiporeactivo);
         request.setAttribute("lista", lista);
-        request.setAttribute("diccionario", dictionary);
+        request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -482,14 +482,16 @@ public class ControladorAnalisis extends SIGIPROServlet {
         Analisis a = new Analisis();
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
-        HashMap<Integer, HashMap> dictionary = new HashMap<Integer, HashMap>();
-        int idActual = 0;
+        //Se crea un diccionario con los elementos del Formulario Dinamico
+        HashMap<Integer, HashMap> diccionario_formulario = new HashMap<Integer, HashMap>();
+        //Variable donde se define el ID actual del campo o tabla del formulario
+        int id_actual = 0;
+        //Variable donde se agrega el orden en el que el Formulario se agrego
         String orden = "";
-        //Contadores para clasificar las columnas y filas
-        HashMap<Integer, HashMap> columnasfilas = new HashMap<Integer, HashMap>();
+        //Diccionario con todos los valores de las columnas y filas del Formulario
+        HashMap<Integer, HashMap> columnas_filas = new HashMap<Integer, HashMap>();
         for (FileItem item : items) {
             if (item.isFormField()) {
-                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
                 String fieldValue;
                 try {
@@ -497,7 +499,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 } catch (UnsupportedEncodingException ex) {
                     fieldValue = item.getString();
                 }
-                //Todavia falta la estructura
                 switch (fieldName) {
                     case "nombre":
                         a.setNombre(fieldValue);
@@ -520,59 +521,60 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         orden = fieldValue;
                         break;
                     default:
-                        //Se crea un diccionario con los elementos del Formulario
-                        System.out.println(fieldName);
+                        //Se agarra el valor y se divide, ya que la entrada tiene una estructura t_nombredelvalor_id
                         String[] values = fieldName.split("_");
-                        System.out.println(values[1]);
                         if (values.length > 1) {
+                            //Se obtiene el ID del campo a procesar
                             int id = Integer.parseInt(values[2]);
                             if (id == 0) {
-                                id = idActual;
+                                id = id_actual;
                             } else {
-                                idActual = id;
+                                id_actual = id;
                             }
-                            if (!dictionary.containsKey(id)) {
+                            //Se crea el Hash en el diccionario, en caso de que no se haya creado
+                            if (!diccionario_formulario.containsKey(id)) {
                                 HashMap<String, String> llaves = new HashMap<String, String>();
                                 if (values[0].equals("c")) {
                                     llaves.put("tipo", "campo");
                                 } else {
                                     llaves.put("tipo", "tabla");
                                 }
-                                dictionary.put(id, llaves);
+                                diccionario_formulario.put(id, llaves);
                             }
-                            if (!columnasfilas.containsKey(id)) {
-                                HashMap<String, Integer> columnafila = new HashMap<String, Integer>();
-                                columnafila.put("columnas", 1);
-                                columnafila.put("filas", 1);
-                                columnasfilas.put(id, columnafila);
+                            //Se crea el Hash en el diccionario en caso de que fuera una tabla
+                            if (!columnas_filas.containsKey(id)) {
+                                HashMap<String, Integer> columna_fila = new HashMap<String, Integer>();
+                                columna_fila.put("columnas", 1);
+                                columna_fila.put("filas", 1);
+                                columnas_filas.put(id, columna_fila);
                             }
                             switch (values[1]) {
                                 case "nombrecolumna":
-                                    int cantidadColumnas1 = (int) columnasfilas.get(id).get("columnas");
-                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas1, fieldValue);
+                                    int cantidad_columnas1 = (int) columnas_filas.get(id).get("columnas");
+                                    diccionario_formulario.get(id).put(values[1] + "_" + cantidad_columnas1, fieldValue);
                                     break;
                                 case "tipocampocolumna":
-                                    int cantidadColumnas2 = (int) columnasfilas.get(id).get("columnas");
-                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas2, fieldValue);
-                                    cantidadColumnas2++;
-                                    columnasfilas.get(id).put("columnas", cantidadColumnas2);
+                                    int cantidad_columnas2 = (int) columnas_filas.get(id).get("columnas");
+                                    diccionario_formulario.get(id).put(values[1] + "_" + cantidad_columnas2, fieldValue);
+                                    cantidad_columnas2++;
+                                    columnas_filas.get(id).put("columnas", cantidad_columnas2);
                                     break;
                                 case "columnacelda":
-                                    int cantidadColumnas3 = (int) columnasfilas.get(id).get("columnas") - 1;
-                                    dictionary.get(id).put(values[1] + "_" + cantidadColumnas3, fieldValue);
+                                    int cantidad_columnas3 = (int) columnas_filas.get(id).get("columnas") - 1;
+                                    diccionario_formulario.get(id).put(values[1] + "_" + cantidad_columnas3, fieldValue);
                                     break;
                                 case "nombrefilaespecial":
-                                    int cantidadFilas1 = (int) columnasfilas.get(id).get("filas");
-                                    dictionary.get(id).put(values[1] + "_" + cantidadFilas1, fieldValue);
+                                    int cantidadFilas1 = (int) columnas_filas.get(id).get("filas");
+                                    diccionario_formulario.get(id).put(values[1] + "_" + cantidadFilas1, fieldValue);
                                     break;
                                 case "tipocampofilaespecial":
-                                    int cantidadFilas2 = (int) columnasfilas.get(id).get("filas");
-                                    dictionary.get(id).put(values[1] + "_" + cantidadFilas2, fieldValue);
+                                    int cantidadFilas2 = (int) columnas_filas.get(id).get("filas");
+                                    diccionario_formulario.get(id).put(values[1] + "_" + cantidadFilas2, fieldValue);
                                     cantidadFilas2++;
-                                    columnasfilas.get(id).put("filas", cantidadFilas2);
+                                    columnas_filas.get(id).put("filas", cantidadFilas2);
                                     break;
                                 default:
-                                    dictionary.get(id).put(values[1], fieldValue);
+                                    diccionario_formulario.get(id).put(values[1], fieldValue);
                                     break;
                             }
                             break;
@@ -600,11 +602,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
             }
         }
-        System.out.println(dictionary);
-        if (!dictionary.isEmpty()) {
-            String xml = this.parseDictXML(dictionary, orden, columnasfilas);
+        if (!diccionario_formulario.isEmpty()) {
+            //Se transforma el diccionario en un XML
+            String xml = this.parseDictXML(diccionario_formulario, orden, columnas_filas);
             a.setEstructuraString(xml);
-            System.out.println(xml);
         }
         return a;
     }
@@ -639,22 +640,18 @@ public class ControladorAnalisis extends SIGIPROServlet {
         return excel;
     }
 
-    private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
-
+    private String parseDictXML(HashMap<Integer, HashMap> diccionario_formulario, String orden, HashMap<Integer, HashMap> columnas_filas) {
         this.nombre_campo = 1;
-
-        System.out.println(dictionary);
-
-        String[] keys = orden.split(",");
-        int contadorTablas = 0;
-
+        //Se obtiene el orden de los campos
+        String[] orden_formulario = orden.split(",");
+        int contador_tablas = 0;
         HelperXML xml = new HelperXML();
-
-        for (String i : keys) {
+        //Se itera sobre los IDS del orden de los campos
+        for (String i : orden_formulario) {
             if (!i.equals("")) {
                 int key = Integer.parseInt(i);
                 Element campo = xml.agregarElemento("campo");
-                HashMap<String, String> hash = dictionary.get(key);
+                HashMap<String, String> hash = diccionario_formulario.get(key);
                 if (hash.get("tipo").equals("campo")) {
                     this.crearCampo(xml, hash, campo);
                 } else {
@@ -676,8 +673,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                     //Columnas
                     Element primeraColumna = xml.agregarElemento("columna", columnas);
                     xml.agregarSubelemento("nombre", hash.get("nombrefilacolumna"), primeraColumna);
-                    int cantidadColumnas = (int) columnasfilas.get(key).get("columnas") - 1;
-                    for (int it = 0; it < cantidadColumnas; it++) {
+                    int cantidad_columnas = (int) columnas_filas.get(key).get("columnas") - 1;
+                    for (int it = 0; it < cantidad_columnas; it++) {
                         int col = it + 1;
                         String keycol = "nombrecolumna_" + col;
                         String valorCol = hash.get(keycol);
@@ -693,7 +690,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         tiposcolumnas.add(valorTipo);
                         columnacelda.add(valorCelda);
                         Element columna = xml.agregarElemento("columna", columnas);
-                        System.out.println(valorTipo);
                         if (valorTipo.equals("excel_tabla")){
                             Attr tipo = xml.definirAtributo("tipo", "excel_tabla");
                             xml.agregarAtributo(columna, tipo);
@@ -723,7 +719,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                             Element celda = xml.agregarElemento("celda", celdas);
                             Element campo_fila = xml.agregarElemento("campo", celda);
                             xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
-                            String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
+                            String nombre_celda = "Tabla_" + contador_tablas + "_Celda_" + it + "_" + jt;
                             xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
                             String celdaColumna = columnacelda.get(jt);
                             if (!celdaColumna.equals("")) {
@@ -742,7 +738,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         }
                     }
                     //Filas especiales
-                    int cantidadFilasEspeciales = (int) columnasfilas.get(key).get("filas") - 1;
+                    int cantidadFilasEspeciales = (int) columnas_filas.get(key).get("filas") - 1;
                     for (int it = 0; it < cantidadFilasEspeciales; it++) {
                         int fil = it + 1;
                         String keycol = "nombrefilaespecial_" + fil;
@@ -762,7 +758,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                             Element celda = xml.agregarElemento("celda", celdas);
                             Element campo_fila = xml.agregarElemento("campo", celda);
                             xml.agregarSubelemento("tipo", tiposcolumnas.get(jt), campo_fila);
-                            String nombre_celda = "Tabla_" + contadorTablas + "_" + valorTipo + "_" + jt;
+                            String nombre_celda = "Tabla_" + contador_tablas + "_" + valorTipo + "_" + jt;
                             xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
                             String celdaColumna = columnacelda.get(jt);
                             if (!celdaColumna.equals("")) {
@@ -781,7 +777,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         }
                     }
                     //------------
-                    contadorTablas++;
+                    contador_tablas++;
                 }
             }
         }
