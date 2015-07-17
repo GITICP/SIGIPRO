@@ -135,7 +135,11 @@ public class HelperXML {
                 case "etiqueta":
                     dictionary.get(contador).put(name, text);
                 case "celda":
-                    dictionary.get(contador).put(name, text);
+                    String patron = "([A-Z]+)(\\d+)";
+                    String primera = text.replaceFirst(patron, "$1");
+                    String segunda = text.replaceFirst(patron, "$2");
+                    String celda = primera+"-"+segunda;
+                    dictionary.get(contador).put(name, celda);
 
             }
         }
@@ -220,9 +224,9 @@ public class HelperXML {
                         nombrefilas.add(nombre.getTextContent());
                     } else {
                         NodeList nodosCampos = etiqueta.getChildNodes();
-                        if (nodosCampos.getLength() == 3){
-                                celdacolumna.add("");
-                            }
+                        if (nodosCampos.getLength() == 3) {
+                            celdacolumna.add("");
+                        }
                         for (int y = 0, lenCampos = nodosCampos.getLength(); y < lenCampos; y++) {
                             Node campo = nodosCampos.item(y);
                             switch (campo.getNodeName()) {
@@ -231,8 +235,11 @@ public class HelperXML {
                                     tipocolumnas.add(tipocolumna);
                                     break;
                                 case "celda":
-                                    System.out.println(campo.getTextContent());
-                                    celdacolumna.add(campo.getTextContent());
+                                    String patron = "([A-Z]+)(\\d+)";
+                                    String prueba = campo.getTextContent();
+                                    String primera = prueba.replaceFirst(patron, "$1");
+                                    String segunda = prueba.replaceFirst(patron, "$2");
+                                    celdacolumna.add(primera + "-" + segunda);
                                     break;
                             }
 

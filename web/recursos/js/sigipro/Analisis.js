@@ -376,8 +376,6 @@ function agregarAnalisis() {
                 var listaColumnas = $("#listaColumnasExcel").val().split(",");
                 alert(listaColumnas);
                 $.each(listaColumnas, function (x, y) {
-
-                    alert(y);
                     if (y !== "") {
                         var celdaColumna = $("#columnacelda_" + e + "_" + y).val();
                         alert(celdaColumna);

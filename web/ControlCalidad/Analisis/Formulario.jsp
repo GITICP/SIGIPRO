@@ -189,12 +189,12 @@
                                                             <div class="input-group">
                                                                 <c:choose>
                                                                     <c:when test="${diccionario.get(i).get('manual').equals('True')}">
-                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A34" class="form-control" id="celda_${i}" name="c_celda_${i}" value="${diccionario.get(i).get('celda')}" 
+                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="celda_${i}" name="c_celda_${i}" value="${diccionario.get(i).get('celda')}" 
                                                                                oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido.')"
                                                                                oninput="setCustomValidity('')" >                                                                 
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A34" class="form-control" id="celda_${i}" name="c_celda_${i}" disabled 
+                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="celda_${i}" name="c_celda_${i}" disabled 
                                                                                oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido.')"
                                                                                oninput="setCustomValidity('')" >                                                                 
                                                                     </c:otherwise>
@@ -246,6 +246,7 @@
                                                     <div class="columnas_${i}">
                                                         <c:if test="${diccionario.get(i).get('columnas').size()>0}">
                                                             <c:forEach begin="0" end="${diccionario.get(i).get('columnas').size()-1}" var="c">
+                                                                
                                                                 <div class='columna col-md-12 columna_${i}_${c}_e' id="columna_${i}_${c}_e" >
                                                                     <div class='col-md-5'>
                                                                         <label for="nombre" class="control-label">*Nombre de Columna</label>
@@ -479,7 +480,7 @@
             <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                    <button type="button" class="btn btn-primary" onclick="agregarAnalisis()"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
                     <button type="button" class="btn btn-primary" onclick="agregarAnalisis()"><i class="fa fa-check-circle"></i> ${accion} Análisis</button>
