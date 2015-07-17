@@ -44,7 +44,7 @@ public class ControladorResultado extends SIGIPROServlet
 {
 
     //Falta implementar
-    private final int[] permisos = {1, 540};
+    private final int[] permisos = {1, 541};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
     private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
@@ -104,7 +104,7 @@ public class ControladorResultado extends SIGIPROServlet
     
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        validarPermiso(541, listaPermisos);
         String redireccion = "Resultado/Ver.jsp";
         
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
@@ -138,7 +138,7 @@ public class ControladorResultado extends SIGIPROServlet
     
     protected void getVerprueba(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        validarPermiso(541, listaPermisos);
         String redireccion = "Resultado/Ver.jsp";
         
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));

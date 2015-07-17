@@ -37,7 +37,7 @@
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEliminar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 520}">
+                                    <c:if test="${permiso == 1 || permiso == 540}">
                                         <c:set var="contienePermisoEliminar" value="true" />
                                     </c:if>
                                 </c:forEach>
@@ -47,19 +47,13 @@
 
                                 <c:set var="contienePermisoEditar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 520}">
+                                    <c:if test="${permiso == 1 || permiso == 540}">
                                         <c:set var="contienePermisoEditar" value="true" />
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=editar&id_analisis=${analisis.getId_analisis()}">Editar</a>
                                 </c:if>
-                                <c:set var="contienePermisoEliminarCertificado" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 521}">
-                                        <c:set var="contienePermisoEliminarCertificado" value="true" />
-                                    </c:if>
-                                </c:forEach>
                             </div>
                         </div>
                         ${mensaje}

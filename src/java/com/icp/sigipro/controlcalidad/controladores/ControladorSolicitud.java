@@ -98,7 +98,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
         String redireccion = "Solicitud/index.jsp";
         List<SolicitudCC> solicitudes = dao.obtenerSolicitudes();
         request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
+        request.setAttribute("boolanular", this.verificarAnularSolicitud(request));
         request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
+
         request.setAttribute("listaSolicitudes", solicitudes);
         redireccionar(request, response, redireccion);
     }
@@ -113,8 +115,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
             SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
             request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
-            request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
+            request.setAttribute("boolanular", this.verificarAnularSolicitud(request));
             request.setAttribute("booleditar", this.verificarEditarSolicitud(request));
+            request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -273,12 +276,12 @@ public class ControladorSolicitud extends SIGIPROServlet {
         SolicitudCC s = construirObjeto(request);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         s.setId_solicitud(id_solicitud);
-        
+
         String idGrupos = request.getParameter("listaGrupos");
         String[] grupos = idGrupos.replace(" ", "").split(",");
-        
+
         resultado = dao.eliminarGrupo(grupos);
-        
+
         if (resultado) {
             for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
                 ags.getGrupo().setSolicitud(s);
@@ -428,8 +431,13 @@ public class ControladorSolicitud extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(551, listaPermisos);
     }
-
+    
     private boolean verificarRealizarSolicitud(HttpServletRequest request) throws AuthenticationException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        return verificarPermiso(541, listaPermisos);
+    }
+
+    private boolean verificarAnularSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         return verificarPermiso(552, listaPermisos);
     }

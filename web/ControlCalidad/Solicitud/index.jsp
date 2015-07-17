@@ -88,12 +88,16 @@
                                             <td>${solicitud.getEstado()}</td>
                                             <c:choose>
                                                 <c:when test="${solicitud.getEstado().equals('Solicitado')}">
-                                                    <c:if test="${boolrecibir}">
-                                                        <td>
+                                                    <td>
+
+                                                        <c:if test="${boolrecibir}">
                                                             <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
+                                                        </c:if>
+                                                        <c:if test="${boolanular}">
                                                             <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
-                                                        </td>
-                                                    </c:if>
+                                                        </c:if>
+                                                    </td>
+
                                                 </c:when>
                                                 <c:otherwise>
                                                     <c:choose>
@@ -167,7 +171,7 @@
         <form class="form-horizontal" id="form_modalautorizar" method="post" data-show-auth="${show_modal_auth}" action="Solicitud">
             ${mensaje_auth}
             <h4> Información sobre la solicitud </h4>
-            
+
             <h5>Para validar la recepción, el usuario que recibe la solicitud debe iniciar sesión. </h5>
 
             <input hidden="true" name="id_solicitud_recibir" id="id_solicitud_recibir">

@@ -45,6 +45,8 @@
                                         </c:if>
                                         <c:if test="${boolrecibir}">
                                             <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
+                                        </c:if>
+                                        <c:if test="${boolanular}">
                                             <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                         </c:if>
                                     </c:when>
@@ -145,7 +147,9 @@
                                                     </td>
                                                     <td>
                                                         <c:if test="${solicitud.getEstado().equals('Recibido')}">
-                                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                            <c:if test="${boolrealizar}">
+                                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                            </c:if>
                                                         </c:if>
                                                     </td>
                                                 </tr>

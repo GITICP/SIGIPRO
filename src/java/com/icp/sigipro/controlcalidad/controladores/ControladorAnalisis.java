@@ -79,8 +79,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorAnalisis", urlPatterns = {"/ControlCalidad/Analisis"})
 public class ControladorAnalisis extends SIGIPROServlet {
 
-    //Falta implementar
-    private final int[] permisos = {1, 540};
+    //Administrar, Realizar
+    private final int[] permisos = {1, 540, 541};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
@@ -263,7 +263,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        validarPermiso(541, listaPermisos);
         String redireccion = "Analisis/Realizar.jsp";
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -304,7 +304,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        validarPermiso(541, listaPermisos);
         String redireccion = "VerResultado.jsp";
 
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
