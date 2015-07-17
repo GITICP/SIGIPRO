@@ -422,6 +422,9 @@ ADD COLUMN descripcion varchar(500);
 ALTER TABLE control_calidad.analisis
 ADD COLUMN nombre varchar(50);
 
+ALTER TABLE control_calidad.analisis
+ADD COLUMN aprobado boolean;
+
 
 -- MENÚ PRINCIPAL
 

@@ -25,6 +25,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperExcel;
 import com.icp.sigipro.utilidades.HelperXML;
@@ -83,6 +84,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final int[] permisos = {1, 540, 541};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
+    private final UsuarioDAO usuariodao = new UsuarioDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
     private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
     private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
@@ -357,6 +359,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
                 this.getAgregar(request, response);
             }
+        } else if (!a.getUsuario_aprobacion().equals("")){
+            boolean autenticacion = usuariodao.autorizarRecibo(a.getUsuario_aprobacion(), a.getContrasena_aprobacion());
+            
+            
+            
         } else {
             resultado = dao.editarAnalisis(a);
             if (resultado) {
@@ -502,6 +509,12 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 switch (fieldName) {
                     case "nombre":
                         a.setNombre(fieldValue);
+                        break;
+                    case "usuario_aprobacion":
+                        a.setUsuario_aprobacion(fieldValue);
+                        break;
+                    case "passw":
+                        a.setContrasena_aprobacion(fieldValue);
                         break;
                     case "id_analisis":
                         int id_analisis = Integer.parseInt(fieldValue);

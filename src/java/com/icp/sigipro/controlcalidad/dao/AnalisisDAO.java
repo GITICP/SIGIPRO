@@ -26,14 +26,15 @@ public class AnalisisDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis (nombre,estructura,machote) "
-                    + " VALUES (?,?,?) RETURNING id_analisis");
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis (nombre,estructura,machote,aprobado) "
+                    + " VALUES (?,?,?,?) RETURNING id_analisis");
 
             SQLXML xmlVal = getConexion().createSQLXML();
             xmlVal.setString(analisis.getEstructuraString());
             consulta.setString(1, analisis.getNombre());
             consulta.setSQLXML(2, xmlVal);
             consulta.setString(3, analisis.getMachote());
+            consulta.setBoolean(4, analisis.isAprobado());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -145,7 +146,6 @@ public class AnalisisDAO extends DAO {
                 consulta.setString(1, analisis.getNombre());
                 consulta.setSQLXML(2, xmlVal);
                 consulta.setInt(3, analisis.getId_analisis());
-                System.out.println(consulta);
             } else {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
                         + "SET nombre=?, estructura=?, machote=? "
@@ -174,13 +174,13 @@ public class AnalisisDAO extends DAO {
         ResultSet rs = null;
         List<Analisis> resultado = new ArrayList<Analisis>();
         try {
-            consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre, count(ags.id_analisis) as cantidad "
+            consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre,analisis.aprobado, count(ags.id_analisis) as cantidad "
                     + "FROM control_calidad.analisis as analisis "
                     + "LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
                     + "WHERE ags.id_analisis_grupo_solicitud not in (SELECT id_analisis_grupo_solicitud FROM control_calidad.resultados) "
                     + "GROUP BY analisis.id_analisis "
                     + "UNION "
-                    + "SELECT analisis.id_analisiS, analisis.nombre, 0 as cantidad "
+                    + "SELECT analisis.id_analisiS, analisis.nombre,analisis.aprobado, 0 as cantidad "
                     + "FROM CONTROL_CALIDAD.ANALISIS AS ANALISIS "
                     + "WHERE analisis.id_analisis not in (SELECT ags.id_analisis FROM control_calidad.analisis as a INNER JOIN control_calidad.analisis_grupo_solicitud as ags ON a.id_analisis = ags.id_analisis);");
             rs = consulta.executeQuery();
@@ -189,6 +189,7 @@ public class AnalisisDAO extends DAO {
                 analisis.setId_analisis(rs.getInt("id_analisis"));
                 analisis.setNombre(rs.getString("nombre"));
                 analisis.setCantidad_pendiente(rs.getInt("cantidad"));
+                analisis.setAprobado(rs.getBoolean("aprobado"));
                 resultado.add(analisis);
             }
         } catch (Exception ex) {
@@ -206,7 +207,7 @@ public class AnalisisDAO extends DAO {
         ResultSet rs = null;
         Analisis resultado = new Analisis();
         try {
-            consulta = getConexion().prepareStatement(" SELECT analisis.id_analisis, analisis.nombre, analisis.estructura, analisis.machote "
+            consulta = getConexion().prepareStatement(" SELECT analisis.id_analisis, analisis.nombre, analisis.estructura, analisis.machote, analisis.aprobado "
                     + "FROM control_calidad.analisis as analisis "
                     + "WHERE analisis.id_analisis = ?; ");
             consulta.setInt(1, id_analisis);
@@ -216,6 +217,7 @@ public class AnalisisDAO extends DAO {
                 resultado.setMachote(rs.getString("machote"));
                 resultado.setEstructura(rs.getSQLXML("estructura"));
                 resultado.setNombre(rs.getString("nombre"));
+                resultado.setAprobado(rs.getBoolean("aprobado"));
             }
             resultado.setTipos_equipos_analisis(this.obtenerTipoEquipos(id_analisis));
             resultado.setTipos_reactivos_analisis(this.obtenerTipoReactivos(id_analisis));
