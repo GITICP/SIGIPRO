@@ -53,7 +53,7 @@ function agregarCampo() {
     fila += "               <div class=\"form-group\">";
     fila += "                   <div class=\"col-sm-12\">";
     fila += "                       <div class=\"input-group\">";
-    fila += "                           <input id=\"visible_" + contador + "\" type=\"checkbox\" name=\"c_campovisible_" + contador + "\" style=\"width:20px; height:20px;\"><span>  Visible para Usuarios</span>";
+    fila += "                           <input id=\"resultado_" + contador + "\" type=\"radio\" name=\"c_camporesultado_0\" style=\"width:20px; height:20px;\"><span>  Resultado</span>";
     fila += "                       </div>";
     fila += "                   </div>";
     fila += "               </div>";
@@ -63,7 +63,7 @@ function agregarCampo() {
     fila += "               <div class=\"form-group\">";
     fila += "                   <div class=\"col-sm-12\">";
     fila += "                       <div class=\"input-group\">";
-    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A34\" class=\"form-control\" id=\"celda_" + contador + "\" name=\"c_celda_" + contador + "\" disabled ";
+    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A-34\" class=\"form-control\" id=\"celda_" + contador + "\" name=\"c_celda_" + contador + "\" disabled ";
     fila += "                               oninvalid=\"setCustomValidity(\'Este campo es requerido o no coincide con el formato requerido. \')\"";
     fila += "                               oninput=\"setCustomValidity(\'\')\" > ";
     fila += "                       </div>";
@@ -105,6 +105,20 @@ function checkNombres(check, id) {
     }
 }
 
+function validarColumnaCelda(select, id, columna) {
+    var value = $(select).val();
+    if (value === 'excel_tabla') {
+        $("#columnacelda_" + id + "_" + columna).prop("disabled", false);
+        var lista = $("#listaColumnasExcel").val();
+        $("#listaColumnasExcel").val(lista + "," + columna);
+        $(select)[0].setCustomValidity('');
+    } else {
+        $("#columnacelda_" + id + "_" + columna).prop("disabled", true);
+        $(select)[0].setCustomValidity('');
+    }
+
+}
+
 $(function () {
     $("#sortable").sortable({
         placeholder: "ui-state-highlight",
@@ -130,7 +144,7 @@ function agregarColumna(id) {
     fila += "               </div>";
     fila += "            </div>";
     fila += "       </div>";
-    fila += "                                            <div class=\"col-md-5\">";
+    fila += "                                            <div class=\"col-md-3\">";
     fila += "                                                <label for=\"especie\" class=\"control-label\"> *Tipo del Campo</label>";
     fila += "                                                <div class=\"form-group\">";
     fila += "                                                    <div class=\"col-sm-12\">";
@@ -138,15 +152,28 @@ function agregarColumna(id) {
     fila += "                                                            <select id=\"tipocampocolumna_" + id + "_" + columnas + "\" class=\"select2\" name=\"t_tipocampocolumna_" + id + "_" + columnas + "\"";
     fila += "                                                                    style='background-color: #fff;' required";
     fila += "                                                                    oninvalid=\"setCustomValidity('Este campo es requerido')\"";
-    fila += "                                                                    onchange=\"setCustomValidity('')\">";
+    fila += "                                                                    onchange=\"validarColumnaCelda(this," + id + "," + columnas + ")\">";
     fila += "                                                                <option value=''></option>";
     fila += "                                                                <option value=\"number_tabla\">Número</option>";
     fila += "                                                                <option value=\"text_tabla\">Campo de Texto</option>";
+    fila += "                                                                <option value=\"excel_tabla\">Excel</option>";
     fila += "                                                            </select>";
     fila += "                                                        </div>";
     fila += "                                                    </div>";
     fila += "                                                </div>";
     fila += "                                            </div>";
+    fila += "           <div class=\"col-sm-2\">";
+    fila += "               <br>";
+    fila += "               <div class=\"form-group\">";
+    fila += "                   <div class=\"col-sm-12\">";
+    fila += "                       <div class=\"input-group\">";
+    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A-34\" class=\"form-control\" id=\"columnacelda_" + id + "_" + columnas + "\" name=\"t_columnacelda_" + id + "_" + columnas + "\" disabled ";
+    fila += "                               required oninvalid=\"setCustomValidity(\'Este campo es requerido o no coincide con el formato requerido. \')\"";
+    fila += "                               oninput=\"setCustomValidity(\'\')\" > ";
+    fila += "                       </div>";
+    fila += "                    </div>";
+    fila += "               </div>";
+    fila += "           </div>";
     fila += "       <div class=\"col-md-2\">";
     fila += "<br>";
     fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo(\'columna_' + id + "_" + columnas + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
@@ -156,7 +183,6 @@ function agregarColumna(id) {
     $(".columnas_" + id).append(fila);
 
     $("#tipocampocolumna_" + id + "_" + columnas).select2();
-    alert("#tipocampocolumna_" + id + "_" + columnas);
 
     columnas++;
 
@@ -215,7 +241,7 @@ function agregarTabla() {
     fila += "    <h3><i class=\"fa fa-table\"></i> Tabla #" + contador + "</h3>";
     fila += "    <div class=\"btn-group widget-header-toolbar\">";
     fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo(\'tabla_' + contador + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
-    fila += "        <input id=\"visible_" + contador + "\" type=\"checkbox\" name=\"t_tablavisible_" + contador + "\" style=\"width:20px; height:20px; alignment-baseline: central\"><span>  Visible para Usuarios</span>";
+    //fila += "        <input id=\"visible_" + contador + "\" type=\"checkbox\" name=\"t_tablavisible_" + contador + "\" style=\"width:20px; height:20px; alignment-baseline: central\"><span>  Visible para Usuarios</span>";
     fila += "    </div>";
     fila += "</div>";
     fila += "<div class=\"widget-content\">";
@@ -329,39 +355,53 @@ function agregarTabla() {
 }
 
 function agregarAnalisis() {
-    //
     var orden = $("#orden").val();
     var lista = orden.split(",");
-    alert(lista);
+    var re = new RegExp("(\\$?[a-zA-Z]{1,2}\\$?\\-[1-9][0-9]*)(?![0-9a-zA-Z_:])", "");
     $.each(lista, function (i, e) {
-        alert(e);
-        alert(e !== "");
         if (e !== "") {
             var tipo = $("#elemento_" + e).val();
+            alert(tipo);
             if (tipo === "tabla") {
                 var filas = $("#nombresfilas_" + e).val().split(",");
-                alert(filas);
                 if (filas !== "") {
                     var tamano = filas.length;
                     var cantidad = parseInt($("#cantidadfilas_" + e).val());
-                    alert(tamano);
-                    alert(cantidad);
                     if (cantidad !== tamano) {
                         $("#nombresfilas_" + e)[0].setCustomValidity("La cantidad de filas no coincide con la cantidad entregada.");
                     } else {
                         $("#nombresfilas_" + e)[0].setCustomValidity('');
                     }
                 }
+                var listaColumnas = $("#listaColumnasExcel").val().split(",");
+                alert(listaColumnas);
+                $.each(listaColumnas, function (x, y) {
+
+                    alert(y);
+                    if (y !== "") {
+                        var celdaColumna = $("#columnacelda_" + e + "_" + y).val();
+                        alert(celdaColumna);
+                        if (celdaColumna !== "") {
+                            if (re.test(celdaColumna)) {
+                                $("#columnacelda_" + e + "_" + y)[0].setCustomValidity("");
+                            } else {
+                                $("#columnacelda_" + e + "_" + y)[0].setCustomValidity("El formato no coincide con una celda de Excel.");
+                            }
+                        }
+                    }
+
+                });
             } else {
                 var celda = $("#celda_" + e).val();
                 if (celda !== "") {
-                    var regex = /(\$?[a-zA-Z]{1,2}\$?[1-9][0-9]*)(?![0-9a-zA-Z_:])/;
-                    if (celda.match(regex)) {
+                    if (re.test(celda)) {
                         $("#celda_" + e)[0].setCustomValidity("");
                     } else {
                         $("#celda_" + e)[0].setCustomValidity("El formato no coincide con una celda de Excel.");
                     }
                 }
+
+
             }
         }
     });
@@ -430,10 +470,14 @@ $(document).ready(function () {
 
     var orden = $("#orden").val();
 
-    var lista = orden.split(",");
-    var len = lista.length;
+    if (orden !== "") {
+        var lista = orden.split(",");
+        var len = lista.length;
 
-    contador = len + 1;
+        contador = len + 1;
+    } else {
+        contador = 1;
+    }
 
     $(".fila-especial").each(function () {
         new FilaEspecial($(this));

@@ -26,7 +26,8 @@ Array.prototype.remove = function (x) {
 }
 
 function seleccionTipoMuestra(tipomuestra, id_formulario) {
-    var id = $(tipomuestra).val();
+    var selectTipoMuestra = $("select[name*='tipomuestra']");
+    alert(selectTipoMuestra);var id = $(tipomuestra).val();
     $("#seleccionAnalisis_" + id_formulario).empty();
     var listaAnalisis = $("#listaAnalisis_" + id).val();
     var parseLista = JSON.parse(listaAnalisis);
@@ -44,7 +45,7 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
 
     var analisis = $("#editaranalisis_" + id_formulario).val();
 
-    if (analisis === "") {
+    if (analisis === undefined) {
         var seleccionados = $(".analisis_" + id_formulario).find("#opt-gr1_" + id_formulario + " > option");
         var selected = [];
         $.each(seleccionados, function (i, e) {
@@ -54,6 +55,7 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
     } else {
         $(".analisis_" + id_formulario).select2("val", analisis.replace(" ", "").split(","));
     }
+
 }
 ;
 
@@ -208,13 +210,17 @@ $(document).ready(function () {
     });
 
     //Formatea las solicitudes ya antes agregadas
-    var ids = $("#listaIds").val().split(",");
-    var cantidad = ids.length;
-    contador = cantidad + 1;
-    $.each(ids, function (i, contador) {
+    var ids = $("#listaIds").val();
+    if (ids !== "") {
+        var listaIds = ids.split(",");
+        var cantidad = listaIds.length;
+        contador = cantidad + 1;
+    } else {
+        contador = 1;
+    }
 
+    $.each(listaIds, function (i, contador) {
         var tipomuestra = $("#editartipomuestra_" + contador).val();
-
         $(".analisis_" + contador).select2();
         $("#identificadores_" + contador).select2({
             minimumResultsForSearch: -1,

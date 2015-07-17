@@ -301,8 +301,8 @@ ALTER TABLE control_calidad.analisis_grupo_solicitud ADD CONSTRAINT Analisis_Gru
 
 
 ALTER TABLE control_calidad.analisis_grupo_solicitud ADD CONSTRAINT Analisis_Grupo_Solicitud_Grupos 
-    FOREIGN KEY (id_grupo)
-    REFERENCES control_calidad.grupos (id_grupo)
+    FOREIGN KEY (id_grupo) 
+    REFERENCES control_calidad.grupos (id_grupo) ON DELETE CASCADE
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE 
 ;
@@ -362,7 +362,7 @@ ALTER TABLE control_calidad.equipos ADD CONSTRAINT Equipo_TipoEquipo
 
 ALTER TABLE control_calidad.grupos_muestras ADD CONSTRAINT Grupos_Muestras_Grupos 
     FOREIGN KEY (id_grupo)
-    REFERENCES control_calidad.grupos (id_grupo)
+    REFERENCES control_calidad.grupos (id_grupo) ON DELETE CASCADE
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE 
 ;
@@ -372,7 +372,7 @@ ALTER TABLE control_calidad.grupos_muestras ADD CONSTRAINT Grupos_Muestras_Grupo
 
 ALTER TABLE control_calidad.grupos_muestras ADD CONSTRAINT Grupos_Muestras_Muestras 
     FOREIGN KEY (id_muestra)
-    REFERENCES control_calidad.muestras (id_muestra)
+    REFERENCES control_calidad.muestras (id_muestra) ON DELETE CASCADE
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE 
 ;
@@ -472,6 +472,7 @@ ADD COLUMN descripcion varchar(500);
 
 ALTER TABLE control_calidad.analisis
 ADD COLUMN nombre varchar(50);
+
 
 -- MENÚ PRINCIPAL
 

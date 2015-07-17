@@ -377,7 +377,7 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement("SELECT tm.id_tipo_muestra, string_agg(CAST (m.identificador as text), ', ') AS identificador, string_agg(DISTINCT CAST ( m.fecha_descarte_estimada as text), ', ') as fecha_descarte, string_agg(DISTINCT CAST ( a.id_analisis as text), ', ') as id_analisis "
+            consulta = getConexion().prepareStatement("SELECT tm.id_tipo_muestra, string_agg(CAST (m.identificador as text), ', ') AS identificador, string_agg(DISTINCT CAST ( m.fecha_descarte_estimada as text), ', ') as fecha_descarte, string_agg(DISTINCT CAST ( a.id_analisis as text), ', ') as id_analisis, string_agg(CAST (g.id_grupo as text), ', ') AS id_grupo "
                     + "FROM control_calidad.analisis_grupo_solicitud as ags "
                     + "LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
                     + "LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
@@ -398,10 +398,12 @@ public class SolicitudDAO extends DAO {
                 m.setFecha_descarte_estimada(rs.getDate("fecha_descarte"));
                 if (m.getFecha_descarte_estimada() != null) {
                     filaSolicitud.add(m.getFecha_descarte_estimadaAsString());
-                }else{
+                } else {
                     filaSolicitud.add("");
                 }
                 filaSolicitud.add(rs.getString("id_analisis"));
+                filaSolicitud.add(rs.getString("id_grupo"));
+
                 resultado.add(filaSolicitud);
                 contador++;
             }
@@ -426,6 +428,37 @@ public class SolicitudDAO extends DAO {
             consulta.setString(1, observaciones);
             consulta.setInt(2, id_solicitud);
             if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean eliminarGrupo(String[] grupos) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.muestras "
+                    + "WHERE id_muestra in (SELECT m.id_muestra FROM control_calidad.muestras as m INNER JOIN control_calidad.grupos_muestras as gm ON gm.id_muestra = m.id_muestra WHERE gm.id_grupo = ?); ");
+            for (String i : grupos) {
+                consulta.setInt(1, Integer.parseInt(i));
+                consulta.addBatch();
+            }
+            consulta.executeBatch();
+            
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.grupos "
+                    + "WHERE id_grupo = ?; ");
+            for (String i : grupos) {
+                consulta.setInt(1, Integer.parseInt(i));
+                consulta.addBatch();
+            }
+            int[] result = consulta.executeBatch();
+            if (result.length > 0) {
                 resultado = true;
             }
         } catch (Exception ex) {
