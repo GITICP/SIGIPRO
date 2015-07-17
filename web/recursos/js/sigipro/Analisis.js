@@ -456,47 +456,53 @@ $(document).ready(function () {
         tokenSeparators: [',', ' ']
     });
 
-    var tiposequipo = $("#listaTiposEquipo").val();
-    var tiposreactivo = $("#listaTiposReactivo").val();
-    if (tiposequipo !== "") {
-        $("#seleccionTipoEquipo").select2("val", tiposequipo.split(","));
-
-    }
-    if (tiposreactivo !== "") {
-        $("#seleccionTipoReactivo").select2("val", tiposreactivo.split(","));
-
+    if ($("#listaTiposEquipo").length > 1) {
+        var tiposequipo = $("#listaTiposEquipo").val();
+        if (tiposequipo !== "") {
+            $("#seleccionTipoEquipo").select2("val", tiposequipo.split(","));
+        }
     }
 
+    if ($("#listaTiposReactivo").length > 1) {
+        var tiposreactivo = $("#listaTiposReactivo").val();
 
-    var orden = $("#orden").val();
+        if (tiposreactivo !== "") {
+            $("#seleccionTipoReactivo").select2("val", tiposreactivo.split(","));
 
-    if (orden !== "") {
-        var lista = orden.split(",");
-        var len = lista.length;
+        }
+    }
 
-        contador = len + 1;
-    } else {
-        contador = 1;
+    if ($("#orden").lenght > 1) {
+        var orden = $("#orden").val();
+
+        if (orden !== "") {
+            var lista = orden.split(",");
+            var len = lista.length;
+
+            contador = len + 1;
+        } else {
+            contador = 1;
+        }
     }
 
     $(".fila-especial").each(function () {
         new FilaEspecial($(this));
     });
-    
-    $("#seleccion-reactivos").change(function() {
+
+    $("#seleccion-reactivos").change(function () {
         var espacio_reactivos = $("#espacio-preparacion-reactivos");
-        
-        espacio_reactivos.children().each(function(){
+
+        espacio_reactivos.children().each(function () {
             $(this).remove();
             $("label[for=preparacion-reactivos]").hide();
         });
-        
-        $(this).find("option:selected").each(function() {
+
+        $(this).find("option:selected").each(function () {
             var enlace = "/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=" + $(this).val();
             var objeto_enlace = $("<a href=\"" + enlace + "\">");
             var quiebre = $("<br>");
             objeto_enlace.text("Descargar preparación de reactivo " + $(this).text());
-            
+
             espacio_reactivos.append(objeto_enlace);
             espacio_reactivos.append(quiebre);
             espacio_reactivos.show();

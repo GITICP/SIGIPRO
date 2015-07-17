@@ -168,7 +168,7 @@ public class ControladorAnalisis extends SIGIPROServlet
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", sig_ex.getMessage());
         }
-        
+
         request.setAttribute("analisis", a);
         request.setAttribute("tipoequipos", tipoequipo);
         request.setAttribute("tiporeactivos", tiporeactivo);
@@ -227,19 +227,19 @@ public class ControladorAnalisis extends SIGIPROServlet
         String redireccion = "Analisis/Editar.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         Analisis a = dao.obtenerAnalisis(id_analisis);
-        
+
         HelperXML xml = new HelperXML(a.getEstructura());
-        
-        HashMap<Integer,HashMap> dictionary = xml.getDictionary();
-        
+
+        HashMap<Integer, HashMap> dictionary = xml.getDictionary();
+
         System.out.println(dictionary.get(2).get("nombrefilas"));
-        
+
         Set<Integer> it = dictionary.keySet();
         List<Integer> lista = new ArrayList<Integer>();
         lista.addAll(it);
-                
+
         List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
-        
+
         List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
         request.setAttribute("analisis", a);
         request.setAttribute("tipoequipos", tipoequipo);
@@ -441,7 +441,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                         String valor;
                         String nombre_campo = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         Node nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        if (tipo_campo.equalsIgnoreCase("excel")) {
+                        if (tipo_campo.equalsIgnoreCase("excel") || tipo_campo.equalsIgnoreCase("excel_tabla")) {
                             Node nodo_celda = elemento.getElementsByTagName("celda").item(0);
                             String celda = nodo_celda.getTextContent();
                             valor = excel.obtenerCelda(celda);
@@ -449,6 +449,14 @@ public class ControladorAnalisis extends SIGIPROServlet
                             valor = this.obtenerParametro(nombre_campo);
                         }
                         nodo_valor.setTextContent(valor);
+
+                        Node nodo_resultado = elemento.getElementsByTagName("resultado").item(0);
+                        if (nodo_resultado != null) {
+                            String texto = nodo_resultado.getTextContent();
+                            if (texto.equalsIgnoreCase("true")) {
+                                resultado.setResultado(valor);
+                            }
+                        }
                     }
                 }
             }
@@ -469,7 +477,6 @@ public class ControladorAnalisis extends SIGIPROServlet
             resultadodao.insertarResultado(resultado);
 
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
-
             try {
                 SolicitudCC s = solicituddao.obtenerSolicitud(resultado.getAgs().getGrupo().getSolicitud().getId_solicitud());
                 request.setAttribute("solicitud", s);
@@ -478,14 +485,17 @@ public class ControladorAnalisis extends SIGIPROServlet
                 ex.printStackTrace();
                 request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
             }
-            
+
             request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
 
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", "Ha ocurrido un error inesperado. Contacte al administrador del sistema.");
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
         }
 
         this.redireccionar(request, response, redireccion);
@@ -547,10 +557,10 @@ public class ControladorAnalisis extends SIGIPROServlet
                         System.out.println(values[1]);
                         if (values.length > 1) {
                             int id = Integer.parseInt(values[2]);
-                            if (id == 0){
+                            if (id == 0) {
                                 id = idActual;
-                            }else{
-                                idActual=id;
+                            } else {
+                                idActual = id;
                             }
                             if (!dictionary.containsKey(id)) {
                                 HashMap<String, String> llaves = new HashMap<String, String>();
@@ -579,7 +589,7 @@ public class ControladorAnalisis extends SIGIPROServlet
                                     columnasfilas.get(id).put("columnas", cantidadColumnas2);
                                     break;
                                 case "columnacelda":
-                                    int cantidadColumnas3 = (int) columnasfilas.get(id).get("columnas")-1;
+                                    int cantidadColumnas3 = (int) columnasfilas.get(id).get("columnas") - 1;
                                     dictionary.get(id).put(values[1] + "_" + cantidadColumnas3, fieldValue);
                                     break;
                                 case "nombrefilaespecial":
@@ -663,7 +673,7 @@ public class ControladorAnalisis extends SIGIPROServlet
     private String parseDictXML(HashMap<Integer, HashMap> dictionary, String orden, HashMap<Integer, HashMap> columnasfilas) {
 
         this.nombre_campo = 1;
-        
+
         System.out.println(dictionary);
 
         String[] keys = orden.split(",");
@@ -706,10 +716,10 @@ public class ControladorAnalisis extends SIGIPROServlet
                         String valorTipo = hash.get(keytipo);
                         String keycelda = "columnacelda_" + col;
                         String valorCelda;
-                        if (hash.containsKey(keycelda)){
+                        if (hash.containsKey(keycelda)) {
                             valorCelda = hash.get(keycelda);
-                        }else{
-                            valorCelda = ""; 
+                        } else {
+                            valorCelda = "";
                         }
                         tiposcolumnas.add(valorTipo);
                         columnacelda.add(valorCelda);
@@ -742,13 +752,13 @@ public class ControladorAnalisis extends SIGIPROServlet
                             String nombre_celda = "Tabla_" + contadorTablas + "_Celda_" + it + "_" + jt;
                             xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
                             String celdaColumna = columnacelda.get(jt);
-                            if (!celdaColumna.equals("")){
+                            if (!celdaColumna.equals("")) {
                                 celdaColumna = celdaColumna.replace("-", "");
                                 xml.agregarSubelemento("celda", celdaColumna, campo_fila);
                                 String[] listaCelda = columnacelda.get(jt).split("-");
                                 int numeroCelda = Integer.parseInt(listaCelda[1]);
                                 numeroCelda++;
-                                String nuevaCelda = listaCelda[0]+"-"+numeroCelda;
+                                String nuevaCelda = listaCelda[0] + "-" + numeroCelda;
                                 columnacelda.remove(jt);
                                 columnacelda.add(jt, nuevaCelda);
                             }
@@ -779,13 +789,13 @@ public class ControladorAnalisis extends SIGIPROServlet
                             String nombre_celda = "Tabla_" + contadorTablas + "_" + valorTipo + "_" + jt;
                             xml.agregarSubelemento("nombre-campo", nombre_celda, campo_fila);
                             String celdaColumna = columnacelda.get(jt);
-                            if (!celdaColumna.equals("")){
+                            if (!celdaColumna.equals("")) {
                                 celdaColumna = celdaColumna.replace("-", "");
                                 xml.agregarSubelemento("celda", celdaColumna, campo_fila);
                                 String[] listaCelda = columnacelda.get(jt).split("-");
                                 int numeroCelda = Integer.parseInt(listaCelda[1]);
                                 numeroCelda++;
-                                String nuevaCelda = listaCelda[0]+"-"+numeroCelda;
+                                String nuevaCelda = listaCelda[0] + "-" + numeroCelda;
                                 columnacelda.remove(jt);
                                 columnacelda.add(jt, nuevaCelda);
                             }
@@ -808,10 +818,10 @@ public class ControladorAnalisis extends SIGIPROServlet
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
         if (hash.containsKey("manual")) {
-            String celda =  hash.get("celda");
+            String celda = hash.get("celda");
             celda = celda.replace("-", "");
             xml.agregarSubelemento("tipo", "Excel", campo);
-            xml.agregarSubelemento("celda",celda, campo);
+            xml.agregarSubelemento("celda", celda, campo);
         } else {
             xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
         }
@@ -840,8 +850,6 @@ public class ControladorAnalisis extends SIGIPROServlet
         }
         return resultado;
     }
-    
-    
 
     private String getFileExtension(String fileName) {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {

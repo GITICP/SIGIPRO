@@ -28,6 +28,7 @@ public class Resultado
     private Date fecha;
     private Usuario usuario;
     private int repeticion;
+    private String resultado;
 
     private List<Reactivo> reactivos_resultado;
     private List<Equipo> equipos_resultado;
@@ -42,6 +43,14 @@ public class Resultado
 
     public void setId_resultado(int id_resultado) {
         this.id_resultado = id_resultado;
+    }
+
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
     }
 
     public String getPath() {

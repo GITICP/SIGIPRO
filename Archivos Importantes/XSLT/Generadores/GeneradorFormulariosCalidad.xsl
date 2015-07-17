@@ -81,7 +81,7 @@
         <xsl:param name="valor" select="valor" />
         
         <!-- Plantilla -->
-        <input type="{$tipo}" name="{$nombre-campo}" class="form-control" value="{$valor}"></input>
+        <input type="{$tipo}" name="{$nombre-campo}" class="form-control" value="{$valor}" step="any"></input>
         
     </xsl:template>
     
@@ -206,7 +206,7 @@
     
     <!-- Plantilla para las columnas de la tabla -->
     <xsl:template match="columna">
-        <xsl:if test="not(@tipo = 'Excel')">
+        <xsl:if test="not(@tipo = 'excel_tabla')">
             <th>
                 <xsl:value-of select="nombre" />
             </th>
@@ -228,7 +228,7 @@
     <xsl:template match="fila">
         <tr>
             <xsl:for-each select="celdas/celda">
-                <xsl:if test="not(campo/tipo = 'Excel')">
+                <xsl:if test="not(campo/tipo = 'excel_tabla')">
                     <td>
                         <xsl:apply-templates />
                     </td>                

@@ -38,7 +38,7 @@
 
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> ${solicitud.getNumero_solicitud()} </h3>
+                            <h3><i class="fa fa-gears"></i> Informe de Solicitud ${solicitud.getNumero_solicitud()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
@@ -113,7 +113,7 @@
                                                             <td>
                                                                 ${resultado.getAgs().getAnalisis().getNombre()}
                                                             </td>
-                                                            <td>Resultado</td>
+                                                            <td>${resultado.getResultado()}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
                                                             </td>
