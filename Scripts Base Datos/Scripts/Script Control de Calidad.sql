@@ -128,6 +128,7 @@ CREATE TABLE control_calidad.resultados (
     id_usuario int NOT NULL,
     fecha date NOT NULL,
     repeticion integer NOT NULL,
+    resultado varchar(500) NOT NULL,
     CONSTRAINT resultados_pk PRIMARY KEY (id_resultado)
 );
 
