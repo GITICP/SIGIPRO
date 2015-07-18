@@ -34,8 +34,8 @@ public class SolicitudRatoneraDAO extends DAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.solicitudes_ratonera (fecha_solicitud, numero_animales, peso_requerido, "
-                                                                        + "numero_cajas,sexo,id_cepa,usuario_solicitante,observaciones,observaciones_rechazo,estado)"
-                                                                        + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_solicitud");
+                                                                        + "numero_cajas,sexo,id_cepa,usuario_solicitante,observaciones,observaciones_rechazo,estado, fecha_necesita)"
+                                                                        + " VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING id_solicitud");
 
             consulta.setDate(1, p.getFecha_solicitud());
             consulta.setInt(2, p.getNumero_animales());
@@ -47,6 +47,7 @@ public class SolicitudRatoneraDAO extends DAO
             consulta.setString(8, p.getObservaciones());
             consulta.setString(9, p.getObservaciones_rechazo());
             consulta.setString(10, p.getEstado());
+            consulta.setDate(11, p.getFecha_necesita());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -72,7 +73,7 @@ public class SolicitudRatoneraDAO extends DAO
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE bioterio.solicitudes_ratonera "
                     + " SET   fecha_solicitud=?, numero_animales=?, peso_requerido=?, "
-                    + " numero_cajas=?,sexo=?,id_cepa=?,usuario_solicitante=?,observaciones=?,observaciones_rechazo=?,estado=?"
+                    + " numero_cajas=?,sexo=?,id_cepa=?,usuario_solicitante=?,observaciones=?,observaciones_rechazo=?,estado=?, fecha_necesita=?"
                     + " WHERE id_solicitud=?; "
             );
 
@@ -86,7 +87,8 @@ public class SolicitudRatoneraDAO extends DAO
             consulta.setString(8, p.getObservaciones());
             consulta.setString(9, p.getObservaciones_rechazo());
             consulta.setString(10, p.getEstado());
-            consulta.setInt(11, p.getId_solicitud());
+            consulta.setDate(11, p.getFecha_necesita());
+            consulta.setInt(12, p.getId_solicitud());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -153,6 +155,7 @@ public class SolicitudRatoneraDAO extends DAO
                 solicitud_ratonera.setObservaciones(rs.getString("observaciones"));
                 solicitud_ratonera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
                 solicitud_ratonera.setEstado(rs.getString("estado"));
+                solicitud_ratonera.setFecha_necesita(rs.getDate("fecha_necesita"));
 
             }
             rs.close();
@@ -196,7 +199,9 @@ public class SolicitudRatoneraDAO extends DAO
                 usr = new Usuario(rs.getInt("id_usuario"), rs.getString("nombre_usuario"), rs.getString("correo"), rs.getString("nombre_completo"), rs.getString("cedula"), rs.getInt("id_seccion"), rs.getInt("id_puesto"), rs.getDate("fecha_activacion"), rs.getDate("fecha_desactivacion"), rs.getBoolean("estado"));
                 solicitud_ratonera.setCepa(cep);
                 solicitud_ratonera.setUsuario_solicitante(usr);
+                solicitud_ratonera.setFecha_necesita(rs.getDate("fecha_necesita"));
                 resultado.add(solicitud_ratonera);
+                
             }
             rs.close();
             consulta.close();
@@ -238,6 +243,7 @@ public class SolicitudRatoneraDAO extends DAO
                 usr = new Usuario(rs.getInt("id_usuario"), rs.getString("nombre_usuario"), rs.getString("correo"), rs.getString("nombre_completo"), rs.getString("cedula"), rs.getInt("id_seccion"), rs.getInt("id_puesto"), rs.getDate("fecha_activacion"), rs.getDate("fecha_desactivacion"), rs.getBoolean("estado"));
                 solicitud_ratonera.setCepa(cep);
                 solicitud_ratonera.setUsuario_solicitante(usr);
+                solicitud_ratonera.setFecha_necesita(rs.getDate("fecha_necesita"));
                 resultado.add(solicitud_ratonera);
             }
             rs.close();

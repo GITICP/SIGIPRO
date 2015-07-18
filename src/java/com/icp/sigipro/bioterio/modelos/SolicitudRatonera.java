@@ -17,6 +17,7 @@ import org.json.JSONObject;
 public class SolicitudRatonera {
   private int id_solicitud;
   private Date fecha_solicitud;
+  private Date fecha_necesita;
   private int numero_animales;
   private String peso_requerido;
   private int numero_cajas;
@@ -51,7 +52,21 @@ public class SolicitudRatonera {
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
-    }  
+    } 
+  public String getFecha_necesita_S(){
+    if (this.fecha_necesita != null)
+    {return formatearFecha(fecha_necesita);}
+    else
+    {return "";}}
+
+  public Date getFecha_necesita() {
+    return fecha_necesita;
+  }
+
+  public void setFecha_necesita(Date fecha_necesita) {
+    this.fecha_necesita = fecha_necesita;
+  }
+  
   public String getFecha_solicitud_S(){
     if (this.fecha_solicitud != null)
     {return formatearFecha(fecha_solicitud);}

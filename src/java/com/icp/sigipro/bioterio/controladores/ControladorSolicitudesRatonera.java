@@ -160,6 +160,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     }
     redireccionar(request, response, redireccion);
   }
+
   protected void getVerentrega(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
@@ -288,6 +289,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     String redireccion = "SolicitudesRatonera/index.jsp";
     redireccionar(request, response, redireccion);
   }
+
   protected void getCerrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
@@ -302,7 +304,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
       List<Cepa> cepas = dao_ce.obtenerCepas();
       request.setAttribute("cepas", cepas);
       SolicitudRatonera solicitud = dao.obtenerSolicitudRatonera(id_solicitud);
-      solicitud.setEstado("Cerrada ("+tipo+")");
+      solicitud.setEstado("Cerrada (" + tipo + ")");
       resultado = dao.editarSolicitudRatonera(solicitud);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
@@ -339,8 +341,10 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     String redireccion = "SolicitudesRatonera/index.jsp";
     redireccionar(request, response, redireccion);
   }
+
   // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+
   protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     boolean resultado = false;
     String redireccion = "SolicitudesRatonera/Agregar.jsp";
@@ -440,7 +444,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     redireccionar(request, response, redireccion);
   }
 
-    protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
@@ -491,8 +495,9 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     }
     String redireccion = "SolicitudesRatonera/index.jsp";
     redireccionar(request, response, redireccion);
-    }
-    protected void postEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  }
+
+  protected void postEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_auth2"));
@@ -511,14 +516,14 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
       EntregaRatonera entrega = construirSubObjeto(request);
       boolean auth = dao_us.AutorizarRecibo(usuario, contrasena);
       if (auth) {
-            int id_us_recibo = dao_us.obtenerIDUsuario(usuario);
-            entrega.setUsuario_recipiente(dao_us.obtenerUsuario(id_us_recibo));
-            solicitud.setEstado("Abierta");
-            resultado = dao.editarSolicitudRatonera(solicitud);
-            resultado2 = dao_en.insertarEntregaRatonera(entrega);     
+        int id_us_recibo = dao_us.obtenerIDUsuario(usuario);
+        entrega.setUsuario_recipiente(dao_us.obtenerUsuario(id_us_recibo));
+        solicitud.setEstado("Abierta");
+        resultado = dao.editarSolicitudRatonera(solicitud);
+        resultado2 = dao_en.insertarEntregaRatonera(entrega);
+      } else {
+        request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos"));
       }
-      else
-          { request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos"));}
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(id_solicitud, Bitacora.ACCION_ENTREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
@@ -554,8 +559,10 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     String redireccion = "SolicitudesRatonera/index.jsp";
     redireccionar(request, response, redireccion);
   }
+
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
+
   private SolicitudRatonera construirObjeto(HttpServletRequest request) throws SIGIPROException {
     SolicitudRatonera solicitud = new SolicitudRatonera();
     solicitud.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
@@ -569,6 +576,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
       SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
       java.util.Date fecha_solicitud;
       java.sql.Date fecha_solicitudSQL;
+
       try {
         fecha_solicitud = formatoFecha.parse(fch_sol);
         fecha_solicitudSQL = new java.sql.Date(fecha_solicitud.getTime());
@@ -577,6 +585,18 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
         Logger.getLogger(ControladorSolicitudesRatonera.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
+    try {
+      String fch_nec = request.getParameter("fecha_necesita");
+      java.util.Date fecha_necesita;
+      java.sql.Date fecha_necesitaSQL;
+      SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+      fecha_necesita = formatoFecha.parse(fch_nec);
+      fecha_necesitaSQL = new java.sql.Date(fecha_necesita.getTime());
+      solicitud.setFecha_necesita(fecha_necesitaSQL);
+    } catch (ParseException ex) {
+      Logger.getLogger(ControladorSolicitudesRatonera.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
     solicitud.setNumero_animales(Integer.parseInt(request.getParameter("numero_animales")));
     solicitud.setPeso_requerido(request.getParameter("peso_requerido"));
     solicitud.setNumero_cajas(Integer.parseInt(request.getParameter("numero_cajas")));

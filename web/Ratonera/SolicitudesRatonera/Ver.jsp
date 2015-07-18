@@ -51,6 +51,7 @@
               <table class="tabla-ver">
                 <tr><td> <strong>Numero de Solicitud:</strong> <td>${solicitud.getId_solicitud()} </td></tr>
                 <tr><td> <strong>Fecha Solicitud:</strong> <td>${solicitud.getFecha_solicitud_S()} </td></tr>
+                <tr><td> <strong>Fecha en que se necesita:</strong> <td>${solicitud.getFecha_necesita_S()} </td></tr>
                 <tr><td> <strong>Numero de Animales:</strong> <td>${solicitud.getNumero_animales()} </td></tr>
                 <tr><td> <strong>Peso Requerido:</strong> <td>${solicitud.getPeso_requerido()} </td></tr>
                 <tr><td> <strong>Numero de Cajas:</strong> <td>  ${solicitud.getNumero_cajas()}</td></tr>
