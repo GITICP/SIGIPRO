@@ -386,7 +386,7 @@
                                                                                        oninput="setCustomValidity('')" >                                                                             
                                                                             </c:when>
                                                                             <c:otherwise>
-                                                                                <input class="select2-tags" type="text" placeholder="Nombre, filas, separadas, por, comas" name="t_nombresfilas_${i}" id="nombresfilas_${i}" value="${diccionario.get(i).get('nombrefilas').toString().replace("[","").replace("]","")}"
+                                                                                <input class="select2-tags" type="text" placeholder="Nombre, filas, separadas, por, comas" name="t_nombresfilas_${i}" id="nombresfilas_${i}" value="${diccionario.get(i).get('nombrefilas').toString().replace("[","").replace("]","")}" required
                                                                                        oninvalid="setCustomValidity('Este campo es requerido o no concuerda con la cantidad de filas a ingresar.')"
                                                                                        oninput="setCustomValidity('')" >                                                                             
                                                                             </c:otherwise>

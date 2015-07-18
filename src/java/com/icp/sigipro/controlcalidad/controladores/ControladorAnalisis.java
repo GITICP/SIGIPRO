@@ -112,6 +112,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         {
             add("agregareditar");
             add("realizar");
+            add("aprobar");
         }
     };
 
@@ -359,11 +360,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
                 this.getAgregar(request, response);
             }
-        } else if (!a.getUsuario_aprobacion().equals("")){
-            boolean autenticacion = usuariodao.autorizarRecibo(a.getUsuario_aprobacion(), a.getContrasena_aprobacion());
-            
-            
-            
         } else {
             resultado = dao.editarAnalisis(a);
             if (resultado) {
@@ -385,6 +381,34 @@ public class ControladorAnalisis extends SIGIPROServlet {
             }
         }
 
+    }
+
+    protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resultado = false;
+
+        String usuario = request.getParameter("usuario_aprobacion");
+        String contrasenna = request.getParameter("passw");
+
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis_aprobar"));
+
+        boolean autenticacion = usuariodao.autorizarRecibo(usuario, contrasenna);
+        if (autenticacion) {
+            resultado = dao.aprobarAnalisis(id_analisis);
+            if (resultado) {
+                Analisis a = dao.obtenerAnalisis(id_analisis);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis aprobado correctamente"));
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
+                //*----------------------------*
+                this.getIndex(request, response);
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser aprobado. Inténtelo de nuevo."));
+                this.getIndex(request, response);
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Usuario o contraseña incorrectos."));
+            this.getIndex(request, response);
+        }
     }
 
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -510,15 +534,13 @@ public class ControladorAnalisis extends SIGIPROServlet {
                     case "nombre":
                         a.setNombre(fieldValue);
                         break;
-                    case "usuario_aprobacion":
-                        a.setUsuario_aprobacion(fieldValue);
-                        break;
-                    case "passw":
-                        a.setContrasena_aprobacion(fieldValue);
-                        break;
                     case "id_analisis":
                         int id_analisis = Integer.parseInt(fieldValue);
                         a.setId_analisis(id_analisis);
+                        break;
+                    case "id_analisis_aprobar":
+                        int id_analisis_aprobar = Integer.parseInt(fieldValue);
+                        a.setId_analisis(id_analisis_aprobar);
                         break;
                     case "tipoequipos":
                         TipoEquipo tipoequipo = new TipoEquipo();
@@ -703,7 +725,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         tiposcolumnas.add(valorTipo);
                         columnacelda.add(valorCelda);
                         Element columna = xml.agregarElemento("columna", columnas);
-                        if (valorTipo.equals("excel_tabla")){
+                        if (valorTipo.equals("excel_tabla")) {
                             Attr tipo = xml.definirAtributo("tipo", "excel_tabla");
                             xml.agregarAtributo(columna, tipo);
                         }
@@ -855,9 +877,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
             lista_acciones = accionesGet;
         } else {
             lista_acciones = accionesPost;
-            this.obtenerParametros(request);
-            if (this.obtenerParametro("accion").equals("realizar")) {
-                accion = "realizar";
+            if (ServletFileUpload.isMultipartContent(request)) {
+                this.obtenerParametros(request);
+                if (this.obtenerParametro("accion").equals("realizar")) {
+                    accion = "realizar";
+                }
             }
         }
         if (lista_acciones.contains(accion.toLowerCase())) {

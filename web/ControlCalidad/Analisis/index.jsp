@@ -57,6 +57,7 @@
                                 <thead> 
                                     <tr>
                                         <th>Nombre</th>
+                                        <th>Estado</th>
                                         <th>Análisis Pendientes</th>
                                         <th>Acción</th>
                                     </tr>
@@ -71,11 +72,26 @@
                                                     </div>
                                                 </a>
                                             </td>
+                                            <c:choose>
+                                                <c:when test="${analisis.isAprobado()}">
+                                                    <td>Aprobado</td>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <td>Pendiente</td>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <td>${analisis.getCantidad_pendiente()}</td>
                                             <td>
-                                                <c:if test="${contienePermisoRealizar}">
-                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=agregar">Realizar</a>
-                                                </c:if>
+                                                <c:choose>
+                                                    <c:when test="${analisis.isAprobado()}">
+                                                        <c:if test="${contienePermisoRealizar}">
+                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=agregar">Realizar</a>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${analisis.getId_analisis()}' data-toggle="modal" data-target="#modalAprobarAnalisis">Aprobar</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -91,5 +107,54 @@
         </div>
 
     </jsp:attribute>
-
+    <jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/Analisis.js"></script>
+    </jsp:attribute>
 </t:plantilla_general>
+
+<t:modal idModal="modalAprobarAnalisis" titulo="Aprobar Análisis">
+
+    <jsp:attribute name="form">
+        <form class="form-horizontal" id="form_modalautorizar" method="post" data-show-auth="${show_modal_auth}" action="Analisis">
+            ${mensaje_auth}
+            <h4> Información sobre el análisis </h4>
+
+            <h5>Para validar la aprobación, el usuario que recibe la solicitud debe iniciar sesión. </h5>
+
+            <input hidden="true" name="id_analisis_aprobar" id="id_analisis_aprobar">
+            <input hidden="true" name="accion" id="accion" value="Aprobar">
+
+            <label for="usr" class="control-label">Usuario</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group" style="display:table;">
+                        <input type="text" id="usr"  name="usuario_aprobacion" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               onchange="setCustomValidity('')">
+                    </div>
+                </div>
+            </div>
+            <label for="passw" class="control-label">Contraseña</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group" style="display:table;">
+                        <input type="password" id="passw" name="passw" required
+                               oninvalid="setCustomValidity('Este campo es requerido ')"
+                               onchange="setCustomValidity('')">
+                    </div>
+                    <p id='mensajeValidación' style='color:red;'><p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Análisis</button>
+                </div>
+            </div>
+        </form>
+
+
+    </jsp:attribute>
+
+</t:modal>

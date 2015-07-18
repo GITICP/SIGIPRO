@@ -1,6 +1,12 @@
 contador = 1;
 columnas = 1;
 filas = 1;
+
+$(document).on("click", ".aprobar-Modal", function () {
+    var id_analisis = $(this).data('id');
+    $("#id_analisis_aprobar").val(id_analisis);
+});
+
 function agregarCampo() {
     fila = "<div class=\"widget widget-table campo_" + contador + "\" id=\"" + contador + "\">";
     fila += "<input hidden=\"true\" id=\"elemento_" + contador + "\" value=\"campo\">";
@@ -110,7 +116,11 @@ function validarColumnaCelda(select, id, columna) {
     if (value === 'excel_tabla') {
         $("#columnacelda_" + id + "_" + columna).prop("disabled", false);
         var lista = $("#listaColumnasExcel").val();
-        $("#listaColumnasExcel").val(lista + "," + columna);
+        var nueva_lista = lista + "," + columna;
+        nueva_lista = nueva_lista.split(",");
+        nueva_lista.remove("");
+        nueva_lista = nueva_lista.join();
+        $("#listaColumnasExcel").val(nueva_lista);
         $(select)[0].setCustomValidity('');
     } else {
         $("#columnacelda_" + id + "_" + columna).prop("disabled", true);
@@ -317,7 +327,7 @@ function agregarTabla() {
     fila += "                        <div class=\"col-sm-12\">";
     fila += "                            <div class=\"input-group\">";
     fila += "                                <input type=\"text\" placeholder=\"Nombre, filas, separadas, por, comas\" name=\"t_nombresfilas_" + contador + "\" id=\"nombresfilas_" + contador + "\" disabled";
-    fila += "                                       oninvalid=\"setCustomValidity('Este campo es requerido o no concuerda con la cantidad de filas a ingresar.')\"";
+    fila += "                                       required oninvalid=\"setCustomValidity('Este campo es requerido o no concuerda con la cantidad de filas a ingresar.')\"";
     fila += "                                       oninput=\"setCustomValidity('')\" > ";
     fila += "                            </div>";
     fila += "                        </div>";
@@ -361,7 +371,6 @@ function agregarAnalisis() {
     $.each(lista, function (i, e) {
         if (e !== "") {
             var tipo = $("#elemento_" + e).val();
-            alert(tipo);
             if (tipo === "tabla") {
                 var filas = $("#nombresfilas_" + e).val().split(",");
                 if (filas !== "") {
@@ -374,12 +383,10 @@ function agregarAnalisis() {
                     }
                 }
                 var listaColumnas = $("#listaColumnasExcel").val().split(",");
-                alert(listaColumnas);
                 $.each(listaColumnas, function (x, y) {
                     if (y !== "") {
                         var celdaColumna = $("#columnacelda_" + e + "_" + y).val();
-                        alert(celdaColumna);
-                        if (celdaColumna !== "") {
+                        if (celdaColumna !== "" && celdaColumna !== undefined) {
                             if (re.test(celdaColumna)) {
                                 $("#columnacelda_" + e + "_" + y)[0].setCustomValidity("");
                             } else {
@@ -426,13 +433,9 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
-    alert(nombres);
     if (nombres[0] === "campo" || nombres[0] === "tabla") {
-        alert(o);
-        alert(nombres[1].toString());
         o.remove(nombres[1].toString());
         o = o.join();
-        alert(o);
         $("#orden").val(o);
     }
 }
@@ -447,36 +450,27 @@ function eliminarCampo(campo) {
  */
 
 $(document).ready(function () {
-
     $(".select2-tags").select2({
         minimumResultsForSearch: -1,
         tags: true,
         tokenSeparators: [',', ' ']
     });
-
     var tiposequipo = $("#listaTiposEquipo").val();
     var tiposreactivo = $("#listaTiposReactivo").val();
     if (tiposequipo !== "") {
         $("#seleccionTipoEquipo").select2("val", tiposequipo.split(","));
-
     }
     if (tiposreactivo !== "") {
         $("#seleccionTipoReactivo").select2("val", tiposreactivo.split(","));
-
     }
-
-
     var orden = $("#orden").val();
-
     if (orden !== "") {
         var lista = orden.split(",");
         var len = lista.length;
-
         contador = len + 1;
     } else {
         contador = 1;
     }
-
     $(".fila-especial").each(function () {
         new FilaEspecial($(this));
     });

@@ -27,8 +27,6 @@ public class Analisis {
     private Usuario encargado;
     private boolean aprobado;
     
-    private String usuario_aprobacion;
-    private String contrasena_aprobacion;
 
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
@@ -80,22 +78,6 @@ public class Analisis {
 
     public void setIsTipoMuestra(boolean isTipoMuestra) {
         this.isTipoMuestra = isTipoMuestra;
-    }
-
-    public String getUsuario_aprobacion() {
-        return usuario_aprobacion;
-    }
-
-    public void setUsuario_aprobacion(String usuario_aprobacion) {
-        this.usuario_aprobacion = usuario_aprobacion;
-    }
-
-    public String getContrasena_aprobacion() {
-        return contrasena_aprobacion;
-    }
-
-    public void setContrasena_aprobacion(String contrasena_aprobacion) {
-        this.contrasena_aprobacion = contrasena_aprobacion;
     }
 
     public void setEstructuraString(String estructuraString) {

@@ -169,6 +169,28 @@ public class AnalisisDAO extends DAO {
         return resultado;
     }
 
+    public boolean aprobarAnalisis(int id_analisis) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+
+            consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
+                    + "SET aprobado=? "
+                    + "WHERE id_analisis = ?; ");
+            consulta.setBoolean(1, true);
+            consulta.setInt(2, id_analisis);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
     public List<Analisis> obtenerAnalisis() {
         PreparedStatement consulta = null;
         ResultSet rs = null;

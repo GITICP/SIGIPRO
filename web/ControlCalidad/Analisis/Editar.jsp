@@ -12,49 +12,52 @@
 
 <t:plantilla_general title="Control de Calidad" direccion_contexto="/SIGIPRO">
 
-  <jsp:attribute name="contenido">
+    <jsp:attribute name="contenido">
+        <style>
+            #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+            .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+        </style>
 
 
+        <!-- content-wrapper -->
+        <div class="col-md-12 content-wrapper">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <ul class="breadcrumb">
+                        <li>Control de Calidad</li>
+                        <li> 
+                            <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
+                        </li>
+                        <li class="active"> Editar Análisis </li>
 
-    <!-- content-wrapper -->
-    <div class="col-md-12 content-wrapper">
-      <div class="row">
-        <div class="col-md-12 ">
-          <ul class="breadcrumb">
-            <li>Control de Calidad</li>
-            <li> 
-              <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
-            </li>
-            <li class="active"> Editar Análisis </li>
-
-          </ul>
-        </div>
-      </div>
-
-      <!-- main -->
-      <div class="content">
-        <div class="main-content">
-          <!-- COLUMN FILTER DATA TABLE -->
-          <div class="widget widget-table">
-            <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Editar Análisis ${analisis.getNombre()} </h3>
+                    </ul>
+                </div>
             </div>
-            ${mensaje}
-            <div class="widget-content">
 
-              <jsp:include page="Formulario.jsp"></jsp:include>
+            <!-- main -->
+            <div class="content">
+                <div class="main-content">
+                    <!-- COLUMN FILTER DATA TABLE -->
+                    <div class="widget widget-table">
+                        <div class="widget-header">
+                            <h3><i class="fa fa-gears"></i> Editar Análisis ${analisis.getNombre()} </h3>
+                        </div>
+                        ${mensaje}
+                        <div class="widget-content">
 
+                            <jsp:include page="Formulario.jsp"></jsp:include>
+
+                            </div>
+                        </div>
+                        <!-- END WIDGET TICKET TABLE -->
+                    </div>
+                    <!-- /main-content -->
+                </div>
+                <!-- /main -->
             </div>
-          </div>
-          <!-- END WIDGET TICKET TABLE -->
-        </div>
-        <!-- /main-content -->
-      </div>
-      <!-- /main -->
-    </div>
 
-  </jsp:attribute>
-<jsp:attribute name="scripts">
+    </jsp:attribute>
+    <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/Analisis.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
