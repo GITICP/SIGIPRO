@@ -271,6 +271,7 @@ public class AnalisisDAO extends DAO {
             }
             resultado.setTipos_equipos_analisis(this.obtenerTipoEquipos(id_analisis));
             resultado.setTipos_reactivos_analisis(this.obtenerTipoReactivos(id_analisis));
+            resultado.setTipos_muestras_analisis(this.obtenerTipoMuestras(id_analisis));
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -322,6 +323,32 @@ public class AnalisisDAO extends DAO {
                 tiporeactivo.setId_tipo_reactivo(rs.getInt("id_tipo_reactivo"));
                 tiporeactivo.setNombre(rs.getString("nombre"));
                 resultado.add(tiporeactivo);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public List<TipoMuestra> obtenerTipoMuestras(int id_analisis) {
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        List<TipoMuestra> resultado = new ArrayList<TipoMuestra>();
+        try {
+            consulta = getConexion().prepareStatement(" SELECT tipo.id_tipo_muestra, tipo.nombre "
+                    + "FROM control_calidad.tipos_muestras as tipo INNER JOIN control_calidad.tipos_muestras_analisis as tiposanalisis ON tiposanalisis.id_tipo_muestra = tipo.id_tipo_muestra  "
+                    + "WHERE tiposanalisis.id_analisis = ?; ");
+            consulta.setInt(1, id_analisis);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                TipoMuestra tipomuestra = new TipoMuestra();
+                tipomuestra.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                tipomuestra.setNombre(rs.getString("nombre"));
+                resultado.add(tipomuestra);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

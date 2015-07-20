@@ -66,20 +66,22 @@ public class HelperXML {
     }
 
     public HelperXML(SQLXML xml) throws SQLException, ParserConfigurationException, SAXException, IOException {
-        InputStream binaryStream = xml.getBinaryStream();
-        DocumentBuilder parser
-                = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        doc = parser.parse(binaryStream);
+        if (xml != null) {
+            InputStream binaryStream = xml.getBinaryStream();
+            DocumentBuilder parser
+                    = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            doc = parser.parse(binaryStream);
 
-        dictionary = new HashMap<Integer, HashMap>();
-        contador = 0;
+            dictionary = new HashMap<Integer, HashMap>();
+            contador = 0;
         //columnas = 0;
-        //filasespeciales = 0;
-        //filas = 0;
+            //filasespeciales = 0;
+            //filas = 0;
 
-        leerXML(doc.getDocumentElement().getFirstChild());
+            leerXML(doc.getDocumentElement().getFirstChild());
 
-        System.out.println(dictionary);
+            System.out.println(dictionary);
+        }
 
     }
 
@@ -138,7 +140,7 @@ public class HelperXML {
                     String patron = "([A-Z]+)(\\d+)";
                     String primera = text.replaceFirst(patron, "$1");
                     String segunda = text.replaceFirst(patron, "$2");
-                    String celda = primera+"-"+segunda;
+                    String celda = primera + "-" + segunda;
                     dictionary.get(contador).put(name, celda);
 
             }

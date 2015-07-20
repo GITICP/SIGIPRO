@@ -76,12 +76,32 @@
                 </c:otherwise>
             </c:choose>
             <c:choose>
+                <c:when test="${reactivo.getTipo_reactivo()!=null}">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group descargar-Machote">
+                                <a href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo=${reactivo.getTipo_reactivo().getId_tipo_reactivo()}">Descargar Machote de Preparación</a>
+                            </div>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group descargar-Machote">
+                            </div>
+                        </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+            <c:choose>
                 <c:when test="${reactivo.getId_reactivo()!=0}">
                     <label for="nombre" class="control-label"> Preparación (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="certificado" name="preparacion"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                <input type="file" id="certificado" name="preparacion"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -89,11 +109,11 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <label for="nombre" class="control-label">*Preparación</label>
+                    <label for="nombre" class="control-label"> Preparación</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="certificado" name="preparacion"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
+                                <input type="file" id="certificado" name="preparacion"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>

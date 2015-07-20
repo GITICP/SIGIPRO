@@ -232,18 +232,27 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
         HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
 
-        System.out.println(diccionario_formulario.get(2).get("nombrefilas"));
-
-        Set<Integer> it = diccionario_formulario.keySet();
         List<Integer> lista = new ArrayList<Integer>();
-        lista.addAll(it);
+
+        if (diccionario_formulario != null) {
+            Set<Integer> it = diccionario_formulario.keySet();
+            lista.addAll(it);
+        }
 
         List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
 
         List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
+        List<TipoMuestra> tiposmuestra = new ArrayList<TipoMuestra>();
+        try {
+            tiposmuestra = tipomuestradao.obtenerTiposDeMuestra();
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", sig_ex.getMessage());
+        }
+
         request.setAttribute("analisis", a);
         request.setAttribute("tipoequipos", tipoequipo);
         request.setAttribute("tiporeactivos", tiporeactivo);
+        request.setAttribute("tiposmuestra", tiposmuestra);
         request.setAttribute("lista", lista);
         request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
@@ -533,8 +542,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
         Analisis a = new Analisis();
+        boolean machote = false;
         a.setTipos_equipos_analisis(new ArrayList<TipoEquipo>());
         a.setTipos_reactivos_analisis(new ArrayList<TipoReactivo>());
+        a.setTipos_muestras_analisis(new ArrayList<TipoMuestra>());
+        a.setMachote("");
         //Se crea un diccionario con los elementos del Formulario Dinamico
         HashMap<Integer, HashMap> diccionario_formulario = new HashMap<Integer, HashMap>();
         //Variable donde se define el ID actual del campo o tabla del formulario
@@ -645,6 +657,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             } else {
                 try {
                     if (item.getSize() != 0) {
+                        machote = true;
                         ubicacion += File.separatorChar + "Machotes";
                         this.crearDirectorio(ubicacion);
                         //Creacion del nombre

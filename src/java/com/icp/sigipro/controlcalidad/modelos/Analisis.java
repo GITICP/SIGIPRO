@@ -55,6 +55,17 @@ public class Analisis {
         }
         return respuesta;
     }
+    public String getListaTiposMuestra() {
+        String respuesta = "";
+        if (tipos_muestras_analisis != null) {
+            for (TipoMuestra tm : tipos_muestras_analisis) {
+                respuesta += tm.getId_tipo_muestra();
+                respuesta += ",";
+            }
+            respuesta = respuesta.substring(0, respuesta.length() - 1);
+        }
+        return respuesta;
+    }
 
     public String getListaTiposEquipo() {
         String respuesta = "";

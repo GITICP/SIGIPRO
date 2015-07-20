@@ -62,7 +62,7 @@
                             ${cuerpo_datos}
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="widget widget-table">
                                         <div class="widget-header">
                                             <h3><i class="fa fa-flask"></i>Tipos de Reactivos Utilizados</h3>
@@ -86,7 +86,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="widget widget-table">
                                         <div class="widget-header">
                                             <h3><i class="fa fa-gears"></i>Tipos de Equipos Utilizados</h3>
@@ -102,6 +102,29 @@
                                                     <c:forEach items="${analisis.getTipos_equipos_analisis()}" var="tipo_equipo">
                                                         <tr>
                                                             <td>${tipo_equipo.getNombre()}</td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="widget widget-table">
+                                        <div class="widget-header">
+                                            <h3><i class="fa fa-gears"></i>Tipos de Muestras Asociadas</h3>
+                                        </div>
+                                        <div class="widget-content">
+                                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="${analisis.getTipos_muestras_analisis()}" var="tipo_muestra">
+                                                        <tr>
+                                                            <td>${tipo_muestra.getNombre()}</td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>

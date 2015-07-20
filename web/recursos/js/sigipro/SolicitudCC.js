@@ -26,10 +26,10 @@ Array.prototype.remove = function (x) {
 }
 
 function seleccionTipoMuestra(tipomuestra, id_formulario) {
-    var selectTipoMuestra = $("select[name*='tipomuestra']");
-    alert(selectTipoMuestra);var id = $(tipomuestra).val();
+    var id = $(tipomuestra).val();
     $("#seleccionAnalisis_" + id_formulario).empty();
     var listaAnalisis = $("#listaAnalisis_" + id).val();
+    var dias_descarte = $("#listaAnalisis_"+id).data("dias-descarte");
     var parseLista = JSON.parse(listaAnalisis);
     $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr1_' + id_formulario + '" label="An&aacute;lisis Asociados"></optgroup>');
     $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr2_' + id_formulario + '" label="Otros"></optgroup>');
@@ -42,6 +42,8 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
             $("#opt-gr2_" + id_formulario).append("<option value=" + value[0] + ">" + value[1] + "</option>");
         }
     });
+    
+    $("#datepicker_"+id_formulario).datepicker("setDate","+"+dias_descarte+"d");
 
     var analisis = $("#editaranalisis_" + id_formulario).val();
 
@@ -84,7 +86,7 @@ function agregarMuestra() {
     fila += "            <input type=\"text\" placeholder=\"Separados, por, comas\" id=\"identificadores_" + contador + "\" class=\"identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
     fila += "          required ";
     fila += "          oninvalid=\"setCustomValidity('Este campo es requerido')\"";
-    fila += "          oninput=\"setCustomValidity('')\" onfocus=\"eliminarBusqueda()\" > ";
+    fila += "          oninput=\"setCustomValidity('')\" > ";
     fila += "</div>";
     fila += "    </div>";
     fila += "</div>";
@@ -166,11 +168,6 @@ function agregarMuestra() {
 
     contador++;
 }
-
-function eliminarBusqueda() {
-    alert("holi");
-}
-;
 
 function eliminarMuestra(id) {
     var lista = $("#listaMuestras").val().split(",");

@@ -67,7 +67,9 @@
                             <table>
                                 <tr><td> <strong>Nombre del Reactivo: </strong></td> <td>${reactivo.getNombre()} </td></tr>
                                 <tr><td> <strong>Tipo de Reactivo: </strong></td> <td>${reactivo.getTipo_reactivo().getNombre()} </td></tr>
-                                <tr><td> <strong>Preparación: </strong> <td><a href="/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=${reactivo.getId_reactivo()}">Descargar Preparación</a></td></tr>
+                                <c:if test="${!reactivo.getPreparacion().equals('')}">
+                                    <tr><td> <strong>Preparación: </strong> <td><a href="/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=${reactivo.getId_reactivo()}">Descargar Preparación</a></td></tr>
+                                </c:if>
                             </table>
                             <br>
                         </div>

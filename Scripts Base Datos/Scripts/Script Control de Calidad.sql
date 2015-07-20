@@ -9,7 +9,7 @@ CREATE SCHEMA control_calidad;
 CREATE TABLE control_calidad.analisis (
     id_analisis serial  NOT NULL,
     estructura xml  NULL,
-    machote varchar(500)  NOT NULL,
+    machote varchar(500) NULL,
     CONSTRAINT analisis_pk PRIMARY KEY (id_analisis)
 );
 

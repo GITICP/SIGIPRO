@@ -16,6 +16,7 @@
             <input hidden="true" name="orden" id="orden" value="${lista.toString().replace("]","").replace("[","").replace(" ","")}">
             <input hidden="true" id="listaTiposReactivo" value="${analisis.getListaTiposReactivo()}">
             <input hidden="true" id="listaTiposEquipo" value="${analisis.getListaTiposEquipo()}">
+            <input hidden="true" id="listaTiposMuestra" value="${analisis.getListaTiposMuestra()}">
             <input hidden="true" id="listaColumnasExcel">
 
             <label for="nombre" class="control-label">*Nombre/Código/Identificador</label>
@@ -35,7 +36,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -43,11 +44,11 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <label for="nombre" class="control-label">*Machote</label>
+                    <label for="nombre" class="control-label"> Machote</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
+                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>

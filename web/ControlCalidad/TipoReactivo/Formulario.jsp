@@ -9,71 +9,70 @@
 
 
 <form class="form-horizontal" autocomplete="off" enctype='multipart/form-data' method="post" action="TipoReactivo">
-  <div class="row">
-    <div class="col-md-6">
-      <input hidden="true" name="id_tipo_reactivo" value="${tiporeactivo.getId_tipo_reactivo()}">
-      <input hidden="true" name="accion" value="${accion}">
-      
-      <label for="nombre" class="control-label">* Nombre</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input type="text" maxlength="45" placeholder="Nombre del Tipo de Reactivo" class="form-control" name="nombre" value="${tiporeactivo.getNombre()}"
-                   required
-                   oninvalid="setCustomValidity('Este campo es requerido')"
-                   oninput="setCustomValidity('')" > 
-          </div>
-        </div>
-      </div>
-                   
-              <c:choose>
-                  <c:when test="${tiporeactivo.getId_tipo_reactivo()!=0}">
-                        <label for="nombre" class="control-label"> Machote de Preparación (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
-                        <div class="form-group">
-                          <div class="col-sm-12">
+    <div class="row">
+        <div class="col-md-6">
+            <input hidden="true" name="id_tipo_reactivo" value="${tiporeactivo.getId_tipo_reactivo()}">
+            <input hidden="true" name="accion" value="${accion}">
+
+            <label for="nombre" class="control-label">* Nombre</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="text" maxlength="45" placeholder="Nombre del Tipo de Reactivo" class="form-control" name="nombre" value="${tiporeactivo.getNombre()}"
+                               required
+                               oninvalid="setCustomValidity('Este campo es requerido')"
+                               oninput="setCustomValidity('')" > 
+                    </div>
+                </div>
+            </div>
+            <c:choose>
+                <c:when test="${tiporeactivo.getId_tipo_reactivo()!=0}">
+                    <label for="nombre" class="control-label"> Machote de Preparación (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                    onchange="setCustomValidity('')"/>
+                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                       onchange="setCustomValidity('')"/>
                             </div>
                         </div>
-                      </div>
-                  </c:when>
-                  <c:otherwise>
-                    <label for="nombre" class="control-label">* Machote de Preparación</label>
-                        <div class="form-group">
-                          <div class="col-sm-12">
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <label for="nombre" class="control-label"> *Machote de Preparación</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
-                                    oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                    onchange="setCustomValidity('')"/>
+                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
+                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                       onchange="setCustomValidity('')"/>
                             </div>
                         </div>
-                      </div>
-                  </c:otherwise>
-              </c:choose>
-                  
-              
-          
-    </div>
-    <div class="col-md-6">
-      <label for="descripcion" class="control-label">Descripción</label>
-      <div class="form-group">
-        <div class="col-sm-12">
-          <div class="input-group">
-            <textarea rows="5" cols="50" maxlength="510" placeholder="Descripción" class="form-control" name="descripcion" >${tiporeactivo.getDescripcion()}</textarea>
-          </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+
+
         </div>
-      </div>
+        <div class="col-md-6">
+            <label for="descripcion" class="control-label">Descripción</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <textarea rows="5" cols="50" maxlength="510" placeholder="Descripción" class="form-control" name="descripcion" >${tiporeactivo.getDescripcion()}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Esta parte es la de los permisos de un rol -->
+        <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
-    <!-- Esta parte es la de los permisos de un rol -->
-    <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
-  </div>
 
 
-  <div class="form-group">
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+    <div class="form-group">
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
@@ -82,7 +81,7 @@
                     <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Tipo de Reactivo</button>
                 </c:otherwise>
             </c:choose>    </div>
-  </div>
+    </div>
 
 
 </form>

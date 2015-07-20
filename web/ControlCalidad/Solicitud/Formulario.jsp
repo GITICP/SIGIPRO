@@ -14,6 +14,7 @@
             <input hidden="true" name="accion" value="${accion}">
             <c:forEach items="${tipomuestras}" var="tipomuestra">
                 <input hidden="true" id="listaAnalisis_${tipomuestra.getId_tipo_muestra()}" value='${tipomuestra.parseListaAnalisis()}' data-dias-descarte="${tipomuestra.getDias_descarte()}">
+            
             </c:forEach>
             <input hidden="true" id="listaTipoMuestra" value='${tipomuestraparse}'>
             <input hidden="true" id="listaMuestras" name="listaMuestras" value="">

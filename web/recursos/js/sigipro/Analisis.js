@@ -457,11 +457,15 @@ $(document).ready(function () {
     });
     var tiposequipo = $("#listaTiposEquipo").val();
     var tiposreactivo = $("#listaTiposReactivo").val();
+    var tiposmuestra = $("#listaTiposMuestra").val();
     if (tiposequipo !== "") {
         $("#seleccionTipoEquipo").select2("val", tiposequipo.split(","));
     }
     if (tiposreactivo !== "") {
         $("#seleccionTipoReactivo").select2("val", tiposreactivo.split(","));
+    }
+    if (tiposmuestra !== "") {
+        $("#seleccion-tipo-muestra").select2("val", tiposmuestra.split(","));
     }
     var orden = $("#orden").val();
     if (orden !== "") {
