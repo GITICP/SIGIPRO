@@ -28,6 +28,7 @@ public class SolicitudCC {
     private Date fecha_recibido;
     private String estado;
     private String observaciones;
+    private Informe informe;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private ControlSolicitud control_solicitud;
@@ -50,6 +51,14 @@ public class SolicitudCC {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public Informe getInforme() {
+        return informe;
+    }
+
+    public void setInforme(Informe informe) {
+        this.informe = informe;
     }
 
   
@@ -113,6 +122,24 @@ public class SolicitudCC {
     public List<AnalisisGrupoSolicitud> getAnalisis_solicitud() {
         return analisis_solicitud;
     }
+    
+    public List<Resultado> getResultados() {
+        
+        List<AnalisisGrupoSolicitud> ags_solicitud = new ArrayList<AnalisisGrupoSolicitud>();
+        for (AnalisisGrupoSolicitud ags : analisis_solicitud) {
+            if (ags.getResultados() != null) {
+                ags_solicitud.add(ags);
+            }
+        }
+        
+        List<Resultado> resultados = new ArrayList<Resultado>();
+        if (!ags_solicitud.isEmpty()){
+            for (AnalisisGrupoSolicitud ags : ags_solicitud) {
+                resultados.addAll(ags.getResultados());
+            }
+        }
+        return resultados;
+    }
 
     public void setAnalisis_solicitud(List<AnalisisGrupoSolicitud> analisis_solicitud) {
         this.analisis_solicitud = analisis_solicitud;
@@ -140,6 +167,16 @@ public class SolicitudCC {
         }
         
         return lista_muestras;
+    }
+    
+    public void agregarResultadoAnalisisGrupoSolicitud (Resultado r) {
+        for (AnalisisGrupoSolicitud ags : this.analisis_solicitud) {
+            if (r.getAgs().getId_analisis_grupo_solicitud() == ags.getId_analisis_grupo_solicitud()) {
+                r.setAgs(ags);
+                ags.agregarResultado(r);
+                break;
+            }
+        }
     }
 
     public String parseJSON() {

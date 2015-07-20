@@ -90,6 +90,23 @@
                     </div>
                 </div>
             </div>
+            
+            <label for="tipos-muestra" class="control-label"> *Tipos de Muestra Asociados</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="seleccion-tipo-muestra" class="select2" name="tipos-muestra" multiple="multiple"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${tiposmuestra}" var="tipo">
+                                <option value=${tipo.getId_tipo_muestra()}>${tipo.getNombre()}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
 
         </div>

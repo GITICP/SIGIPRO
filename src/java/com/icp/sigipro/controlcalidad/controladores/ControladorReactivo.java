@@ -52,9 +52,6 @@ public class ControladorReactivo extends SIGIPROServlet {
     private ReactivoDAO dao = new ReactivoDAO();
     private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
 
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
-
     protected final Class clase = ControladorReactivo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {

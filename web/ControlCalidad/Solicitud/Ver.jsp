@@ -51,7 +51,14 @@
                                         </c:if>
                                     </c:when>
                                     <c:otherwise>
-
+                                        <c:choose>
+                                            <c:when test="${solicitud.getInforme() == null}">
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_informe=${solicitud.getInforme().getId_informe()}">Editar Informe</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -117,16 +124,54 @@
                                         </div>
                                     </div>
 
-                                    <div class="widget-content">
-                                        <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
-                                            <!-- Columnas -->
-                                            <thead> 
-                                                <tr>
-                                                    <th>Grupo</th>
-                                                    <th>Tipo de Muestras</th>
-                                                    <th>Identificadores de Muestras</th>
-                                                    <th>Análisis Solicitado</th>
-                                                    <th>Acción</th>
+                                <div class="widget-content">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                        <!-- Columnas -->
+                                        <thead> 
+                                            <tr>
+                                                <th>Identificadores de Muestras (Tipo)</th>
+                                                <th>Análisis Solicitado</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
+                                                <tr id='${ags.getId_analisis_grupo_solicitud()}'>
+                                                    <td>
+                                                        <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                        </c:forEach>
+                                                    </td>
+                                                    <td>
+                                                        ${ags.getAnalisis().getNombre()}
+                                                    </td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${solicitud.getEstado().equals('Recibido')}">
+                                                                <c:choose>
+                                                                    <c:when test="${ags.getResultados() == null}">
+                                                                        <a class="btn btn-primary btn-sm boton-accion" 
+                                                                           href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                            Realizar
+                                                                        </a>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <a class="btn btn-primary btn-sm boton-accion" 
+                                                                           href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                            Repetir
+                                                                        </a>
+                                                                        <a class="btn btn-primary btn-sm boton-accion" 
+                                                                           href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
+                                                                            Ver Resultados (${ags.getResultados().size()})
+                                                                        </a>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Solicitud aún no ha sido recibida.
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
                                                 </tr>
                                             </thead>
                                             <tbody>

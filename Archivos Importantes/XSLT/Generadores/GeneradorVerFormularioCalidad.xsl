@@ -13,7 +13,7 @@
                 <tr>
                     <th>Nombre de Campo</th>
                     <th>Tipo</th>
-                    <th>Visible para Usuarios</th>
+                    <th>Resultado</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,8 +46,8 @@
                 </xsl:call-template>
             </td>
             <td>
-                <xsl:call-template name="visible">
-                    <xsl:with-param name="visible" select="visible" />
+                <xsl:call-template name="resultado">
+                    <xsl:with-param name="resultado" select="resultado" />
                 </xsl:call-template>
             </td>
         </tr>
@@ -65,7 +65,7 @@
             <xsl:when test="$tipo = 'text' or $tipo = 'text_tabla'">
                 <xsl:value-of select="'Texto'" />
             </xsl:when>
-            <xsl:when test="$tipo = 'Excel'">
+            <xsl:when test="$tipo = 'Excel' or $tipo = 'excel_tabla'">
                 <xsl:value-of select="concat('Excel (', $celda, ')' )" />
             </xsl:when>
             <xsl:when test="$tipo = 'textarea'">
@@ -77,14 +77,14 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template name="visible">
-        <xsl:param name="visible" />
+    <xsl:template name="resultado">
+        <xsl:param name="resultado" />
         
         <xsl:choose>
-            <xsl:when test="$visible = 'True'">
+            <xsl:when test="$resultado = 'True'">
                 <xsl:value-of select="'Sí'" />
             </xsl:when>
-            <xsl:when test="$visible = 'False'">
+            <xsl:when test="$resultado = 'False'">
                 <xsl:value-of select="'No'" />
             </xsl:when>
         </xsl:choose>
@@ -113,6 +113,7 @@
                     <i class="fa fa-table"></i> 
                     <xsl:value-of select="nombre" /> 
                 </h3>
+                <!--
                 <div class="btn-group widget-header-toolbar">
                     <h3> 
                         <xsl:call-template name="visible-tabla">
@@ -120,6 +121,7 @@
                         </xsl:call-template>
                     </h3>
                 </div>
+                -->
             </div>
             
             <div class="widget-content">
@@ -151,6 +153,7 @@
                         <xsl:with-param name="nombre" select="celda-nombre/nombre" />
                         <xsl:with-param name="nombre-campo" select="campo/nombre-campo" />
                         <xsl:with-param name="tipo" select="campo/tipo" />
+                        <xsl:with-param name="celda" select="campo/celda" />
                     </xsl:call-template>
                 </td>
             </xsl:for-each>
@@ -161,6 +164,7 @@
         <xsl:param name="nombre" select="'valor_defecto'"/>
         <xsl:param name="nombre-campo" />
         <xsl:param name="tipo" />
+        <xsl:param name="celda" />
         
         <!--
             Solamente uno va a tener un valor en un momento determinado. 
@@ -180,6 +184,7 @@
             <xsl:otherwise>
                 <xsl:call-template name="tipo-dato">
                     <xsl:with-param name="tipo" select="$tipo" />
+                    <xsl:with-param name="celda" select="$celda" />
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>

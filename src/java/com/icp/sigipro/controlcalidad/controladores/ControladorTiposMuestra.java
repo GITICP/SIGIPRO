@@ -166,6 +166,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet
 
         tipo_muestra.setNombre(request.getParameter("nombre"));
         tipo_muestra.setDescripcion(request.getParameter("descripcion"));
+        tipo_muestra.setDias_descarte(Integer.parseInt(request.getParameter("dias_descarte")));
 
         return tipo_muestra;
     }

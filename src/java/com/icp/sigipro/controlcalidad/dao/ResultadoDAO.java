@@ -14,6 +14,7 @@ import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,8 +48,8 @@ public class ResultadoDAO extends DAO
             getConexion().setAutoCommit(false);
 
             insert_resultado = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.resultados (path, datos, id_usuario, fecha, id_analisis_grupo_solicitud) "
-                    + " VALUES (?,?,?,?,?) RETURNING id_resultado; "
+                    " INSERT INTO control_calidad.resultados (path, datos, id_usuario, fecha, id_analisis_grupo_solicitud, resultado) "
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_resultado; "
             );
 
             SQLXML datos = getConexion().createSQLXML();
@@ -59,6 +60,7 @@ public class ResultadoDAO extends DAO
             insert_resultado.setInt(3, resultado.getUsuario().getId_usuario());
             insert_resultado.setDate(4, helper_fechas.getFecha_hoy());
             insert_resultado.setInt(5, resultado.getAgs().getId_analisis_grupo_solicitud());
+            insert_resultado.setString(6, resultado.getResultado());
 
             rs_insert_resultado = insert_resultado.executeQuery();
             
@@ -169,6 +171,7 @@ public class ResultadoDAO extends DAO
                 resultado.setId_resultado(rs.getInt("id_resultado"));
                 resultado.setDatos(rs.getSQLXML("datos"));
                 resultado.setPath(rs.getString("path"));
+                resultado.setResultado(rs.getString("resultado"));
             } else {
                 throw new SIGIPROException("El resultado que está intentando buscar no existe.");
             }
@@ -257,6 +260,55 @@ public class ResultadoDAO extends DAO
         }
         
         return resultado;
+    }
+
+    public List<Resultado> obtenerResultadosAGS(int id_ags) throws SIGIPROException {
+        
+        List<Resultado> lista_resultados = new ArrayList<Resultado>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            consulta = getConexion().prepareStatement(
+                  " SELECT r.id_resultado, r.fecha, r.repeticion, r.resultado, u.id_usuario, u.nombre_completo "
+                + " FROM control_calidad.resultados r "
+                + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
+                + " WHERE r.id_analisis_grupo_solicitud = ? "
+                + " ORDER BY repeticion ASC"
+            );
+            
+            consulta.setInt(1, id_ags);
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Resultado r = new Resultado();
+                
+                r.setId_resultado(rs.getInt("id_resultado"));
+                r.setFecha(rs.getDate("fecha"));
+                r.setRepeticion(rs.getInt("repeticion"));
+                r.setResultado(rs.getString("resultado"));
+                
+                Usuario u = new Usuario();
+                u.setId_usuario(rs.getInt("id_usuario"));
+                u.setNombreCompleto(rs.getString("nombre_completo"));
+                
+                r.setUsuario(u);
+                
+                lista_resultados.add(r);
+            }
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener el listado de resultados. Inténtelo nuevamente.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return lista_resultados;
     }
 
 }

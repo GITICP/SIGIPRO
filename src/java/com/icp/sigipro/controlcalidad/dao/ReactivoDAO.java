@@ -244,7 +244,7 @@ public class ReactivoDAO extends DAO {
             String ids_parseados = this.pasar_ids_a_parentesis(ids_tipos);
             
             consulta = getConexion().prepareStatement(
-                    " SELECT id_reactivo, nombre FROM control_calidad.reactivos WHERE id_tipo_reactivo in " + ids_parseados + "; "
+                    " SELECT id_reactivo, nombre, preparacion FROM control_calidad.reactivos WHERE id_tipo_reactivo in " + ids_parseados + "; "
             );
             
             rs = consulta.executeQuery();
@@ -254,6 +254,7 @@ public class ReactivoDAO extends DAO {
                 
                 reactivo.setNombre(rs.getString("nombre"));
                 reactivo.setId_reactivo(rs.getInt("id_reactivo"));
+                reactivo.setPreparacion(rs.getString("preparacion"));
                 
                 resultado.add(reactivo);
             }

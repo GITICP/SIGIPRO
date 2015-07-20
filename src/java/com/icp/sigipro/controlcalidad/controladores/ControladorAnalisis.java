@@ -12,6 +12,7 @@ import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
+import com.icp.sigipro.controlcalidad.dao.TipoMuestraDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
@@ -20,6 +21,7 @@ import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
+import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -87,6 +89,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final UsuarioDAO usuariodao = new UsuarioDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
     private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
+    private final TipoMuestraDAO tipomuestradao = new TipoMuestraDAO();
     private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
     private final EquipoDAO equipodao = new EquipoDAO();
     private final ReactivoDAO reactivodao = new ReactivoDAO();
@@ -159,9 +162,17 @@ public class ControladorAnalisis extends SIGIPROServlet {
         Analisis a = new Analisis();
         List<TipoEquipo> tipoequipo = tipoequipodao.obtenerTipoEquipos();
         List<TipoReactivo> tiporeactivo = tiporeactivodao.obtenerTipoReactivos();
+        List<TipoMuestra> tiposmuestra = new ArrayList<TipoMuestra>();
+        try {
+            tiposmuestra = tipomuestradao.obtenerTiposDeMuestra();
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", sig_ex.getMessage());
+        }
+
         request.setAttribute("analisis", a);
         request.setAttribute("tipoequipos", tipoequipo);
         request.setAttribute("tiporeactivos", tiporeactivo);
+        request.setAttribute("tiposmuestra", tiposmuestra);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -351,6 +362,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             if (resultado) {
                 dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
                 dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
+                dao.insertarTipoMuestra(a.getTipos_muestras_analisis(), a.getId_analisis());
                 request.setAttribute("mensaje", helper.mensajeDeExito("Analisis agregado correctamente"));
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
@@ -457,7 +469,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         String valor;
                         String nombre_campo = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         Node nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        if (tipo_campo.equalsIgnoreCase("excel")) {
+                        if (tipo_campo.equalsIgnoreCase("excel") || tipo_campo.equalsIgnoreCase("excel_tabla")) {
                             Node nodo_celda = elemento.getElementsByTagName("celda").item(0);
                             String celda = nodo_celda.getTextContent();
                             valor = excel.obtenerCelda(celda);
@@ -465,6 +477,14 @@ public class ControladorAnalisis extends SIGIPROServlet {
                             valor = this.obtenerParametro(nombre_campo);
                         }
                         nodo_valor.setTextContent(valor);
+
+                        Node nodo_resultado = elemento.getElementsByTagName("resultado").item(0);
+                        if (nodo_resultado != null) {
+                            String texto = nodo_resultado.getTextContent();
+                            if (texto.equalsIgnoreCase("true")) {
+                                resultado.setResultado(valor);
+                            }
+                        }
                     }
                 }
             }
@@ -485,7 +505,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultadodao.insertarResultado(resultado);
 
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
-
             try {
                 SolicitudCC s = solicituddao.obtenerSolicitud(resultado.getAgs().getGrupo().getSolicitud().getId_solicitud());
                 request.setAttribute("solicitud", s);
@@ -501,7 +520,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", "Ha ocurrido un error inesperado. Contacte al administrador del sistema.");
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
         }
 
         this.redireccionar(request, response, redireccion);
@@ -551,6 +573,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         TipoReactivo tiporeactivo = new TipoReactivo();
                         tiporeactivo.setId_tipo_reactivo(Integer.parseInt(fieldValue));
                         a.getTipos_reactivos_analisis().add(tiporeactivo);
+                        break;
+                    case "tipos-muestra":
+                        TipoMuestra tipo_muestra = new TipoMuestra();
+                        tipo_muestra.setId_tipo_muestra(Integer.parseInt(fieldValue));
+                        a.getTipos_muestras_analisis().add(tipo_muestra);
                         break;
                     case "orden":
                         orden = fieldValue;

@@ -5,7 +5,7 @@
         <tipo>number</tipo>
         <nombre-campo>numero1</nombre-campo>
         <etiqueta>Número 1</etiqueta>
-        <visible>True</visible>
+        <resultado>True</resultado>
         <valor></valor>
     </campo>
     <campo>
@@ -13,47 +13,47 @@
         <nombre-campo>excel_1</nombre-campo>
         <celda>A27</celda>
         <etiqueta>Excel 1</etiqueta>
-        <visible>True</visible>
+        <resultado>False</resultado>
         <valor></valor>
     </campo>
     <campo>
         <tipo>text</tipo>
         <nombre-campo>texto1</nombre-campo>
         <etiqueta>Texto 1</etiqueta>
-        <visible>False</visible>
+        <resultado>False</resultado>
         <valor></valor>
     </campo>
     <campo>
         <tipo>text</tipo>
         <nombre-campo>texto2</nombre-campo>
         <etiqueta>Texto 2</etiqueta>
-        <visible>False</visible>
+        <resultado>False</resultado>
         <valor></valor>
     </campo>
     <campo>
         <tipo>number</tipo>
         <nombre-campo>numero2</nombre-campo>
         <etiqueta>Número 2</etiqueta>
-        <visible>False</visible>
+        <resultado>False</resultado>
         <valor></valor>
     </campo>
     <campo>
         <tipo>textarea</tipo>
         <nombre-campo>area1</nombre-campo>
         <etiqueta>Área 1</etiqueta>
-        <visible>False</visible>
+        <resultado>False</resultado>
         <valor></valor>
     </campo>
     <campo>
         <tipo>fecha</tipo>
         <nombre-campo>fecha1</nombre-campo>
         <etiqueta>Fecha de Ingreso</etiqueta>
-        <visible>False</visible>
+        <resultado>False</resultado>
         <valor></valor>
     </campo>
     <campo>
         <tipo>table</tipo>
-        <visible>False</visible>
+        <resultado>False</resultado>
         <nombre>Nombre Tabla</nombre>
         <columnas>
             <columna>
@@ -65,8 +65,8 @@
             <columna>
                 <nombre>Columna 2</nombre>
             </columna>
-            <columna>
-                <nombre>Columna 3</nombre>
+            <columna tipo="Excel">
+                <nombre>Columna Excel</nombre>
             </columna>
         </columnas>
         <filas>
@@ -93,8 +93,9 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_1_3</nombre-campo>
+                            <tipo>Excel</tipo>
+                            <nombre-campo>Tabla_1_Excel_1_3</nombre-campo>
+                            <celda>A28</celda>
                             <valor></valor>
                         </campo>
                     </celda>
@@ -123,8 +124,9 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_3</nombre-campo>
+                            <tipo>Excel</tipo>
+                            <nombre-campo>Tabla_1_Excel_2_3</nombre-campo>
+                            <celda>A29</celda>
                             <valor></valor>
                         </campo>
                     </celda>
@@ -153,8 +155,9 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Sumatoria_3</nombre-campo>
+                            <tipo>Excel</tipo>
+                            <nombre-campo>Tabla_1_Excel_Sumatoria_3</nombre-campo>
+                            <celda>A30</celda>
                             <valor></valor>
                         </campo>
                     </celda>
@@ -183,8 +186,9 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Promedio_3</nombre-campo>
+                            <tipo>Excel</tipo>
+                            <nombre-campo>Tabla_1_Excel_Promedio_3</nombre-campo>
+                            <celda>A29</celda>
                             <valor></valor>
                         </campo>
                     </celda>
@@ -194,7 +198,7 @@
     </campo>
     <campo>
         <tipo>table</tipo>
-        <visible>True</visible>
+        <resultado>False</resultado>
         <columnas>
             <columna>
                 <nombre>Columna 1</nombre>

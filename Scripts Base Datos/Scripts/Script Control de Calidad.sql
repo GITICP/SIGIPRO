@@ -93,6 +93,7 @@ CREATE TABLE control_calidad.tipos_muestras (
     id_tipo_muestra serial NOT NULL,
     nombre varchar(50) NOT NULL,
     descripcion varchar(500) NOT NULL,
+    dias_descarte integer NULL,
     CONSTRAINT tipos_muestras_pk PRIMARY KEY (id_tipo_muestra)
 );
 
@@ -127,6 +128,7 @@ CREATE TABLE control_calidad.resultados (
     id_usuario int NOT NULL,
     fecha date NOT NULL,
     repeticion integer NOT NULL,
+    resultado varchar(500) NOT NULL,
     CONSTRAINT resultados_pk PRIMARY KEY (id_resultado)
 );
 
@@ -198,8 +200,58 @@ CREATE TABLE control_calidad.reactivos_resultado (
     CONSTRAINT reactivos_resultado_pk PRIMARY KEY (id_resultado, id_reactivo)
 );
 
+-- Table: informes
+CREATE TABLE control_calidad.informes
+(
+    id_informe serial NOT NULL, 
+    id_solicitud integer, 
+    fecha date NOT NULL,
+    realizado_por integer NOT NULL,
+    CONSTRAINT pk_informes PRIMARY KEY (id_informe)
+);
+
+-- Table: resultados_informes
+CREATE TABLE control_calidad.resultados_informes
+(
+    id_informe integer NOT NULL,
+    id_resultado integer NOT NULL,
+    CONSTRAINT pk_resultaods PRIMARY KEY (id_informe, id_resultado)
+);
+
 
 -- foreign keys
+-- Reference: Informes_Solicitudes (table: solicitudes)
+ALTER TABLE control_calidad.informes ADD CONSTRAINT fk_informes_solicitudes
+    FOREIGN KEY (id_solicitud) 
+    REFERENCES control_calidad.solicitudes (id_solicitud)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Informes_Solicitudes (table: usuarios)
+ALTER TABLE control_calidad.informes ADD CONSTRAINT fk_informes_usuarios
+    FOREIGN KEY (realizado_por) 
+    REFERENCES seguridad.usuarios (id_usuario)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Resultados_Informes (table: resultados)
+ALTER TABLE control_calidad.resultados_informes ADD CONSTRAINT fk_informes_resultados_resultado
+    FOREIGN KEY (id_resultado)
+    REFERENCES control_calidad.resultados (id_resultado)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Resultados_Informes (table: informes)
+ALTER TABLE control_calidad.resultados_informes ADD CONSTRAINT fk_informes_resultados_informe
+    FOREIGN KEY (id_informe)
+    REFERENCES control_calidad.informes (id_informe)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
 -- Reference:  Equipos_Resultado_Resultado (table: resultados)
 ALTER TABLE control_calidad.equipos_resultado ADD CONSTRAINT Equipos_Resultado_Resultados
     FOREIGN KEY (id_resultado)

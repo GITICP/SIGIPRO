@@ -9,7 +9,9 @@ import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.ControlSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Grupo;
+import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Muestra;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.core.DAO;
@@ -252,9 +254,9 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado, solicitud.observaciones "
-                    + "FROM control_calidad.solicitudes as solicitud  "
-                    + "WHERE id_solicitud=?; ");
+            consulta = getConexion().prepareStatement(" SELECT solicitud.id_solicitud, solicitud.numero_solicitud, solicitud.id_usuario_solicitante, solicitud.id_usuario_recibido, solicitud.fecha_solicitud, solicitud.fecha_recibido, solicitud.estado, solicitud.observaciones, i.id_informe "
+                    + "FROM control_calidad.solicitudes as solicitud LEFT JOIN control_calidad.informes i ON i.id_solicitud = solicitud.id_solicitud "
+                    + "WHERE solicitud.id_solicitud=?; ");
             consulta.setInt(1, id_solicitud);
             rs = consulta.executeQuery();
             UsuarioDAO usuariodao = new UsuarioDAO();
@@ -270,6 +272,12 @@ public class SolicitudDAO extends DAO {
                 resultado.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 resultado.setNumero_solicitud(rs.getString("numero_solicitud"));
                 resultado.setObservaciones(rs.getString("observaciones"));
+                int id_informe = rs.getInt("id_informe");
+                if (id_informe != 0) {
+                    Informe i = new Informe();
+                    i.setId_informe(id_informe);
+                    resultado.setInforme(i);
+                }
             }
 
             consulta = getConexion().prepareStatement(
@@ -329,8 +337,32 @@ public class SolicitudDAO extends DAO {
 
                 cs.agregarCombinacion(ags.getAnalisis(), tm, m);
             }
+            
             resultado.setAnalisis_solicitud(lista_grupos_analisis_solicitud);
             resultado.setControl_solicitud(cs);
+            
+            consulta = getConexion().prepareStatement(
+                  " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado FROM control_calidad.analisis_grupo_solicitud ags "
+                + " LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
+                + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
+                + " ORDER BY ags.id_analisis_grupo_solicitud; "
+            );
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                int id_resultado = rs.getInt("id_resultado");
+                if (id_resultado != 0) {
+                    Resultado r = new Resultado();
+                    r.setId_resultado(rs.getInt("id_resultado"));
+                    r.setResultado(rs.getString("resultado"));
+                    AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
+                    ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
+                    r.setAgs(ags_iter);
+                    resultado.agregarResultadoAnalisisGrupoSolicitud(r);
+                }
+            }          
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -511,5 +543,16 @@ public class SolicitudDAO extends DAO {
         }
 
         return resultado;
+    }
+    
+    private String pasarIdsAGSAParentesis(List<AnalisisGrupoSolicitud> lista_ags) {
+        
+        String resultado = "(";
+        
+        for (AnalisisGrupoSolicitud ags : lista_ags) {
+            resultado = resultado + String.valueOf(ags.getId_analisis_grupo_solicitud()) + ",";
+        }
+        
+        return resultado.substring(0, resultado.length() - 1) + ")";
     }
 }

@@ -25,9 +25,9 @@ public class PruebasXSLT
         try {
             TransformerFactory tff = TransformerFactory.newInstance();
             Transformer tf = tff.newTransformer(new StreamSource(new File(
-                    "Archivos Importantes\\XSLT\\Generadores\\GeneradorVerFormularioCalidad.xsl"
+                    "Archivos Importantes\\XSLT\\Generadores\\GeneradorFormulariosCalidad.xsl"
             )));
-            StreamSource ss = new StreamSource(new File("Archivos Importantes\\XSLT\\Archivos de Prueba\\Formulario Completo.xml"));
+            StreamSource ss = new StreamSource(new File("Archivos Importantes\\XSLT\\Archivos de Prueba\\Formulario 2.xml"));
             StreamResult sr = new StreamResult(new File("Archivos Importantes\\XSLT\\Archivos Generados\\PruebaVerFormulario.html"));
             tf.transform(ss, sr);
         } catch (Exception ex){

@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -18,6 +19,7 @@ public class AnalisisGrupoSolicitud {
     private int id_analisis_grupo_solicitud;
     private Analisis analisis;
     private Grupo grupo;
+    private List<Resultado> resultados;
 
     private String[] lista_analisis;
 
@@ -54,6 +56,21 @@ public class AnalisisGrupoSolicitud {
 
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
+    }
+
+    public List<Resultado> getResultados() {
+        return resultados;
+    }
+    
+    public void setResultados(List<Resultado> resultados) {
+        this.resultados = resultados;
+    }
+    
+    public void agregarResultado(Resultado r) {
+        if (resultados == null) {
+            resultados = new ArrayList<Resultado>();
+        }
+        resultados.add(r);
     }
     
     public List<Muestra> obtenerMuestras() {
