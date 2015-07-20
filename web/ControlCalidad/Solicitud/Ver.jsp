@@ -45,6 +45,8 @@
                                         </c:if>
                                         <c:if test="${boolrecibir}">
                                             <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
+                                        </c:if>
+                                        <c:if test="${boolanular}">
                                             <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                         </c:if>
                                     </c:when>
@@ -113,13 +115,14 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="widget widget-table">
-                                <div class="widget-header">
-                                    <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
-                                    <div class="btn-group widget-header-toolbar">                                    
-                                        <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
+                            <c:if test="${solicitud.getEstado().equals('Recibido')}">
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
+                                        <div class="btn-group widget-header-toolbar">                                    
+                                            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
+                                        </div>
                                     </div>
-                                </div>
 
                                 <div class="widget-content">
                                     <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
@@ -170,11 +173,38 @@
                                                         </c:choose>
                                                     </td>
                                                 </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
+                                                    <tr id='${ags.getId_analisis_grupo_solicitud()}'>
+                                                        <td>
+                                                            ${ags.getGrupo().getId_grupo()}
+                                                        </td>
+                                                        <td>
+                                                            ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
+                                                        </td>
+                                                        <td>
+                                                            <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                ${muestra.getIdentificador()} <br>
+                                                            </c:forEach>
+                                                        </td>
+                                                        <td>
+                                                            ${ags.getAnalisis().getNombre()}
+                                                        </td>
+                                                        <td>
+                                                            <c:if test="${solicitud.getEstado().equals('Recibido')}">
+                                                                <c:if test="${boolrealizar}">
+                                                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">Realizar</a>
+                                                                </c:if>
+                                                            </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            </c:if>
                         </div>
                         <!-- END WIDGET TICKET TABLE -->
                     </div>

@@ -24,6 +24,8 @@ public class Analisis {
     private String estructuraString;
     private String machote;
     private Usuario encargado;
+    private boolean aprobado;
+    
 
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
@@ -64,6 +66,14 @@ public class Analisis {
             respuesta = respuesta.substring(0, respuesta.length() - 1);
         }
         return respuesta;
+    }
+
+    public boolean isAprobado() {
+        return aprobado;
+    }
+
+    public void setAprobado(boolean aprobado) {
+        this.aprobado = aprobado;
     }
 
     public void setIsTipoMuestra(boolean isTipoMuestra) {

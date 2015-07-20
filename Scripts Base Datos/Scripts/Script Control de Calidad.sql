@@ -474,6 +474,9 @@ ADD COLUMN descripcion varchar(500);
 ALTER TABLE control_calidad.analisis
 ADD COLUMN nombre varchar(50);
 
+ALTER TABLE control_calidad.analisis
+ADD COLUMN aprobado boolean;
+
 
 -- MENÚ PRINCIPAL
 
@@ -517,6 +520,14 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (520, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (521, '[ControlCalidad]AdministrarCertificadoEquipo', 'Permite agregar y eliminar un certificado de equipo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[ControlCalidad]AdministrarReactivo', 'Permite agregar, editar y eliminar un reactivo');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdminCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (540, '[ControlCalidad]AdministrarAnalisis', 'Permite agregar, editar y eliminar un Analisis.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (541, '[ControlCalidad]RealizarAnalisis', 'Permite realizar un Analisis de Control de Calidad y ver los resultados.');
+
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (550, '[ControlCalidad]SolicitarAnalisis', 'Permite agregar y editar una Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (551, '[ControlCalidad]RecibirSolicitud', 'Permite recibir la Solicitud para su agrupacion y realizacion.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (552, '[ControlCalidad]AnularSolicitud', 'Permite anular una Solicitud de Control de Calidad.');
+
 
 
 -- End of file.
