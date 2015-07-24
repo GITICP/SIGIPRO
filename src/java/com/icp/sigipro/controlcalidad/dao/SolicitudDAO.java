@@ -490,6 +490,7 @@ public class SolicitudDAO extends DAO {
 
             consulta_grupo.setInt(1, grupo.getSolicitud().getId_solicitud());
 
+            System.out.println(consulta_grupo);
             rs_grupo = consulta_grupo.executeQuery();
 
             if (rs_grupo.next()) {
@@ -503,6 +504,7 @@ public class SolicitudDAO extends DAO {
             for (Muestra m : grupo.getGrupos_muestras()) {
                 consulta_muestras_grupo.setInt(1, m.getId_muestra());
                 consulta_muestras_grupo.setInt(2, grupo.getId_grupo());
+                System.out.println(consulta_muestras_grupo);
                 consulta_muestras_grupo.addBatch();
             }
 
@@ -515,6 +517,7 @@ public class SolicitudDAO extends DAO {
             for (Analisis a : grupo.getAnalisis()) {
                 consulta_ags.setInt(1, a.getId_analisis());
                 consulta_ags.setInt(2, grupo.getId_grupo());
+                System.out.println(consulta_ags);
                 consulta_ags.addBatch();
             }
 

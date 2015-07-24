@@ -85,7 +85,7 @@
                                                 <c:choose>
                                                     <c:when test="${analisis.isAprobado()}">
                                                         <c:if test="${contienePermisoRealizar}">
-                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=agregar">Realizar</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=lista&id_analisis=${analisis.getId_analisis()}">Realizar</a>
                                                         </c:if>
                                                     </c:when>
                                                     <c:otherwise>

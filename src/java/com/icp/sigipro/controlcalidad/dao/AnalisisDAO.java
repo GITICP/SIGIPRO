@@ -6,6 +6,11 @@
 package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
+import com.icp.sigipro.controlcalidad.modelos.Grupo;
+import com.icp.sigipro.controlcalidad.modelos.Muestra;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
@@ -134,7 +139,7 @@ public class AnalisisDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean insertarTipoMuestra(List<TipoMuestra> tipos_muestras_analisis, int id_analisis) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -153,8 +158,7 @@ public class AnalisisDAO extends DAO {
             ex.printStackTrace();
             SQLException ex2 = ex.getNextException();
             ex2.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
@@ -282,6 +286,89 @@ public class AnalisisDAO extends DAO {
         return resultado;
     }
 
+    public List<AnalisisGrupoSolicitud> obtenerSolicitudesAnalisis(int id_analisis) {
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        List<AnalisisGrupoSolicitud> resultado = new ArrayList<AnalisisGrupoSolicitud>();
+
+        try {
+            consulta = getConexion().prepareStatement(
+                    "SELECT ags.id_analisis_grupo_solicitud, g.id_solicitud, s.numero_solicitud, s.estado, r.id_resultado, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
+                    + "FROM control_calidad.analisis_grupo_solicitud as ags "
+                    + "LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.resultados as r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud "
+                    + "LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
+                    + "LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
+                    + "LEFT OUTER JOIN control_calidad.solicitudes as s ON s.id_solicitud = g.id_solicitud "
+                    + "WHERE ags.id_analisis = ? "
+                    + "ORDER BY g.id_grupo;");
+
+            consulta.setInt(1, id_analisis);
+
+            AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+            Grupo g = new Grupo();
+
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                Analisis a = new Analisis();
+                a.setId_analisis(rs.getInt("id_analisis"));
+                a.setNombre(rs.getString("nombreanalisis"));
+                do {
+                    if (g.getId_grupo() == 0 || g.getId_grupo() != rs.getInt("id_grupo")) {
+                        if (g.getId_grupo() != 0) {
+                            ags.setGrupo(g);
+                        }
+                        SolicitudCC s = new SolicitudCC();
+                        s.setId_solicitud(rs.getInt("id_solicitud"));
+                        s.setNumero_solicitud(rs.getString("numero_solicitud"));
+                        s.setEstado(rs.getString("estado"));
+                        g = new Grupo();
+                        g.setId_grupo(rs.getInt("id_grupo"));
+                        g.setSolicitud(s);
+                        g.setGrupos_muestras(new ArrayList<Muestra>());
+                    }
+                    if (ags.getId_analisis_grupo_solicitud() == 0 || ags.getId_analisis_grupo_solicitud() != rs.getInt("id_analisis_grupo_solicitud")) {
+                        if (ags.getId_analisis_grupo_solicitud() != 0) {
+                            resultado.add(ags);
+                        }
+                        ags = new AnalisisGrupoSolicitud();
+                        ags.setAnalisis(a);
+                        ags.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
+                        ags.setResultados(new ArrayList<Resultado>());
+                    }
+                    TipoMuestra tm = new TipoMuestra();
+                    tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                    tm.setNombre(rs.getString("nombretipo"));
+                    Muestra m = new Muestra();
+                    m.setId_muestra(rs.getInt("id_muestra"));
+                    m.setIdentificador(rs.getString("identificador"));
+                    m.setTipo_muestra(tm);
+
+                    g.getGrupos_muestras().add(m);
+
+                    if (rs.getInt("id_resultado") != 0) {
+                        Resultado r = new Resultado();
+                        r.setId_resultado(rs.getInt("id_resultado"));
+                        ags.getResultados().add(r);
+                    }
+
+                } while (rs.next());
+            }
+            ags.setGrupo(g);
+            resultado.add(ags);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
     public List<TipoEquipo> obtenerTipoEquipos(int id_analisis) {
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -333,7 +420,7 @@ public class AnalisisDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public List<TipoMuestra> obtenerTipoMuestras(int id_analisis) {
         PreparedStatement consulta = null;
         ResultSet rs = null;

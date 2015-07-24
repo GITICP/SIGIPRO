@@ -107,6 +107,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
+            add("editar");
+            add("lista");
             add("archivo");
             add("realizar");
         }
@@ -183,6 +185,21 @@ public class ControladorAnalisis extends SIGIPROServlet {
         String redireccion = "Analisis/index.jsp";
         List<Analisis> analisis = dao.obtenerAnalisis();
         request.setAttribute("listaAnalisis", analisis);
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void getLista(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(541, listaPermisos);
+
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+
+        Analisis a = dao.obtenerAnalisis(id_analisis);
+
+        String redireccion = "Analisis/Lista.jsp";
+        List<AnalisisGrupoSolicitud> ags = dao.obtenerSolicitudesAnalisis(id_analisis);
+        request.setAttribute("listaAGS", ags);
+        request.setAttribute("nombreAnalisis", a.getNombre());
         redireccionar(request, response, redireccion);
     }
 
