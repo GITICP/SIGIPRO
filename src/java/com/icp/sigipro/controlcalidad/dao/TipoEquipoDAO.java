@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.controlcalidad.dao;
 
-import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;
@@ -124,20 +123,18 @@ public class TipoEquipoDAO extends DAO {
         return resultado;
     }
     
-    public boolean eliminarTipoEquipo(int id_tipo_equipo)
-    {
+    public boolean eliminarTipoEquipo(int id_tipo_equipo) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_equipos WHERE id_tipo_equipo=?; ");
             consulta.setInt(1, id_tipo_equipo);
             if (consulta.executeUpdate() == 1) {
-                resultado=true;
+                resultado = true;
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

@@ -10,8 +10,6 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.serpentario.modelos.Especie;
-import com.icp.sigipro.serpentario.modelos.Veneno;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

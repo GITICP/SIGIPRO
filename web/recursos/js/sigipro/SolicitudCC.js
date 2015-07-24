@@ -29,7 +29,7 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
     var id = $(tipomuestra).val();
     $("#seleccionAnalisis_" + id_formulario).empty();
     var listaAnalisis = $("#listaAnalisis_" + id).val();
-    var dias_descarte = $("#listaAnalisis_"+id).data("dias-descarte");
+    var dias_descarte = $("#listaAnalisis_" + id).data("dias-descarte");
     var parseLista = JSON.parse(listaAnalisis);
     $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr1_' + id_formulario + '" label="An&aacute;lisis Asociados"></optgroup>');
     $("#seleccionAnalisis_" + id_formulario).append('<optgroup id="opt-gr2_' + id_formulario + '" label="Otros"></optgroup>');
@@ -42,8 +42,8 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
             $("#opt-gr2_" + id_formulario).append("<option value=" + value[0] + ">" + value[1] + "</option>");
         }
     });
-    
-    $("#datepicker_"+id_formulario).datepicker("setDate","+"+dias_descarte+"d");
+
+    $("#datepicker_" + id_formulario).datepicker("setDate", "+" + dias_descarte + "d");
 
     var analisis = $("#editaranalisis_" + id_formulario).val();
 
@@ -57,9 +57,40 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
     } else {
         $(".analisis_" + id_formulario).select2("val", analisis.replace(" ", "").split(","));
     }
-
+    
+    //Elimina el TM seleccionado para los proximos
+    //var listaTipoMuestra = $("#listaTipoMuestra").val();
+    //var parseLista = JSON.parse(listaTipoMuestra);
+    //var nueva_lista = [];
+    //$.each(parseLista, function (e, i) {
+    //    if (i[0].toString() !== id) {
+    //        nueva_lista = nueva_lista.concat([i]);
+    //    }
+    //});
+    //nueva_lista = JSON.stringify(nueva_lista);
+    //$("#listaTipoMuestra").val(nueva_lista);
+    //recargarTipoMuestra();
 }
-;
+
+function recargarTipoMuestra() {
+    var listaTipoMuestra = $("#listaTipoMuestra").val();
+    var listaMuestra = $("#listaMuestras").val().split(",");
+    var parseLista = JSON.parse(listaTipoMuestra);
+
+    alert(parseLista);
+    $.each(listaMuestra, function (i, e) {
+        var seleccionado = $("#seleccionTipo_" + e + " :selected");
+        $("#seleccionTipo_" + e).empty().append('<optgroup id="seleccionmuestras_' + e + '" label="Tipos de Muestra"></optgroup>');
+        if (seleccionado.val() !== "") {
+            $("#seleccionmuestras_" + e).append("<option value=" + seleccionado.val() + " selected>" + seleccionado.text() + "</option>");
+        }
+        $.each(parseLista, function (index, value) {
+            $("#seleccionmuestras_" + e).append("<option value=" + value[0] + ">" + value[1] + "</option>");
+        });
+
+    });
+}
+
 
 function agregarMuestra() {
     fila = "<div id=" + contador + " class=\"col-sm-12\">";
@@ -170,11 +201,24 @@ function agregarMuestra() {
 }
 
 function eliminarMuestra(id) {
+    var valor = $("#seleccionTipo_" + id).val();
+    var texto = $("#seleccionTipo_" + id + " :selected").text();
+    var nuevo_tipo = [valor, texto];
     var lista = $("#listaMuestras").val().split(",");
     $("div > #" + id).remove();
     lista.remove(id.toString());
     lista = lista.join();
     $("#listaMuestras").val(lista);
+
+    //Agrega el TM seleccionado para los proximos
+    //var listaTipoMuestra = $("#listaTipoMuestra").val();
+    //var parseLista = JSON.parse(listaTipoMuestra);
+    //parseLista = parseLista.concat([nuevo_tipo]);
+    //parseLista = JSON.stringify(parseLista);
+    //$("#listaTipoMuestra").val(parseLista);
+
+    //recargarTipoMuestra();
+
 }
 
 

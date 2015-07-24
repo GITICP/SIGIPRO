@@ -246,4 +246,24 @@ public class TipoMuestraDAO extends DAO {
 
         return resultado;
     }
+    
+    public boolean eliminarTipoMuestra(int id_tipo_muestra)
+    {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_muestras WHERE id_tipo_muestra=?; ");
+            consulta.setInt(1, id_tipo_muestra);
+            if (consulta.executeUpdate() == 1) {
+                resultado=true;
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
 }
