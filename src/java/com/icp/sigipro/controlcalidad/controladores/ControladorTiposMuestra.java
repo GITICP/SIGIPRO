@@ -109,7 +109,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        int id_tipo_muestra = Integer.parseInt(request.getParameter("id_tipo_muestra"));
+        int id_tipo_muestra = Integer.parseInt(request.getParameter("id_tipos_muestra"));
         boolean resultado = false;
         try {
             resultado = dao.eliminarTipoMuestra(id_tipo_muestra);
