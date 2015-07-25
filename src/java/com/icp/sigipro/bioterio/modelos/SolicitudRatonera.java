@@ -24,6 +24,7 @@ public class SolicitudRatonera {
   private String sexo;
   private Cepa cepa;
   private Usuario usuario_solicitante;
+  private Usuario usuario_utiliza;
   private String observaciones;
   private String observaciones_rechazo;
   private String estado;
@@ -42,12 +43,23 @@ public class SolicitudRatonera {
                 }
             }       
             JSON.put("id_cepa",this.cepa.getId_cepa());
-            JSON.put("usuario_solicitante",this.usuario_solicitante.getId_usuario());
+            JSON.put("usuario_solicitante",this.usuario_solicitante.getID());
+            JSON.put("usuario_utiliza",this.usuario_utiliza.getID());
         }catch (Exception e){
             
         }
         return JSON.toString();
     } 
+
+  public Usuario getUsuario_utiliza() {
+    return usuario_utiliza;
+  }
+
+  public void setUsuario_utiliza(Usuario usuario_utiliza) {
+    this.usuario_utiliza = usuario_utiliza;
+  }
+  
+  
   private String formatearFecha(Date fecha)
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");

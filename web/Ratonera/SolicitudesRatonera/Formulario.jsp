@@ -64,7 +64,28 @@
             <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${solicitud.getObservaciones()}</textarea>
           </div>
         </div>
-      </div> 
+      </div>
+      <label for="usuario_utiliza" class="control-label">Usuario que utiliza</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <select id="usuario_utiliza" class="select2" name="usuario_utiliza" required
+                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+
+              <c:forEach items="${usuarios}" var="us">
+                <c:choose>
+                  <c:when test="${us.getID() == solicitud.getUsuario_utiliza().getID()}" >
+                    <option value=${us.getID()} selected> ${us.getNombreCompleto()}</option>
+                  </c:when>
+                  <c:otherwise>
+                    <option value=${us.getID()}>${us.getNombreCompleto()}</option>
+                  </c:otherwise>
+                </c:choose>
+              </c:forEach>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-md-6">
       <label for="id_cepa" class="control-label">*Cepa</label>

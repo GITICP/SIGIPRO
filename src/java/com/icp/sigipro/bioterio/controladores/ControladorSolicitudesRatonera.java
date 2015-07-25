@@ -16,6 +16,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -99,6 +100,13 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     } catch (SIGIPROException ex) {
       Logger.getLogger(ControladorSolicitudesRatonera.class.getName()).log(Level.SEVERE, null, ex);
     }
+
+    HttpSession sesion = request.getSession();
+    String nombre_usr = (String) sesion.getAttribute("usuario");
+    int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
+    Usuario us = dao_us.obtenerUsuario(id_usuario);
+    List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
+    request.setAttribute("usuarios", usuarios);
     request.setAttribute("pesos", pesos);
     request.setAttribute("sexos", sexos);
     String redireccion = "SolicitudesRatonera/Agregar.jsp";
@@ -182,6 +190,12 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     validarPermisos(permisos, listaPermisos);
     String redireccion = "SolicitudesRatonera/Editar.jsp";
     int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+    HttpSession sesion = request.getSession();
+    String nombre_usr = (String) sesion.getAttribute("usuario");
+    int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
+    Usuario us = dao_us.obtenerUsuario(id_usuario);
+    List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
+    request.setAttribute("usuarios", usuarios);
     request.setAttribute("accion", "Editar");
     request.setAttribute("pesos", pesos);
     request.setAttribute("sexos", sexos);
@@ -344,7 +358,6 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
 
   // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-
   protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     boolean resultado = false;
     String redireccion = "SolicitudesRatonera/Agregar.jsp";
@@ -562,7 +575,6 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
 
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-
   private SolicitudRatonera construirObjeto(HttpServletRequest request) throws SIGIPROException {
     SolicitudRatonera solicitud = new SolicitudRatonera();
     solicitud.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
@@ -611,6 +623,10 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
     } else {
       int id_usuario = Integer.parseInt(request.getParameter("usuario_solicitante"));
       solicitud.setUsuario_solicitante(dao_us.obtenerUsuario(id_usuario));
+    }
+    if (!(request.getParameter("usuario_utiliza").equals(""))) {
+      int id_usuario = Integer.parseInt(request.getParameter("usuario_utiliza"));
+      solicitud.setUsuario_utiliza(dao_us.obtenerUsuario(id_usuario));
     }
 
     return solicitud;

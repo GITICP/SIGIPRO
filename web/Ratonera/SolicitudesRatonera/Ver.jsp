@@ -61,6 +61,7 @@
                 <tr><td> <strong>Observaciones:</strong> <td>  ${solicitud.getObservaciones()}</td></tr>
                 <tr><td> <strong>Observaciones de Rechazo:</strong> <td> ${solicitud.getObservaciones_rechazo()}</td></tr>
                 <tr><td> <strong>Estado:</strong> <td> ${solicitud.getEstado()}</td></tr>
+                <tr><td> <strong>Usuario que utiliza:</strong> <td>  ${solicitud.getUsuario_utiliza().getNombreCompleto()}</td></tr>
               </table>
               <br>
             </div>

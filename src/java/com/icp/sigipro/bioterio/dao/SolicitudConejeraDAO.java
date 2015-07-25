@@ -32,8 +32,8 @@ public class SolicitudConejeraDAO extends DAO
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.solicitudes_conejera (fecha_solicitud, numero_animales, peso_requerido, "
-                                                                        + "sexo,usuario_solicitante,observaciones,observaciones_rechazo,estado)"
-                                                                        + " VALUES (?,?,?,?,?,?,?,?) RETURNING id_solicitud");
+                                                                        + "sexo,usuario_solicitante,observaciones,observaciones_rechazo,estado, fecha_necesita, usuario_utiliza)"
+                                                                        + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_solicitud");
 
             consulta.setDate(1, p.getFecha_solicitud());
             consulta.setInt(2, p.getNumero_animales());
@@ -43,6 +43,8 @@ public class SolicitudConejeraDAO extends DAO
             consulta.setString(6, p.getObservaciones());
             consulta.setString(7, p.getObservaciones_rechazo());
             consulta.setString(8, p.getEstado());
+            consulta.setDate(9, p.getFecha_necesita());
+            consulta.setInt(10, p.getUsuario_utiliza().getID());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -68,7 +70,7 @@ public class SolicitudConejeraDAO extends DAO
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE bioterio.solicitudes_conejera "
                     + " SET   fecha_solicitud=?, numero_animales=?, peso_requerido=?, "
-                    + " sexo=?,usuario_solicitante=?,observaciones=?,observaciones_rechazo=?,estado=?"
+                    + " sexo=?,usuario_solicitante=?,observaciones=?,observaciones_rechazo=?,estado=?, fecha_necesita=?, usuario_utiliza=?"
                     + " WHERE id_solicitud=?; "
             );
 
@@ -80,7 +82,9 @@ public class SolicitudConejeraDAO extends DAO
             consulta.setString(6, p.getObservaciones());
             consulta.setString(7, p.getObservaciones_rechazo());
             consulta.setString(8, p.getEstado());
-            consulta.setInt(9, p.getId_solicitud());
+            consulta.setDate(9, p.getFecha_necesita());
+            consulta.setInt(10, p.getUsuario_utiliza().getID());
+            consulta.setInt(11, p.getId_solicitud());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -141,9 +145,11 @@ public class SolicitudConejeraDAO extends DAO
                 solicitud_conejera.setPeso_requerido(rs.getString("peso_requerido"));
                 solicitud_conejera.setSexo(rs.getString("sexo"));
                 solicitud_conejera.setUsuario_solicitante(usr.obtenerUsuario(rs.getInt("usuario_solicitante")));
+                solicitud_conejera.setUsuario_utiliza(usr.obtenerUsuario(rs.getInt("usuario_utiliza")));
                 solicitud_conejera.setObservaciones(rs.getString("observaciones"));
                 solicitud_conejera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
                 solicitud_conejera.setEstado(rs.getString("estado"));
+                solicitud_conejera.setFecha_necesita(rs.getDate("fecha_necesita"));
             }
             rs.close();
             consulta.close();
@@ -180,7 +186,10 @@ public class SolicitudConejeraDAO extends DAO
                 solicitud_conejera.setObservaciones(rs.getString("observaciones"));
                 solicitud_conejera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
                 solicitud_conejera.setEstado(rs.getString("estado"));
+                solicitud_conejera.setFecha_necesita(rs.getDate("fecha_necesita"));
                 usr = new Usuario(rs.getInt("id_usuario"), rs.getString("nombre_usuario"), rs.getString("correo"), rs.getString("nombre_completo"), rs.getString("cedula"), rs.getInt("id_seccion"), rs.getInt("id_puesto"), rs.getDate("fecha_activacion"), rs.getDate("fecha_desactivacion"), rs.getBoolean("estado"));
+                UsuarioDAO usr2 = new UsuarioDAO();
+                solicitud_conejera.setUsuario_utiliza(usr2.obtenerUsuario(rs.getInt("usuario_utiliza")));
                 solicitud_conejera.setUsuario_solicitante(usr);
                 resultado.add(solicitud_conejera);
             }
@@ -217,7 +226,10 @@ public class SolicitudConejeraDAO extends DAO
                 solicitud_conejera.setObservaciones(rs.getString("observaciones"));
                 solicitud_conejera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
                 solicitud_conejera.setEstado(rs.getString("estado"));
+                solicitud_conejera.setFecha_necesita(rs.getDate("fecha_necesita"));
                 usr = new Usuario(rs.getInt("id_usuario"), rs.getString("nombre_usuario"), rs.getString("correo"), rs.getString("nombre_completo"), rs.getString("cedula"), rs.getInt("id_seccion"), rs.getInt("id_puesto"), rs.getDate("fecha_activacion"), rs.getDate("fecha_desactivacion"), rs.getBoolean("estado"));
+                UsuarioDAO usr2 = new UsuarioDAO();
+                solicitud_conejera.setUsuario_utiliza(usr2.obtenerUsuario(rs.getInt("usuario_utiliza")));
                 solicitud_conejera.setUsuario_solicitante(usr);
                 resultado.add(solicitud_conejera);
             }
