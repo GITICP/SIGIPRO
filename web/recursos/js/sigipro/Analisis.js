@@ -458,22 +458,30 @@ $(document).ready(function () {
     var tiposequipo = $("#listaTiposEquipo").val();
     var tiposreactivo = $("#listaTiposReactivo").val();
     var tiposmuestra = $("#listaTiposMuestra").val();
-    if (tiposequipo !== "") {
-        $("#seleccionTipoEquipo").select2("val", tiposequipo.split(","));
+    if (tiposequipo !== undefined) {
+        if (tiposequipo !== "") {
+            $("#seleccionTipoEquipo").select2("val", tiposequipo.split(","));
+        }
     }
-    if (tiposreactivo !== "") {
-        $("#seleccionTipoReactivo").select2("val", tiposreactivo.split(","));
+    if (tiposreactivo !== undefined) {
+        if (tiposreactivo !== "") {
+            $("#seleccionTipoReactivo").select2("val", tiposreactivo.split(","));
+        }
     }
-    if (tiposmuestra !== "") {
-        $("#seleccion-tipo-muestra").select2("val", tiposmuestra.split(","));
+    if (tiposmuestra !== undefined) {
+        if (tiposmuestra !== "") {
+            $("#seleccion-tipo-muestra").select2("val", tiposmuestra.split(","));
+        }
     }
     var orden = $("#orden").val();
-    if (orden !== "") {
-        var lista = orden.split(",");
-        var len = lista.length;
-        contador = len + 1;
-    } else {
-        contador = 1;
+    if (orden !== undefined) {
+        if (orden !== "") {
+            var lista = orden.split(",");
+            var len = lista.length;
+            contador = len + 1;
+        } else {
+            contador = 1;
+        }
     }
     $(".fila-especial").each(function () {
         new FilaEspecial($(this));

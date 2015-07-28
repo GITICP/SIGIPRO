@@ -303,7 +303,7 @@ public class AnalisisDAO extends DAO {
                     + "LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
                     + "LEFT OUTER JOIN control_calidad.solicitudes as s ON s.id_solicitud = g.id_solicitud "
                     + "WHERE ags.id_analisis = ? "
-                    + "ORDER BY g.id_analisis_grupo_solicitud;");
+                    + "ORDER BY ags.id_analisis_grupo_solicitud;");
 
             consulta.setInt(1, id_analisis);
 
