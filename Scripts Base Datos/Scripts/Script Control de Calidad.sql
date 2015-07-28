@@ -544,3 +544,4 @@ CREATE FUNCTION control_calidad.consecutivo_repeticiones_resultados() RETURNS TR
     END;
 $numero_repeticion$ LANGUAGE plpgsql;
 
+CREATE TRIGGER actualizacion_repeticion BEFORE INSERT OR UPDATE ON control_calidad.resultados EXECUTE PROCEDURE control_calidad.consecutivo_repeticiones_resultados();
