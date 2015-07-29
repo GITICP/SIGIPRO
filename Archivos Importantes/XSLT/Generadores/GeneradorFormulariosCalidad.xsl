@@ -217,9 +217,11 @@
         <xsl:param name="funcion" select="current()/@funcion" />
         <tr class="fila-especial" data-funcion="{$funcion}">
             <xsl:for-each select="celdas/celda">
-                <td class="especial-fila">
-                    <xsl:apply-templates />
-                </td>
+                <xsl:if test="not(campo/tipo = 'excel_tabla')">
+                    <td class="especial-fila">
+                        <xsl:apply-templates />
+                    </td>
+                </xsl:if>
             </xsl:for-each>
         </tr>
     </xsl:template>

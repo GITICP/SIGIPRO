@@ -13,7 +13,7 @@ VALUES (1, 'Generador Formularios Calidad',
                 XML(
                 '
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
-    
+
                     <xsl:output method="html" indent="yes"/>
 
                     <xsl:template match="/">
@@ -231,9 +231,11 @@ VALUES (1, 'Generador Formularios Calidad',
                         <xsl:param name="funcion" select="current()/@funcion" />
                         <tr class="fila-especial" data-funcion="{$funcion}">
                             <xsl:for-each select="celdas/celda">
-                                <td class="especial-fila">
-                                    <xsl:apply-templates />
-                                </td>
+                                <xsl:if test="not(campo/tipo = ''excel_tabla'')">
+                                    <td class="especial-fila">
+                                        <xsl:apply-templates />
+                                    </td>
+                                </xsl:if>
                             </xsl:for-each>
                         </tr>
                     </xsl:template>
