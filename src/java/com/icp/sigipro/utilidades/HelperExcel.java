@@ -9,6 +9,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -38,15 +39,20 @@ public class HelperExcel
     public String obtenerCelda(String celda_por_buscar) {
         Cell celda = null;
         CellReference referencia  = new CellReference(celda_por_buscar);
-        Row r = hoja.getRow(referencia.getRow());
-        if (r!=null) {
-            celda = r.getCell(referencia.getCol());
+        Row fila = hoja.getRow(referencia.getRow());
+        String retorno = "No se ingresó ningún valor en la celda " + celda_por_buscar;
+        if (fila != null) {
+            celda = fila.getCell(referencia.getCol());
         }
         if (celda != null) {
-            return celda.getStringCellValue();
+            DataFormatter df = new DataFormatter();
+            String valor = df.formatCellValue(celda);
+            if (!valor.isEmpty()) {
+                retorno = valor;
+            }
         } else {
-            return "Celda no encontrada. Verifique que el análisis esté configurado de acuerdo con su machote.";
+            retorno = "Celda no encontrada. Verifique que el análisis esté configurado de acuerdo con su machote.";
         }
-        
+        return retorno;
     }
 }
