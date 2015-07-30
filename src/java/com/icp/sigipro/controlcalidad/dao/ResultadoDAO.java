@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.controlcalidad.dao;
 
+import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Grupo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
@@ -156,9 +158,10 @@ public class ResultadoDAO extends DAO
         
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT * "
-                  + " FROM control_calidad.resultados "
-                  + " WHERE id_resultado = ? "
+                    " SELECT r.*, ags.id_analisis "
+                  + " FROM control_calidad.resultados r "
+                  + "   INNER JOIN control_calidad.analisis_grupo_solicitud ags ON ags.id_analisis_grupo_solicitud = r.id_analisis_grupo_solicitud "
+                  + " WHERE r.id_resultado = ? "
             );
                         
             consulta.setInt(1, id_resultado);
@@ -172,6 +175,15 @@ public class ResultadoDAO extends DAO
                 resultado.setDatos(rs.getSQLXML("datos"));
                 resultado.setPath(rs.getString("path"));
                 resultado.setResultado(rs.getString("resultado"));
+                
+                AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+                ags.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
+                Analisis a = new Analisis();
+                a.setId_analisis(rs.getInt("id_analisis"));
+                ags.setAnalisis(a);
+                
+                resultado.setAgs(ags);
+                
             } else {
                 throw new SIGIPROException("El resultado que está intentando buscar no existe.");
             }
@@ -309,6 +321,128 @@ public class ResultadoDAO extends DAO
         }
         
         return lista_resultados;
+    }
+
+    public Resultado editarResultado(Resultado resultado) throws SIGIPROException {
+        boolean commit = false;
+        PreparedStatement update_resultado = null;
+        PreparedStatement delete_reactivos = null;
+        PreparedStatement delete_equipos = null;
+        PreparedStatement insert_reactivos = null;
+        PreparedStatement insert_equipos = null;
+        
+        PreparedStatement consulta_solicitud = null;
+        ResultSet rs_solicitud = null;
+
+        try {
+
+            getConexion().setAutoCommit(false);
+
+            update_resultado = getConexion().prepareStatement(
+                    " UPDATE control_calidad.resultados SET PATH = ?, datos = ?, id_usuario = ?, fecha = ?, id_analisis_grupo_solicitud = ?, resultado = ? "
+                    + " WHERE id_resultado = ?; "
+            );
+
+            SQLXML datos = getConexion().createSQLXML();
+            datos.setString(resultado.getDatos_string());
+
+            update_resultado.setString(1, resultado.getPath());
+            update_resultado.setSQLXML(2, datos);
+            update_resultado.setInt(3, resultado.getUsuario().getId_usuario());
+            update_resultado.setDate(4, helper_fechas.getFecha_hoy());
+            update_resultado.setInt(5, resultado.getAgs().getId_analisis_grupo_solicitud());
+            update_resultado.setString(6, resultado.getResultado());
+            update_resultado.setInt(7, resultado.getId_resultado());
+
+            update_resultado.executeUpdate();
+
+            delete_reactivos = getConexion().prepareStatement(
+                    " DELETE FROM control_calidad.reactivos_resultado where id_resultado = ?;"
+            );
+            delete_reactivos.setInt(1, resultado.getId_resultado());
+            delete_reactivos.execute();
+            
+            if (resultado.tieneReactivos()) {
+                insert_reactivos = getConexion().prepareStatement(
+                        " INSERT INTO control_calidad.reactivos_resultado (id_resultado, id_reactivo) VALUES (?,?);"
+                );
+                
+                for (Reactivo r : resultado.getReactivos_resultado()) {
+                    insert_reactivos.setInt(1, resultado.getId_resultado());
+                    insert_reactivos.setInt(2, r.getId_reactivo());
+                    insert_reactivos.addBatch();
+                }
+                
+                insert_reactivos.executeBatch();
+            }
+            
+            delete_equipos = getConexion().prepareStatement(
+                    " DELETE FROM control_calidad.equipos_resultado where id_resultado = ?;"
+            );
+            delete_equipos.setInt(1, resultado.getId_resultado());
+            delete_equipos.execute();
+            
+            if (resultado.tieneEquipos()) {
+                insert_equipos = getConexion().prepareStatement(
+                        " INSERT INTO control_calidad.equipos_resultado (id_resultado, id_equipo) VALUES (?,?); "
+                );
+                
+                for (Equipo e : resultado.getEquipos_resultado()) {
+                    insert_equipos.setInt(1, resultado.getId_resultado());
+                    insert_equipos.setInt(2, e.getId_equipo());
+                    insert_equipos.addBatch();
+                }
+                
+                insert_equipos.executeBatch();
+            }
+            
+            consulta_solicitud = getConexion().prepareStatement(
+                  " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
+                + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+            );
+            
+            consulta_solicitud.setInt(1, resultado.getAgs().getId_analisis_grupo_solicitud());
+            
+            rs_solicitud = consulta_solicitud.executeQuery();
+            
+            if (rs_solicitud.next()) {
+                Grupo g = new Grupo();
+                SolicitudCC s = new SolicitudCC();
+                s.setId_solicitud(rs_solicitud.getInt("id_solicitud"));
+                g.setSolicitud(s);
+                resultado.getAgs().setGrupo(g);
+                resultado.getAgs().getGrupo().setSolicitud(s);
+            }
+            
+            commit = true;
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al ingresar el resultado. Inténtelo nuevamente.");
+        }
+        finally {
+            try {
+                if (commit) {
+                    getConexion().commit();
+                }
+                else {
+                    getConexion().rollback();
+                }
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+                throw new SIGIPROException("Error de comunicación con la base de datos. Inténtelo nuevamente o notifique al administrador del sistema.");
+            }
+            cerrarSilencioso(update_resultado);
+            cerrarSilencioso(insert_reactivos);
+            cerrarSilencioso(insert_equipos);
+            cerrarSilencioso(rs_solicitud);
+            cerrarSilencioso(consulta_solicitud);
+            cerrarConexion();
+        }
+
+        return resultado;
     }
 
 }

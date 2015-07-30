@@ -168,18 +168,44 @@ public class Resultado
     }
 
     public boolean tieneEquipos() {
-        boolean resultado = false;
+        boolean resultado_func = false;
         if (this.equipos_resultado != null) {
-            resultado = !this.equipos_resultado.isEmpty();
+            resultado_func = !this.equipos_resultado.isEmpty();
         }
-        return resultado;
+        return resultado_func;
     }
 
     public boolean tieneReactivos() {
-        boolean resultado = false;
+        boolean resultado_func = false;
         if (this.reactivos_resultado != null) {
-            resultado = !this.reactivos_resultado.isEmpty();
+            resultado_func = !this.reactivos_resultado.isEmpty();
         }
-        return resultado;
+        return resultado_func;
+    }
+    
+    public boolean tieneReactivo(Reactivo reactivo) {
+        boolean resultado_func = false;
+        if (this.reactivos_resultado != null) {
+            for (Reactivo r : this.reactivos_resultado) {
+                if (r.getId_reactivo() == reactivo.getId_reactivo()) {
+                    resultado_func = true;
+                    break;
+                }
+            }
+        }
+        return resultado_func;
+    }
+    
+    public boolean tieneEquipo(Equipo equipo) {
+        boolean resultado_func = false;
+        if (this.equipos_resultado != null) {
+            for (Equipo e : this.equipos_resultado) {
+                if (e.getId_equipo() == equipo.getId_equipo()) {
+                    resultado_func = true;
+                    break;
+                }
+            }
+        }
+        return resultado_func;
     }
 }

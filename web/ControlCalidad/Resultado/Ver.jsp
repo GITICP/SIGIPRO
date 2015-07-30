@@ -52,7 +52,7 @@
                                     </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Equipo?accion=editar&id_equipo=${equipo.getId_equipo()}">Editar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}">Editar</a>
                                 </c:if>
                                 <c:set var="contienePermisoEliminarCertificado" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">

@@ -30,6 +30,7 @@ import com.icp.sigipro.core.formulariosdinamicos.ControlXSLTDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperExcel;
+import com.icp.sigipro.utilidades.HelperTransformaciones;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,6 +96,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final ReactivoDAO reactivodao = new ReactivoDAO();
     private final ResultadoDAO resultadodao = new ResultadoDAO();
     private final SolicitudDAO solicituddao = new SolicitudDAO();
+    private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
     private String ubicacion;
 
     private int nombre_campo;
@@ -215,16 +217,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             analisis = dao.obtenerAnalisis(id_analisis);
             xslt = controlxsltdao.obtenerControlXSLTVerFormulario();
             if (analisis.getEstructura() != null) {
-                TransformerFactory tff = TransformerFactory.newInstance();
-                InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
-                InputStream streamXML = analisis.getEstructura().getBinaryStream();
-                Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
-                StreamSource stream_source = new StreamSource(streamXML);
-                StreamResult stream_result = new StreamResult(new StringWriter());
-                transformador.transform(stream_source, stream_result);
-
-                String formulario = stream_result.getWriter().toString();
-
+                String formulario = helper_transformaciones.transformar(xslt, analisis.getEstructura());
                 request.setAttribute("cuerpo_datos", formulario);
             } else {
                 request.setAttribute("cuerpo_datos", null);
@@ -317,15 +310,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             xslt = controlxsltdao.obtenerControlXSLTFormulario();
             analisis = dao.obtenerAnalisis(id_analisis);
 
-            TransformerFactory tff = TransformerFactory.newInstance();
-            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
-            InputStream streamXML = analisis.getEstructura().getBinaryStream();
-            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
-            StreamSource stream_source = new StreamSource(streamXML);
-            StreamResult stream_result = new StreamResult(new StringWriter());
-            transformador.transform(stream_source, stream_result);
-
-            String formulario = stream_result.getWriter().toString();
+            String formulario = helper_transformaciones.transformar(xslt, analisis.getEstructura());
 
             request.setAttribute("cuerpo_formulario", formulario);
             List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
@@ -342,6 +327,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
+    /*
     protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(541, listaPermisos);
@@ -374,7 +360,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         }
 
         redireccionar(request, response, redireccion);
-    }
+    }*/
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
@@ -389,13 +375,13 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
                 dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
                 dao.insertarTipoMuestra(a.getTipos_muestras_analisis(), a.getId_analisis());
-                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis agregado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis agregado correctamente"));
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
                 this.getIndex(request, response);
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser agregado. Inténtelo de nuevo."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Análisis no pudo ser agregado. Inténtelo de nuevo."));
                 this.getAgregar(request, response);
             }
         } else {
@@ -410,10 +396,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
-                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis editado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis editado correctamente"));
                 this.getIndex(request, response);
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser editado. Inténtelo de nuevo."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Análisis no pudo ser editado. Inténtelo de nuevo."));
                 request.setAttribute("id_analisis", a.getId_analisis());
                 this.getEditar(request, response);
             }
