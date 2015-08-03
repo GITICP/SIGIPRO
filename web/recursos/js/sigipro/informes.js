@@ -136,10 +136,8 @@ function generar_select_caballos(datos) {
     for (i = 0; i < datos.length; i++) {
         var elemento = datos[i];
         var opcion = $("<option>");
-        alert(elemento.nombre);
         opcion.val(elemento.id_caballo);
         opcion.text(elemento.nombre + "(" + elemento.numero + ")");
-        alert(opcion.text());
         select_caballos.append(opcion);
     }
     

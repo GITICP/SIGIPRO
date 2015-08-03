@@ -12,6 +12,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -75,6 +76,12 @@ public class InformeDAO extends DAO
 
             if (iteracion_completa) {
                 resultado_resultados = true;
+            }
+            
+            List<PreparedStatement> consultas_asociacion = informe.obtenerConsultasAsociacion(getConexion());
+            
+            for (PreparedStatement ps : consultas_asociacion) {
+                ps.executeBatch();
             }
 
             resultado = resultado_resultados && resultado_informe;

@@ -6,9 +6,13 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -21,6 +25,9 @@ public class Informe
     private SolicitudCC solicitud;
     private Usuario usuario;
     private Date fecha;
+    private Asociacion asociacion;
+    
+    private final String SANGRIA = "sangria";
     
     public Informe(){}
 
@@ -40,11 +47,14 @@ public class Informe
         this.resultados = resultados;
     }
     
-    public void agregarResultado(Resultado resultado) {
+    public void agregarResultado(Resultado resultado, HttpServletRequest request) {
         if (resultados == null) {
             resultados = new ArrayList<Resultado>();
         }
         resultados.add(resultado);
+        if (asociacion != null) {
+            asociacion.asociar(resultado, request);
+        }
     }
 
     public SolicitudCC getSolicitud() {
@@ -69,5 +79,22 @@ public class Informe
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+    
+    public void asociar_objeto(String objeto) {
+        
+        switch (objeto) {
+            case SANGRIA:
+                asociacion = new AsociacionLALSangria();
+                asociacion.setInforme(this);
+                break;
+            default:
+                break;
+        }
+    
+    }
+    
+    public List<PreparedStatement> obtenerConsultasAsociacion(Connection conexion) throws SQLException {
+        return asociacion.asociarSQL(conexion);
     }
 }

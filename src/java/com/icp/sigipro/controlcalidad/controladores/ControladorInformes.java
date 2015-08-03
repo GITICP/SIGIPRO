@@ -92,10 +92,13 @@ public class ControladorInformes extends SIGIPROServlet
         u.setId_usuario(this.getIdUsuario(request));
         informe.setUsuario(u);
         
+        String objeto_por_asociar = request.getParameter("objeto-relacionado");
+        informe.asociar_objeto(objeto_por_asociar);
+        
         for (String resultado : ids_resultados) {
             Resultado r = new Resultado();
             r.setId_resultado(Integer.parseInt(resultado));
-            informe.agregarResultado(r);
+            informe.agregarResultado(r, request);
         }
         
         try {
