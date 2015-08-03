@@ -141,7 +141,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
             response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            String nombre = "machote-" + analisis + "." + this.getFileExtension(filename);
+            String nombre = "machote-" + analisis.getNombre() + "." + this.getFileExtension(filename);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
 
             ServletOutputStream os = response.getOutputStream();

@@ -58,7 +58,19 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-
+                            <div class="form-group">
+                                <strong>Machote de Preparación: </strong> 
+                                <c:choose>
+                                    <c:when test="${analisis.getMachote() != ''}">
+                                        <a href="/SIGIPRO/ControlCalidad/Analisis?accion=archivo&id_analisis=${analisis.getId_analisis()}">Descargar Machote</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        No hay machote.
+                                    </c:otherwise>
+                                    
+                                </c:choose>
+                                <br>
+                            </div>
                             ${cuerpo_datos}
 
                             <div class="row">
