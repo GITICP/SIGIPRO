@@ -69,6 +69,10 @@ public class Muestra {
         return formatearFecha(fecha_descarte_estimada);
     }
     
+    public String getFecha_descarte_realAsString() {
+        return formatearFecha(fecha_descarte_real);
+    }
+    
     public String parseJSON(){
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
