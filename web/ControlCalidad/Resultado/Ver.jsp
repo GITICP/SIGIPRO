@@ -21,9 +21,9 @@
                     <ul class="breadcrumb">
                         <li>Control de Calidad</li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Resultado?">Resultados</a>
+                            <a href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${analisis.getId_analisis()}&id_ags=${resultado.getAgs().getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">Resultados</a>
                         </li>
-                        <li class="active"> Resultado </li>
+                        <li class="active"> Resultado de Solicitud ${solicitud.getNumero_solicitud()} </li>
                     </ul>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Ver Resultado  </h3>
+                            <h3><i class="fa fa-gears"></i> Ver Resultado de Solicitud ${solicitud.getNumero_solicitud()} - ${analisis.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEliminar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">

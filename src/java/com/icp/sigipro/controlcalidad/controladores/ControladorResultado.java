@@ -154,8 +154,12 @@ public class ControladorResultado extends SIGIPROServlet
             resultado = dao.obtenerResultado(id_resultado);
 
             String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
-
+            Analisis analisis = resultado.getAgs().getAnalisis();
+            SolicitudCC solicitud = resultado.getAgs().getGrupo().getSolicitud();
+          
             request.setAttribute("resultado", resultado);
+            request.setAttribute("analisis",analisis);
+            request.setAttribute("solicitud", solicitud);
             request.setAttribute("cuerpo_datos", formulario);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
@@ -179,6 +183,8 @@ public class ControladorResultado extends SIGIPROServlet
             xslt = controlxsltdao.obtenerControlXSLTFormulario();
             resultado = dao.obtenerResultado(id_resultado);
             analisis = analisisdao.obtenerAnalisis(resultado.getAgs().getAnalisis().getId_analisis());
+            
+            SolicitudCC solicitud = resultado.getAgs().getGrupo().getSolicitud();
 
             String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
 
@@ -187,6 +193,7 @@ public class ControladorResultado extends SIGIPROServlet
 
             request.setAttribute("resultado", resultado);
             request.setAttribute("analisis", analisis);
+            request.setAttribute("solicitud", solicitud);
             request.setAttribute("cuerpo_formulario", formulario);
             request.setAttribute("id_ags", resultado.getAgs().getId_analisis_grupo_solicitud());
             request.setAttribute("id_analisis", resultado.getAgs().getAnalisis().getId_analisis());
@@ -242,8 +249,13 @@ public class ControladorResultado extends SIGIPROServlet
         int id_ags = Integer.parseInt(request.getParameter("id_ags"));
         String id_solicitud = request.getParameter("id_solicitud");
         String numero_solicitud = request.getParameter("numero_solicitud");
+        String id_analisis = request.getParameter("id_analisis");
+        
+        Analisis a = analisisdao.obtenerAnalisis(Integer.parseInt(id_analisis));
+        
         request.setAttribute("id_solicitud", id_solicitud);
         request.setAttribute("numero_solicitud", numero_solicitud);
+        request.setAttribute("analisis", a);
 
         try {
             List<Resultado> resultados = dao.obtenerResultadosAGS(id_ags);
