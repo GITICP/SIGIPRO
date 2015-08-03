@@ -55,7 +55,8 @@
                                                 </c:forEach>
                                             </td>
                                             <td>
-                                                ${ags.getGrupo().getSolicitud().getNumero_solicitud()}
+                                                <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${ags.getGrupo().getSolicitud().getId_solicitud()}">
+                                                ${ags.getGrupo().getSolicitud().getNumero_solicitud()}</a>
                                             </td>
                                             <td>
                                                 <c:choose>

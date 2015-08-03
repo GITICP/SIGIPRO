@@ -69,7 +69,7 @@ function agregarCampo() {
     fila += "               <div class=\"form-group\">";
     fila += "                   <div class=\"col-sm-12\">";
     fila += "                       <div class=\"input-group\">";
-    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A-34\" class=\"form-control\" id=\"celda_" + contador + "\" name=\"c_celda_" + contador + "\" disabled ";
+    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A-34\" class=\"form-control celda\" id=\"celda_" + contador + "\" name=\"c_celda_" + contador + "\" disabled ";
     fila += "                               oninvalid=\"setCustomValidity(\'Este campo es requerido o no coincide con el formato requerido. \')\"";
     fila += "                               oninput=\"setCustomValidity(\'\')\" > ";
     fila += "                       </div>";
@@ -177,7 +177,7 @@ function agregarColumna(id) {
     fila += "               <div class=\"form-group\">";
     fila += "                   <div class=\"col-sm-12\">";
     fila += "                       <div class=\"input-group\">";
-    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A-34\" class=\"form-control\" id=\"columnacelda_" + id + "_" + columnas + "\" name=\"t_columnacelda_" + id + "_" + columnas + "\" disabled ";
+    fila += "                           <input type=\"text\" maxlength=\"45\" placeholder=\"Celda eg. A-34\" class=\"form-control celda\" id=\"columnacelda_" + id + "_" + columnas + "\" name=\"t_columnacelda_" + id + "_" + columnas + "\" disabled ";
     fila += "                               required oninvalid=\"setCustomValidity(\'Este campo es requerido o no coincide con el formato requerido. \')\"";
     fila += "                               oninput=\"setCustomValidity(\'\')\" > ";
     fila += "                       </div>";
@@ -410,9 +410,28 @@ function agregarAnalisis() {
             }
         }
     });
+
+    var errorResultado = true;
+
+    if ($('input:radio:checked').length === 0) {
+        $("#modalErrorResultado").modal("show");
+        errorResultado = false;
+    }
+
+    var errorExcel = true;
+    if ($(".celda:enabled").length > 0) {
+        var file = document.querySelector('input[id=machote]').files[0];
+        if (file === undefined) {
+            $("#modalErrorExcel").modal("show");
+            errorExcel = false;
+        }
+    }
+
     if (!$('#agregarAnalisis')[0].checkValidity()) {
-        $('<input type="submit">').hide().appendTo($('#agregarAnalisis')).click().remove();
-        $('#agregarAnalisis').find(':submit').click();
+        if (errorResultado && errorExcel) {
+            $('<input type="submit">').hide().appendTo($('#agregarAnalisis')).click().remove();
+            $('#agregarAnalisis').find(':submit').click();
+        }
     } else {
         $("#agregarAnalisis").submit();
     }

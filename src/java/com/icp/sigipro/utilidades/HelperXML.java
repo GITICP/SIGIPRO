@@ -74,7 +74,7 @@ public class HelperXML {
 
             dictionary = new HashMap<Integer, HashMap>();
             contador = 0;
-        //columnas = 0;
+            //columnas = 0;
             //filasespeciales = 0;
             //filas = 0;
 
@@ -136,12 +136,14 @@ public class HelperXML {
                     break;
                 case "etiqueta":
                     dictionary.get(contador).put(name, text);
+                    break;
                 case "celda":
                     String patron = "([A-Z]+)(\\d+)";
                     String primera = text.replaceFirst(patron, "$1");
                     String segunda = text.replaceFirst(patron, "$2");
                     String celda = primera + "-" + segunda;
                     dictionary.get(contador).put(name, celda);
+                    break;
 
             }
         }
