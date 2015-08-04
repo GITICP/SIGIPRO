@@ -84,7 +84,12 @@ public class SolicitudRatoneraDAO extends DAO {
       consulta.setString(9, p.getObservaciones_rechazo());
       consulta.setString(10, p.getEstado());
       consulta.setDate(11, p.getFecha_necesita());
-      consulta.setInt(12, p.getUsuario_utiliza().getID());
+      if (p.getUsuario_utiliza() != null) {
+        consulta.setInt(12, p.getUsuario_utiliza().getID());
+      } else {
+        consulta.setNull(12, java.sql.Types.INTEGER);
+      }
+      
       consulta.setInt(13, p.getId_solicitud());
 
       if (consulta.executeUpdate() == 1) {

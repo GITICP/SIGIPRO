@@ -83,7 +83,12 @@ public class SolicitudConejeraDAO extends DAO
             consulta.setString(7, p.getObservaciones_rechazo());
             consulta.setString(8, p.getEstado());
             consulta.setDate(9, p.getFecha_necesita());
-            consulta.setInt(10, p.getUsuario_utiliza().getID());
+            if (p.getUsuario_utiliza() != null) {
+                consulta.setInt(10, p.getUsuario_utiliza().getID());
+            } else {
+                consulta.setNull(10, java.sql.Types.INTEGER);
+            }
+            
             consulta.setInt(11, p.getId_solicitud());
 
             if (consulta.executeUpdate() == 1) {
