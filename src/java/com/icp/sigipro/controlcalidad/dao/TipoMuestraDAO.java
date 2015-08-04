@@ -7,6 +7,7 @@ package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
+import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
@@ -42,6 +43,8 @@ public class TipoMuestraDAO extends DAO {
 
             if (rs.next()) {
                 m.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                
+
             } else {
                 throw new SQLException("TipoMuestra > insertarTipoMuestra: No hubo respuesta al insertar.");
             }
@@ -55,6 +58,48 @@ public class TipoMuestraDAO extends DAO {
         }
 
         return m;
+    }
+    
+    public boolean eliminarTipoMuestrasAnalisis(int id_tipo_muestra) {
+        PreparedStatement consulta = null;
+        boolean resultado = false;
+        try {
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_muestras_analisis WHERE id_tipo_muestra=?; ");
+            consulta.setInt(1, id_tipo_muestra);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean insertarTipoMuestraAnalisis(TipoMuestra tm) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_muestras_analisis (id_analisis,id_tipo_muestra) "
+                    + " VALUES (?,?);");
+
+            for (Analisis a : tm.getTipos_muestras_analisis()) {
+                consulta.setInt(1, a.getId_analisis());
+                consulta.setInt(2, tm.getId_tipo_muestra());
+                consulta.addBatch();
+            }
+            consulta.executeBatch();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+
+        return resultado;
     }
 
     public List<TipoMuestra> obtenerTiposDeMuestra() throws SIGIPROException {
@@ -184,7 +229,7 @@ public class TipoMuestraDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " UPDATE control_calidad.tipos_muestras"
-                    + " SET nombre = ?, descripcion = ?, set dias_descarte = ?"
+                    + " SET nombre = ?, descripcion = ?, dias_descarte = ?"
                     + " WHERE id_tipo_muestra = ?;"
             );
 
@@ -192,6 +237,8 @@ public class TipoMuestraDAO extends DAO {
             consulta.setString(2, m.getDescripcion());
             consulta.setInt(3, m.getDias_descarte());
             consulta.setInt(4, m.getId_tipo_muestra());
+            
+            System.out.println(consulta);
 
             resultado = consulta.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -213,7 +260,7 @@ public class TipoMuestraDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                      " SELECT tm.id_tipo_muestra, tm.nombre, tm.descripcion, tm.dias_descarte, a.id_analisis, a.nombre as nombreanalisis "
+                    " SELECT tm.id_tipo_muestra, tm.nombre, tm.descripcion, tm.dias_descarte, a.id_analisis, a.nombre as nombreanalisis "
                     + " FROM control_calidad.tipos_muestras as tm LEFT OUTER JOIN control_calidad.tipos_muestras_analisis as tma ON tma.id_tipo_muestra = tm.id_tipo_muestra "
                     + " LEFT JOIN control_calidad.analisis as a ON a.id_analisis = tma.id_analisis "
                     + " WHERE tm.id_tipo_muestra = ?"
@@ -246,21 +293,19 @@ public class TipoMuestraDAO extends DAO {
 
         return resultado;
     }
-    
-    public boolean eliminarTipoMuestra(int id_tipo_muestra)
-    {
+
+    public boolean eliminarTipoMuestra(int id_tipo_muestra) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_muestras WHERE id_tipo_muestra=?; ");
             consulta.setInt(1, id_tipo_muestra);
             if (consulta.executeUpdate() == 1) {
-                resultado=true;
+                resultado = true;
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

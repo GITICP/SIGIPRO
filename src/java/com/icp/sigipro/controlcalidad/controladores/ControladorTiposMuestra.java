@@ -6,7 +6,9 @@
 package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoMuestraDAO;
+import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -31,6 +33,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     private final int[] permisos = {1, 314};
     //-----------------
     private final TipoMuestraDAO dao = new TipoMuestraDAO();
+    private final AnalisisDAO analisisdao = new AnalisisDAO();
 
     protected final Class clase = ControladorTiposMuestra.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -63,9 +66,11 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "TiposMuestra/Agregar.jsp";
+        List<Analisis> analisis = analisisdao.obtenerAnalisis();
 
         request.setAttribute("accion", "Agregar");
         request.setAttribute("tipo_muestra", new TipoMuestra());
+        request.setAttribute("listaAnalisis", analisis);
         redireccionar(request, response, redireccion);
     }
 
@@ -93,6 +98,8 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
         TipoMuestra tipo_muestra = new TipoMuestra();
         String redireccion = "TiposMuestra/Editar.jsp";
 
+        List<Analisis> analisis = analisisdao.obtenerAnalisis();
+
         int id_tipo_muestra = obtenerId(request);
 
         try {
@@ -100,7 +107,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", sig_ex.getMessage());
         }
-
+        request.setAttribute("listaAnalisis", analisis);
         request.setAttribute("accion", "Editar");
         request.setAttribute("tipo_muestra", tipo_muestra);
         redireccionar(request, response, redireccion);
@@ -138,6 +145,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
 
         try {
             dao.insertarTipoDeMuestra(tipo_muestra);
+            dao.insertarTipoMuestraAnalisis(tipo_muestra);
             redireccion = "TiposMuestra/index.jsp";
             request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Muestra agregado con éxito."));
             obtenerListadoCompleto(request, "Tipo de Muestra agregado con éxito, pero no se pudo obtener el listado completo. Refresque la página.", false);
@@ -151,15 +159,20 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     }
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resultado = false;
         String redireccion = "TiposMuestra/Agregar.jsp";
         TipoMuestra tipo_muestra = construirObjeto(request);
         tipo_muestra.setId_tipo_muestra(obtenerId(request));
 
         try {
-            dao.editarTipoDeMuestra(tipo_muestra);
-            redireccion = "TiposMuestra/index.jsp";
-            request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Muestra editado con éxito."));
-            obtenerListadoCompleto(request, "Tipo de Muestra editado con éxito, pero no se pudo obtener el listado completo. Refresque la página.", false);
+            resultado = dao.editarTipoDeMuestra(tipo_muestra);
+            if (resultado) {
+                dao.eliminarTipoMuestrasAnalisis(tipo_muestra.getId_tipo_muestra());
+                dao.insertarTipoMuestraAnalisis(tipo_muestra);
+                redireccion = "TiposMuestra/index.jsp";
+                request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Muestra editado con éxito."));
+                obtenerListadoCompleto(request, "Tipo de Muestra editado con éxito, pero no se pudo obtener el listado completo. Refresque la página.", false);
+            }
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("accion", "Editar");
             request.setAttribute("tipo_muestra", tipo_muestra);
@@ -177,6 +190,14 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
         tipo_muestra.setNombre(request.getParameter("nombre"));
         tipo_muestra.setDescripcion(request.getParameter("descripcion"));
         tipo_muestra.setDias_descarte(Integer.parseInt(request.getParameter("dias_descarte")));
+        tipo_muestra.setTipos_muestras_analisis(new ArrayList<Analisis>());
+        String[] analisis = request.getParameterValues("analisis");
+
+        for (String i : analisis) {
+            Analisis a = new Analisis();
+            a.setId_analisis(Integer.parseInt(i));
+            tipo_muestra.getTipos_muestras_analisis().add(a);
+        }
 
         return tipo_muestra;
     }

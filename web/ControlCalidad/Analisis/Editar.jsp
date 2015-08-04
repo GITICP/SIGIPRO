@@ -62,3 +62,16 @@
     </jsp:attribute>
 </t:plantilla_general>
 
+<t:modal idModal="modalError" titulo="Error en el Formulario">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-liofilizacion-inicio">
+                <input hidden="true" name="accion" value="Liofilizacioninicio">
+                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
+                <strong><div id="numero_extraccion" class="control-label"></div></strong>
+                <label for="label" class="control-label">Es requerido elegir un campo de Resultado al formulario. Favor asignar un Resultado al análisis. </label>
+
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>

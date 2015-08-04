@@ -207,12 +207,12 @@
                                                             <div class="input-group">
                                                                 <c:choose>
                                                                     <c:when test="${diccionario.get(i).get('manual').equals('True')}">
-                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="celda_${i}" name="c_celda_${i}" value="${diccionario.get(i).get('celda')}" 
+                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control celda" id="celda_${i}" name="c_celda_${i}" value="${diccionario.get(i).get('celda')}" 
                                                                                oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido.')"
                                                                                oninput="setCustomValidity('')" >                                                                 
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="celda_${i}" name="c_celda_${i}" disabled 
+                                                                        <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control celda" id="celda_${i}" name="c_celda_${i}" disabled 
                                                                                oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido.')"
                                                                                oninput="setCustomValidity('')" >                                                                 
                                                                     </c:otherwise>
@@ -317,12 +317,12 @@
                                                                                     <%--Ligero BUG que no valida el formato de las celdas en las tablas, que ya fueron agregadas anteriormente--%>
                                                                                     <c:choose>
                                                                                         <c:when test="${diccionario.get(i).get('tipocolumnas').get(c).equals('excel')}">
-                                                                                            <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" value="${diccionario.get(i).get('celdacolumna').get(c)}"
+                                                                                            <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control celda" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" value="${diccionario.get(i).get('celdacolumna').get(c)}"
                                                                                                    required oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido. ')"
                                                                                                    oninput="setCustomValidity('')" >
                                                                                         </c:when>
                                                                                         <c:otherwise>
-                                                                                            <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" disabled
+                                                                                            <input type="text" maxlength="45" placeholder="Celda eg. A-34" class="form-control celda" id="columnacelda_${i}_${c}_e" name="t_columnacelda_${i}_${c}" disabled
                                                                                                    required oninvalid="setCustomValidity('Este campo es requerido o no coincide con el formato requerido. ')"
                                                                                                    oninput="setCustomValidity('')" >
                                                                                         </c:otherwise>

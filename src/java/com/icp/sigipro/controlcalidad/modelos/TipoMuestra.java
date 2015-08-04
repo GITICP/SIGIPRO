@@ -29,6 +29,18 @@ public class TipoMuestra {
     public List<Analisis> getTipos_muestras_analisis() {
         return tipos_muestras_analisis;
     }
+    
+     public String getListaAnalisis() {
+        String respuesta = "";
+        if (tipos_muestras_analisis != null) {
+            for (Analisis a : tipos_muestras_analisis) {
+                respuesta += a.getId_analisis();
+                respuesta += ",";
+            }
+            respuesta = respuesta.substring(0, respuesta.length() - 1);
+        }
+        return respuesta;
+    }
 
     public void setTipos_muestras_analisis(List<Analisis> tipos_muestras_analisis) {
         this.tipos_muestras_analisis = tipos_muestras_analisis;

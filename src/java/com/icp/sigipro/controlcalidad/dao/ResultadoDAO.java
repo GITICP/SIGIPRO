@@ -28,14 +28,12 @@ import java.util.List;
  *
  * @author Boga
  */
-public class ResultadoDAO extends DAO
-{
-    public ResultadoDAO()
-    {
-    }
+public class ResultadoDAO extends DAO {
 
-    public Resultado insertarResultado(Resultado resultado) throws SIGIPROException
-    {
+    public ResultadoDAO() {
+    }
+    
+    public Resultado insertarResultado(Resultado resultado) throws SIGIPROException {
         boolean commit = false;
         PreparedStatement insert_resultado = null;
         ResultSet rs_insert_resultado = null;
@@ -44,32 +42,32 @@ public class ResultadoDAO extends DAO
         
         PreparedStatement consulta_solicitud = null;
         ResultSet rs_solicitud = null;
-
+        
         try {
-
+            
             getConexion().setAutoCommit(false);
-
+            
             insert_resultado = getConexion().prepareStatement(
                     " INSERT INTO control_calidad.resultados (path, datos, id_usuario, fecha, id_analisis_grupo_solicitud, resultado) "
                     + " VALUES (?,?,?,?,?,?) RETURNING id_resultado; "
             );
-
+            
             SQLXML datos = getConexion().createSQLXML();
             datos.setString(resultado.getDatos_string());
-
+            
             insert_resultado.setString(1, resultado.getPath());
             insert_resultado.setSQLXML(2, datos);
             insert_resultado.setInt(3, resultado.getUsuario().getId_usuario());
             insert_resultado.setDate(4, helper_fechas.getFecha_hoy());
             insert_resultado.setInt(5, resultado.getAgs().getId_analisis_grupo_solicitud());
             insert_resultado.setString(6, resultado.getResultado());
-
+            
             rs_insert_resultado = insert_resultado.executeQuery();
             
             if (rs_insert_resultado.next()) {
                 resultado.setId_resultado(rs_insert_resultado.getInt("id_resultado"));
             }
-
+            
             if (resultado.tieneReactivos()) {
                 insert_reactivos = getConexion().prepareStatement(
                         " INSERT INTO control_calidad.reactivos_resultado (id_resultado, id_reactivo) VALUES (?,?);"
@@ -99,9 +97,9 @@ public class ResultadoDAO extends DAO
             }
             
             consulta_solicitud = getConexion().prepareStatement(
-                  " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
-                + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
-                + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+                    " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
+                    + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                    + " WHERE ags.id_analisis_grupo_solicitud = ?; "
             );
             
             consulta_solicitud.setInt(1, resultado.getAgs().getId_analisis_grupo_solicitud());
@@ -118,21 +116,17 @@ public class ResultadoDAO extends DAO
             }
             
             commit = true;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al ingresar el resultado. Inténtelo nuevamente.");
-        }
-        finally {
+        } finally {
             try {
                 if (commit) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                 }
-            }
-            catch (SQLException ex) {
+            } catch (SQLException ex) {
                 ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Inténtelo nuevamente o notifique al administrador del sistema.");
             }
@@ -142,10 +136,10 @@ public class ResultadoDAO extends DAO
             cerrarSilencioso(insert_equipos);
             cerrarConexion();
         }
-
+        
         return resultado;
     }
-
+    
     public Resultado obtenerResultado(int id_resultado) throws SIGIPROException {
         Resultado resultado = null;
         
@@ -158,17 +152,20 @@ public class ResultadoDAO extends DAO
         
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.*, ags.id_analisis "
-                  + " FROM control_calidad.resultados r "
-                  + "   INNER JOIN control_calidad.analisis_grupo_solicitud ags ON ags.id_analisis_grupo_solicitud = r.id_analisis_grupo_solicitud "
-                  + " WHERE r.id_resultado = ? "
+                    " SELECT r.*, ags.id_analisis, a.nombre, s.id_solicitud, s.numero_solicitud "
+                    + " FROM control_calidad.resultados r "
+                    + "   INNER JOIN control_calidad.analisis_grupo_solicitud ags ON ags.id_analisis_grupo_solicitud = r.id_analisis_grupo_solicitud "
+                    + "INNER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
+                            + "LEFT JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
+                            + "LEFT JOIN control_calidad.solicitudes as s ON s.id_solicitud = g.id_solicitud "
+                    + " WHERE r.id_resultado = ? "
             );
-                        
+            
             consulta.setInt(1, id_resultado);
             
             rs = consulta.executeQuery();
             
-            if(rs.next()) {
+            if (rs.next()) {
                 resultado = new Resultado();
                 
                 resultado.setId_resultado(rs.getInt("id_resultado"));
@@ -180,7 +177,14 @@ public class ResultadoDAO extends DAO
                 ags.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                 Analisis a = new Analisis();
                 a.setId_analisis(rs.getInt("id_analisis"));
+                a.setNombre(rs.getString("nombre"));
                 ags.setAnalisis(a);
+                SolicitudCC s = new SolicitudCC();
+                s.setId_solicitud(rs.getInt("id_solicitud"));
+                s.setNumero_solicitud(rs.getString("numero_solicitud"));
+                Grupo g = new Grupo();
+                g.setSolicitud(s);
+                ags.setGrupo(g);
                 
                 resultado.setAgs(ags);
                 
@@ -189,11 +193,11 @@ public class ResultadoDAO extends DAO
             }
             
             consulta_reactivos = getConexion().prepareStatement(
-                   " SELECT r.id_reactivo, r.nombre, tr.id_tipo_reactivo, tr.nombre as nombre_tipo " 
-                 + " FROM control_calidad.reactivos_resultado rr "  
-                 + "      INNER JOIN control_calidad.reactivos r ON rr.id_reactivo = r.id_reactivo "  
-                 + "      INNER JOIN control_calidad.tipos_reactivos tr ON tr.id_tipo_reactivo = r.id_tipo_reactivo " 
-                 + "      WHERE rr.id_resultado = ?; "
+                    " SELECT r.id_reactivo, r.nombre, tr.id_tipo_reactivo, tr.nombre as nombre_tipo "
+                    + " FROM control_calidad.reactivos_resultado rr "
+                    + "      INNER JOIN control_calidad.reactivos r ON rr.id_reactivo = r.id_reactivo "
+                    + "      INNER JOIN control_calidad.tipos_reactivos tr ON tr.id_tipo_reactivo = r.id_tipo_reactivo "
+                    + "      WHERE rr.id_resultado = ?; "
             );
             
             consulta_reactivos.setInt(1, id_resultado);
@@ -218,17 +222,17 @@ public class ResultadoDAO extends DAO
                     
                     reactivos_resultado.add(r);
                     
-                } while(rs_reactivos.next());
+                } while (rs_reactivos.next());
             }
             
             resultado.setReactivos_resultado(reactivos_resultado);
             
             consulta_equipos = getConexion().prepareStatement(
                     " SELECT e.id_equipo, e.nombre, te.id_tipo_equipo, te.nombre as nombre_tipo "
-                  + " FROM control_calidad.equipos_resultado er " 
-                  + "   INNER JOIN control_calidad.equipos e ON er.id_equipo = e.id_equipo " 
-                  + "   INNER JOIN control_calidad.tipos_equipos te ON te.id_tipo_equipo = e.id_tipo_equipo "
-                  + "   WHERE er.id_resultado = ?; "
+                    + " FROM control_calidad.equipos_resultado er "
+                    + "   INNER JOIN control_calidad.equipos e ON er.id_equipo = e.id_equipo "
+                    + "   INNER JOIN control_calidad.tipos_equipos te ON te.id_tipo_equipo = e.id_tipo_equipo "
+                    + "   WHERE er.id_resultado = ?; "
             );
             
             consulta_equipos.setInt(1, id_resultado);
@@ -254,7 +258,7 @@ public class ResultadoDAO extends DAO
                     
                     equipos_resultado.add(e);
                     
-                } while(rs_equipos.next());
+                } while (rs_equipos.next());
             }
             
             resultado.setEquipos_resultado(equipos_resultado);
@@ -273,7 +277,7 @@ public class ResultadoDAO extends DAO
         
         return resultado;
     }
-
+    
     public List<Resultado> obtenerResultadosAGS(int id_ags) throws SIGIPROException {
         
         List<Resultado> lista_resultados = new ArrayList<Resultado>();
@@ -283,18 +287,18 @@ public class ResultadoDAO extends DAO
         
         try {
             consulta = getConexion().prepareStatement(
-                  " SELECT r.id_resultado, r.fecha, r.repeticion, r.resultado, u.id_usuario, u.nombre_completo "
-                + " FROM control_calidad.resultados r "
-                + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
-                + " WHERE r.id_analisis_grupo_solicitud = ? "
-                + " ORDER BY repeticion ASC"
+                    " SELECT r.id_resultado, r.fecha, r.repeticion, r.resultado, u.id_usuario, u.nombre_completo "
+                    + " FROM control_calidad.resultados r "
+                    + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
+                    + " WHERE r.id_analisis_grupo_solicitud = ? "
+                    + " ORDER BY repeticion ASC"
             );
             
             consulta.setInt(1, id_ags);
             
             rs = consulta.executeQuery();
             
-            while(rs.next()) {
+            while (rs.next()) {
                 Resultado r = new Resultado();
                 
                 r.setId_resultado(rs.getInt("id_resultado"));
@@ -322,7 +326,7 @@ public class ResultadoDAO extends DAO
         
         return lista_resultados;
     }
-
+    
     public Resultado editarResultado(Resultado resultado) throws SIGIPROException {
         boolean commit = false;
         PreparedStatement update_resultado = null;
@@ -333,19 +337,19 @@ public class ResultadoDAO extends DAO
         
         PreparedStatement consulta_solicitud = null;
         ResultSet rs_solicitud = null;
-
+        
         try {
-
+            
             getConexion().setAutoCommit(false);
-
+            
             update_resultado = getConexion().prepareStatement(
                     " UPDATE control_calidad.resultados SET PATH = ?, datos = ?, id_usuario = ?, fecha = ?, id_analisis_grupo_solicitud = ?, resultado = ? "
                     + " WHERE id_resultado = ?; "
             );
-
+            
             SQLXML datos = getConexion().createSQLXML();
             datos.setString(resultado.getDatos_string());
-
+            
             update_resultado.setString(1, resultado.getPath());
             update_resultado.setSQLXML(2, datos);
             update_resultado.setInt(3, resultado.getUsuario().getId_usuario());
@@ -353,9 +357,9 @@ public class ResultadoDAO extends DAO
             update_resultado.setInt(5, resultado.getAgs().getId_analisis_grupo_solicitud());
             update_resultado.setString(6, resultado.getResultado());
             update_resultado.setInt(7, resultado.getId_resultado());
-
+            
             update_resultado.executeUpdate();
-
+            
             delete_reactivos = getConexion().prepareStatement(
                     " DELETE FROM control_calidad.reactivos_resultado where id_resultado = ?;"
             );
@@ -397,9 +401,9 @@ public class ResultadoDAO extends DAO
             }
             
             consulta_solicitud = getConexion().prepareStatement(
-                  " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
-                + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
-                + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+                    " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
+                    + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                    + " WHERE ags.id_analisis_grupo_solicitud = ?; "
             );
             
             consulta_solicitud.setInt(1, resultado.getAgs().getId_analisis_grupo_solicitud());
@@ -416,21 +420,17 @@ public class ResultadoDAO extends DAO
             }
             
             commit = true;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al ingresar el resultado. Inténtelo nuevamente.");
-        }
-        finally {
+        } finally {
             try {
                 if (commit) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                 }
-            }
-            catch (SQLException ex) {
+            } catch (SQLException ex) {
                 ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Inténtelo nuevamente o notifique al administrador del sistema.");
             }
@@ -441,8 +441,8 @@ public class ResultadoDAO extends DAO
             cerrarSilencioso(consulta_solicitud);
             cerrarConexion();
         }
-
+        
         return resultado;
     }
-
+    
 }

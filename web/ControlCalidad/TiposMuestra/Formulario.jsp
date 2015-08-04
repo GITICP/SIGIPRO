@@ -12,6 +12,7 @@
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_tipo_muestra" value="${tipo_muestra.getId_tipo_muestra()}">
+            <input hidden="true" id="listaAnalisis" value="${tipo_muestra.getListaAnalisis()}">
             <input hidden="true" name="accion" value="${accion}">
 
             <label for="nombre" class="control-label">* Nombre del Tipo de Muestra</label>
@@ -34,6 +35,22 @@
                                required
                                oninvalid="setCustomValidity('Este campo es requerido')"
                                oninput="setCustomValidity('')" > 
+                    </div>
+                </div>
+            </div>
+            <label for="analisis" class="control-label"> *Análisis Asociados</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="seleccionAnalisis" class="select2" name="analisis" multiple="multiple"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${listaAnalisis}" var="analisis">
+                                <option value=${analisis.getId_analisis()}>${analisis.getNombre()}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
             </div>

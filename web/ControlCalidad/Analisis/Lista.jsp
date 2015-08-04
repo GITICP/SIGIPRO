@@ -55,7 +55,8 @@
                                                 </c:forEach>
                                             </td>
                                             <td>
-                                                ${ags.getGrupo().getSolicitud().getNumero_solicitud()}
+                                                <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${ags.getGrupo().getSolicitud().getId_solicitud()}">
+                                                ${ags.getGrupo().getSolicitud().getNumero_solicitud()}</a>
                                             </td>
                                             <td>
                                                 <c:choose>
@@ -73,7 +74,7 @@
                                                                     Repetir
                                                                 </a>
                                                                 <a class="btn btn-primary btn-sm boton-accion" 
-                                                                   href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
+                                                                   href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${ags.getGrupo().getSolicitud().getId_solicitud()}&numero_solicitud=${ags.getGrupo().getSolicitud().getNumero_solicitud()}">
                                                                     Ver Resultados (${ags.getResultados().size()})
                                                                 </a>
                                                             </c:otherwise>

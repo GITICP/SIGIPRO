@@ -293,10 +293,9 @@ public class AnalisisDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    "SELECT ags.id_analisis_grupo_solicitud, g.id_solicitud, s.numero_solicitud, s.estado, r.id_resultado, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
+                    "SELECT ags.id_analisis_grupo_solicitud, g.id_solicitud, s.numero_solicitud, s.estado, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
                     + "FROM control_calidad.analisis_grupo_solicitud as ags "
                     + "LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
-                    + "LEFT OUTER JOIN control_calidad.resultados as r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud "
                     + "LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
                     + "LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
                     + "LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
@@ -307,8 +306,11 @@ public class AnalisisDAO extends DAO {
 
             consulta.setInt(1, id_analisis);
 
+            System.out.println(consulta);
+
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             Grupo g = new Grupo();
+            Muestra m = new Muestra();
 
             rs = consulta.executeQuery();
             if (rs.next()) {
@@ -338,27 +340,42 @@ public class AnalisisDAO extends DAO {
                         ags.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                         ags.setResultados(new ArrayList<Resultado>());
                     }
+
                     TipoMuestra tm = new TipoMuestra();
                     tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
                     tm.setNombre(rs.getString("nombretipo"));
-                    Muestra m = new Muestra();
+                    m = new Muestra();
                     m.setId_muestra(rs.getInt("id_muestra"));
                     m.setIdentificador(rs.getString("identificador"));
                     m.setTipo_muestra(tm);
 
                     g.getGrupos_muestras().add(m);
-
-                    if (rs.getInt("id_resultado") != 0) {
-                        Resultado r = new Resultado();
-                        r.setId_resultado(rs.getInt("id_resultado"));
-                        ags.getResultados().add(r);
-                    }
-
+                    
                 } while (rs.next());
             }
             ags.setGrupo(g);
             resultado.add(ags);
-
+            
+            consulta = getConexion().prepareStatement("SELECT ags.id_analisis_grupo_solicitud, r.id_resultado "
+                    + "FROM control_calidad.analisis_grupo_solicitud ags "
+                    + "INNER JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud "
+                    + "WHERE ags.id_analisis = ? "
+                    + "ORDER BY ags.id_analisis_grupo_solicitud;");
+            consulta.setInt(1, id_analisis);
+            
+            rs = consulta.executeQuery();
+            
+            while (rs.next()){
+                Resultado r = new Resultado();
+                r.setId_resultado(rs.getInt("id_resultado"));
+                for (AnalisisGrupoSolicitud a : resultado){
+                    if (a.getId_analisis_grupo_solicitud() == rs.getInt("id_analisis_grupo_solicitud")){
+                        a.agregarResultado(r);
+                    }
+                }
+            }
+            
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

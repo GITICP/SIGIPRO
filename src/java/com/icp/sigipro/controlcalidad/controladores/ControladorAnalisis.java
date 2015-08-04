@@ -63,7 +63,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -141,7 +140,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
             response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            String nombre = "machote-" + analisis + "." + this.getFileExtension(filename);
+            String nombre = "machote-" + analisis.getNombre() + "." + this.getFileExtension(filename);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
 
             ServletOutputStream os = response.getOutputStream();
@@ -682,6 +681,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         }
         if (!diccionario_formulario.isEmpty()) {
             //Se transforma el diccionario en un XML
+            System.out.println(diccionario_formulario);
             String xml = this.parseDictXML(diccionario_formulario, orden, columnas_filas);
             a.setEstructuraString(xml);
         }
