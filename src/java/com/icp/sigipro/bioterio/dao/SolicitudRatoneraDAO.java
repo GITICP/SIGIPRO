@@ -175,8 +175,8 @@ public class SolicitudRatoneraDAO extends DAO {
       PreparedStatement consulta;
       consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_ratonera s "
               + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
-              + "INNER JOIN seguridad.usuarios u2 ON s.usuario_utiliza = u2.id_usuario "
-              + "INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa WHERE s.usuario_solicitante=? ");
+              + "INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa "
+              + "LEFT JOIN seguridad.usuarios u2 ON s.usuario_utiliza = u2.id_usuario WHERE s.usuario_solicitante=? ");
       consulta.setInt(1, id_usuario);
       ResultSet rs = consulta.executeQuery();
 
