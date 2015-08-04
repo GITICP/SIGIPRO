@@ -127,3 +127,8 @@ function CerrarSolicitud(id_solicitud){
         </div>");
     $("#ModalCerrarGenerico").modal('show');
 }
+$(function() {
+    var max = new Date();
+     $("#fecha_necesita").datepicker({startDate:max,endDate:"-0d"});
+
+});

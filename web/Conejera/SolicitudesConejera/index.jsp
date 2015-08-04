@@ -44,7 +44,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" data-columna-filtro="5">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -53,6 +53,7 @@
                     <th>Usuario Solicitante</th>
                     <th>Número de Animales</th>
                     <th>Peso</th>
+                    <th>Fecha Necesita</th>
                     <th>Estado</th>
                       <c:if test="${admin}">
                       <th> Cambio Estado</th>
@@ -70,10 +71,11 @@
                           </div>
                         </a>
                       </td>
-                      <td>${solicitud.getFecha_solicitud()}</td>
+                      <td>${solicitud.getFecha_solicitud_S()}</td>
                       <td>${solicitud.getUsuario_solicitante().getNombreCompleto()}</td>
                       <td>${solicitud.getNumero_animales()}</td>
                       <td>${solicitud.getPeso_requerido()}</td>
+                      <td>${solicitud.getFecha_necesita_S()}</td>
                       <td>${solicitud.getEstado()}</td>
                       <c:if test="${admin}">
                         <c:choose>
