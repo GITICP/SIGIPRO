@@ -160,6 +160,18 @@
                                                     </c:choose>
                                                 </tr>
                                             </c:forEach>
+                                                <tr>
+                                                    <td>Subtotal</td>
+                                                    <td class="campo-tabla-centrado">${(sangria.getSubtotalSangre(1) == 0) ? sin_datos : sangria.getSubtotalSangre(1)}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria.getSubtotalPlasma(1) == 0) ? sin_datos : sangria.getSubtotalPlasma(1)}</td>
+                                                    <td class="campo-tabla-centrado">-</td>
+                                                    <td class="campo-tabla-centrado">${(sangria.getSubtotalSangre(2) == 0) ? sin_datos : sangria.getSubtotalSangre(2)}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria.getSubtotalPlasma(2) == 0) ? sin_datos : sangria.getSubtotalPlasma(2)}</td>
+                                                    <td class="campo-tabla-centrado">-</td>
+                                                    <td class="campo-tabla-centrado">${(sangria.getSubtotalSangre(3) == 0) ? sin_datos : sangria.getSubtotalSangre(3)}</td>
+                                                    <td class="campo-tabla-centrado">${(sangria.getSubtotalPlasma(3) == 0) ? sin_datos : sangria.getSubtotalPlasma(3)}</td>
+                                                    <td class="campo-tabla-centrado">-</td>
+                                                </tr>
                                         </tbody>
                                     </table>
                                 </div>

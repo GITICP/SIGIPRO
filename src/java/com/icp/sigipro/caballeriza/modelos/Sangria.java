@@ -118,7 +118,6 @@ public class Sangria {
     public void setFecha_dia3(Date fecha_dia3) {
         this.fecha_dia3 = fecha_dia3;
     }
-    
 
     public float getHematrocito_promedio() {
         return hematrocito_promedio;
@@ -220,6 +219,76 @@ public class Sangria {
     public void setCaballos(List<Caballo> caballos)
     {
         this.caballos = caballos;
+    }
+    
+    public float getSubtotalSangre(int dia) {
+        if (dia == 1) {
+            return getSubtotalSangreDia1();
+        } else if (dia == 2) {
+            return getSubtotalSangreDia2();
+        } else if (dia == 3) {
+            return getSubtotalSangreDia3();
+        } else {
+            return 0;
+        }
+    }
+    
+    private float getSubtotalSangreDia1() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia1();
+        }
+        return resultado;
+    }
+    
+    private float getSubtotalSangreDia2() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia2();
+        }
+        return resultado;
+    }
+    private float getSubtotalSangreDia3() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia3();
+        }
+        return resultado;
+    }
+    
+    public float getSubtotalPlasma(int dia) {
+        if (dia == 1) {
+            return getSubtotalPlasmaDia1();
+        } else if (dia == 2) {
+            return getSubtotalPlasmaDia2();
+        } else if (dia == 3) {
+            return getSubtotalPlasmaDia3();
+        } else {
+            return 0;
+        }
+    }
+    
+    private float getSubtotalPlasmaDia1() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia1();
+        }
+        return resultado;
+    }
+    
+    private float getSubtotalPlasmaDia2() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia2();
+        }
+        return resultado;
+    }
+    private float getSubtotalPlasmaDia3() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia3();
+        }
+        return resultado;
     }
     
     public void agregarSangriaCaballo(SangriaCaballo sangria_caballo) {
