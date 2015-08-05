@@ -7,6 +7,7 @@ package com.icp.sigipro.caballeriza.modelos;
 
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -238,7 +239,7 @@ public class Sangria {
         for (SangriaCaballo sc : sangrias_caballos) {
             resultado += sc.getSangre_dia1();
         }
-        return resultado;
+        return formatearResultado(resultado);
     }
     
     private float getSubtotalSangreDia2() {
@@ -246,14 +247,14 @@ public class Sangria {
         for (SangriaCaballo sc : sangrias_caballos) {
             resultado += sc.getSangre_dia2();
         }
-        return resultado;
+        return formatearResultado(resultado);
     }
     private float getSubtotalSangreDia3() {
         float resultado = 0.0f;
         for (SangriaCaballo sc : sangrias_caballos) {
             resultado += sc.getSangre_dia3();
         }
-        return resultado;
+        return formatearResultado(resultado);
     }
     
     public float getSubtotalPlasma(int dia) {
@@ -273,7 +274,7 @@ public class Sangria {
         for (SangriaCaballo sc : sangrias_caballos) {
             resultado += sc.getPlasma_dia1();
         }
-        return resultado;
+        return formatearResultado(resultado);
     }
     
     private float getSubtotalPlasmaDia2() {
@@ -281,14 +282,14 @@ public class Sangria {
         for (SangriaCaballo sc : sangrias_caballos) {
             resultado += sc.getPlasma_dia2();
         }
-        return resultado;
+        return formatearResultado(resultado);
     }
     private float getSubtotalPlasmaDia3() {
         float resultado = 0.0f;
         for (SangriaCaballo sc : sangrias_caballos) {
             resultado += sc.getPlasma_dia3();
         }
-        return resultado;
+        return formatearResultado(resultado);
     }
     
     public void agregarSangriaCaballo(SangriaCaballo sangria_caballo) {
@@ -296,6 +297,12 @@ public class Sangria {
             sangrias_caballos = new ArrayList<SangriaCaballo>();
         }
         sangrias_caballos.add(sangria_caballo);
+    }
+    
+    private float formatearResultado(float sumatoria) {
+        BigDecimal bd = new BigDecimal(Float.toString(sumatoria));
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
     
     public boolean valididarCaballoEnSangria(Caballo c){
