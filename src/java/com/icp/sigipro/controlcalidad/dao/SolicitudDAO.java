@@ -372,7 +372,7 @@ public class SolicitudDAO extends DAO {
             resultado.setControl_solicitud(cs);
 
             consulta = getConexion().prepareStatement(
-                    " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado FROM control_calidad.analisis_grupo_solicitud ags "
+                    " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion FROM control_calidad.analisis_grupo_solicitud ags "
                     + " LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                     + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
                     + " ORDER BY ags.id_analisis_grupo_solicitud; "
@@ -386,6 +386,7 @@ public class SolicitudDAO extends DAO {
                     Resultado r = new Resultado();
                     r.setId_resultado(rs.getInt("id_resultado"));
                     r.setResultado(rs.getString("resultado"));
+                    r.setRepeticion(rs.getInt("repeticion"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                     r.setAgs(ags_iter);

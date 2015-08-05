@@ -119,9 +119,10 @@
                                                     <!-- Columnas -->
                                                     <thead> 
                                                         <tr>
-                                                            <th>Identificadores de Muestras (Tipo)</th>
+                                                            <th>ID Muestras (Tipo)</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
+                                                            <th>Repetición</th>
                                                             <th>Acción</th>
                                                         </tr>
                                                     </thead>
@@ -146,6 +147,7 @@
                                                             <th>Identificadores de Muestras (Tipo)</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
+                                                            <th>Repetición</th>
                                                             <th>Acción</th>
                                                         </tr>
                                                     </thead>
@@ -163,6 +165,7 @@
                                                                 ${resultado.getAgs().getAnalisis().getNombre()}
                                                             </td>
                                                             <td>${resultado.getResultado()}</td>
+                                                            <td>${resultado.getRepeticion()}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
                                                             </td>
