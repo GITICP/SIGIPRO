@@ -21,14 +21,14 @@ public class Bitacora {
     private String estado;
 
     //Variables de Tablas
-    public static final String TABLA_SANGRIA_PRUEBA= "CABALLERIZA.SANGRIAS_PRUEBAS";
-    public static final String TABLA_SANGRIA= "CABALLERIZA.SANGRIAS";
-    public static final String TABLA_INOCULO= "CABALLERIZA.INOCULOS";
-    public static final String TABLA_TIPO_EVENTO= "CABALLERIZA.TIPOS_EVENTOS";
-    public static final String TABLA_GRUPO_DE_CABALLOS= "CABALLERIZA.GRUPOS_DE_CABALLOS";
-    public static final String TABLA_CABALLO= "CABALLERIZA.CABALLOS";
-    public static final String TABLA_EVENTO_CLINICO= "CABALLERIZA.EVENTOS_CLINICOS";
-    public static final String TABLA_EVENTOSCLINICOSCABALLOS= "CABALLERIZA.EVENTOS_CLINICOS_CABALLOS";
+    public static final String TABLA_SANGRIA_PRUEBA = "CABALLERIZA.SANGRIAS_PRUEBAS";
+    public static final String TABLA_SANGRIA = "CABALLERIZA.SANGRIAS";
+    public static final String TABLA_INOCULO = "CABALLERIZA.INOCULOS";
+    public static final String TABLA_TIPO_EVENTO = "CABALLERIZA.TIPOS_EVENTOS";
+    public static final String TABLA_GRUPO_DE_CABALLOS = "CABALLERIZA.GRUPOS_DE_CABALLOS";
+    public static final String TABLA_CABALLO = "CABALLERIZA.CABALLOS";
+    public static final String TABLA_EVENTO_CLINICO = "CABALLERIZA.EVENTOS_CLINICOS";
+    public static final String TABLA_EVENTOSCLINICOSCABALLOS = "CABALLERIZA.EVENTOS_CLINICOS_CABALLOS";
     public static final String TABLA_ACTIVOFIJO = "BODEGA.ACTIVOS_FIJOS";
     public static final String TABLA_CATALOGOEXTERNO = "BODEGA.CATALOGO_EXTERNO";
     public static final String TABLA_CATALOGOEXTERNOINTERNO = "BODEGA.CATALOGOS_INTERNOS_EXTERNOS";
@@ -93,6 +93,7 @@ public class Bitacora {
     public static final String ACCION_REPONER = "REPONER";
     public static final String ACCION_ANULAR = "ANULAR";
     public static final String ACCION_REGISTRAR_EXTRACCION = "REGISTRAR EXTRACCIÓN";
+    public static final String ACCION_RECIBIR = "RECIBIR";
 
     public Bitacora() {
 

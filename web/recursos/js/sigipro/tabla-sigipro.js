@@ -78,3 +78,33 @@ function crear_data_table(elemento, configuracion) {
     });
     
 }
+
+function inicializar_tabla(selector_tabla) {
+    var elemento = $(selector_tabla);
+
+    var dtTable = elemento.DataTable({// use DataTable, not dataTable
+        sDom:
+                "t" +
+                "<'row'<'col-sm-6'i><'col-sm-6'p>>"
+    });
+    var ths = '';
+    var cantidadColumnas = elemento.find('thead th').not('.columna-escondida').length;
+
+    for (i = 0; i < cantidadColumnas; i++) {
+        ths += '<th></th>';
+    }
+
+    elemento.find('thead').append('<tr class="row-filter">' + ths + '</tr>');
+    elemento.find('thead .row-filter th').each(function () {
+        $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+    });
+
+    elemento.find('.row-filter input').on('keyup change', function () {
+        dtTable
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    return dtTable;
+}

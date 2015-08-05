@@ -349,7 +349,7 @@ public class ControladorSangria extends SIGIPROServlet
             redireccion = "Sangria/index.jsp";
         }
         catch (SIGIPROException sig_ex) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Extracción no se registró correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Extracción no se registró correctamente."));
         }
         redireccionar(request, response, redireccion);
     }
