@@ -18,7 +18,7 @@
     <input hidden="true" name="accionindex" id="accionindex" value="">
     <input hidden="true" name="id_solicitud" value="${solicitud.getId_solicitud()}">
     <input hidden="true" name="id_usuario" value="${solicitud.getId_usuario()}">
-    <input hidden="true" name="fecha_solicitud" value="${solicitud.getFecha_solicitudAsDate()}">
+    <input hidden="true" name="fecha_solicitud" value="${solicitud.getFecha_solicitudAsString()}">
     <input hidden="true" name="estado" value="${solicitud.getEstado()}">
     <label for="seleccioninventario" class="control-label"> *Producto</label>
     <div class="form-group">

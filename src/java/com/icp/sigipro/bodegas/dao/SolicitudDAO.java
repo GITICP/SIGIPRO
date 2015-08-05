@@ -106,7 +106,7 @@ public class SolicitudDAO extends DAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE bodega.solicitudes"
-                    + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
+                    + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?, id_inventario = ?"
                     + " WHERE id_solicitud=? AND cantidad <= (Select cantidad from bodega.inventarios where id_inventario =? ) "
             );
 
@@ -120,8 +120,9 @@ public class SolicitudDAO extends DAO
                 consulta.setInt(4, p.getId_usuario_recibo());
             }
             consulta.setString(5, p.getObservaciones());
-            consulta.setInt(6, p.getId_solicitud());
-            consulta.setInt(7, p.getId_inventario());
+            consulta.setInt(6, p.getId_inventario());
+            consulta.setInt(7, p.getId_solicitud());
+            consulta.setInt(8, p.getId_inventario());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
