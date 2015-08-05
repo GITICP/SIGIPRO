@@ -130,7 +130,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia1() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia1() == null || sangria_caballo.isParticipo_dia1() == null) ? "Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -142,7 +142,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia2() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia2() == null || sangria_caballo.isParticipo_dia2() == null) ? "Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -154,12 +154,24 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia3() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia3() == null || sangria_caballo.isParticipo_dia3() == null) ? "Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </tr>
                                             </c:forEach>
+                                                <tr>
+                                                    <td class="campo-subtotal">Subtotal</td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(1) == 0) ? sin_datos : sangria.getSubtotalSangre(1)}</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(1) == 0) ? sin_datos : sangria.getSubtotalPlasma(1)}</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(2) == 0) ? sin_datos : sangria.getSubtotalSangre(2)}</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(2) == 0) ? sin_datos : sangria.getSubtotalPlasma(2)}</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(3) == 0) ? sin_datos : sangria.getSubtotalSangre(3)}</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(3) == 0) ? sin_datos : sangria.getSubtotalPlasma(3)}</strong></td>
+                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
+                                                </tr>
                                         </tbody>
                                     </table>
                                 </div>
