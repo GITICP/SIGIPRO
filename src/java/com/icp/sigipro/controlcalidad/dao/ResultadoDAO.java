@@ -9,10 +9,12 @@ import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Grupo;
+import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
+import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
@@ -278,10 +280,13 @@ public class ResultadoDAO extends DAO {
         return resultado;
     }
     
-    public List<Resultado> obtenerResultadosAGS(int id_ags) throws SIGIPROException {
+    public AnalisisGrupoSolicitud obtenerAGS(int id_ags) throws SIGIPROException {
         
+        AnalisisGrupoSolicitud ags_resultado = new AnalisisGrupoSolicitud();
         List<Resultado> lista_resultados = new ArrayList<Resultado>();
         
+        PreparedStatement consulta_grupo = null;
+        ResultSet rs_grupo = null;
         PreparedStatement consulta = null;
         ResultSet rs = null;
         
@@ -315,16 +320,48 @@ public class ResultadoDAO extends DAO {
                 lista_resultados.add(r);
             }
             
+            consulta_grupo = getConexion().prepareStatement(
+                    " SELECT m.identificador, tm.nombre "
+                  + " FROM control_calidad.analisis_grupo_solicitud ags "
+                  + "   INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                  + "   INNER JOIN control_calidad.grupos_muestras gm ON g.id_grupo = gm.id_grupo "
+                  + "   INNER JOIN control_calidad.muestras m ON gm.id_muestra = m.id_muestra "
+                  + "   INNER JOIN control_calidad.tipos_muestras tm ON m.id_tipo_muestra = tm.id_tipo_muestra "
+                  + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+            );
+            
+            consulta_grupo.setInt(1, id_ags);
+            
+            rs_grupo = consulta_grupo.executeQuery();
+            
+            ags_resultado.setResultados(lista_resultados);
+            Grupo g = new Grupo();
+            List<Muestra> muestras = new ArrayList<Muestra>();
+            
+            while(rs_grupo.next()) {
+                TipoMuestra tm = new TipoMuestra();
+                tm.setNombre(rs_grupo.getString("nombre"));
+                Muestra m = new Muestra();
+                m.setIdentificador(rs_grupo.getString("identificador"));
+                m.setTipo_muestra(tm);
+                muestras.add(m);
+            }
+            
+            g.setGrupos_muestras(muestras);
+            ags_resultado.setGrupo(g);
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error al obtener el listado de resultados. Inténtelo nuevamente.");
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
+            cerrarSilencioso(rs_grupo);
+            cerrarSilencioso(consulta_grupo);
             cerrarConexion();
         }
         
-        return lista_resultados;
+        return ags_resultado;
     }
     
     public Resultado editarResultado(Resultado resultado) throws SIGIPROException {

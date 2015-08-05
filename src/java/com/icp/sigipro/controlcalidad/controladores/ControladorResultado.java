@@ -11,6 +11,7 @@ import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
+import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
@@ -258,9 +259,9 @@ public class ControladorResultado extends SIGIPROServlet
         request.setAttribute("analisis", a);
 
         try {
-            List<Resultado> resultados = dao.obtenerResultadosAGS(id_ags);
-
-            request.setAttribute("resultados", resultados);
+            AnalisisGrupoSolicitud ags = dao.obtenerAGS(id_ags);
+            request.setAttribute("ags", ags);
+            request.setAttribute("resultados", ags.getResultados());
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", sig_ex.getMessage());
         }

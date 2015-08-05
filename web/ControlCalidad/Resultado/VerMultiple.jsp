@@ -38,40 +38,35 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> Resultados de Solicitud ${numero_solicitud} - ${analisis.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoEliminar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 520}">
-                                        <c:set var="contienePermisoEliminar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEliminar}">
-                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el equipo" data-href="/SIGIPRO/ControlCalidad/Equipo?accion=eliminar&id_equipo=${equipo.getId_equipo()}">Eliminar</a>
-                                </c:if>
-
-                                <c:set var="contienePermisoEditar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 520}">
-                                        <c:set var="contienePermisoEditar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEditar}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Equipo?accion=editar&id_equipo=${equipo.getId_equipo()}">Editar</a>
-                                </c:if>
-                                <c:set var="contienePermisoEliminarCertificado" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 521}">
-                                        <c:set var="contienePermisoEliminarCertificado" value="true" />
-                                    </c:if>
-                                </c:forEach>
+                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${id_solicitud}">Volver</a>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-
-                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-asc-filter">
+                            <table class="tabla-ver">
+                                <tr>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${ags.getGrupo().getGrupos_muestras().size() == 1}">
+                                                <strong>Identificador de la Muestra:</strong>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <strong>Identificadores de las Muestras:</strong>    
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                        </c:forEach>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                                 <thead>
                                     <tr>
-                                        <th>Identificador</th>
+                                        <th>Identificador Resultado</th>
                                         <th>Fecha</th>
                                         <th>Repetición</th>
                                         <th>Usuario Encargado</th>
