@@ -29,7 +29,7 @@
   margin-right:5px !important;
   color:#fff !important;
   padding-top: 3px !important;
-  font-family: "Helvetica";
+  font-family: "Helvetica Neue";
 }
 
 .campos-requeridos {
@@ -98,6 +98,10 @@
     width: 100%;
 }
 
-.opcion-escondida {
-    display: none !important;
+.dataTables_length {
+    float: right;
+}
+
+.campo-subtotal {
+    border-color: black !important;
 }

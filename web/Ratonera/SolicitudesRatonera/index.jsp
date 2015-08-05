@@ -54,7 +54,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter" data-columna-filtro="7">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -65,6 +65,7 @@
                     <th>Peso</th>
                     <th>Número de Cajas</th>
                     <th>Estado</th>
+                    <th>Fecha necesita </th>
                       <c:if test="${admin}">
                       <th> Cambio Estado</th>
                       </c:if>
@@ -87,6 +88,7 @@
                       <td>${solicitud.getPeso_requerido()}</td>
                       <td>${solicitud.getNumero_cajas()}</td>
                       <td>${solicitud.getEstado()}</td>
+                      <td>${solicitud.getFecha_necesita_S()}</td>
                       <c:if test="${admin}">
                         <c:choose>
                           <c:when test="${solicitud.getEstado().equals('Pendiente')}">

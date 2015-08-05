@@ -88,7 +88,7 @@
                                                                 <c:choose>
                                                                     <c:when test="${editar}">
                                                                         <c:choose>
-                                                                            <c:when test="${sangria_caballo.getParticipo(dia)}">
+                                                                            <c:when test="${sangria_caballo.getParticipo(dia) || sangria_caballo.getParticipo(dia) == null}">
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
                                                                             </c:when>
                                                                             <c:otherwise>
