@@ -47,6 +47,7 @@
               <c:if test="${contienePermisoEliminar}">
 
                 <div class="btn-group widget-header-toolbar">
+                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=historial">Historial</a>
                   <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ratonera/SolicitudesRatonera?accion=agregar">Realizar Solicitud</a>
                 </div>
 
