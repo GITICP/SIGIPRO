@@ -95,6 +95,10 @@ public class Informe
     }
     
     public List<PreparedStatement> obtenerConsultasAsociacion(Connection conexion) throws SQLException {
-        return asociacion.asociarSQL(conexion);
+        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        if (asociacion != null) {
+            resultado = asociacion.asociarSQL(conexion);
+        }
+        return resultado;
     }
 }

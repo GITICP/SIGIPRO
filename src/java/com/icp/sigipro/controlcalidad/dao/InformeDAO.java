@@ -30,10 +30,12 @@ public class InformeDAO extends DAO
         boolean resultado = false;
         boolean resultado_informe = false;
         boolean resultado_resultados = false;
+        boolean resultado_solicitud = false;
 
         PreparedStatement consulta_informe = null;
         ResultSet rs_informe = null;
         PreparedStatement consulta_resultados = null;
+        PreparedStatement update_solicitud = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -83,8 +85,17 @@ public class InformeDAO extends DAO
             for (PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();
             }
+            
+            update_solicitud = getConexion().prepareStatement(
+                    " UPDATE control_calidad.solicitudes SET estado = ? WHERE id_solicitud = ? "
+            );
+            
+            update_solicitud.setString(1, "Completada");
+            update_solicitud.setInt(2, informe.getSolicitud().getId_solicitud());
+            
+            resultado_solicitud = update_solicitud.executeUpdate() == 1;
 
-            resultado = resultado_resultados && resultado_informe;
+            resultado = resultado_resultados && resultado_informe && resultado_solicitud;
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -103,6 +114,7 @@ public class InformeDAO extends DAO
             cerrarSilencioso(rs_informe);
             cerrarSilencioso(consulta_informe);
             cerrarSilencioso(consulta_resultados);
+            cerrarSilencioso(update_solicitud);
             cerrarConexion();
         }
 
