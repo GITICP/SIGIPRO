@@ -14,27 +14,10 @@ $(document).ready(function () {
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-tabla-filter';
         $(selectorTabla).each(function () {
-            var dtTable = $(this).DataTable(configuracion_tablas);
-            var ths = '';
-            var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
-
-            for (i = 0; i < cantidadColumnas; i++) {
-                ths += '<th></th>';
-            }
-
-            $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
-            $(this).find('thead .row-filter th').each(function () {
-                $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
-            });
-
-            $(this).find('.row-filter input').on('keyup change', function () {
-                dtTable
-                        .column($(this).parent().index() + ':visible')
-                        .search(this.value)
-                        .draw();
-            });
+            crear_data_table($(this), configuracion_tablas);
         });
     }
+    
     var cantidadTablas = $('.sigipro-desc-filter').length;
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-desc-filter';
@@ -43,29 +26,11 @@ $(document).ready(function () {
             if ($(this).data("columna-filtro")) {
                 columna_filtro = $(this).data("columna-filtro");
             }
-            
+
             var configuracion_especifica = {"order": [[columna_filtro, "desc"]]};
             var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
 
-            var dtTable = $(this).DataTable(configuracion_final);
-            var ths = '';
-            var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
-
-            for (i = 0; i < cantidadColumnas; i++) {
-                ths += '<th></th>';
-            }
-
-            $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
-            $(this).find('thead .row-filter th').each(function () {
-                $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
-            });
-
-            $(this).find('.row-filter input').on('keyup change', function () {
-                dtTable
-                        .column($(this).parent().index() + ':visible')
-                        .search(this.value)
-                        .draw();
-            });
+            crear_data_table($(this), configuracion_final);
         });
     }
 
@@ -77,29 +42,39 @@ $(document).ready(function () {
             if ($(this).data("columna-filtro")) {
                 columna_filtro = $(this).data("columna-filtro");
             }
-            
+
             var configuracion_especifica = {"order": [[columna_filtro, "asc"]]};
             var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
 
-            var dtTable = $(this).DataTable(configuracion_final);
-            var ths = '';
-            var cantidadColumnas = $(this).find('thead th').not('.columna-escondida').length;
-
-            for (i = 0; i < cantidadColumnas; i++) {
-                ths += '<th></th>';
-            }
-
-            $(this).find('thead').append('<tr class="row-filter">' + ths + '</tr>');
-            $(this).find('thead .row-filter th').each(function () {
-                $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
-            });
-
-            $(this).find('.row-filter input').on('keyup change', function () {
-                dtTable
-                        .column($(this).parent().index() + ':visible')
-                        .search(this.value)
-                        .draw();
-            });
+            crear_data_table($(this), configuracion_final);
         });
     }
 });
+
+function crear_data_table(elemento, configuracion) {
+    
+    if (elemento.data("filas-defecto") !== undefined) {
+        configuracion = $.extend({}, configuracion, {pageLength: elemento.data("filas-defecto")});
+    }
+    
+    var dtTable = elemento.DataTable(configuracion);
+    var ths = '';
+    var cantidadColumnas = elemento.find('thead th').not('.columna-escondida').length;
+
+    for (i = 0; i < cantidadColumnas; i++) {
+        ths += '<th></th>';
+    }
+
+    elemento.find('thead').append('<tr class="row-filter">' + ths + '</tr>');
+    elemento.find('thead .row-filter th').each(function () {
+        $(this).html('<input type="text" class="form-control input-sm" placeholder="Buscar...">');
+    });
+
+    elemento.find('.row-filter input').on('keyup change', function () {
+        dtTable
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+    
+}

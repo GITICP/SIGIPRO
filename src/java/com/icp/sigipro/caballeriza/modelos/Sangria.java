@@ -7,6 +7,7 @@ package com.icp.sigipro.caballeriza.modelos;
 
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -118,7 +119,6 @@ public class Sangria {
     public void setFecha_dia3(Date fecha_dia3) {
         this.fecha_dia3 = fecha_dia3;
     }
-    
 
     public float getHematrocito_promedio() {
         return hematrocito_promedio;
@@ -222,11 +222,87 @@ public class Sangria {
         this.caballos = caballos;
     }
     
+    public float getSubtotalSangre(int dia) {
+        if (dia == 1) {
+            return getSubtotalSangreDia1();
+        } else if (dia == 2) {
+            return getSubtotalSangreDia2();
+        } else if (dia == 3) {
+            return getSubtotalSangreDia3();
+        } else {
+            return 0;
+        }
+    }
+    
+    private float getSubtotalSangreDia1() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia1();
+        }
+        return formatearResultado(resultado);
+    }
+    
+    private float getSubtotalSangreDia2() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia2();
+        }
+        return formatearResultado(resultado);
+    }
+    private float getSubtotalSangreDia3() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia3();
+        }
+        return formatearResultado(resultado);
+    }
+    
+    public float getSubtotalPlasma(int dia) {
+        if (dia == 1) {
+            return getSubtotalPlasmaDia1();
+        } else if (dia == 2) {
+            return getSubtotalPlasmaDia2();
+        } else if (dia == 3) {
+            return getSubtotalPlasmaDia3();
+        } else {
+            return 0;
+        }
+    }
+    
+    private float getSubtotalPlasmaDia1() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia1();
+        }
+        return formatearResultado(resultado);
+    }
+    
+    private float getSubtotalPlasmaDia2() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia2();
+        }
+        return formatearResultado(resultado);
+    }
+    private float getSubtotalPlasmaDia3() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia3();
+        }
+        return formatearResultado(resultado);
+    }
+    
     public void agregarSangriaCaballo(SangriaCaballo sangria_caballo) {
         if(sangrias_caballos == null) {
             sangrias_caballos = new ArrayList<SangriaCaballo>();
         }
         sangrias_caballos.add(sangria_caballo);
+    }
+    
+    private float formatearResultado(float sumatoria) {
+        BigDecimal bd = new BigDecimal(Float.toString(sumatoria));
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
     
     public boolean valididarCaballoEnSangria(Caballo c){
