@@ -267,11 +267,16 @@ public class SolicitudRatoneraDAO extends DAO {
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT s.*, c.*, u.*, sr.id_entrega, sr.fecha_entrega FROM bioterio.solicitudes_ratonera s "
-                    + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
-                    + "INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa "
-                    + "LEFT JOIN bioterio.entregas_solicitudes_ratonera sr ON sr.id_solicitud = s.id_solicitud "
-                    + "WHERE s.estado IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)')");
+            consulta = getConexion().prepareStatement(
+                      "  WITH consulta AS ( "
+                    + "    SELECT s.*, c.*, u.*, sr.id_entrega, sr.fecha_entrega, ROW_NUMBER() OVER(PARTITION BY s.id_solicitud ORDER BY sr.fecha_entrega DESC) AS num_fila "
+                    + "    FROM bioterio.solicitudes_ratonera s "
+                    + "      INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+                    + "      INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa "
+                    + "      LEFT JOIN bioterio.entregas_solicitudes_ratonera sr ON sr.id_solicitud = s.id_solicitud "
+                    + "    WHERE s.estado IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)')"
+                    + ") SELECT consulta.* FROM consulta WHERE consulta.num_fila = 1 "
+            );
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
@@ -320,12 +325,17 @@ public class SolicitudRatoneraDAO extends DAO {
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_ratonera s "
-                    + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
-                    + "INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa "
-                    + "LEFT JOIN bioterio.entregas_solicitudes_ratonera sr ON sr.id_solicitud = s.id_solicitud "
-                    + "LEFT JOIN seguridad.usuarios u2 ON s.usuario_utiliza = u2.id_usuario "
-                    + "WHERE u.id_seccion = ? AND s.estado IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)'); ");
+            consulta = getConexion().prepareStatement(
+                      " WITH consulta AS ( "
+                    + "   SELECT *, ROW_NUMBER() OVER(PARTITION BY s.id_solicitud ORDER BY sr.fecha_entrega DESC) AS num_fila "
+                    + "   FROM bioterio.solicitudes_ratonera s "
+                    + "     INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+                    + "     INNER JOIN bioterio.cepas c ON s.id_cepa = c.id_cepa "
+                    + "     LEFT JOIN bioterio.entregas_solicitudes_ratonera sr ON sr.id_solicitud = s.id_solicitud "
+                    + "     LEFT JOIN seguridad.usuarios u2 ON s.usuario_utiliza = u2.id_usuario "
+                    + "   WHERE u.id_seccion = ? AND s.estado IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)') "
+                    + " ) SELECT consulta.* FROM consulta WHERE consulta.num_fila = 1"
+            );
             consulta.setInt(1, id_seccion);
             ResultSet rs = consulta.executeQuery();
 
