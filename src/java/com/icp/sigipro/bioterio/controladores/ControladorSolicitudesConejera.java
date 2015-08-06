@@ -280,7 +280,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
             //*----------------------------* 
 
             if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada."));
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
             }
@@ -330,7 +330,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
             //*----------------------------* 
 
             if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada."));
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
             }
@@ -399,7 +399,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
                     solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
                 }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada con éxito"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada con éxito."));
             } catch (SIGIPROException ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
@@ -446,13 +446,13 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
                     solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
                 }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada con éxito"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada con éxito."));
 
             } catch (SIGIPROException ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición."));
         }
         redireccionar(request, response, redireccion);
     }
@@ -478,9 +478,9 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
             //*----------------------------* 
 
             if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada."));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición."));
             }
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
@@ -531,7 +531,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
                 resultado = dao.editarSolicitudConejera(solicitud);
                 resultado2 = dao_en.insertarEntregaConejera(entrega);
             } else {
-                request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos"));
+                request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos."));
             }
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -539,9 +539,9 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet {
             //*----------------------------* 
 
             if (resultado && resultado2) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada."));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición."));
             }
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
