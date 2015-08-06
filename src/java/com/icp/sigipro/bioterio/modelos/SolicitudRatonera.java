@@ -28,6 +28,7 @@ public class SolicitudRatonera {
   private String observaciones;
   private String observaciones_rechazo;
   private String estado;
+  private EntregaRatonera entrega;
 
   public String parseJSON(){
         Class _class = this.getClass();
@@ -172,5 +173,13 @@ public class SolicitudRatonera {
   public void setEstado(String estado) {
     this.estado = estado;
   }
+
+    public EntregaRatonera getEntrega() {
+        return entrega;
+    }
+
+    public void setEntrega(EntregaRatonera entrega) {
+        this.entrega = entrega;
+    }
 
 }

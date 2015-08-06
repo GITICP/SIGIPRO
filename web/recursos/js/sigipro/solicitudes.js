@@ -31,12 +31,6 @@ function RechazarSolicitud(id_solicitud) {
     $('#ModalRechazar').modal('show');
 }
 
-$('#cantidadinput').change(function () {
-    var max = $('option:selected').data('stock');
-    $("input[name='cantidad']").attr("max", max);
-}
-);
-
 $(document).ready(function () {
 
     table = $('#tabladeSolicitudes').DataTable();
@@ -47,6 +41,17 @@ $(document).ready(function () {
                 "t" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "order": [[0, "desc"]]
+    });
+
+    $('#cantidadinput').change(function () {
+        var max = $('option:selected').data('stock');
+        $("input[name='cantidad']").attr("max", max);
+    }
+    );
+
+    $("#seleccioninventario").change(function () {
+        var max = $('option:selected').data('stock');
+        $("input[name='cantidad']").attr("max", max);
     });
 }
 );
@@ -135,7 +140,7 @@ $(document).ready(function () {
                     celda.text('Producto No Perecedero');
                 }
 
-                $(this).append(celda); 
+                $(this).append(celda);
 
                 $('.sigiproDatePicker').each(function () {
                     $(this).datepicker()

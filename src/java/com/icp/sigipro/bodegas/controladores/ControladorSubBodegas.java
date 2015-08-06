@@ -251,6 +251,20 @@ public class ControladorSubBodegas extends SIGIPROServlet
         PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
 
         obtenerSubBodega(request, permisos_sub_bodega, id_sub_bodega);
+        
+        String agrupar = request.getParameter("agrupar");
+        
+        if (agrupar != null) {
+            if (agrupar.equals("true")) {
+                Object obj_sb = request.getAttribute("sub_bodega");
+                if (obj_sb != null) {
+                    SubBodega sb = (SubBodega) obj_sb;
+                    sb.agruparPorProducto();
+                    request.setAttribute("inventarios", sb.getInventarios());
+                    request.setAttribute("agrupacion_por_producto", true);
+                }
+            }
+        }
 
         redireccionar(request, response, redireccion);
     }
