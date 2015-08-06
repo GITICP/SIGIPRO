@@ -192,11 +192,12 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
         tipo_muestra.setDias_descarte(Integer.parseInt(request.getParameter("dias_descarte")));
         tipo_muestra.setTipos_muestras_analisis(new ArrayList<Analisis>());
         String[] analisis = request.getParameterValues("analisis");
-
-        for (String i : analisis) {
-            Analisis a = new Analisis();
-            a.setId_analisis(Integer.parseInt(i));
-            tipo_muestra.getTipos_muestras_analisis().add(a);
+        if (analisis != null) {
+            for (String i : analisis) {
+                Analisis a = new Analisis();
+                a.setId_analisis(Integer.parseInt(i));
+                tipo_muestra.getTipos_muestras_analisis().add(a);
+            }
         }
 
         return tipo_muestra;

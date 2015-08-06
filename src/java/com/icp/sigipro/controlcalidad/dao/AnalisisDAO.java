@@ -169,7 +169,7 @@ public class AnalisisDAO extends DAO {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
-            if (analisis.getMachote() == null) {
+            if (analisis.getMachote().equals("")) {
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
                         + "SET nombre=?, estructura=? "
                         + "WHERE id_analisis = ?; ");

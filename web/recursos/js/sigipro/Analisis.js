@@ -422,18 +422,21 @@ function agregarAnalisis() {
     if ($(".celda:enabled").length > 0) {
         var file = document.querySelector('input[id=machote]').files[0];
         if (file === undefined) {
-            $("#modalErrorExcel").modal("show");
-            errorExcel = false;
+            var tieneArchivo = $("#tieneArchivo").val();
+            if (tieneArchivo === "false" || tieneArchivo === "") {
+                $("#modalErrorExcel").modal("show");
+                errorExcel = false;
+            }
         }
     }
 
     if (!$('#agregarAnalisis')[0].checkValidity()) {
-        if (errorResultado && errorExcel) {
-            $('<input type="submit">').hide().appendTo($('#agregarAnalisis')).click().remove();
-            $('#agregarAnalisis').find(':submit').click();
-        }
+        $('<input type="submit">').hide().appendTo($('#agregarAnalisis')).click().remove();
+        $('#agregarAnalisis').find(':submit').click();
     } else {
-        $("#agregarAnalisis").submit();
+        if (errorResultado && errorExcel) {
+            $("#agregarAnalisis").submit();
+        }
     }
 
 
