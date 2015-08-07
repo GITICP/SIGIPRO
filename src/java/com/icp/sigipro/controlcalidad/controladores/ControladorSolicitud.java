@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorSolicitud extends SIGIPROServlet {
 
     //Solicitar, Recibir, Anular
-    private final int[] permisos = {1, 550, 551, 552};
+    private final int[] permisos = {550, 551, 552, 553, 554, 555, 556};
     //-----------------
     private final SolicitudDAO dao = new SolicitudDAO();
     private final TipoMuestraDAO tipomuestradao = new TipoMuestraDAO();
@@ -69,8 +69,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
 
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(550, listaPermisos);
+        validarPermiso(550, request);
 
         String redireccion = "Solicitud/Agregar.jsp";
         SolicitudCC s = new SolicitudCC();
@@ -93,8 +92,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Solicitud/index.jsp";
         List<SolicitudCC> solicitudes = dao.obtenerSolicitudes();
         request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
@@ -106,8 +104,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Solicitud/Ver.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
 
@@ -128,8 +125,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(550, listaPermisos);
+        validarPermiso(553, request);
         String redireccion = "Solicitud/Editar.jsp";
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         SolicitudCC solicitud = dao.obtenerSolicitud(id_solicitud);
@@ -165,10 +161,10 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAnular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(552, listaPermisos);
+        validarPermiso(552, request);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_anular"));
         String observaciones = request.getParameter("observaciones");
         boolean resultado = false;
@@ -192,8 +188,10 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void postRecibir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(551, request);
+        
         boolean resultado = false;
-        String redireccion = "SolicitudVeneno/index.jsp";
         String usuario = request.getParameter("usuario_recibo");
         String contrasenna = request.getParameter("passw");
 
@@ -239,6 +237,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        
+        validarPermiso(550, request);
+        
         boolean resultado = false;
         SolicitudCC s = construirObjeto(request);
         s.setEstado("Solicitado");
@@ -272,6 +273,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        
+        validarPermiso(553, request);
+        
         boolean resultado = false;
         SolicitudCC s = construirObjeto(request);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -308,6 +312,8 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     protected void postAgregargrupo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(556, request);
 
         String redireccion = "Solicitud/Ver.jsp";
 
@@ -459,6 +465,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

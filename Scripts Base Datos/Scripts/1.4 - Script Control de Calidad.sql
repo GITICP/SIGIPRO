@@ -591,8 +591,10 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (550, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (551, '[ControlCalidad]RecibirSolicitud', 'Permite recibir la Solicitud para su agrupación y realización.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (552, '[ControlCalidad]AnularSolicitud', 'Permite anular una Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (553, '[ControlCalidad]EditarSolicitud', 'Permite editar una Solicitud de Control de Calidad.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (554, '[ControlCalidad]EliminarSolicitud', 'Permite eliminar una Solicitud de Control de Calidad.');
+--INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (554, '[ControlCalidad]EliminarSolicitud', 'Permite eliminar una Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (555, '[ControlCalidad]VerSolicitud', 'Permite ver una Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (556, '[ControlCalidad]AgruparMuestras', 'Permite agrupar las muestras de Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (557, '[ControlCalidad]GenerarInforme', 'Permite generar un informe para una Solicitud de Control de Calidad.');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (550, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (551, 501);

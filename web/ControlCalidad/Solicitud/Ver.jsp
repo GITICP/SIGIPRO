@@ -41,7 +41,6 @@
                                     <c:when test="${solicitud.getEstado().equals('Solicitado')}">
                                         <c:if test="${booleditar}">
                                             <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Solicitud?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar</a>
-
                                         </c:if>
                                         <c:if test="${boolrecibir}">
                                             <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
@@ -52,12 +51,12 @@
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
-                                            <c:when test="${solicitud.getInforme() == null}">
+                                            <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
                                             </c:when>
-                                            <c:otherwise>
+                                            <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
                                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_informe=${solicitud.getInforme().getId_informe()}">Editar Informe</a>
-                                            </c:otherwise>
+                                            </c:when>
                                         </c:choose>
                                     </c:otherwise>
                                 </c:choose>
@@ -116,7 +115,7 @@
                                 </div>
                             </div>
                             <c:choose>
-                                <c:when test="${solicitud.getEstado().equals('Recibido')}">
+                                <c:when test="${solicitud.getEstado().equals('Recibido') && helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
                                     <div class="widget widget-table">
                                         <div class="widget-header">
                                             <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
