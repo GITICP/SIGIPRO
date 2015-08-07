@@ -493,7 +493,7 @@ ADD COLUMN aprobado boolean;
     INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (510, 502, 'Tipos de Reactivos', '/ControlCalidad/TipoReactivo');
     INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (530, 502, 'Reactivos', '/ControlCalidad/Reactivo');
 
-    -- Análisis    
+    -- Análisis
 
     INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (503, 500, 'Análisis', null);
 
@@ -515,23 +515,109 @@ ADD COLUMN aprobado boolean;
 
 -- PERMISOS
 
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (500, '[ControlCalidad]AdministrarTipoEquipo', 'Permite agregar, editar y eliminar un tipo de equipo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (510, '[ControlCalidad]AdministrarTipoReactivo', 'Permite agregar, editar y eliminar un tipo de reactivo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (520, '[ControlCalidad]AdministrarEquipo', 'Permite agregar, editar y eliminar un equipo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (521, '[ControlCalidad]AdministrarCertificadoEquipo', 'Permite agregar y eliminar un certificado de equipo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[ControlCalidad]AdministrarReactivo', 'Permite agregar, editar y eliminar un reactivo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdminCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (540, '[ControlCalidad]AdministrarAnalisis', 'Permite agregar, editar y eliminar un Analisis.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (541, '[ControlCalidad]RealizarAnalisis', 'Permite realizar un Analisis de Control de Calidad y ver los resultados.');
+    -- Tipos de Equipo
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (500, '[ControlCalidad]AgregarTipoEquipo', 'Permite agregar un tipo de equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (501, '[ControlCalidad]EditarTipoEquipo', 'Permite editar un tipo de equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (502, '[ControlCalidad]EliminarTipoEquipo', 'Permite eliminar un tipo de equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (503, '[ControlCalidad]VerTipoEquipo', 'Permite ver un tipo de equipo.');
 
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (550, '[ControlCalidad]SolicitarAnalisis', 'Permite agregar y editar una Solicitud de Control de Calidad.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (551, '[ControlCalidad]RecibirSolicitud', 'Permite recibir la Solicitud para su agrupacion y realizacion.');
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (500, 521);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (501, 521);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (502, 521);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (503, 521);
+
+    -- Tipos de Reactivo
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (510, '[ControlCalidad]AgregarTipoReactivo', 'Permite agregar un tipo de reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (511, '[ControlCalidad]EditarTipoReactivo', 'Permite editar un tipo de reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (512, '[ControlCalidad]EliminarTipoReactivo', 'Permite eliminar un tipo de reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (513, '[ControlCalidad]VerTipoReactivo', 'Permite ver un tipo de reactivo.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (510, 510);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (511, 510);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (512, 510);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (513, 510);
+
+    -- Equipos
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (520, '[ControlCalidad]AgregarEquipo', 'Permite agregar un equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (521, '[ControlCalidad]AdministrarCertificadoEquipo', 'Permite agregar y eliminar un certificado de equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (522, '[ControlCalidad]EditarEquipo', 'Permite editar un equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (523, '[ControlCalidad]EliminarEquipo', 'Permite eliminar un equipo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (524, '[ControlCalidad]VerEquipo', 'Permite ver un equipo.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (520, 520);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (521, 520);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (522, 520);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (523, 520);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (524, 520);
+
+    -- Reactivos
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (530, '[ControlCalidad]AgregarReactivo', 'Permite agregar un reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (531, '[ControlCalidad]AdministrarCertificadoReactivo', 'Permite agregar y eliminar un certificado de reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (532, '[ControlCalidad]EditarReactivo', 'Permite editar un reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (533, '[ControlCalidad]EliminarReactivo', 'Permite eliminar un reactivo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (534, '[ControlCalidad]VerReactivo', 'Permite ver un reactivo.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (530, 530);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (531, 530);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (532, 530);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (533, 530);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (534, 530);
+
+    -- Análisis
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (540, '[ControlCalidad]AgregarAnálisis', 'Permite agregar un Análisis.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (541, '[ControlCalidad]RealizarAnálisis', 'Permite realizar un Análisis de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (542, '[ControlCalidad]EditarAnálisis', 'Permite editar un Análisis.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (543, '[ControlCalidad]EliminarAnálisis', 'Permite eliminar un Análisis.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (544, '[ControlCalidad]AprobarAnálisis', 'Permite aprobar un Análisis.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (545, '[ControlCalidad]VerAnálisis', 'Permite ver un Análisis.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (546, '[ControlCalidad]VerResultado', 'Permite ver un Resultado.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (540, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (541, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (542, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (543, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (544, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (545, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (546, 540);
+
+    -- Solicitudes
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (550, '[ControlCalidad]SolicitarAnalisis', 'Permite agregar una Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (551, '[ControlCalidad]RecibirSolicitud', 'Permite recibir la Solicitud para su agrupación y realización.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (552, '[ControlCalidad]AnularSolicitud', 'Permite anular una Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (553, '[ControlCalidad]EditarSolicitud', 'Permite editar una Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (554, '[ControlCalidad]EliminarSolicitud', 'Permite eliminar una Solicitud de Control de Calidad.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (555, '[ControlCalidad]VerSolicitud', 'Permite ver una Solicitud de Control de Calidad.');
 
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (550, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (551, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (552, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (553, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (554, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (555, 501);
+
+    -- Muestras
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (560, '[ControlCalidad]DescartarMuestras', 'Permite seleccionar un conjunto de Muestras y descartarlas.');
 
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (560, 560);
+
+    -- Tipos de Muestra
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (561, '[ControlCalidad]AgregarTipoDeMuestra', 'Permite agregar un tipo de muestra.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (562, '[ControlCalidad]EditarTipoDeMuestra', 'Permite editar un tipo de muestra.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (563, '[ControlCalidad]EliminarTipoDeMuestra', 'Permite eliminar un tipo de muestra.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (564, '[ControlCalidad]VerTipoDeMuestra', 'Permite ver un tipo de muestra.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (561, 550);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (562, 550);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (563, 550);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (564, 550);
 
 
 -- End of file.

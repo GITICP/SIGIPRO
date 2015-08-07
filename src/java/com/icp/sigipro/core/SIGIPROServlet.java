@@ -7,6 +7,7 @@ package com.icp.sigipro.core;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
+import com.icp.sigipro.utilidades.HelperPermisos;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,8 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
@@ -33,11 +32,11 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * @author Boga
  */
 @WebServlet(name = "SIGIPROServlet", urlPatterns = {"/SIGIPROServlet"})
-public abstract class SIGIPROServlet extends HttpServlet
-{
+public abstract class SIGIPROServlet extends HttpServlet {
 
     protected final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     protected final BitacoraDAO bitacora = new BitacoraDAO();
+    protected final HelperPermisos helper_permisos = HelperPermisos.getSingletonHelperPermisos();
     protected List<FileItem> parametros;
 
     @Override
@@ -52,10 +51,11 @@ public abstract class SIGIPROServlet extends HttpServlet
         request.setCharacterEncoding("UTF-8");
         procesarSolicitud(request, response, "post");
     }
-    
+
     protected void procesarSolicitud(HttpServletRequest request, HttpServletResponse response, String accionHTTP)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
+        request.setAttribute("helper_permisos", helper_permisos);
         if (accion == null) {
             accion = "index";
         }
@@ -64,26 +64,21 @@ public abstract class SIGIPROServlet extends HttpServlet
         }
         try {
             ejecutarAccion(request, response, accion, accionHTTP);
-        }
-        catch (InvocationTargetException ex) {
+        } catch (InvocationTargetException ex) {
             try {
                 throw ex.getCause();
-            }
-            catch (AuthenticationException auth) {
+            } catch (AuthenticationException auth) {
                 RequestDispatcher vista = request.getRequestDispatcher("/index.jsp");
                 vista.forward(request, response);
-            }
-            catch (SIGIPROException sigipro) {
+            } catch (SIGIPROException sigipro) {
                 request.setAttribute("mensaje", helper.mensajeDeError(sigipro.getMessage()));
                 RequestDispatcher vista = request.getRequestDispatcher(sigipro.getRedireccion());
                 vista.forward(request, response);
-            }
-            catch (Throwable ex1) {
+            } catch (Throwable ex1) {
                 ex1.printStackTrace();
                 Logger.getLogger(ControladorSubBodegas.class.getName()).log(Level.SEVERE, null, ex1);
             }
-        }
-        catch (NoSuchMethodException | IllegalAccessException ex) {
+        } catch (NoSuchMethodException | IllegalAccessException ex) {
             ex.printStackTrace();
         }
     }
@@ -99,8 +94,18 @@ public abstract class SIGIPROServlet extends HttpServlet
             if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
             }
+        } catch (NullPointerException e) {
+            throw new AuthenticationException("Expiró la sesión.");
         }
-        catch (NullPointerException e) {
+    }
+
+    protected void validarPermiso(int permiso, HttpServletRequest request) throws AuthenticationException, NullPointerException {
+        try {
+            List<Integer> permisosUsuario = this.getPermisosUsuario(request);
+            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
+                throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
+            }
+        } catch (NullPointerException e) {
             throw new AuthenticationException("Expiró la sesión.");
         }
     }
@@ -110,17 +115,37 @@ public abstract class SIGIPROServlet extends HttpServlet
             if (!(permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(permisos[1]) || permisosUsuario.contains(permisos[2]) || permisosUsuario.contains(1))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new AuthenticationException("Expiró la sesión.");
         }
+    }
+
+    protected void validarPermisosMultiple(int[] permisos, HttpServletRequest request) throws AuthenticationException {
+
+        List<Integer> lista_permisos = this.getPermisosUsuario(request);
+        boolean incluido = false;
+
+        try {
+            for (int i = 0; i < permisos.length; i++) {
+                if (lista_permisos.contains(permisos[i])) {
+                    incluido = true;
+                    break;
+                }
+            }
+
+            if (!incluido) {
+                throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
+            }
+        } catch (NullPointerException e) {
+            throw new AuthenticationException("Expiró la sesión.");
+        }
+
     }
 
     protected boolean validarPermiso(List<Integer> permisosUsuario) throws AuthenticationException {
         try {
             return permisosUsuario.contains(getPermiso()) || permisosUsuario.contains(1);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new AuthenticationException("Expiró la sesión.");
         }
     }
@@ -128,8 +153,7 @@ public abstract class SIGIPROServlet extends HttpServlet
     protected boolean verificarPermiso(Integer p, List<Integer> permisosUsuario) throws AuthenticationException {
         try {
             return permisosUsuario.contains(p) || permisosUsuario.contains(1);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new AuthenticationException("Expiró la sesión.");
         }
     }
@@ -156,18 +180,16 @@ public abstract class SIGIPROServlet extends HttpServlet
         if (resultado != null) {
             try {
                 valor = resultado.getString("UTF-8").trim();
-            }
-            catch (UnsupportedEncodingException ex) {
+            } catch (UnsupportedEncodingException ex) {
                 valor = resultado.getString();
             }
             parametros.remove(resultado);
-        }
-        else {
+        } else {
             valor = "";
         }
         return valor;
     }
-    
+
     protected FileItem obtenerParametroFileItem(String nombre_parametro) {
         FileItem resultado = null;
         for (FileItem file_item : parametros) {
@@ -190,13 +212,12 @@ public abstract class SIGIPROServlet extends HttpServlet
                 lista_items.add(file_item);
                 try {
                     resultado.add(file_item.getString("UTF-8").trim());
-                }
-                catch (UnsupportedEncodingException ex) {
+                } catch (UnsupportedEncodingException ex) {
                     resultado.add(file_item.getString());
                 }
             }
         }
-        
+
         if (!lista_items.isEmpty()) {
             for (FileItem item : lista_items) {
                 parametros.remove(item);
@@ -209,8 +230,7 @@ public abstract class SIGIPROServlet extends HttpServlet
         try {
             HttpSession sesion = request.getSession();
             return (int) sesion.getAttribute("idusuario");
-        }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             throw new AuthenticationException("Expiró la sesión");
         }
 
