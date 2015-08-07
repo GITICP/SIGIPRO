@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
@@ -13,12 +12,10 @@ import com.icp.sigipro.controlcalidad.modelos.CertificadoReactivo;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +28,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
@@ -47,10 +43,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorReactivo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 530,531};
+    private final int[] permisos = {530, 531, 532, 533, 534};
     //-----------------
-    private ReactivoDAO dao = new ReactivoDAO();
-    private TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
+    private final ReactivoDAO dao = new ReactivoDAO();
+    private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
 
     protected final Class clase = ControladorReactivo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -73,8 +69,7 @@ public class ControladorReactivo extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getCertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
 
         int id_certificado_reactivo = Integer.parseInt(request.getParameter("id_certificado_reactivo"));
         String reactivo = request.getParameter("nombre");
@@ -103,13 +98,16 @@ public class ControladorReactivo extends SIGIPROServlet {
             os.close();
             fis.close();
 
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("El archivo no fue encontrado. Actualice el reactivo."));
+            this.getVer(request, response);
         }
 
     }
 
     protected void getPreparacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+
+        validarPermisosMultiple(permisos, request);
 
         int id_reactivo = Integer.parseInt(request.getParameter("id_reactivo"));
         Reactivo reactivo = dao.obtenerReactivo(id_reactivo);
@@ -142,8 +140,7 @@ public class ControladorReactivo extends SIGIPROServlet {
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(530, listaPermisos);
+        validarPermiso(530, request);
 
         String redireccion = "Reactivo/Agregar.jsp";
         Reactivo r = new Reactivo();
@@ -155,8 +152,7 @@ public class ControladorReactivo extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Reactivo/index.jsp";
         List<Reactivo> reactivos = dao.obtenerReactivos();
         request.setAttribute("listaReactivos", reactivos);
@@ -164,8 +160,7 @@ public class ControladorReactivo extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Reactivo/Ver.jsp";
         int id_reactivo = Integer.parseInt(request.getParameter("id_reactivo"));
         try {
@@ -180,8 +175,7 @@ public class ControladorReactivo extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(530, listaPermisos);
+        validarPermiso(532, request);
         String redireccion = "Reactivo/Editar.jsp";
         int id_reactivo = Integer.parseInt(request.getParameter("id_reactivo"));
         Reactivo reactivo = dao.obtenerReactivo(id_reactivo);
@@ -194,8 +188,7 @@ public class ControladorReactivo extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(530, listaPermisos);
+        validarPermiso(533, request);
         int id_reactivo = Integer.parseInt(request.getParameter("id_reactivo"));
         Reactivo reactivo = dao.obtenerReactivo(id_reactivo);
 
@@ -227,8 +220,7 @@ public class ControladorReactivo extends SIGIPROServlet {
     }
 
     protected void getEliminarcertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(531, listaPermisos);
+        validarPermiso(531, request);
         int id_certificado_reactivo = Integer.parseInt(request.getParameter("id_certificado_reactivo"));
         String certificado = dao.obtenerCertificado(id_certificado_reactivo).getPath();
         boolean resultado = false;
@@ -257,6 +249,9 @@ public class ControladorReactivo extends SIGIPROServlet {
 
 // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermisosMultiple(permisos, request);
+        
         boolean resultado = false;
         try {
             //Se crea el Path en la carpeta del Proyecto
