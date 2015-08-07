@@ -35,23 +35,10 @@
             <div class="widget-header">
               <h3><i class="fa fa-gears"></i> ${tiporeactivo.getNombre()} </h3>
               <div class="btn-group widget-header-toolbar">
-                <c:set var="contienePermisoEliminar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 510}">
-                    <c:set var="contienePermisoEliminar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoEliminar}">
+                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 512)}">
                   <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el tipo de reactivo" data-href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=eliminar&id_tipo_reactivo=${tiporeactivo.getId_tipo_reactivo()}">Eliminar</a>
                 </c:if>
-                  
-                <c:set var="contienePermisoEditar" value="false" />
-                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                  <c:if test="${permiso == 1 || permiso == 510}">
-                    <c:set var="contienePermisoEditar" value="true" />
-                  </c:if>
-                </c:forEach>
-                <c:if test="${contienePermisoEditar}">
+                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 511)}">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=editar&id_tipo_reactivo=${tiporeactivo.getId_tipo_reactivo()}">Editar</a>
                 </c:if>
               </div>

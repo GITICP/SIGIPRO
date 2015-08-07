@@ -42,12 +42,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorTipoReactivo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 510};
+    private final int[] permisos = {510, 511, 512, 513};
     //-----------------
-    private TipoReactivoDAO dao = new TipoReactivoDAO();
+    private final TipoReactivoDAO dao = new TipoReactivoDAO();
 
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
 
     protected final Class clase = ControladorTipoReactivo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -68,8 +66,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
 
   // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
 
         int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
         TipoReactivo tiporeactivo = dao.obtenerTipoReactivo(id_tipo_reactivo);
@@ -97,13 +94,15 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
             os.close();
             fis.close();
 
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("El archivo no fue encontrado. Actualice el tipo de reactivo."));
+            this.getVer(request, response);
         }
 
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(510, listaPermisos);
+        validarPermiso(510, request);
 
         String redireccion = "TipoReactivo/Agregar.jsp";
         TipoReactivo tr = new TipoReactivo();
@@ -113,8 +112,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "TipoReactivo/index.jsp";
         List<TipoReactivo> tiporeactivos = dao.obtenerTipoReactivos();
         request.setAttribute("listaTipos", tiporeactivos);
@@ -122,9 +120,8 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(request.getServletContext().getAttribute("FILES_DIR"));
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+
+        validarPermisosMultiple(permisos, request);
         String redireccion = "TipoReactivo/Ver.jsp";
         int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
         try {
@@ -138,8 +135,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(510, listaPermisos);
+        validarPermiso(511, request);
         String redireccion = "TipoReactivo/Editar.jsp";
         int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
         TipoReactivo tiporeactivo = dao.obtenerTipoReactivo(id_tipo_reactivo);
@@ -150,8 +146,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(510, listaPermisos);
+        validarPermiso(512, request);
         int id_tipo_reactivo = Integer.parseInt(request.getParameter("id_tipo_reactivo"));
         TipoReactivo tiporeactivo = dao.obtenerTipoReactivo(id_tipo_reactivo);
         boolean resultado = false;
@@ -182,6 +177,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
 
   // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
         boolean resultado = false;
         try {
             //Se crea el Path en la carpeta del Proyecto
