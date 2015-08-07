@@ -585,6 +585,7 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (544, 540);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (545, 540);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (546, 540);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (547, 540);
 
     -- Solicitudes
 
@@ -601,8 +602,10 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (551, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (552, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (553, 501);
-INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (554, 501);
+--INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (554, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (555, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (556, 501);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (557, 501);
 
     -- Muestras
 
