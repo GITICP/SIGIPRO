@@ -32,13 +32,7 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-gears"></i> Tipos de Equipos </h3>
-              <c:set var="contienePermiso" value="false" />
-              <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                <c:if test="${permiso == 1 || permiso == 500}">
-                  <c:set var="contienePermiso" value="true" />
-                </c:if>
-              </c:forEach>
-              <c:if test="${contienePermiso}">
+              <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 500)}">
                 <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/TipoEquipo?accion=agregar">Agregar Tipo</a>
                 </div>

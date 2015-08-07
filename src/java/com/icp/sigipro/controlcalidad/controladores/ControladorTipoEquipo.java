@@ -29,12 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorTipoEquipo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1,500};
+    private final int[] permisos = {500, 501, 502, 503};
     //-----------------
-    private TipoEquipoDAO dao = new TipoEquipoDAO();
+    private final TipoEquipoDAO dao = new TipoEquipoDAO();
     
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO(); 
 
     protected final Class clase = ControladorTipoEquipo.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -59,8 +57,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
   
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(500, listaPermisos);
+        validarPermiso(500, request);
 
         String redireccion = "TipoEquipo/Agregar.jsp";
         TipoEquipo te = new TipoEquipo();
@@ -71,8 +68,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "TipoEquipo/index.jsp";
         List<TipoEquipo> tipoequipos = dao.obtenerTipoEquipos();
         request.setAttribute("listaTipos", tipoequipos);
@@ -81,8 +77,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "TipoEquipo/Ver.jsp";
         int id_tipo_equipo = Integer.parseInt(request.getParameter("id_tipo_equipo"));
         try {
@@ -98,8 +93,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(500, listaPermisos);
+        validarPermiso(501, request);
         String redireccion = "TipoEquipo/Editar.jsp";
         int id_tipo_equipo = Integer.parseInt(request.getParameter("id_tipo_equipo"));
         TipoEquipo tipoequipo = dao.obtenerTipoEquipo(id_tipo_equipo);
@@ -111,8 +105,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(500, listaPermisos);
+        validarPermiso(502, request);
         int id_tipo_equipo = Integer.parseInt(request.getParameter("id_tipo_equipo"));
         boolean resultado = false;
         try{
@@ -141,6 +134,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
   
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        validarPermiso(500, request);
         boolean resultado = false;
         TipoEquipo te = construirObjeto(request);
         resultado = dao.insertarTipoEquipo(te);
@@ -159,6 +153,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        validarPermiso(501, request);
         boolean resultado = false;
         TipoEquipo te = construirObjeto(request);
         int id_tipo_equipo = Integer.parseInt(request.getParameter("id_tipo_equipo"));
