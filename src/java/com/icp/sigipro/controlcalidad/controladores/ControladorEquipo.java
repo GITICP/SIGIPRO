@@ -46,13 +46,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorEquipo extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 520};
+    private final int[] permisos = {520, 521, 522, 523, 524};
     //-----------------
-    private EquipoDAO dao = new EquipoDAO();
-    private TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
-
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
+    private final EquipoDAO dao = new EquipoDAO();
+    private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
 
     protected final Class clase = ControladorEquipo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -74,8 +71,8 @@ public class ControladorEquipo extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getCertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        
+        validarPermisosMultiple(permisos, request);
 
         int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
         String equipo = request.getParameter("nombre");
@@ -109,8 +106,8 @@ public class ControladorEquipo extends SIGIPROServlet {
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(520, listaPermisos);
+        
+        validarPermiso(520, request);
 
         String redireccion = "Equipo/Agregar.jsp";
         Equipo e = new Equipo();
@@ -122,8 +119,7 @@ public class ControladorEquipo extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Equipo/index.jsp";
         List<Equipo> equipos = dao.obtenerEquipos();
         request.setAttribute("listaEquipos", equipos);
@@ -131,8 +127,7 @@ public class ControladorEquipo extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Equipo/Ver.jsp";
         int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
         try {
@@ -147,8 +142,7 @@ public class ControladorEquipo extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(520, listaPermisos);
+        validarPermiso(522, request);
         String redireccion = "Equipo/Editar.jsp";
         int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
         Equipo equipo = dao.obtenerEquipo(id_equipo);
@@ -161,8 +155,7 @@ public class ControladorEquipo extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(520, listaPermisos);
+        validarPermiso(523, request);
         int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
         boolean resultado = false;
         try {
@@ -185,8 +178,7 @@ public class ControladorEquipo extends SIGIPROServlet {
     }
 
     protected void getEliminarcertificado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(521, listaPermisos);
+        validarPermiso(521, request);
         int id_certificado_equipo = Integer.parseInt(request.getParameter("id_certificado_equipo"));
         String certificado = dao.obtenerCertificado(id_certificado_equipo).getPath();
         boolean resultado = false;

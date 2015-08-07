@@ -35,31 +35,12 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> ${equipo.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoEliminar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 520}">
-                                        <c:set var="contienePermisoEliminar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEliminar}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 523)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el equipo" data-href="/SIGIPRO/ControlCalidad/Equipo?accion=eliminar&id_equipo=${equipo.getId_equipo()}">Eliminar</a>
                                 </c:if>
-
-                                <c:set var="contienePermisoEditar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 520}">
-                                        <c:set var="contienePermisoEditar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEditar}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 522)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Equipo?accion=editar&id_equipo=${equipo.getId_equipo()}">Editar</a>
                                 </c:if>
-                                <c:set var="contienePermisoEliminarCertificado" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 521}">
-                                        <c:set var="contienePermisoEliminarCertificado" value="true" />
-                                    </c:if>
-                                </c:forEach>
                             </div>
                         </div>
                         ${mensaje}
@@ -75,17 +56,13 @@
                             <div class="widget widget-table">
                                 <div class="widget-header">
                                     <h3><i class="fa fa-download"></i> Certificados</h3>
-                                    <div class="btn-group widget-header-toolbar">
-                                        <c:set var="contienePermisoEditar" value="false" />
-                                        <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                            <c:if test="${permiso == 1 || permiso == 520}">
-                                                <c:set var="contienePermisoEditar" value="true" />
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${contienePermisoEditar}">
+
+                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 521)}">
+                                        <div class="btn-group widget-header-toolbar">
                                             <a class="btn btn-primary btn-sm boton-accion certificado-Modal" data-id='${equipo.getId_equipo()}' data-toggle="modal" data-target="#modalCertificado">Agregar Certificado</a>
-                                        </c:if>
-                                    </div>
+                                        </div>
+                                    </c:if>
+
                                 </div>
                                 <div class="widget-content">
                                     <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
@@ -94,7 +71,7 @@
                                             <tr>
                                                 <th>Fecha del Certificado</th>
                                                 <th>Certificado</th>
-                                                    <c:if test="${contienePermisoEliminarCertificado}">
+                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 521)}">
                                                     <th>Eliminar</th>
                                                     </c:if>
                                             </tr>
@@ -108,7 +85,7 @@
                                                     <td>
                                                         <a href="/SIGIPRO/ControlCalidad/Equipo?accion=certificado&id_certificado_equipo=${certificado.getId_certificado_equipo()}&nombre=${equipo.getNombre()}">Descargar Certificado</a>
                                                     </td>
-                                                    <c:if test="${contienePermisoEliminarCertificado}">
+                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 521)}">
                                                         <td>
                                                             <a class="btn btn-danger btn-sm boton-accion eliminarCertificado-Modal" data-id='${certificado.getId_certificado_equipo()}' data-toggle="modal" data-target="#modalEliminarCertificado">Eliminar</a>
                                                         </td>  
