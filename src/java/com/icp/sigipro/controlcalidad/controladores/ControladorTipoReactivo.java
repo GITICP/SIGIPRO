@@ -5,12 +5,10 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
