@@ -50,7 +50,13 @@ public class SolicitudCC {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        String obs_final = "Sin observaciones.";
+        if (observaciones != null) {
+            if (!observaciones.isEmpty()) {
+                obs_final = observaciones;
+            }
+        }
+        this.observaciones = obs_final;
     }
 
     public Informe getInforme() {

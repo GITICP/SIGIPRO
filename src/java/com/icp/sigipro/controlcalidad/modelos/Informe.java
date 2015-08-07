@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -75,6 +76,15 @@ public class Informe
 
     public Date getFecha() {
         return fecha;
+    }
+    
+    public String getFechaAsString() {
+        String resultado = "Sin fecha";
+        if (fecha != null) {
+            HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+            resultado = helper_fechas.formatearFecha(fecha);
+        }
+        return resultado;
     }
 
     public void setFecha(Date fecha) {

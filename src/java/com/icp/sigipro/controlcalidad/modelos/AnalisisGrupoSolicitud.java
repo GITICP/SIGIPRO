@@ -62,6 +62,10 @@ public class AnalisisGrupoSolicitud {
         return resultados;
     }
     
+    public Resultado getPrimerResultado() {
+        return resultados.get(0);
+    }
+    
     public void setResultados(List<Resultado> resultados) {
         this.resultados = resultados;
     }

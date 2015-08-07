@@ -71,6 +71,8 @@ funcion_asociar_resultado_caballos = function () {
     var input_caballos = $("<input type='hidden'>");
     input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
     input_caballos.prop("value", $("#seleccion-caballos").val());
+    
+    $("#modal-asociar-caballo").modal("hide");
 
     var form = $("#form-informe");
     form.prepend(input_caballos);

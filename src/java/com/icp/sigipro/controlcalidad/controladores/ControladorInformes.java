@@ -75,6 +75,25 @@ public class ControladorInformes extends SIGIPROServlet
         
         redireccionar(request, response, redireccion);
     }
+    
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(550, listaPermisos);
+        String redireccion = "Informe/Ver.jsp";
+        
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        
+        SolicitudCC solicitud = daosolicitud.obtenerSolicitud(id_solicitud);
+        
+        if (solicitud != null) {
+            request.setAttribute("solicitud", solicitud);
+            request.setAttribute("accion", "Generar");
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Error al obtener la información de la solicitud. Inténtelo nuevamente."));
+        }
+        
+        redireccionar(request, response, redireccion);
+    }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
