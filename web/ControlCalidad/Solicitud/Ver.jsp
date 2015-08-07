@@ -119,9 +119,11 @@
                                     <div class="widget widget-table">
                                         <div class="widget-header">
                                             <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
-                                            <div class="btn-group widget-header-toolbar">                                    
-                                                <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
-                                            </div>
+                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 556)}">
+                                                <div class="btn-group widget-header-toolbar">                                    
+                                                    <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
+                                                </div>
+                                            </c:if>
                                         </div>
 
                                         <div class="widget-content">

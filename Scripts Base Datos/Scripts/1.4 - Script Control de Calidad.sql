@@ -576,6 +576,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (543, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (544, '[ControlCalidad]AprobarAnálisis', 'Permite aprobar un Análisis.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (545, '[ControlCalidad]VerAnálisis', 'Permite ver un Análisis.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (546, '[ControlCalidad]VerResultado', 'Permite ver un Resultado.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (547, '[ControlCalidad]EditarResultado', 'Permite editar un Resultado.');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (540, 540);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (541, 540);

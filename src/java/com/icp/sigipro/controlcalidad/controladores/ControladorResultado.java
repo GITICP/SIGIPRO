@@ -73,7 +73,7 @@ public class ControladorResultado extends SIGIPROServlet
 {
 
     //Falta implementar
-    private final int[] permisos = {1, 541};
+    private final int[] permisos = {541, 546, 547};
     //-----------------
     private final AnalisisDAO analisisdao = new AnalisisDAO();
     private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
@@ -104,8 +104,7 @@ public class ControladorResultado extends SIGIPROServlet
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
 
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
 
@@ -141,8 +140,8 @@ public class ControladorResultado extends SIGIPROServlet
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(541, listaPermisos);
+        
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Resultado/Ver.jsp";
 
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
@@ -171,6 +170,8 @@ public class ControladorResultado extends SIGIPROServlet
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(547, request);
 
         String redireccion = "Resultado/Editar.jsp";
 
@@ -208,43 +209,10 @@ public class ControladorResultado extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVerprueba(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(541, listaPermisos);
-        String redireccion = "Resultado/Ver.jsp";
-
-        int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
-
-        ControlXSLT xslt;
-        Resultado resultado;
-
-        try {
-            xslt = controlxsltdao.obtenerControlXSLTResultadoReducido();
-            resultado = dao.obtenerResultado(id_resultado);
-
-            TransformerFactory tff = TransformerFactory.newInstance();
-            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
-            InputStream streamXML = resultado.getDatos().getBinaryStream();
-            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
-            StreamSource stream_source = new StreamSource(streamXML);
-            StreamResult stream_result = new StreamResult(new StringWriter());
-            transformador.transform(stream_source, stream_result);
-
-            String formulario = stream_result.getWriter().toString();
-
-            request.setAttribute("resultado", formulario);
-            request.setAttribute("cuerpo_datos", formulario);
-        } catch (TransformerException | SIGIPROException | SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
-        }
-
-        redireccionar(request, response, redireccion);
-    }
-
     protected void getVermultiple(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        
+        validarPermiso(546, request);
+        
         String redireccion = "Resultado/VerMultiple.jsp";
 
         int id_ags = Integer.parseInt(request.getParameter("id_ags"));
@@ -273,6 +241,8 @@ public class ControladorResultado extends SIGIPROServlet
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        validarPermiso(547, request);
+        
         String redireccion = "Resultado/Editar.jsp";
         int id_resultado = Integer.parseInt(this.obtenerParametro("id_resultado"));
         int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
