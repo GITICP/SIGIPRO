@@ -49,7 +49,7 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table>
+                            <table class="tabla-ver">
                                 <tr><td> <strong>Nombre del Reactivo: </strong></td> <td>${reactivo.getNombre()} </td></tr>
                                 <tr><td> <strong>Tipo de Reactivo: </strong></td> <td>${reactivo.getTipo_reactivo().getNombre()} </td></tr>
                                 <c:if test="${!reactivo.getPreparacion().equals('')}">

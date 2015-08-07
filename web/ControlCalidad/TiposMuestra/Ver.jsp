@@ -47,7 +47,7 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table>
+                            <table class="tabla-ver">
                                 <tr><td> <strong>Nombre:</strong></td> <td>${tipo_muestra.getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${tipo_muestra.getDescripcion()} </td></tr>
                             </table>
