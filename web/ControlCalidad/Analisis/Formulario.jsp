@@ -18,6 +18,7 @@
             <input hidden="true" id="listaTiposEquipo" value="${analisis.getListaTiposEquipo()}">
             <input hidden="true" id="listaTiposMuestra" value="${analisis.getListaTiposMuestra()}">
             <input hidden="true" id="listaColumnasExcel">
+            <input hidden="true" id="tieneArchivo" value="${tieneArchivo}">
 
             <label for="nombre" class="control-label">*Nombre/Código/Identificador</label>
             <div class="form-group">

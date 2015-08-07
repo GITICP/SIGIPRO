@@ -501,6 +501,7 @@ ADD COLUMN aprobado boolean;
 
     INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (540, 503, 'Análisis', '/ControlCalidad/Analisis');
     INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (550, 503, 'Tipos de Muestra', '/ControlCalidad/TiposMuestra');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (560, 503, 'Muestras', '/ControlCalidad/Muestra');
 
     -- Equipos
     
@@ -527,6 +528,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (541, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (550, '[ControlCalidad]SolicitarAnalisis', 'Permite agregar y editar una Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (551, '[ControlCalidad]RecibirSolicitud', 'Permite recibir la Solicitud para su agrupacion y realizacion.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (552, '[ControlCalidad]AnularSolicitud', 'Permite anular una Solicitud de Control de Calidad.');
+
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (560, '[ControlCalidad]DescartarMuestras', 'Permite seleccionar un conjunto de Muestras y descartarlas.');
 
 
 

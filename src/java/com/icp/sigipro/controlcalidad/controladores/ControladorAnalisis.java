@@ -265,6 +265,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
         request.setAttribute("lista", lista);
         request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
+        if (a.getMachote().equals("")) {
+            request.setAttribute("tieneArchivo", false);
+        } else {
+            request.setAttribute("tieneArchivo", true);
+        }
         redireccionar(request, response, redireccion);
 
     }
@@ -327,40 +332,39 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     /*
-    protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(541, listaPermisos);
-        String redireccion = "VerResultado.jsp";
+     protected void getResultado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     List<Integer> listaPermisos = getPermisosUsuario(request);
+     validarPermiso(541, listaPermisos);
+     String redireccion = "VerResultado.jsp";
 
-        int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
+     int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
 
-        ControlXSLT xslt;
-        Resultado resultado;
+     ControlXSLT xslt;
+     Resultado resultado;
 
-        try {
-            xslt = controlxsltdao.obtenerControlXSLTResultado();
-            resultado = resultadodao.obtenerResultado(id_resultado);
+     try {
+     xslt = controlxsltdao.obtenerControlXSLTResultado();
+     resultado = resultadodao.obtenerResultado(id_resultado);
 
-            TransformerFactory tff = TransformerFactory.newInstance();
-            InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
-            InputStream streamXML = resultado.getDatos().getBinaryStream();
-            Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
-            StreamSource stream_source = new StreamSource(streamXML);
-            StreamResult stream_result = new StreamResult(new StringWriter());
-            transformador.transform(stream_source, stream_result);
+     TransformerFactory tff = TransformerFactory.newInstance();
+     InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+     InputStream streamXML = resultado.getDatos().getBinaryStream();
+     Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+     StreamSource stream_source = new StreamSource(streamXML);
+     StreamResult stream_result = new StreamResult(new StringWriter());
+     transformador.transform(stream_source, stream_result);
 
-            String formulario = stream_result.getWriter().toString();
+     String formulario = stream_result.getWriter().toString();
 
-            request.setAttribute("resultado", formulario);
-            request.setAttribute("cuerpo_datos", formulario);
-        } catch (TransformerException | SIGIPROException | SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
-        }
+     request.setAttribute("resultado", formulario);
+     request.setAttribute("cuerpo_datos", formulario);
+     } catch (TransformerException | SIGIPROException | SQLException ex) {
+     ex.printStackTrace();
+     request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+     }
 
-        redireccionar(request, response, redireccion);
-    }*/
-
+     redireccionar(request, response, redireccion);
+     }*/
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {

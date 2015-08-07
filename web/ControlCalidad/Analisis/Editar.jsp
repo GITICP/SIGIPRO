@@ -59,16 +59,29 @@
     </jsp:attribute>
     <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/Analisis.js"></script>
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
     </jsp:attribute>
 </t:plantilla_general>
 
-<t:modal idModal="modalError" titulo="Error en el Formulario">
+<t:modal idModal="modalErrorResultado" titulo="Error en el Formulario">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-liofilizacion-inicio">
-                <input hidden="true" name="accion" value="Liofilizacioninicio">
-                <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
-                <strong><div id="numero_extraccion" class="control-label"></div></strong>
-                <label for="label" class="control-label">Es requerido elegir un campo de Resultado al formulario. Favor asignar un Resultado al análisis. </label>
+            <strong><div id="numero_extraccion" class="control-label"></div></strong>
+            <label for="label" class="control-label">Es requerido elegir un campo de Resultado al formulario. Favor asignar un Resultado al análisis. </label>
+
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalErrorExcel" titulo="Error en el Formulario">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-liofilizacion-inicio">
+            <strong><div id="numero_extraccion" class="control-label"></div></strong>
+            <label for="label" class="control-label">Es requerido elegir un archivo de Excel si tiene celdas asociadas al formulario. Favor subir un archivo de Excel o deseleccionar los campos tipo Excel.</label>
 
         </div>
 

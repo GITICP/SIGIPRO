@@ -38,12 +38,12 @@
                     </div>
                 </div>
             </div>
-            <label for="analisis" class="control-label"> *Análisis Asociados</label>
+            <label for="analisis" class="control-label">Análisis Asociados</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <select id="seleccionAnalisis" class="select2" name="analisis" multiple="multiple"
-                                style='background-color: #fff;' required
+                                style='background-color: #fff;' 
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>

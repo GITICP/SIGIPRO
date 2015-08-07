@@ -33,6 +33,22 @@ $(document).ready(function () {
             crear_data_table($(this), configuracion_final);
         });
     }
+    
+    var cantidadTablas = $('.sigipro-no-filter').length;
+    if (cantidadTablas > 0) {
+        var selectorTabla = '.sigipro-no-filter';
+        $(selectorTabla).each(function () {
+            var columna_filtro = 0;
+            if ($(this).data("columna-filtro")) {
+                columna_filtro = $(this).data("columna-filtro");
+            }
+
+            var configuracion_especifica = {"order": []};
+            var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
+
+            crear_data_table($(this), configuracion_final);
+        });
+    }
 
     var cantidadTablas = $('.sigipro-asc-filter').length;
     if (cantidadTablas > 0) {
