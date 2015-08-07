@@ -36,23 +36,11 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> ${tipo_muestra.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:set var="contienePermisoEliminar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 301}">
-                                        <c:set var="contienePermisoEliminar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEliminar}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 563)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el tipo de muestra" data-href="/SIGIPRO/ControlCalidad/TiposMuestra?accion=eliminar&id_tipos_muestra=${tipo_muestra.getId_tipo_muestra()}">Eliminar</a>
                                 </c:if>
 
-                                <c:set var="contienePermisoEditar" value="false" />
-                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                    <c:if test="${permiso == 1 || permiso == 302}">
-                                        <c:set var="contienePermisoEditar" value="true" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:if test="${contienePermisoEditar}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 562)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/TiposMuestra?accion=editar&id_tipo_muestra=${tipo_muestra.getId_tipo_muestra()}">Editar</a>
                                 </c:if>
                             </div>

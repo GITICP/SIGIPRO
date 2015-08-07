@@ -29,9 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorTiposMuestra", urlPatterns = {"/ControlCalidad/TiposMuestra"})
 public class ControladorTiposMuestra extends SIGIPROServlet {
 
-    //Falta implementar
-    private final int[] permisos = {1, 314};
-    //-----------------
+    private final int[] permisos = {561, 562, 563, 564};
     private final TipoMuestraDAO dao = new TipoMuestraDAO();
     private final AnalisisDAO analisisdao = new AnalisisDAO();
 
@@ -54,8 +52,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "TiposMuestra/index.jsp";
 
         obtenerListadoCompleto(request, "No se pudo obtener el listado completo. Refresque la página y de persistir el problema notifique al administrador del sistema.", true);
@@ -63,8 +60,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermiso(561, request);
         String redireccion = "TiposMuestra/Agregar.jsp";
         List<Analisis> analisis = analisisdao.obtenerAnalisis();
 
@@ -75,8 +71,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         TipoMuestra tipo_muestra = new TipoMuestra();
         String redireccion = "TiposMuestra/Ver.jsp";
 
@@ -93,8 +88,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermiso(562, request);
         TipoMuestra tipo_muestra = new TipoMuestra();
         String redireccion = "TiposMuestra/Editar.jsp";
 
@@ -114,8 +108,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        validarPermiso(563, request);
         int id_tipo_muestra = Integer.parseInt(request.getParameter("id_tipos_muestra"));
         boolean resultado = false;
         try {
@@ -126,7 +119,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
                 //----------------------------
                 request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Muestra eliminado correctamente"));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Muestra no pudo ser eliminado ya que tiene muestras asociados."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Muestra no pudo ser eliminado ya que tiene muestras o análisis asociados."));
             }
             this.getIndex(request, response);
         } catch (Exception ex) {
@@ -140,6 +133,9 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(561, request);
+        
         String redireccion = "TiposMuestra/Agregar.jsp";
         TipoMuestra tipo_muestra = construirObjeto(request);
 
@@ -159,6 +155,9 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
     }
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(562, request);
+        
         boolean resultado = false;
         String redireccion = "TiposMuestra/Agregar.jsp";
         TipoMuestra tipo_muestra = construirObjeto(request);
