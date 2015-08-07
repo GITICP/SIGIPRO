@@ -58,6 +58,13 @@ funcion_eliminar_sangria = function () {
     var fila = $(this).parents("tr");
     var id = fila.attr("id");
     
+    var caballos_crudo = $("input[name=caballos_res_" + id + "]").val();
+    var caballos = caballos_crudo.split(",");
+    
+    for (var i = 0; i < caballos.length; i++) {
+        $("option[value=" + caballos[i] + "]").removeClass("opcion-escondida");
+    }
+    
     $("input[name=caballos_res_" + id + "]").remove();
 };
 
@@ -73,6 +80,13 @@ funcion_asociar_resultado_caballos = function () {
     input_caballos.prop("value", $("#seleccion-caballos").val());
     
     $("#modal-asociar-caballo").modal("hide");
+    
+    $("#seleccion-caballos :selected").each(function() {
+        $(this).attr("selected", false);
+        $(this).addClass("opcion-escondida");
+    });
+    
+    $("#seleccion-caballos").select2();
 
     var form = $("#form-informe");
     form.prepend(input_caballos);
