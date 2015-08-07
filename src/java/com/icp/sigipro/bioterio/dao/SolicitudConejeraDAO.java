@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bioterio.dao;
 
+import com.icp.sigipro.bioterio.modelos.EntregaConejera;
 import com.icp.sigipro.bioterio.modelos.SolicitudConejera;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
@@ -19,21 +20,19 @@ import java.util.List;
  *
  * @author Amed
  */
-public class SolicitudConejeraDAO extends DAO
-{
+public class SolicitudConejeraDAO extends DAO {
 
-    public SolicitudConejeraDAO()
-    {  }
+    public SolicitudConejeraDAO() {
+    }
 
-    public boolean insertarSolicitudConejera(SolicitudConejera p) throws SIGIPROException
-    {
+    public boolean insertarSolicitudConejera(SolicitudConejera p) throws SIGIPROException {
 
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.solicitudes_conejera (fecha_solicitud, numero_animales, peso_requerido, "
-                                                                        + "sexo,usuario_solicitante,observaciones,observaciones_rechazo,estado, fecha_necesita, usuario_utiliza)"
-                                                                        + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_solicitud");
+                    + "sexo,usuario_solicitante,observaciones,observaciones_rechazo,estado, fecha_necesita, usuario_utiliza)"
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_solicitud");
 
             consulta.setDate(1, p.getFecha_solicitud());
             consulta.setInt(2, p.getNumero_animales());
@@ -53,16 +52,14 @@ public class SolicitudConejeraDAO extends DAO
             resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar el ingreso");
         }
         return resultado;
     }
 
-    public boolean editarSolicitudConejera(SolicitudConejera p) throws SIGIPROException
-    {
+    public boolean editarSolicitudConejera(SolicitudConejera p) throws SIGIPROException {
 
         boolean resultado = false;
 
@@ -88,7 +85,7 @@ public class SolicitudConejeraDAO extends DAO
             } else {
                 consulta.setNull(10, java.sql.Types.INTEGER);
             }
-            
+
             consulta.setInt(11, p.getId_solicitud());
 
             if (consulta.executeUpdate() == 1) {
@@ -96,16 +93,14 @@ public class SolicitudConejeraDAO extends DAO
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la edición");
         }
         return resultado;
     }
 
-    public boolean eliminarSolicitudConejera(int id_solicitud) throws SIGIPROException
-    {
+    public boolean eliminarSolicitudConejera(int id_solicitud) throws SIGIPROException {
 
         boolean resultado = false;
 
@@ -122,16 +117,14 @@ public class SolicitudConejeraDAO extends DAO
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la eliminación");
         }
         return resultado;
     }
 
-    public SolicitudConejera obtenerSolicitudConejera(int id) throws SIGIPROException
-    {
+    public SolicitudConejera obtenerSolicitudConejera(int id) throws SIGIPROException {
 
         SolicitudConejera solicitud_conejera = new SolicitudConejera();
 
@@ -159,25 +152,25 @@ public class SolicitudConejeraDAO extends DAO
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
         return solicitud_conejera;
     }
 
-    public List<SolicitudConejera> obtenerSolicitudesConejera(int id_usuario) throws SIGIPROException
-    {
+    public List<SolicitudConejera> obtenerSolicitudesConejera(int id_seccion) throws SIGIPROException {
 
         List<SolicitudConejera> resultado = new ArrayList<SolicitudConejera>();
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_conejera s "
-                                                      + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
-                                                      + "WHERE s.usuario_solicitante=? ");
-            consulta.setInt(1, id_usuario);
+            consulta = getConexion().prepareStatement(
+                    " SELECT * FROM bioterio.solicitudes_conejera s "
+                    + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+                    + "WHERE u.id_seccion=? AND s.estado NOT IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)'); "
+            );
+            consulta.setInt(1, id_seccion);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
@@ -201,23 +194,24 @@ public class SolicitudConejeraDAO extends DAO
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
         return resultado;
     }
 
-    public List<SolicitudConejera> obtenerSolicitudesConejeraAdm() throws SIGIPROException
-    {
+    public List<SolicitudConejera> obtenerSolicitudesConejeraAdm() throws SIGIPROException {
 
         List<SolicitudConejera> resultado = new ArrayList<SolicitudConejera>();
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM bioterio.solicitudes_conejera s "
-                                                      + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario ");
+            consulta = getConexion().prepareStatement(
+                    " SELECT * FROM bioterio.solicitudes_conejera s "
+                    + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+                    + "WHERE s.estado NOT IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)');"
+            );
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
@@ -241,8 +235,112 @@ public class SolicitudConejeraDAO extends DAO
             rs.close();
             consulta.close();
             cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
-        catch (Exception ex) {
+        return resultado;
+    }
+
+    public List<SolicitudConejera> obtenerSolicitudesConejeraCompletadas(int id_seccion) throws SIGIPROException {
+
+        List<SolicitudConejera> resultado = new ArrayList<SolicitudConejera>();
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(
+                    " WITH consulta AS ( "
+                    + "   SELECT *, ROW_NUMBER() OVER(PARTITION BY s.id_solicitud ORDER BY ec.fecha_entrega DESC) AS num_fila "
+                    + "   FROM bioterio.solicitudes_conejera s "
+                    + "INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+                    + "LEFT JOIN bioterio.entregas_solicitudes_conejera ec ON ec.id_solicitud = s.id_solicitud "
+                    + "WHERE u.id_seccion=? AND s.estado IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)') "
+                    + " ) SELECT consulta.* FROM consulta WHERE consulta.num_fila = 1"
+            );
+            consulta.setInt(1, id_seccion);
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                SolicitudConejera solicitud_conejera = new SolicitudConejera();
+                Usuario usr;
+                solicitud_conejera.setId_solicitud(rs.getInt("id_solicitud"));
+                solicitud_conejera.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud_conejera.setNumero_animales(rs.getInt("numero_animales"));
+                solicitud_conejera.setPeso_requerido(rs.getString("peso_requerido"));
+                solicitud_conejera.setSexo(rs.getString("sexo"));
+                solicitud_conejera.setObservaciones(rs.getString("observaciones"));
+                solicitud_conejera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
+                solicitud_conejera.setEstado(rs.getString("estado"));
+                solicitud_conejera.setFecha_necesita(rs.getDate("fecha_necesita"));
+                usr = new Usuario(rs.getInt("id_usuario"), rs.getString("nombre_usuario"), rs.getString("correo"), rs.getString("nombre_completo"), rs.getString("cedula"), rs.getInt("id_seccion"), rs.getInt("id_puesto"), rs.getDate("fecha_activacion"), rs.getDate("fecha_desactivacion"), rs.getBoolean("estado"));
+                UsuarioDAO usr2 = new UsuarioDAO();
+                solicitud_conejera.setUsuario_utiliza(usr2.obtenerUsuario(rs.getInt("usuario_utiliza")));
+                solicitud_conejera.setUsuario_solicitante(usr);
+                resultado.add(solicitud_conejera);
+
+                if (rs.getInt("id_entrega") != 0) {
+                    EntregaConejera e = new EntregaConejera();
+                    e.setId_entrega(rs.getInt("id_entrega"));
+                    e.setFecha_entrega(rs.getDate("fecha_entrega"));
+                    solicitud_conejera.setEntrega(e);
+                }
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
+
+    public List<SolicitudConejera> obtenerSolicitudesConejeraAdmCompletadas() throws SIGIPROException {
+
+        List<SolicitudConejera> resultado = new ArrayList<SolicitudConejera>();
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(
+                    " WITH consulta AS ( "
+                    + "   SELECT *, ROW_NUMBER() OVER(PARTITION BY s.id_solicitud ORDER BY ec.fecha_entrega DESC) AS num_fila "
+                    + "   FROM bioterio.solicitudes_conejera s "
+                    + "   INNER JOIN seguridad.usuarios u ON s.usuario_solicitante = u.id_usuario "
+                    + "   LEFT JOIN bioterio.entregas_solicitudes_conejera ec ON ec.id_solicitud = s.id_solicitud "
+                    + "   WHERE s.estado IN ('Rechazada', 'Cerrada', 'Cerrada (Entrega Parcial)', 'Entregada', 'Cerrada (Anulada)')"
+                    + " ) SELECT consulta.* FROM consulta WHERE consulta.num_fila = 1"
+            );
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                SolicitudConejera solicitud_conejera = new SolicitudConejera();
+                Usuario usr;
+                solicitud_conejera.setId_solicitud(rs.getInt("id_solicitud"));
+                solicitud_conejera.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud_conejera.setNumero_animales(rs.getInt("numero_animales"));
+                solicitud_conejera.setPeso_requerido(rs.getString("peso_requerido"));
+                solicitud_conejera.setSexo(rs.getString("sexo"));
+                solicitud_conejera.setObservaciones(rs.getString("observaciones"));
+                solicitud_conejera.setObservaciones_rechazo(rs.getString("observaciones_rechazo"));
+                solicitud_conejera.setEstado(rs.getString("estado"));
+                solicitud_conejera.setFecha_necesita(rs.getDate("fecha_necesita"));
+                usr = new Usuario(rs.getInt("id_usuario"), rs.getString("nombre_usuario"), rs.getString("correo"), rs.getString("nombre_completo"), rs.getString("cedula"), rs.getInt("id_seccion"), rs.getInt("id_puesto"), rs.getDate("fecha_activacion"), rs.getDate("fecha_desactivacion"), rs.getBoolean("estado"));
+                UsuarioDAO usr2 = new UsuarioDAO();
+                solicitud_conejera.setUsuario_utiliza(usr2.obtenerUsuario(rs.getInt("usuario_utiliza")));
+                solicitud_conejera.setUsuario_solicitante(usr);
+                resultado.add(solicitud_conejera);
+
+                if (rs.getInt("id_entrega") != 0) {
+                    EntregaConejera e = new EntregaConejera();
+                    e.setId_entrega(rs.getInt("id_entrega"));
+                    e.setFecha_entrega(rs.getDate("fecha_entrega"));
+                    solicitud_conejera.setEntrega(e);
+                }
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
