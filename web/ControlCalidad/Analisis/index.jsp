@@ -32,19 +32,7 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> Análisis </h3>
-                            <c:set var="contienePermiso" value="false" />
-                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                <c:if test="${permiso == 1 || permiso == 540}">
-                                    <c:set var="contienePermiso" value="true" />
-                                </c:if>
-                            </c:forEach>
-                            <c:set var="contienePermisoRealizar" value="false" />
-                            <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
-                                <c:if test="${permiso == 1 || permiso == 541}">
-                                    <c:set var="contienePermisoRealizar" value="true" />
-                                </c:if>
-                            </c:forEach>
-                            <c:if test="${contienePermiso}">
+                            <c:if test="${helper_permisos.validarPermiso(listaPermisos, 540)}">
                                 <div class="btn-group widget-header-toolbar">
                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=agregar">Agregar Análisis</a>
                                 </div>
@@ -59,7 +47,9 @@
                                         <th>Nombre</th>
                                         <th>Estado</th>
                                         <th>Análisis Pendientes</th>
-                                        <th>Acción</th>
+                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 541) || helper_permisos.validarPermiso(sessionScope.listaPermisos, 544)}">
+                                            <th>Acción</th>
+                                            </c:if>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -81,18 +71,33 @@
                                                 </c:otherwise>
                                             </c:choose>
                                             <td>${analisis.getCantidad_pendiente()}</td>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${analisis.isAprobado()}">
-                                                        <c:if test="${contienePermisoRealizar}">
-                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=lista&id_analisis=${analisis.getId_analisis()}">Realizar</a>
-                                                        </c:if>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${analisis.getId_analisis()}' data-toggle="modal" data-target="#modalAprobarAnalisis">Aprobar</a>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </td>
+                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 541) || helper_permisos.validarPermiso(listaPermisos, 544)}">
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${analisis.isAprobado()}">
+                                                            <c:choose>
+                                                                <c:when test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
+                                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=lista&id_analisis=${analisis.getId_analisis()}">Realizar</a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <button class="btn btn-danger btn-sm boton-accion" disabled >Análisis Aprobado</button>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:choose>
+                                                                <c:when test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 544)}">
+                                                                    <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${analisis.getId_analisis()}' data-toggle="modal" data-target="#modalAprobarAnalisis">Aprobar</a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <button class="btn btn-danger btn-sm boton-accion" disabled >Sin acción.</button>
+                                                                </c:otherwise>
+                                                            </c:choose>
+
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </c:if>
                                         </tr>
                                     </c:forEach>
                                 </tbody>

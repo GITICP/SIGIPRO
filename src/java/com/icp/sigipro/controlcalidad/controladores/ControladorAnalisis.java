@@ -83,7 +83,7 @@ import org.xml.sax.SAXException;
 public class ControladorAnalisis extends SIGIPROServlet {
 
     //Administrar, Realizar
-    private final int[] permisos = {1, 540, 541};
+    private final int[] permisos = {540, 541, 542, 543, 544, 545, 546};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
     private final UsuarioDAO usuariodao = new UsuarioDAO();
@@ -124,8 +124,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        
+        validarPermisosMultiple(permisos, request);
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         Analisis analisis = dao.obtenerAnalisis(id_analisis);
@@ -158,8 +158,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        
+        validarPermiso(540, request);
 
         String redireccion = "Analisis/Agregar.jsp";
         Analisis a = new Analisis();
@@ -181,8 +181,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Analisis/index.jsp";
         List<Analisis> analisis = dao.obtenerAnalisis();
         request.setAttribute("listaAnalisis", analisis);
@@ -190,8 +190,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getLista(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(541, listaPermisos);
+        
+        validarPermiso(541, request);
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
 
@@ -205,8 +205,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
+        
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Analisis/Ver.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         ControlXSLT xslt;
@@ -231,8 +231,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        
+        validarPermiso(542, request);
         String redireccion = "Analisis/Editar.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         Analisis a = dao.obtenerAnalisis(id_analisis);
@@ -275,8 +275,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(540, listaPermisos);
+        
+        validarPermiso(543, request);
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         boolean resultado = false;
         try {
@@ -299,8 +299,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(541, listaPermisos);
+
+        validarPermiso(541, request);
         String redireccion = "Analisis/Realizar.jsp";
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
