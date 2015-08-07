@@ -126,11 +126,15 @@ public abstract class SIGIPROServlet extends HttpServlet {
         boolean incluido = false;
 
         try {
-            for (int i = 0; i < permisos.length; i++) {
-                if (lista_permisos.contains(permisos[i])) {
-                    incluido = true;
-                    break;
+            if (!lista_permisos.contains(1)) {
+                for (int i = 0; i < permisos.length; i++) {
+                    if (lista_permisos.contains(permisos[i])) {
+                        incluido = true;
+                        break;
+                    }
                 }
+            } else {
+                incluido = true;
             }
 
             if (!incluido) {
