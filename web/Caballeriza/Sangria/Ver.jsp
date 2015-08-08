@@ -120,8 +120,27 @@
                                         <tbody>
                                             <c:set var="sin_datos" value="-"></c:set>
                                             <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
+
+                                                <c:set var="tiene_observaciones" value="false"></c:set>
+                                                <c:if test="${sangria_caballo.getObservaciones_dia1() != null 
+                                                              || sangria_caballo.getObservaciones_dia2() != null 
+                                                              || sangria_caballo.getObservaciones_dia3() != null}">
+
+                                                      <c:set var="tiene_observaciones" value="true"></c:set>
+
+                                                </c:if>
                                                 <tr id="${caballo.getId_caballo()}">
-                                                    <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
+                                                    <td data-observaciones-dia1="${sangria_caballo.getObservaciones_dia1()}"
+                                                        data-observaciones-dia2="${sangria_caballo.getObservaciones_dia2()}"
+                                                        data-observaciones-dia3="${sangria_caballo.getObservaciones_dia3()}">
+
+                                                        ${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})
+
+                                                        <c:if test="${tiene_observaciones}">
+                                                            <i class="fa fa-info-circle boton-observaciones"></i>
+                                                        </c:if>
+
+                                                    </td>
                                                     <c:choose>
                                                         <c:when test="${sangria_caballo.isParticipo_dia1()}">
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()}</td>
@@ -160,18 +179,18 @@
                                                     </c:choose>
                                                 </tr>
                                             </c:forEach>
-                                                <tr>
-                                                    <td class="campo-subtotal">Subtotal</td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(1) == 0) ? sin_datos : sangria.getSubtotalSangre(1)}</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(1) == 0) ? sin_datos : sangria.getSubtotalPlasma(1)}</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(2) == 0) ? sin_datos : sangria.getSubtotalSangre(2)}</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(2) == 0) ? sin_datos : sangria.getSubtotalPlasma(2)}</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(3) == 0) ? sin_datos : sangria.getSubtotalSangre(3)}</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(3) == 0) ? sin_datos : sangria.getSubtotalPlasma(3)}</strong></td>
-                                                    <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
-                                                </tr>
+                                            <tr>
+                                                <td class="campo-subtotal">Subtotal</td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(1) == 0) ? sin_datos : sangria.getSubtotalSangre(1)}</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(1) == 0) ? sin_datos : sangria.getSubtotalPlasma(1)}</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(2) == 0) ? sin_datos : sangria.getSubtotalSangre(2)}</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(2) == 0) ? sin_datos : sangria.getSubtotalPlasma(2)}</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(3) == 0) ? sin_datos : sangria.getSubtotalSangre(3)}</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(3) == 0) ? sin_datos : sangria.getSubtotalPlasma(3)}</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -185,6 +204,55 @@
             <!-- /main -->
         </div>
 
+        <t:modal idModal="observaciones-caballo-sangria" titulo="Observaciones">
+
+            <jsp:attribute name="form">
+
+                <label class="control-label">Día 1</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group" id='inputGroupSeleccionInterno'>
+                            <p id="campo-observaciones-dia1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="control-label">Día 2</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group" id='inputGroupSeleccionInterno'>
+                            <p id="campo-observaciones-dia2"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="control-label">Día 3</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group" id='inputGroupSeleccionInterno'>
+                            <p id="campo-observaciones-dia3"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <br>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </jsp:attribute>
+
+        </t:modal>                                                
+
+    </jsp:attribute>
+
+    <jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/sangrias.js"></script>
     </jsp:attribute>
 
 </t:plantilla_general>
+

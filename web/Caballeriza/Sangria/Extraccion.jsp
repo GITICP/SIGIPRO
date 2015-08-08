@@ -75,7 +75,7 @@
                                                 <tr>
                                                     <th>Sangre</th>
                                                     <th>Plasma</th>
-                                                    <th>LAL</th>
+                                                    <th>Observaciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -114,11 +114,11 @@
                                                         </td>
                                                         <c:set var="sangre" value=""></c:set>
                                                         <c:set var="plasma" value=""></c:set>
-                                                        <c:set var="lal" value=""></c:set>
+                                                        <c:set var="observaciones" value=""></c:set>
                                                         <c:if test="${editar}">
                                                             <c:set var="sangre" value="${(sangria_caballo.getSangre(dia) == 0) ? '' : sangria_caballo.getSangre(dia)}"></c:set>
                                                             <c:set var="plasma" value="${(sangria_caballo.getPlasma(dia) == 0) ? '' : sangria_caballo.getPlasma(dia)}"></c:set>
-                                                            <c:set var="lal" value="${(sangria_caballo.getLal(dia) == 0) ? '' : sangria_caballo.getLal(dia)}"></c:set>
+                                                            <c:set var="observaciones" value="${(sangria_caballo.getObservaciones(dia) == 'Sin observaciones.') ? '' : sangria_caballo.getObservaciones(dia)}"></c:set>
                                                         </c:if>
                                                         <td>
                                                             <input type="number" step="any" placeholder="" class="form-control" name="sangre_${sangria_caballo.getCaballo().getId_caballo()}"
@@ -129,8 +129,8 @@
                                                                    value="${(plasma == 0) ? "" : plasma}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
                                                         </td>
                                                         <td>
-                                                            <input type="number" step="any" placeholder="" class="form-control" name="lal_${sangria_caballo.getCaballo().getId_caballo()}"
-                                                                   value="${(lal == 0) ? "" : lal}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
+                                                            <textarea class="form-control" name="observaciones_${sangria_caballo.getCaballo().getId_caballo()}"
+                                                                   oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>${(observaciones == 'Sin observaciones.') ? "" : observaciones}</textarea>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

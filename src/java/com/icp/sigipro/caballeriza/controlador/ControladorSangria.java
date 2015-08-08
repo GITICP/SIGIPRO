@@ -260,15 +260,15 @@ public class ControladorSangria extends SIGIPROServlet
 
                 String sangre_str = request.getParameter("sangre_" + id_caballo);
                 String plasma_str = request.getParameter("plasma_" + id_caballo);
-                String lal_str = request.getParameter("lal_" + id_caballo);
+                String observaciones = request.getParameter("observaciones_" + id_caballo); // Esta línea se cambió
 
                 float sangre = (sangre_str.isEmpty()) ? 0.0f : Float.parseFloat(sangre_str);
                 float plasma = (plasma_str.isEmpty()) ? 0.0f : Float.parseFloat(plasma_str);
-                float lal = (lal_str.isEmpty()) ? 0.0f : Float.parseFloat(lal_str);
+                // Aquí se borró algo
 
                 sangria_caballo.setPlasma(dia, plasma);
                 sangria_caballo.setSangre(dia, sangre);
-                sangria_caballo.setLal(dia, lal);
+                sangria_caballo.setObservaciones(dia, observaciones); // Esta línea se cambió
 
                 
                 sangria.agregarSangriaCaballo(sangria_caballo);

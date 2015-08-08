@@ -183,9 +183,9 @@ public class SangriaDAO extends DAO
                     sangria_caballo.setParticipo_dia1((Boolean)rs.getObject("participo_dia1"));
                     sangria_caballo.setParticipo_dia2((Boolean)rs.getObject("participo_dia2"));
                     sangria_caballo.setParticipo_dia3((Boolean)rs.getObject("participo_dia3"));
-                    sangria_caballo.setLal_dia1(rs.getFloat("lal_dia1"));
-                    sangria_caballo.setLal_dia2(rs.getFloat("lal_dia2"));
-                    sangria_caballo.setLal_dia3(rs.getFloat("lal_dia3"));
+                    sangria_caballo.setObservaciones_dia1(rs.getString("observaciones_dia1")); // Esta línea se cambió
+                    sangria_caballo.setObservaciones_dia2(rs.getString("observaciones_dia2")); // Esta línea se cambió
+                    sangria_caballo.setObservaciones_dia3(rs.getString("observaciones_dia3")); // Esta línea se cambió
                     sangria_caballo.setPlasma_dia1(rs.getFloat("plasma_dia1"));
                     sangria_caballo.setPlasma_dia2(rs.getFloat("plasma_dia2"));
                     sangria_caballo.setPlasma_dia3(rs.getFloat("plasma_dia3"));
@@ -353,7 +353,7 @@ public class SangriaDAO extends DAO
                         " UPDATE caballeriza.sangrias_caballos "
                         + " SET sangre_dia" + dia + " = 0,"
                         + "     plasma_dia" + dia + " = 0,"
-                        + "     lal_dia" + dia + " = 0,"
+                        + "     observaciones_dia" + dia + " = ''," // Esta línea cambió.
                         + "     participo_dia" + dia + " = false "
                         + " WHERE id_sangria = ? AND id_caballo NOT IN " + this.pasar_ids_a_parentesis(sangria.obtener_ids_caballos_sangria()) + ";"
                 );
@@ -366,7 +366,7 @@ public class SangriaDAO extends DAO
                         " UPDATE caballeriza.sangrias_caballos "
                         + " SET sangre_dia" + dia + " = ?, "
                         + "     plasma_dia" + dia + " = ?, "
-                        + "     lal_dia" + dia + " = ?, "
+                        + "     observaciones_dia" + dia + " = ?, " // Esta línea se cambió
                         + "     participo_dia" + dia + " = true "
                         + " WHERE id_sangria = ? AND id_caballo = ?; "
                 );
@@ -375,7 +375,7 @@ public class SangriaDAO extends DAO
                     if (sangria_caballo.sumatoria(dia) > 0.0f) {
                         consulta_sangrias_caballos.setFloat(1, sangria_caballo.getSangre(dia));
                         consulta_sangrias_caballos.setFloat(2, sangria_caballo.getPlasma(dia));
-                        consulta_sangrias_caballos.setFloat(3, sangria_caballo.getLal(dia));
+                        consulta_sangrias_caballos.setString(3, sangria_caballo.getObservaciones(dia)); // Esta línea se cambió
                         consulta_sangrias_caballos.setInt(4, sangria.getId_sangria());
                         consulta_sangrias_caballos.setInt(5, sangria_caballo.getCaballo().getId_caballo());
                         consulta_sangrias_caballos.addBatch();
