@@ -285,8 +285,17 @@ public class ControladorSangria extends SIGIPROServlet
             bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_REGISTRAR_EXTRACCION, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción registrada correctamente."));
-            request.setAttribute("lista_sangrias", dao.obtenerSangrias());
-            redireccion = "Sangria/index.jsp";
+
+            // Código nuevo
+            boolean volver = Boolean.parseBoolean(request.getParameter("volver"));
+            
+            if (volver) {
+                this.getEditarextraccion(request, response);
+            } else {
+                request.setAttribute("lista_sangrias", dao.obtenerSangrias());
+                redireccion = "Sangria/index.jsp";
+            }
+            // Código nuevo
         }
         catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción no se registró correctamente."));

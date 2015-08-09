@@ -334,5 +334,27 @@ public class SangriaCaballo
         this.observaciones_dia3 = observaciones_dia3;
     }
     
+    public boolean tieneObservaciones() {
+        boolean dia_1 = false;
+        boolean dia_2 = false;
+        boolean dia_3 = false;
+        if (observaciones_dia1 != null) {
+            if (!observaciones_dia1.equals("Sin observaciones.")) {
+                dia_1 = true;
+            }
+        }
+        if (observaciones_dia2 != null) {
+            if (!observaciones_dia2.equals("Sin observaciones.")) {
+                dia_1 = true;
+            }
+        }
+        if (observaciones_dia3 != null) {
+            if (!observaciones_dia3.equals("Sin observaciones.")) {
+                dia_1 = true;
+            }
+        }
+        return dia_1 || dia_2 || dia_3;
+    }
+    
     /* Código Nuevo */
 }

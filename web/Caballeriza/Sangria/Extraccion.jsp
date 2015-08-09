@@ -43,11 +43,12 @@
                         ${mensaje}
                         <div class="widget-content">
 
-                            <form class="form-horizontal" autocomplete="off" method="post" action="Sangria">
+                            <form id="form-extraccion-sangria" class="form-horizontal" autocomplete="off" method="post" action="Sangria">
                                 <div class="col-md-12">
                                     <input hidden="true" name="id_sangria" value="${sangria.getId_sangria()}">
                                     <input hidden="true" name="dia" value="${dia}">
                                     <input hidden="true" name="accion" value="Extraccion">
+                                    <input id="input-volver" hidden="true" name="volver" value="false">
                                     <label for="fecha_extraccion" class="control-label">*Fecha de Extracción</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
@@ -148,14 +149,8 @@
                                         <div class="form-group">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                                <c:choose>
-                                                    <c:when test="${editar}">
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Extracción</button>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar y Salir</button>
+                                                <button id="boton-guardar-volver" type="button" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar </button>
                                             </div>
                                         </div>
                                     </div> 
@@ -174,5 +169,6 @@
     </jsp:attribute>
     <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/Caballeriza.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/sangrias.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
