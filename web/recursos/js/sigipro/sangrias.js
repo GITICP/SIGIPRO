@@ -22,6 +22,14 @@ $(document).ready(function() {
         
     });
     
+    $("#boton-guardar-volver").click(function() {
+        
+        var form = $("#form-extraccion-sangria");
+        $("#input-volver").val("true");
+        form.submit();
+        
+    });
+    
 });
 
 function validar_texto(variable) {

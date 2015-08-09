@@ -121,14 +121,6 @@
                                             <c:set var="sin_datos" value="-"></c:set>
                                             <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
 
-                                                <c:set var="tiene_observaciones" value="false"></c:set>
-                                                <c:if test="${sangria_caballo.getObservaciones_dia1() != null 
-                                                              || sangria_caballo.getObservaciones_dia2() != null 
-                                                              || sangria_caballo.getObservaciones_dia3() != null}">
-
-                                                      <c:set var="tiene_observaciones" value="true"></c:set>
-
-                                                </c:if>
                                                 <tr id="${caballo.getId_caballo()}">
                                                     <td data-observaciones-dia1="${sangria_caballo.getObservaciones_dia1()}"
                                                         data-observaciones-dia2="${sangria_caballo.getObservaciones_dia2()}"
@@ -136,7 +128,7 @@
 
                                                         ${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})
 
-                                                        <c:if test="${tiene_observaciones}">
+                                                        <c:if test="${sangria_caballo.tieneObservaciones()}">
                                                             <i class="fa fa-info-circle boton-observaciones"></i>
                                                         </c:if>
 
