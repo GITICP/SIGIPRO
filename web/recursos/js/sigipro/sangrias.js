@@ -14,6 +14,7 @@ $(document).ready(function() {
         var observaciones_dia2 = validar_texto(fila.data("observaciones-dia2"));
         var observaciones_dia3 = validar_texto(fila.data("observaciones-dia3"));
         
+        $("#myModalLabel").text("Observaciones " + fila.text());
         $("#campo-observaciones-dia1").text(observaciones_dia1);
         $("#campo-observaciones-dia2").text(observaciones_dia2);
         $("#campo-observaciones-dia3").text(observaciones_dia3);

@@ -333,6 +333,7 @@ public class SangriaDAO extends DAO
         Method get_fecha;
 
         PreparedStatement consulta_preparacion = null;
+        PreparedStatement consulta_sin_participacion = null; // Esta línea se agregó
         PreparedStatement consulta_sangrias_caballos = null;
         PreparedStatement update_sangria = null;
         CallableStatement actualizar_estadisticas = null;
@@ -353,7 +354,7 @@ public class SangriaDAO extends DAO
                         " UPDATE caballeriza.sangrias_caballos "
                         + " SET sangre_dia" + dia + " = 0,"
                         + "     plasma_dia" + dia + " = 0,"
-                        + "     observaciones_dia" + dia + " = ''," // Esta línea cambió.
+                        + "     observaciones_dia" + dia + " = 'Sin observaciones.'," // Esta línea cambió.
                         + "     participo_dia" + dia + " = false "
                         + " WHERE id_sangria = ? AND id_caballo NOT IN " + this.pasar_ids_a_parentesis(sangria.obtener_ids_caballos_sangria()) + ";"
                 );
@@ -361,6 +362,24 @@ public class SangriaDAO extends DAO
                 consulta_preparacion.setInt(1, sangria.getId_sangria());
 
                 consulta_preparacion.executeUpdate();
+                
+                // Se agregó este bloque
+                if (sangria.getSangrias_caballos_sin_participacion() != null) {
+                    consulta_sin_participacion = getConexion().prepareStatement(
+                        " UPDATE caballeriza.sangrias_caballos "
+                        + " SET observaciones_dia" + dia + " = ? "
+                        + " WHERE id_sangria = ? AND id_caballo = ?; "
+                    );
+                    
+                    for (SangriaCaballo sc : sangria.getSangrias_caballos_sin_participacion()) {
+                        consulta_sin_participacion.setString(1, sc.getObservaciones(dia));
+                        consulta_sin_participacion.setInt(2, sangria.getId_sangria());
+                        consulta_sin_participacion.setInt(3, sc.getCaballo().getId_caballo());
+                        consulta_sin_participacion.addBatch();
+                    }
+                    
+                    consulta_sin_participacion.executeBatch();
+                }
 
                 consulta_sangrias_caballos = getConexion().prepareStatement(
                         " UPDATE caballeriza.sangrias_caballos "
@@ -435,6 +454,7 @@ public class SangriaDAO extends DAO
             }
             cerrarSilencioso(actualizar_estadisticas);
             cerrarSilencioso(consulta_preparacion);
+            cerrarSilencioso(consulta_sin_participacion); // Esta línea se agregó
             cerrarSilencioso(consulta_sangrias_caballos);
             cerrarSilencioso(update_sangria);
             cerrarConexion();

@@ -240,9 +240,10 @@ public class ControladorSangria extends SIGIPROServlet
         int dia = Integer.parseInt(request.getParameter("dia"));
         Sangria sangria = new Sangria();
         sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
-        String redireccion = "Sangria/Agregar.jsp";
+        String redireccion; // Esta línea se cambió
 
         String[] ids_caballos = request.getParameterValues("caballos");
+        String[] ids_caballos_false = request.getParameterValues("caballos_false"); // Se agregó esta línea
         String fecha = request.getParameter("fecha_extraccion");
 
         try {
@@ -274,6 +275,24 @@ public class ControladorSangria extends SIGIPROServlet
                 sangria.agregarSangriaCaballo(sangria_caballo);
                 
             }
+            
+            // Se agregó todo este bloque.
+            for (String id_caballo : ids_caballos_false) {
+
+                SangriaCaballo sangria_caballo = new SangriaCaballo();
+
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(Integer.parseInt(id_caballo));
+
+                sangria_caballo.setCaballo(caballo);
+
+                String observaciones = request.getParameter("observaciones_" + id_caballo);
+
+                sangria_caballo.setObservaciones(dia, observaciones);
+                
+                sangria.agregarSangriaCaballoSinParticipacion(sangria_caballo);
+                
+            }
         }
         catch (Exception ex) {
 
@@ -294,13 +313,14 @@ public class ControladorSangria extends SIGIPROServlet
             } else {
                 request.setAttribute("lista_sangrias", dao.obtenerSangrias());
                 redireccion = "Sangria/index.jsp";
+                redireccionar(request, response, redireccion);
             }
             // Código nuevo
         }
         catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción no se registró correctamente."));
         }
-        redireccionar(request, response, redireccion);
+        // Aquí se borró algo
     }
     
     // </editor-fold>

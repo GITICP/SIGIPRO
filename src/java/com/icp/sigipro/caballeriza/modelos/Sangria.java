@@ -36,6 +36,7 @@ public class Sangria {
     private float potencia;
     private GrupoDeCaballos grupo;
     List<SangriaCaballo> sangrias_caballos;
+    List<SangriaCaballo> sangrias_caballos_sin_participacion;
     
     List<Caballo> caballos; //Este atributo es para ayudar y no se encuentra en la base de datos
 
@@ -196,6 +197,12 @@ public class Sangria {
     {
         return sangrias_caballos;
     }
+    
+    // Se agregó esta función
+    public List<SangriaCaballo> getSangrias_caballos_sin_participacion()
+    {
+        return sangrias_caballos_sin_participacion;
+    }
 
     public void setSangrias_caballos(List<SangriaCaballo> sangrias_caballos)
     {
@@ -297,6 +304,14 @@ public class Sangria {
             sangrias_caballos = new ArrayList<SangriaCaballo>();
         }
         sangrias_caballos.add(sangria_caballo);
+    }
+    
+    // Se agregó esta función
+    public void agregarSangriaCaballoSinParticipacion(SangriaCaballo sangria_caballo) {
+        if(sangrias_caballos_sin_participacion == null) {
+            sangrias_caballos_sin_participacion = new ArrayList<SangriaCaballo>();
+        }
+        sangrias_caballos_sin_participacion.add(sangria_caballo);
     }
     
     private float formatearResultado(float sumatoria) {
