@@ -105,3 +105,16 @@
 .campo-subtotal {
     border-color: black !important;
 }
+
+.boton-observaciones {
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+/* Esto es agregó */
+.boton-observaciones:hover {
+    padding-left: 10px;
+    font-size: 20px;
+    color: blue;
+    cursor: pointer;
+}

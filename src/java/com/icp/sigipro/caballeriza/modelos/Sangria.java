@@ -36,6 +36,7 @@ public class Sangria {
     private float potencia;
     private GrupoDeCaballos grupo;
     List<SangriaCaballo> sangrias_caballos;
+    List<SangriaCaballo> sangrias_caballos_sin_participacion;
     
     List<Caballo> caballos; //Este atributo es para ayudar y no se encuentra en la base de datos
 
@@ -153,7 +154,7 @@ public class Sangria {
     }
 
     public float getSangre_total() {
-        return sangre_total;
+        return formatearResultado(sangre_total);// Esta línea se cambió
     }
 
     public void setSangre_total(float sangre_total) {
@@ -161,7 +162,7 @@ public class Sangria {
     }
 
     public float getPeso_plasma_total() {
-        return peso_plasma_total;
+        return formatearResultado(peso_plasma_total);// Esta línea se cambió
     }
 
     public void setPeso_plasma_total(float peso_plasma_total) {
@@ -169,7 +170,7 @@ public class Sangria {
     }
 
     public float getVolumen_plasma_total() {
-        return volumen_plasma_total;
+        return formatearResultado(volumen_plasma_total);// Esta línea se cambió
     }
 
     public void setVolumen_plasma_total(float volumen_plasma_total) {
@@ -177,7 +178,7 @@ public class Sangria {
     }
 
     public float getPlasma_por_caballo() {
-        return plasma_por_caballo;
+        return formatearResultado(plasma_por_caballo);// Esta línea se cambió
     }
 
     public void setPlasma_por_caballo(float plasma_por_caballo) {
@@ -185,7 +186,7 @@ public class Sangria {
     }
 
     public float getPotencia() {
-        return potencia;
+        return formatearResultado(potencia); // Esta línea se cambió
     }
 
     public void setPotencia(float potencia) {
@@ -195,6 +196,12 @@ public class Sangria {
     public List<SangriaCaballo> getSangrias_caballos()
     {
         return sangrias_caballos;
+    }
+    
+    // Se agregó esta función
+    public List<SangriaCaballo> getSangrias_caballos_sin_participacion()
+    {
+        return sangrias_caballos_sin_participacion;
     }
 
     public void setSangrias_caballos(List<SangriaCaballo> sangrias_caballos)
@@ -297,6 +304,14 @@ public class Sangria {
             sangrias_caballos = new ArrayList<SangriaCaballo>();
         }
         sangrias_caballos.add(sangria_caballo);
+    }
+    
+    // Se agregó esta función
+    public void agregarSangriaCaballoSinParticipacion(SangriaCaballo sangria_caballo) {
+        if(sangrias_caballos_sin_participacion == null) {
+            sangrias_caballos_sin_participacion = new ArrayList<SangriaCaballo>();
+        }
+        sangrias_caballos_sin_participacion.add(sangria_caballo);
     }
     
     private float formatearResultado(float sumatoria) {
