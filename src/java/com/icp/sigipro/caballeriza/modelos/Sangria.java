@@ -154,7 +154,7 @@ public class Sangria {
     }
 
     public float getSangre_total() {
-        return sangre_total;
+        return formatearResultado(sangre_total);// Esta línea se cambió
     }
 
     public void setSangre_total(float sangre_total) {
@@ -162,7 +162,7 @@ public class Sangria {
     }
 
     public float getPeso_plasma_total() {
-        return peso_plasma_total;
+        return formatearResultado(peso_plasma_total);// Esta línea se cambió
     }
 
     public void setPeso_plasma_total(float peso_plasma_total) {
@@ -170,7 +170,7 @@ public class Sangria {
     }
 
     public float getVolumen_plasma_total() {
-        return volumen_plasma_total;
+        return formatearResultado(volumen_plasma_total);// Esta línea se cambió
     }
 
     public void setVolumen_plasma_total(float volumen_plasma_total) {
@@ -178,7 +178,7 @@ public class Sangria {
     }
 
     public float getPlasma_por_caballo() {
-        return plasma_por_caballo;
+        return formatearResultado(plasma_por_caballo);// Esta línea se cambió
     }
 
     public void setPlasma_por_caballo(float plasma_por_caballo) {
@@ -186,7 +186,7 @@ public class Sangria {
     }
 
     public float getPotencia() {
-        return potencia;
+        return formatearResultado(potencia); // Esta línea se cambió
     }
 
     public void setPotencia(float potencia) {

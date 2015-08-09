@@ -94,14 +94,14 @@
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
                                                                                 <span></span>
                                                                             </label>
-                                                                            <input type="checkbox" name="caballos_false"  value="${sangria_caballo.getCaballo().getId_caballo()}">
+                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" style="display:none">
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <label class="fancy-checkbox" style="text-align:center">
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos">
                                                                                 <span></span>
                                                                             </label>
-                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" checked>
+                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" checked style="display:none">
                                                                             <c:set var="deshabilitado" value="true"></c:set>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -113,14 +113,14 @@
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
                                                                                 <span></span>
                                                                             </label>
-                                                                            <input type="checkbox" name="caballos_false"  value="${sangria_caballo.getCaballo().getId_caballo()}">
+                                                                            <input type="checkbox" name="caballos_false"  value="${sangria_caballo.getCaballo().getId_caballo()}" style="display:none">
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <label class="fancy-checkbox" style="text-align:center">
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" disabled>    
                                                                                 <span></span>
                                                                             </label>
-                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" checked>
+                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" checked style="display:none">
                                                                             <c:set var="deshabilitado" value="true"></c:set>
                                                                         </c:otherwise>
                                                                     </c:choose>
