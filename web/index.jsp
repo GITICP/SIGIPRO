@@ -21,14 +21,53 @@
       </div>
       <div class="row">
         <div class="col-xs-1"></div>
-        <div class="col-xs-10">
-          <h1>Inicio</h1>
-        </div>
         <div class="col-xs-1"></div>
       </div>
       <!-- main -->
       <div class="content">
+        <div class="main-header">
+          <h2>INICIO</h2>
+          <em>Recordatorios</em>
+        </div>
         <div class="main-content">
+          <div class="col-md-12">
+            <!-- WIDGET REMINDER -->
+            <div class="widget widget-hide-header widget-reminder">
+              <div class="widget-header hide">
+                <h3>Recordaorio</h3>
+              </div>
+              <div class="widget-content">
+                <div class="today-reminder">
+                  <h4 class="reminder-title">Prueba 1</h4>
+                  <p class="reminder-time"><i class="fa fa-clock-o"></i> 9:00 AM</p>
+                  <p class="reminder-place"> Bodega 2</p>
+                  <em class="reminder-notes"> Arreglar las cosas que hay adentro</em>
+                  <i class="fa fa-bell"></i>
+
+                </div>
+              </div>
+            </div>
+            <!-- END WIDGET REMINDER -->
+          </div>
+          <div class="col-md-12">
+            <!-- WIDGET REMINDER -->
+            <div class="widget widget-hide-header widget-reminder">
+              <div class="widget-header hide">
+                <h3>Recordaorio</h3>
+              </div>
+              <div class="widget-content">
+                <div class="today-reminder">
+                  <h4 class="reminder-title">Destete</h4>
+                  <p class="reminder-time"><i class="fa fa-clock-o"></i> 2:00 PM</p>
+                  <p class="reminder-place">Destetes</p>
+                  <em class="reminder-notes">Arrebatarle los ratones a las hembras</em>
+                  <i class="fa fa-bell"></i>
+
+                </div>
+              </div>
+            </div>
+            <!-- END WIDGET REMINDER -->
+          </div>
           <!-- Acá va contenido importante, notificaciones, etc. -->
         </div>
         <!-- /main-content -->

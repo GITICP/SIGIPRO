@@ -233,7 +233,62 @@ public class EventoDAO {
 //
 //        return evento;
 //    }
-  public List<Evento> obtenerEventos(Usuario u) throws SIGIPROException {
+  public List<Evento> obtenerEventos_afterhoy(Usuario u) throws SIGIPROException {
+    List<Evento> eventos = new ArrayList<Evento>();
+    try {
+      PreparedStatement preparedStatement = getConexion().
+              prepareStatement("SELECT *\n"
+                      + "FROM calendario.eventos e\n"
+                      + "     FULL OUTER JOIN calendario.eventos_usuarios eu\n"
+                      + "        ON e.id = eu.id_evento\n"
+                      + "     FULL OUTER JOIN calendario.eventos_secciones es\n"
+                      + "        ON e.id = es.id_evento\n"
+                      + "WHERE (eu.id_usuario =? or es.id_seccion=?) AND e.start_date >= now()");
+      PreparedStatement preparedStatement2 = getConexion().
+              prepareStatement("SELECT * FROM calendario.eventos WHERE id IN "
+                      + "(SELECT e.id_evento FROM calendario.eventos_roles e where e.id_rol IN "
+                      + "(SELECT id_rol FROM seguridad.roles_usuarios WHERE id_usuario=? )) AND start_date >= now() ");
+      preparedStatement.setInt(1, u.getID());
+      preparedStatement.setInt(2, u.getIdSeccion());
+      preparedStatement2.setInt(1, u.getID());
+      ResultSet rs = preparedStatement.executeQuery();
+      ResultSet rs2 = preparedStatement2.executeQuery();
+            
+            while (rs.next()) {
+                Evento evento = new Evento();
+                evento.setId(rs.getInt("id"));
+                evento.setTitle(rs.getString("title"));
+                evento.setStart_date(rs.getTimestamp("start_date"));
+                evento.setEnd_date(rs.getTimestamp("end_date"));
+                evento.setDescription(rs.getString("description"));
+                evento.setAllDay(rs.getBoolean("allDay"));
+                eventos.add(evento);
+            }
+            while (rs2.next()) {
+                Evento evento = new Evento();
+                evento.setId(rs.getInt("id"));
+                evento.setTitle(rs.getString("title"));
+                evento.setStart_date(rs.getTimestamp("start_date"));
+                evento.setEnd_date(rs.getTimestamp("end_date"));
+                evento.setDescription(rs.getString("description"));
+                evento.setAllDay(rs.getBoolean("allDay"));
+                eventos.add(evento);
+            }
+            
+            rs.close();
+            rs2.close();
+            preparedStatement.close();
+            preparedStatement2.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SIGIPROException("No se puede obtener los eventos.");
+        }
+
+        return eventos;
+    }
+   public List<Evento> obtenerEventos(Usuario u) throws SIGIPROException {
     List<Evento> eventos = new ArrayList<Evento>();
     try {
       PreparedStatement preparedStatement = getConexion().

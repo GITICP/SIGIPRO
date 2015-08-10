@@ -49,6 +49,12 @@
                             <span class="text" href="/SIGIPRO/Calendario/Calendario">Calendario</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="/SIGIPRO/Calendario/Notificaciones">
+                            <i class="fa fa-bell"></i>
+                            <span class="text" href="/SIGIPRO/Calendario/Notificaciones">Notificaciones</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>
