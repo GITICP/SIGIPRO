@@ -177,6 +177,7 @@ public class SolicitudDAO extends DAO
                     + "         ci.nombre AS nombre_producto, "
                     + "         ci.codigo_icp AS cod_icp ,"
                     + "         ci.id_producto, "
+                    + "         ci.presentacion, "        
                     + "         i.stock_actual "
                     + " FROM ( "
                     + "         SELECT * FROM bodega.solicitudes where id_solicitud = ? "
@@ -217,7 +218,7 @@ public class SolicitudDAO extends DAO
                 p.setId_producto(rs.getInt("id_producto"));
                 p.setCodigo_icp(rs.getString("cod_icp"));
                 p.setNombre(rs.getString("nombre_producto"));
-
+                p.setPresentacion(rs.getString("presentacion"));
                 i.setId_producto(rs.getInt("id_producto"));
 
                 Seccion s = new Seccion();
