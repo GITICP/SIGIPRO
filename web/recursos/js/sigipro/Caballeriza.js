@@ -125,13 +125,15 @@ $(document).ready(function () {
 
     $("#tabla-sangrias-caballos").find("input[name='caballos']").change(function () {
         var inputs = $(this).parent().parent().parent().find("input[type='number']");
-        if ($(this).prop("checked")) {
-            inputs.each(function () {
-                $(this).prop("disabled", false);
+        if( $(this).prop("checked")) {
+            $("input[name=caballos_false][value=" + $(this).val() + "]").prop("checked", false);
+            inputs.each(function(){
+               $(this).prop("disabled", false);
             });
         } else {
-            inputs.each(function () {
-                $(this).prop("disabled", true);
+            $("input[name=caballos_false][value=" + $(this).val() + "]").prop("checked", true);
+            inputs.each(function(){
+               $(this).prop("disabled", true);
             });
         }
     });

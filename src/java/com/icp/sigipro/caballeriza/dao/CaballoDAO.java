@@ -476,9 +476,10 @@ public class CaballoDAO extends DAO
                 sangriac.setPlasma_dia1(rs.getFloat("plasma_dia1"));
                 sangriac.setPlasma_dia2(rs.getFloat("plasma_dia2"));
                 sangriac.setPlasma_dia3(rs.getFloat("plasma_dia3"));
+                /*
                 sangriac.setLal_dia1(rs.getFloat("lal_dia1"));
                 sangriac.setLal_dia2(rs.getFloat("lal_dia2"));
-                sangriac.setLal_dia3(rs.getFloat("lal_dia3"));
+                sangriac.setLal_dia3(rs.getFloat("lal_dia3")); */
                 sangriac.setParticipo_dia1(rs.getBoolean("participo_dia1"));
                 sangriac.setParticipo_dia2(rs.getBoolean("participo_dia2"));
                 sangriac.setParticipo_dia3(rs.getBoolean("participo_dia3"));

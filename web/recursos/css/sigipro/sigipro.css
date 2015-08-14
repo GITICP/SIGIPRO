@@ -109,3 +109,15 @@
 .opcion-escondida {
     display: none !important;
 }
+
+.boton-observaciones {
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+.boton-observaciones:hover {
+    padding-left: 10px;
+    font-size: 20px;
+    color: blue;
+    cursor: pointer;
+}
