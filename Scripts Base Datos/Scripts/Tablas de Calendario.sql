@@ -1,18 +1,13 @@
 ﻿-- Schema: calendario
 
--- DROP SCHEMA calendario;
-
-CREATE SCHEMA calendario
-  AUTHORIZATION postgres;
-
 CREATE TABLE calendario.eventos
 (
   id serial NOT NULL,
   title character varying(150) NOT NULL,
-  start_date timestamp NOT NULL,
-  end_date timestamp,
+  start_date timestamp without time zone NOT NULL,
+  end_date timestamp without time zone,
   description character varying(500),
-  allDay boolean NOT NULL,
+  allday boolean NOT NULL,
   CONSTRAINT pk_id_evento PRIMARY KEY (id)
 )
 
