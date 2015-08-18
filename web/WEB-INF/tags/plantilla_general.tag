@@ -9,7 +9,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <c:if test="${sessionScope.usuario == null}">
-    <c:redirect url="/Cuenta/IniciarSesion" />
+    <c:redirect url="/Cuenta/IniciarSesion?expiro=true" />
 </c:if>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>

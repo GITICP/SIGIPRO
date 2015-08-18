@@ -44,7 +44,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
+              <table id="tablaindexdestetes" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -61,7 +61,7 @@
                       <td>
                         <a href="/SIGIPRO/Ratonera/Destetes?accion=ver&id_destete=${destete.getId_destete()}">
                           <div style="height:100%;width:100%">
-                            ${destete.getFecha_destete_S()}
+                            ${destete.getFecha_destete()}
                           </div>
                         </a>
                       </td>
@@ -81,6 +81,9 @@
       </div>
       <!-- /main -->
 
+    </jsp:attribute>
+      <jsp:attribute name="scripts">
+      <script src="/SIGIPRO/recursos/js/sigipro/destetes.js"></script>
     </jsp:attribute>
 
   </t:plantilla_general>

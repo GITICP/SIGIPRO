@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bioterio.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -73,6 +74,15 @@ public class EntregaConejera {
 
   public Date getFecha_entrega() {
     return fecha_entrega;
+  }
+  
+  public String getFecha_entregaAsString() {
+      String resultado = "Sin fecha.";
+      if (fecha_entrega != null) {
+          HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+          resultado = helper_fechas.formatearFecha(fecha_entrega);
+      }
+      return resultado;
   }
 
   public void setFecha_entrega(Date fecha_entrega) {

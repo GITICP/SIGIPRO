@@ -52,6 +52,15 @@
                                 <div class="widget-header">
                                     <h3><i class="fa fa-th-large"></i> ${sub_bodega.getNombre()} </h3>
                                     <div class="btn-group widget-header-toolbar">
+                                        <c:choose>
+                                            <c:when test="${agrupacion_por_producto == null}">
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ver&id_sub_bodega=${sub_bodega.getId_sub_bodega()}&agrupar=true">Agrupar Por Producto</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ver&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Agrupar Por Fecha de Vencimiento</a>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                         <c:if test="${permisos_usuario.isEncargado() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
                                             <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=historial&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Historial</a>
                                             <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=mover&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Mover</a>

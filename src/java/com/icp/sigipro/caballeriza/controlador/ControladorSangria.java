@@ -240,9 +240,10 @@ public class ControladorSangria extends SIGIPROServlet
         int dia = Integer.parseInt(request.getParameter("dia"));
         Sangria sangria = new Sangria();
         sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
-        String redireccion = "Sangria/Agregar.jsp";
+        String redireccion; // Esta línea se cambió
 
         String[] ids_caballos = request.getParameterValues("caballos");
+        String[] ids_caballos_false = request.getParameterValues("caballos_false"); // Se agregó esta línea
         String fecha = request.getParameter("fecha_extraccion");
 
         try {
@@ -260,18 +261,36 @@ public class ControladorSangria extends SIGIPROServlet
 
                 String sangre_str = request.getParameter("sangre_" + id_caballo);
                 String plasma_str = request.getParameter("plasma_" + id_caballo);
-                String lal_str = request.getParameter("lal_" + id_caballo);
+                String observaciones = request.getParameter("observaciones_" + id_caballo); // Esta línea se cambió
 
                 float sangre = (sangre_str.isEmpty()) ? 0.0f : Float.parseFloat(sangre_str);
                 float plasma = (plasma_str.isEmpty()) ? 0.0f : Float.parseFloat(plasma_str);
-                float lal = (lal_str.isEmpty()) ? 0.0f : Float.parseFloat(lal_str);
+                // Aquí se borró algo
 
                 sangria_caballo.setPlasma(dia, plasma);
                 sangria_caballo.setSangre(dia, sangre);
-                sangria_caballo.setLal(dia, lal);
+                sangria_caballo.setObservaciones(dia, observaciones); // Esta línea se cambió
 
                 
                 sangria.agregarSangriaCaballo(sangria_caballo);
+                
+            }
+            
+            // Se agregó todo este bloque.
+            for (String id_caballo : ids_caballos_false) {
+
+                SangriaCaballo sangria_caballo = new SangriaCaballo();
+
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(Integer.parseInt(id_caballo));
+
+                sangria_caballo.setCaballo(caballo);
+
+                String observaciones = request.getParameter("observaciones_" + id_caballo);
+
+                sangria_caballo.setObservaciones(dia, observaciones);
+                
+                sangria.agregarSangriaCaballoSinParticipacion(sangria_caballo);
                 
             }
         }
@@ -285,13 +304,23 @@ public class ControladorSangria extends SIGIPROServlet
             bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_REGISTRAR_EXTRACCION, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción registrada correctamente."));
-            request.setAttribute("lista_sangrias", dao.obtenerSangrias());
-            redireccion = "Sangria/index.jsp";
+
+            // Código nuevo
+            boolean volver = Boolean.parseBoolean(request.getParameter("volver"));
+            
+            if (volver) {
+                this.getEditarextraccion(request, response);
+            } else {
+                request.setAttribute("lista_sangrias", dao.obtenerSangrias());
+                redireccion = "Sangria/index.jsp";
+                redireccionar(request, response, redireccion);
+            }
+            // Código nuevo
         }
         catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción no se registró correctamente."));
         }
-        redireccionar(request, response, redireccion);
+        // Aquí se borró algo
     }
     
     // </editor-fold>

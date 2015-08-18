@@ -27,6 +27,10 @@ public class SangriaCaballo
     private float sangre_dia3;
     private float plasma_dia3;
     private float lal_dia3;
+    
+    private String observaciones_dia1; //Esta línea fue un cambio
+    private String observaciones_dia2; //Esta línea fue un cambio
+    private String observaciones_dia3; //Esta línea fue un cambio
 
     public SangriaCaballo()
     {
@@ -275,4 +279,82 @@ public class SangriaCaballo
         }
         return resultado;
     }
+    
+    /* Código Nuevo */
+    public String getObservaciones(int dia) {
+        String resultado = "Sin observaciones.";
+        if (dia == 1) {
+            resultado = observaciones_dia1;
+        } else if (dia == 2) {
+            resultado = observaciones_dia2;
+        } else if (dia == 3) {
+            resultado = observaciones_dia3;
+        }
+        return resultado;
+    }
+    
+    public void setObservaciones(int dia, String valor) {
+        if (valor == null) {
+            valor = "Sin observaciones.";
+        } else {
+            if (valor.isEmpty()) {
+                valor = "Sin observaciones.";
+            }
+        }
+        if (dia == 1) {
+            observaciones_dia1 = valor;
+        } else if (dia == 2) {
+            observaciones_dia2 = valor;
+        } else if (dia == 3) {
+            observaciones_dia3 = valor;
+        }
+    }
+
+    public String getObservaciones_dia1() {
+        return observaciones_dia1;
+    }
+
+    public void setObservaciones_dia1(String observaciones_dia1) {
+        this.observaciones_dia1 = observaciones_dia1;
+    }
+
+    public String getObservaciones_dia2() {
+        return observaciones_dia2;
+    }
+
+    public void setObservaciones_dia2(String observaciones_dia2) {
+        this.observaciones_dia2 = observaciones_dia2;
+    }
+
+    public String getObservaciones_dia3() {
+        return observaciones_dia3;
+    }
+
+    public void setObservaciones_dia3(String observaciones_dia3) {
+        this.observaciones_dia3 = observaciones_dia3;
+    }
+    
+    public boolean tieneObservaciones() {
+        boolean dia_1 = false;
+        boolean dia_2 = false;
+        boolean dia_3 = false;
+        if (observaciones_dia1 != null) {
+            if (!observaciones_dia1.equals("Sin observaciones.")) {
+                dia_1 = true;
+            }
+        }
+        if (observaciones_dia2 != null) {
+            if (!observaciones_dia2.equals("Sin observaciones.")) {
+                dia_1 = true;
+            }
+        }
+        if (observaciones_dia3 != null) {
+            if (!observaciones_dia3.equals("Sin observaciones.")) {
+                dia_1 = true;
+            }
+        }
+        return dia_1 || dia_2 || dia_3;
+    }
+    
+    /* Código Nuevo */
 }
