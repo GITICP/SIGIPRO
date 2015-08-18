@@ -44,7 +44,6 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     //-----------------
     private final TipoReactivoDAO dao = new TipoReactivoDAO();
 
-
     protected final Class clase = ControladorTipoReactivo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
@@ -62,7 +61,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
         }
     };
 
-  // <editor-fold defaultstate="collapsed" desc="Métodos Get">
+    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
 
@@ -157,7 +156,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                     bitacora.setBitacora(id_tipo_reactivo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOREACTIVO, request.getRemoteAddr());
                     //----------------------------
                     request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente"));
-                }else{
+                } else {
                     request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente pero hubo un error eliminando el machote."));
                 }
             } else {
@@ -173,7 +172,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     }
     // </editor-fold>
 
-  // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         boolean resultado = false;
@@ -209,12 +208,12 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                 }
             } else {
                 String archivoViejo = "";
-                if (!tr.getMachote().equals("")){
+                if (!tr.getMachote().equals("")) {
                     archivoViejo = dao.obtenerTipoReactivo(tr.getId_tipo_reactivo()).getMachote();
                 }
                 resultado = dao.editarTipoReactivo(tr);
                 if (resultado) {
-                    if (!archivoViejo.equals("")){
+                    if (!archivoViejo.equals("")) {
                         File archivo = new File(archivoViejo);
                         archivo.delete();
                     }
@@ -236,7 +235,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
     }
 
   // </editor-fold>
-  // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
+    // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private TipoReactivo construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
         TipoReactivo tr = new TipoReactivo();
         for (FileItem item : items) {
@@ -259,6 +258,10 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                     case "id_tipo_reactivo":
                         int id_tipo_reactivo = Integer.parseInt(fieldValue);
                         tr.setId_tipo_reactivo(id_tipo_reactivo);
+                        break;
+                    case "certificable":
+                        boolean certificable = Boolean.parseBoolean(fieldValue);
+                        tr.setCertificable(certificable);
                         break;
                 }
             } else {
@@ -316,7 +319,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
         }
     }
 
-  // </editor-fold>
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

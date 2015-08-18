@@ -25,6 +25,17 @@
                     </div>
                 </div>
             </div>
+            <label for="opciones" class="control-label">Certificados</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <label class="fancy-checkbox">
+                            <input type="checkbox" name="certificable" value="true" checked>
+                            <span> Tipo de Equipo Certificable</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <c:choose>
                 <c:when test="${tiporeactivo.getId_tipo_reactivo()!=0}">
                     <label for="nombre" class="control-label"> Machote de Curva (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>

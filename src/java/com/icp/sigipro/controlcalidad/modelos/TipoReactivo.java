@@ -17,6 +17,7 @@ public class TipoReactivo {
     private String nombre;
     private String descripcion;
     private String machote;
+    private boolean certificable;
 
     public TipoReactivo() {
     }
@@ -51,6 +52,14 @@ public class TipoReactivo {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public boolean isCertificable() {
+        return certificable;
+    }
+
+    public void setCertificable(boolean certificable) {
+        this.certificable = certificable;
     }
     
     public String parseJSON(){

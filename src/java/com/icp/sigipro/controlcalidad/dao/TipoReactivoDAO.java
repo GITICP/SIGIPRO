@@ -24,11 +24,12 @@ public class TipoReactivoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_reactivos (nombre,descripcion,machote) "
-                                                                        + " VALUES (?,?,?) RETURNING id_tipo_reactivo");
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_reactivos (nombre,descripcion,machote,certificable) "
+                                                                        + " VALUES (?,?,?,?) RETURNING id_tipo_reactivo");
             consulta.setString(1, tiporeactivo.getNombre());
             consulta.setString(2, tiporeactivo.getDescripcion());
             consulta.setString(3, tiporeactivo.getMachote());
+            consulta.setBoolean(4, tiporeactivo.isCertificable());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -52,19 +53,21 @@ public class TipoReactivoDAO extends DAO {
         try {
             if (tiporeactivo.getMachote().equals("")){
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_reactivos "
-                        + "SET nombre=?, descripcion=? "
+                        + "SET nombre=?, descripcion=?, certificable=? "
                         + "WHERE id_tipo_reactivo = ?; ");
                 consulta.setString(1, tiporeactivo.getNombre());
                 consulta.setString(2, tiporeactivo.getDescripcion());
-                consulta.setInt(3, tiporeactivo.getId_tipo_reactivo());
+                consulta.setBoolean(3, tiporeactivo.isCertificable());
+                consulta.setInt(4, tiporeactivo.getId_tipo_reactivo());
             }else{
                 consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_reactivos "
-                        + "SET nombre=?, descripcion=?, machote=? "
+                        + "SET nombre=?, descripcion=?, machote=?, certificable=? "
                         + "WHERE id_tipo_reactivo = ?; ");
                 consulta.setString(1, tiporeactivo.getNombre());
                 consulta.setString(2, tiporeactivo.getDescripcion());
                 consulta.setString(3, tiporeactivo.getMachote());
-                consulta.setInt(4, tiporeactivo.getId_tipo_reactivo());
+                consulta.setBoolean(4, tiporeactivo.isCertificable());
+                consulta.setInt(5, tiporeactivo.getId_tipo_reactivo());
             }
             if (consulta.executeUpdate()==1) {
                 resultado = true;
@@ -118,6 +121,7 @@ public class TipoReactivoDAO extends DAO {
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
                 resultado.setMachote(rs.getString("machote"));
+                resultado.setCertificable(rs.getBoolean("certificable"));
             }
         }
         catch (Exception ex) {

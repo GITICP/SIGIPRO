@@ -154,6 +154,7 @@ CREATE TABLE control_calidad.tipos_equipos (
     id_tipo_equipo serial  NOT NULL,
     nombre varchar(50) NOT NULL,
     descripcion varchar(500) NULL,
+    certificable boolean NOT NULL,
     CONSTRAINT tipos_equipos_pk PRIMARY KEY (id_tipo_equipo)
 );
 
@@ -182,6 +183,7 @@ CREATE TABLE control_calidad.tipos_reactivos (
 CREATE TABLE control_calidad.tipos_reactivos_analisis (
     id_analisis int  NOT NULL,
     id_tipo_reactivo int  NOT NULL,
+    certificable boolean NOT NULL,
     CONSTRAINT tipos_reactivos_analisis_pk PRIMARY KEY (id_analisis,id_tipo_reactivo)
 );
 
