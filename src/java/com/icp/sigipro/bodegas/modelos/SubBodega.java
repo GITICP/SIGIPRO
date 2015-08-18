@@ -9,6 +9,7 @@ import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -16,8 +17,7 @@ import org.json.JSONObject;
  *
  * @author Boga
  */
-public class SubBodega extends IModelo
-{
+public class SubBodega extends IModelo {
 
     private int id_sub_bodega;
     private Seccion seccion;
@@ -26,14 +26,12 @@ public class SubBodega extends IModelo
     private List<InventarioSubBodega> inventarios;
     private List<BitacoraSubBodega> historial;
 
-    public SubBodega()
-    {
+    public SubBodega() {
 
     }
 
     //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
-    public String parseJSON()
-    {
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
         try {
@@ -42,75 +40,82 @@ public class SubBodega extends IModelo
                 Field field = properties[i];
                 if (i != 0) {
                     JSON.put(field.getName(), field.get(this));
-                }
-                else {
+                } else {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
         }
         return JSON.toString();
     }
 
-    public int getId_sub_bodega()
-    {
+    public int getId_sub_bodega() {
         return id_sub_bodega;
     }
 
-    public void setId_sub_bodega(int id_sub_bodega)
-    {
+    public void setId_sub_bodega(int id_sub_bodega) {
         this.id_sub_bodega = id_sub_bodega;
     }
 
-    public Seccion getSeccion()
-    {
+    public Seccion getSeccion() {
         return seccion;
     }
 
-    public void setSeccion(Seccion seccion)
-    {
+    public void setSeccion(Seccion seccion) {
         this.seccion = seccion;
     }
 
-    public Usuario getUsuario()
-    {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario)
-    {
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
-    public String getNombre()
-    {
+    public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre)
-    {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public List<InventarioSubBodega> getInventarios()
-    {
+    public List<InventarioSubBodega> getInventarios() {
         return inventarios;
     }
 
-    public void setInventarios(List<InventarioSubBodega> inventarios)
-    {
+    public void setInventarios(List<InventarioSubBodega> inventarios) {
         this.inventarios = inventarios;
     }
-    
-    public List<BitacoraSubBodega> getHistorial()
-    {
+
+    public List<BitacoraSubBodega> getHistorial() {
         return historial;
     }
 
-    public void setHistorial(List<BitacoraSubBodega> historial)
-    {
+    public void setHistorial(List<BitacoraSubBodega> historial) {
         this.historial = historial;
+    }
+
+    public void agruparPorProducto() {
+
+        List<InventarioSubBodega> lista_resultado = new ArrayList<InventarioSubBodega>();
+
+        for (InventarioSubBodega i_sb : inventarios) {
+            boolean encontro = false;
+            for (InventarioSubBodega i_sb_iter : lista_resultado) {
+                if (i_sb_iter.getProducto().getId_producto() == i_sb.getProducto().getId_producto()) {
+                    int cantidad_nueva = i_sb_iter.getCantidad() + i_sb.getCantidad();
+                    i_sb_iter.setCantidad(cantidad_nueva);
+                    encontro = true;
+                }
+            }
+            if (!encontro) {
+                lista_resultado.add(i_sb);
+            }
+        }
+
+        this.inventarios = lista_resultado;
     }
 }

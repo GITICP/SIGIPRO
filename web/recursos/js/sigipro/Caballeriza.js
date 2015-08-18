@@ -1,9 +1,12 @@
+/* global tEventos, tCaballos */
+
 // Variables globales de tablas
 tEventos = null;
 tCaballos = null;
 valor_fecha_hoy = null;
 T_EVENTOS_SELECTOR = "#caballos-evento";
 T_CABALLOS_SELECTOR = "#caballos-grupo";
+SELECTOR_SELECT_CABALLOS_GRUPO = "#seleccioncaballo";
 
 $(document).ready(function () {
     var hoy = new Date();
@@ -123,15 +126,22 @@ $(document).ready(function () {
     $("#tabla-sangrias-caballos").find("input[name='caballos']").change(function(){
         var inputs = $(this).parent().parent().parent().find("input[type='number']");
         if( $(this).prop("checked")) {
+            $("input[name=caballos_false][value=" + $(this).val() + "]").prop("checked", false);
             inputs.each(function(){
-               $(this).prop("disabled", false) ;
+               $(this).prop("disabled", false);
             });
         } else {
+            $("input[name=caballos_false][value=" + $(this).val() + "]").prop("checked", true);
             inputs.each(function(){
-               $(this).prop("disabled", true) ;
+               $(this).prop("disabled", true);
             });
         }
     });
+    
+    var select_caballos_grupo = $(SELECTOR_SELECT_CABALLOS_GRUPO);
+    if (select_caballos_grupo.length >= 1) {
+        crearSelectEditar(SELECTOR_SELECT_CABALLOS_GRUPO);
+    }
 });
 
 // -- Caballos -- //
@@ -197,19 +207,7 @@ function llenarCampoAsociacion(string_pivote, tabla_selector, campo_escondido) {
 }
 
 $(document).ready(function () {
-
-    $("select[name='tipoevento']").on('change', function () {
-        var split = $(this).val().split(",");
-
-        $("textarea ").val(split[1]);
-    });
-
-    $("select[name='eventoModal']").on('change', function () {
-        var split = $(this).val().split("|");
-
-        $("textarea ").val(split[1]);
-    });
-
+    
     $("#seleccionInoculoGrupo").change(function () {
         var id_grupo = $(this).val();
 
@@ -272,8 +270,8 @@ function previstaImagen(input, id) {
         var size = file.size;
         var imagen = document.getElementById(input.id.toString());
         var reader = new FileReader();
-        if (size > 102400) {
-            input.setCustomValidity("La imagen debe ser de 100KB o menos. ");
+        if (size > 307200) {
+            input.setCustomValidity("La imagen debe ser de 300KB o menos. ");
             document.getElementById("botonCancelar" + id).style.visibility = "visible";
         } else {
             input.setCustomValidity("");
@@ -308,10 +306,55 @@ function eliminarImagen(id) {
     document.getElementById("botonCancelar" + id).style.visibility = "hidden";
 }
 
+function borrarImagen(id) {
+    var formData = $("#caballosform").serializeArray();
+    var URL = $("#caballosform").attr("action") + "?accion=eliminarimagen&id_imagen="+id;
+    $.ajax(
+            {
+                url : URL,
+                type: "POST",
+                success: function(data,textStatus,jqXHR)
+                {
+                    document.getElementById("botonBorrar"+id).style.visibility = "hidden";
+                    $("#labelImagen"+id).text("Eliminada.");
+                    $("#imagenActual"+id).prop("src","");
+                    $("#imagenActual"+id).prop("height",0);
+                    
+                },
+                error:function(jqXHR,textStatus,errorThrown)
+                {
+                    alert("Error al enviar la solicitud.");
+                    
+                }
+                
+            });
+    var preview = document.getElementById("imagenSubida" + id); //selects the query named img
+    preview.src = "";
+    var imagen = document.getElementById("imagen" + id);
+    imagen.value = "";
+    imagen.setCustomValidity("");
+    document.getElementById("botonCancelar" + id).style.visibility = "hidden";
+}
+
+
 function eliminarDeSelect(id, selector_select) {
     var select = $(selector_select);
     var valor = select.val();
     var indice = valor.indexOf(id.toString());
     valor.splice(indice, 1);
+    select.select2("val", valor);
+}
+
+function crearSelectEditar(selector_select) {
+    var filas = $(T_CABALLOS_SELECTOR + ' tbody tr');
+    var select = $(selector_select);
+    var valor = [];
+
+    if (filas.find(".dataTables_empty").length === 0) {
+        filas.each(function () {
+            valor.push($(this).attr('id').split('-')[1]);
+        });
+    }
+
     select.select2("val", valor);
 }

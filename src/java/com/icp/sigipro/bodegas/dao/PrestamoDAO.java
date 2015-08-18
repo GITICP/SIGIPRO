@@ -8,6 +8,7 @@ package com.icp.sigipro.bodegas.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.Prestamo;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +20,9 @@ import java.util.List;
  *
  * @author Amed
  */
-public class PrestamoDAO
+public class PrestamoDAO extends DAO
 {
-
-    private Connection conexion;
-
-    public PrestamoDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
+    public PrestamoDAO(){    }
 
     public boolean insertarPrestamo(Prestamo p)
     {
@@ -239,40 +233,5 @@ public class PrestamoDAO
             ex.printStackTrace();
         }
         return resultado;
-    }
-
-    private Connection getConexion()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        if (conexion == null) {
-            conexion = s.conectar();
-        }
-        else {
-            try {
-                if (conexion.isClosed()) {
-                    conexion = s.conectar();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

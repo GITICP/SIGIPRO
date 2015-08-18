@@ -5,16 +5,15 @@
  */
 package com.icp.sigipro.caballeriza.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Method;
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,25 +25,20 @@ import java.util.List;
  *
  * @author Walter
  */
-public class SangriaDAO
+public class SangriaDAO extends DAO
 {
 
-    private Connection conexion;
-
-    public SangriaDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
+    public SangriaDAO() {
     }
 
-    public Sangria insertarSangria(Sangria s) throws SIGIPROException
-    {
+    public Sangria insertarSangria(Sangria s) throws SIGIPROException {
 
         boolean resultado_sangria = false;
         boolean resultado_caballos = false;
         PreparedStatement consulta_sangria = null;
         PreparedStatement consulta_caballos = null;
         ResultSet rs_sangria = null;
+        CallableStatement actualizar_estadisticas = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -56,23 +50,20 @@ public class SangriaDAO
 
             consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
             consulta_sangria.setInt(2, s.getSangrias_caballos().size());
-            
+
             if (s.getNum_inf_cc() == 0) {
                 consulta_sangria.setNull(3, java.sql.Types.INTEGER);
-            }
-            else {
+            } else {
                 consulta_sangria.setInt(3, s.getNum_inf_cc());
             }
             if (s.getPotencia() == 0.0f) {
                 consulta_sangria.setNull(4, java.sql.Types.FLOAT);
-            }
-            else {
+            } else {
                 consulta_sangria.setFloat(4, s.getPotencia());
             }
-            if (s.getVolumen_plasma_total()== 0.0f) {
+            if (s.getVolumen_plasma_total() == 0.0f) {
                 consulta_sangria.setNull(5, java.sql.Types.FLOAT);
-            }
-            else {
+            } else {
                 consulta_sangria.setFloat(5, s.getVolumen_plasma_total());
             }
             consulta_sangria.setInt(6, s.getGrupo().getId_grupo_caballo());
@@ -81,11 +72,9 @@ public class SangriaDAO
             if (rs_sangria.next()) {
                 resultado_sangria = true;
                 s.setId_sangria(rs_sangria.getInt("id_sangria"));
-            }
-            else {
+            } else {
                 resultado_sangria = false;
             }
-            rs_sangria.close();
 
             consulta_caballos = getConexion().prepareStatement(
                     " INSERT INTO caballeriza.sangrias_caballos (id_sangria, id_caballo) "
@@ -112,53 +101,42 @@ public class SangriaDAO
             if (iteracion_completa) {
                 resultado_caballos = true;
             }
-            
-            CallableStatement actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
-            
+
+            actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
+
             actualizar_estadisticas.setInt(1, s.getId_sangria());
             actualizar_estadisticas.execute();
-            actualizar_estadisticas.close();
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("No se pudo la sangría correctamente.");
-        }
-        finally {
+        } finally {
             try {
                 if (resultado_sangria && resultado_caballos) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                 }
-                if (rs_sangria != null) {
-                    rs_sangria.close();
-                }
-                if (consulta_sangria != null) {
-                    consulta_sangria.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
-                cerrarConexion();
-            }
-            catch (SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos");
             }
+            cerrarSilencioso(actualizar_estadisticas);
+            cerrarSilencioso(rs_sangria);
+            cerrarSilencioso(consulta_sangria);
+            cerrarSilencioso(consulta_caballos);
+            cerrarConexion();
         }
 
         return s;
     }
 
-    public Sangria obtenerSangria(int id_sangria) throws SIGIPROException
-    {
+    public Sangria obtenerSangria(int id_sangria) throws SIGIPROException {
         Sangria sangria = new Sangria();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                      " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario, fecha, gc.nombre as nombre_grupo "
+                    " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario, fecha, gc.nombre as nombre_grupo "
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
                     + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
@@ -202,12 +180,12 @@ public class SangriaDAO
                     caballo.setNumero_microchip(rs.getString("numero_microchip"));
                     caballo.setNumero(rs.getInt("numero"));
                     sangria_caballo.setCaballo(caballo);
-                    sangria_caballo.setParticipo_dia1(rs.getBoolean("participo_dia1"));
-                    sangria_caballo.setParticipo_dia2(rs.getBoolean("participo_dia2"));
-                    sangria_caballo.setParticipo_dia3(rs.getBoolean("participo_dia3"));
-                    sangria_caballo.setLal_dia1(rs.getFloat("lal_dia1"));
-                    sangria_caballo.setLal_dia2(rs.getFloat("lal_dia2"));
-                    sangria_caballo.setLal_dia3(rs.getFloat("lal_dia3"));
+                    sangria_caballo.setParticipo_dia1((Boolean)rs.getObject("participo_dia1"));
+                    sangria_caballo.setParticipo_dia2((Boolean)rs.getObject("participo_dia2"));
+                    sangria_caballo.setParticipo_dia3((Boolean)rs.getObject("participo_dia3"));
+                    sangria_caballo.setObservaciones_dia1(rs.getString("observaciones_dia1")); // Esta línea se cambió
+                    sangria_caballo.setObservaciones_dia2(rs.getString("observaciones_dia2")); // Esta línea se cambió
+                    sangria_caballo.setObservaciones_dia3(rs.getString("observaciones_dia3")); // Esta línea se cambió
                     sangria_caballo.setPlasma_dia1(rs.getFloat("plasma_dia1"));
                     sangria_caballo.setPlasma_dia2(rs.getFloat("plasma_dia2"));
                     sangria_caballo.setPlasma_dia3(rs.getFloat("plasma_dia3"));
@@ -217,41 +195,37 @@ public class SangriaDAO
 
                     sangria.agregarSangriaCaballo(sangria_caballo);
 
-                }
-                while (rs.next());
-            }
-            else {
+                } while (rs.next());
+            } else {
                 throw new SIGIPROException("La sangría que está intentando buscar no existe.");
             }
 
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Ocurrió un error al procesar su solitud.");
         }
         return sangria;
     }
 
-    public Sangria obtenerSangriaConCaballosDeGrupo(int id_sangria) throws SIGIPROException
-    {
+    public Sangria obtenerSangriaConCaballosDeGrupo(int id_sangria) throws SIGIPROException {
         Sangria sangria = new Sangria();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario," +
-"                             s.potencia, fecha," +
-"                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, " +
-"                             CASE " +
-"                                  WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true " +
-"                                  ELSE false " +
-"                              END AS incluido " +
-"                      FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s " +
-"                      INNER JOIN seguridad.usuarios u ON u.id_usuario = s.responsable " +
-"                      INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos" +
-"                      INNER JOIN caballeriza.caballos c ON c.id_grupo_de_caballo = g.id_grupo_de_caballo; "
+                    " SELECT s.id_sangria, s.fecha_dia1, s.num_inf_cc, s.volumen_plasma_total, g.nombre as nombre_grupo, g.id_grupo_de_caballo, u.nombre_completo, u.id_usuario,"
+                    + "                             s.potencia, fecha,"
+                    + "                             c.id_caballo, c.nombre, c.numero, c.numero_microchip, "
+                    + "                             CASE "
+                    + "                                  WHEN c.id_caballo in (SELECT id_caballo FROM caballeriza.sangrias_caballos WHERE id_sangria = ?) THEN true "
+                    + "                                  ELSE false "
+                    + "                              END AS incluido "
+                    + "                      FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
+                    + "                      INNER JOIN seguridad.usuarios u ON u.id_usuario = s.responsable "
+                    + "                      INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos"
+                    + "                      INNER JOIN caballeriza.caballos c ON c.id_grupo_de_caballo = g.id_grupo_de_caballo; "
             );
 
             consulta.setInt(1, id_sangria);
@@ -271,11 +245,11 @@ public class SangriaDAO
                 u.setId_usuario(rs.getInt("id_usuario"));
                 sangria.setResponsable(u);
                 sangria.setVolumen_plasma_total(rs.getFloat("volumen_plasma_total"));
-                
+
                 GrupoDeCaballos g = new GrupoDeCaballos();
                 g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
-                g.setNombre(rs.getString("nombre"));
-                
+                g.setNombre(rs.getString("nombre_grupo"));
+
                 do {
                     Caballo caballo = new Caballo();
                     caballo.setId_caballo(rs.getInt("id_caballo"));
@@ -289,20 +263,17 @@ public class SangriaDAO
                         sc.setCaballo(caballo);
                         sangria.agregarSangriaCaballo(sc);
                     }
-                }
-                while (rs.next());
-                
+                } while (rs.next());
+
                 sangria.setGrupo(g);
-            }
-            else {
+            } else {
                 throw new SIGIPROException("La sangría que está intentando buscar no existe.");
             }
 
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Ocurrió un error al procesar su solitud.");
         }
@@ -310,18 +281,16 @@ public class SangriaDAO
         return sangria;
     }
 
-    public List<Sangria> obtenerSangrias() throws SIGIPROException
-    {
+    public List<Sangria> obtenerSangrias() throws SIGIPROException {
         List<Sangria> resultado = new ArrayList<Sangria>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " SELECT s.*, u.nombre_completo, u.id_usuario, gc.nombre "
-                  + " FROM caballeriza.sangrias s "
-                  + " INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario"
-                  + " INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos;"
+                    + " FROM caballeriza.sangrias s "
+                    + " INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario"
+                    + " INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos;"
             );
             ResultSet rs = consulta.executeQuery();
-            SangriaPruebaDAO dao = new SangriaPruebaDAO();
             while (rs.next()) {
                 Sangria sangria = new Sangria();
                 sangria.setId_sangria(rs.getInt("id_sangria"));
@@ -345,34 +314,33 @@ public class SangriaDAO
                 g.setNombre(rs.getString("nombre"));
                 sangria.setGrupo(g);
             }
+            rs.close();
             consulta.close();
             cerrarConexion();
-            rs.close();
-        }
-        catch (SQLException ex) {
+
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Las Sangrias no pueden ser accedidas.");
         }
         return resultado;
     }
 
-    public Sangria registrarExtraccion(Sangria sangria, int dia) throws SIGIPROException
-    {
+    public Sangria registrarExtraccion(Sangria sangria, int dia) throws SIGIPROException {
         boolean resultado = false;
         boolean resultado_sangria = false;
-        boolean resultado_preparacion = false;
         boolean resultado_sangrias_caballos = false;
 
         Method get_fecha;
 
         PreparedStatement consulta_preparacion = null;
+        PreparedStatement consulta_sin_participacion = null; // Esta línea se agregó
         PreparedStatement consulta_sangrias_caballos = null;
         PreparedStatement update_sangria = null;
+        CallableStatement actualizar_estadisticas = null;
 
         try {
             get_fecha = Sangria.class.getDeclaredMethod("getFecha_dia" + dia, (Class<?>[]) null);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Error inesperado. Contacte al administrador del sistema.");
         }
@@ -381,51 +349,72 @@ public class SangriaDAO
 
             getConexion().setAutoCommit(false);
 
-            consulta_preparacion = getConexion().prepareStatement(
-                    " UPDATE caballeriza.sangrias_caballos "
-                    + " SET sangre_dia" + dia + " = 0,"
-                    + "     plasma_dia" + dia + " = 0,"
-                    + "     lal_dia" + dia + " = 0,"
-                    + "     participo_dia" + dia + " = false "
-                    + " WHERE id_sangria = ?; "
-            );
+            if (sangria.getSangrias_caballos() != null) {
+                consulta_preparacion = getConexion().prepareStatement(
+                        " UPDATE caballeriza.sangrias_caballos "
+                        + " SET sangre_dia" + dia + " = 0,"
+                        + "     plasma_dia" + dia + " = 0,"
+                        + "     observaciones_dia" + dia + " = 'Sin observaciones.'," // Esta línea cambió.
+                        + "     participo_dia" + dia + " = false "
+                        + " WHERE id_sangria = ? AND id_caballo NOT IN " + this.pasar_ids_a_parentesis(sangria.obtener_ids_caballos_sangria()) + ";"
+                );
+                
+                consulta_preparacion.setInt(1, sangria.getId_sangria());
 
-            consulta_preparacion.setInt(1, sangria.getId_sangria());
-
-            int filas_actualizadas_preparacion = consulta_preparacion.executeUpdate();
-            if (filas_actualizadas_preparacion >= 1) {
-                resultado_preparacion = true;
-            }
-
-            consulta_sangrias_caballos = getConexion().prepareStatement(
-                    " UPDATE caballeriza.sangrias_caballos "
-                    + " SET sangre_dia" + dia + " = ?, "
-                    + "     plasma_dia" + dia + " = ?, "
-                    + "     lal_dia" + dia + " = ?, "
-                    + "     participo_dia" + dia + " = true "
-                    + " WHERE id_sangria = ? AND id_caballo = ?; "
-            );
-
-            for (SangriaCaballo sangria_caballo : sangria.getSangrias_caballos()) {
-                consulta_sangrias_caballos.setFloat(1, sangria_caballo.getSangre(dia));
-                consulta_sangrias_caballos.setFloat(2, sangria_caballo.getPlasma(dia));
-                consulta_sangrias_caballos.setFloat(3, sangria_caballo.getLal(dia));
-                consulta_sangrias_caballos.setInt(4, sangria.getId_sangria());
-                consulta_sangrias_caballos.setInt(5, sangria_caballo.getCaballo().getId_caballo());
-                consulta_sangrias_caballos.addBatch();
-            }
-
-            int[] resultados_caballos = consulta_sangrias_caballos.executeBatch();
-
-            boolean iteracion_completa = true;
-
-            for (int i : resultados_caballos) {
-                if (i != 1) {
-                    iteracion_completa = false;
+                consulta_preparacion.executeUpdate();
+                
+                // Se agregó este bloque
+                if (sangria.getSangrias_caballos_sin_participacion() != null) {
+                    consulta_sin_participacion = getConexion().prepareStatement(
+                        " UPDATE caballeriza.sangrias_caballos "
+                        + " SET observaciones_dia" + dia + " = ? "
+                        + " WHERE id_sangria = ? AND id_caballo = ?; "
+                    );
+                    
+                    for (SangriaCaballo sc : sangria.getSangrias_caballos_sin_participacion()) {
+                        consulta_sin_participacion.setString(1, sc.getObservaciones(dia));
+                        consulta_sin_participacion.setInt(2, sangria.getId_sangria());
+                        consulta_sin_participacion.setInt(3, sc.getCaballo().getId_caballo());
+                        consulta_sin_participacion.addBatch();
+                    }
+                    
+                    consulta_sin_participacion.executeBatch();
                 }
-            }
 
-            if (iteracion_completa) {
+                consulta_sangrias_caballos = getConexion().prepareStatement(
+                        " UPDATE caballeriza.sangrias_caballos "
+                        + " SET sangre_dia" + dia + " = ?, "
+                        + "     plasma_dia" + dia + " = ?, "
+                        + "     observaciones_dia" + dia + " = ?, " // Esta línea se cambió
+                        + "     participo_dia" + dia + " = true "
+                        + " WHERE id_sangria = ? AND id_caballo = ?; "
+                );
+
+                for (SangriaCaballo sangria_caballo : sangria.getSangrias_caballos()) {
+                    if (sangria_caballo.sumatoria(dia) > 0.0f) {
+                        consulta_sangrias_caballos.setFloat(1, sangria_caballo.getSangre(dia));
+                        consulta_sangrias_caballos.setFloat(2, sangria_caballo.getPlasma(dia));
+                        consulta_sangrias_caballos.setString(3, sangria_caballo.getObservaciones(dia)); // Esta línea se cambió
+                        consulta_sangrias_caballos.setInt(4, sangria.getId_sangria());
+                        consulta_sangrias_caballos.setInt(5, sangria_caballo.getCaballo().getId_caballo());
+                        consulta_sangrias_caballos.addBatch();
+                    }
+                }
+
+                int[] resultados_caballos = consulta_sangrias_caballos.executeBatch();
+
+                boolean iteracion_completa = true;
+
+                for (int i : resultados_caballos) {
+                    if (i != 1) {
+                        iteracion_completa = false;
+                    }
+                }
+
+                if (iteracion_completa) {
+                    resultado_sangrias_caballos = true;
+                }
+            } else {
                 resultado_sangrias_caballos = true;
             }
 
@@ -441,50 +430,39 @@ public class SangriaDAO
             if (update_sangria.executeUpdate() == 1) {
                 resultado_sangria = true;
             }
-            
-            CallableStatement actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
-            
+
+            actualizar_estadisticas = getConexion().prepareCall(" { call caballeriza.actualizar_estadisticas_sangria( ? ) } ");
+
             actualizar_estadisticas.setInt(1, sangria.getId_sangria());
             actualizar_estadisticas.execute();
-            actualizar_estadisticas.close();
 
-            resultado = resultado_sangrias_caballos && resultado_preparacion && resultado_sangria;
-        }
-        catch (SQLException sql_ex) {
+            resultado = resultado_sangrias_caballos && resultado_sangria;
+        } catch (SQLException sql_ex) {
             sql_ex.printStackTrace();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 if (resultado) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                 }
-                if( consulta_preparacion != null ) {
-                    consulta_preparacion.close();
-                }
-                if( consulta_sangrias_caballos != null ) {
-                    consulta_sangrias_caballos.close();
-                }
-                if( update_sangria != null ) {
-                    update_sangria.close();
-                }
-                cerrarConexion();
-            }
-            catch (SQLException ex) {
+            } catch (SQLException ex) {
                 ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Contacte al administrador del sistema.");
             }
+            cerrarSilencioso(actualizar_estadisticas);
+            cerrarSilencioso(consulta_preparacion);
+            cerrarSilencioso(consulta_sin_participacion); // Esta línea se agregó
+            cerrarSilencioso(consulta_sangrias_caballos);
+            cerrarSilencioso(update_sangria);
+            cerrarConexion();
         }
         return sangria;
     }
 
-    public Sangria editarSangria(Sangria s) throws SIGIPROException
-    {
+    public Sangria editarSangria(Sangria s) throws SIGIPROException {
 
         boolean resultado_sangria = false;
         boolean resultado_caballos = false;
@@ -496,34 +474,31 @@ public class SangriaDAO
         try {
             getConexion().setAutoCommit(false);
             boolean edicion_caballos = s.getSangrias_caballos() != null;
-            
+
             String consulta = " UPDATE caballeriza.sangrias"
-                    + " SET responsable = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? ";
+                              + " SET responsable = ?, num_inf_cc = ?, potencia = ?, volumen_plasma_total = ? ";
             if (edicion_caballos) {
                 consulta += ", cantidad_de_caballos = ? ";
-            }           
+            }
             consulta += " WHERE id_sangria = ? RETURNING fecha_dia1;";
-            
+
             consulta_sangria = getConexion().prepareStatement(consulta);
 
             consulta_sangria.setInt(1, s.getResponsable().getId_usuario());
 
             if (s.getNum_inf_cc() == 0) {
                 consulta_sangria.setNull(2, java.sql.Types.INTEGER);
-            }
-            else {
+            } else {
                 consulta_sangria.setInt(2, s.getNum_inf_cc());
             }
             if (s.getPotencia() == 0.0f) {
                 consulta_sangria.setNull(3, java.sql.Types.FLOAT);
-            }
-            else {
+            } else {
                 consulta_sangria.setFloat(3, s.getPotencia());
             }
-            if (s.getVolumen_plasma_total()== 0.0f) {
+            if (s.getVolumen_plasma_total() == 0.0f) {
                 consulta_sangria.setNull(4, java.sql.Types.FLOAT);
-            }
-            else {
+            } else {
                 consulta_sangria.setFloat(4, s.getVolumen_plasma_total());
             }
             if (edicion_caballos) {
@@ -532,8 +507,7 @@ public class SangriaDAO
             } else {
                 consulta_sangria.setInt(5, s.getId_sangria());
             }
-            
-            
+
             rs_sangria = consulta_sangria.executeQuery();
 
             boolean realizar_insercion_caballos;
@@ -543,12 +517,10 @@ public class SangriaDAO
                 if (rs_sangria.next()) {
                     resultado_sangria = false;
                     realizar_insercion_caballos = false;
-                }
-                else {
+                } else {
                     resultado_sangria = true;
                 }
-            }
-            else {
+            } else {
                 resultado_sangria = false;
                 resultado_caballos = false;
                 realizar_insercion_caballos = false;
@@ -556,14 +528,14 @@ public class SangriaDAO
             rs_sangria.close();
 
             if (realizar_insercion_caballos) {
-                
+
                 eliminar_caballos = getConexion().prepareStatement(
                         " DELETE FROM caballeriza.sangrias_caballos WHERE id_sangria = ?; "
                 );
-                
+
                 eliminar_caballos.setInt(1, s.getId_sangria());
                 eliminar_caballos.executeUpdate();
-                
+
                 consulta_caballos = getConexion().prepareStatement(
                         " INSERT INTO caballeriza.sangrias_caballos (id_sangria, id_caballo) "
                         + " VALUES (?,?); "
@@ -592,68 +564,26 @@ public class SangriaDAO
             } else {
                 resultado_caballos = true;
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("No se pudo registrar la sangría.");
-        }
-        finally {
+        } finally {
             try {
                 if (resultado_sangria && resultado_caballos) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                 }
-                if (rs_sangria != null) {
-                    rs_sangria.close();
-                }
-                if (consulta_sangria != null) {
-                    consulta_sangria.close();
-                }
-                if (consulta_caballos != null) {
-                    consulta_caballos.close();
-                }
-                if (eliminar_caballos != null) {
-                    eliminar_caballos.close();
-                }
-                cerrarConexion();
-            }
-            catch (SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos");
             }
+            cerrarSilencioso(rs_sangria);
+            cerrarSilencioso(consulta_sangria);
+            cerrarSilencioso(consulta_caballos);
+            cerrarSilencioso(eliminar_caballos);
+            cerrarConexion();
         }
         return s;
-    }
-
-    private Connection getConexion()
-    {
-        try {
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

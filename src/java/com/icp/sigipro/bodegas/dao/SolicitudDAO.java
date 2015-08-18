@@ -5,9 +5,7 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.BitacoraSubBodega;
-import com.icp.sigipro.bodegas.modelos.Ingreso;
 import com.icp.sigipro.bodegas.modelos.Inventario;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.Prestamo;
@@ -15,10 +13,10 @@ import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Solicitud;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,16 +31,10 @@ import java.util.List;
  *
  * @author Amed
  */
-public class SolicitudDAO
+public class SolicitudDAO extends DAO
 {
 
-    private Connection conexion;
-
-    public SolicitudDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
+    public SolicitudDAO() { }
 
     public boolean insertarSolicitud(Solicitud p)
     {
@@ -114,7 +106,7 @@ public class SolicitudDAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE bodega.solicitudes"
-                    + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
+                    + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?, id_inventario = ?"
                     + " WHERE id_solicitud=? AND cantidad <= (Select cantidad from bodega.inventarios where id_inventario =? ) "
             );
 
@@ -128,8 +120,9 @@ public class SolicitudDAO
                 consulta.setInt(4, p.getId_usuario_recibo());
             }
             consulta.setString(5, p.getObservaciones());
-            consulta.setInt(6, p.getId_solicitud());
-            consulta.setInt(7, p.getId_inventario());
+            consulta.setInt(6, p.getId_inventario());
+            consulta.setInt(7, p.getId_solicitud());
+            consulta.setInt(8, p.getId_inventario());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -185,6 +178,7 @@ public class SolicitudDAO
                     + "         ci.nombre AS nombre_producto, "
                     + "         ci.codigo_icp AS cod_icp ,"
                     + "         ci.id_producto, "
+                    + "         ci.presentacion, "
                     + "         i.stock_actual "
                     + " FROM ( "
                     + "         SELECT * FROM bodega.solicitudes where id_solicitud = ? "
@@ -225,7 +219,7 @@ public class SolicitudDAO
                 p.setId_producto(rs.getInt("id_producto"));
                 p.setCodigo_icp(rs.getString("cod_icp"));
                 p.setNombre(rs.getString("nombre_producto"));
-
+                p.setPresentacion(rs.getString("presentacion"));
                 i.setId_producto(rs.getInt("id_producto"));
 
                 Seccion s = new Seccion();
@@ -282,8 +276,10 @@ public class SolicitudDAO
                          + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
                          + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
 
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement consulta;
+            
             if (id_usuario == 0) {
                 codigo_consulta = parte_1
                                   + " SELECT * "
@@ -297,14 +293,14 @@ public class SolicitudDAO
                 codigo_consulta = parte_1 
                                   + " SELECT s.* FROM bodega.solicitudes s "
                                   + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND (( estado in ('Pendiente','Aprobada') ) OR ( (estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < fecha_entrega) )) "
+                                  + " WHERE u.id_seccion = ? AND (( s.estado in ('Pendiente','Aprobada') ) OR ( (s.estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < s.fecha_entrega) )) "
                                   + " ORDER BY s.id_solicitud DESC " 
                                   + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
                 consulta.setInt(1, id_usuario);
             }
 
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Solicitud solicitud = new Solicitud();
@@ -389,9 +385,11 @@ public class SolicitudDAO
                          + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
                          + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
                          + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
 
         try {
-            PreparedStatement consulta;
+            
             if (seccion_usuario == 0) {
                 codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado = 'Entregada' OR estado = 'Cerrada' OR estado = 'Rechazada' ORDER BY fecha_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
@@ -399,12 +397,12 @@ public class SolicitudDAO
             else {
                 codigo_consulta = parte_1 + " SELECT s.* FROM bodega.solicitudes s "
                                   + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
+                                  + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR s.estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
                 consulta.setInt(1, seccion_usuario);
             }
 
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
 
             while (rs.next()) {
                 Solicitud solicitud = new Solicitud();
@@ -452,12 +450,14 @@ public class SolicitudDAO
 
                 resultado.add(solicitud);
             }
-            rs.close();
-            consulta.close();
-            cerrarConexion();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }
+        finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }
@@ -534,7 +534,7 @@ public class SolicitudDAO
                 }
 
                 insert_bitacora = getConexion().prepareStatement(
-                        "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario) VALUES (?,?,?,?,?);"
+                        "INSERT INTO bodega.bitacora_sub_bodegas (id_sub_bodega, accion, id_producto, cantidad, id_usuario, fecha, observaciones) VALUES (?,?,?,?,?,?,?);"
                 );
 
                 for (InventarioSubBodega inventario_sub_bodega : inventarios_sub_bodegas) {
@@ -600,6 +600,9 @@ public class SolicitudDAO
                     insert_bitacora.setInt(3, inventario_sub_bodega.getProducto().getId_producto());
                     insert_bitacora.setInt(4, inventario_sub_bodega.getCantidad());
                     insert_bitacora.setInt(5, id_usuario_recibo);
+                    insert_bitacora.setDate(6, hoysql);
+                    insert_bitacora.setString(7, "Sin observaciones.");
+                    
 
                     insert_bitacora.addBatch();
                 }
@@ -664,38 +667,6 @@ public class SolicitudDAO
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 
     private String pasar_ids_solicitudes(String[] ids_solicitudes)

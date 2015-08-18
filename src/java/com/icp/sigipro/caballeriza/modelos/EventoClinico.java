@@ -110,7 +110,15 @@ public class EventoClinico {
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        if (descripcion == null) {
+            this.descripcion = "Sin descripción.";
+        } else {
+            if (descripcion.isEmpty()) {
+                this.descripcion = "Sin descripción.";
+            } else {
+                this.descripcion = descripcion;
+            }
+        }
     }
 
     public String getObservaciones() {
@@ -118,7 +126,15 @@ public class EventoClinico {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        if (observaciones == null) {
+            this.observaciones = "Sin observaciones.";
+        } else {
+            if (observaciones.isEmpty()) {
+                this.observaciones = "Sin observaciones.";
+            } else {
+                this.observaciones = observaciones;
+            }
+        }
     }
 
     public Usuario getResponsable() {

@@ -5,10 +5,9 @@
  */
 package com.icp.sigipro.bodegas.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bodegas.modelos.ProductoInterno;
 import com.icp.sigipro.bodegas.modelos.Reactivo;
-import java.sql.Connection;
+import com.icp.sigipro.core.DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +19,11 @@ import java.util.List;
  *
  * @author Boga
  */
-public class ProductoInternoDAO
+public class ProductoInternoDAO extends DAO
 {
-
-    private Connection conexion;
 
     public ProductoInternoDAO()
     {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
     }
 
     public boolean insertarProductoInterno(ProductoInterno p, String ubicaciones, String productosExternos)
@@ -91,7 +86,7 @@ public class ProductoInternoDAO
                     consultaUbicaciones.setInt(1, Integer.parseInt(id));
                     consultaUbicaciones.executeUpdate();
                 }
-                
+
                 consultaUbicaciones.close();
             }
 
@@ -205,7 +200,7 @@ public class ProductoInternoDAO
                 upsertReactivo.setString(17, r.getVolumen_lab());
 
                 upsertReactivo.executeUpdate();
-                
+
                 upsertReactivo.close();
             }
 
@@ -228,8 +223,6 @@ public class ProductoInternoDAO
                 PreparedStatement consultaUbicaciones = getConexion().prepareStatement(
                         " INSERT INTO bodega.ubicaciones_catalogo_interno(id_ubicacion, id_producto) "
                         + " VALUES (?, ?)");
-
-                
 
                 for (String id : ids) {
                     consultaUbicaciones.setInt(1, Integer.parseInt(id));
@@ -406,7 +399,7 @@ public class ProductoInternoDAO
 
                 resultado.add(producto);
             }
-            
+
             rs.close();
             consulta.close();
             cerrarConexion();
@@ -435,7 +428,7 @@ public class ProductoInternoDAO
 
                 resultado.add(producto);
             }
-            
+
             rs.close();
             consulta.close();
             cerrarConexion();
@@ -524,25 +517,22 @@ public class ProductoInternoDAO
     {
         boolean resultado = false;
 
-        if (conexion != null) {
-            try {
-                PreparedStatement consulta;
-                consulta = getConexion().prepareStatement("SELECT codigo_icp FROM bodega.catalogo_interno WHERE codigo_icp = ? and id_producto <> ?");
-                consulta.setString(1, codigo);
-                consulta.setInt(2, id_producto);
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement("SELECT codigo_icp FROM bodega.catalogo_interno WHERE codigo_icp = ? and id_producto <> ?");
+            consulta.setString(1, codigo);
+            consulta.setInt(2, id_producto);
 
-                ResultSet resultadoConsulta = consulta.executeQuery();
-                if (!resultadoConsulta.next()) {
-                    resultado = true;
-                }
-                resultadoConsulta.close();
-                consulta.close();
-                cerrarConexion();
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (!resultadoConsulta.next()) {
+                resultado = true;
             }
-            catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-
+            resultadoConsulta.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
         }
         return resultado;
     }
@@ -551,37 +541,5 @@ public class ProductoInternoDAO
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
-    
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

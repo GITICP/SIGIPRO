@@ -83,7 +83,7 @@
                 <div class="input-group">
                     <c:choose>
                         <c:when test="${serpiente.getFecha_ingreso()==null}">
-                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePickerSerpiente" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                    oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
                                    onchange="setCustomValidity('')">
                         </c:when>

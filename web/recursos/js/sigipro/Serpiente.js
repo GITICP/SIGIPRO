@@ -6,8 +6,8 @@ function previewFile(){
         var size  = file.size;
         var imagen = document.getElementById("imagen_Serpiente");
         var reader  = new FileReader();
-        if (size> 102400){
-            document.getElementById("imagen_Serpiente").setCustomValidity("La imagen debe ser de 100KB o menos. ");
+        if (size> 307200){
+            document.getElementById("imagen_Serpiente").setCustomValidity("La imagen debe ser de 300KB o menos. ");
             document.getElementById("boton_Cancelar").style.visibility = "visible";
         }else{
             document.getElementById("imagen_Serpiente").setCustomValidity("");
@@ -31,6 +31,7 @@ function previewFile(){
 $(function() {
     var max = $("#fecha_ingreso").val();
     var datepicker = $("#datepickerDeceso").datepicker({startDate:max,endDate:"-0d"});
+    $("#datepickerSerpiente").datepicker({endDate:"0d"});
 });
 
 
@@ -45,6 +46,11 @@ $(document).on("click", ".open-Modal", function () {
 $(document).on("click", ".evento-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente").val(id_serpiente);                          
+                            });
+                            
+$(document).on("click", ".pasocv-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_pasocv").val(id_serpiente);                          
                             });
                             
 $(document).on("click", ".ch-Modal", function () {                            

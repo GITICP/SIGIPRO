@@ -2,6 +2,7 @@ package com.icp.sigipro.activosfijos.dao;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.activosfijos.modelos.ActivoFijo;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,16 +22,9 @@ import org.postgresql.util.PSQLException;
  * @author Walter
  */
 //Cada DAO tiene su propia conexion a la Bitacora
-public class ActivoFijoDAO
+public class ActivoFijoDAO extends DAO
 {
-
-    private Connection conexion;
-
-    public ActivoFijoDAO()
-    {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
-    }
+    public ActivoFijoDAO(){  }
 
     public boolean insertarActivoFijo(ActivoFijo a) throws SIGIPROException
     {
@@ -180,7 +174,7 @@ public class ActivoFijoDAO
                 activo.setId_ubicacion(rs.getInt("id_ubicacion"));
                 activo.setFecha_registro(rs.getDate("fecha_registro"));
                 activo.setEstado(rs.getString("estado"));
-                PreparedStatement consultaSeccion = conexion.prepareStatement(" Select nombre_seccion "
+                PreparedStatement consultaSeccion = getConexion().prepareStatement(" Select nombre_seccion "
                                                                               + " From seguridad.secciones"
                                                                               + " Where id_seccion = ? ");
                 consultaSeccion.setInt(1, rs.getInt("id_seccion"));
@@ -188,7 +182,7 @@ public class ActivoFijoDAO
                 resultadoConsultaSeccion.next();
                 String seccion = resultadoConsultaSeccion.getString("nombre_seccion");
                 activo.setNombre_seccion(seccion);
-                PreparedStatement consultaUbicacion = conexion.prepareStatement(" Select nombre "
+                PreparedStatement consultaUbicacion = getConexion().prepareStatement(" Select nombre "
                                                                                 + " From bodega.ubicaciones"
                                                                                 + " Where id_ubicacion = ? ");
                 consultaUbicacion.setInt(1, rs.getInt("id_ubicacion"));
@@ -316,37 +310,5 @@ public class ActivoFijoDAO
     {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
-    }
-
-    private Connection getConexion()
-    {
-        try {
-
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            conexion = null;
-        }
-
-        return conexion;
-    }
-
-    private void cerrarConexion()
-    {
-        if (conexion != null) {
-            try {
-                if (conexion.isClosed()) {
-                    conexion.close();
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                conexion = null;
-            }
-        }
     }
 }

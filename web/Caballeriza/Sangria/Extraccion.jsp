@@ -17,23 +17,18 @@
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
             <div class="row">
-                <div class="col-md-8 ">
+                <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
-                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangría</a>
+                            <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=${sangria.getId_sangria()}">Sangría ${sangria.getId_sangria_especial()}</a>
                         </li>
-                        <li class="active"> Agregar Extracción</li>
+                        <li class="active"> ${(editar == true) ? "Editar" : "Registrar"} Extracción</li>
 
                     </ul>
-                </div>
-                <div class="col-md-4 ">
-                    <div class="top-content">
-
-                    </div>
                 </div>
             </div>
 
@@ -43,16 +38,17 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-tint"></i> Agregar Extracción del día ${dia} para la sangría ${sangria.getId_sangria_especial()}</h3>
+                            <h3><i class="fa fa-tint"></i> ${(editar == true) ? "Editar" : "Registrar"} Extracción del día ${dia} para la sangría ${sangria.getId_sangria_especial()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
 
-                            <form class="form-horizontal" autocomplete="off" method="post" action="Sangria">
+                            <form id="form-extraccion-sangria" class="form-horizontal" autocomplete="off" method="post" action="Sangria">
                                 <div class="col-md-12">
                                     <input hidden="true" name="id_sangria" value="${sangria.getId_sangria()}">
                                     <input hidden="true" name="dia" value="${dia}">
                                     <input hidden="true" name="accion" value="Extraccion">
+                                    <input id="input-volver" hidden="true" name="volver" value="false">
                                     <label for="fecha_extraccion" class="control-label">*Fecha de Extracción</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
@@ -80,7 +76,7 @@
                                                 <tr>
                                                     <th>Sangre</th>
                                                     <th>Plasma</th>
-                                                    <th>LAL</th>
+                                                    <th>Observaciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -89,41 +85,56 @@
                                                     <tr id="${caballo.getId_caballo()}">
                                                         <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
                                                         <td>
-                                                            <label class="fancy-checkbox" style="text-align:center">
-                                                                <c:choose>
-                                                                    <c:when test="${editar}">
-                                                                        <c:choose>
-                                                                            <c:when test="${sangria_caballo.getParticipo(dia)}">
+
+                                                            <c:choose>
+                                                                <c:when test="${editar}">
+                                                                    <c:choose>
+                                                                        <c:when test="${sangria_caballo.getParticipo(dia) || sangria_caballo.getParticipo(dia) == null}">
+                                                                            <label class="fancy-checkbox" style="text-align:center">
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
-                                                                            </c:when>
-                                                                            <c:otherwise>
+                                                                                <span></span>
+                                                                            </label>
+                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" style="display:none">
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <label class="fancy-checkbox" style="text-align:center">
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos">
-                                                                                <c:set var="deshabilitado" value="true"></c:set>
-                                                                            </c:otherwise>
-                                                                        </c:choose>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <c:choose>
-                                                                            <c:when test="${sangria_caballo.getParticipo(dia - 1)}">
+                                                                                <span></span>
+                                                                            </label>
+                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" checked style="display:none">
+                                                                            <c:set var="deshabilitado" value="true"></c:set>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <c:choose>
+                                                                        <c:when test="${sangria_caballo.getParticipo(dia - 1)}">
+                                                                            <label class="fancy-checkbox" style="text-align:center">
                                                                                 <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" checked>
-                                                                            </c:when>
-                                                                            <c:otherwise>
-                                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" disabled>
-                                                                                <c:set var="deshabilitado" value="true"></c:set>
-                                                                            </c:otherwise>
-                                                                        </c:choose>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                                <span></span>
-                                                            </label>
+                                                                                <span></span>
+                                                                            </label>
+                                                                            <input type="checkbox" name="caballos_false"  value="${sangria_caballo.getCaballo().getId_caballo()}" style="display:none">
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <label class="fancy-checkbox" style="text-align:center">
+                                                                                <input type="checkbox" value="${sangria_caballo.getCaballo().getId_caballo()}" name="caballos" disabled>    
+                                                                                <span></span>
+                                                                            </label>
+                                                                            <input type="checkbox" name="caballos_false" value="${sangria_caballo.getCaballo().getId_caballo()}" checked style="display:none">
+                                                                            <c:set var="deshabilitado" value="true"></c:set>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:otherwise>
+                                                            </c:choose>
+
                                                         </td>
                                                         <c:set var="sangre" value=""></c:set>
                                                         <c:set var="plasma" value=""></c:set>
-                                                        <c:set var="lal" value=""></c:set>
+                                                        <c:set var="observaciones" value=""></c:set>
                                                         <c:if test="${editar}">
                                                             <c:set var="sangre" value="${(sangria_caballo.getSangre(dia) == 0) ? '' : sangria_caballo.getSangre(dia)}"></c:set>
                                                             <c:set var="plasma" value="${(sangria_caballo.getPlasma(dia) == 0) ? '' : sangria_caballo.getPlasma(dia)}"></c:set>
-                                                            <c:set var="lal" value="${(sangria_caballo.getLal(dia) == 0) ? '' : sangria_caballo.getLal(dia)}"></c:set>
+                                                            <c:set var="observaciones" value="${(sangria_caballo.getObservaciones(dia) == 'Sin observaciones.') ? '' : sangria_caballo.getObservaciones(dia)}"></c:set>
                                                         </c:if>
                                                         <td>
                                                             <input type="number" step="any" placeholder="" class="form-control" name="sangre_${sangria_caballo.getCaballo().getId_caballo()}"
@@ -134,8 +145,8 @@
                                                                    value="${(plasma == 0) ? "" : plasma}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
                                                         </td>
                                                         <td>
-                                                            <input type="number" step="any" placeholder="" class="form-control" name="lal_${sangria_caballo.getCaballo().getId_caballo()}"
-                                                                   value="${(lal == 0) ? "" : lal}" oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')" ${(deshabilitado == true) ? "disabled" : ""}>
+                                                            <textarea class="form-control" name="observaciones_${sangria_caballo.getCaballo().getId_caballo()}"
+                                                                      oninput="setCustomValidity(\'\')" oninvalid="setCustomValidity(\'Ingrese solo números\')">${observaciones}</textarea>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -153,14 +164,8 @@
                                         <div class="form-group">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                                <c:choose>
-                                                    <c:when test="${editar}">
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Extracción</button>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar y Salir</button>
+                                                <button id="boton-guardar-volver" type="button" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar </button>
                                             </div>
                                         </div>
                                     </div> 
@@ -179,5 +184,6 @@
     </jsp:attribute>
     <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/Caballeriza.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/sangrias.js"></script>
     </jsp:attribute>
 </t:plantilla_general>

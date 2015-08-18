@@ -20,20 +20,15 @@
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
             <div class="row">
-                <div class="col-md-4 ">
+                <div class="col-md-12">
                     <ul class="breadcrumb">
                         <li>Caballeriza</li>
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/Sangria?">Sangrías</a>
                         </li>
-                        <li class="active">Sangria ${sangria.getId_sangria_especial()}</li>
+                        <li class="active">Editar Sangria ${sangria.getId_sangria_especial()}</li>
 
                     </ul>
-                </div>
-                <div class="col-md-8 ">
-                    <div class="top-content">
-
-                    </div>
                 </div>
             </div>
 
@@ -43,7 +38,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-tint"></i> Editar Sangría </h3>
+                            <h3><i class="fa fa-tint"></i> Editar Sangría ${sangria.getId_sangria_especial()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

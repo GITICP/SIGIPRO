@@ -5,10 +5,9 @@
  */
 package com.icp.sigipro.caballeriza.dao;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
+import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,20 +18,19 @@ import java.util.List;
  *
  * @author Walter
  */
-public class TipoEventoDAO {
+public class TipoEventoDAO extends DAO
+{
 
-    private Connection conexion;
-
-    public TipoEventoDAO() {
-        SingletonBD s = SingletonBD.getSingletonBD();
-        conexion = s.conectar();
+    public TipoEventoDAO()
+    {
     }
 
-    public boolean insertarTipoEvento(TipoEvento te) throws SIGIPROException {
+    public boolean insertarTipoEvento(TipoEvento te) throws SIGIPROException
+    {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.tipos_eventos (nombre, descripcion) "
-                    + " VALUES (?,?) RETURNING id_tipo_evento");
+                                                                        + " VALUES (?,?) RETURNING id_tipo_evento");
             consulta.setString(1, te.getNombre());
             consulta.setString(2, te.getDescripcion());
 
@@ -41,16 +39,19 @@ public class TipoEventoDAO {
                 resultado = true;
                 te.setId_tipo_evento(resultadoConsulta.getInt("id_tipo_evento"));
             }
+            resultadoConsulta.close();
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("El tipo de evento no pudo ser agregado correctamente.");
         }
         return resultado;
     }
 
-    public boolean eliminarTipoEvento(int id_tipo_evento) throws SIGIPROException {
+    public boolean eliminarTipoEvento(int id_tipo_evento) throws SIGIPROException
+    {
         boolean resultado = false;
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
@@ -62,15 +63,17 @@ public class TipoEventoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("El tipo de evento no pudo ser eliminado debido a que uno o más eventos se encuentran asociadas a este.");
         }
         return resultado;
     }
 
-    public boolean editarTipoEvento(TipoEvento te) throws SIGIPROException {
+    public boolean editarTipoEvento(TipoEvento te) throws SIGIPROException
+    {
         boolean resultado = false;
 
         try {
@@ -88,8 +91,9 @@ public class TipoEventoDAO {
                 resultado = true;
             }
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("El tipo de evento no pudo ser actualizado correctamente.");
         }
@@ -97,7 +101,8 @@ public class TipoEventoDAO {
 
     }
 
-    public TipoEvento obtenerTipoEvento(int id_tipo_evento) throws SIGIPROException {
+    public TipoEvento obtenerTipoEvento(int id_tipo_evento) throws SIGIPROException
+    {
         TipoEvento tipoevento = new TipoEvento();
         try {
             PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.tipos_eventos where id_tipo_evento = ?");
@@ -110,15 +115,17 @@ public class TipoEventoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("No se pudo obtener el tipo de evento correctamente.");
         }
         return tipoevento;
     }
 
-    public List<TipoEvento> obtenerTiposEventos() throws SIGIPROException {
+    public List<TipoEvento> obtenerTiposEventos() throws SIGIPROException
+    {
         List<TipoEvento> resultado = new ArrayList<TipoEvento>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement("select * from caballeriza.tipos_eventos where id_tipo_evento != 0");
@@ -132,23 +139,12 @@ public class TipoEventoDAO {
             }
             rs.close();
             consulta.close();
-            conexion.close();
-        } catch (SQLException ex) {
+            cerrarConexion();
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("No se pudo obtener los tipos de eventos correctamente.");
         }
         return resultado;
-    }
-
-    private Connection getConexion() {
-        try {
-            if (conexion.isClosed()) {
-                SingletonBD s = SingletonBD.getSingletonBD();
-                conexion = s.conectar();
-            }
-        } catch (Exception ex) {
-            conexion = null;
-        }
-        return conexion;
     }
 }

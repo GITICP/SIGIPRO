@@ -14,6 +14,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -35,19 +36,16 @@ import javax.servlet.http.HttpSession;
  * @author Amed
  */
 @WebServlet(name = "ControladorSolicitudesConejera", urlPatterns = {"/Conejera/SolicitudesConejera"})
-public class ControladorSolicitudesConejera extends SIGIPROServlet
-{
+public class ControladorSolicitudesConejera extends SIGIPROServlet {
 
     private final int[] permisos = {253, 254, 1};
     private final SolicitudConejeraDAO dao = new SolicitudConejeraDAO();
     private final EntregaConejeraDAO dao_en = new EntregaConejeraDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
-    private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     private boolean admin = false;
 
     protected final Class clase = ControladorSolicitudesConejera.class;
-    protected final List<String> accionesGet = new ArrayList<String>()
-    {
+    protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
             add("ver");
@@ -57,10 +55,10 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             add("aprobar");
             add("cerrar");
             add("verentrega");
+            add("historial");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>()
-    {
+    protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
             add("editar");
@@ -69,8 +67,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         }
     };
 
-    protected final List<String> pesos = new ArrayList<String>()
-    {
+    protected final List<String> pesos = new ArrayList<String>() {
         {
             add("2200");
             add("2300");
@@ -80,8 +77,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
 
         }
     };
-    protected final List<String> sexos = new ArrayList<String>()
-    {
+    protected final List<String> sexos = new ArrayList<String>() {
         {
             add("Mixto");
             add("Hembras");
@@ -90,11 +86,14 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-
+        HttpSession sesion = request.getSession();
+        int id_usuario = (int) sesion.getAttribute("idusuario");
+        Usuario us = dao_us.obtenerUsuario(id_usuario);
+        List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
+        request.setAttribute("usuarios", usuarios);
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
         String redireccion = "SolicitudesConejera/Agregar.jsp";
@@ -105,8 +104,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         admin = verificarPermiso(254, listaPermisos);
@@ -119,28 +117,54 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             try {
                 solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                 request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+            } catch (SIGIPROException ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
-            catch (SIGIPROException ex) {
+        } else {
+            try {
+                HttpSession sesion = request.getSession();
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
+                request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+            } catch (SIGIPROException ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
         }
-        else {
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        admin = verificarPermiso(254, listaPermisos);
+        request.setAttribute("admin", admin);
+        String redireccion = "SolicitudesConejera/Historial.jsp";
+        List<SolicitudConejera> solicitudes_conejera;
+        request.setAttribute("pesos", pesos);
+        request.setAttribute("sexos", sexos);
+        if (admin) {
+            try {
+                solicitudes_conejera = dao.obtenerSolicitudesConejeraAdmCompletadas();
+                request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+            } catch (SIGIPROException ex) {
+                request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+            }
+        } else {
             try {
                 HttpSession sesion = request.getSession();
-                String nombre_usr = (String) sesion.getAttribute("usuario");
-                int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejeraCompletadas(u.getIdSeccion());
                 request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-            }
-            catch (SIGIPROException ex) {
+            } catch (SIGIPROException ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         admin = verificarPermiso(254, listaPermisos);
@@ -152,15 +176,13 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             List<EntregaConejera> e = dao_en.obtenerEntregasConejera(id_solicitud);
             request.setAttribute("solicitud", s);
             request.setAttribute("entregas", e);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVerentrega(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getVerentrega(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         admin = verificarPermiso(254, listaPermisos);
@@ -170,15 +192,13 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         try {
             EntregaConejera s = dao_en.obtenerEntregaConejera(id_entrega);
             request.setAttribute("entrega", s);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "SolicitudesConejera/Editar.jsp";
@@ -186,18 +206,21 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
         request.setAttribute("accion", "Editar");
         request.setAttribute("pesos", pesos);
         request.setAttribute("sexos", sexos);
+        HttpSession sesion = request.getSession();
+        int id_usuario = (int) sesion.getAttribute("idusuario");
+        Usuario us = dao_us.obtenerUsuario(id_usuario);
+        List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
+        request.setAttribute("usuarios", usuarios);
         try {
             SolicitudConejera s = dao.obtenerSolicitudConejera(id_solicitud);
             request.setAttribute("solicitud", s);
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -212,8 +235,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             bitacora.setBitacora(id_solicitud, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
             //*----------------------------* 
             request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud de conejera eliminada correctamente."));
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         try {
@@ -222,28 +244,24 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                 try {
                     solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-                }
-                catch (SIGIPROException ex) {
+                } catch (SIGIPROException ex) {
                     request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                 }
-            }
-            else {
+            } else {
                 HttpSession sesion = request.getSession();
-                String nombre_usr = (String) sesion.getAttribute("usuario");
-                int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                 request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
             }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         String redireccion = "SolicitudesConejera/index.jsp";
         redireccionar(request, response, redireccion);
     }
 
-    protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -262,13 +280,11 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             //*----------------------------* 
 
             if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
-            }
-            else {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada."));
+            } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
             }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         try {
@@ -277,79 +293,76 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                 try {
                     solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-                }
-                catch (SIGIPROException ex) {
+                } catch (SIGIPROException ex) {
                     request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                 }
-            }
-            else {
+            } else {
                 HttpSession sesion = request.getSession();
-                String nombre_usr = (String) sesion.getAttribute("usuario");
-                int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                 request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
             }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         String redireccion = "SolicitudesConejera/index.jsp";
         redireccionar(request, response, redireccion);
     }
-   protected void getCerrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    List<Integer> listaPermisos = getPermisosUsuario(request);
-    validarPermisos(permisos, listaPermisos);
-    int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-    String tipo = request.getParameter("tipo");
-    boolean resultado = false;
-    admin = verificarPermiso(203, listaPermisos);
-    request.setAttribute("admin", admin);
-    request.setAttribute("pesos", pesos);
-    request.setAttribute("sexos", sexos);
-    try {
-      SolicitudConejera solicitud = dao.obtenerSolicitudConejera(id_solicitud);
-      solicitud.setEstado("Cerrada ("+tipo+")");
-      resultado = dao.editarSolicitudConejera(solicitud);
-      //Funcion que genera la bitacora
-      BitacoraDAO bitacora = new BitacoraDAO();
-      bitacora.setBitacora(id_solicitud, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-      //*----------------------------* 
 
-      if (resultado) {
-        request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada"));
-      } else {
-        request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-      }
-    } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-    }
-    try {
-      List<SolicitudConejera> solicitudes_conejera;
-      if (admin) {
+    protected void getCerrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        String tipo = request.getParameter("tipo");
+        boolean resultado = false;
+        admin = verificarPermiso(203, listaPermisos);
+        request.setAttribute("admin", admin);
+        request.setAttribute("pesos", pesos);
+        request.setAttribute("sexos", sexos);
         try {
-          solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
-          request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+            SolicitudConejera solicitud = dao.obtenerSolicitudConejera(id_solicitud);
+            solicitud.setEstado("Cerrada (" + tipo + ")");
+            resultado = dao.editarSolicitudConejera(solicitud);
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(id_solicitud, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            //*----------------------------* 
+
+            if (resultado) {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud cerrada."));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
         } catch (SIGIPROException ex) {
-          request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
-      } else {
-        HttpSession sesion = request.getSession();
-        String nombre_usr = (String) sesion.getAttribute("usuario");
-        int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-        solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
-        request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-      }
-    } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        try {
+            List<SolicitudConejera> solicitudes_conejera;
+            if (admin) {
+                try {
+                    solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
+                    request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+                } catch (SIGIPROException ex) {
+                    request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+                }
+            } else {
+                HttpSession sesion = request.getSession();
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
+                request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
+            }
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        String redireccion = "SolicitudesConejera/index.jsp";
+        redireccionar(request, response, redireccion);
     }
-    String redireccion = "SolicitudesConejera/index.jsp";
-    redireccionar(request, response, redireccion);
-  }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
         String redireccion = "SolicitudesConejera/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -365,8 +378,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
             //*----------------------------*
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
@@ -377,32 +389,27 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                     try {
                         solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                         request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-                    }
-                    catch (SIGIPROException ex) {
+                    } catch (SIGIPROException ex) {
                         request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                     }
-                }
-                else {
+                } else {
                     HttpSession sesion = request.getSession();
-                    String nombre_usr = (String) sesion.getAttribute("usuario");
-                    int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                    solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                    int id_usuario = (int) sesion.getAttribute("idusuario");
+                    Usuario u = dao_us.obtenerUsuario(id_usuario);
+                    solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
                 }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada con éxito"));
-            }
-            catch (SIGIPROException ex) {
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada con éxito."));
+            } catch (SIGIPROException ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
-        }
-        else {
+        } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
         String redireccion = "SolicitudesConejera/Editar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -418,8 +425,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
             //*----------------------------*
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
@@ -430,33 +436,28 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                     try {
                         solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                         request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-                    }
-                    catch (SIGIPROException ex) {
+                    } catch (SIGIPROException ex) {
                         request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                     }
-                }
-                else {
+                } else {
                     HttpSession sesion = request.getSession();
-                    String nombre_usr = (String) sesion.getAttribute("usuario");
-                    int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                    solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                    int id_usuario = (int) sesion.getAttribute("idusuario");
+                    Usuario u = dao_us.obtenerUsuario(id_usuario);
+                    solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
                 }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada con éxito"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada con éxito."));
 
-            }
-            catch (SIGIPROException ex) {
+            } catch (SIGIPROException ex) {
                 request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             }
-        }
-        else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición."));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
@@ -477,13 +478,11 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             //*----------------------------* 
 
             if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada."));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición."));
             }
-            else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-            }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         try {
@@ -492,28 +491,24 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                 try {
                     solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-                }
-                catch (SIGIPROException ex) {
+                } catch (SIGIPROException ex) {
                     request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                 }
-            }
-            else {
+            } else {
                 HttpSession sesion = request.getSession();
-                String nombre_usr = (String) sesion.getAttribute("usuario");
-                int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                 request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
             }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         String redireccion = "SolicitudesConejera/index.jsp";
         redireccionar(request, response, redireccion);
     }
 
-    protected void postEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_auth2"));
@@ -535,9 +530,8 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                 solicitud.setEstado("Abierta");
                 resultado = dao.editarSolicitudConejera(solicitud);
                 resultado2 = dao_en.insertarEntregaConejera(entrega);
-            }
-            else {
-                request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos"));
+            } else {
+                request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos."));
             }
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -545,13 +539,11 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             //*----------------------------* 
 
             if (resultado && resultado2) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud aprobada"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud entregada."));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición."));
             }
-            else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-            }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         try {
@@ -560,31 +552,26 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                 try {
                     solicitudes_conejera = dao.obtenerSolicitudesConejeraAdm();
                     request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
-                }
-                catch (SIGIPROException ex) {
+                } catch (SIGIPROException ex) {
                     request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
                 }
-            }
-            else {
+            } else {
                 HttpSession sesion = request.getSession();
-                String nombre_usr = (String) sesion.getAttribute("usuario");
-                int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-                solicitudes_conejera = dao.obtenerSolicitudesConejera(id_usuario);
+                int id_usuario = (int) sesion.getAttribute("idusuario");
+                Usuario u = dao_us.obtenerUsuario(id_usuario);
+                solicitudes_conejera = dao.obtenerSolicitudesConejera(u.getIdSeccion());
                 request.setAttribute("listaSolicitudesConejera", solicitudes_conejera);
             }
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         String redireccion = "SolicitudesConejera/index.jsp";
         redireccionar(request, response, redireccion);
     }
   // </editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
 
-    private SolicitudConejera construirObjeto(HttpServletRequest request) throws SIGIPROException
-    {
+    // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
+    private SolicitudConejera construirObjeto(HttpServletRequest request) throws SIGIPROException {
         SolicitudConejera solicitud = new SolicitudConejera();
         solicitud.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
         if (request.getParameter("fecha_solicitud").equals("")) {
@@ -592,8 +579,7 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             java.sql.Date fecha_solicitudSQL;
             fecha_solicitudSQL = new java.sql.Date(fecha_solicitud.getTime());
             solicitud.setFecha_solicitud(fecha_solicitudSQL);
-        }
-        else {
+        } else {
             String fch_sol = request.getParameter("fecha_solicitud");
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
             java.util.Date fecha_solicitud;
@@ -602,10 +588,20 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
                 fecha_solicitud = formatoFecha.parse(fch_sol);
                 fecha_solicitudSQL = new java.sql.Date(fecha_solicitud.getTime());
                 solicitud.setFecha_solicitud(fecha_solicitudSQL);
-            }
-            catch (ParseException ex) {
+            } catch (ParseException ex) {
                 Logger.getLogger(ControladorSolicitudesConejera.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        try {
+            String fch_nec = request.getParameter("fecha_necesita");
+            java.util.Date fecha_necesita;
+            java.sql.Date fecha_necesitaSQL;
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+            fecha_necesita = formatoFecha.parse(fch_nec);
+            fecha_necesitaSQL = new java.sql.Date(fecha_necesita.getTime());
+            solicitud.setFecha_necesita(fecha_necesitaSQL);
+        } catch (ParseException ex) {
+            Logger.getLogger(ControladorSolicitudesRatonera.class.getName()).log(Level.SEVERE, null, ex);
         }
         solicitud.setNumero_animales(Integer.parseInt(request.getParameter("numero_animales")));
         solicitud.setPeso_requerido(request.getParameter("peso_requerido"));
@@ -616,17 +612,18 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
             String nombre_usr = (String) sesion.getAttribute("usuario");
             int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
             solicitud.setUsuario_solicitante(dao_us.obtenerUsuario(id_usuario));
-        }
-        else {
+        } else {
             int id_usuario = Integer.parseInt(request.getParameter("usuario_solicitante"));
             solicitud.setUsuario_solicitante(dao_us.obtenerUsuario(id_usuario));
         }
-
+        if (!(request.getParameter("usuario_utiliza").equals(""))) {
+            int id_usuario = Integer.parseInt(request.getParameter("usuario_utiliza"));
+            solicitud.setUsuario_utiliza(dao_us.obtenerUsuario(id_usuario));
+        }
         return solicitud;
     }
 
-    private EntregaConejera construirSubObjeto(HttpServletRequest request) throws SIGIPROException
-    {
+    private EntregaConejera construirSubObjeto(HttpServletRequest request) throws SIGIPROException {
         EntregaConejera entrega = new EntregaConejera();
         entrega.setSolicitud(dao.obtenerSolicitudConejera(Integer.parseInt(request.getParameter("id_solicitud_auth2"))));
         java.util.Date fecha_solicitud = new java.util.Date();
@@ -641,32 +638,27 @@ public class ControladorSolicitudesConejera extends SIGIPROServlet
     }
 
   // </editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
-    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
-    {
+    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<String> lista_acciones;
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
-        }
-        else {
+        } else {
             lista_acciones = accionesPost;
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
             Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
-        }
-        else {
+        } else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
         }
     }
 
     @Override
-    protected int getPermiso()
-    {
+    protected int getPermiso() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
