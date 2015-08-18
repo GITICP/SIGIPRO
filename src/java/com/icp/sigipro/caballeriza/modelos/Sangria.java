@@ -6,6 +6,7 @@
 package com.icp.sigipro.caballeriza.modelos;
 
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperVarios;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -315,9 +316,8 @@ public class Sangria {
     }
     
     private float formatearResultado(float sumatoria) {
-        BigDecimal bd = new BigDecimal(Float.toString(sumatoria));
-        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
+        HelperVarios hv = HelperVarios.getSingletonHelperVarios();
+        return hv.redondearFloat(sumatoria, 2);
     }
     
     public boolean valididarCaballoEnSangria(Caballo c){
