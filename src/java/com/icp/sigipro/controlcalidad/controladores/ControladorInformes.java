@@ -53,6 +53,7 @@ public class ControladorInformes extends SIGIPROServlet
     {
         {
             add("generar");
+            add("editar");
         }
     };
 
@@ -69,6 +70,25 @@ public class ControladorInformes extends SIGIPROServlet
         if (solicitud != null) {
             request.setAttribute("solicitud", solicitud);
             request.setAttribute("accion", "Generar");
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Error al obtener la información de la solicitud. Inténtelo nuevamente."));
+        }
+        
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermiso(550, listaPermisos);
+        String redireccion = "Informe/Generar.jsp";
+        
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        
+        SolicitudCC solicitud = daosolicitud.obtenerSolicitud(id_solicitud);
+        
+        if (solicitud != null) {
+            request.setAttribute("solicitud", solicitud);
+            request.setAttribute("accion", "Editar");
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Error al obtener la información de la solicitud. Inténtelo nuevamente."));
         }
@@ -122,6 +142,43 @@ public class ControladorInformes extends SIGIPROServlet
         
         try {
             informe = dao.ingresarInforme(informe);
+            // Bitácora informe
+            request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        }
+        
+        this.redireccionar(request, response, redireccion);
+        
+    }
+    
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        String redireccion = "Solicitud/Ver.jsp";
+        
+        String[] ids_resultados = request.getParameterValues("resultados");
+        
+        Informe informe = new Informe();
+        SolicitudCC s = new SolicitudCC();
+        s.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
+        informe.setSolicitud(s);
+        Usuario u = new Usuario();
+        u.setId_usuario(this.getIdUsuario(request));
+        informe.setUsuario(u);
+        informe.setId_informe(Integer.parseInt(request.getParameter("id_informe")));
+        
+        String objeto_por_asociar = request.getParameter("objeto-relacionado");
+        informe.asociar_objeto(objeto_por_asociar);
+        
+        for (String resultado : ids_resultados) {
+            Resultado r = new Resultado();
+            r.setId_resultado(Integer.parseInt(resultado));
+            informe.agregarResultado(r, request);
+        }
+        
+        try {
+            informe = dao.editarInforme(informe);
             // Bitácora informe
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
             request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));

@@ -332,38 +332,18 @@ public class SolicitudDAO extends DAO {
                 }
             }
 
-            if (resultado.getInforme() == null) {
-                consulta = getConexion().prepareStatement(
-                        " SELECT ags.id_analisis_grupo_solicitud, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
-                        + " FROM control_calidad.analisis_grupo_solicitud as ags "
-                        + "   LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
-                        + "   LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
-                        + "   LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
-                        + "   LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
-                        + "   LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
-                        + " WHERE g.id_solicitud = ?"
-                        + " ORDER BY ags.id_analisis_grupo_solicitud;");
+            consulta = getConexion().prepareStatement(
+                    " SELECT ags.id_analisis_grupo_solicitud, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
+                    + " FROM control_calidad.analisis_grupo_solicitud as ags "
+                    + "   LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
+                    + "   LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
+                    + "   LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
+                    + "   LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "   LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
+                    + " WHERE g.id_solicitud = ?"
+                    + " ORDER BY ags.id_analisis_grupo_solicitud;");
 
-                consulta.setInt(1, id_solicitud);
-            } else {
-                consulta = getConexion().prepareStatement(
-                        " SELECT ags.id_analisis_grupo_solicitud, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
-                        + " FROM control_calidad.analisis_grupo_solicitud as ags "
-                        + "   LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
-                        + "   LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
-                        + "   LEFT OUTER JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
-                        + "   LEFT OUTER JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
-                        + "   LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
-                        + " WHERE ags.id_analisis_grupo_solicitud IN ( "
-                        + "                                           SELECT r.id_analisis_grupo_solicitud "
-                        + "                                           FROM control_calidad.resultados_informes ri "
-                        + "                                               INNER JOIN control_calidad.resultados r ON r.id_resultado = ri.id_resultado "
-                        + "                                           WHERE ri.id_informe = ? "
-                        + "                                          ) "
-                        + " ORDER BY ags.id_analisis_grupo_solicitud;");
-
-                consulta.setInt(1, resultado.getInforme().getId_informe());
-            }
+            consulta.setInt(1, id_solicitud);
 
             rs = consulta.executeQuery();
 
@@ -414,12 +394,35 @@ public class SolicitudDAO extends DAO {
             resultado.setAnalisis_solicitud(lista_grupos_analisis_solicitud);
             resultado.setControl_solicitud(cs);
 
-            consulta = getConexion().prepareStatement(
-                    " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion FROM control_calidad.analisis_grupo_solicitud ags "
-                    + " LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
-                    + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
-                    + " ORDER BY ags.id_analisis_grupo_solicitud; "
-            );
+            if (resultado.getInforme() != null) {
+                String ids = this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud);
+                consulta = getConexion().prepareStatement(
+                          " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, "
+                        + " CASE WHEN r.id_resultado IN (  "
+                        + " 				SELECT r.id_resultado "
+                        + " 				FROM control_calidad.resultados_informes ri  "
+                        + " 				    INNER JOIN control_calidad.resultados r ON r.id_resultado = ri.id_resultado  "
+                        + " 				WHERE ri.id_informe = ?  "
+                        + " 				)  "
+                        + "      THEN true "
+                        + "      ELSE false "
+                        + " END AS en_informe "
+                        + " FROM control_calidad.analisis_grupo_solicitud ags "
+                        + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
+                        + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
+                        + " ORDER BY ags.id_analisis_grupo_solicitud; "
+                );
+                
+                consulta.setInt(1, resultado.getInforme().getId_informe());
+            } else {
+                consulta = getConexion().prepareStatement(
+                          " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
+                        + " FROM control_calidad.analisis_grupo_solicitud ags "
+                        + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
+                        + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
+                        + " ORDER BY ags.id_analisis_grupo_solicitud; "
+                );
+            }
 
             rs = consulta.executeQuery();
 
@@ -434,6 +437,11 @@ public class SolicitudDAO extends DAO {
                     ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                     r.setAgs(ags_iter);
                     resultado.agregarResultadoAnalisisGrupoSolicitud(r);
+                    if (resultado.getInforme() != null) {
+                        if (rs.getBoolean("en_informe")) {
+                            resultado.getInforme().agregarResultado(r);
+                        }
+                    }
                 }
             }
 
@@ -591,7 +599,6 @@ public class SolicitudDAO extends DAO {
             for (Analisis a : grupo.getAnalisis()) {
                 consulta_ags.setInt(1, a.getId_analisis());
                 consulta_ags.setInt(2, grupo.getId_grupo());
-                System.out.println(consulta_ags);
                 consulta_ags.addBatch();
             }
 

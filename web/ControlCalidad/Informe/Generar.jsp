@@ -24,9 +24,9 @@
                             <a href="/SIGIPRO/ControlCalidad/Solicitud?">Solicitudes</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Solicitud?id_solicitud=${solicitud.getId_solicitud()}">${solicitud.getNumero_solicitud()} </a>
+                            <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">${solicitud.getNumero_solicitud()} </a>
                         </li>
-                        <li class="active"> Generar Informe</li>
+                        <li class="active"> ${accion} Informe</li>
                     </ul>
                 </div>
             </div>
@@ -59,6 +59,10 @@
                             <form class="form-horizontal" method="post" action="Informe" id="form-informe">
                                 <input type="hidden" value="${accion}" name="accion" />
                                 <input type="hidden" value="${solicitud.getId_solicitud()}" name="id_solicitud" />
+                                <c:if test="${accion == 'Editar'}">
+                                    <input type="hidden" value="${solicitud.getInforme().getId_informe()}" name="id_informe" />
+                                </c:if>
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
@@ -109,31 +113,7 @@
                                 </div>
                                 <div class="row">
 
-                                    <div class="col-md-6">
-                                        <div class="widget widget-table">
-                                            <div class="widget-header">
-                                                <h3><i class="fa fa-calendar"></i> Resultados por Reportar</h3>
-                                            </div>
-                                            <div class="widget-content">
-                                                <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                                    <!-- Columnas -->
-                                                    <thead> 
-                                                        <tr>
-                                                            <th>ID Muestras (Tipo)</th>
-                                                            <th>Análisis Solicitado</th>
-                                                            <th>Resultado</th>
-                                                            <th>Repetición</th>
-                                                            <th>Acción</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="widget widget-table">
                                             <div class="widget-header">
                                                 <h3><i class="fa fa-calendar"></i> Resultados Obtenidos</h3>
@@ -141,9 +121,9 @@
 
                                             <div class="widget-content">
                                                 <table id="resultados-obtenidos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                                    <!-- Columnas -->
                                                     <thead> 
                                                         <tr>
+                                                            <th class="columna-escondida">Control</th>
                                                             <th>Identificadores de Muestras (Tipo)</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
@@ -153,29 +133,72 @@
                                                     </thead>
                                                     <tbody>
                                                         <c:forEach items="${solicitud.getResultados()}" var="resultado">
-                                                        <input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" style="display:none" />
-                                                        <tr id='${resultado.getId_resultado()}'>
-
-                                                            <td>
-                                                                <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                    ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
-                                                                </c:forEach>
-                                                            </td>
-                                                            <td>
-                                                                ${resultado.getAgs().getAnalisis().getNombre()}
-                                                            </td>
-                                                            <td>${resultado.getResultado()}</td>
-                                                            <td>${resultado.getRepeticion()}</td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
-                                                            </td>
-                                                        </tr>
-                                                    </c:forEach>
+                                                            <c:if test="${!solicitud.getInforme().tieneResultado(resultado.getId_resultado())}">
+                                                                <tr id="${resultado.getId_resultado()}">
+                                                                    <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}"></td>
+                                                                    <td>
+                                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                        </c:forEach>
+                                                                    </td>
+                                                                    <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
+                                                                    <td>${resultado.getResultado()}</td>
+                                                                    <td>${resultado.getRepeticion()}</td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:if>
+                                                        </c:forEach>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="widget widget-table">
+                                            <div class="widget-header">
+                                                <h3><i class="fa fa-calendar"></i> Resultados por Reportar</h3>
+                                            </div>
+                                            <div class="widget-content">
+                                                <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                    <!-- Columnas -->
+                                                    <thead> 
+                                                        <tr>
+                                                            <th class="columna-escondida">Control</th>
+                                                            <th>ID Muestras (Tipo)</th>
+                                                            <th>Análisis Solicitado</th>
+                                                            <th>Resultado</th>
+                                                            <th>Repetición</th>
+                                                            <th>Acción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:if test="${accion == 'Editar'}">
+                                                            <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
+
+                                                                <tr id="${resultado.getId_resultado()}">
+                                                                    <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
+                                                                    <td class="">
+                                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                        </c:forEach>
+                                                                    </td>
+                                                                    <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
+                                                                    <td>${resultado.getResultado()}</td>
+                                                                    <td>${resultado.getRepeticion()}</td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger btn-sm boton-accion eliminar-resultado">Eliminar de informe</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </c:if>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <!-- END WIDGET TICKET TABLE -->
                                 <div class="form-group">
@@ -201,9 +224,11 @@
         </div>
 
     </jsp:attribute>
+
     <jsp:attribute name="scripts">
         <script src="/SIGIPRO/recursos/js/sigipro/informes.js"></script>
     </jsp:attribute>
+
 </t:plantilla_general>
 
 

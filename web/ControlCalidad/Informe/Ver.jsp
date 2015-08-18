@@ -24,7 +24,7 @@
                             <a href="/SIGIPRO/ControlCalidad/Solicitud?">Solicitudes de Control de Calidad</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicutud=${solicitud.getId_solicitud()}">Solicitud ${solicitud.getNumero_solicitud()}</a>
+                            <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">Solicitud ${solicitud.getNumero_solicitud()}</a>
                         </li>
                         <li class="active"> Informe </li>
                     </ul>

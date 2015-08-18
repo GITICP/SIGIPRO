@@ -57,6 +57,13 @@ public class Informe
             asociacion.asociar(resultado, request);
         }
     }
+    
+    public void agregarResultado(Resultado resultado) {
+        if (resultados == null) {
+            resultados = new ArrayList<Resultado>();
+        }
+        resultados.add(resultado);
+    }
 
     public SolicitudCC getSolicitud() {
         return solicitud;
@@ -102,6 +109,19 @@ public class Informe
                 break;
         }
     
+    }
+    
+    public boolean tieneResultado(int id_resultado) {
+        boolean resultado = false;
+        if (resultados != null) {
+            for (Resultado r : resultados) {
+                if (r.getId_resultado() == id_resultado) {
+                    resultado = true;
+                    break;
+                }
+            }
+        }
+        return resultado;
     }
     
     public List<PreparedStatement> obtenerConsultasAsociacion(Connection conexion) throws SQLException {

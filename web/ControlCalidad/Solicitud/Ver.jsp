@@ -55,7 +55,7 @@
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
                                             </c:when>
                                             <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
-                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_informe=${solicitud.getInforme().getId_informe()}">Editar Informe</a>
+                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe</a>
                                             </c:when>
                                         </c:choose>
                                     </c:otherwise>
@@ -210,18 +210,18 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
-                                                                <tr id='${ags.getId_analisis_grupo_solicitud()}'>
+                                                            <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
+                                                                <tr id='${resultado.getId_resultado()}'>
                                                                     <td>
-                                                                        <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
                                                                             ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
                                                                         </c:forEach>
                                                                     </td>
                                                                     <td>
-                                                                        ${ags.getAnalisis().getNombre()}
+                                                                        ${resultado.getAgs().getAnalisis().getNombre()}
                                                                     </td>
                                                                     <td>
-                                                                        ${ags.getPrimerResultado().getResultado()}
+                                                                        ${resultado.getResultado()}
                                                                     </td>
                                                                 </tr>
                                                             </c:forEach>
