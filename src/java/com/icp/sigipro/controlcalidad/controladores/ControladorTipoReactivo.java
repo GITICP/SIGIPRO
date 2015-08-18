@@ -171,7 +171,6 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
 
     }
     // </editor-fold>
-
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);

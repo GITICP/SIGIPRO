@@ -16,6 +16,7 @@ public class TipoEquipo {
     private int id_tipo_equipo;
     private String nombre;
     private String descripcion;
+    private boolean certificable;
 
     public TipoEquipo() {
     }
@@ -28,8 +29,6 @@ public class TipoEquipo {
         this.descripcion = descripcion;
     }
     
-    
-
     public int getId_tipo_equipo() {
         return id_tipo_equipo;
     }
@@ -44,6 +43,14 @@ public class TipoEquipo {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public boolean isCertificable() {
+        return certificable;
+    }
+
+    public void setCertificable(boolean certificable) {
+        this.certificable = certificable;
     }
     
     public String parseJSON(){

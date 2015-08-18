@@ -5,12 +5,10 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -180,6 +178,7 @@ public class ControladorTipoEquipo extends SIGIPROServlet {
         TipoEquipo te = new TipoEquipo();
         te.setNombre(request.getParameter("nombre"));
         te.setDescripcion(request.getParameter("descripcion"));
+        te.setCertificable(Boolean.parseBoolean(request.getParameter("certificable")));
 
         return te;
     }

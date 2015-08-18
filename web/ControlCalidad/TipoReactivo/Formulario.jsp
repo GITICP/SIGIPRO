@@ -30,8 +30,16 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <label class="fancy-checkbox">
-                            <input type="checkbox" name="certificable" value="true" checked>
-                            <span> Tipo de Equipo Certificable</span>
+                            <c:choose>
+                                <c:when test="${accion == 'Editar' && !tiporeactivo.isCertificable()}">
+                                    <input type="checkbox" name="certificable" value="true">
+                                    <span> Tipo de Equipo Certificable</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="checkbox" name="certificable" value="true" checked>
+                                    <span> Tipo de Equipo Certificable</span>
+                                </c:otherwise>
+                            </c:choose>
                         </label>
                     </div>
                 </div>

@@ -24,10 +24,11 @@ public class TipoEquipoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_equipos (nombre,descripcion) "
-                                                                        + " VALUES (?,?) RETURNING id_tipo_equipo");
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_equipos (nombre,descripcion, certificable) "
+                                                                        + " VALUES (?,?,?) RETURNING id_tipo_equipo");
             consulta.setString(1, tipoequipo.getNombre());
             consulta.setString(2, tipoequipo.getDescripcion());
+            consulta.setBoolean(3, tipoequipo.isCertificable());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -53,11 +54,12 @@ public class TipoEquipoDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_equipos "
-                    + "SET nombre=?, descripcion=? "
+                    + "SET nombre=?, descripcion=?, certificable=? "
                     + "WHERE id_tipo_equipo = ?; ");
             consulta.setString(1, tipoequipo.getNombre());
             consulta.setString(2, tipoequipo.getDescripcion());
-            consulta.setInt(3, tipoequipo.getId_tipo_equipo());
+            consulta.setBoolean(3, tipoequipo.isCertificable());
+            consulta.setInt(4, tipoequipo.getId_tipo_equipo());
             if (consulta.executeUpdate()==1) {
                 resultado = true;
             }
@@ -111,6 +113,7 @@ public class TipoEquipoDAO extends DAO {
                 resultado.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
+                resultado.setCertificable(rs.getBoolean("certificable"));
             }
         }
         catch (Exception ex) {

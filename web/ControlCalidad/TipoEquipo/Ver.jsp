@@ -48,6 +48,7 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre del Tipo: </strong></td> <td>${tipoequipo.getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción: </strong> <td>${tipoequipo.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Tipo de Equipo ${(tipoequipo.isCertificable() ? "Certificable" : "No certificable")}</strong></td></tr>
                             </table>
                             <br>
                         </div>
