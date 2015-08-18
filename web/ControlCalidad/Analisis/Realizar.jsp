@@ -59,7 +59,7 @@
                                                             <option value=''></option>
                                                             <c:forEach items="${reactivos}" var="reactivo">
                                                                 <option value=${reactivo.getId_reactivo()}>
-                                                                    ${reactivo.getNombre()}
+                                                                    ${reactivo.getNombre()} (${reactivo.getTipo_reactivo().getNombre()})
                                                                 </option>
                                                             </c:forEach>
                                                         </select>
@@ -89,7 +89,9 @@
                                                                 onchange="setCustomValidity('')">
                                                             <option value=''></option>
                                                             <c:forEach items="${equipos}" var="equipo">
-                                                                <option value=${equipo.getId_equipo()}>${equipo.getNombre()}</option>
+                                                                <option value=${equipo.getId_equipo()}>
+                                                                    ${equipo.getNombre()} (${equipo.getTipo_equipo().getNombre()})
+                                                                </option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>

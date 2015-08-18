@@ -153,7 +153,10 @@ public class EquipoDAO extends DAO {
         try {
             String ids_parseados = this.pasar_ids_a_parentesis(ids_tipos);
             consulta = getConexion().prepareStatement(
-                    " SELECT id_equipo, nombre FROM control_calidad.equipos WHERE id_tipo_equipo in " + ids_parseados + "; "
+                    " SELECT e.id_equipo, e.nombre, e.id_tipo_equipo, te.nombre as nombre_tipo "
+                  + " FROM control_calidad.equipos e"
+                  + "   INNER JOIN control_calidad.tipos_equipos te ON te.id_tipo_equipo = e.id_tipo_equipo "
+                  + " WHERE e.id_tipo_equipo in " + ids_parseados + "; "
             );
             
             rs = consulta.executeQuery();
@@ -162,6 +165,12 @@ public class EquipoDAO extends DAO {
                 Equipo equipo = new Equipo();
                 equipo.setNombre(rs.getString("nombre"));
                 equipo.setId_equipo(rs.getInt("id_equipo"));
+                
+                TipoEquipo tipo_equipo = new TipoEquipo();
+                tipo_equipo.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
+                tipo_equipo.setNombre(rs.getString("nombre_tipo"));
+                
+                equipo.setTipo_equipo(tipo_equipo);
                 
                 resultado.add(equipo);
             }
