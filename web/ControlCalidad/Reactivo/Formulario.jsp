@@ -80,7 +80,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group descargar-Machote">
-                                <a href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo=${reactivo.getTipo_reactivo().getId_tipo_reactivo()}">Descargar Machote de Preparación</a>
+                                <a href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo=${reactivo.getTipo_reactivo().getId_tipo_reactivo()}">Descargar Machote de Curva</a>
                             </div>
                         </div>
                     </div>

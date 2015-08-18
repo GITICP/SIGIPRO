@@ -48,7 +48,7 @@
               <table class="tabla-ver">
                 <tr><td> <strong>Nombre del Tipo: </strong></td> <td>${tiporeactivo.getNombre()} </td></tr>
                 <tr><td> <strong>Descripción: </strong> <td>${tiporeactivo.getDescripcion()} </td></tr>
-                <tr><td> <strong>Machote de Preparación: </strong> <td><a href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo=${tiporeactivo.getId_tipo_reactivo()}">Descargar Machote</a></td></tr>
+                <tr><td> <strong>Machote de Curva: </strong> <td><a href="/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo=${tiporeactivo.getId_tipo_reactivo()}">Descargar Machote</a></td></tr>
               </table>
               <br>
             </div>

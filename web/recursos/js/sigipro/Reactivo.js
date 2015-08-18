@@ -10,6 +10,6 @@ $(document).on("click", ".eliminarCertificado-Modal", function () {
 
 $("#seleccionTipo").change(function(){
     var id = $(this).val();
-    $(".descargar-Machote").empty().append("<a href=\"/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo="+id+"\">Descargar Machote de Preparación</a>");
+    $(".descargar-Machote").empty().append("<a href=\"/SIGIPRO/ControlCalidad/TipoReactivo?accion=archivo&id_tipo_reactivo="+id+"\">Descargar Machote de Curva</a>");
 
 });

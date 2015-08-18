@@ -27,7 +27,7 @@
             </div>
             <c:choose>
                 <c:when test="${tiporeactivo.getId_tipo_reactivo()!=0}">
-                    <label for="nombre" class="control-label"> Machote de Preparación (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
+                    <label for="nombre" class="control-label"> Machote de Curva (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
@@ -39,7 +39,7 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <label for="nombre" class="control-label"> *Machote de Preparación</label>
+                    <label for="nombre" class="control-label"> *Machote de Curva</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
