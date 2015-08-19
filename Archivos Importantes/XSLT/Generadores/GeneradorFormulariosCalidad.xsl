@@ -28,7 +28,7 @@
         <xsl:param name="valor" select="valor" />
 
         <!-- Plantilla -->
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="{$nombre-campo}" class="control-label">
                 <xsl:value-of select="$etiqueta" />
             </label>
@@ -54,7 +54,7 @@
         <xsl:param name="valor" select="valor" />
         
         <!-- Plantilla -->
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="{$nombre-campo}" class="control-label">
                 <xsl:value-of select="$etiqueta" />
             </label>
@@ -94,7 +94,7 @@
         <xsl:param name="valor" select="valor" />
         
         <!-- Plantilla -->
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="{$nombre-campo}" class="control-label">
                 <xsl:value-of select="$etiqueta" />
             </label>
@@ -118,7 +118,7 @@
         <xsl:param name="valor" select="valor" />
         
         <!-- Plantilla -->
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="{$nombre-campo}" class="control-label">
                 <xsl:value-of select="$etiqueta" />
             </label>
@@ -138,7 +138,35 @@
         <xsl:param name="celda" select="celda" />
         <xsl:param name="nombre-campo" select="nombre-campo" />
         <xsl:param name="valor" select="valor" />
-        <input type="hidden" value="{$celda}" name="{$nombre-campo}"></input>
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <xsl:call-template name="input_excel">
+                            <xsl:with-param name="texto_parte1" select="'Se obtiene de la celda '" />
+                            <xsl:with-param name="texto_parte2" select="' del archivo de Excel.'" />
+                            <xsl:with-param name="celda" select="$celda" />
+                        </xsl:call-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xsl:template>
+    
+    <!-- Plantilla general de Input -->
+    <xsl:template name="input_excel">
+        <!-- Parámetros -->
+        <xsl:param name="texto_parte1" />
+        <xsl:param name="celda" />
+        <xsl:param name="texto_parte2" />
+        
+        <!-- Plantilla -->
+        <input class="form-control" type="text" value="{concat($texto_parte1, $celda, $texto_parte2)}" disabled="disabled"></input>
+        
     </xsl:template>
     
     <!-- 
@@ -147,27 +175,31 @@
     
     <!-- Plantilla general de una tabla -->
     <xsl:template match="campo[tipo = 'table']">
-        <div class="widget widget-table">
-            <div class="widget-header">
-                <h3>
-                    <i class="fa fa-table"></i> 
-                    <xsl:value-of select="nombre" /> 
-                </h3>
-            </div>
-            <div class="widget-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget widget-table">
+                    <div class="widget-header">
+                        <h3>
+                            <i class="fa fa-table"></i> 
+                            <xsl:value-of select="nombre" /> 
+                        </h3>
+                    </div>
+                    <div class="widget-content">
             
-                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                    <thead>
-                        <tr>
-                            <!-- Aplicación de plantillas para las columnas de la tabla -->
-                            <xsl:apply-templates select="columnas" />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Aplicación de plantillas para las filas de la tabla -->
-                        <xsl:apply-templates select="filas" />
-                    </tbody>
-                </table>
+                        <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                            <thead>
+                                <tr>
+                                    <!-- Aplicación de plantillas para las columnas de la tabla -->
+                                    <xsl:apply-templates select="columnas" />
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Aplicación de plantillas para las filas de la tabla -->
+                                <xsl:apply-templates select="filas" />
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </xsl:template>
@@ -206,22 +238,32 @@
     
     <!-- Plantilla para las columnas de la tabla -->
     <xsl:template match="columna">
-        <xsl:if test="not(@tipo = 'excel_tabla')">
-            <th>
-                <xsl:value-of select="nombre" />
-            </th>
-        </xsl:if>
+        <th>
+            <xsl:value-of select="nombre" />
+        </th>
     </xsl:template>
     
     <xsl:template match="fila[@tipo = 'especial']">
         <xsl:param name="funcion" select="current()/@funcion" />
         <tr class="fila-especial" data-funcion="{$funcion}">
             <xsl:for-each select="celdas/celda">
-                <xsl:if test="not(campo/tipo = 'excel_tabla')">
-                    <td class="especial-fila">
-                        <xsl:apply-templates />
-                    </td>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="not(campo/tipo = 'excel_tabla')">
+                        <td class="especial-fila">
+                            <xsl:apply-templates />
+                        </td>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <td>
+                            <xsl:call-template name="input_excel">
+                                <xsl:with-param name="texto_parte1" select="'Celda '" />
+                                <xsl:with-param name="texto_parte2" select="' del Excel.'" />
+                                <xsl:with-param name="celda" select="campo/celda" />
+                            </xsl:call-template>
+                        </td>
+                    </xsl:otherwise>
+                </xsl:choose>
+                
             </xsl:for-each>
         </tr>
     </xsl:template>
@@ -230,11 +272,22 @@
     <xsl:template match="fila">
         <tr>
             <xsl:for-each select="celdas/celda">
-                <xsl:if test="not(campo/tipo = 'excel_tabla')">
-                    <td>
-                        <xsl:apply-templates />
-                    </td>                
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="not(campo/tipo = 'excel_tabla')">
+                        <td>
+                            <xsl:apply-templates />
+                        </td> 
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <td>
+                            <xsl:call-template name="input_excel">
+                                <xsl:with-param name="texto_parte1" select="'Celda '" />
+                                <xsl:with-param name="texto_parte2" select="' del Excel.'" />
+                                <xsl:with-param name="celda" select="campo/celda" />
+                            </xsl:call-template>
+                        </td>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:for-each>
         </tr>
     </xsl:template>

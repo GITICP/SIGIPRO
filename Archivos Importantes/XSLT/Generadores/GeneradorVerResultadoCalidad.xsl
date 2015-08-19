@@ -8,14 +8,21 @@
     
     <xsl:template match="analisis">
         
-        <table>
-            <!-- Campos diferentes de tablas -->
-            <xsl:apply-templates select="campo[tipo != 'table']"/>
-        </table>
+        <div class="widget widget-table">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-table"></i> 
+                    <xsl:value-of select="'Campos'" /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="tabla-ver">
+                    <!-- Campos diferentes de tablas -->
+                    <xsl:apply-templates select="campo[tipo != 'table']"/>
+                </table>
+            </div>
+        </div>
         
-        <br>
-            <!-- Campos de tablas -->
-        </br>
         <xsl:apply-templates select="campo[tipo = 'table']"/>
         
     </xsl:template>

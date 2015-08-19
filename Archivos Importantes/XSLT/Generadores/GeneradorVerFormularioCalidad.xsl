@@ -7,22 +7,29 @@
     </xsl:template>
     
     <xsl:template match="analisis">
-        
-        <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-            <thead>
-                <tr>
-                    <th>Nombre de Campo</th>
-                    <th>Tipo</th>
-                    <th>Resultado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Campos diferentes de tablas -->
-                <xsl:apply-templates select="campo[not(tipo = 'table')]"/>
-            </tbody>
-        </table>
-            
-        <br />
+        <div class="widget widget-table">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-table"></i> 
+                    <xsl:value-of select="'Campos'" /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Nombre de Campo</th>
+                            <th>Tipo</th>
+                            <th>Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:apply-templates select="campo[not(tipo = 'table')]"/>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <!-- Campos de tablas -->
         <xsl:apply-templates select="campo[tipo = 'table']"/>
         

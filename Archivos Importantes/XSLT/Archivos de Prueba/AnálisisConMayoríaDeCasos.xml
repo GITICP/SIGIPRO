@@ -1,34 +1,46 @@
 <analisis>
     <campo>
-        <nombre-campo>Campo 1-Campo 1_1</nombre-campo>
-        <etiqueta>Campo 1-Campo 1</etiqueta>
+        <nombre-campo>Campo de Texto Manual_1</nombre-campo>
+        <etiqueta>Campo de Texto Manual</etiqueta>
         <valor/>
-        <tipo>number</tipo>
+        <tipo>text</tipo>
         <resultado>True</resultado>
     </campo>
     <campo>
-        <nombre-campo>Texto 1-Texto 1_2</nombre-campo>
-        <etiqueta>Texto 1-Texto 1</etiqueta>
+        <nombre-campo>Número Manual_2</nombre-campo>
+        <etiqueta>Número Manual</etiqueta>
+        <valor/>
+        <tipo>number</tipo>
+        <resultado>False</resultado>
+    </campo>
+    <campo>
+        <nombre-campo>Campo de Texto Automático_3</nombre-campo>
+        <etiqueta>Campo de Texto Automático</etiqueta>
         <valor/>
         <tipo>Excel</tipo>
-        <celda>A2</celda>
+        <celda>A3</celda>
+        <resultado>False</resultado>
+    </campo>
+    <campo>
+        <nombre-campo>Número Automático_4</nombre-campo>
+        <etiqueta>Número Automático</etiqueta>
+        <valor/>
+        <tipo>Excel</tipo>
+        <celda>B3</celda>
         <resultado>False</resultado>
     </campo>
     <campo>
         <tipo>table</tipo>
-        <nombre>Tabla Normal</nombre>
+        <nombre>Tabla Todo automático</nombre>
         <columnas>
             <columna>
-                <nombre>Sin nombre</nombre>
+                <nombre>Medida #</nombre>
             </columna>
-            <columna>
+            <columna tipo="excel_tabla">
                 <nombre>Columna 1</nombre>
             </columna>
-            <columna>
+            <columna tipo="excel_tabla">
                 <nombre>Columna 2</nombre>
-            </columna>
-            <columna>
-                <nombre>Columna 3</nombre>
             </columna>
         </columnas>
         <filas>
@@ -41,22 +53,17 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
+                            <tipo>excel_tabla</tipo>
                             <nombre-campo>Tabla_0_Celda_0_0</nombre-campo>
+                            <celda>C1</celda>
                             <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
+                            <tipo>excel_tabla</tipo>
                             <nombre-campo>Tabla_0_Celda_0_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_0_2</nombre-campo>
+                            <celda>D1</celda>
                             <valor/>
                         </campo>
                     </celda>
@@ -71,112 +78,17 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
+                            <tipo>excel_tabla</tipo>
                             <nombre-campo>Tabla_0_Celda_1_0</nombre-campo>
+                            <celda>C2</celda>
                             <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>text_tabla</tipo>
+                            <tipo>excel_tabla</tipo>
                             <nombre-campo>Tabla_0_Celda_1_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_1_2</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <celda-nombre>
-                            <nombre>3</nombre>
-                        </celda-nombre>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_2_0</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_2_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_2_2</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <celda-nombre>
-                            <nombre>4</nombre>
-                        </celda-nombre>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_3_0</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_3_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_3_2</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <celda-nombre>
-                            <nombre>5</nombre>
-                        </celda-nombre>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_4_0</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_4_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_0_Celda_4_2</nombre-campo>
+                            <celda>D2</celda>
                             <valor/>
                         </campo>
                     </celda>
@@ -186,19 +98,16 @@
     </campo>
     <campo>
         <tipo>table</tipo>
-        <nombre>Fila con Excel</nombre>
+        <nombre>Tabla Todo Manual</nombre>
         <columnas>
             <columna>
-                <nombre>Filas</nombre>
-            </columna>
-            <columna tipo="excel_tabla">
-                <nombre>Columna Excel</nombre>
+                <nombre>Medida #</nombre>
             </columna>
             <columna>
-                <nombre>Columna Número</nombre>
+                <nombre>Número</nombre>
             </columna>
             <columna>
-                <nombre>Columna Texto</nombre>
+                <nombre>Texto</nombre>
             </columna>
         </columnas>
         <filas>
@@ -211,23 +120,15 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>excel_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_0_0</nombre-campo>
-                            <celda>A6</celda>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
                             <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_0_1</nombre-campo>
+                            <nombre-campo>Tabla_1_Celda_0_0</nombre-campo>
                             <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
                             <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_0_2</nombre-campo>
+                            <nombre-campo>Tabla_1_Celda_0_1</nombre-campo>
                             <valor/>
                         </campo>
                     </celda>
@@ -242,85 +143,15 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>excel_tabla</tipo>
+                            <tipo>number_tabla</tipo>
                             <nombre-campo>Tabla_1_Celda_1_0</nombre-campo>
-                            <celda>A7</celda>
                             <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>number_tabla</tipo>
+                            <tipo>text_tabla</tipo>
                             <nombre-campo>Tabla_1_Celda_1_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_1_2</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <celda-nombre>
-                            <nombre>3</nombre>
-                        </celda-nombre>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>excel_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_0</nombre-campo>
-                            <celda>A8</celda>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_2_2</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                </celdas>
-            </fila>
-            <fila>
-                <celdas>
-                    <celda>
-                        <celda-nombre>
-                            <nombre>4</nombre>
-                        </celda-nombre>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>excel_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_3_0</nombre-campo>
-                            <celda>A9</celda>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_3_1</nombre-campo>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
-                            <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_Celda_3_2</nombre-campo>
                             <valor/>
                         </campo>
                     </celda>
@@ -335,23 +166,244 @@
                     </celda>
                     <celda>
                         <campo>
-                            <tipo>excel_tabla</tipo>
-                            <nombre-campo>Tabla_1_promedio_0</nombre-campo>
-                            <celda>A10</celda>
-                            <valor/>
-                        </campo>
-                    </celda>
-                    <celda>
-                        <campo>
                             <tipo>number_tabla</tipo>
-                            <nombre-campo>Tabla_1_promedio_1</nombre-campo>
+                            <nombre-campo>Tabla_1_promedio_0</nombre-campo>
                             <valor/>
                         </campo>
                     </celda>
                     <celda>
                         <campo>
                             <tipo>text_tabla</tipo>
-                            <nombre-campo>Tabla_1_promedio_2</nombre-campo>
+                            <nombre-campo>Tabla_1_promedio_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila funcion="sumatoria" tipo="especial">
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Sumatoria</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_1_sumatoria_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_1_sumatoria_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+        </filas>
+    </campo>
+    <campo>
+        <tipo>table</tipo>
+        <nombre>Tabla Parcial</nombre>
+        <columnas>
+            <columna>
+                <nombre>Con Nombre Número</nombre>
+            </columna>
+            <columna>
+                <nombre>Columna Número</nombre>
+            </columna>
+            <columna>
+                <nombre>Columna Texto</nombre>
+            </columna>
+            <columna tipo="excel_tabla">
+                <nombre>Columna Excel</nombre>
+            </columna>
+        </columnas>
+        <filas>
+            <fila>
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Uno</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_0_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_0_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>excel_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_0_2</nombre-campo>
+                            <celda>E1</celda>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Dos</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_1_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_1_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>excel_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_1_2</nombre-campo>
+                            <celda>E2</celda>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Tres</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_2_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_2_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>excel_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_2_2</nombre-campo>
+                            <celda>E3</celda>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila>
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Cuatro</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_3_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_3_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>excel_tabla</tipo>
+                            <nombre-campo>Tabla_2_Celda_3_2</nombre-campo>
+                            <celda>E4</celda>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila funcion="promedio" tipo="especial">
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Promedio</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_2_promedio_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_2_promedio_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>excel_tabla</tipo>
+                            <nombre-campo>Tabla_2_promedio_2</nombre-campo>
+                            <celda>E5</celda>
+                            <valor/>
+                        </campo>
+                    </celda>
+                </celdas>
+            </fila>
+            <fila funcion="sumatoria" tipo="especial">
+                <celdas>
+                    <celda>
+                        <celda-nombre>
+                            <nombre>Sumatoria</nombre>
+                        </celda-nombre>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>number_tabla</tipo>
+                            <nombre-campo>Tabla_2_sumatoria_0</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>text_tabla</tipo>
+                            <nombre-campo>Tabla_2_sumatoria_1</nombre-campo>
+                            <valor/>
+                        </campo>
+                    </celda>
+                    <celda>
+                        <campo>
+                            <tipo>excel_tabla</tipo>
+                            <nombre-campo>Tabla_2_sumatoria_2</nombre-campo>
+                            <celda>E6</celda>
                             <valor/>
                         </campo>
                     </celda>
