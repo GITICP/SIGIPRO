@@ -115,7 +115,11 @@ public class Informe extends Asociable
             default:
                 break;
         }
+    }
     
+    @Override
+    public boolean tieneTipoAsociacion() {
+        return asociacion != null;
     }
     
     public boolean tieneResultado(int id_resultado) {

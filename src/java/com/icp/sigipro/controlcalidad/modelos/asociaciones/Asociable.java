@@ -15,5 +15,6 @@ public abstract class Asociable {
     
     public abstract void setTipoAsociacion(String objeto);
     public abstract int getId();
+    public abstract boolean tieneTipoAsociacion();
     
 }

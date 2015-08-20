@@ -50,6 +50,7 @@ public class SolicitudDAO extends DAO {
             
             for(PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();
+                cerrarSilencioso(ps);
             }
             
             resultado = true;
@@ -186,16 +187,16 @@ public class SolicitudDAO extends DAO {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
-            consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
-                    + "SET id_usuario_recibido=?, fecha_recibido=?, estado=? "
-                    + "WHERE id_solicitud = ?; ");
-            consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
-            consulta.setDate(2, solicitud.getFecha_recibido());
-            consulta.setString(3, solicitud.getEstado());
-            consulta.setInt(4, solicitud.getId_solicitud());
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
+            
+            List<PreparedStatement> consultas_asociacion = solicitud.obtenerConsultasInsertarAsociacion(getConexion());
+            
+            for(PreparedStatement ps : consultas_asociacion) {
+                ps.executeBatch();
+                cerrarSilencioso(ps);
             }
+            
+            resultado = true;
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

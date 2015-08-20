@@ -285,6 +285,14 @@ public class ControladorSolicitud extends SIGIPROServlet {
         SolicitudCC s = construirObjeto(request);
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         s.setId_solicitud(id_solicitud);
+        
+        String objeto_por_asociar = request.getParameter("objeto-relacionado");
+        s.setTipoAsociacion(objeto_por_asociar);
+        s.asociar(request);
+        
+        if (s.tieneTipoAsociacion()) {
+            dao.editarSolicitud(s);
+        }
 
         String idGrupos = request.getParameter("listaGrupos");
         String[] grupos = idGrupos.replace(" ", "").split(",");

@@ -230,6 +230,11 @@ public class SolicitudCC extends Asociable {
         }
 
     }
+    
+    @Override
+    public boolean tieneTipoAsociacion() {
+        return asociacion != null;
+    }
 
     public List<PreparedStatement> obtenerConsultasInsertarAsociacion(Connection conexion) throws SQLException {
         List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
