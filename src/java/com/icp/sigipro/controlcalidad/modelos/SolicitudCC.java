@@ -5,20 +5,28 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociacion;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociable;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionSolicitudSangria;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 
 /**
  *
  * @author ld.conejo
  */
-public class SolicitudCC {
+public class SolicitudCC extends Asociable {
 
     private int id_solicitud;
     private String numero_solicitud;
@@ -29,12 +37,19 @@ public class SolicitudCC {
     private String estado;
     private String observaciones;
     private Informe informe;
+    private Asociacion asociacion;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private ControlSolicitud control_solicitud;
 
+    private final String SANGRIA = "sangria";
 
     public SolicitudCC() {
+    }
+
+    @Override
+    public int getId() {
+        return id_solicitud;
     }
 
     public int getId_solicitud() {
@@ -66,8 +81,6 @@ public class SolicitudCC {
     public void setInforme(Informe informe) {
         this.informe = informe;
     }
-
-  
 
     public Date getFecha_solicitud() {
         return fecha_solicitud;
@@ -128,18 +141,18 @@ public class SolicitudCC {
     public List<AnalisisGrupoSolicitud> getAnalisis_solicitud() {
         return analisis_solicitud;
     }
-    
+
     public List<Resultado> getResultados() {
-        
+
         List<AnalisisGrupoSolicitud> ags_solicitud = new ArrayList<AnalisisGrupoSolicitud>();
         for (AnalisisGrupoSolicitud ags : analisis_solicitud) {
             if (ags.getResultados() != null) {
                 ags_solicitud.add(ags);
             }
         }
-        
+
         List<Resultado> resultados = new ArrayList<Resultado>();
-        if (!ags_solicitud.isEmpty()){
+        if (!ags_solicitud.isEmpty()) {
             for (AnalisisGrupoSolicitud ags : ags_solicitud) {
                 resultados.addAll(ags.getResultados());
             }
@@ -158,11 +171,11 @@ public class SolicitudCC {
     public void setControl_solicitud(ControlSolicitud control_solicitud) {
         this.control_solicitud = control_solicitud;
     }
-    
+
     public List<Muestra> obtenerMuestras() {
         List<Muestra> lista_muestras = new ArrayList<Muestra>();
         List<Integer> ids_muestras = new ArrayList<Integer>();
-        
+
         for (AnalisisGrupoSolicitud ags : this.analisis_solicitud) {
             for (Muestra m : ags.obtenerMuestras()) {
                 if (!ids_muestras.contains(m.getId_muestra())) {
@@ -171,11 +184,11 @@ public class SolicitudCC {
                 }
             }
         }
-        
+
         return lista_muestras;
     }
-    
-    public void agregarResultadoAnalisisGrupoSolicitud (Resultado r) {
+
+    public void agregarResultadoAnalisisGrupoSolicitud(Resultado r) {
         for (AnalisisGrupoSolicitud ags : this.analisis_solicitud) {
             if (r.getAgs().getId_analisis_grupo_solicitud() == ags.getId_analisis_grupo_solicitud()) {
                 r.setAgs(ags);
@@ -183,6 +196,46 @@ public class SolicitudCC {
                 break;
             }
         }
+    }
+
+    public void asociar(HttpServletRequest request) {
+        if (asociacion != null) {
+            asociacion.asociar(request);
+        }
+    }
+
+    public void asociar(ResultSet rs) throws SQLException {
+        if (asociacion != null) {
+            asociacion.asociar(rs);
+        }
+    }
+    
+    public void prepararEditar(HttpServletRequest request) {
+        if (asociacion != null) {
+            asociacion.prepararEditar(request);
+        }
+    }
+
+    @Override
+    public void setTipoAsociacion(String objeto) {
+
+        switch (objeto) {
+            case SANGRIA:
+                asociacion = new AsociacionSolicitudSangria(this);
+                asociacion.setAsociable(this);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public List<PreparedStatement> obtenerConsultasInsertarAsociacion(Connection conexion) throws SQLException {
+        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        if (asociacion != null) {
+            resultado = asociacion.insertarSQL(conexion);
+        }
+        return resultado;
     }
 
     public String parseJSON() {
@@ -194,7 +247,7 @@ public class SolicitudCC {
             for (int i = 0; i < properties.length; i++) {
                 Field field = properties[i];
                 if (i != 0) {
-                    if(!field.getName().equals("analisis_solicitud")){
+                    if (!field.getName().equals("analisis_solicitud")) {
                         JSON.put(field.getName(), field.get(this));
                     }
                 } else {

@@ -43,10 +43,18 @@ public class SolicitudDAO extends DAO {
             consulta.setString(4, solicitud.getEstado());
             rs = consulta.executeQuery();
             if (rs.next()) {
-                resultado = true;
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
             }
-        } catch (Exception ex) {
+            
+            List<PreparedStatement> consultas_asociacion = solicitud.obtenerConsultasInsertarAsociacion(getConexion());
+            
+            for(PreparedStatement ps : consultas_asociacion) {
+                ps.executeBatch();
+            }
+            
+            resultado = true;
+            
+        } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
             cerrarSilencioso(rs);
@@ -294,6 +302,10 @@ public class SolicitudDAO extends DAO {
                     + "        solicitud.fecha_recibido, "
                     + "        solicitud.estado, "
                     + "        solicitud.observaciones, "
+                    + "        solicitud.tipo_referencia, "
+                    + "        solicitud.tabla_referencia, "
+                    + "        solicitud.id_referenciado, "
+                    + "        solicitud.informacion_referencia_adicional, "
                     + "        i.id_informe, "
                     + "        i.realizado_por,"
                     + "        i.fecha as fecha_informe, "
@@ -329,6 +341,11 @@ public class SolicitudDAO extends DAO {
                     u.setNombreCompleto(rs.getString("nombre_usuario_informe"));
                     i.setUsuario(u);
                     resultado.setInforme(i);
+                }
+                String tipo = rs.getString("tipo_referencia");
+                if (tipo != null) {
+                    resultado.setTipoAsociacion(tipo);
+                    resultado.asociar(rs);
                 }
             }
 

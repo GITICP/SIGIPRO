@@ -5,6 +5,9 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionLALSangria;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociacion;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociable;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Connection;
@@ -19,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Boga
  */
-public class Informe
+public class Informe extends Asociable
 {
     private int id_informe;
     private List<Resultado> resultados;
@@ -28,10 +31,13 @@ public class Informe
     private Date fecha;
     private Asociacion asociacion;
     
-    private final String SANGRIA = "sangria";
-    
     public Informe(){}
 
+    @Override
+    public int getId() {
+        return id_informe;
+    }
+    
     public int getId_informe() {
         return id_informe;
     }
@@ -98,12 +104,13 @@ public class Informe
         this.fecha = fecha;
     }
     
-    public void asociar_objeto(String objeto) {
+    @Override
+    public void setTipoAsociacion(String objeto) {
         
         switch (objeto) {
             case SANGRIA:
                 asociacion = new AsociacionLALSangria();
-                asociacion.setInforme(this);
+                asociacion.setAsociable(this);
                 break;
             default:
                 break;
@@ -124,10 +131,10 @@ public class Informe
         return resultado;
     }
     
-    public List<PreparedStatement> obtenerConsultasAsociacion(Connection conexion) throws SQLException {
+    public List<PreparedStatement> obtenerConsultasInsertarAsociacion(Connection conexion) throws SQLException {
         List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
         if (asociacion != null) {
-            resultado = asociacion.asociarSQL(conexion);
+            resultado = asociacion.insertarSQL(conexion);
         }
         return resultado;
     }

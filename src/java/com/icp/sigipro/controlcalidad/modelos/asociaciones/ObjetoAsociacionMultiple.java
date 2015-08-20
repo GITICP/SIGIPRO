@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.controlcalidad.modelos;
+package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import java.util.ArrayList;
 import java.util.List;
 

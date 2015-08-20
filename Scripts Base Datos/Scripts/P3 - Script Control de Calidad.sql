@@ -144,6 +144,10 @@ CREATE TABLE control_calidad.solicitudes (
     fecha_recibido date,
     observaciones varchar(500),
     estado varchar(50),
+    tipo_referencia character varying(100),
+    tabla_referencia character varying(100),
+    id_referenciado integer,
+    informacion_referencia_adicional character varying(100),
     CONSTRAINT solicitudes_pk PRIMARY KEY (id_solicitud)
 );
 

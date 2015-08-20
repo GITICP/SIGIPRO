@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.controlcalidad.modelos;
+package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
 import com.icp.sigipro.caballeriza.modelos.Sangria;
+import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +26,12 @@ public class AsociacionLALSangria extends Asociacion {
     private Sangria sangria;
 
     public AsociacionLALSangria() {
-        objeto = "sangrias_caballos";
+        tipo = "sangrias_caballos";
         tabla = "caballeriza.sangrias_caballos";
     }
 
     @Override
-    protected void asociar(Resultado resultado, HttpServletRequest request) {
+    public void asociar(Resultado resultado, HttpServletRequest request) {
 
         if (sangria == null) {
             int id_sangria = Integer.parseInt(request.getParameter("sangria"));
@@ -50,23 +52,28 @@ public class AsociacionLALSangria extends Asociacion {
 
         objetos.add(osm);
     }
+    
+    @Override
+    public void asociar(ResultSet rs) throws SQLException {
+        throw new SQLException();
+    }
 
     @Override
-    protected List<PreparedStatement> asociarSQL(Connection conexion) throws SQLException {
-        
+    public List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException {
+
         List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
-        
+
         PreparedStatement consulta_sangria = conexion.prepareStatement(
                 " UPDATE caballeriza.sangrias SET num_inf_cc = ? WHERE id_sangria = ? "
         );
-        
-        consulta_sangria.setInt(1, informe.getId_informe());
+
+        consulta_sangria.setInt(1, objeto_asociable.getId());
         consulta_sangria.setInt(2, sangria.getId_sangria());
-        
+
         PreparedStatement consulta_caballos = conexion.prepareStatement(
                 " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria = ? AND id_caballo = ?; "
         );
-        
+
         for (ObjetoAsociacionMultiple osm : objetos) {
             for (int id : osm.getIds()) {
                 consulta_caballos.setInt(1, osm.getResultado().getId_resultado());
@@ -75,12 +82,25 @@ public class AsociacionLALSangria extends Asociacion {
                 consulta_caballos.addBatch();
             }
         }
-        
+
         resultado.add(consulta_sangria);
         resultado.add(consulta_caballos);
-        
+
         return resultado;
+
+    }
+    
+    @Override
+    public void prepararEditar(HttpServletRequest request) {
         
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Métodos Abstractos Inutilizados">
+    
+    @Override
+    public void asociar(HttpServletRequest request) {
+
+    }
+
+    // </editor-fold>
 }

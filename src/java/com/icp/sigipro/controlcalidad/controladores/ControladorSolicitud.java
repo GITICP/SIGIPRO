@@ -148,6 +148,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
 
+        solicitud.prepararEditar(request);
         request.setAttribute("listaSolicitud", listaSolicitud);
         request.setAttribute("listaTM", idTipoMuestras);
         request.setAttribute("listaGrupos", idGrupos);
@@ -246,6 +247,10 @@ public class ControladorSolicitud extends SIGIPROServlet {
         Usuario usuario = usuariodao.obtenerUsuario((String) request.getSession().getAttribute("usuario"));
         s.setUsuario_solicitante(usuario);
 
+        String objeto_por_asociar = request.getParameter("objeto-relacionado");
+        s.setTipoAsociacion(objeto_por_asociar);
+        s.asociar(request);
+        
         resultado = dao.entregarSolicitud(s);
         if (resultado) {
             for (AnalisisGrupoSolicitud ags : s.getAnalisis_solicitud()) {
