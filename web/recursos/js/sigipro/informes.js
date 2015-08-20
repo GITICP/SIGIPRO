@@ -179,7 +179,6 @@ function evento_seleccionar_dia() {
         data: {"accion": "caballossangriaajax", "dia": dia, "id_sangria": id_sangria},
         dataType: "json",
         success: function (datos) {
-            datos_globales = datos;
             generar_select_caballos(datos);
         }
     });

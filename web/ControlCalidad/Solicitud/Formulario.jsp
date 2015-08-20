@@ -14,21 +14,74 @@
             <input hidden="true" name="accion" value="${accion}">
             <c:forEach items="${tipomuestras}" var="tipomuestra">
                 <input hidden="true" id="listaAnalisis_${tipomuestra.getId_tipo_muestra()}" value='${tipomuestra.parseListaAnalisis()}' data-dias-descarte="${tipomuestra.getDias_descarte()}">
-            
+
             </c:forEach>
             <input hidden="true" id="listaTipoMuestra" value='${tipomuestraparse}'>
             <input hidden="true" id="listaMuestras" name="listaMuestras" value="">
             <input hidden="true" id="listaIds" value="${listaTM}">
             <input hidden="true" id="listaGrupos" name="listaGrupos" value="${listaGrupos}">
 
-            <label for="nombre" class="control-label">*Número de Solicitud</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Identificador de la Solicitud" class="form-control" name="numero_solicitud" value="${numero_solicitud}"
-                               required
-                               oninvalid="setCustomValidity('Este campo es requerido')"
-                               oninput="setCustomValidity('')" > 
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="nombre" class="control-label">*Número de Solicitud</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" maxlength="45" placeholder="Identificador de la Solicitud" class="form-control" name="numero_solicitud" value="${numero_solicitud}"
+                                       required
+                                       oninvalid="setCustomValidity('Este campo es requerido')"
+                                       oninput="setCustomValidity('')" > 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <select id="seleccion-objeto" class="select2" name="objeto-relacionado"
+                                        style='background-color: #fff;'>
+                                    <option value=''></option>
+                                    <option value="sangria">
+                                        Sangría
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+            <div id="fila-select-sangria" class="row" hidden="true">
+                <div class="col-md-6">
+                    <label for="sangria" class="control-label"> Sangría por asociar</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <select id="seleccion-sangria" name="sangria"
+                                        style='background-color: #fff;'>
+                                    <option value=''></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+            <div id="fila-select-dia" class="row" hidden="true">
+                <div class="col-md-6">
+                    <label for="sangria" class="control-label"> Día por asignar</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <select id="seleccion-dia" name="dia"
+                                        style='background-color: #fff;'>
+                                    <option value=''></option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,8 +108,8 @@
                                                 <select id="seleccionTipo_${muestra.get(0)}" class="tipomuestra tipomuestra_${muestra.get(0)}" name="tipomuestra_${muestra.get(0)}"
                                                         style='background-color: #fff;' required
                                                         oninvalid="setCustomValidity('Este campo es requerido')"
-                                                        onchange="seleccionTipoMuestra(this,'${muestra.get(0)}')">
-                                                        <option value=''></option>
+                                                        onchange="seleccionTipoMuestra(this, '${muestra.get(0)}')">
+                                                    <option value=''></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -97,7 +150,7 @@
                                                         style='background-color: #fff;' required
                                                         oninvalid="setCustomValidity('Este campo es requerido')"
                                                         onchange="setCustomValidity('')">
-                                                        <option value=''></option>
+                                                    <option value=''></option>
                                                 </select>
                                             </div>
                                         </div>
