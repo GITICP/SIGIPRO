@@ -5,9 +5,11 @@
  */
 package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
+import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +27,7 @@ public class AsociacionSolicitudSangria extends Asociacion {
     private Sangria sangria;
     private int dia;
     private final SolicitudCC solicitud;
+    private final SangriaDAO sangria_dao = new SangriaDAO();
 
     public AsociacionSolicitudSangria(SolicitudCC p_solicitud) {
         tipo = "sangria";
@@ -48,12 +51,12 @@ public class AsociacionSolicitudSangria extends Asociacion {
         sangria.setId_sangria(id_sangria);
     }
     
-    @Override
-    public void prepararEditar(HttpServletRequest request) {
-        String tipo_editar = "data-tipo=\"" + tipo + "\"";
-        String tipo_id_sangria = "data-id-sangria = \"" + sangria.getId_sangria() + "\"";
-        String tipo_dia = "data-dia=\"" + dia + "\"";
-        request.setAttribute("valores_editar", tipo_editar + " " + tipo_id_sangria + " " + tipo_dia);
+    @Override 
+    public void prepararEditar(HttpServletRequest request) throws SIGIPROException {
+        request.setAttribute("tipo", "sangria");
+        request.setAttribute("id_sangria", sangria.getId_sangria());
+        request.setAttribute("dia", dia);
+        request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
     }
     
     @Override

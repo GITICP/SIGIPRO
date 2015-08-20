@@ -8,6 +8,7 @@ package com.icp.sigipro.controlcalidad.modelos;
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociacion;
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociable;
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionSolicitudSangria;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -210,7 +211,7 @@ public class SolicitudCC extends Asociable {
         }
     }
     
-    public void prepararEditar(HttpServletRequest request) {
+    public void prepararEditar(HttpServletRequest request) throws SIGIPROException {
         if (asociacion != null) {
             asociacion.prepararEditar(request);
         }

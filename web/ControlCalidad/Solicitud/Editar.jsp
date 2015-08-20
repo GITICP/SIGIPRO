@@ -52,9 +52,7 @@
                 </div>
                 <!-- /main -->
             </div>
-        <c:if test="${valores_editar != null}">
-            <div id="valores-editar" ${valores_editar} />
-        </c:if>
+            <div id="tipo-edicion" data-tipo="${tipo}" />
 
 
     </jsp:attribute>

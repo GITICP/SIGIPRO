@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +27,7 @@ public abstract class Asociacion {
     public abstract void asociar(HttpServletRequest request);
     public abstract void asociar(ResultSet rs) throws SQLException;
     public abstract void asociar(Resultado resultado, HttpServletRequest request);
-    public abstract void prepararEditar(HttpServletRequest request);
+    public abstract void prepararEditar(HttpServletRequest request) throws SIGIPROException ;
     public abstract List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException;
 
     public Asociable getInforme() {

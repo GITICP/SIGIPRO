@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <form class="form-horizontal" autocomplete="off" method="post" action="Solicitud">
     <div class="row">
@@ -14,7 +15,6 @@
             <input hidden="true" name="accion" value="${accion}">
             <c:forEach items="${tipomuestras}" var="tipomuestra">
                 <input hidden="true" id="listaAnalisis_${tipomuestra.getId_tipo_muestra()}" value='${tipomuestra.parseListaAnalisis()}' data-dias-descarte="${tipomuestra.getDias_descarte()}">
-
             </c:forEach>
             <input hidden="true" id="listaTipoMuestra" value='${tipomuestraparse}'>
             <input hidden="true" id="listaMuestras" name="listaMuestras" value="">
@@ -44,7 +44,7 @@
                                 <select id="seleccion-objeto" class="select2" name="objeto-relacionado"
                                         style='background-color: #fff;'>
                                     <option value=''></option>
-                                    <option value="sangria">
+                                    <option value="sangria" ${(tipo == 'sangria') ? "selected" : ""}>
                                         Sangría
                                     </option>
                                 </select>
@@ -53,47 +53,110 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6"></div>
-            <div id="fila-select-sangria" class="row" hidden="true">
-                <div class="col-md-6">
-                    <label for="sangria" class="control-label"> Sangría por asociar</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <select id="seleccion-sangria" name="sangria"
-                                        style='background-color: #fff;'>
-                                    <option value=''></option>
-                                </select>
+            <c:choose>
+                <c:when test="${accion == 'Agregar'}">
+                    <div class="col-md-6"></div>
+                    <div id="fila-select-sangria" class="row" hidden="true">
+                        <div class="col-md-6">
+                            <label for="sangria" class="control-label"> Sangría por asociar</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <select id="seleccion-sangria" name="sangria"
+                                                style='background-color: #fff;'>
+                                            <option value=''></option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6"></div>
-            <div id="fila-select-dia" class="row" hidden="true">
-                <div class="col-md-6">
-                    <label for="sangria" class="control-label"> Día por asignar</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <select id="seleccion-dia" name="dia"
-                                        style='background-color: #fff;'>
-                                    <option value=''></option>
-                                </select>
+                    <div class="col-md-6"></div>
+                    <div id="fila-select-dia" class="row" hidden="true">
+                        <div class="col-md-6">
+                            <label for="sangria" class="control-label"> Día por asignar</label>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <select id="seleccion-dia" name="dia"
+                                                style='background-color: #fff;'>
+                                            <option value=''></option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="${tipo == 'sangria'}">
+                            <div class="col-md-6"></div>
+                            <div id="fila-select-sangria" class="row">
+                                <div class="col-md-6">
+                                    <label for="sangria" class="control-label"> Sangría por asociar</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <select id="seleccion-sangria" name="sangria"
+                                                        style='background-color: #fff;'>
+                                                    <option value=''></option>
+                                                    <c:forEach items="${sangrias}" var="sangria">
+                                                        <c:if test="${sangria.getId_sangria() == id_sangria}">
+                                                            <c:set var="sangria_seleccionada" value="${sangria}" /> 
+                                                        </c:if>
+
+                                                        <option value="${sangria.getId_sangria()}"
+                                                                data-fecha-1="${sangria.getFecha_dia1()}"
+                                                                data-fecha-2="${sangria.getFecha_dia2()}"
+                                                                data-fecha-3="${sangria.getFecha_dia3()}"
+                                                                ${(sangria.getId_sangria() == id_sangria) ? "selected" : ""}>
+                                                            ${sangria.getId_sangria_especial()}
+                                                        </option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div id="fila-select-dia" class="row">
+                                <div class="col-md-6">
+                                    <label for="sangria" class="control-label"> Día por asignar</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <select id="seleccion-dia" name="dia"
+                                                        style='background-color: #fff;'>
+                                                    <c:if test="${sangria_seleccionada.getFecha_dia1() != null}">
+                                                        <option value="1" ${(dia == 1 ? "selected" : "")}>Día 1</option>
+                                                    </c:if>
+                                                    <c:if test="${sangria_seleccionada.getFecha_dia2() != null}">
+                                                        <option value="1" ${(dia == 2 ? "selected" : "")}>Día 2</option>
+                                                    </c:if>
+                                                    <c:if test="${sangria_seleccionada.getFecha_dia3() != null}">
+                                                        <option value="1" ${(dia == 3 ? "selected" : "")}>Día 3</option>
+                                                    </c:if>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
         </div>
 
         <div class="col-md-12">
             <div class="widget widget-table">
                 <div class="widget-header">
                     <h3><i class="fa fa-th-list"></i> Muestras</h3>
-                    <div class="btn-group widget-header-toolbar">
-
-                    </div>
                 </div>
                 <div class="widget-content">
                     <div class="muestras">
