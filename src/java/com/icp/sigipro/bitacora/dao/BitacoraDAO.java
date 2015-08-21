@@ -86,7 +86,7 @@ public class BitacoraDAO extends DAO
         List<Bitacora> resultado = new ArrayList<Bitacora>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_bitacora, fecha_accion, nombre_usuario,ip,tabla, accion,estado FROM bitacora.bitacora ORDER BY fecha_accion DESC;");
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT id_bitacora, fecha_accion, nombre_usuario,ip,tabla, accion,estado FROM bitacora.bitacora ORDER BY fecha_accion DESC LIMIT 100;");
 
             ResultSet rs = consulta.executeQuery();
 
@@ -142,3 +142,4 @@ public class BitacoraDAO extends DAO
         return bitacora;
     }
 }
+

@@ -51,6 +51,7 @@
               <table>
                 <tr><td> <strong>Usuario Solicitante:</strong></td> <td>${solicitud.getUsuario().getNombreCompleto()} </td></tr>
                 <tr><td> <strong>Producto:</strong> <td>${solicitud.getInventario().getProducto().getNombre()} (${solicitud.getInventario().getProducto().getCodigo_icp()}) </td></tr>
+                <tr><td> <strong>Presentación:</strong> <td>${solicitud.getInventario().getProducto().getPresentacion()} </td></tr>
                 <tr><td> <strong>Cantidad:</strong> <td>${solicitud.getCantidad()} (${solicitud.getInventario().getSeccion().getNombre_seccion()}) </td></tr>
                 <tr><td> <strong>Fecha Solicitud:</strong> <td>${solicitud.getFecha_solicitud()} </td></tr>
                 <tr><td> <strong>Estado:</strong> <td>${solicitud.getEstado()} </td></tr>

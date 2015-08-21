@@ -51,7 +51,7 @@
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
-            <input id="numero_cajas" placeholder=" Número de Cajas" type="number" min="1"  class="form-control" name="numero_cajas" value="${solicitud.getNumero_cajas()}"required 
+            <input id="numero_cajas" placeholder=" Número de Cajas" type="number" min="0"  class="form-control" name="numero_cajas" value="${solicitud.getNumero_cajas()}"required 
                    oninvalid="setCustomValidity('Este campo es Requerido. Por favor introduzca un número válido.')"
                    oninput="setCustomValidity('')"> 
           </div>
