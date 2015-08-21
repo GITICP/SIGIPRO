@@ -7,6 +7,7 @@ package com.icp.sigipro.core;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
+import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelperPermisos;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
     protected final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     protected final BitacoraDAO bitacora = new BitacoraDAO();
     protected final HelperPermisos helper_permisos = HelperPermisos.getSingletonHelperPermisos();
+    protected final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     protected List<FileItem> parametros;
 
     @Override
@@ -56,6 +58,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
         request.setAttribute("helper_permisos", helper_permisos);
+        request.setAttribute("helper_fechas", helper_fechas);
         if (accion == null) {
             accion = "index";
         }

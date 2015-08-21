@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
@@ -13,7 +12,6 @@ import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
