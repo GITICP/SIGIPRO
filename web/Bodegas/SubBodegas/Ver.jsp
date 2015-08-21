@@ -62,8 +62,11 @@
                                         </c:choose>
 
                                         <c:if test="${permisos_usuario.isEncargado() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
-                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=historial&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Historial</a>
+
                                             <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=mover&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Mover</a>
+                                        </c:if>
+                                        <c:if test="${permisos_usuario.tieneAlgunPermiso() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
+                                            <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=historial&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Historial</a>
                                         </c:if>
                                         <c:if test="${permisos_usuario.isEncargado() || permisos_usuario.isIngresar() || sessionScope.listaPermisos.contains(70) || sessionScope.listaPermisos.contains(1)}">
                                             <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ingresar&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Ingresar</a>
