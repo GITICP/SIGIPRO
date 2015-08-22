@@ -311,7 +311,7 @@ public class ResultadoDAO extends DAO {
                     p.setTipo(rs_patrones_controles.getString("tipo"));
                     
                     resultado.agregarPatron(p);
-                } while(rs.next());
+                } while(rs_patrones_controles.next());
             }
 
         } catch (SQLException ex) {
@@ -421,8 +421,10 @@ public class ResultadoDAO extends DAO {
         PreparedStatement update_resultado = null;
         PreparedStatement delete_reactivos = null;
         PreparedStatement delete_equipos = null;
+        PreparedStatement delete_patrones_controles = null;
         PreparedStatement insert_reactivos = null;
         PreparedStatement insert_equipos = null;
+        PreparedStatement insert_patrones_controles = null;
 
         PreparedStatement consulta_solicitud = null;
         ResultSet rs_solicitud = null;
@@ -488,6 +490,35 @@ public class ResultadoDAO extends DAO {
 
                 insert_equipos.executeBatch();
             }
+            
+            delete_patrones_controles = getConexion().prepareStatement(
+                    " DELETE FROM control_calidad.patrones_resultados WHERE id_resultado = ?; "
+            );
+            
+            delete_patrones_controles.setInt(1, resultado.getId_resultado());
+            delete_patrones_controles.execute();
+            
+            if (resultado.tienePatronesOControles()) {
+                
+                insert_patrones_controles = getConexion().prepareStatement(
+                        " INSERT INTO control_calidad.patrones_resultados (id_resultado, id_patron) VALUES (?,?); "
+                );
+
+                for (Patron p : resultado.getPatrones_resultado()) {
+                    insert_patrones_controles.setInt(1, resultado.getId_resultado());
+                    insert_patrones_controles.setInt(2, p.getId_patron());
+                    insert_patrones_controles.addBatch();
+                }
+
+                for (Patron p : resultado.getControles_resultado()) {
+                    insert_patrones_controles.setInt(1, resultado.getId_resultado());
+                    insert_patrones_controles.setInt(2, p.getId_patron());
+                    insert_patrones_controles.addBatch();
+                }
+
+                insert_patrones_controles.executeBatch();
+                
+            }
 
             consulta_solicitud = getConexion().prepareStatement(
                     " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
@@ -523,7 +554,11 @@ public class ResultadoDAO extends DAO {
                 ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Inténtelo nuevamente o notifique al administrador del sistema.");
             }
+            cerrarSilencioso(delete_patrones_controles);
+            cerrarSilencioso(delete_reactivos);
+            cerrarSilencioso(delete_equipos);
             cerrarSilencioso(update_resultado);
+            cerrarSilencioso(insert_patrones_controles);
             cerrarSilencioso(insert_reactivos);
             cerrarSilencioso(insert_equipos);
             cerrarSilencioso(rs_solicitud);

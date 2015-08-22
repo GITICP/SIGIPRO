@@ -49,97 +49,146 @@
                                 <input type="hidden" value="${id_ags}" name="id_ags" />
                                 <input type="hidden" value="${resultado.getId_resultado()}" name="id_resultado" />
 
-                                <div class="row">
-                                    <c:if test="${!reactivos.isEmpty()}">
-                                        <div class="col-md-6">
-                                            <label for="reactivos" class="control-label"> *Reactivos Utilizados</label>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div class="input-group">
-                                                        <select id="seleccion-reactivos" class="select2" name="reactivos" multiple="multiple"
-                                                                style='background-color: #fff;' required
-                                                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                                                onchange="setCustomValidity('')">
-                                                            <option value=''></option>
-                                                            <c:forEach items="${reactivos}" var="reactivo">
-                                                                <option value=${reactivo.getId_reactivo()} ${(resultado.tieneReactivo(reactivo)) ? "selected" : ""}>
-                                                                    ${reactivo.getNombre()}
-                                                                </option>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <label for="preparacion-reactivos" class="control-label" hidden="true">Preparación Reactivo</label>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div id="espacio-preparacion-reactivos" class="input-group">
-                                                        <div></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </c:if>
-                                    <c:if test="${!reactivos.isEmpty()}">
-                                        <div class="col-md-6">
-                                            <label for="especie" class="control-label"> *Equipos de Medición Utilizados</label>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div class="input-group">
-                                                        <select id="seleccion-equipo" class="select2" name="equipos" multiple="multiple"
-                                                                style='background-color: #fff;' required
-                                                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                                                onchange="setCustomValidity('')">
-                                                            <option value=''></option>
-                                                            <c:forEach items="${equipos}" var="equipo">
-                                                                <option value=${equipo.getId_equipo()} ${(resultado.tieneEquipo(equipo)) ? "selected" : ""}>
-                                                                    ${equipo.getNombre()}
-                                                                </option>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:if>
-                                </div>
-                                <c:if test="${analisis.tieneMachote()}">
-                                    <input type="hidden" name="path" value="${resultado.getPath()}" />
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="nombre" class="control-label"> Machote</label>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <div class="input-group">
-                                                        <a href="/SIGIPRO/ControlCalidad/Analisis?accion=archivo&id_analisis=${analisis.getId_analisis()}">Descargar Machote</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <label for="nombre" class="control-label"> Resultado</label>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <div class="input-group">
-                                                        <a href="/SIGIPRO/ControlCalidad/Resultado?accion=archivo&id_resultado=${resultado.getId_resultado()}">Descargar Resultado</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <label for="nombre" class="control-label"> Actualización Resultado</label>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div class="input-group">
-                                                        <input type="file" id="resultado" name="resultado"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                                               oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                                               onchange="setCustomValidity('')"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-gears"></i> Reactivos, Equipos, Patrones y Controles Utilizados </h3>
                                     </div>
-                                </c:if>
+                                    <div class="widget-content">
+                                        <div class="row">
+                                            <c:if test="${!reactivos.isEmpty()}">
+                                                <div class="col-md-6">
+                                                    <label for="reactivos" class="control-label"> *Reactivos Utilizados</label>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <div class="input-group">
+                                                                <select id="seleccion-reactivos" class="select2" name="reactivos" multiple="multiple"
+                                                                        style='background-color: #fff;' required
+                                                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                        onchange="setCustomValidity('')">
+                                                                    <option value=''></option>
+                                                                    <c:forEach items="${reactivos}" var="reactivo">
+                                                                        <option value=${reactivo.getId_reactivo()} ${(resultado.tieneReactivo(reactivo)) ? "selected" : ""}>
+                                                                            ${reactivo.getNombre()}
+                                                                        </option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <label for="preparacion-reactivos" class="control-label" hidden="true">Preparación Reactivo</label>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <div id="espacio-preparacion-reactivos" class="input-group">
+                                                                <div></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${!reactivos.isEmpty()}">
+                                                <div class="col-md-6">
+                                                    <label for="especie" class="control-label"> *Equipos de Medición Utilizados</label>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <div class="input-group">
+                                                                <select id="seleccion-equipo" class="select2" name="equipos" multiple="multiple"
+                                                                        style='background-color: #fff;' required
+                                                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                        onchange="setCustomValidity('')">
+                                                                    <option value=''></option>
+                                                                    <c:forEach items="${equipos}" var="equipo">
+                                                                        <option value=${equipo.getId_equipo()} ${(resultado.tieneEquipo(equipo)) ? "selected" : ""}>
+                                                                            ${equipo.getNombre()}
+                                                                        </option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="patrones" class="control-label"> Patrones Utilizados</label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <select id="seleccion-patrones" class="select2" name="patrones" multiple="multiple"
+                                                                    style='background-color: #fff;'
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                    onchange="setCustomValidity('')">
+                                                                <option value=''></option>
+                                                                <c:forEach items="${patrones}" var="patron">
+                                                                    <option value=${patron.getId_patron()} ${(resultado.tienePatron(patron)) ? "selected" : ""}>
+                                                                        ${patron.getNumero_lote()} (${patron.getTipo()})
+                                                                    </option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="patrones" class="control-label"> Controles Utilizados</label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <select id="seleccion-controles" class="select2" name="controles" multiple="multiple"
+                                                                    style='background-color: #fff;'
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                    onchange="setCustomValidity('')">
+                                                                <option value=''></option>
+                                                                <c:forEach items="${controles}" var="control">
+                                                                    <option value=${control.getId_patron()} ${(resultado.tieneControl(control)) ? "selected" : ""}>
+                                                                        ${control.getNumero_lote()}
+                                                                    </option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <c:if test="${analisis.tieneMachote()}">
+                                            <input type="hidden" name="path" value="${resultado.getPath()}" />
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="nombre" class="control-label"> Machote</label>
+                                                    <div class="form-group">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group">
+                                                                <a href="/SIGIPRO/ControlCalidad/Analisis?accion=archivo&id_analisis=${analisis.getId_analisis()}">Descargar Machote</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <label for="nombre" class="control-label"> Resultado</label>
+                                                    <div class="form-group">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group">
+                                                                <a href="/SIGIPRO/ControlCalidad/Resultado?accion=archivo&id_resultado=${resultado.getId_resultado()}">Descargar Resultado</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <label for="nombre" class="control-label"> Actualización Resultado</label>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <div class="input-group">
+                                                                <input type="file" id="resultado" name="resultado"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                                                       onchange="setCustomValidity('')"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </div>
 
                                 <div class="row">
                                     <div class="col-md-12">

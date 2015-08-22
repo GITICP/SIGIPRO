@@ -7,12 +7,14 @@ package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
+import com.icp.sigipro.controlcalidad.dao.PatronDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
+import com.icp.sigipro.controlcalidad.modelos.Patron;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
@@ -68,8 +70,7 @@ import org.xml.sax.SAXException;
  * @author ld.conejo, boga
  */
 @WebServlet(name = "ControladorResultado", urlPatterns = {"/ControlCalidad/Resultado"})
-public class ControladorResultado extends SIGIPROServlet
-{
+public class ControladorResultado extends SIGIPROServlet {
 
     //Falta implementar
     private final int[] permisos = {541, 546, 547};
@@ -80,12 +81,12 @@ public class ControladorResultado extends SIGIPROServlet
     private final EquipoDAO equipodao = new EquipoDAO();
     private final ReactivoDAO reactivodao = new ReactivoDAO();
     private final SolicitudDAO solicituddao = new SolicitudDAO();
+    private final PatronDAO patrondao = new PatronDAO();
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
     private String ubicacion;
 
     protected final Class clase = ControladorResultado.class;
-    protected final List<String> accionesGet = new ArrayList<String>()
-    {
+    protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("ver");
             add("editar");
@@ -94,8 +95,7 @@ public class ControladorResultado extends SIGIPROServlet
             add("archivo");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>()
-    {
+    protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("editar");
         }
@@ -139,7 +139,7 @@ public class ControladorResultado extends SIGIPROServlet
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermisosMultiple(permisos, request);
         String redireccion = "Resultado/Ver.jsp";
 
@@ -155,9 +155,9 @@ public class ControladorResultado extends SIGIPROServlet
             String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
             Analisis analisis = resultado.getAgs().getAnalisis();
             SolicitudCC solicitud = resultado.getAgs().getGrupo().getSolicitud();
-          
+
             request.setAttribute("resultado", resultado);
-            request.setAttribute("analisis",analisis);
+            request.setAttribute("analisis", analisis);
             request.setAttribute("solicitud", solicitud);
             request.setAttribute("cuerpo_datos", formulario);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
@@ -169,7 +169,7 @@ public class ControladorResultado extends SIGIPROServlet
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermiso(547, request);
 
         String redireccion = "Resultado/Editar.jsp";
@@ -184,14 +184,17 @@ public class ControladorResultado extends SIGIPROServlet
             xslt = controlxsltdao.obtenerControlXSLTFormulario();
             resultado = dao.obtenerResultado(id_resultado);
             analisis = analisisdao.obtenerAnalisis(resultado.getAgs().getAnalisis().getId_analisis());
-            
+
             SolicitudCC solicitud = resultado.getAgs().getGrupo().getSolicitud();
 
             String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
 
             List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
             List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
+            List<List<Patron>> patrones_controles = patrondao.obtenerPatronesRealizarAnalisis();
 
+            request.setAttribute("patrones", patrones_controles.get(0));
+            request.setAttribute("controles", patrones_controles.get(1));
             request.setAttribute("resultado", resultado);
             request.setAttribute("analisis", analisis);
             request.setAttribute("solicitud", solicitud);
@@ -209,18 +212,18 @@ public class ControladorResultado extends SIGIPROServlet
     }
 
     protected void getVermultiple(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermiso(546, request);
-        
+
         String redireccion = "Resultado/VerMultiple.jsp";
 
         int id_ags = Integer.parseInt(request.getParameter("id_ags"));
         String id_solicitud = request.getParameter("id_solicitud");
         String numero_solicitud = request.getParameter("numero_solicitud");
         String id_analisis = request.getParameter("id_analisis");
-        
+
         Analisis a = analisisdao.obtenerAnalisis(Integer.parseInt(id_analisis));
-        
+
         request.setAttribute("id_solicitud", id_solicitud);
         request.setAttribute("numero_solicitud", numero_solicitud);
         request.setAttribute("analisis", a);
@@ -241,7 +244,7 @@ public class ControladorResultado extends SIGIPROServlet
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         validarPermiso(547, request);
-        
+
         String redireccion = "Resultado/Editar.jsp";
         int id_resultado = Integer.parseInt(this.obtenerParametro("id_resultado"));
         int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
@@ -258,6 +261,8 @@ public class ControladorResultado extends SIGIPROServlet
 
             String[] equipos_utilizados = this.obtenerParametros("equipos");
             String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+            String[] controles_utilizados = this.obtenerParametros("controles");
+            String[] patrones_utilizados = this.obtenerParametros("patrones");
 
             InputStream binary_stream = resultado.getDatos().getBinaryStream();
 
@@ -318,9 +323,11 @@ public class ControladorResultado extends SIGIPROServlet
 
             resultado.setEquipos(equipos_utilizados);
             resultado.setReactivos(reactivos_utilizados);
+            resultado.setPatrones(patrones_utilizados);
+            resultado.setControles(controles_utilizados);
 
             dao.editarResultado(resultado);
-            
+
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
             try {
                 SolicitudCC s = solicituddao.obtenerSolicitud(resultado.getAgs().getGrupo().getSolicitud().getId_solicitud());

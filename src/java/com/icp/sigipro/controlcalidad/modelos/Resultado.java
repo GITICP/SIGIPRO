@@ -260,6 +260,33 @@ public class Resultado
         return resultado_func;
     }
     
+    public boolean tienePatron(Patron p) {
+        boolean resultado_func = false;
+        if (this.patrones_resultado != null) {
+            resultado_func = tienePatronEnLista(patrones_resultado, p.getId_patron());
+        }
+        return resultado_func;
+    }
+    
+    public boolean tieneControl(Patron p) {
+        boolean resultado_func = false;
+        if (this.controles_resultado != null) {
+            resultado_func = tienePatronEnLista(controles_resultado, p.getId_patron());
+        }
+        return resultado_func;
+    }
+    
+    private boolean tienePatronEnLista(List<Patron> lista, int id_patron) {
+        boolean resultado_func = false;
+        for (Patron p : lista) {
+            if (p.getId_patron() == id_patron) {
+                resultado_func = true;
+                break;
+            }
+        }
+        return resultado_func;
+    }
+    
     public void agregarPatron(Patron p) {
         if (!p.getTipo().equalsIgnoreCase("Control Interno")) {
             if(patrones_resultado == null) {
