@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 
 /**
@@ -12,6 +13,8 @@ import java.sql.Date;
  * @author Boga
  */
 public class Patron {
+    
+    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     
     private int id_patron;
     private String numero_lote;
@@ -53,6 +56,10 @@ public class Patron {
     public Date getFecha_ingreso() {
         return fecha_ingreso;
     }
+    
+    public String getFecha_ingresoAsString() {
+        return formatearFecha(fecha_ingreso, "Sin fecha de vencimiento");
+    }
 
     public void setFecha_ingreso(Date fecha_ingreso) {
         this.fecha_ingreso = fecha_ingreso;
@@ -60,6 +67,10 @@ public class Patron {
 
     public Date getFecha_vencimiento() {
         return fecha_vencimiento;
+    }
+    
+    public String getFecha_vencimientoAsString() {
+        return formatearFecha(fecha_vencimiento, "Sin fecha de vencimiento");
     }
 
     public void setFecha_vencimiento(Date fecha_vencimiento) {
@@ -69,6 +80,10 @@ public class Patron {
     public Date getFecha_inicio_uso() {
         return fecha_inicio_uso;
     }
+    
+    public String getFecha_inicio_usoAsString() {
+        return formatearFecha(fecha_inicio_uso, "Sin fecha de vencimiento");
+    }
 
     public void setFecha_inicio_uso(Date fecha_inicio_uso) {
         this.fecha_inicio_uso = fecha_inicio_uso;
@@ -76,6 +91,16 @@ public class Patron {
 
     public String getCertificado() {
         return certificado;
+    }
+    
+    public Boolean tieneCertificado() {
+        boolean resultado = false;
+        if (certificado != null) {
+            if (!certificado.isEmpty()) {
+                resultado = true;
+            }
+        }
+        return resultado;
     }
 
     public void setCertificado(String certificado) {
@@ -103,6 +128,20 @@ public class Patron {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        String resultado = "Sin observaciones.";
+        if (observaciones != null) {
+            if (!observaciones.isEmpty()) {
+                resultado = observaciones;
+            }
+        }
+        this.observaciones = resultado;
+    }
+    
+    private String formatearFecha(Date fecha, String mensaje_si_es_nula) {
+        String resultado = mensaje_si_es_nula;
+        if (fecha != null) {
+            resultado = helper_fechas.formatearFecha(fecha);
+        }
+        return resultado;
     }
 }

@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Control de Calidad</li>
             <li> 
-              <a href="/SIGIPRO/ControlCalidad/TipoEquipo?">Tipos de Equipos</a>
+              <a href="/SIGIPRO/ControlCalidad/Patron?">Patrones y Controles</a>
             </li>
           </ul>
         </div>
@@ -31,10 +31,10 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Tipos de Equipos </h3>
+              <h3><i class="fa fa-gears"></i> Patrones y Controles </h3>
               <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 500)}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/TipoEquipo?accion=agregar">Agregar Tipo</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Patron?accion=agregar">Agregar Patrón</a>
                 </div>
               </c:if>
             </div>
@@ -44,20 +44,26 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Nombre</th>
+                    <th>Núm. Lote/Identificador</th>
+                    <th>Tipo</th>
+                    <th>Fecha de Vencimiento</th>
+                    <th>Lugar de Almacenamiento</th>                    
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaTipos}" var="tipo">
+                  <c:forEach items="${lista_patrones}" var="patron">
 
-                    <tr id ="${tipo.getId_tipo_equipo()}">
+                    <tr id ="${patron.getId_patron()}">
                       <td>
-                        <a href="/SIGIPRO/ControlCalidad/TipoEquipo?accion=ver&id_tipo_equipo=${tipo.getId_tipo_equipo()}">
+                        <a href="/SIGIPRO/ControlCalidad/Patron?accion=ver&id_patron=${patron.getId_patron()}">
                           <div style="height:100%;width:100%">
-                            ${tipo.getNombre()}
+                            ${patron.getNumero_lote()}
                           </div>
                         </a>
                       </td>
+                      <td>${patron.getTipo()}</td>
+                      <td>${patron.getFecha_vencimientoAsString()}</td>
+                      <td>${patron.getLugar_almacenamiento()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

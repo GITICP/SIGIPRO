@@ -224,6 +224,22 @@ CREATE TABLE control_calidad.resultados_informes
     CONSTRAINT pk_resultaods PRIMARY KEY (id_informe, id_resultado)
 );
 
+-- Table: patrones
+CREATE TABLE control_calidad.patrones
+(
+    id_patron serial NOT NULL,
+    numero_lote character varying(70) NOT NULL,
+    tipo character varying (40) NOT NULL,
+    fecha_ingreso date NOT NULL,
+    fecha_vencimiento date NOT NULL,
+    fecha_inicio_uso date NULL,
+    certificado character varying (200) NOT NULL,
+    lugar_almacenamiento character varying (500) NULL,
+    condicion_almacenamiento character varying (500) NULL,
+    observaciones character varying (500) NULL,
+    CONSTRAINT pk_patrones PRIMARY KEY (id_patron)
+);
+
 
 -- foreign keys
 -- Reference: Informes_Solicitudes (table: solicitudes)

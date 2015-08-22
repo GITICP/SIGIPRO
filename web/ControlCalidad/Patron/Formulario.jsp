@@ -29,15 +29,15 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="primario">
+                            <input type="radio" name="tipo" value="Primario" ${(accion == 'Editar' && patron.getTipo() == 'Primario') ? "checked" : ""}>
                             <span><i></i>Primario</span>
                         </label>
                         <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="secundario">
+                            <input type="radio" name="tipo" value="Secundario" ${(accion == 'Editar' && patron.getTipo() == 'Secundario') ? "checked" : ""}>
                             <span><i></i>Secundario</span>
                         </label>
                         <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="control_interno">
+                            <input type="radio" name="tipo" value="Control Interno" ${(accion == 'Editar' && patron.getTipo() == 'Control Interno') ? "checked" : ""}>
                             <span><i></i>Control Interno</span>
                         </label>
                     </div>
@@ -47,7 +47,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" value="${(fecha_sangria != null) ? fecha_sangria : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                        <input type="text" value="${(patron.getFecha_ingreso() != null) ? patron.getFecha_ingresoAsString() : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" value="${(fecha_sangria != null) ? fecha_sangria : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                        <input type="text" value="${(patron.getFecha_vencimiento() != null) ? patron.getFecha_vencimientoAsString() : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
@@ -67,7 +67,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" value="${(fecha_sangria != null) ? fecha_sangria : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_inicio_uso" data-date-format="dd/mm/yyyy" required
+                        <input type="text" value="${(patron.getFecha_inicio_uso() != null) ? patron.getFecha_inicio_usoAsString() : helper_fechas.getFecha_hoyAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_inicio_uso" data-date-format="dd/mm/yyyy" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
@@ -75,21 +75,40 @@
             </div>
         </div>
         <div class="col-md-6">
-            <label for="nombre" class="control-label">* Certificado</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="file" id="certificado" name="certificado"  accept="application/pdf,image/jpeg,image/gif,image/png" required
-                               oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                               onchange="setCustomValidity('')"/>
+            <c:choose>
+                <c:when test="${accion == 'Agregar'}">
+                    <label for="nombre" class="control-label">* Certificado</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="file" id="certificado" name="certificado"  accept="application/pdf,image/jpeg,image/gif,image/png" required
+                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                       onchange="setCustomValidity('')"/>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </c:when>
+                <c:otherwise>
+                    <label for="nombre" class="control-label">Certificado (Si no se selecciona ningún archivo se mantiene el archivo anterior)</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="file" id="certificado" name="certificado"  accept="application/pdf,image/jpeg,image/gif,image/png"
+                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                       onchange="setCustomValidity('')"/>
+                            </div>
+                        </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+
+
             <label for="nombre" class="control-label">* Lugar de Almacenamiento</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Lugar de Almacenamiento" class="form-control" name="lugar_almacenamiento" value="${patron.getNumero_lote()}"
+                        <input type="text" maxlength="45" placeholder="Lugar de Almacenamiento" class="form-control" name="lugar_almacenamiento" value="${patron.getLugar_almacenamiento()}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido')"
                                oninput="setCustomValidity('')" > 
@@ -108,7 +127,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="descripcion" >${patron.getObservaciones()}</textarea>
+                        <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones" >${(patron.getObservaciones() == 'Sin observaciones.') ? "" : patron.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>
@@ -116,7 +135,6 @@
         <!-- Esta parte es la de los permisos de un rol -->
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
-
 
     <div class="form-group">
         <div class="modal-footer">
@@ -130,6 +148,5 @@
                 </c:otherwise>
             </c:choose>    </div>
     </div>
-
 
 </form>
