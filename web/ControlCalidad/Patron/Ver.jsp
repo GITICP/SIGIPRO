@@ -36,7 +36,7 @@
                             <h3><i class="fa fa-gears"></i> Patrón ${patron.getNumero_lote()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 502)}">
-                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el tipo de equipo" data-href="/SIGIPRO/ControlCalidad/TipoEquipo?accion=eliminar&id_tipo_equipo=${tipoequipo.getId_tipo_equipo()}">Eliminar</a>
+                                    <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar este patrón" data-href="/SIGIPRO/ControlCalidad/Patron?accion=eliminar&id_patron=${patron.getId_patron()}">Eliminar</a>
                                 </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 501)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Patron?accion=editar&id_patron=${patron.getId_patron()}">Editar</a>
@@ -54,7 +54,7 @@
                                 <tr><td> <strong>Lugar de Almacenamiento: </strong></td> <td>${patron.getLugar_almacenamiento()} </td></tr>
                                 <tr><td> <strong>Condición de Almacenamiento: </strong></td> <td>${patron.getCondicion_almacenamiento()} </td></tr>
                                 <tr><td> <strong>Observaciones: </strong></td> <td>${patron.getObservaciones()} </td></tr>
-                                <tr><td> <strong>Certifiado: </strong></td><td><a href="/SIGIPRO/ControlCalidad/Patron?accion=certificado&id_patron=${patron.getId_patron()}">Descargar Certificado</a></td></tr>
+                                <tr><td> <strong>Certificado: </strong></td><td><a href="/SIGIPRO/ControlCalidad/Patron?accion=certificado&id_patron=${patron.getId_patron()}">Descargar Certificado</a></td></tr>
                             </table>
                             <br>
                         </div>

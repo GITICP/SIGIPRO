@@ -122,7 +122,7 @@ public class PatronDAO extends DAO {
                 } else {
                     getConexion().rollback();
                 }
-            } catch(SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");
             }
@@ -226,6 +226,48 @@ public class PatronDAO extends DAO {
 
         return resultado;
 
+    }
+
+    public boolean eliminarPatron(int id_patron) throws SIGIPROException {
+
+        boolean resultado = false;
+
+        PreparedStatement consulta = null;
+
+        try {
+            
+            getConexion().setAutoCommit(false);
+
+            consulta = getConexion().prepareStatement(
+                    " DELETE FROM control_calidad.patrones WHERE id_patron = ?;"
+            );
+
+            consulta.setInt(1, id_patron);
+
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+
+        } catch (SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            String a = "prueba";
+        } finally {
+            try {
+                if (resultado) {
+                    getConexion().commit();
+                } else {
+                    getConexion().rollback();
+                }
+            } catch (SQLException sql_ex) {
+                sql_ex.printStackTrace();
+                throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");
+            }
+
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+
+        return resultado;
     }
 
 }

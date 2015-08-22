@@ -7,10 +7,7 @@ package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.PatronDAO;
-import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
-import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Patron;
-import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.File;
@@ -156,7 +153,7 @@ public class ControladorPatron extends SIGIPROServlet {
         try {
             Patron patron = dao.obtenerPatron(id_patron);
             request.setAttribute("patron", patron);
-        } catch(SIGIPROException sig_ex) {
+        } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
 
@@ -166,25 +163,23 @@ public class ControladorPatron extends SIGIPROServlet {
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(523, request);
-        int id_equipo = Integer.parseInt(request.getParameter("id_equipo"));
-        boolean resultado = false;
+        int id_patron = Integer.parseInt(request.getParameter("id_patron"));
+        boolean resultado;
         try {
-            //resultado = dao.eliminarEquipo(id_equipo);
+            resultado = dao.eliminarPatron(id_patron);
             if (resultado) {
                 //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_equipo, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EQUIPO, request.getRemoteAddr());
+                bitacora.setBitacora(id_patron, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EQUIPO, request.getRemoteAddr());
                 //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Equipo eliminado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Patrón eliminado correctamente."));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser eliminado ya que tiene certificados asociados."));
+                request.setAttribute("mensaje", helper.mensajeDeError("El patrón que está intentando eliminar no existe."));
             }
             this.getIndex(request, response);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Equipo no pudo ser eliminado ya que tiene certificados asociados."));
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             this.getIndex(request, response);
         }
-
     }
 
     // </editor-fold>
@@ -205,7 +200,7 @@ public class ControladorPatron extends SIGIPROServlet {
 
         this.getIndex(request, response);
     }
-    
+
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Patron patron = construirObjeto(request);
 
