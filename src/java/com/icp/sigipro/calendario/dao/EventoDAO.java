@@ -83,6 +83,55 @@ public class EventoDAO {
         }
         return resultado;
     }
+    public boolean insertarEvento(Evento evento, Boolean Shared, String sharing_type, String[] ids) throws SIGIPROException
+    {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion()
+                    .prepareStatement("insert into calendario.eventos(title, start_date, end_date, description, allDay) values (?, ?, ?, ?, ?) RETURNING id");
+            // Parameters start with 1
+            consulta.setString(1, evento.getTitle());
+            consulta.setTimestamp(2, evento.getStart_date());
+            consulta.setTimestamp(3, evento.getEnd_date());
+            consulta.setString(4, evento.getDescription());
+            consulta.setBoolean(5, evento.getAllDay());
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {  
+                resultado = true;
+                Integer id_evento = resultadoConsulta.getInt("id");
+                if (Shared)
+                  {
+                    if (sharing_type.equals("Usuarios"))
+                    {for(int i=0; i<ids.length; i++)
+                      {insertarEvento_Usuario(id_evento,
+                              Integer.parseInt(ids[i]));}
+                    }
+                    else if (sharing_type.equals("Secciones"))
+                    {for(int i=0; i<ids.length; i++)
+                      {insertarEvento_Seccion(id_evento,
+                              Integer.parseInt(ids[i]));}
+                    }
+                    else if (sharing_type.equals("Roles"))
+                    {for(int i=0; i<ids.length; i++)
+                      {insertarEvento_Rol(id_evento,
+                              Integer.parseInt(ids[i]));}
+                    }
+                    else
+                    {insertarEvento_Seccion(id_evento,0);}
+                  }
+            }
+
+            resultadoConsulta.close();
+            consulta.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SIGIPROException("Ocurrió un error al insertar el evento.");
+        }
+        return resultado;
+    }
 
     public boolean insertarEvento_Usuario(Integer id_e, Integer id_u) throws SIGIPROException
     {
@@ -233,6 +282,61 @@ public class EventoDAO {
 //
 //        return evento;
 //    }
+  public List<Evento> obtenerEventos_hoy(Usuario u) throws SIGIPROException {
+    List<Evento> eventos = new ArrayList<Evento>();
+    try {
+      PreparedStatement preparedStatement = getConexion().
+              prepareStatement("SELECT *\n"
+                      + "FROM calendario.eventos e\n"
+                      + "     FULL OUTER JOIN calendario.eventos_usuarios eu\n"
+                      + "        ON e.id = eu.id_evento\n"
+                      + "     FULL OUTER JOIN calendario.eventos_secciones es\n"
+                      + "        ON e.id = es.id_evento\n"
+                      + "WHERE (eu.id_usuario =? or es.id_seccion=?) AND e.start_date >= current_date AND start_date < current_date + 1");
+      PreparedStatement preparedStatement2 = getConexion().
+              prepareStatement("SELECT * FROM calendario.eventos WHERE id IN "
+                      + "(SELECT e.id_evento FROM calendario.eventos_roles e where e.id_rol IN "
+                      + "(SELECT id_rol FROM seguridad.roles_usuarios WHERE id_usuario=? )) AND start_date >= current_date AND start_date < current_date + 1 ");
+      preparedStatement.setInt(1, u.getID());
+      preparedStatement.setInt(2, u.getIdSeccion());
+      preparedStatement2.setInt(1, u.getID());
+      ResultSet rs = preparedStatement.executeQuery();
+      ResultSet rs2 = preparedStatement2.executeQuery();
+            
+            while (rs.next()) {
+                Evento evento = new Evento();
+                evento.setId(rs.getInt("id"));
+                evento.setTitle(rs.getString("title"));
+                evento.setStart_date(rs.getTimestamp("start_date"));
+                evento.setEnd_date(rs.getTimestamp("end_date"));
+                evento.setDescription(rs.getString("description"));
+                evento.setAllDay(rs.getBoolean("allDay"));
+                eventos.add(evento);
+            }
+            while (rs2.next()) {
+                Evento evento = new Evento();
+                evento.setId(rs.getInt("id"));
+                evento.setTitle(rs.getString("title"));
+                evento.setStart_date(rs.getTimestamp("start_date"));
+                evento.setEnd_date(rs.getTimestamp("end_date"));
+                evento.setDescription(rs.getString("description"));
+                evento.setAllDay(rs.getBoolean("allDay"));
+                eventos.add(evento);
+            }
+            
+            rs.close();
+            rs2.close();
+            preparedStatement.close();
+            preparedStatement2.close();
+            getConexion().close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SIGIPROException("No se puede obtener los eventos.");
+        }
+
+        return eventos;
+    }
   public List<Evento> obtenerEventos_afterhoy(Usuario u) throws SIGIPROException {
     List<Evento> eventos = new ArrayList<Evento>();
     try {

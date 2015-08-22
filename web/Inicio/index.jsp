@@ -1,16 +1,18 @@
 <%-- 
     Document   : index
-    Created on : Nov 26, 2014, 10:16:57 PM
-    Author     : Boga
+    Created on : Mar 26, 2015, 4:02:57 PM
+    Author     : Amed
 --%>
 
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:plantilla_general title="Inicio" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
 
-    <jsp:include page="plantillas/barraFuncionalidad.jsp" />
+    <jsp:include page="../plantillas/barraFuncionalidad.jsp" />
 
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
@@ -41,9 +43,9 @@
                 <div class="widget-content">
                   <div class="today-reminder">
                     <h4 class="reminder-title">${evento.getTitle()}</h4>
-                    <p class="reminder-time"><i class="fa fa-clock-o"></i> ${evento.getStart_Date()}</p>
+                    <p class="reminder-time"><i class="fa fa-clock-o"></i> Hoy - ${evento.getHora()}</p>
                     <p class="reminder-place"> </p>
-                    <em class="reminder-notes"> ${evento.getDescripcion()}</em>
+                    <em class="reminder-notes"> ${evento.getDescription()}</em>
                     <i class="fa fa-bell"></i>
 
                   </div>
@@ -59,6 +61,7 @@
       <!-- /main -->
     </div>
     <!-- /content-wrapper -->
-  </jsp:attribute>
+    </jsp:attribute>
 
-</t:plantilla_general>
+  </t:plantilla_general>
+

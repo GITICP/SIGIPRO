@@ -38,7 +38,21 @@ public class Evento {
   public Timestamp getStart_date() {
     return start;
   }
+  public String getHora() {
+    if (this.allDay){return "Todo el día";}
+    else{
+    int horas = start.getHours();
+    int minutos = start.getMinutes();
+    String minuto;
+    if (minutos==0){
+      minuto = "00";
+    }
+    else
+    {minuto = String.valueOf(minutos);}
+    String hora = String.valueOf(horas);
 
+    return  hora+":"+minuto;}
+  }
   public void setStart_date(Timestamp start_date) {
     this.start = start_date;
   }

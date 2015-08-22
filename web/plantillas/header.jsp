@@ -21,7 +21,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/SIGIPRO">SIGIPRO</a>
+        <a class="navbar-brand" href="/SIGIPRO/Inicio">SIGIPRO</a>
     </div>
     <div class="navbar-collapse collapse">
 
@@ -49,12 +49,12 @@
                             <span class="text" href="/SIGIPRO/Calendario/Calendario">Calendario</span>
                         </a>
                     </li>
-                    <li>
+<!--                    <li>
                         <a href="/SIGIPRO/Calendario/Notificaciones">
                             <i class="fa fa-bell"></i>
                             <span class="text" href="/SIGIPRO/Calendario/Notificaciones">Notificaciones</span>
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
             <li>
