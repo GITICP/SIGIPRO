@@ -240,8 +240,31 @@ CREATE TABLE control_calidad.patrones
     CONSTRAINT pk_patrones PRIMARY KEY (id_patron)
 );
 
+-- Table: patrones_resultados
+CREATE TABLE control_calidad.patrones_resultados
+(
+    id_patron integer NOT NULL,
+    id_resultado integer NOT NULL,
+    CONSTRAINT pk_patrones_resultados PRIMARY KEY (id_patron, id_resultado)
+);
 
 -- foreign keys
+-- Reference: patrones_resultados (table: Patrones)
+ALTER TABLE control_calidad.patrones_resultados ADD CONSTRAINT fk_patrones_resultados_patrones
+    FOREIGN KEY (id_patron) 
+    REFERENCES control_calidad.patrones(id_patron)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: patrones_resultados (table: Resultados)
+ALTER TABLE control_calidad.patrones_resultados ADD CONSTRAINT fk_patrones_resultados_resultados
+    FOREIGN KEY (id_resultado) 
+    REFERENCES control_calidad.resultados(id_resultado)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
 -- Reference: Informes_Solicitudes (table: solicitudes)
 ALTER TABLE control_calidad.informes ADD CONSTRAINT fk_informes_solicitudes
     FOREIGN KEY (id_solicitud) 

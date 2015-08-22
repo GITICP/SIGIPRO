@@ -269,5 +269,52 @@ public class PatronDAO extends DAO {
 
         return resultado;
     }
+    
+    public List<List<Patron>> obtenerPatronesRealizarAnalisis() throws SIGIPROException {
+        
+        List<Patron> lista_patrones = new ArrayList<>();
+        List<Patron> lista_controles = new ArrayList<>();
+        
+        List<List<Patron>> resultado = new ArrayList<>();
+        
+        resultado.add(lista_patrones);
+        resultado.add(lista_controles);
+
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT p.id_patron, p.numero_lote, p.tipo "
+                    + " FROM control_calidad.patrones p "
+            );
+
+            rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                Patron p = new Patron();
+
+                p.setId_patron(rs.getInt("id_patron"));
+                p.setNumero_lote(rs.getString("numero_lote"));
+                p.setTipo(rs.getString("tipo"));
+
+                if (p.getTipo().equalsIgnoreCase("Control Interno")) {
+                    lista_controles.add(p);
+                } else {
+                    lista_patrones.add(p);
+                }
+            }
+
+        } catch (SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al admiinstrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+
+        return resultado;
+    }
 
 }

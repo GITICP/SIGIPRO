@@ -100,6 +100,59 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="widget widget-table">
+                                        <div class="widget-header">
+                                            <h3><i class="fa fa-flask"></i>Patrones utilizados</h3>
+                                        </div>
+                                        <div class="widget-content">
+                                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Número de Lote/Identificador</th>
+                                                        <th>Tipo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="${resultado.getPatrones_resultado()}" var="patron">
+                                                        <tr>
+                                                            <td>${patron.getNumero_lote()}</td>
+                                                            <td>${patron.getTipo()}</td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="widget widget-table">
+                                        <div class="widget-header">
+                                            <h3><i class="fa fa-gears"></i>Controles utilizados</h3>
+                                        </div>
+                                        <div class="widget-content">
+                                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Número de Lote/Identificador</th>
+                                                        <th>Tipo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="${resultado.getControles_resultado()}" var="patron">
+                                                        <tr>
+                                                            <td>${patron.getNumero_lote()}</td>
+                                                            <td>${patron.getTipo()}</td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

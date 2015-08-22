@@ -8,6 +8,7 @@ package com.icp.sigipro.controlcalidad.controladores;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
+import com.icp.sigipro.controlcalidad.dao.PatronDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
@@ -17,6 +18,7 @@ import com.icp.sigipro.controlcalidad.dao.TipoReactivoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
 import com.icp.sigipro.controlcalidad.modelos.Equipo;
+import com.icp.sigipro.controlcalidad.modelos.Patron;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
@@ -95,6 +97,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final ReactivoDAO reactivodao = new ReactivoDAO();
     private final ResultadoDAO resultadodao = new ResultadoDAO();
     private final SolicitudDAO solicituddao = new SolicitudDAO();
+    private final PatronDAO patrondao = new PatronDAO();
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
     private String ubicacion;
 
@@ -319,7 +322,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
             request.setAttribute("cuerpo_formulario", formulario);
             List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
             List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
+            List<List<Patron>> patrones_controles = patrondao.obtenerPatronesRealizarAnalisis();
 
+            request.setAttribute("patrones", patrones_controles.get(0));
+            request.setAttribute("controles", patrones_controles.get(1));
             request.setAttribute("equipos", equipos);
             request.setAttribute("reactivos", reactivos);
             request.setAttribute("analisis", analisis);
@@ -425,6 +431,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
         String[] equipos_utilizados = this.obtenerParametros("equipos");
         String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+        String[] controles_utilizados = this.obtenerParametros("controles");
+        String[] patrones_utilizados = this.obtenerParametros("patrones");
 
         HelperExcel excel = this.guardarArchivoResultado(resultado, analisis, ubicacion);
 
@@ -481,6 +489,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
             resultado.setEquipos(equipos_utilizados);
             resultado.setReactivos(reactivos_utilizados);
+            resultado.setPatrones(patrones_utilizados);
+            resultado.setControles(controles_utilizados);
 
             resultadodao.insertarResultado(resultado);
 
