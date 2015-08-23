@@ -60,6 +60,13 @@
                                 <input type="hidden" value="${solicitud.getId_solicitud()}" name="id_solicitud" />
                                 <c:if test="${accion == 'Editar'}">
                                     <input type="hidden" value="${solicitud.getInforme().getId_informe()}" name="id_informe" />
+                                    <c:choose>
+                                        <c:when test="${tipo == 'sangria'}">
+                                            <c:forEach items="${caballos_resultado}" var="resultado_caballo">
+                                                <input type="hidden" name="caballos_res_${resultado_caballo.getResultado().getId_resultado()}" value="${resultado_caballo.pasarIdsAString()}" />
+                                            </c:forEach>
+                                        </c:when>
+                                    </c:choose>
                                 </c:if>
 
                                 <div class="row">
@@ -118,7 +125,6 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="row">
-
                                     <div class="col-md-12">
                                         <div class="widget widget-table">
                                             <div class="widget-header">

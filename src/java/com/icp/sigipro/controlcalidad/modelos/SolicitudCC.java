@@ -211,15 +211,21 @@ public class SolicitudCC extends Asociable {
         }
     }
     
-    public void prepararEditar(HttpServletRequest request) throws SIGIPROException {
+    public void prepararEditarSolicitud(HttpServletRequest request) throws SIGIPROException {
         if (asociacion != null) {
-            asociacion.prepararEditar(request);
+            asociacion.prepararEditarSolicitud(request);
         }
     }
     
-    public void prepararGenerar(HttpServletRequest request) throws SIGIPROException {
+    public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         if (asociacion != null) {
-            asociacion.prepararGenerar(request);
+            asociacion.prepararGenerarInforme(request);
+        }
+    }
+    
+    public void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException {
+        if (asociacion != null) {
+            asociacion.prepararEditarInforme(request);
         }
     }
 

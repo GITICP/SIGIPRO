@@ -7,6 +7,7 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
+import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
@@ -28,6 +29,7 @@ public class AsociacionSolicitudSangria extends Asociacion {
     private int dia;
     private final SolicitudCC solicitud;
     private final SangriaDAO sangria_dao = new SangriaDAO();
+    private final ResultadoDAO resultado_dao = new ResultadoDAO();
 
     public AsociacionSolicitudSangria(SolicitudCC p_solicitud) {
         tipo = "sangria";
@@ -52,26 +54,36 @@ public class AsociacionSolicitudSangria extends Asociacion {
     }
 
     @Override
-    public void prepararEditar(HttpServletRequest request) throws SIGIPROException {
+    public void prepararEditarSolicitud(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
-        request.setAttribute("dia", dia);
+        request.setAttribute("dia", dia); 
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
     }
 
     @Override
-    public void prepararGenerar(HttpServletRequest request) throws SIGIPROException {
+    public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
         request.setAttribute("dia", dia);
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
         request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
     }
+    
+    @Override 
+    public void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException {
+        request.setAttribute("tipo", "sangria");
+        request.setAttribute("id_sangria", sangria.getId_sangria());
+        request.setAttribute("dia", dia);
+        request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
+        request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
+        request.setAttribute("caballos_resultado", resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia));
+    }
 
     @Override
     public List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException {
 
-        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        List<PreparedStatement> resultado = new ArrayList<>();
 
         PreparedStatement consulta = conexion.prepareStatement(
                 " UPDATE control_calidad.solicitudes SET "

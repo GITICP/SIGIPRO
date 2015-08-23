@@ -27,8 +27,9 @@ public abstract class Asociacion {
     public abstract void asociar(HttpServletRequest request);
     public abstract void asociar(ResultSet rs) throws SQLException;
     public abstract void asociar(Resultado resultado, HttpServletRequest request);
-    public abstract void prepararEditar(HttpServletRequest request) throws SIGIPROException;
-    public abstract void prepararGenerar(HttpServletRequest request) throws SIGIPROException;
+    public abstract void prepararEditarSolicitud(HttpServletRequest request) throws SIGIPROException;
+    public abstract void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException;
+    public abstract void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException;
     public abstract List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException;
 
     public Asociable getInforme() {

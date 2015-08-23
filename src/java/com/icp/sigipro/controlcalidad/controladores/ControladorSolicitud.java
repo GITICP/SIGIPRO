@@ -148,7 +148,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
 
-        solicitud.prepararEditar(request);
+        solicitud.prepararEditarSolicitud(request);
         request.setAttribute("listaSolicitud", listaSolicitud);
         request.setAttribute("listaTM", idTipoMuestras);
         request.setAttribute("listaGrupos", idGrupos);

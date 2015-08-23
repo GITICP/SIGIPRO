@@ -69,7 +69,7 @@ public class ControladorInformes extends SIGIPROServlet
         
         try {
             // Aunque sea generar, se necesita la misma información 
-            solicitud.prepararGenerar(request);
+            solicitud.prepararGenerarInforme(request);
         } catch(SIGIPROException sig_ex) {
             solicitud = null;
         }
@@ -92,6 +92,11 @@ public class ControladorInformes extends SIGIPROServlet
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
         
         SolicitudCC solicitud = daosolicitud.obtenerSolicitud(id_solicitud);
+        try {
+            solicitud.prepararEditarInforme(request);
+        } catch(SIGIPROException sig_ex) {
+            solicitud = null;
+        }
         
         if (solicitud != null) {
             request.setAttribute("solicitud", solicitud);

@@ -40,9 +40,16 @@ public class ObjetoAsociacionMultiple {
     
     public void agregarId(int id) {
         if (ids == null) {
-            ids = new ArrayList<Integer>();
+            ids = new ArrayList<>();
         }
         ids.add(id);
     }
     
+    public String pasarIdsAString() {
+        String resultado_func = "";
+        for (Integer id : ids) {
+            resultado_func = resultado_func + String.valueOf(id) + ",";
+        }
+        return resultado_func.substring(0, resultado_func.length() - 1);
+    }
 }

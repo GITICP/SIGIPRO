@@ -17,6 +17,7 @@ import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.ObjetoAsociacionMultiple;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -567,6 +568,59 @@ public class ResultadoDAO extends DAO {
         }
 
         return resultado;
+    }
+    
+    public List<ObjetoAsociacionMultiple> obtenerCaballosResultado(int id_sangria, int dia) throws SIGIPROException {
+        
+        List<ObjetoAsociacionMultiple> resultado = new ArrayList<>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            String campo_resultado = "id_resultado_lal_dia" + dia;
+            consulta = getConexion().prepareStatement(
+                  " SELECT id_caballo, " + campo_resultado
+                + " FROM caballeriza.sangrias_caballos "
+                + " WHERE id_sangria = ? "
+                + " ORDER BY " + campo_resultado + ";"
+            );
+            
+            consulta.setInt(1, id_sangria);
+            
+            rs = consulta.executeQuery();
+            
+            ObjetoAsociacionMultiple objeto = new ObjetoAsociacionMultiple();
+            Resultado res_temp = new Resultado();
+            objeto.setResultado(res_temp);
+            
+            while(rs.next()) {
+                int id_resultado_temp = rs.getInt(campo_resultado);
+                if (objeto.getResultado().getId_resultado() != id_resultado_temp) {
+                    objeto = new ObjetoAsociacionMultiple();
+                    
+                    Resultado r = new Resultado();
+                    r.setId_resultado(id_resultado_temp);
+                    
+                    objeto.setResultado(r);
+                    
+                    resultado.add(objeto);
+                }
+                objeto.agregarId(rs.getInt("id_caballo"));
+            }
+            
+            
+        } catch(SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener la información. Inténtelo nuevamente y de persistir notifique al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return resultado;
+        
     }
 
 }

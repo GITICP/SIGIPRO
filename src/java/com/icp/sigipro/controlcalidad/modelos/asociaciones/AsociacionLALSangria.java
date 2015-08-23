@@ -92,7 +92,7 @@ public class AsociacionLALSangria extends Asociacion {
     }
     
     @Override
-    public void prepararEditar(HttpServletRequest request) {
+    public void prepararEditarSolicitud(HttpServletRequest request) {
         
     }
 
@@ -104,9 +104,14 @@ public class AsociacionLALSangria extends Asociacion {
     }
     
     @Override 
-    public void prepararGenerar(HttpServletRequest request) throws SIGIPROException {
+    public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         throw new SIGIPROException("Esta operación aún no se ha implementado");
     }
-
+    
     // </editor-fold>
+
+    @Override
+    public void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException {
+        throw new SIGIPROException("Esta operación aún no se ha implementado");
+    }
 }
