@@ -142,4 +142,16 @@ public class Informe extends Asociable
         }
         return resultado;
     }
+    
+    public List<PreparedStatement> obtenerConsultasEditarAsociacion(Connection conexion) throws SQLException {
+        
+        // Obtener asociación de solicitud
+        // Actualizar asociación de solicitud a nulo
+        
+        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        if (asociacion != null) {
+            resultado = asociacion.editarSQL(conexion);
+        }
+        return resultado;
+    }
 }

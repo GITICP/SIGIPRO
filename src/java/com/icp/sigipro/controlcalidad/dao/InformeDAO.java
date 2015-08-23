@@ -181,7 +181,7 @@ public class InformeDAO extends DAO {
                 resultado_resultados = true;
             }
 
-            List<PreparedStatement> consultas_asociacion = informe.obtenerConsultasInsertarAsociacion(getConexion());
+            List<PreparedStatement> consultas_asociacion = informe.obtenerConsultasEditarAsociacion(getConexion());
 
             for (PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();

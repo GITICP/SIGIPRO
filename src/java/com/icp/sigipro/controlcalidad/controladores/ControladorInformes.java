@@ -193,7 +193,7 @@ public class ControladorInformes extends SIGIPROServlet
             informe = dao.editarInforme(informe);
             // Bitácora informe
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
-            request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Informe editado correctamente."));
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }

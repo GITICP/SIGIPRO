@@ -112,6 +112,11 @@ public class AsociacionSolicitudSangria extends Asociacion {
     public void asociar(Resultado resultado, HttpServletRequest request) {
 
     }
+    
+    @Override
+    public List<PreparedStatement> editarSQL(Connection conexion) throws SQLException {
+        throw new SQLException("Operación no existe.");
+    }
 
     // </editor-fold>
 }
