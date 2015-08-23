@@ -67,6 +67,13 @@ public class ControladorInformes extends SIGIPROServlet
         
         SolicitudCC solicitud = daosolicitud.obtenerSolicitud(id_solicitud);
         
+        try {
+            // Aunque sea generar, se necesita la misma información 
+            solicitud.prepararGenerar(request);
+        } catch(SIGIPROException sig_ex) {
+            solicitud = null;
+        }
+        
         if (solicitud != null) {
             request.setAttribute("solicitud", solicitud);
             request.setAttribute("accion", "Generar");

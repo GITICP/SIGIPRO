@@ -91,59 +91,7 @@
                 <c:otherwise>
                     <c:choose>
                         <c:when test="${tipo == 'sangria'}">
-                            <div class="col-md-6"></div>
-                            <div id="fila-select-sangria" class="row">
-                                <div class="col-md-6">
-                                    <label for="sangria" class="control-label"> Sangría por asociar</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="input-group">
-                                                <select id="seleccion-sangria" name="sangria"
-                                                        style='background-color: #fff;'>
-                                                    <option value=''></option>
-                                                    <c:forEach items="${sangrias}" var="sangria">
-                                                        <c:if test="${sangria.getId_sangria() == id_sangria}">
-                                                            <c:set var="sangria_seleccionada" value="${sangria}" /> 
-                                                        </c:if>
-
-                                                        <option value="${sangria.getId_sangria()}"
-                                                                data-fecha-1="${sangria.getFecha_dia1()}"
-                                                                data-fecha-2="${sangria.getFecha_dia2()}"
-                                                                data-fecha-3="${sangria.getFecha_dia3()}"
-                                                                ${(sangria.getId_sangria() == id_sangria) ? "selected" : ""}>
-                                                            ${sangria.getId_sangria_especial()}
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6"></div>
-                            <div id="fila-select-dia" class="row">
-                                <div class="col-md-6">
-                                    <label for="sangria" class="control-label"> Día por asignar</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="input-group">
-                                                <select id="seleccion-dia" name="dia"
-                                                        style='background-color: #fff;'>
-                                                    <c:if test="${sangria_seleccionada.getFecha_dia1() != null}">
-                                                        <option value="1" ${(dia == 1 ? "selected" : "")}>Día 1</option>
-                                                    </c:if>
-                                                    <c:if test="${sangria_seleccionada.getFecha_dia2() != null}">
-                                                        <option value="1" ${(dia == 2 ? "selected" : "")}>Día 2</option>
-                                                    </c:if>
-                                                    <c:if test="${sangria_seleccionada.getFecha_dia3() != null}">
-                                                        <option value="1" ${(dia == 3 ? "selected" : "")}>Día 3</option>
-                                                    </c:if>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <t:editar_solicitud_sangria derecha="true" />
                         </c:when>
                         <c:otherwise>
 
@@ -223,14 +171,7 @@
                                     <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarMuestra('${muestra.get(0)}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
                                 </div>
                             </div>
-
-
-
                         </c:forEach>
-
-
-
-
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">

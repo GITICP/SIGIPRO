@@ -216,6 +216,12 @@ public class SolicitudCC extends Asociable {
             asociacion.prepararEditar(request);
         }
     }
+    
+    public void prepararGenerar(HttpServletRequest request) throws SIGIPROException {
+        if (asociacion != null) {
+            asociacion.prepararGenerar(request);
+        }
+    }
 
     @Override
     public void setTipoAsociacion(String objeto) {

@@ -42,7 +42,7 @@ public class AsociacionSolicitudSangria extends Asociacion {
         sangria = new Sangria();
         sangria.setId_sangria(id_sangria);
     }
-    
+
     @Override
     public void asociar(ResultSet rs) throws SQLException {
         dia = Integer.parseInt(rs.getString("informacion_referencia_adicional"));
@@ -50,20 +50,29 @@ public class AsociacionSolicitudSangria extends Asociacion {
         sangria = new Sangria();
         sangria.setId_sangria(id_sangria);
     }
-    
-    @Override 
+
+    @Override
     public void prepararEditar(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
         request.setAttribute("dia", dia);
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
     }
-    
+
+    @Override
+    public void prepararGenerar(HttpServletRequest request) throws SIGIPROException {
+        request.setAttribute("tipo", "sangria");
+        request.setAttribute("id_sangria", sangria.getId_sangria());
+        request.setAttribute("dia", dia);
+        request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
+        request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
+    }
+
     @Override
     public List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException {
-        
+
         List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
-        
+
         PreparedStatement consulta = conexion.prepareStatement(
                 " UPDATE control_calidad.solicitudes SET "
                 + " tipo_referencia = ?, "
@@ -72,27 +81,25 @@ public class AsociacionSolicitudSangria extends Asociacion {
                 + " informacion_referencia_adicional = ?"
                 + " where id_solicitud = ?; "
         );
-        
+
         consulta.setString(1, tipo);
         consulta.setString(2, tabla);
         consulta.setInt(3, sangria.getId_sangria());
         consulta.setString(4, String.valueOf(dia));
         consulta.setInt(5, solicitud.getId_solicitud());
         consulta.addBatch();
-        
+
         resultado.add(consulta);
-        
+
         return resultado;
-        
+
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Métodos Abstractos Inutilizados">
-    
     @Override
     public void asociar(Resultado resultado, HttpServletRequest request) {
 
     }
 
     // </editor-fold>
-
 }

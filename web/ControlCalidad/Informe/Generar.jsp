@@ -34,7 +34,6 @@
             <div class="content">
                 <div class="main-content">
                     <!-- COLUMN FILTER DATA TABLE -->
-                    <input hidden="true" id="listaIds" value="${listaIds}">
 
                     <div class="widget widget-table">
                         <div class="widget-header">
@@ -80,37 +79,44 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div id="fila-select-sangria" class="row" hidden="true">
-                                    <div class="col-md-6">
-                                        <label for="sangria" class="control-label"> Sangría por asociar</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <select id="seleccion-sangria" name="sangria"
-                                                            style='background-color: #fff;'>
-                                                        <option value=''></option>
-                                                    </select>
+                                </div>                                
+                                <c:choose>
+                                    <c:when test="${solicitud.tieneTipoAsociacion()}">
+                                        <t:editar_solicitud_sangria derecha="false" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div id="fila-select-sangria" class="row" hidden="true">
+                                            <div class="col-md-6">
+                                                <label for="sangria" class="control-label"> Sangría por asociar</label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <select id="seleccion-sangria" name="sangria"
+                                                                    style='background-color: #fff;'>
+                                                                <option value=''></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div id="fila-select-dia" class="row" hidden="true">
-                                    <div class="col-md-6">
-                                        <label for="sangria" class="control-label"> Día por asignar</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <select id="seleccion-dia" name="dia"
-                                                            style='background-color: #fff;'>
-                                                        <option value=''></option>
-                                                    </select>
+                                        <div id="fila-select-dia" class="row" hidden="true">
+                                            <div class="col-md-6">
+                                                <label for="sangria" class="control-label"> Día por asignar</label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <select id="seleccion-dia" name="dia"
+                                                                    style='background-color: #fff;'>
+                                                                <option value=''></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </c:otherwise>
+                                </c:choose>
                                 <div class="row">
 
                                     <div class="col-md-12">
@@ -223,6 +229,8 @@
             </div>
         </div>
 
+        <div id="flag-asociacion" data-tipo="${tipo}" />
+
     </jsp:attribute>
 
     <jsp:attribute name="scripts">
@@ -240,7 +248,12 @@
 
             <label for="ids-caballos" class="control-label">Seleccione los caballos</label>
             <select id="seleccion-caballos" class="select2" style="background-color: #fff" name="ids_caballos" multiple="multiple" required
-                    oninvalid="setCustomValidity('El campo de muestras es requerido.')">  
+                    oninvalid="setCustomValidity('El campo de muestras es requerido.')">
+                <c:if test="${tipo == 'sangria'}">
+                    <c:forEach items="${caballos_sangria}" var="caballo">
+                        <option value="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero()})</option>
+                    </c:forEach>
+                </c:if>
             </select>
 
             <br/>

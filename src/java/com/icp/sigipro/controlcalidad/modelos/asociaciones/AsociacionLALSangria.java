@@ -7,6 +7,7 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -100,6 +101,11 @@ public class AsociacionLALSangria extends Asociacion {
     @Override
     public void asociar(HttpServletRequest request) {
 
+    }
+    
+    @Override 
+    public void prepararGenerar(HttpServletRequest request) throws SIGIPROException {
+        throw new SIGIPROException("Esta operación aún no se ha implementado");
     }
 
     // </editor-fold>
