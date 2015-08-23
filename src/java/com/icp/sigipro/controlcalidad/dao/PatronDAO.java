@@ -249,8 +249,12 @@ public class PatronDAO extends DAO {
             }
 
         } catch (SQLException sql_ex) {
-            sql_ex.printStackTrace();
-            String a = "prueba";
+            if (sql_ex.getSQLState().equals("23503")) {
+                throw new SIGIPROException("No se puede eliminar el patrón ya que se encuentra asociado a uno más resultados.");
+            } else {
+                sql_ex.printStackTrace();
+                throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");
+            }
         } finally {
             try {
                 if (resultado) {
@@ -258,7 +262,7 @@ public class PatronDAO extends DAO {
                 } else {
                     getConexion().rollback();
                 }
-            } catch (SQLException sql_ex) {
+            } catch (SQLException | NullPointerException sql_ex) {
                 sql_ex.printStackTrace();
                 throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");
             }
