@@ -69,7 +69,6 @@ function evento_seleccionar_sangria() {
     select_dia.change(evento_seleccionar_dia);
 
     var opcion_seleccionada = $(this).find("option:selected");
-    alert(opcion_seleccionada.val());
 
     if (opcion_seleccionada.attr("data-fecha-1") !== undefined && opcion_seleccionada.attr("data-fecha-1") !== "") {
         var opcion = $("<option>");
