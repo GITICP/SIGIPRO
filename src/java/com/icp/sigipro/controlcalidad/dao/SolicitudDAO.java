@@ -472,6 +472,41 @@ public class SolicitudDAO extends DAO {
         }
         return resultado;
     }
+    
+    public SolicitudCC obtenerAsociacion(SolicitudCC solicitud) throws SQLException {
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            
+            consulta = getConexion().prepareStatement(
+                      " SELECT s.tipo_referencia, s.tabla_referencia, s.id_referenciado, s.informacion_referencia_adicional "
+                    + " FROM control_calidad.solicitudes s "
+                    + " WHERE id_solicitud = ? "
+            );
+            
+            consulta.setInt(1, solicitud.getId_solicitud());
+            
+            rs = consulta.executeQuery();
+            
+            if (rs.next()) {
+                String tipo = rs.getString("tipo_referencia");
+                if (tipo != null) {
+                    solicitud.setTipoAsociacion(tipo);
+                    solicitud.asociar(rs);
+                }
+            }
+            
+        } catch (SQLException sql_ex) {
+            
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+        }
+        
+        return solicitud;
+    }
 
     public List<List<String>> obtenerSolicitudEditar(int id_solicitud) {
         List<List<String>> resultado = new ArrayList<List<String>>();

@@ -5,9 +5,8 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
-import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociacion;
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociable;
-import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionSolicitudSangria;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionSangria;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
@@ -38,7 +37,6 @@ public class SolicitudCC extends Asociable {
     private String estado;
     private String observaciones;
     private Informe informe;
-    private Asociacion asociacion;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private ControlSolicitud control_solicitud;
@@ -228,14 +226,22 @@ public class SolicitudCC extends Asociable {
             asociacion.prepararEditarInforme(request);
         }
     }
+    
+    public List<PreparedStatement> obtenerConsultasEditarInforme(Connection conexion) throws SQLException {
+        List<PreparedStatement> resultado = new ArrayList<>();
+        if (asociacion != null) {
+            resultado = asociacion.editarSQLInforme(conexion);
+        }
+        return resultado;
+    }
 
     @Override
     public void setTipoAsociacion(String objeto) {
 
         switch (objeto) {
             case SANGRIA:
-                asociacion = new AsociacionSolicitudSangria(this);
-                asociacion.setAsociable(this);
+                asociacion = new AsociacionSangria(this);
+                asociacion.setSolicitud(this);
                 break;
             default:
                 break;
@@ -249,9 +255,17 @@ public class SolicitudCC extends Asociable {
     }
 
     public List<PreparedStatement> obtenerConsultasInsertarAsociacion(Connection conexion) throws SQLException {
-        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        List<PreparedStatement> resultado = new ArrayList<>();
         if (asociacion != null) {
-            resultado = asociacion.insertarSQL(conexion);
+            resultado = asociacion.insertarSQLSolicitud(conexion);
+        }
+        return resultado;
+    }
+    
+    public List<PreparedStatement> resetear(Connection conexion) throws SQLException {
+        List<PreparedStatement> resultado = new ArrayList<>();
+        if (asociacion != null) {
+            resultado = asociacion.resetear(conexion);
         }
         return resultado;
     }
@@ -284,5 +298,9 @@ public class SolicitudCC extends Asociable {
     private String formatearFecha(Date fecha) {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
+    }
+
+    public List<PreparedStatement> obtenerConsultasInsertarAsociacionInforme(Connection conexion) throws SQLException {
+        return asociacion.insertarSQLInforme(conexion);
     }
 }

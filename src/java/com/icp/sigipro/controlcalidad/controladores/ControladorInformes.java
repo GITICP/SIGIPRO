@@ -144,7 +144,8 @@ public class ControladorInformes extends SIGIPROServlet
         informe.setUsuario(u);
         
         String objeto_por_asociar = request.getParameter("objeto-relacionado");
-        informe.setTipoAsociacion(objeto_por_asociar);
+        s.setTipoAsociacion(objeto_por_asociar);
+        s.asociar(request);
         
         for (String resultado : ids_resultados) {
             Resultado r = new Resultado();
@@ -181,7 +182,8 @@ public class ControladorInformes extends SIGIPROServlet
         informe.setId_informe(Integer.parseInt(request.getParameter("id_informe")));
         
         String objeto_por_asociar = request.getParameter("objeto-relacionado");
-        informe.setTipoAsociacion(objeto_por_asociar);
+        s.setTipoAsociacion(objeto_por_asociar);
+        s.asociar(request);
         
         for (String resultado : ids_resultados) {
             Resultado r = new Resultado();

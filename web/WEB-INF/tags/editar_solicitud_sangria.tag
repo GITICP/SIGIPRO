@@ -54,10 +54,10 @@
                             <option value="1" ${(dia == 1 ? "selected" : "")}>Día 1</option>
                         </c:if>
                         <c:if test="${sangria_seleccionada.getFecha_dia2() != null}">
-                            <option value="1" ${(dia == 2 ? "selected" : "")}>Día 2</option>
+                            <option value="2" ${(dia == 2 ? "selected" : "")}>Día 2</option>
                         </c:if>
                         <c:if test="${sangria_seleccionada.getFecha_dia3() != null}">
-                            <option value="1" ${(dia == 3 ? "selected" : "")}>Día 3</option>
+                            <option value="3" ${(dia == 3 ? "selected" : "")}>Día 3</option>
                         </c:if>
                     </select>
                 </div>

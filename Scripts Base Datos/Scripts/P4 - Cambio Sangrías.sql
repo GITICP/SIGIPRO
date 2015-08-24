@@ -23,9 +23,19 @@ ALTER TABLE caballeriza.sangrias
     DROP COLUMN num_inf_cc;
 
 ALTER TABLE caballeriza.sangrias
-    ADD id_informe integer;
+    ADD id_informe_dia1 integer, ADD id_informe_dia2 integer, ADD id_informe_dia3 integer;
 
 ALTER TABLE caballeriza.sangrias
-    ADD CONSTRAINT fk_id_informe
-    FOREIGN KEY (id_informe)
+    ADD CONSTRAINT fk_id_informe_dia1
+    FOREIGN KEY (id_informe_dia1)
+    REFERENCES  control_calidad.informes (id_informe);
+
+ALTER TABLE caballeriza.sangrias
+    ADD CONSTRAINT fk_id_informe_dia2
+    FOREIGN KEY (id_informe_dia2)
+    REFERENCES  control_calidad.informes (id_informe);
+
+ALTER TABLE caballeriza.sangrias
+    ADD CONSTRAINT fk_id_informe_dia3
+    FOREIGN KEY (id_informe_dia3)
     REFERENCES  control_calidad.informes (id_informe);

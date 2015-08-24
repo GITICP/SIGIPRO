@@ -8,6 +8,7 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
+import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
@@ -23,15 +24,15 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Boga
  */
-public class AsociacionSolicitudSangria extends Asociacion {
+public class AsociacionSangria extends AsociacionSolicitud {
 
     private Sangria sangria;
     private int dia;
-    private final SolicitudCC solicitud;
     private final SangriaDAO sangria_dao = new SangriaDAO();
     private final ResultadoDAO resultado_dao = new ResultadoDAO();
+    private final AsociacionLALSangria asociacion_informe = new AsociacionLALSangria(this);
 
-    public AsociacionSolicitudSangria(SolicitudCC p_solicitud) {
+    public AsociacionSangria(SolicitudCC p_solicitud) {
         tipo = "sangria";
         tabla = "caballeriza.sangrias";
         solicitud = p_solicitud;
@@ -54,10 +55,15 @@ public class AsociacionSolicitudSangria extends Asociacion {
     }
 
     @Override
+    public void asociarResultado(Resultado resultado, HttpServletRequest request) {
+        asociacion_informe.asociar(resultado, request);
+    }
+
+    @Override
     public void prepararEditarSolicitud(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
-        request.setAttribute("dia", dia); 
+        request.setAttribute("dia", dia);
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
     }
 
@@ -69,8 +75,8 @@ public class AsociacionSolicitudSangria extends Asociacion {
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
         request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
     }
-    
-    @Override 
+
+    @Override
     public void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
@@ -81,7 +87,7 @@ public class AsociacionSolicitudSangria extends Asociacion {
     }
 
     @Override
-    public List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException {
+    public List<PreparedStatement> insertarSQLSolicitud(Connection conexion) throws SQLException {
 
         List<PreparedStatement> resultado = new ArrayList<>();
 
@@ -107,16 +113,50 @@ public class AsociacionSolicitudSangria extends Asociacion {
 
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Métodos Abstractos Inutilizados">
     @Override
-    public void asociar(Resultado resultado, HttpServletRequest request) {
-
+    public List<PreparedStatement> editarSQLInforme(Connection conexion) throws SQLException {
+        
+        List<PreparedStatement> resultado = new ArrayList<>();
+        
+        resultado.addAll(resetearSolicitudAnterior(conexion));
+        resultado.addAll(asociacion_informe.editarSQL(conexion));
+        
+        return resultado;
     }
-    
+
     @Override
-    public List<PreparedStatement> editarSQL(Connection conexion) throws SQLException {
-        throw new SQLException("Operación no existe.");
+    public List<PreparedStatement> insertarSQLInforme(Connection conexion) throws SQLException {
+        return asociacion_informe.insertarSQL(conexion);
     }
 
-    // </editor-fold>
+    @Override
+    public List<PreparedStatement> resetear(Connection conexion) throws SQLException {
+        List<PreparedStatement> resultado = new ArrayList<>(); 
+        
+        PreparedStatement consulta_sangria = conexion.prepareStatement(
+                  " UPDATE caballeriza.sangrias SET "
+                + " id_informe_dia" + dia + " = ? "
+                + " WHERE id_sangria = ?; "
+        );
+
+        consulta_sangria.setNull(1, java.sql.Types.INTEGER);
+        consulta_sangria.setInt(2, sangria.getId_sangria());
+        consulta_sangria.addBatch();
+
+        resultado.add(consulta_sangria);
+        
+        PreparedStatement consulta_sangrias_caballos = conexion.prepareStatement(
+                  " UPDATE caballeriza.sangrias_caballos SET "
+                + " id_resultado_lal_dia" + dia + " = ? "
+                + " WHERE id_sangria = ?;"
+        );
+        
+        consulta_sangrias_caballos.setNull(1, java.sql.Types.INTEGER);
+        consulta_sangrias_caballos.setInt(2, sangria.getId_sangria());
+        consulta_sangrias_caballos.addBatch();
+        
+        resultado.add(consulta_sangrias_caballos);
+        
+        return resultado;
+    }
 }

@@ -12,6 +12,11 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 public abstract class Asociable {
     
     protected final String SANGRIA = "sangria";
+    protected AsociacionSolicitud asociacion;
+    
+    public AsociacionSolicitud getTipoAsociacion() {
+        return asociacion;
+    } 
     
     public abstract void setTipoAsociacion(String objeto);
     public abstract int getId();

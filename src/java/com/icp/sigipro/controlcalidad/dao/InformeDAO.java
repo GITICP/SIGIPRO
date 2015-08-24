@@ -78,7 +78,10 @@ public class InformeDAO extends DAO {
                 resultado_resultados = true;
             }
 
-            List<PreparedStatement> consultas_asociacion = informe.obtenerConsultasInsertarAsociacion(getConexion());
+            List<PreparedStatement> consultas_asociacion = informe.getSolicitud().obtenerConsultasInsertarAsociacion(getConexion());
+            List<PreparedStatement> consultas_asociacion_informe = informe.getSolicitud().obtenerConsultasInsertarAsociacionInforme(getConexion());
+            
+            consultas_asociacion.addAll(consultas_asociacion_informe);
 
             for (PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();
@@ -124,7 +127,6 @@ public class InformeDAO extends DAO {
         boolean resultado = false;
         boolean resultado_informe = false;
         boolean resultado_resultados = false;
-        boolean resultado_solicitud;
 
         PreparedStatement consulta_update_informe = null;
         int rs_informe;
@@ -181,7 +183,7 @@ public class InformeDAO extends DAO {
                 resultado_resultados = true;
             }
 
-            List<PreparedStatement> consultas_asociacion = informe.obtenerConsultasEditarAsociacion(getConexion());
+            List<PreparedStatement> consultas_asociacion = informe.getSolicitud().obtenerConsultasEditarInforme(getConexion());
 
             for (PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();

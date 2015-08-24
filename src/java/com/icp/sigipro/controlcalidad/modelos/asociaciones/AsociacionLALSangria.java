@@ -6,11 +6,10 @@
 package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
 import com.icp.sigipro.caballeriza.modelos.Sangria;
+import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
-import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,25 +19,28 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Boga
  */
-public class AsociacionLALSangria extends Asociacion {
+public class AsociacionLALSangria extends AsociacionInforme {
 
-    private List<ObjetoAsociacionMultiple> objetos = new ArrayList<ObjetoAsociacionMultiple>();
+    private final List<ObjetoAsociacionMultiple> objetos = new ArrayList<>();
+    private final String tabla;
     private String campo;
     private Sangria sangria;
+    private int dia;
+    private final AsociacionSangria asociacion_sangria;
 
-    public AsociacionLALSangria() {
-        tipo = "sangrias_caballos";
+    public AsociacionLALSangria(AsociacionSangria p_asociacion_sangria) {
         tabla = "caballeriza.sangrias_caballos";
+        asociacion_sangria = p_asociacion_sangria;
     }
 
-    @Override
     public void asociar(Resultado resultado, HttpServletRequest request) {
 
         if (sangria == null) {
             int id_sangria = Integer.parseInt(request.getParameter("sangria"));
             sangria = new Sangria();
             sangria.setId_sangria(id_sangria);
-            campo = "id_resultado_lal_dia" + request.getParameter("dia");
+            dia = Integer.parseInt(request.getParameter("dia"));
+            campo = "id_resultado_lal_dia" + dia;
         }
 
         ObjetoAsociacionMultiple osm = new ObjetoAsociacionMultiple();
@@ -53,23 +55,19 @@ public class AsociacionLALSangria extends Asociacion {
 
         objetos.add(osm);
     }
-    
-    @Override
-    public void asociar(ResultSet rs) throws SQLException {
-        throw new SQLException();
-    }
 
     @Override
     public List<PreparedStatement> insertarSQL(Connection conexion) throws SQLException {
 
-        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        List<PreparedStatement> resultado = new ArrayList<>();
 
         PreparedStatement consulta_sangria = conexion.prepareStatement(
-                " UPDATE caballeriza.sangrias SET num_inf_cc = ? WHERE id_sangria = ? "
+                " UPDATE caballeriza.sangrias SET id_informe_dia" + dia + " = ? WHERE id_sangria = ? "
         );
 
-        consulta_sangria.setInt(1, objeto_asociable.getId());
+        consulta_sangria.setInt(1, getInforme().getId_informe());
         consulta_sangria.setInt(2, sangria.getId_sangria());
+        consulta_sangria.addBatch();
 
         PreparedStatement consulta_caballos = conexion.prepareStatement(
                 " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria = ? AND id_caballo = ?; "
@@ -94,14 +92,15 @@ public class AsociacionLALSangria extends Asociacion {
     @Override
     public List<PreparedStatement> editarSQL(Connection conexion) throws SQLException {
 
-        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
+        List<PreparedStatement> resultado = new ArrayList<>();
 
         PreparedStatement consulta_sangria = conexion.prepareStatement(
-                " UPDATE caballeriza.sangrias SET num_inf_cc = ? WHERE id_sangria = ? "
+                " UPDATE caballeriza.sangrias SET id_informe_dia" + dia + " = ? WHERE id_sangria = ? "
         );
 
-        consulta_sangria.setInt(1, objeto_asociable.getId());
+        consulta_sangria.setInt(1, getInforme().getId_informe());
         consulta_sangria.setInt(2, sangria.getId_sangria());
+        consulta_sangria.addBatch();
         
         PreparedStatement update_caballos = conexion.prepareStatement(
                 " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria = ?; "
@@ -109,6 +108,7 @@ public class AsociacionLALSangria extends Asociacion {
         
         update_caballos.setNull(1, java.sql.Types.INTEGER);
         update_caballos.setInt(2, sangria.getId_sangria());
+        update_caballos.addBatch();
 
         PreparedStatement consulta_caballos = conexion.prepareStatement(
                 " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria = ? AND id_caballo = ?; "
@@ -122,35 +122,17 @@ public class AsociacionLALSangria extends Asociacion {
                 consulta_caballos.addBatch();
             }
         }
-
+        
         resultado.add(consulta_sangria);
+        resultado.add(update_caballos);
         resultado.add(consulta_caballos);
 
         return resultado;
 
     }
     
-    @Override
-    public void prepararEditarSolicitud(HttpServletRequest request) {
-        
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="Métodos Abstractos Inutilizados">
-    
-    @Override
-    public void asociar(HttpServletRequest request) {
-
+    private Informe getInforme() {
+        return asociacion_sangria.getSolicitud().getInforme();
     }
     
-    @Override 
-    public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
-        throw new SIGIPROException("Esta operación aún no se ha implementado");
-    }
-    
-    // </editor-fold>
-
-    @Override
-    public void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException {
-        throw new SIGIPROException("Esta operación aún no se ha implementado");
-    }
 }

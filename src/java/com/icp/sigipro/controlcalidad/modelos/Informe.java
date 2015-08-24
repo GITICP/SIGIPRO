@@ -5,9 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
-import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionLALSangria;
-import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociacion;
-import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociable;
+import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Connection;
@@ -22,21 +20,17 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Boga
  */
-public class Informe extends Asociable
+public class Informe
 {
     private int id_informe;
     private List<Resultado> resultados;
     private SolicitudCC solicitud;
     private Usuario usuario;
     private Date fecha;
-    private Asociacion asociacion;
     
+    private final SolicitudDAO solicitud_dao = new SolicitudDAO();
+        
     public Informe(){}
-
-    @Override
-    public int getId() {
-        return id_informe;
-    }
     
     public int getId_informe() {
         return id_informe;
@@ -56,17 +50,17 @@ public class Informe extends Asociable
     
     public void agregarResultado(Resultado resultado, HttpServletRequest request) {
         if (resultados == null) {
-            resultados = new ArrayList<Resultado>();
+            resultados = new ArrayList<>();
         }
         resultados.add(resultado);
-        if (asociacion != null) {
-            asociacion.asociar(resultado, request);
+        if (solicitud.getTipoAsociacion() != null) {
+            solicitud.getTipoAsociacion().asociarResultado(resultado, request);
         }
     }
     
     public void agregarResultado(Resultado resultado) {
         if (resultados == null) {
-            resultados = new ArrayList<Resultado>();
+            resultados = new ArrayList<>();
         }
         resultados.add(resultado);
     }
@@ -77,6 +71,7 @@ public class Informe extends Asociable
 
     public void setSolicitud(SolicitudCC solicitud) {
         this.solicitud = solicitud;
+        this.solicitud.setInforme(this);
     }
 
     public Usuario getUsuario() {
@@ -104,24 +99,6 @@ public class Informe extends Asociable
         this.fecha = fecha;
     }
     
-    @Override
-    public void setTipoAsociacion(String objeto) {
-        
-        switch (objeto) {
-            case SANGRIA:
-                asociacion = new AsociacionLALSangria();
-                asociacion.setAsociable(this);
-                break;
-            default:
-                break;
-        }
-    }
-    
-    @Override
-    public boolean tieneTipoAsociacion() {
-        return asociacion != null;
-    }
-    
     public boolean tieneResultado(int id_resultado) {
         boolean resultado = false;
         if (resultados != null) {
@@ -131,26 +108,6 @@ public class Informe extends Asociable
                     break;
                 }
             }
-        }
-        return resultado;
-    }
-    
-    public List<PreparedStatement> obtenerConsultasInsertarAsociacion(Connection conexion) throws SQLException {
-        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
-        if (asociacion != null) {
-            resultado = asociacion.insertarSQL(conexion);
-        }
-        return resultado;
-    }
-    
-    public List<PreparedStatement> obtenerConsultasEditarAsociacion(Connection conexion) throws SQLException {
-        
-        // Obtener asociación de solicitud
-        // Actualizar asociación de solicitud a nulo
-        
-        List<PreparedStatement> resultado = new ArrayList<PreparedStatement>();
-        if (asociacion != null) {
-            resultado = asociacion.editarSQL(conexion);
         }
         return resultado;
     }
