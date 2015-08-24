@@ -213,6 +213,7 @@ public class ControladorSerpiente extends SIGIPROServlet {
             Serpiente s = dao.obtenerSerpiente(id_serpiente);
             String fecha = request.getParameter("fecha_evento");
             Evento e = this.setEvento(s, 5,fecha, request);
+            e.setObservaciones(request.getParameter("observacionesModal"));
             //----Agregar el Evento al Sistema
             boolean resultado = eventodao.insertarEvento(e);
 
