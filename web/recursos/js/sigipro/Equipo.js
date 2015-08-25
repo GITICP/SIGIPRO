@@ -7,3 +7,21 @@ $(document).on("click", ".eliminarCertificado-Modal", function () {
     var id_certificado = $(this).data('id');
     $("#id_certificado_equipo").val(id_certificado);
 });
+
+$(document).ready(function(){
+    $("#seleccionTipo").change(function(){
+        var opcion = $(this).find("option:selected");
+        var certificable = opcion.data("certificable");
+        
+        var certificado = $("#certificado");
+        var label_certificado = $("#label-certificado");
+        
+        if (certificable === true) {
+            label_certificado.text("* Certficado");
+            certificado.prop("required", true);
+        } else {
+            label_certificado.text("Certficado");
+            certificado.prop("required", false);
+        }
+    });
+});

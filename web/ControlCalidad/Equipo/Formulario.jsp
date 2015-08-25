@@ -39,10 +39,10 @@
                                     <c:forEach items="${tipoequipos}" var="tipoequipo">
                                         <c:choose>
                                             <c:when test="${tipoequipo.getId_tipo_equipo() == equipo.getTipo_equipo().getId_tipo_equipo()}" >
-                                                <option value=${tipoequipo.getId_tipo_equipo()} selected> ${tipoequipo.getNombre()}</option>
+                                                <option value=${tipoequipo.getId_tipo_equipo()} data-certificable="${tipoequipo.isCertificable()}" selected> ${tipoequipo.getNombre()}</option>
                                             </c:when>
                                             <c:otherwise>
-                                                <option value=${tipoequipo.getId_tipo_equipo()}> ${tipoequipo.getNombre()}</option>
+                                                <option value=${tipoequipo.getId_tipo_equipo()} data-certificable="${tipoequipo.isCertificable()}"> ${tipoequipo.getNombre()}</option>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
@@ -62,7 +62,7 @@
 
                 </c:when>
                 <c:otherwise>
-                    <label for="nombre" class="control-label">* Certificado</label>
+                    <label id="label-certificado" for="nombre" class="control-label">* Certificado</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">

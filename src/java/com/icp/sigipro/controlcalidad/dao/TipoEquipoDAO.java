@@ -81,12 +81,13 @@ public class TipoEquipoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT id_tipo_equipo, nombre FROM control_calidad.tipos_equipos; ");
+            consulta = getConexion().prepareStatement(" SELECT id_tipo_equipo, nombre, certificable FROM control_calidad.tipos_equipos; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 TipoEquipo tipoequipo = new TipoEquipo();
                 tipoequipo.setId_tipo_equipo(rs.getInt("id_tipo_equipo"));
                 tipoequipo.setNombre(rs.getString("nombre"));
+                tipoequipo.setCertificable(rs.getBoolean("certificable"));
                 resultado.add(tipoequipo);
             }
         }
