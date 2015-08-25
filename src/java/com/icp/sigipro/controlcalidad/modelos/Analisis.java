@@ -25,12 +25,11 @@ public class Analisis {
     private String machote;
     private Usuario encargado;
     private boolean aprobado;
-    
 
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
     private List<TipoMuestra> tipos_muestras_analisis;
-    
+
     private boolean isTipoMuestra;
 
     public Analisis() {
@@ -47,22 +46,28 @@ public class Analisis {
     public String getListaTiposReactivo() {
         String respuesta = "";
         if (tipos_reactivos_analisis != null) {
-            for (TipoReactivo tr : tipos_reactivos_analisis) {
-                respuesta += tr.getId_tipo_reactivo();
-                respuesta += ",";
+            if (tipos_reactivos_analisis.size() > 0) {
+                for (TipoReactivo tr : tipos_reactivos_analisis) {
+                    respuesta += tr.getId_tipo_reactivo();
+                    respuesta += ",";
+                }
+                respuesta = respuesta.substring(0, respuesta.length() - 1);
             }
-            respuesta = respuesta.substring(0, respuesta.length() - 1);
+
         }
         return respuesta;
     }
+
     public String getListaTiposMuestra() {
         String respuesta = "";
         if (tipos_muestras_analisis != null) {
-            for (TipoMuestra tm : tipos_muestras_analisis) {
-                respuesta += tm.getId_tipo_muestra();
-                respuesta += ",";
+            if (tipos_muestras_analisis.size() > 0) {
+                for (TipoMuestra tm : tipos_muestras_analisis) {
+                    respuesta += tm.getId_tipo_muestra();
+                    respuesta += ",";
+                }
+                respuesta = respuesta.substring(0, respuesta.length() - 1);
             }
-            respuesta = respuesta.substring(0, respuesta.length() - 1);
         }
         return respuesta;
     }
@@ -70,11 +75,13 @@ public class Analisis {
     public String getListaTiposEquipo() {
         String respuesta = "";
         if (tipos_equipos_analisis != null) {
-            for (TipoEquipo tr : tipos_equipos_analisis) {
-                respuesta += tr.getId_tipo_equipo();
-                respuesta += ",";
+            if (tipos_equipos_analisis.size() > 0) {
+                for (TipoEquipo tr : tipos_equipos_analisis) {
+                    respuesta += tr.getId_tipo_equipo();
+                    respuesta += ",";
+                }
+                respuesta = respuesta.substring(0, respuesta.length() - 1);
             }
-            respuesta = respuesta.substring(0, respuesta.length() - 1);
         }
         return respuesta;
     }
@@ -167,8 +174,7 @@ public class Analisis {
         this.tipos_muestras_analisis = tipos_muestras_analisis;
     }
 
-    
-    public String parseJSON(){
+    public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
         try {

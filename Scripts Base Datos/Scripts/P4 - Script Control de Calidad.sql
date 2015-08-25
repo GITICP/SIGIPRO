@@ -178,6 +178,7 @@ CREATE TABLE control_calidad.tipos_reactivos (
     id_tipo_reactivo serial  NOT NULL,
     nombre varchar(50)  NOT NULL,
     machote varchar(500) NULL,
+    certificable boolean NOT NULL,
     CONSTRAINT tipos_reactivos_pk PRIMARY KEY (id_tipo_reactivo)
 );
 
@@ -187,7 +188,6 @@ CREATE TABLE control_calidad.tipos_reactivos (
 CREATE TABLE control_calidad.tipos_reactivos_analisis (
     id_analisis int  NOT NULL,
     id_tipo_reactivo int  NOT NULL,
-    certificable boolean NOT NULL,
     CONSTRAINT tipos_reactivos_analisis_pk PRIMARY KEY (id_analisis,id_tipo_reactivo)
 );
 
