@@ -17,7 +17,7 @@ $(document).ready(function(){
         var label_certificado = $("#label-certificado");
         
         if (certificable === true) {
-            label_certificado.text("* Certficado");
+            label_certificado.text("*Certficado");
             certificado.prop("required", true);
         } else {
             label_certificado.text("Certficado");

@@ -14,7 +14,7 @@
             <input hidden="true" name="id_equipo" value="${equipo.getId_equipo()}">
             <input hidden="true" name="accion" value="${accion}">
 
-            <label for="nombre" class="control-label">* Nombre/Código/Identificador</label>
+            <label for="nombre" class="control-label">*Nombre/Código/Identificador</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -62,7 +62,7 @@
 
                 </c:when>
                 <c:otherwise>
-                    <label id="label-certificado" for="nombre" class="control-label">* Certificado</label>
+                    <label id="label-certificado" for="nombre" class="control-label">*Certificado</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
