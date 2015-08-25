@@ -331,23 +331,19 @@ public class ControladorSubBodegas extends SIGIPROServlet
         redireccion = "SubBodegas/VerHistorial.jsp";
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_sub_bodega"));
         request.setAttribute("id_sub_bodega", id_sub_bodega);
-
+        
         PermisoSubBodegas permisos_sub_bodega = obtenerPermisosVer(request, id_sub_bodega);
 
-        if (permisos_sub_bodega.isEncargado()) {
-            try {
-                SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
-                request.setAttribute("sub_bodega", sb);
-                request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
-                request.setAttribute("permisos_usuario", permisos_sub_bodega);
-            }
-            catch (SIGIPROException sig_ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
-            }
+        try {
+            SubBodega sb = dao.obtenerHistorial(id_sub_bodega);
+            request.setAttribute("sub_bodega", sb);
+            request.setAttribute("valor_movimiento", BitacoraSubBodega.MOVER);
+            request.setAttribute("permisos_usuario", permisos_sub_bodega);
         }
-        else {
-            redireccion = "/index.jsp";
+        catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener el historial. Inténtelo nuevamente."));
         }
+        
         redireccionar(request, response, redireccion);
     }
 

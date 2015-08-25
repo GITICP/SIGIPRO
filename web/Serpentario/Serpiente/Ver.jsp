@@ -60,7 +60,7 @@
                                         <c:choose>
                                             <c:when test="${coleccionViva == null}">
                                                 <c:if test="${contienePermisoEvento}">
-                                                    <a class="btn btn-primary btn-sm boton-accion confirmable-form" data-form-id="form-pasoCV" data-texto-confirmacion="pasar la serpiente a Colección Viva">Paso a CV</a>
+                                                    <a class="btn btn-primary btn-sm boton-accion pasocv-Modal"  data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalPasoCV">Paso a CV</a>
                                                 </c:if>
                                             </c:when>
                                         </c:choose>
@@ -298,6 +298,16 @@
                         </div>
                     </div>
                 </div>
+                <label for="fecha_evento" class="control-label">*Fecha de Evento</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePicker" name="fecha_evento" data-date-format="dd/mm/yyyy" required
+                                   oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                   onchange="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
                 <label for="observaciones" class="control-label">Observaciones</label>
                 <div class="form-group">
                     <div class="col-sm-12">
@@ -361,6 +371,47 @@
     </jsp:attribute>
 
 </t:modal>
+        
+<t:modal idModal="modalPasoCV" titulo="Paso a Colección Viva">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="agregarEventos" autocomplete="off" method="post" action="Serpiente">
+                <input hidden="true" name="accion" value="Coleccionviva">
+                <input hidden="true" id='id_serpiente_pasocv' name='id_serpiente_pasocv'>
+                <label for="especie" class="control-label">*Fecha de Pase a CV</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerDeceso" class="form-control sigiproDatePickerSerpiente" name="fecha_evento" data-date-format="dd/mm/yyyy" required
+                                   oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                   onchange="setCustomValidity('')">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label for="observaciones" class="control-label">*Observaciones</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                                      oninvalid="setCustomValidity('Este campo es requerido. ')"
+                                      oninput="setCustomValidity('')"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Paso a CV</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
 
 <t:modal idModal="modalDescarte" titulo="Registrar Descarte">
     <jsp:attribute name="form">
@@ -368,6 +419,16 @@
             <form class="form-horizontal" id="agregarEventos" autocomplete="off" method="post" action="Serpiente">
                 <input hidden="true" name="accion" value="Descartar">
                 <input hidden="true" id='id_serpiente_descarte' name='id_serpiente_descarte'>
+                <label for="fecha_ingreso" class="control-label">*Fecha de Descarte</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePicker" name="fecha_evento" data-date-format="dd/mm/yyyy" required
+                                   oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                   onchange="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
                 <label for="observaciones" class="control-label">*Observaciones</label>
                 <div class="form-group">
                     <div class="col-sm-12">

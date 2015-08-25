@@ -48,6 +48,11 @@ $(document).on("click", ".evento-Modal", function () {
                             $("#id_serpiente").val(id_serpiente);                          
                             });
                             
+$(document).on("click", ".pasocv-Modal", function () {                            
+                            var id_serpiente = $(this).data('id');
+                            $("#id_serpiente_pasocv").val(id_serpiente);                          
+                            });
+                            
 $(document).on("click", ".ch-Modal", function () {                            
                             var id_serpiente = $(this).data('id');
                             $("#id_serpiente_coleccion_humeda").val(id_serpiente);                          
