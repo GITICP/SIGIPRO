@@ -64,7 +64,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <select id="seleccionTipoReactivo" class="select2" name="tiporeactivos" multiple="multiple"
-                                style='background-color: #fff;' required
+                                style='background-color: #fff;'
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>
@@ -81,7 +81,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <select id="seleccionTipoEquipo" class="select2" name="tipoequipos" multiple="multiple"
-                                style='background-color: #fff;' required
+                                style='background-color: #fff;'
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 onchange="setCustomValidity('')">
                             <option value=''></option>

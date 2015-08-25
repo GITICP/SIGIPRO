@@ -337,7 +337,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group" style="display:table;">
-                        <input type="text" id="usr"  name="usuario_recibo" required
+                        <input class="form-control" type="text" id="usr"  name="usuario_recibo" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
@@ -347,7 +347,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group" style="display:table;">
-                        <input type="password" id="passw" name="passw" required
+                        <input class="form-control" type="password" id="passw" name="passw" required
                                oninvalid="setCustomValidity('Este campo es requerido ')"
                                onchange="setCustomValidity('')">
                     </div>
