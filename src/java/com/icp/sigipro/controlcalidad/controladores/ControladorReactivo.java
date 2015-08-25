@@ -254,11 +254,7 @@ public class ControladorReactivo extends SIGIPROServlet {
         
         boolean resultado = false;
         try {
-            //Se crea el Path en la carpeta del Proyecto
-            String path = this.getClass().getClassLoader().getResource("").getPath();
-            String fullPath = URLDecoder.decode(path, "UTF-8");
-            String pathArr[] = fullPath.split("/WEB-INF/classes/");
-            fullPath = pathArr[0];
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
             String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Reactivo";
             //-------------------------------------------
             //Crea los directorios si no estan creados aun

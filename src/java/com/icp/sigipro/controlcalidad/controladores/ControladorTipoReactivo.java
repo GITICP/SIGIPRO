@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -177,10 +176,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
         boolean resultado = false;
         try {
             //Se crea el Path en la carpeta del Proyecto
-            String path = this.getClass().getClassLoader().getResource("").getPath();
-            String fullPath = URLDecoder.decode(path, "UTF-8");
-            String pathArr[] = fullPath.split("/WEB-INF/classes/");
-            fullPath = pathArr[0];
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
             String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "TipoReactivo" + File.separatorChar + "Machotes";
             //-------------------------------------------
             System.out.println(ubicacion);
