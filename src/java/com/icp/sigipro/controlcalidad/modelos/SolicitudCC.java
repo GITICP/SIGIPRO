@@ -301,6 +301,10 @@ public class SolicitudCC extends Asociable {
     }
 
     public List<PreparedStatement> obtenerConsultasInsertarAsociacionInforme(Connection conexion) throws SQLException {
-        return asociacion.insertarSQLInforme(conexion);
+        List<PreparedStatement> resultado = new ArrayList<>();
+        if (asociacion != null) {
+            resultado = asociacion.insertarSQLInforme(conexion);
+        }
+        return resultado;
     }
 }

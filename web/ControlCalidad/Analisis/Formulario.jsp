@@ -59,7 +59,7 @@
             </c:choose>
         </div>
         <div class="col-md-6">
-            <label for="especie" class="control-label"> *Tipos de Reactivos</label>
+            <label for="especie" class="control-label"> Tipos de Reactivos</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <label for="especie" class="control-label"> *Tipos de Equipo de Medición</label>
+            <label for="especie" class="control-label"> Tipos de Equipo de Medición</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">

@@ -527,35 +527,42 @@ ADD COLUMN aprobado boolean;
 
     -- Solicitudes
 
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (501, 500, 'Solicitudes', '/ControlCalidad/Solicitud');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (501, 500, 'Solicitudes', '/ControlCalidad/Solicitud', 6);
 
     -- Reactivos
 
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (502, 500, 'Reactivos', null);
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (502, 500, 'Reactivos', null, 3);
 
         -- Submenús
 
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (510, 502, 'Tipos de Reactivos', '/ControlCalidad/TipoReactivo');
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (530, 502, 'Reactivos', '/ControlCalidad/Reactivo');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (510, 502, 'Tipos de Reactivos', '/ControlCalidad/TipoReactivo', 1);
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (530, 502, 'Reactivos', '/ControlCalidad/Reactivo', 2);
+
+    -- Muestras
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (503, 500, 'Muestras', null, 1);
+
+        -- Submenús
+
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (550, 503, 'Tipos de Muestra', '/ControlCalidad/TiposMuestra', 1);
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (560, 503, 'Muestras', '/ControlCalidad/Muestra', 2);
 
     -- Análisis
 
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (503, 500, 'Análisis', null);
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (540, 500, 'Análisis', '/ControlCalidad/Analisis', 5);
 
-        -- Submenús
+    -- Patrones y Controles
 
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (540, 503, 'Análisis', '/ControlCalidad/Analisis');
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (550, 503, 'Tipos de Muestra', '/ControlCalidad/TiposMuestra');
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (560, 503, 'Muestras', '/ControlCalidad/Muestra');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (570, 500, 'Patrones y Controles', '/ControlCalidad/Patron', 4);
 
     -- Equipos
     
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (504, 500, 'Equipos', null);
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (504, 500, 'Equipos', null, 2);
 
         -- Submenús
     
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (520, 504, 'Equipos', '/ControlCalidad/Equipo');
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (521, 504, 'Tipos de Equipo', '/ControlCalidad/TipoEquipo');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (520, 504, 'Equipos', '/ControlCalidad/Equipo', 2);
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (521, 504, 'Tipos de Equipo', '/ControlCalidad/TipoEquipo', 1);
 
 
 -- PERMISOS
@@ -638,7 +645,6 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (550, '[C
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (551, '[ControlCalidad]RecibirSolicitud', 'Permite recibir la Solicitud para su agrupación y realización.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (552, '[ControlCalidad]AnularSolicitud', 'Permite anular una Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (553, '[ControlCalidad]EditarSolicitud', 'Permite editar una Solicitud de Control de Calidad.');
---INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (554, '[ControlCalidad]EliminarSolicitud', 'Permite eliminar una Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (555, '[ControlCalidad]VerSolicitud', 'Permite ver una Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (556, '[ControlCalidad]AgruparMuestras', 'Permite agrupar las muestras de Solicitud de Control de Calidad.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (557, '[ControlCalidad]GenerarInforme', 'Permite generar un informe para una Solicitud de Control de Calidad.');
@@ -647,7 +653,6 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (551, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (552, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (553, 501);
---INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (554, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (555, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (556, 501);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (557, 501);
@@ -669,6 +674,18 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (562, 550);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (563, 550);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (564, 550);
+
+    -- Patrones y Controles
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (571, '[ControlCalidad]AgregarPatrón', 'Permite agregar un patrón o control.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (572, '[ControlCalidad]EditarPatrón', 'Permite editar un patrón o control.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (573, '[ControlCalidad]EliminarPatrón', 'Permite eliminar patrón o control.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (574, '[ControlCalidad]VerPatrón', 'Permite ver un patrón o control.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (571, 570);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (572, 570);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (573, 570);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (574, 570);
 
 
 -- End of file.

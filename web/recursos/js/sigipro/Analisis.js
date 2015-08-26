@@ -27,7 +27,7 @@ function agregarCampo() {
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           onchange=\"setCustomValidity(\'\')\">";
     fila += "                           <option value=\'\'></option>";
-    fila += "                           <option value=\"number\">Número</option>";
+    fila += "                           <option value=\"number\">N&uacute;mero</option>";
     fila += "                           <option value=\"text\">Campo de Texto</option>";
     fila += "                       </select>";
     fila += "                   </div>";
@@ -51,7 +51,7 @@ function agregarCampo() {
     fila += "               <div class=\"form-group\">";
     fila += "                   <div class=\"col-sm-12\">";
     fila += "                       <div class=\"input-group\">";
-    fila += "                           <input id=\"manual_" + contador + "\" onchange=\"checkManual(this," + contador + ")\" type=\"checkbox\" name=\"c_manual_" + contador + "\" style=\"width:20px; height:20px;\"><span>  Automático</span>";
+    fila += "                           <input id=\"manual_" + contador + "\" onchange=\"checkManual(this," + contador + ")\" type=\"checkbox\" name=\"c_manual_" + contador + "\" style=\"width:20px; height:20px;\"><span>  Autom&aacute;tico</span>";
     fila += "                       </div>";
     fila += "                   </div>";
     fila += "               </div>";
@@ -164,7 +164,7 @@ function agregarColumna(id) {
     fila += "                                                                    oninvalid=\"setCustomValidity('Este campo es requerido')\"";
     fila += "                                                                    onchange=\"validarColumnaCelda(this," + id + "," + columnas + ")\">";
     fila += "                                                                <option value=''></option>";
-    fila += "                                                                <option value=\"number_tabla\">Número</option>";
+    fila += "                                                                <option value=\"number_tabla\">N&uacute;mero</option>";
     fila += "                                                                <option value=\"text_tabla\">Campo de Texto</option>";
     fila += "                                                                <option value=\"excel_tabla\">Excel</option>";
     fila += "                                                            </select>";
@@ -521,7 +521,7 @@ $(document).ready(function () {
             var enlace = "/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=" + $(this).val();
             var objeto_enlace = $("<a href=\"" + enlace + "\">");
             var quiebre = $("<br>");
-            objeto_enlace.text("Descargar preparación de reactivo " + $(this).text());
+            objeto_enlace.text("Descargar preparaci&oacute;n de reactivo " + $(this).text());
 
             espacio_reactivos.append(objeto_enlace);
             espacio_reactivos.append(quiebre);
@@ -529,6 +529,15 @@ $(document).ready(function () {
             $("label[for=preparacion-reactivos]").show();
         });
     });
+    
+    var hay_campo_excel = $("input:disabled").length > 0;
+    
+    if (hay_campo_excel) {
+        $(".campo-subir-resultado").each(function(){
+            $(this).show();
+        });
+        $("#resultado").prop("required", true);
+    }
 });
 
 

@@ -14,10 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -244,7 +242,8 @@ public class ControladorPatron extends SIGIPROServlet {
             if (archivo.getSize() != 0) {
                 //Creación del nombre
                 String extension = this.getFileExtension(archivo.getName());
-                String nombre = "certificado-patron-" + p.getNumero_lote() + "." + extension;
+                String fecha = helper_fechas.getFecha_hoy_formateada("yyyyMMdd HHmm");
+                String nombre = "certificado-patron - " + p.getNumero_lote() + " - " + fecha + "." + extension;
                 //---------------------
                 File archivo_final = new File(ubicacion, nombre);
                 archivo.write(archivo_final);

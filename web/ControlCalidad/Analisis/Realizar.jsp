@@ -147,9 +147,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <c:if test="${analisis.tieneMachote()}">
-                                            <div class="row">
-                                                <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <c:if test="${analisis.tieneMachote()}">
                                                     <label for="nombre" class="control-label"> Machote</label>
                                                     <div class="form-group">
                                                         <div class="col-md-12">
@@ -159,22 +159,22 @@
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <label for="nombre" class="control-label"> Excel Resultado</label>
-                                                    <div class="form-group">
-                                                        <div class="col-sm-12">
-                                                            <div class="input-group">
-                                                                <input type="file" id="resultado" name="resultado"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                                                       onchange="setCustomValidity('')"/>
-                                                            </div>
+                                                </c:if>
+                                                <label for="nombre" class="control-label campo-subir-resultado" style="display: none"> Excel Resultado</label>
+                                                <div class="form-group campo-subir-resultado" style="display: none">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <input type="file" id="resultado" name="resultado"  accept=".xslx"
+                                                                   oninvalid="setCustomValidity('Debe subir un archivo o el formato no es permitido.')"
+                                                                   onchange="setCustomValidity('')" />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </c:if>
+                                        </div>
                                     </div>
                                 </div>
-                                    
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         ${cuerpo_formulario}

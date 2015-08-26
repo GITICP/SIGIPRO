@@ -69,6 +69,7 @@
                                         <th>Identificador Resultado</th>
                                         <th>Fecha</th>
                                         <th>Repetición</th>
+                                        <th>Resultado</th>
                                         <th>Usuario Encargado</th>
                                     </tr>
                                 </thead>
@@ -84,6 +85,7 @@
                                             </td>
                                             <td>${resultado.getFecha()}</td>
                                             <td>${resultado.getRepeticion()}</td>
+                                            <td>${resultado.getResultado()}</td>
                                             <td>${resultado.getUsuario().getNombre_completo()}</td>
                                         </tr>
                                     </c:forEach>
