@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                <input type="file" id="machote" name="machote"  accept=".xlsx"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -58,11 +58,11 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <label for="nombre" class="control-label"> *Machote de Curva</label>
+                    <label for="nombre" class="control-label">Machote de Curva</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required
+                                <input type="file" id="machote" name="machote"  accept=".xlsx"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>

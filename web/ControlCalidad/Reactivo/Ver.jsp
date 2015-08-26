@@ -125,17 +125,7 @@
             <form class="form-horizontal" enctype='multipart/form-data' id="agregarCertificado" autocomplete="off" method="post" action="Reactivo">
                 <input hidden="true" name="accion" value="Certificado">
                 <input hidden="true" id='id_reactivo_certificado' name='id_reactivo_certificado'>
-                <%--
-                <label for="fecha" class="control-label">*Fecha de Certificado</label>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerCertificado" class="form-control sigiproDatePicker" name="fecha_certificado" data-date-format="dd/mm/yyyy" required
-                                   oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
-                                   onchange="setCustomValidity('')">
-                        </div>
-                    </div>
-                </div> --%>
+                
                 <label for="observaciones" class="control-label">*Certificado</label>
                 <div class="form-group">
                     <div class="col-sm-12">

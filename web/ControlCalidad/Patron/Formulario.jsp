@@ -77,11 +77,11 @@
         <div class="col-md-6">
             <c:choose>
                 <c:when test="${accion == 'Agregar'}">
-                    <label for="nombre" class="control-label">* Certificado</label>
+                    <label for="nombre" class="control-label">Certificado</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="certificado" name="certificado"  accept="application/pdf,image/jpeg,image/gif,image/png" required
+                                <input type="file" id="certificado" name="certificado"  accept="application/pdf,image/jpeg,image/gif,image/png"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>

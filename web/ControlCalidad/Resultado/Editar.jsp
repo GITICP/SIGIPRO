@@ -178,7 +178,7 @@
                                                     <div class="form-group">
                                                         <div class="col-sm-12">
                                                             <div class="input-group">
-                                                                <input type="file" id="resultado" name="resultado"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                                <input type="file" id="resultado" name="resultado"  accept=".xlsx"
                                                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                                                        onchange="setCustomValidity('')"/>
                                                             </div>
