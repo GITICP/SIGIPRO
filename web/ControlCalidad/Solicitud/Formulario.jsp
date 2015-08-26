@@ -43,7 +43,7 @@
                             <div class="input-group">
                                 <select id="seleccion-objeto" class="select2" name="objeto-relacionado"
                                         style='background-color: #fff;'>
-                                    <option value=''></option>
+                                    <option value='' selected>Sin selección</option>
                                     <option value="sangria" ${(tipo == 'sangria') ? "selected" : ""}>
                                         Sangría
                                     </option>

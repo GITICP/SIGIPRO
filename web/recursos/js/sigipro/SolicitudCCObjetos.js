@@ -13,6 +13,11 @@ $("#seleccion-objeto").change(function () {
                 generar_select_sangria(datos);
             }
         });
+    
+    } else {
+        // Meter el comportamiento de otros objetos como un else if dejar este else de último
+        $("#fila-select-sangria").hide();
+        $("#fila-select-dia").hide();
     }
 });
 
