@@ -37,8 +37,8 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                <input type="file" id="machote" name="machote"  accept=".xlsx"
+                                       oninvalid="setCustomValidity('No es un archivo permitido.')"
                                        onchange="setCustomValidity('')"/>
                             </div>
                         </div>
@@ -49,8 +49,8 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="machote" name="machote"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                <input type="file" id="machote" name="machote"  accept=".xlsx"
+                                       oninvalid="setCustomValidity('No es un archivo permitido.')"
                                        onchange="setCustomValidity('')"/>
                             </div>
                         </div>

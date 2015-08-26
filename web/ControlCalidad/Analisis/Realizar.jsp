@@ -164,7 +164,7 @@
                                                 <div class="form-group campo-subir-resultado" style="display: none">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
-                                                            <input type="file" id="resultado" name="resultado"  accept=".xslx"
+                                                            <input type="file" id="resultado" name="resultado"  accept=".xlsx"
                                                                    oninvalid="setCustomValidity('Debe subir un archivo o el formato no es permitido.')"
                                                                    onchange="setCustomValidity('')" />
                                                         </div>
