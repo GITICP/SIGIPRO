@@ -33,11 +33,11 @@
                             <c:choose>
                                 <c:when test="${accion == 'Editar' && !tiporeactivo.isCertificable()}">
                                     <input type="checkbox" name="certificable" value="true">
-                                    <span> Tipo de Equipo Certificable</span>
+                                    <span> Tipo de Reactivo Certificable</span>
                                 </c:when>
                                 <c:otherwise>
                                     <input type="checkbox" name="certificable" value="true" checked>
-                                    <span> Tipo de Equipo Certificable</span>
+                                    <span> Tipo de Reactivo Certificable</span>
                                 </c:otherwise>
                             </c:choose>
                         </label>
