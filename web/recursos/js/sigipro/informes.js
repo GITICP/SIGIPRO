@@ -176,19 +176,19 @@ function evento_seleccionar_sangria() {
 
     if (opcion_seleccionada.attr("data-fecha-1") !== undefined && opcion_seleccionada.attr("data-fecha-1") !== "") {
         var opcion = $("<option>");
-        opcion.text("Día 1");
+        opcion.text("D\xEDa 1");
         opcion.val("1");
         select_dia.append(opcion);
     }
     if (opcion_seleccionada.attr("data-fecha-2") !== undefined && opcion_seleccionada.attr("data-fecha-2") !== "") {
         var opcion = $("<option>");
-        opcion.text("Día 2");
+        opcion.text("D\xEDa 2");
         opcion.val("2");
         select_dia.append(opcion);
     }
     if (opcion_seleccionada.attr("data-fecha-3") !== undefined && opcion_seleccionada.attr("data-fecha-3") !== "") {
         var opcion = $("<option>");
-        opcion.text("Día 3");
+        opcion.text("D\xEDa 3");
         opcion.val("3");
         select_dia.append(opcion);
     }

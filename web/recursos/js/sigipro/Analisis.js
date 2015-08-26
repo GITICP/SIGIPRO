@@ -509,7 +509,7 @@ $(document).ready(function () {
             var enlace = "/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=" + $(this).val();
             var objeto_enlace = $("<a href=\"" + enlace + "\">");
             var quiebre = $("<br>");
-            objeto_enlace.text("Descargar preparaci&oacute;n de reactivo " + $(this).text());
+            objeto_enlace.text("Descargar preparaci\xF3n de reactivo " + $(this).text());
 
             espacio_reactivos.append(objeto_enlace);
             espacio_reactivos.append(quiebre);
