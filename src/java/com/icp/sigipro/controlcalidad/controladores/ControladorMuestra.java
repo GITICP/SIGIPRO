@@ -5,13 +5,11 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.MuestraDAO;
 import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,10 +32,7 @@ public class ControladorMuestra extends SIGIPROServlet {
     //Falta implementar
     private final int[] permisos = {1, 560};
     //-----------------
-    private MuestraDAO dao = new MuestraDAO();
-
-    HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    BitacoraDAO bitacora = new BitacoraDAO();
+    private final MuestraDAO dao = new MuestraDAO();
 
     protected final Class clase = ControladorMuestra.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
