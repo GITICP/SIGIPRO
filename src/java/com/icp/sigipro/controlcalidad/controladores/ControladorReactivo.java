@@ -244,13 +244,14 @@ public class ControladorReactivo extends SIGIPROServlet {
         }
 
     }
-    // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermisosMultiple(permisos, request);
-        
+
         boolean resultado = false;
         try {
             String fullPath = helper_archivos.obtenerDireccionArchivos();
@@ -287,12 +288,12 @@ public class ControladorReactivo extends SIGIPROServlet {
                 }
             } else if (r.getCertificados().isEmpty()) {
                 String archivoViejo = "";
-                if (!r.getPreparacion().equals("")){
+                if (!r.getPreparacion().equals("")) {
                     archivoViejo = dao.obtenerReactivo(r.getId_reactivo()).getPreparacion();
                 }
                 resultado = dao.editarReactivo(r);
                 if (resultado) {
-                    if (!archivoViejo.equals("")){
+                    if (!archivoViejo.equals("")) {
                         File archivo = new File(archivoViejo);
                         archivo.delete();
                     }
