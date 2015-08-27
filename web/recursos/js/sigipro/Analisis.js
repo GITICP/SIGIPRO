@@ -509,7 +509,14 @@ $(document).ready(function () {
             var enlace = "/SIGIPRO/ControlCalidad/Reactivo?accion=preparacion&id_reactivo=" + $(this).val();
             var objeto_enlace = $("<a href=\"" + enlace + "\">");
             var quiebre = $("<br>");
-            objeto_enlace.text("Descargar preparaci\xF3n de reactivo " + $(this).text());
+            
+            if($(this).data("preparacion") !== "") {
+                objeto_enlace.text("Descargar preparaci\xF3n de reactivo " + $(this).text());
+            } else {
+                objeto_enlace = $("<span>");
+                objeto_enlace.text("Reactivo " + $(this).text() + " no tiene archivo de preparaci\xF3n.");
+            }
+            
 
             espacio_reactivos.append(objeto_enlace);
             espacio_reactivos.append(quiebre);

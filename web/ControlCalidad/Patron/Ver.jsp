@@ -54,7 +54,18 @@
                                 <tr><td> <strong>Lugar de Almacenamiento: </strong></td> <td>${patron.getLugar_almacenamiento()} </td></tr>
                                 <tr><td> <strong>Condición de Almacenamiento: </strong></td> <td>${patron.getCondicion_almacenamiento()} </td></tr>
                                 <tr><td> <strong>Observaciones: </strong></td> <td>${patron.getObservaciones()} </td></tr>
-                                <tr><td> <strong>Certificado: </strong></td><td><a href="/SIGIPRO/ControlCalidad/Patron?accion=certificado&id_patron=${patron.getId_patron()}">Descargar Certificado</a></td></tr>
+                                <tr><td> <strong>Certificado: </strong></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${patron.getCertificado() != ''}">
+                                                <a href="/SIGIPRO/ControlCalidad/Patron?accion=certificado&id_patron=${patron.getId_patron()}">Descargar Certificado</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                Sin certificado.
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                             </table>
                             <br>
                         </div>

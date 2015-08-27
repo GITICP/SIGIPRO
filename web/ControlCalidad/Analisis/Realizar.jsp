@@ -63,7 +63,7 @@
                                                                         onchange="setCustomValidity('')">
                                                                     <option value=''></option>
                                                                     <c:forEach items="${reactivos}" var="reactivo">
-                                                                        <option value=${reactivo.getId_reactivo()}>
+                                                                        <option value=${reactivo.getId_reactivo()} data-preparacion="${reactivo.getPreparacion()}">
                                                                             ${reactivo.getNombre()} (${reactivo.getTipo_reactivo().getNombre()})
                                                                         </option>
                                                                     </c:forEach>
