@@ -44,6 +44,9 @@
                                 <input type="hidden" value="realizar" name="accion" />
                                 <input type="hidden" value="${id_analisis}" name="id_analisis" />
                                 <input type="hidden" value="${id_ags}" name="id_ags" />
+                                <c:if test="${lista != null}">
+                                    <input type="hidden" value="true" name="redirect_lista" />
+                                </c:if>
 
                                 <div class="widget widget-table">
                                     <div class="widget-header">

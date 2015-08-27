@@ -126,7 +126,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermisosMultiple(permisos, request);
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -160,7 +160,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermiso(540, request);
 
         String redireccion = "Analisis/Agregar.jsp";
@@ -183,7 +183,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermisosMultiple(permisos, request);
         String redireccion = "Analisis/index.jsp";
         List<Analisis> analisis = dao.obtenerAnalisis();
@@ -192,7 +192,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getLista(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermiso(541, request);
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -207,7 +207,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermisosMultiple(permisos, request);
         String redireccion = "Analisis/Ver.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -233,7 +233,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
-        
+
         validarPermiso(542, request);
         String redireccion = "Analisis/Editar.jsp";
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
@@ -277,7 +277,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermiso(543, request);
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         boolean resultado = false;
@@ -308,6 +308,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         request.setAttribute("id_analisis", id_analisis);
         request.setAttribute("id_ags", request.getParameter("id_ags"));
+        request.setAttribute("lista", request.getParameter("lista"));
 
         ControlXSLT xslt;
         Analisis analisis;
@@ -335,8 +336,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
         redireccionar(request, response, redireccion);
     }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
 
@@ -454,14 +457,14 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
                     if (!tipo_campo.equals("table")) {
                         String valor;
-                        String nombre_campo = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        String nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         Node nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         if (tipo_campo.equalsIgnoreCase("excel") || tipo_campo.equalsIgnoreCase("excel_tabla")) {
                             Node nodo_celda = elemento.getElementsByTagName("celda").item(0);
                             String celda = nodo_celda.getTextContent();
                             valor = excel.obtenerCelda(celda);
                         } else {
-                            valor = this.obtenerParametro(nombre_campo);
+                            valor = this.obtenerParametro(nombre_campo_resultado);
                         }
                         nodo_valor.setTextContent(valor);
 
@@ -515,7 +518,18 @@ public class ControladorAnalisis extends SIGIPROServlet {
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
         }
 
-        this.redireccionar(request, response, redireccion);
+        if (!Boolean.parseBoolean(this.obtenerParametro("redirect_lista"))) {
+            this.redireccionar(request, response, redireccion);
+        } else {
+            Analisis a = dao.obtenerAnalisis(id_analisis);
+
+            redireccion = "Analisis/Lista.jsp";
+            List<AnalisisGrupoSolicitud> ags_lista = dao.obtenerSolicitudesAnalisis(id_analisis);
+            request.setAttribute("listaAGS", ags_lista);
+            request.setAttribute("nombreAnalisis", a.getNombre());
+            redireccionar(request, response, redireccion);
+        }
+
     }
 
     // </editor-fold>
