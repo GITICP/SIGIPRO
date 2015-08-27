@@ -495,6 +495,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultado.setControles(controles_utilizados);
 
             resultadodao.insertarResultado(resultado);
+            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO, request.getRemoteAddr());
 
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
             try {

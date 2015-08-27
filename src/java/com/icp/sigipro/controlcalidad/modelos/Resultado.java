@@ -5,13 +5,12 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONObject;
 
 /**
  *
@@ -33,7 +32,9 @@ public class Resultado
     private List<Equipo> equipos_resultado;
     private List<Patron> controles_resultado;
     private List<Patron> patrones_resultado;
-    private AnalisisGrupoSolicitud ags;
+    
+    // Evitar error al parsear a JSON con la libraría Gson
+    private transient AnalisisGrupoSolicitud ags;
 
     public Resultado() {
     }
@@ -127,23 +128,8 @@ public class Resultado
     }
 
     public String parseJSON() {
-        Class _class = this.getClass();
-        JSONObject JSON = new JSONObject();
-        try {
-            Field properties[] = _class.getDeclaredFields();
-            for (int i = 0; i < properties.length; i++) {
-                Field field = properties[i];
-                if (i != 0) {
-                    JSON.put(field.getName(), field.get(this));
-                } else {
-                    JSON.put("id_objeto", field.get(this));
-                }
-            }
-
-        } catch (Exception e) {
-
-        }
-        return JSON.toString();
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     public void setEquipos(String[] ids) {
