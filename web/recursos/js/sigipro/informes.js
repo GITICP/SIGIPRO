@@ -51,6 +51,16 @@ $(document).ready(function () {
     $(".eliminar-resultado").each(function () {
         $(this).click(funcion_eliminar);
     });
+    
+    $("#form-informe").submit(function () {
+        var resultado = false;
+        if(funcion_validar()) {
+            resultado = true;
+        } else {
+            $("#modal-error").modal("show");
+        }
+        return resultado;
+    });
 
 });
 
@@ -67,6 +77,11 @@ funcion_eliminar_general = function () {
     desasignar_evento_boton($(this), FLAG_REPORTAR);
     mover_de_tabla($(this), TABLA_RESULTADOS_POR_REPORTAR, TABLA_RESULTADOS_OBTENIDOS, false);
 };
+
+funcion_validar_general = function() {
+    $("#label-error").text("Debe elegir al menos un resultado para generar el informe.");
+    return $(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR).find("tbody > tr").length > 0;
+}
 
 funcion_reportar_sangria = function () {
     var fila = $(this).parents("tr");
@@ -279,3 +294,4 @@ function asignar_eventos_botones(funcion) {
 
 funcion_eliminar = funcion_eliminar_general;
 funcion_reportar = funcion_reportar_general;
+funcion_validar = funcion_validar_general;

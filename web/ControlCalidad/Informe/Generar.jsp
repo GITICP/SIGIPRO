@@ -55,7 +55,7 @@
                                 </c:if>
                             </table>
                             <br>
-                            <form class="form-horizontal" method="post" action="Informe" id="form-informe">
+                            <form id="form-informe" class="form-horizontal" method="post" action="Informe" id="form-informe">
                                 <input type="hidden" value="${accion}" name="accion" />
                                 <input type="hidden" value="${solicitud.getId_solicitud()}" name="id_solicitud" />
                                 <c:if test="${accion == 'Editar'}">
@@ -275,4 +275,22 @@
 
     </jsp:attribute>
 
+</t:modal>
+
+<t:modal idModal="modal-error" titulo="Error en el Formulario">
+    <jsp:attribute name="form">
+
+        <form class="form-horizontal">
+            <div class="widget-content">
+                <label id="label-error" class="control-label"></label>
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
+                </div>
+            </div>
+        </form>
+    </jsp:attribute>
 </t:modal>
