@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.PatronDAO;
@@ -30,10 +31,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -327,6 +326,7 @@ public class ControladorResultado extends SIGIPROServlet {
             resultado.setControles(controles_utilizados);
 
             dao.editarResultado(resultado);
+            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO, request.getRemoteAddr());
 
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
             try {

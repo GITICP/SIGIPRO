@@ -21,7 +21,7 @@ public class Resultado
 
     private int id_resultado;
     private String path;
-    private SQLXML datos;
+    private transient SQLXML datos;
     private String datos_string;
     private Date fecha;
     private Usuario usuario;
