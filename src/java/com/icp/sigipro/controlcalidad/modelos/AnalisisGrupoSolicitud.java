@@ -72,7 +72,7 @@ public class AnalisisGrupoSolicitud {
     
     public void agregarResultado(Resultado r) {
         if (resultados == null) {
-            resultados = new ArrayList<Resultado>();
+            resultados = new ArrayList<>();
         }
         resultados.add(r);
     }

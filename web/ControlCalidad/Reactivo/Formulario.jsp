@@ -39,10 +39,10 @@
                                     <c:forEach items="${tiporeactivos}" var="tiporeactivo">
                                         <c:choose>
                                             <c:when test="${tiporeactivo.getId_tipo_reactivo() == reactivo.getTipo_reactivo().getId_tipo_reactivo()}" >
-                                                <option value=${tiporeactivo.getId_tipo_reactivo()} data-certificable="${tiporeactivo.isCertificable()}" selected> ${tiporeactivo.getNombre()}</option>
+                                                <option value=${tiporeactivo.getId_tipo_reactivo()} data-certificable="${tiporeactivo.isCertificable()}" data-machote="${tiporeactivo.getMachote()}" selected> ${tiporeactivo.getNombre()}</option>
                                             </c:when>
                                             <c:otherwise>
-                                                <option value=${tiporeactivo.getId_tipo_reactivo()} data-certificable="${tiporeactivo.isCertificable()}"> ${tiporeactivo.getNombre()}</option>
+                                                <option value=${tiporeactivo.getId_tipo_reactivo()} data-certificable="${tiporeactivo.isCertificable()}" data-machote="${tiporeactivo.getMachote()}"> ${tiporeactivo.getNombre()}</option>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>

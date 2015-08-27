@@ -84,17 +84,18 @@ public class TipoReactivoDAO extends DAO {
     
     public List<TipoReactivo> obtenerTipoReactivos()
     {
-        List<TipoReactivo> resultado = new ArrayList<TipoReactivo>();
+        List<TipoReactivo> resultado = new ArrayList<>();
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT id_tipo_reactivo, nombre, certificable FROM control_calidad.tipos_reactivos; ");
+            consulta = getConexion().prepareStatement(" SELECT id_tipo_reactivo, nombre, certificable, machote FROM control_calidad.tipos_reactivos; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 TipoReactivo tiporeactivo = new TipoReactivo();
                 tiporeactivo.setId_tipo_reactivo(rs.getInt("id_tipo_reactivo"));
                 tiporeactivo.setNombre(rs.getString("nombre"));
                 tiporeactivo.setCertificable(rs.getBoolean("certificable"));
+                tiporeactivo.setMachote(rs.getString("machote"));
                 resultado.add(tiporeactivo);
             }
         }

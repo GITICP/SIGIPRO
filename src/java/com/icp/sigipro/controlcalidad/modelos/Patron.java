@@ -128,13 +128,12 @@ public class Patron {
     }
 
     public void setObservaciones(String observaciones) {
-        String resultado = "Sin observaciones.";
+        this.observaciones = "Sin observaciones.";
         if (observaciones != null) {
             if (!observaciones.isEmpty()) {
-                resultado = observaciones;
+                this.observaciones = observaciones;
             }
         }
-        this.observaciones = resultado;
     }
     
     private String formatearFecha(Date fecha, String mensaje_si_es_nula) {

@@ -8,6 +8,8 @@ $(document).on("click", ".eliminarCertificado-Modal", function () {
     $("#id_certificado_equipo").val(id_certificado);
 });
 
+// Las líneas documentdas de esta función son por si se desea hacer que los certificados sean obligatorios dependendiendo del tipo
+/*
 $(document).ready(function(){
     $("#seleccionTipo").change(function(){
         var opcion = $(this).find("option:selected");
@@ -24,4 +26,4 @@ $(document).ready(function(){
             certificado.prop("required", false);
         }
     });
-});
+});*/

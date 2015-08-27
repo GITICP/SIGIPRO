@@ -8,10 +8,7 @@ package com.icp.sigipro.controlcalidad.modelos;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +24,6 @@ public class Informe
     private SolicitudCC solicitud;
     private Usuario usuario;
     private Date fecha;
-    
-    private final SolicitudDAO solicitud_dao = new SolicitudDAO();
         
     public Informe(){}
     

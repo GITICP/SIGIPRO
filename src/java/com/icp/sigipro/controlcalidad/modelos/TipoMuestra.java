@@ -67,12 +67,9 @@ public class TipoMuestra {
     }
 
     public void setDescripcion(String descripcion) {
-        if (descripcion == null) {
-            this.descripcion = "Sin descripción.";
-        } else {
-            if (descripcion.isEmpty()) {
-                this.descripcion = "Sin descripción.";
-            } else {
+        this.descripcion = "Sin descripción.";
+        if (descripcion != null) {
+            if (!descripcion.isEmpty()) {
                 this.descripcion = descripcion;
             }
         }

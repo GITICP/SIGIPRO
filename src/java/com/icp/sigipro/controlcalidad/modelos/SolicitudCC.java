@@ -64,13 +64,12 @@ public class SolicitudCC extends Asociable {
     }
 
     public void setObservaciones(String observaciones) {
-        String obs_final = "Sin observaciones.";
+        this.observaciones = "Sin observaciones.";
         if (observaciones != null) {
             if (!observaciones.isEmpty()) {
-                obs_final = observaciones;
+                this.observaciones = observaciones;
             }
         }
-        this.observaciones = obs_final;
     }
 
     public Informe getInforme() {
@@ -143,14 +142,14 @@ public class SolicitudCC extends Asociable {
 
     public List<Resultado> getResultados() {
 
-        List<AnalisisGrupoSolicitud> ags_solicitud = new ArrayList<AnalisisGrupoSolicitud>();
+        List<AnalisisGrupoSolicitud> ags_solicitud = new ArrayList<>();
         for (AnalisisGrupoSolicitud ags : analisis_solicitud) {
             if (ags.getResultados() != null) {
                 ags_solicitud.add(ags);
             }
         }
 
-        List<Resultado> resultados = new ArrayList<Resultado>();
+        List<Resultado> resultados = new ArrayList<>();
         if (!ags_solicitud.isEmpty()) {
             for (AnalisisGrupoSolicitud ags : ags_solicitud) {
                 resultados.addAll(ags.getResultados());
@@ -172,8 +171,8 @@ public class SolicitudCC extends Asociable {
     }
 
     public List<Muestra> obtenerMuestras() {
-        List<Muestra> lista_muestras = new ArrayList<Muestra>();
-        List<Integer> ids_muestras = new ArrayList<Integer>();
+        List<Muestra> lista_muestras = new ArrayList<>();
+        List<Integer> ids_muestras = new ArrayList<>();
 
         for (AnalisisGrupoSolicitud ags : this.analisis_solicitud) {
             for (Muestra m : ags.obtenerMuestras()) {

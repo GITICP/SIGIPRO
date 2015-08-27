@@ -48,7 +48,12 @@ public class Equipo {
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.descripcion = "Sin descripcion";
+        if (descripcion != null) {
+            if (!descripcion.isEmpty()) {
+                this.descripcion = descripcion;
+            }
+        }
     }
 
     public TipoEquipo getTipo_equipo() {

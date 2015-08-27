@@ -35,7 +35,12 @@ public class TipoReactivo {
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.descripcion = "Sin descripción.";
+        if (descripcion != null) {
+            if (!descripcion.isEmpty()) {
+                this.descripcion = descripcion;
+            }
+        }
     }
 
     public int getId_tipo_reactivo() {

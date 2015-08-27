@@ -58,7 +58,7 @@ public class Grupo {
     
     public void agregarMuestra(Muestra m) {
         if (this.grupos_muestras == null) {
-            grupos_muestras = new ArrayList<Muestra>();
+            grupos_muestras = new ArrayList<>();
         }
         grupos_muestras.add(m);
     }

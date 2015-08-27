@@ -15,14 +15,14 @@ import java.util.List;
 public class AnalisisTipoMuestra
 {
 
-    private List<Analisis> analisis;
-    private List<Muestra> muestras;
+    private final List<Analisis> analisis;
+    private final List<Muestra> muestras;
     private TipoMuestra tipo_muestra;
 
     public AnalisisTipoMuestra(Analisis a, TipoMuestra tm, Muestra m) {
-        analisis = new ArrayList<Analisis>();
+        analisis = new ArrayList<>();
         analisis.add(a);
-        muestras = new ArrayList<Muestra>();
+        muestras = new ArrayList<>();
         muestras.add(m);
         tipo_muestra = tm;
         

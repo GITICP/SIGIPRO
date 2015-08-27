@@ -22,7 +22,6 @@ public class Resultado
 
     private int id_resultado;
     private String path;
-    //Debe ser de tipo XML pero por ahora lo dejo asi
     private SQLXML datos;
     private String datos_string;
     private Date fecha;
