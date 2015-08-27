@@ -167,7 +167,7 @@ public class ControladorPatron extends SIGIPROServlet {
             resultado = dao.eliminarPatron(id_patron);
             if (resultado) {
                 //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_patron, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EQUIPO, request.getRemoteAddr());
+                bitacora.setBitacora(id_patron, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PATRON, request.getRemoteAddr());
                 //----------------------------
                 request.setAttribute("mensaje", helper.mensajeDeExito("Patrón eliminado correctamente."));
             } else {
@@ -191,7 +191,7 @@ public class ControladorPatron extends SIGIPROServlet {
         try {
             this.crearDirectorio();
             dao.insertarPatron(patron);
-            //Bitácora
+            bitacora.setBitacora(patron.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PATRON, request.getRemoteAddr());
             request.setAttribute("mensaje", helper.mensajeDeExito("Patrón agregado correctamente."));
 
         } catch (SIGIPROException sig_ex) {
@@ -211,7 +211,7 @@ public class ControladorPatron extends SIGIPROServlet {
             this.crearDirectorio();
             patron.setId_patron(Integer.parseInt(obtenerParametro("id_patron")));
             dao.editarPatron(patron);
-            //Bitácora
+            bitacora.setBitacora(patron.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PATRON, request.getRemoteAddr());
             request.setAttribute("mensaje", helper.mensajeDeExito("Patrón editado correctamente."));
 
         } catch (SIGIPROException sig_ex) {

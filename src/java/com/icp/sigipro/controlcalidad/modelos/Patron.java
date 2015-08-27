@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 
@@ -14,7 +15,7 @@ import java.sql.Date;
  */
 public class Patron {
     
-    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+    private final transient HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     
     private int id_patron;
     private String numero_lote;
@@ -142,5 +143,9 @@ public class Patron {
             resultado = helper_fechas.formatearFecha(fecha);
         }
         return resultado;
+    }
+    
+    public String parseJSON() {
+        return new Gson().toJson(this);
     }
 }
