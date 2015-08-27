@@ -70,18 +70,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
-                                                <tr id='${ags.getId_analisis_grupo_solicitud()}'>
+                                            <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
+                                                <tr id='${resultado.getId_resultado()}'>
                                                     <td>
-                                                        <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
                                                             ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
                                                         </c:forEach>
                                                     </td>
                                                     <td>
-                                                        ${ags.getAnalisis().getNombre()}
+                                                        ${resultado.getAgs().getAnalisis().getNombre()}
                                                     </td>
                                                     <td>
-                                                        ${ags.getPrimerResultado().getResultado()}
+                                                        ${resultado.getResultado()}
                                                     </td>
                                                 </tr>
                                             </c:forEach>

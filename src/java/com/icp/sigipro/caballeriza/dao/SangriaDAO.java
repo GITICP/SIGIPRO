@@ -9,6 +9,8 @@ import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
+import com.icp.sigipro.controlcalidad.modelos.Informe;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -142,15 +144,23 @@ public class SangriaDAO extends DAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                       " SELECT s.*, sc.*, c.id_caballo, c.nombre, c.numero_microchip, c.numero, u.nombre_completo, u.id_usuario, s.fecha, gc.nombre as nombre_grupo, "
-                    + "        r1.resultado as resultado_lal_dia1, r2.resultado as resultado_lal_dia2, r3.resultado as resultado_lal_dia3 "
+                    + "        r1.resultado as resultado_lal_dia1, r2.resultado as resultado_lal_dia2, r3.resultado as resultado_lal_dia3, id_informe_dia1, id_informe_dia2, id_informe_dia3, "
+                    + "        s1.numero_solicitud AS num_sol1, s2.numero_solicitud AS num_sol2, s3.numero_solicitud AS num_sol3, "
+                    + "        s1.id_solicitud AS id_sol1, s2.id_solicitud AS id_sol2, s3.id_solicitud AS id_sol3 "
                     + " FROM (SELECT * FROM caballeriza.sangrias WHERE id_sangria = ?) AS s "
                     + "   INNER JOIN caballeriza.sangrias_caballos sc ON sc.id_sangria = s.id_sangria "
                     + "   INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo "
                     + "   INNER JOIN seguridad.usuarios u ON s.responsable = u.id_usuario "
                     + "   INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = s.id_grupo_caballos "
-                    + "   LEFT JOIN control_calidad.resultados r1 ON id_resultado_lal_dia1 = r1.id_resultado "
-                    + "   LEFT JOIN control_calidad.resultados r2 ON id_resultado_lal_dia2 = r2.id_resultado "
-                    + "   LEFT JOIN control_calidad.resultados r3 ON id_resultado_lal_dia3 = r3.id_resultado; "
+                    + "   LEFT JOIN control_calidad.resultados r1 ON sc.id_resultado_lal_dia1 = r1.id_resultado "
+                    + "   LEFT JOIN control_calidad.resultados r2 ON sc.id_resultado_lal_dia2 = r2.id_resultado "
+                    + "   LEFT JOIN control_calidad.resultados r3 ON sc.id_resultado_lal_dia3 = r3.id_resultado "
+                    + "   LEFT JOIN control_calidad.informes i1 ON s.id_informe_dia1 = i1.id_informe "
+                    + "   LEFT JOIN control_calidad.solicitudes s1 ON s1.id_solicitud = i1.id_solicitud "
+                    + "   LEFT JOIN control_calidad.informes i2 ON s.id_informe_dia2 = i2.id_informe "
+                    + "   LEFT JOIN control_calidad.solicitudes s2 ON s2.id_solicitud = i2.id_solicitud "
+                    + "   LEFT JOIN control_calidad.informes i3 ON s.id_informe_dia3 = i3.id_informe "
+                    + "   LEFT JOIN control_calidad.solicitudes s3 ON s3.id_solicitud = i3.id_solicitud "
             );
 
             consulta.setInt(1, id_sangria);
@@ -177,6 +187,22 @@ public class SangriaDAO extends DAO
                 GrupoDeCaballos g = new GrupoDeCaballos();
                 g.setNombre(rs.getString("nombre_grupo"));
                 sangria.setGrupo(g);
+                
+                int id_informe_dia1 = rs.getInt("id_informe_dia1");
+                int id_informe_dia2 = rs.getInt("id_informe_dia2");
+                int id_informe_dia3 = rs.getInt("id_informe_dia3");
+                
+                if(id_informe_dia1 != 0) {
+                    sangria.setInforme_dia1(obtenerInformacionSolicitudSangria(rs, 1));
+                }
+                
+                if(id_informe_dia2 != 0) {
+                    sangria.setInforme_dia2(obtenerInformacionSolicitudSangria(rs, 2));
+                }
+                
+                if(id_informe_dia3 != 0) {
+                    sangria.setInforme_dia3(obtenerInformacionSolicitudSangria(rs, 3));
+                }
 
                 do {
 
@@ -710,6 +736,22 @@ public class SangriaDAO extends DAO
         }
         
         return caballos_sangria;
+        
+    }
+    
+    private Informe obtenerInformacionSolicitudSangria(ResultSet rs, int dia) throws SQLException {
+        
+        SolicitudCC solicitud = new SolicitudCC();
+        Informe resultado = new Informe();
+        
+        resultado.setId_informe(rs.getInt("id_informe_dia" + dia));
+        
+        solicitud.setId_solicitud(rs.getInt("id_sol" + dia));
+        solicitud.setNumero_solicitud(rs.getString("num_sol" + dia));
+        
+        resultado.setSolicitud(solicitud);
+        
+        return resultado;
         
     }
 }

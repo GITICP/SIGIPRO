@@ -5,10 +5,10 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
+import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperVarios;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,7 +27,9 @@ public class Sangria {
     private Date fecha_dia2;
     private Date fecha_dia3;
     private float hematrocito_promedio;
-    private int num_inf_cc;
+    private Informe informe_dia1;
+    private Informe informe_dia2;
+    private Informe informe_dia3;
     private Usuario responsable;
     private int cantidad_de_caballos;
     private float sangre_total;
@@ -42,22 +44,6 @@ public class Sangria {
     List<Caballo> caballos; //Este atributo es para ayudar y no se encuentra en la base de datos
 
     public Sangria() {
-    }
-
-    public Sangria(int id_sangria, Date fecha_dia1, Date fecha_dia2, Date fecha_dia3, float hematrocito_promedio, int num_inf_cc, Usuario responsable, int cantidad_de_caballos, float sangre_total, float peso_plasma_total, float volumen_plasma_total, float plasma_por_caballo, float potencia) {
-        this.id_sangria = id_sangria;
-        this.fecha_dia1 = fecha_dia1;
-        this.fecha_dia2 = fecha_dia2;
-        this.fecha_dia3 = fecha_dia3;
-        this.hematrocito_promedio = hematrocito_promedio;
-        this.num_inf_cc = num_inf_cc;
-        this.responsable = responsable;
-        this.cantidad_de_caballos = cantidad_de_caballos;
-        this.sangre_total = sangre_total;
-        this.peso_plasma_total = peso_plasma_total;
-        this.volumen_plasma_total = volumen_plasma_total;
-        this.plasma_por_caballo = plasma_por_caballo;
-        this.potencia = potencia;
     }
 
     public int getId_sangria() {
@@ -130,12 +116,28 @@ public class Sangria {
         this.hematrocito_promedio = hematrocito_promedio;
     }
 
-    public int getNum_inf_cc() {
-        return num_inf_cc;
+    public Informe getInforme_dia1() {
+        return informe_dia1;
     }
 
-    public void setNum_inf_cc(int num_inf_cc) {
-        this.num_inf_cc = num_inf_cc;
+    public void setInforme_dia1(Informe informe_dia1) {
+        this.informe_dia1 = informe_dia1;
+    }
+
+    public Informe getInforme_dia2() {
+        return informe_dia2;
+    }
+
+    public void setInforme_dia2(Informe informe_dia2) {
+        this.informe_dia2 = informe_dia2;
+    }
+
+    public Informe getInforme_dia3() {
+        return informe_dia3;
+    }
+
+    public void setInforme_dia3(Informe informe_dia3) {
+        this.informe_dia3 = informe_dia3;
     }
 
     public Usuario getResponsable() {

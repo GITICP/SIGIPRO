@@ -403,9 +403,6 @@ public class ControladorSangria extends SIGIPROServlet
         String potencia = request.getParameter("potencia");
         String volumen_plasma_total = request.getParameter("volumen_plasma");
 
-        if (!numero_informe_calidad.isEmpty()) {
-            sangria.setNum_inf_cc(Integer.parseInt(numero_informe_calidad));
-        }
         if (!potencia.isEmpty()) {
             sangria.setPotencia(Float.parseFloat(potencia));
         }
