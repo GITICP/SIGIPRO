@@ -11,8 +11,8 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
  */
 public abstract class Asociable {
     
-    protected final String SANGRIA = "sangria";
-    protected AsociacionSolicitud asociacion;
+    protected final transient String SANGRIA = "sangria";
+    protected transient AsociacionSolicitud asociacion;
     
     public AsociacionSolicitud getTipoAsociacion() {
         return asociacion;

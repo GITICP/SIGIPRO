@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
-import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
+import com.google.gson.Gson;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
@@ -21,7 +21,7 @@ public class Informe
 {
     private int id_informe;
     private List<Resultado> resultados;
-    private SolicitudCC solicitud;
+    private transient SolicitudCC solicitud;
     private Usuario usuario;
     private Date fecha;
         
@@ -105,5 +105,10 @@ public class Informe
             }
         }
         return resultado;
+    }
+    
+    public String parseJSON() {
+        String json_parcial = new Gson().toJson(this);
+        return json_parcial.substring(0, json_parcial.length()-1) + ",\"id_solicitud\":"+solicitud.getId_solicitud() + "}";
     }
 }

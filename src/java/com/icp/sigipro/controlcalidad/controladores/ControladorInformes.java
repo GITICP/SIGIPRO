@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.InformeDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Informe;
@@ -156,7 +157,7 @@ public class ControladorInformes extends SIGIPROServlet
         
         try {
             informe = dao.ingresarInforme(informe);
-            // Bitácora informe
+            bitacora.setBitacora(informe.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INFORME, request.getRemoteAddr());
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
             request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));
         } catch (SIGIPROException sig_ex) {
@@ -196,7 +197,7 @@ public class ControladorInformes extends SIGIPROServlet
         
         try {
             informe = dao.editarInforme(informe);
-            // Bitácora informe
+            bitacora.setBitacora(informe.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INFORME, request.getRemoteAddr());
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
             request.setAttribute("mensaje", helper.mensajeDeExito("Informe editado correctamente."));
         } catch (SIGIPROException sig_ex) {

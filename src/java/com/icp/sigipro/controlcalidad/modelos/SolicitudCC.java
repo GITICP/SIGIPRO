@@ -39,9 +39,7 @@ public class SolicitudCC extends Asociable {
     private Informe informe;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
-    private ControlSolicitud control_solicitud;
-
-    private final String SANGRIA = "sangria";
+    private transient ControlSolicitud control_solicitud;
 
     public SolicitudCC() {
     }

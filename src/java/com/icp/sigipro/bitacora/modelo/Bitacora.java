@@ -80,6 +80,7 @@ public class Bitacora {
     public static final String TABLA_RESULTADO = "CONTROL_CALIDAD.RESULTADOS";
     public static final String TABLA_SOLICITUDCC = "CONTROL_CALIDAD.SOLICITUDES";
     public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
+    public static final String TABLA_INFORME = "CONTROL_CALIDAD.INFORMES";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";
