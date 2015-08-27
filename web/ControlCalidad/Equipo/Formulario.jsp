@@ -73,9 +73,6 @@
                     </div>
                 </c:otherwise>
             </c:choose>
-
-
-
         </div>
         <div class="col-md-6">
             <label for="descripcion" class="control-label">Descripción</label>

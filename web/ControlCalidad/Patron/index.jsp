@@ -32,7 +32,7 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-gears"></i> Patrones y Controles </h3>
-              <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 500)}">
+              <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 571)}">
                 <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Patron?accion=agregar">Agregar Patrón</a>
                 </div>

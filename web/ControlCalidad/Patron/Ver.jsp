@@ -35,10 +35,10 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> Patrón ${patron.getNumero_lote()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 502)}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 573)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar este patrón" data-href="/SIGIPRO/ControlCalidad/Patron?accion=eliminar&id_patron=${patron.getId_patron()}">Eliminar</a>
                                 </c:if>
-                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 501)}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 572)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Patron?accion=editar&id_patron=${patron.getId_patron()}">Editar</a>
                                 </c:if>
                             </div>

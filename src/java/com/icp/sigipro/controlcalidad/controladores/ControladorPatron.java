@@ -38,7 +38,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorPatron extends SIGIPROServlet {
 
     //Por definir
-    private final int[] permisos = {520, 521, 522, 523, 524};
+    private final int[] permisos = {571, 572, 573, 574};
     //-----------------
     private final PatronDAO dao = new PatronDAO();
 
@@ -107,7 +107,7 @@ public class ControladorPatron extends SIGIPROServlet {
 
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(520, request);
+        validarPermiso(571, request);
 
         String redireccion = "Patron/Agregar.jsp";
         Patron p = new Patron();
@@ -144,7 +144,7 @@ public class ControladorPatron extends SIGIPROServlet {
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(522, request);
+        validarPermiso(572, request);
         String redireccion = "Patron/Editar.jsp";
         request.setAttribute("accion", "Editar");
         int id_patron = Integer.parseInt(request.getParameter("id_patron"));
@@ -160,7 +160,7 @@ public class ControladorPatron extends SIGIPROServlet {
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(523, request);
+        validarPermiso(573, request);
         int id_patron = Integer.parseInt(request.getParameter("id_patron"));
         boolean resultado;
         try {
@@ -183,7 +183,9 @@ public class ControladorPatron extends SIGIPROServlet {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        
+        validarPermiso(571, request);
+        
         Patron patron = construirObjeto(request);
 
         try {
@@ -200,6 +202,9 @@ public class ControladorPatron extends SIGIPROServlet {
     }
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(572, request);
+        
         Patron patron = construirObjeto(request);
 
         try {

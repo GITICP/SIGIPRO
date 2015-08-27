@@ -156,7 +156,7 @@ public class ControladorTipoReactivo extends SIGIPROServlet {
                     //----------------------------
                     request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente"));
                 } else {
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente pero hubo un error eliminando el machote."));
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Reactivo eliminado correctamente."));
                 }
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Tipo de Reactivo no pudo ser eliminado ya que tiene reactivos asociados."));

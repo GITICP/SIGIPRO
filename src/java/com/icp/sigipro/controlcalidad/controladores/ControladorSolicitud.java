@@ -463,7 +463,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
     private boolean verificarEditarSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        return verificarPermiso(550, listaPermisos);
+        return verificarPermiso(553, listaPermisos);
     }
 
     public List<String> parseListaTipoMuestra(List<TipoMuestra> tipomuestra) {

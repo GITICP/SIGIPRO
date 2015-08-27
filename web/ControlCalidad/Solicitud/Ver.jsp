@@ -54,7 +54,7 @@
                                             <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
                                             </c:when>
-                                            <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
+                                            <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 558)}">
                                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe</a>
                                             </c:when>
                                         </c:choose>
@@ -181,7 +181,7 @@
                                         </div>
                                     </div>
                                 </c:when>
-                                <c:when test="${solicitud.getEstado().equals('Completada')}">
+                                <c:when test="${solicitud.getEstado().equals('Completada') && helper_permisos.validarPermiso(sessionScope.listaPermisos, 559)}">
                                     <div class="widget widget-table">
                                         <div class="widget-header">
                                             <h3><i class="fa fa-gears"></i> Informe de la Solicitud ${solicitud.getNumero_solicitud()} </h3>

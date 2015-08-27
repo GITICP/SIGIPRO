@@ -32,7 +32,7 @@ public class ControladorInformes extends SIGIPROServlet
 {
 
     //Falta implementar
-    private final int[] permisos = {1, 540};
+    private final int[] permisos = {1, 557, 558, 559};
     //-----------------
     
     private final InformeDAO dao = new InformeDAO();
@@ -60,7 +60,7 @@ public class ControladorInformes extends SIGIPROServlet
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getGenerar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(550, listaPermisos);
+        validarPermiso(557, listaPermisos);
         String redireccion = "Informe/Generar.jsp";
         
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -86,7 +86,7 @@ public class ControladorInformes extends SIGIPROServlet
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(550, listaPermisos);
+        validarPermiso(558, listaPermisos);
         String redireccion = "Informe/Generar.jsp";
         
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -109,8 +109,7 @@ public class ControladorInformes extends SIGIPROServlet
     }
     
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermiso(550, listaPermisos);
+        validarPermisosMultiple(permisos, request);
         String redireccion = "Informe/Ver.jsp";
         
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
@@ -130,6 +129,8 @@ public class ControladorInformes extends SIGIPROServlet
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postGenerar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(557, request);
         
         String redireccion = "Solicitud/Ver.jsp";
         
@@ -167,6 +168,8 @@ public class ControladorInformes extends SIGIPROServlet
     }
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(558, request);
         
         String redireccion = "Solicitud/Ver.jsp";
         
