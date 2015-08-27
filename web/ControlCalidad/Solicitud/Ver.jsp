@@ -49,6 +49,9 @@
                                             <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                         </c:if>
                                     </c:when>
+                                    <c:when test="${solicitud.getEstado().equals('Anulada')}">
+
+                                    </c:when>
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
