@@ -142,6 +142,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
         try {
             dao.insertarTipoDeMuestra(tipo_muestra);
             dao.insertarTipoMuestraAnalisis(tipo_muestra);
+            bitacora.setBitacora(tipo_muestra.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOMUESTRA, request.getRemoteAddr());
             redireccion = "TiposMuestra/index.jsp";
             request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Muestra agregado con éxito."));
             obtenerListadoCompleto(request, "Tipo de Muestra agregado con éxito, pero no se pudo obtener el listado completo. Refresque la página.", false);
@@ -168,6 +169,7 @@ public class ControladorTiposMuestra extends SIGIPROServlet {
             if (resultado) {
                 dao.eliminarTipoMuestrasAnalisis(tipo_muestra.getId_tipo_muestra());
                 dao.insertarTipoMuestraAnalisis(tipo_muestra);
+                bitacora.setBitacora(tipo_muestra.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TIPOMUESTRA, request.getRemoteAddr());
                 redireccion = "TiposMuestra/index.jsp";
                 request.setAttribute("mensaje", helper.mensajeDeExito("Tipo de Muestra editado con éxito."));
                 obtenerListadoCompleto(request, "Tipo de Muestra editado con éxito, pero no se pudo obtener el listado completo. Refresque la página.", false);
