@@ -208,7 +208,7 @@
                         <div class="col-sm-12">
                             <div class="input-group">
                                 <br>
-                                <button type="button" onclick="agregarMuestra()" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Muestras</button>
+                                <button id="boton-muestra" type="button" onclick="agregarMuestra()" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Muestras</button>
                             </div>
                         </div>
                     </div>

@@ -18,6 +18,7 @@ $("#seleccion-objeto").change(function () {
         // Meter el comportamiento de otros objetos como un else if dejar este else de último
         $("#fila-select-sangria").hide();
         $("#fila-select-dia").hide();
+        $("#boton-muestra").prop("disabled", false);
     }
 });
 
@@ -123,6 +124,8 @@ function agregar_muestra_caballos(datos) {
 
     agregarMuestra();
     $("#identificadores_" + (contador - 1)).select2("val", lista_caballos);
+    $("#identificadores_" + (contador - 1)).prop("readonly", true);
+    $("#boton-muestra").prop("disabled", true);
 }
 
 $(document).ready(function () {

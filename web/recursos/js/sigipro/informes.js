@@ -42,6 +42,8 @@ $(document).ready(function () {
         select_dia.change(evento_seleccionar_dia);
 
         asignar_eventos_botones("sangria");
+        
+        funcion_validar = funcion_validar_sangria;
     }
 
     $(".reportar-resultado").each(function () {
@@ -80,8 +82,8 @@ funcion_eliminar_general = function () {
 
 funcion_validar_general = function() {
     $("#label-error").text("Debe elegir al menos un resultado para generar el informe.");
-    return $(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR).find("tbody > tr").length > 0;
-}
+    return $(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR).find("tbody > tr.fila-resultado").length !== 0;
+};
 
 funcion_reportar_sangria = function () {
     var fila = $(this).parents("tr");
@@ -104,6 +106,11 @@ funcion_eliminar_sangria = function () {
     }
 
     $("input[name=caballos_res_" + id + "]").remove();
+};
+
+funcion_validar_sangria = function () {
+    $("#label-error").text("Debe asignar un resultado a todos los caballos de la sangría.");
+    return $("#seleccion-caballos").find("option:not(.opcion-escondida)").length === 0;
 };
 
 funcion_asociar_resultado_caballos = function () {
@@ -276,9 +283,11 @@ function asignar_eventos_botones(funcion) {
     if (funcion === "sangria") {
         funcion_eliminar = funcion_eliminar_sangria;
         funcion_reportar = funcion_reportar_sangria;
+        funcion_validar = funcion_validar_sangria;
     } else {
         funcion_eliminar = funcion_eliminar_general;
         funcion_reportar = funcion_reportar_general;
+        funcion_validar = funcion_validar_general;
     }
     
     $(".reportar-resultado").each(function () {

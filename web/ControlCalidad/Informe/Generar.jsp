@@ -146,7 +146,7 @@
                                                     <tbody>
                                                         <c:forEach items="${solicitud.getResultados()}" var="resultado">
                                                             <c:if test="${!solicitud.getInforme().tieneResultado(resultado.getId_resultado())}">
-                                                                <tr id="${resultado.getId_resultado()}">
+                                                                <tr id="${resultado.getId_resultado()}" class="fila-resultado">
                                                                     <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}"></td>
                                                                     <td>
                                                                         <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
@@ -189,7 +189,7 @@
                                                         <c:if test="${accion == 'Editar'}">
                                                             <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
 
-                                                                <tr id="${resultado.getId_resultado()}">
+                                                                <tr id="${resultado.getId_resultado()}" class="fila-resultado">
                                                                     <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
                                                                     <td class="">
                                                                         <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
@@ -257,8 +257,16 @@
                     oninvalid="setCustomValidity('El campo de muestras es requerido.')">
                 <c:if test="${tipo == 'sangria'}">
                     <c:forEach items="${caballos_sangria}" var="caballo">
-                        <option value="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero()})</option>
+                        <c:choose>
+                            <c:when test="${accion == 'Generar'}">
+                                <option value="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero()})</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${caballo.getId_caballo()}" class="opcion-escondida">${caballo.getNombre()} (${caballo.getNumero()})</option>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
+                    
                 </c:if>
             </select>
 
