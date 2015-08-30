@@ -1,6 +1,7 @@
 ﻿-- Schema: calendario
+CREATE SCHEMA IF NOT EXISTS calendario;
 
-CREATE TABLE calendario.eventos
+CREATE TABLE IF NOT EXISTS calendario.eventos
 (
   id serial NOT NULL,
   title character varying(150) NOT NULL,
@@ -9,9 +10,9 @@ CREATE TABLE calendario.eventos
   description character varying(500),
   allday boolean NOT NULL,
   CONSTRAINT pk_id_evento PRIMARY KEY (id)
-)
+);
 
-CREATE TABLE calendario.eventos_usuarios
+CREATE TABLE IF NOT EXISTS calendario.eventos_usuarios
 (
   id_evento integer NOT NULL,
   id_usuario integer NOT NULL,
@@ -22,9 +23,9 @@ CREATE TABLE calendario.eventos_usuarios
   CONSTRAINT fk_id_usuario_e FOREIGN KEY (id_usuario)
       REFERENCES seguridad.usuarios (id_usuario) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
-)
+);
 
-CREATE TABLE calendario.eventos_secciones
+CREATE TABLE IF NOT EXISTS calendario.eventos_secciones
 (
   id_evento integer NOT NULL,
   id_seccion integer NOT NULL,
@@ -35,9 +36,9 @@ CREATE TABLE calendario.eventos_secciones
   CONSTRAINT fk_id_seccion_e FOREIGN KEY (id_seccion)
       REFERENCES seguridad.secciones(id_seccion) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
-)
+);
 
-CREATE TABLE calendario.eventos_roles
+CREATE TABLE IF NOT EXISTS calendario.eventos_roles
 (
   id_evento integer NOT NULL,
   id_rol integer NOT NULL,
@@ -48,4 +49,4 @@ CREATE TABLE calendario.eventos_roles
   CONSTRAINT fk_id_rol_e FOREIGN KEY (id_rol)
       REFERENCES seguridad.roles (id_rol) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
-)
+);
