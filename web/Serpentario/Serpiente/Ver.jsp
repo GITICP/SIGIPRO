@@ -313,7 +313,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <BR>
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" ></textarea>
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -352,7 +352,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
                                       oninvalid="setCustomValidity('Este campo es requerido. ')"
                                       oninput="setCustomValidity('')"></textarea>
                         </div>
@@ -393,7 +393,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
                                       oninvalid="setCustomValidity('Este campo es requerido. ')"
                                       oninput="setCustomValidity('')"></textarea>
                         </div>
@@ -433,7 +433,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
                                       oninvalid="setCustomValidity('Este campo es requerido. ')"
                                       oninput="setCustomValidity('')"></textarea>
                         </div>
@@ -495,7 +495,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <BR>
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del paso a Colección Húmeda" class="form-control" name="observacionesCH" ></textarea>
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del paso a Colección Húmeda" class="form-control" name="observacionesCH" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -568,7 +568,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <BR>
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del paso a Catálogo de Tejidos" class="form-control" name="observacionesCT" ></textarea>
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del paso a Catálogo de Tejidos" class="form-control" name="observacionesCT" ></textarea>
                         </div>
                     </div>
                 </div>
