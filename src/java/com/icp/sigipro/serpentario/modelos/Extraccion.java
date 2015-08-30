@@ -36,6 +36,8 @@ public class Extraccion {
     private boolean isCentrifugado;
     private boolean isLiofilizacionInicio;
     private boolean isLiofilizacionFin;
+    
+    private boolean interno;
 
     public Extraccion() {
         isSerpiente=false;
@@ -55,6 +57,14 @@ public class Extraccion {
         this.usuario_registro = usuario_registro;
         this.fecha_registro = fecha_registro;
         this.lote = lote;
+    }
+
+    public boolean isInterno() {
+        return interno;
+    }
+
+    public void setInterno(boolean interno) {
+        this.interno = interno;
     }
 
     public Centrifugado getCentrifugado() {

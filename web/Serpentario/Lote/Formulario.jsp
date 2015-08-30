@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="numero_lote" disabled="true" value="${lote.getNumero_lote()}" required
+                                <input type="text" class="form-control" name="numero_lote" maxlength="10" disabled="true" value="${lote.getNumero_lote()}" required
                                        oninvalid="setCustomValidity('Este campo es requerido ')"
                                        oninput="setCustomValidity('')"> 
                             </div>
@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="numero_lote" value="${lote.getNumero_lote()}" required
+                                <input type="text" class="form-control" maxlength="10" name="numero_lote" value="${lote.getNumero_lote()}" required
                                        oninvalid="setCustomValidity('Este campo es requerido ')"
                                        oninput="setCustomValidity('')"> 
                             </div>

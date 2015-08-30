@@ -76,16 +76,28 @@ public class VenenoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement("SELECT * FROM serpentario.venenos where id_veneno = ?");
+            consulta = getConexion().prepareStatement(" SELECT especie.*,veneno.*, sum(peso_recuperado) as cantidad "
+                    + "FROM serpentario.especies as especie  "
+                    + "LEFT OUTER JOIN serpentario.extraccion as extraccion ON especie.id_especie=extraccion.id_especie "
+                    + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON liofilizacion.id_extraccion=extraccion.id_extraccion "
+                    + "LEFT OUTER JOIN serpentario.venenos as veneno ON veneno.id_especie = especie.id_especie "
+                    + "WHERE veneno.id_veneno = ?"
+                    + "GROUP BY especie.id_especie, veneno.id_veneno;");
             consulta.setInt(1, id_veneno);
             rs = consulta.executeQuery();
-            EspecieDAO especiedao = new EspecieDAO();
             if (rs.next()) {
                 veneno.setId_veneno(rs.getInt("id_veneno"));
                 veneno.setCantidad_minima(rs.getFloat("cantidad_minima"));
-                veneno.setEspecie(especiedao.obtenerEspecie(rs.getInt("id_especie")));
-                veneno.setCantidad(obtenerCantidad(veneno));
+                Especie especie = new Especie();
+                especie.setId_especie(rs.getInt("id_especie"));
+                especie.setEspecie(rs.getString("especie"));
+                especie.setGenero(rs.getString("genero"));
+                veneno.setEspecie(especie);
                 veneno.setRestriccion(rs.getBoolean("restriccion"));
+                float cantidad_original = rs.getFloat("cantidad");
+                float cantidad_entregada = this.obtenerCantidadEntregada(veneno.getEspecie().getId_especie());
+                float cantidad = (float) (cantidad_original - (cantidad_entregada * 0.001));
+                veneno.setCantidad(cantidad);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -125,15 +137,15 @@ public class VenenoDAO extends DAO {
         }
         return veneno;
     }
-
+//Necesita arreglo
     public List<Veneno> obtenerVenenos() {
         List<Veneno> resultado = new ArrayList<Veneno>();
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT especie.id_especie,especie.especie, especie.genero, veneno.*, sum(peso_recuperado) as cantidad, sum(entrega.cantidad) as cantidad_entregada "
-                    + "FROM serpentario.extraccion as extraccion "
-                    + "INNER JOIN serpentario.especies as especie ON especie.id_especie=extraccion.id_especie "
+            consulta = getConexion().prepareStatement(" SELECT especie.id_especie,especie.especie, especie.genero, veneno.*, sum(DISTINCT peso_recuperado) as cantidad, sum(entrega.cantidad) as cantidad_entregada "
+                    + "FROM serpentario.especies as especie  "
+                    + "LEFT OUTER JOIN serpentario.extraccion as extraccion ON especie.id_especie=extraccion.id_especie "
                     + "LEFT OUTER JOIN serpentario.liofilizacion as liofilizacion ON liofilizacion.id_extraccion=extraccion.id_extraccion "
                     + "LEFT OUTER JOIN serpentario.venenos as veneno ON veneno.id_especie = especie.id_especie "
                     + "LEFT OUTER JOIN serpentario.lote as lote ON lote.id_lote = extraccion.id_lote "
@@ -192,33 +204,6 @@ public class VenenoDAO extends DAO {
             cerrarConexion();
         }
         return resultado;
-    }
-
-    public float obtenerCantidad(Veneno v) {
-        float respuesta = 0;
-        PreparedStatement consulta = null;
-        ResultSet rs = null;
-        try {
-            consulta = getConexion().prepareStatement("SELECT extraccion.id_especie, sum(peso_recuperado) as cantidad "
-                    + "FROM serpentario.extraccion as extraccion INNER JOIN serpentario.especies as especie ON especie.id_especie=extraccion.id_especie "
-                    + "INNER JOIN serpentario.liofilizacion as liofilizacion ON liofilizacion.id_extraccion=extraccion.id_extraccion "
-                    + "WHERE extraccion.id_especie = ? "
-                    + "GROUP BY extraccion.id_especie;");
-            consulta.setInt(1, v.getEspecie().getId_especie());
-            rs = consulta.executeQuery();
-            float cantidad_entregada = this.obtenerCantidadEntregada(v.getEspecie().getId_especie());
-            if (rs.next()) {
-                float cantidad_original = rs.getFloat("cantidad");
-                respuesta = (float) (cantidad_original - (cantidad_entregada * 0.001));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            cerrarSilencioso(rs);
-            cerrarSilencioso(consulta);
-            cerrarConexion();
-        }
-        return respuesta;
     }
 
     public float obtenerCantidadEntregada(int id_especie) {
