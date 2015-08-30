@@ -228,7 +228,7 @@ public class SolicitudDAO extends DAO {
         return resultado;
     }
 
-    public List<SolicitudCC> obtenerSolicitudes() {
+    public List<SolicitudCC> obtenerTodasSolicitudes() {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -236,6 +236,76 @@ public class SolicitudDAO extends DAO {
             consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
                     + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + "WHERE s.estado ='Solicitado' or s.estado='Recibido'; ");
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                SolicitudCC solicitud = new SolicitudCC();
+                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
+                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                solicitud.setUsuario_solicitante(usuario);
+                solicitud.setEstado(rs.getString("estado"));
+                resultado.add(solicitud);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public List<SolicitudCC> obtenerSeccionSolicitudes(int id_usuario) {
+        List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion "
+                    + "FROM control_calidad.solicitudes as s "
+                    + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
+                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido' "
+                    + "AND u.id_seccion=u2.id_seccion");
+            consulta.setInt(1, id_usuario);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                SolicitudCC solicitud = new SolicitudCC();
+                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
+                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                solicitud.setUsuario_solicitante(usuario);
+                solicitud.setEstado(rs.getString("estado"));
+                resultado.add(solicitud);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public List<SolicitudCC> obtenerSeccionSolicitudesHistorial(int id_usuario) {
+        List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion "
+                    + "FROM control_calidad.solicitudes as s "
+                    + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
+                    + "WHERE s.estado ='Anulada' or s.estado='Completada' "
+                    + "AND u.id_seccion=u2.id_seccion");
+            consulta.setInt(1, id_usuario);
             rs = consulta.executeQuery();
             while (rs.next()) {
                 SolicitudCC solicitud = new SolicitudCC();
