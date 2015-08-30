@@ -77,7 +77,15 @@
                                                         <c:when test="${analisis.isAprobado()}">
                                                             <c:choose>
                                                                 <c:when test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
-                                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=lista&id_analisis=${analisis.getId_analisis()}">Realizar</a>
+                                                                    <c:choose>
+                                                                        <c:when test="${analisis.getCantidad_pendiente()>0}">
+                                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=lista&id_analisis=${analisis.getId_analisis()}">Realizar</a>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Analisis?accion=lista&id_analisis=${analisis.getId_analisis()}">Repetir</a>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <button class="btn btn-danger btn-sm boton-accion" disabled >Análisis Aprobado</button>

@@ -231,12 +231,25 @@ public class AnalisisDAO extends DAO {
             consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre,analisis.aprobado, count(ags.id_analisis) as cantidad "
                     + "FROM control_calidad.analisis as analisis "
                     + "LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
-                    + "WHERE ags.id_analisis_grupo_solicitud not in (SELECT id_analisis_grupo_solicitud FROM control_calidad.resultados) "
+                    + "LEFT OUTER JOIN control_calidad.grupos as grupo ON grupo.id_grupo = ags.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.solicitudes as solicitud ON grupo.id_solicitud = solicitud.id_solicitud "
+                    + "WHERE ags.id_analisis_grupo_solicitud not in (SELECT id_analisis_grupo_solicitud FROM control_calidad.resultados)  "
+                    + "AND solicitud.id_solicitud not in (SELECT id_solicitud FROM control_calidad.informes) "
                     + "GROUP BY analisis.id_analisis "
                     + "UNION "
-                    + "SELECT analisis.id_analisiS, analisis.nombre,analisis.aprobado, 0 as cantidad "
+                    + "SELECT analisis.id_analisis, analisis.nombre,analisis.aprobado, 0 as cantidad "
                     + "FROM CONTROL_CALIDAD.ANALISIS AS ANALISIS "
-                    + "WHERE analisis.id_analisis not in (SELECT ags.id_analisis FROM control_calidad.analisis as a INNER JOIN control_calidad.analisis_grupo_solicitud as ags ON a.id_analisis = ags.id_analisis);");
+                    + "LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
+                    + "LEFT OUTER JOIN control_calidad.grupos as grupo ON grupo.id_grupo = ags.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.solicitudes as solicitud ON grupo.id_solicitud = solicitud.id_solicitud "
+                    + "WHERE analisis.id_analisis not in " 
+                    + "(SELECT ags.id_analisis FROM control_calidad.analisis as a "
+                    + "INNER JOIN control_calidad.analisis_grupo_solicitud as ags ON a.id_analisis = ags.id_analisis "
+                    + "LEFT OUTER JOIN control_calidad.grupos as grupo ON grupo.id_grupo = ags.id_grupo "
+                    + "LEFT OUTER JOIN control_calidad.solicitudes as solicitud ON grupo.id_solicitud = solicitud.id_solicitud "
+                    + "WHERE ags.id_analisis_grupo_solicitud not in (SELECT id_analisis_grupo_solicitud FROM control_calidad.resultados) "
+                    + "AND solicitud.id_solicitud not in (SELECT id_solicitud FROM control_calidad.informes) ) "
+                    + "GROUP BY analisis.id_analisis;");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 Analisis analisis = new Analisis();
@@ -302,6 +315,7 @@ public class AnalisisDAO extends DAO {
                     + "LEFT OUTER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
                     + "LEFT OUTER JOIN control_calidad.solicitudes as s ON s.id_solicitud = g.id_solicitud "
                     + "WHERE ags.id_analisis = ? "
+                    + "AND s.id_solicitud not in (SELECT id_solicitud FROM control_calidad.informes) "
                     + "ORDER BY ags.id_analisis_grupo_solicitud;");
 
             consulta.setInt(1, id_analisis);
@@ -350,32 +364,31 @@ public class AnalisisDAO extends DAO {
                     m.setTipo_muestra(tm);
 
                     g.getGrupos_muestras().add(m);
-                    
+
                 } while (rs.next());
             }
             ags.setGrupo(g);
             resultado.add(ags);
-            
+
             consulta = getConexion().prepareStatement("SELECT ags.id_analisis_grupo_solicitud, r.id_resultado "
                     + "FROM control_calidad.analisis_grupo_solicitud ags "
                     + "INNER JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud "
                     + "WHERE ags.id_analisis = ? "
                     + "ORDER BY ags.id_analisis_grupo_solicitud;");
             consulta.setInt(1, id_analisis);
-            
+
             rs = consulta.executeQuery();
-            
-            while (rs.next()){
+
+            while (rs.next()) {
                 Resultado r = new Resultado();
                 r.setId_resultado(rs.getInt("id_resultado"));
-                for (AnalisisGrupoSolicitud a : resultado){
-                    if (a.getId_analisis_grupo_solicitud() == rs.getInt("id_analisis_grupo_solicitud")){
+                for (AnalisisGrupoSolicitud a : resultado) {
+                    if (a.getId_analisis_grupo_solicitud() == rs.getInt("id_analisis_grupo_solicitud")) {
                         a.agregarResultado(r);
                     }
                 }
             }
-            
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
