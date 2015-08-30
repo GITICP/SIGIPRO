@@ -20,7 +20,7 @@
                     <ul class="breadcrumb">
                         <li>Control de Calidad</li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Solicitud?">Solicitudes de Control de Calidad</a>
+                            <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=historial">Historial de Solicitudes de Control de Calidad</a>
                         </li>
                     </ul>
                 </div>
@@ -36,11 +36,10 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-list-alt"></i> Solicitudes de Control de Calidad </h3>
+                            <h3><i class="fa fa-list-alt"></i>Historial de Solicitudes de Control de Calidad </h3>
                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 550)}">
                                 <div class="btn-group widget-header-toolbar">
-                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Solicitud?accion=historial">Historial</a>
-                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Solicitud?accion=agregar">Agregar Solicitud</a>
+                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Solicitud?">Volver</a>
                                 </div>
                             </c:if>
                         </div>

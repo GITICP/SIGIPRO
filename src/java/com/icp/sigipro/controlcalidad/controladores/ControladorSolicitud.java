@@ -51,6 +51,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
+            add("historial");
             add("ver");
             add("agregar");
             add("editar");
@@ -95,6 +96,18 @@ public class ControladorSolicitud extends SIGIPROServlet {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Solicitud/index.jsp";
         List<SolicitudCC> solicitudes = dao.obtenerSolicitudes();
+        request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
+        request.setAttribute("boolanular", this.verificarAnularSolicitud(request));
+        request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
+
+        request.setAttribute("listaSolicitudes", solicitudes);
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Solicitud/Historial.jsp";
+        List<SolicitudCC> solicitudes = dao.obtenerSolicitudesHistorial();
         request.setAttribute("boolrecibir", this.verificarRecibirSolicitud(request));
         request.setAttribute("boolanular", this.verificarAnularSolicitud(request));
         request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));

@@ -234,7 +234,39 @@ public class SolicitudDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
-                    + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante ; ");
+                    + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido'; ");
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                SolicitudCC solicitud = new SolicitudCC();
+                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
+                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                solicitud.setUsuario_solicitante(usuario);
+                solicitud.setEstado(rs.getString("estado"));
+                resultado.add(solicitud);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public List<SolicitudCC> obtenerSolicitudesHistorial() {
+        List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
+                    + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + "WHERE s.estado ='Anulada' or s.estado='Completada'; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 SolicitudCC solicitud = new SolicitudCC();
