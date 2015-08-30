@@ -88,11 +88,12 @@ public class InformeDAO extends DAO {
             }
 
             update_solicitud = getConexion().prepareStatement(
-                    " UPDATE control_calidad.solicitudes SET estado = ? WHERE id_solicitud = ? "
+                    " UPDATE control_calidad.solicitudes SET estado = ?, fecha_cierre=? WHERE id_solicitud = ? "
             );
 
             update_solicitud.setString(1, "Completada");
-            update_solicitud.setInt(2, informe.getSolicitud().getId_solicitud());
+            update_solicitud.setTimestamp(2, informe.getSolicitud().getFecha_cierre());
+            update_solicitud.setInt(3, informe.getSolicitud().getId_solicitud());
 
             resultado_solicitud = update_solicitud.executeUpdate() == 1;
 

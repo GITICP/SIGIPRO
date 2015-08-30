@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,11 +33,12 @@ public class SolicitudCC extends Asociable {
     private String numero_solicitud;
     private Usuario usuario_solicitante;
     private Usuario usuario_recibido;
-    private Date fecha_solicitud;
-    private Date fecha_recibido;
+    private Timestamp fecha_solicitud;
+    private Timestamp fecha_recibido;
     private String estado;
     private String observaciones;
     private Informe informe;
+    private Timestamp fecha_cierre;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private transient ControlSolicitud control_solicitud;
@@ -51,6 +53,30 @@ public class SolicitudCC extends Asociable {
 
     public int getId_solicitud() {
         return id_solicitud;
+    }
+
+    public Timestamp getFecha_solicitud() {
+        return fecha_solicitud;
+    }
+
+    public void setFecha_solicitud(Timestamp fecha_solicitud) {
+        this.fecha_solicitud = fecha_solicitud;
+    }
+
+    public Timestamp getFecha_recibido() {
+        return fecha_recibido;
+    }
+
+    public void setFecha_recibido(Timestamp fecha_recibido) {
+        this.fecha_recibido = fecha_recibido;
+    }
+
+    public Timestamp getFecha_cierre() {
+        return fecha_cierre;
+    }
+
+    public void setFecha_cierre(Timestamp fecha_cierre) {
+        this.fecha_cierre = fecha_cierre;
     }
 
     public void setId_solicitud(int id_solicitud) {
@@ -78,14 +104,6 @@ public class SolicitudCC extends Asociable {
         this.informe = informe;
     }
 
-    public Date getFecha_solicitud() {
-        return fecha_solicitud;
-    }
-
-    public void setFecha_solicitud(Date fecha_solicitud) {
-        this.fecha_solicitud = fecha_solicitud;
-    }
-
     public String getNumero_solicitud() {
         return numero_solicitud;
     }
@@ -110,14 +128,6 @@ public class SolicitudCC extends Asociable {
         this.usuario_recibido = usuario_recibido;
     }
 
-    public Date getFecha_recibido() {
-        return fecha_recibido;
-    }
-
-    public void setFecha_recibido(Date fecha_recibido) {
-        this.fecha_recibido = fecha_recibido;
-    }
-
     public String getEstado() {
         return estado;
     }
@@ -132,6 +142,10 @@ public class SolicitudCC extends Asociable {
 
     public String getFecha_recibidoAsString() {
         return formatearFecha(fecha_recibido);
+    }
+    
+    public String getFecha_cierreAsString() {
+        return formatearFecha(fecha_cierre);
     }
 
     public List<AnalisisGrupoSolicitud> getAnalisis_solicitud() {
@@ -283,7 +297,7 @@ public class SolicitudCC extends Asociable {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_usuario_solicitante", this.getUsuario_solicitante().getId_usuario());
+            //JSON.put("id_usuario_solicitante", this.getUsuario_solicitante().getId_usuario());
             //JSON.put("id_usuario_recibido", this.getUsuario_recibido().getId_usuario());
 
         } catch (Exception e) {
@@ -292,9 +306,9 @@ public class SolicitudCC extends Asociable {
         return JSON.toString();
     }
 
-    private String formatearFecha(Date fecha) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(fecha);
+    private String formatearFecha(Timestamp fecha) {
+        String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(fecha);
+        return date;
     }
 
     public List<PreparedStatement> obtenerConsultasInsertarAsociacionInforme(Connection conexion) throws SQLException {

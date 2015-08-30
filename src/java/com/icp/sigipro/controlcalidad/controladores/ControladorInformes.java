@@ -17,7 +17,9 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -139,6 +141,8 @@ public class ControladorInformes extends SIGIPROServlet
         
         Informe informe = new Informe();
         SolicitudCC s = new SolicitudCC();
+        Timestamp fecha_cierre = new Timestamp(new Date().getTime());
+        s.setFecha_cierre(fecha_cierre);
         s.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));
         informe.setSolicitud(s);
         Usuario u = new Usuario();

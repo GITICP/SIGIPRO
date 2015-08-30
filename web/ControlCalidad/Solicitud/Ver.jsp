@@ -75,6 +75,9 @@
                                     <tr><td> <strong>Usuario Receptor: </strong> <td>${solicitud.getUsuario_recibido().getNombre_completo()} </td></tr>
                                     <tr><td> <strong>Fecha de Recepción: </strong> <td>${solicitud.getFecha_recibidoAsString()} </td></tr>
                                 </c:if>
+                                <c:if test="${solicitud.getFecha_cierre()!=null}">
+                                    <tr><td> <strong>Fecha de Cierre: </strong> <td>${solicitud.getFecha_cierreAsString()} </td></tr>
+                                </c:if>
                                 <tr><td> <strong>Estado: </strong> <td>${solicitud.getEstado()} </td></tr>
                                 <c:if test="${!solicitud.getObservaciones().equals('')}">
                                     <tr><td> <strong>Observaciones: </strong> <td>${solicitud.getObservaciones()} </td></tr>

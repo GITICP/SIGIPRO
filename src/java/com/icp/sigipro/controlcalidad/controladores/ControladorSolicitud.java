@@ -21,6 +21,7 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -235,7 +236,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
                 SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
-                java.sql.Date fecha_recibido = new java.sql.Date(new Date().getTime());
+                Timestamp fecha_recibido = new java.sql.Timestamp(new Date().getTime());
                 solicitud.setFecha_recibido(fecha_recibido);
 
                 resultado = dao.recibirSolicitud(solicitud);
@@ -383,7 +384,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
         s.setNumero_solicitud(request.getParameter("numero_solicitud"));
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
-        java.sql.Date fecha_solicitud = new java.sql.Date(new Date().getTime());
+        Timestamp fecha_solicitud = new java.sql.Timestamp(new Date().getTime());
         s.setFecha_solicitud(fecha_solicitud);
 
         String lista = request.getParameter("listaMuestras");

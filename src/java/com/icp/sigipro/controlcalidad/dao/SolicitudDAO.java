@@ -39,22 +39,22 @@ public class SolicitudDAO extends DAO {
                     + " VALUES (?,?,?,?) RETURNING id_solicitud");
             consulta.setString(1, solicitud.getNumero_solicitud());
             consulta.setInt(2, solicitud.getUsuario_solicitante().getId_usuario());
-            consulta.setDate(3, solicitud.getFecha_solicitud());
+            consulta.setTimestamp(3, solicitud.getFecha_solicitud());
             consulta.setString(4, solicitud.getEstado());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
             }
-            
+
             List<PreparedStatement> consultas_asociacion = solicitud.obtenerConsultasInsertarAsociacion(getConexion());
-            
-            for(PreparedStatement ps : consultas_asociacion) {
+
+            for (PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();
                 cerrarSilencioso(ps);
             }
-            
+
             resultado = true;
-            
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -187,16 +187,16 @@ public class SolicitudDAO extends DAO {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
-            
+
             List<PreparedStatement> consultas_asociacion = solicitud.obtenerConsultasInsertarAsociacion(getConexion());
-            
-            for(PreparedStatement ps : consultas_asociacion) {
+
+            for (PreparedStatement ps : consultas_asociacion) {
                 ps.executeBatch();
                 cerrarSilencioso(ps);
             }
-            
+
             resultado = true;
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -214,7 +214,7 @@ public class SolicitudDAO extends DAO {
                     + "SET id_usuario_recibido=?, fecha_recibido=?, estado='Recibido' "
                     + "WHERE id_solicitud = ?; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
-            consulta.setDate(2, solicitud.getFecha_recibido());
+            consulta.setTimestamp(2, solicitud.getFecha_recibido());
             consulta.setInt(3, solicitud.getId_solicitud());
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -241,7 +241,7 @@ public class SolicitudDAO extends DAO {
                 SolicitudCC solicitud = new SolicitudCC();
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
                 solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
                 Usuario usuario = new Usuario();
                 usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
@@ -258,7 +258,7 @@ public class SolicitudDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public List<SolicitudCC> obtenerSeccionSolicitudes(int id_usuario) {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
         PreparedStatement consulta = null;
@@ -276,7 +276,7 @@ public class SolicitudDAO extends DAO {
                 SolicitudCC solicitud = new SolicitudCC();
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
                 solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
                 Usuario usuario = new Usuario();
                 usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
@@ -293,7 +293,7 @@ public class SolicitudDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public List<SolicitudCC> obtenerSeccionSolicitudesHistorial(int id_usuario) {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
         PreparedStatement consulta = null;
@@ -311,7 +311,7 @@ public class SolicitudDAO extends DAO {
                 SolicitudCC solicitud = new SolicitudCC();
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
                 solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
                 Usuario usuario = new Usuario();
                 usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
@@ -328,7 +328,7 @@ public class SolicitudDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public List<SolicitudCC> obtenerSolicitudesHistorial() {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
         PreparedStatement consulta = null;
@@ -342,7 +342,7 @@ public class SolicitudDAO extends DAO {
                 SolicitudCC solicitud = new SolicitudCC();
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
                 solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
                 Usuario usuario = new Usuario();
                 usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
@@ -409,6 +409,7 @@ public class SolicitudDAO extends DAO {
                     + "        solicitud.tabla_referencia, "
                     + "        solicitud.id_referenciado, "
                     + "        solicitud.informacion_referencia_adicional, "
+                    + "solicitud.fecha_cierre, "
                     + "        i.id_informe, "
                     + "        i.realizado_por,"
                     + "        i.fecha as fecha_informe, "
@@ -430,8 +431,9 @@ public class SolicitudDAO extends DAO {
                 Usuario usuario_recibido = usuariodao.obtenerUsuario(rs.getInt("id_usuario_recibido"));
                 resultado.setUsuario_recibido(usuario_recibido);
                 resultado.setUsuario_solicitante(usuario_solicitante);
-                resultado.setFecha_recibido(rs.getDate("fecha_recibido"));
-                resultado.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                resultado.setFecha_recibido(rs.getTimestamp("fecha_recibido"));
+                resultado.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                resultado.setFecha_cierre(rs.getTimestamp("fecha_cierre"));
                 resultado.setNumero_solicitud(rs.getString("numero_solicitud"));
                 resultado.setObservaciones(rs.getString("observaciones"));
                 int id_informe = rs.getInt("id_informe");
@@ -517,7 +519,7 @@ public class SolicitudDAO extends DAO {
             if (resultado.getInforme() != null) {
                 String ids = this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud);
                 consulta = getConexion().prepareStatement(
-                          " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, "
+                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, "
                         + " CASE WHEN r.id_resultado IN (  "
                         + " 				SELECT r.id_resultado "
                         + " 				FROM control_calidad.resultados_informes ri  "
@@ -532,11 +534,11 @@ public class SolicitudDAO extends DAO {
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
-                
+
                 consulta.setInt(1, resultado.getInforme().getId_informe());
             } else {
                 consulta = getConexion().prepareStatement(
-                          " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
+                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
@@ -574,24 +576,24 @@ public class SolicitudDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public SolicitudCC obtenerAsociacion(SolicitudCC solicitud) throws SQLException {
-        
+
         PreparedStatement consulta = null;
         ResultSet rs = null;
-        
+
         try {
-            
+
             consulta = getConexion().prepareStatement(
-                      " SELECT s.tipo_referencia, s.tabla_referencia, s.id_referenciado, s.informacion_referencia_adicional "
+                    " SELECT s.tipo_referencia, s.tabla_referencia, s.id_referenciado, s.informacion_referencia_adicional "
                     + " FROM control_calidad.solicitudes s "
                     + " WHERE id_solicitud = ? "
             );
-            
+
             consulta.setInt(1, solicitud.getId_solicitud());
-            
+
             rs = consulta.executeQuery();
-            
+
             if (rs.next()) {
                 String tipo = rs.getString("tipo_referencia");
                 if (tipo != null) {
@@ -599,14 +601,14 @@ public class SolicitudDAO extends DAO {
                     solicitud.asociar(rs);
                 }
             }
-            
+
         } catch (SQLException sql_ex) {
-            
+
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
         }
-        
+
         return solicitud;
     }
 
