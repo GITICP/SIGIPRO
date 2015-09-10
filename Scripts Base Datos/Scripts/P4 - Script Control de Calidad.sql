@@ -139,14 +139,15 @@ CREATE TABLE control_calidad.solicitudes (
     id_solicitud serial  NOT NULL,
     numero_solicitud varchar(20)  NOT NULL,
     id_usuario_solicitante int  NOT NULL,
-    fecha_solicitud date NOT NULL,
+    fecha_solicitud timestamp without time zone NOT NULL,
     id_usuario_recibido int,
-    fecha_recibido date,
+    fecha_recibido timestamp without time zone,
     observaciones varchar(500),
     estado varchar(50),
     tipo_referencia character varying(100),
     tabla_referencia character varying(100),
     id_referenciado integer,
+    fecha_cierre timestamp without time zone,
     informacion_referencia_adicional character varying(100),
     CONSTRAINT solicitudes_pk PRIMARY KEY (id_solicitud)
 );
