@@ -1,7 +1,8 @@
 ﻿-- Schema: calendario
-CREATE SCHEMA IF NOT EXISTS calendario;
+DROP SCHEMA IF EXISTS calendario CASCADE;
+CREATE SCHEMA calendario;
 
-CREATE TABLE IF NOT EXISTS calendario.eventos
+CREATE TABLE calendario.eventos
 (
   id serial NOT NULL,
   title character varying(150) NOT NULL,
@@ -12,7 +13,7 @@ CREATE TABLE IF NOT EXISTS calendario.eventos
   CONSTRAINT pk_id_evento PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS calendario.eventos_usuarios
+CREATE TABLE calendario.eventos_usuarios
 (
   id_evento integer NOT NULL,
   id_usuario integer NOT NULL,
@@ -25,7 +26,7 @@ CREATE TABLE IF NOT EXISTS calendario.eventos_usuarios
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS calendario.eventos_secciones
+CREATE TABLE calendario.eventos_secciones
 (
   id_evento integer NOT NULL,
   id_seccion integer NOT NULL,
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS calendario.eventos_secciones
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS calendario.eventos_roles
+CREATE TABLE calendario.eventos_roles
 (
   id_evento integer NOT NULL,
   id_rol integer NOT NULL,
