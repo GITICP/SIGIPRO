@@ -78,7 +78,7 @@
                                    onchange="setCustomValidity('')">
                         </c:when>
                         <c:otherwise>
-                            <input type="text" value="${serpiente.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                            <input type="text" value="${serpiente.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                    oninvalid="setCustomValidity('Este campo es requerido ')"
                                    onchange="setCustomValidity('')">
                         </c:otherwise>
