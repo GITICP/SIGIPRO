@@ -13,13 +13,14 @@
         <div class="col-md-6">
             <input hidden="true" name="id_lote" value="${lote.getId_lote()}">
             <input hidden="true" name="accion" value="${accion}">
+            <input hidden="true" name="listaExtracciones" id="listaExtracciones" value="${listaExtracciones}">
             <label for="lote" class="control-label"> *Identificación del Lote</label>
             <c:choose>
                 <c:when test="${lote.getId_lote()!=0}">
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="numero_lote" disabled="true" value="${lote.getNumero_lote()}" required
+                                <input type="text" class="form-control" name="numero_lote" maxlength="10" disabled="true" value="${lote.getNumero_lote()}" required
                                        oninvalid="setCustomValidity('Este campo es requerido ')"
                                        oninput="setCustomValidity('')"> 
                             </div>
@@ -30,7 +31,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="numero_lote" value="${lote.getNumero_lote()}" required
+                                <input type="text" class="form-control" maxlength="10" name="numero_lote" value="${lote.getNumero_lote()}" required
                                        oninvalid="setCustomValidity('Este campo es requerido ')"
                                        oninput="setCustomValidity('')"> 
                             </div>
@@ -45,59 +46,69 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <c:choose>
-                            <c:when test='${lote.getEspecie()==null}'>
-                                <select id="seleccionEspecie" class="select2" name="especie"
-                                        style='background-color: #fff;' required
-                                        oninvalid="setCustomValidity('Este campo es requerido')"
-                                        onchange="setCustomValidity('')">
-                                    <option value=''></option>
-                                    <c:forEach items="${especies}" var="especie">
-                                        <c:choose>
-                                            <c:when test="${especie.getId_especie() == serpiente.getEspecie().getId_especie()}" >
-                                                <option value=${especie.getId_especie()} selected> ${especie.getGenero_especie()}</option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <option value=${especie.getId_especie()}>${especie.getGenero_especie()}</option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </select>
-                            </c:when>
-                            <c:otherwise>
-                                <input hidden="true" name='especie' value="${lote.getEspecie().getId_especie()}">
-                                <select id="seleccionEspecie" class="select2" name="selectEspecie" disabled="true"
-                                        style='background-color: #fff;'>
-                                    <option value='${lote.getEspecie().getId_especie()}' selected>${lote.getEspecie().getGenero_especie()}</option>
-                                </select>
-                            </c:otherwise>
-                        </c:choose>
+                        <input hidden="true" name='especie' value="${lote.getEspecie().getId_especie()}">
+                        <select id="seleccionEspecie" class="select2" name="selectEspecie" disabled="true"
+                                style='background-color: #fff;'>
+                            <option value='${lote.getEspecie().getId_especie()}' selected>${lote.getEspecie().getGenero_especie()}</option>
+                        </select>
+
                     </div>
                 </div>
             </div>
         </div>
-        <c:choose>
-            <c:when test="${accion == 'Editar'}">
-                <div class="col-md-12">
-                    <label for="especie" class="control-label"> *Extracciones</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <select id="seleccionExtraccion" class="select2" name="extracciones" multiple="multiple"
-                                        style='background-color: #fff;' required
-                                        oninvalid="setCustomValidity('Este campo es requerido')"
-                                        onchange="setCustomValidity('')">
-                                    <option value=''></option>
-                                    <c:forEach items="${extracciones}" var="extraccion">
-                                        <option value=${extraccion.getId_extraccion()}>${extraccion.getNumero_extraccion()}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+    </div>
+    <div class="row">
+        <c:if test="${lote.isInterno()}">
+            <div class="col-md-6">
+                <c:if test="${accion.equals('Agregar')}">
+                    <c:set var="checkedExtracción" value="true" />
+                    <input id="extraccion" type="checkbox" name="extraccion" value="true" style="width:20px; height:20px;" checked="true" ${checkedExtraccion}><span>  ¿Proviene de extracciones internas?</span>
+                </c:if>
+                <br>
+                <label for="especie" class="control-label"> *Extracciones</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <select id="seleccionExtraccion" class="select2" name="extracciones" multiple="multiple"
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${extracciones}" var="extraccion">
+                                    <option value=${extraccion.getId_extraccion()}>${extraccion.getNumero_extraccion()}</option>
+                                </c:forEach>
+                            </select>
                         </div>
                     </div>
                 </div>
-            </c:when>
-        </c:choose>
+            </div>
+        </c:if>
+        <c:if test="${accion.equals('Agregar')}">
+            <div class="col-md-6">
+                <label for="genero" class="control-label">*Identificador de Control</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="numero_control" type="text" maxlength="45" placeholder="Ex: COMPRA-ICP-01-2015" disabled class="form-control" name="numero_control" value="${extraccion.getNumero_extraccion()}"
+                                   required
+                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                   oninput="setCustomValidity('')" > 
+                        </div>
+                    </div>
+                </div>
+                <label for="peso_recuperado" class="control-label">*Cantidad adquirida (G)</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input name="peso_comprado" id="peso_comprado" type="number" step="any" min="0" disabled placeholder="Número de G comprados" class="form-control" value="" required
+                                   oninvalid="setCustomValidity('El peso comprado debe ser un número mayor a 0. ')"
+                                   oninput="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </c:if>
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
 

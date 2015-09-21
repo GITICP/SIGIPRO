@@ -119,6 +119,12 @@
                                         <c:set var="contienePermisoReversarDeceso" value="true" />
                                     </c:if>
                                 </c:forEach>
+                                <c:set var="contienePermisoEditarEvento" value="false" />
+                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                    <c:if test="${permiso == 1 || permiso == 318}">
+                                        <c:set var="contienePermisoEditarEvento" value="true" />
+                                    </c:if>
+                                </c:forEach>
                                 -->
 
                             </div>
@@ -237,6 +243,9 @@
                                                                 <a class="btn btn-danger btn-sm boton-accion rDeceso-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalReversarDeceso">Reversar</a>
                                                             </c:if>
                                                         </c:if>
+                                                        <c:if test="${contienePermisoEditarEvento}">
+                                                            <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editarevento&id_evento=${eventos.getId_evento()}">Editar</a>
+                                                        </c:if>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -313,7 +322,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <BR>
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" ></textarea>
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -352,7 +361,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
                                       oninvalid="setCustomValidity('Este campo es requerido. ')"
                                       oninput="setCustomValidity('')"></textarea>
                         </div>
@@ -371,7 +380,7 @@
     </jsp:attribute>
 
 </t:modal>
-        
+
 <t:modal idModal="modalPasoCV" titulo="Paso a Colección Viva">
     <jsp:attribute name="form">
         <div class="widget-content">
@@ -393,7 +402,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
                                       oninvalid="setCustomValidity('Este campo es requerido. ')"
                                       oninput="setCustomValidity('')"></textarea>
                         </div>
@@ -433,7 +442,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del Evento" class="form-control" name="observacionesModal" required
                                       oninvalid="setCustomValidity('Este campo es requerido. ')"
                                       oninput="setCustomValidity('')"></textarea>
                         </div>
@@ -495,7 +504,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <BR>
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del paso a Colección Húmeda" class="form-control" name="observacionesCH" ></textarea>
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del paso a Colección Húmeda" class="form-control" name="observacionesCH" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -568,7 +577,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <BR>
-                            <textarea rows="5" cols="50" maxlength="200" placeholder="Observaciones del paso a Catálogo de Tejidos" class="form-control" name="observacionesCT" ></textarea>
+                            <textarea rows="5" cols="50" maxlength="2000" placeholder="Observaciones del paso a Catálogo de Tejidos" class="form-control" name="observacionesCT" ></textarea>
                         </div>
                     </div>
                 </div>

@@ -21,8 +21,17 @@ public class Lote {
     private List<Extraccion> extracciones;
     private float cantidad_actual;
     private float cantidad_original;
+    private boolean interno;
 
     public Lote() {
+    }
+
+    public boolean isInterno() {
+        return interno;
+    }
+
+    public void setInterno(boolean interno) {
+        this.interno = interno;
     }
 
     public Lote(int id_lote, Veneno veneno) {
