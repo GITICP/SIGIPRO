@@ -175,7 +175,7 @@ public class SerpienteDAO extends DAO
             //------------------------------------------------------------
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE serpentario.serpientes "
-                    + " SET localidad_origen=?, colectada=?,  sexo=?, talla_cabeza=?, talla_cola=?,peso=?"
+                    + " SET localidad_origen=?, colectada=?,  sexo=?, talla_cabeza=?, talla_cola=?,peso=?, id_especie=?, fecha_ingreso=? "
                     + " WHERE id_serpiente=?; "
             );
 
@@ -202,7 +202,9 @@ public class SerpienteDAO extends DAO
             consulta.setFloat(4, s.getTalla_cabeza());
             consulta.setFloat(5, s.getTalla_cola());
             consulta.setFloat(6, s.getPeso());
-            consulta.setInt(7, s.getId_serpiente());
+            consulta.setInt(7, s.getEspecie().getId_especie());
+            consulta.setDate(8, s.getFecha_ingreso());
+            consulta.setInt(9, s.getId_serpiente());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

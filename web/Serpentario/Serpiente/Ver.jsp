@@ -119,6 +119,12 @@
                                         <c:set var="contienePermisoReversarDeceso" value="true" />
                                     </c:if>
                                 </c:forEach>
+                                <c:set var="contienePermisoEditarEvento" value="false" />
+                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                    <c:if test="${permiso == 1 || permiso == 318}">
+                                        <c:set var="contienePermisoEditarEvento" value="true" />
+                                    </c:if>
+                                </c:forEach>
                                 -->
 
                             </div>
@@ -236,6 +242,9 @@
                                                             <c:if test="${contienePermisoReversarDeceso}">
                                                                 <a class="btn btn-danger btn-sm boton-accion rDeceso-Modal" data-id='${serpiente.getId_serpiente()}' data-toggle="modal" data-target="#modalReversarDeceso">Reversar</a>
                                                             </c:if>
+                                                        </c:if>
+                                                        <c:if test="${contienePermisoEditarEvento}">
+                                                            <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editarevento&id_evento=${eventos.getId_evento()}">Editar</a>
                                                         </c:if>
                                                     </td>
                                                 </tr>
@@ -371,7 +380,7 @@
     </jsp:attribute>
 
 </t:modal>
-        
+
 <t:modal idModal="modalPasoCV" titulo="Paso a Colección Viva">
     <jsp:attribute name="form">
         <div class="widget-content">
