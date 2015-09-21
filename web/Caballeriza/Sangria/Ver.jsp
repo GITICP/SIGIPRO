@@ -48,10 +48,23 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table>
+                            <table class="tabla-ver">
                                 <tr><td> <strong>Identificador:</strong></td> <td>${sangria.getId_sangria_especial()} </td></tr>
                                 <tr><td> <strong>Responsable:</strong></td> <td>${sangria.getResponsable().getNombre_completo()} </td></tr>
-                                <tr><td> <strong>Número de Informe de Control de Calidad:</strong></td> <td>${sangria.getNum_inf_cc()} </td></tr>
+                                <tr><td> <strong>Número de Informe de CC Día 1:</strong></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${sangria.getInforme_dia1() == null}">
+                                                Sin solicitar.
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/SIGIPRO/ControlCalidad/Informe?accion=ver&id_solicitud=${sangria.getInforme_dia1().getSolicitud().getId_solicitud()}">${sangria.getInforme_dia1().getSolicitud().getNumero_solicitud()}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr><td> <strong>Número de Informe de CC Día 2:</strong></td><td>${(sangria.getInforme_dia2() == null) ? "Sin solicitar." : sangria.getInforme_dia2().getSolicitud().getNumero_solicitud()}</td></tr>
+                                <tr><td> <strong>Número de Informe de CC Día 3:</strong></td><td>${(sangria.getInforme_dia3() == null) ? "Sin solicitar." : sangria.getInforme_dia3().getSolicitud().getNumero_solicitud()}</td></tr>
                                 <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>
                                 <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} </td></tr>
                                 <tr><td> <strong>Peso de Plasma Total:</strong></td> <td>${sangria.getPeso_plasma_total()} </td></tr>
@@ -137,11 +150,11 @@
                                                         <c:when test="${sangria_caballo.isParticipo_dia1()}">
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()}</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia1() == 0) ? sin_datos : sangria_caballo.getPlasma_dia1()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia1() == 0)    ? sin_datos : sangria_caballo.getLal_dia1()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia1() == null) ? "Pendiente" : sangria_caballo.getLal_dia1()}</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia1() == null || sangria_caballo.isParticipo_dia1() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia1() == null || sangria_caballo.isParticipo_dia1() == null) ? "Extracción Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -149,11 +162,11 @@
                                                         <c:when test="${sangria_caballo.isParticipo_dia2()}">
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia2() == 0) ? sin_datos : sangria_caballo.getSangre_dia2()}</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia2() == 0) ? sin_datos : sangria_caballo.getPlasma_dia2()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia2() == 0)    ? sin_datos : sangria_caballo.getLal_dia2()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia2() == null) ? "Pendiente" : sangria_caballo.getLal_dia2()}</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia2() == null || sangria_caballo.isParticipo_dia2() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia2() == null || sangria_caballo.isParticipo_dia2() == null) ? "Extracción Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -161,11 +174,11 @@
                                                         <c:when test="${sangria_caballo.isParticipo_dia3()}">
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia3() == 0) ? sin_datos : sangria_caballo.getSangre_dia3()}</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia3() == 0) ? sin_datos : sangria_caballo.getPlasma_dia3()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia3() == 0)    ? sin_datos : sangria_caballo.getLal_dia3()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia3() == null) ? "Pendiente" : sangria_caballo.getLal_dia3()}</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td></td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia3() == null || sangria_caballo.isParticipo_dia3() == null) ? "Pendiente" : "No participó"}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getFecha_dia3() == null || sangria_caballo.isParticipo_dia3() == null) ? "Extracción Pendiente" : "No participó"}</td>
                                                             <td></td>
                                                         </c:otherwise>
                                                     </c:choose>

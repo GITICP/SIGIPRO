@@ -70,13 +70,13 @@
                 <input hidden="true" id='id_extraccion' name='id_extraccion' value="">
                 <strong><div id="numero_extraccion" class="control-label"></div></strong>
                 <label for="label" class="control-label">¿Está seguro que desea registrar el inicio de la Liofilización?</label>
-        
-        <div class="form-group">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Iniciar Liofilización</button>            </div>
-        </div>
-        </form>
+
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Iniciar Liofilización</button>            </div>
+                </div>
+            </form>
         </div>
 
     </jsp:attribute>

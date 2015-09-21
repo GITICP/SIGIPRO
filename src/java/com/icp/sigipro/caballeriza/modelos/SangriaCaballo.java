@@ -18,15 +18,15 @@ public class SangriaCaballo
     private Boolean participo_dia1;
     private float sangre_dia1;
     private float plasma_dia1;
-    private float lal_dia1;
+    private String lal_dia1;
     private Boolean participo_dia2;
     private float sangre_dia2;
     private float plasma_dia2;
-    private float lal_dia2;
+    private String lal_dia2;
     private Boolean participo_dia3;
     private float sangre_dia3;
     private float plasma_dia3;
-    private float lal_dia3;
+    private String lal_dia3;
     
     private String observaciones_dia1; //Esta línea fue un cambio
     private String observaciones_dia2; //Esta línea fue un cambio
@@ -87,12 +87,12 @@ public class SangriaCaballo
         this.plasma_dia1 = plasma_dia1;
     }
 
-    public float getLal_dia1()
+    public String getLal_dia1()
     {
         return lal_dia1;
     }
 
-    public void setLal_dia1(float lal_dia1)
+    public void setLal_dia1(String lal_dia1)
     {
         this.lal_dia1 = lal_dia1;
     }
@@ -127,12 +127,12 @@ public class SangriaCaballo
         this.plasma_dia2 = plasma_dia2;
     }
 
-    public float getLal_dia2()
+    public String getLal_dia2()
     {
         return lal_dia2;
     }
 
-    public void setLal_dia2(float lal_dia2)
+    public void setLal_dia2(String lal_dia2)
     {
         this.lal_dia2 = lal_dia2;
     }
@@ -167,12 +167,12 @@ public class SangriaCaballo
         this.plasma_dia3 = plasma_dia3;
     }
 
-    public float getLal_dia3()
+    public String getLal_dia3()
     {
         return lal_dia3;
     }
 
-    public void setLal_dia3(float lal_dia3)
+    public void setLal_dia3(String lal_dia3)
     {
         this.lal_dia3 = lal_dia3;
     }
@@ -226,8 +226,8 @@ public class SangriaCaballo
         return resultado;
     }
     
-    public float getLal(int dia) {
-        float resultado = 0;
+    public String getLal(int dia) {
+        String resultado = "0";
         if (dia == 1) {
             resultado = lal_dia1;
         } else if (dia == 2) {
@@ -258,7 +258,7 @@ public class SangriaCaballo
         }
     }
     
-    public void setLal(int dia, float valor) {
+    public void setLal(int dia, String valor) {
         if (dia == 1) {
             lal_dia1 = valor;
         } else if (dia == 2) {
@@ -271,11 +271,11 @@ public class SangriaCaballo
     public float sumatoria(int dia) {
         float resultado = 0;
         if (dia == 1) {
-            resultado = lal_dia1 + plasma_dia1 + sangre_dia1;
+            resultado = plasma_dia1 + sangre_dia1;
         } else if (dia == 2) {
-            resultado = lal_dia2 + plasma_dia2 + sangre_dia2;
+            resultado = plasma_dia2 + sangre_dia2;
         } else if (dia == 3) {
-            resultado = lal_dia3 + plasma_dia3 + sangre_dia3;
+            resultado = plasma_dia3 + sangre_dia3;
         }
         return resultado;
     }
