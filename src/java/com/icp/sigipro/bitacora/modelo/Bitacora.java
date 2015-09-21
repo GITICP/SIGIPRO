@@ -10,7 +10,7 @@ import org.json.JSONObject;
  * @author ld.conejo
  */
 public class Bitacora {
-    
+
     private int id_bitacora;
     private Timestamp fecha_accion;
     private String nombre_usuario;
@@ -19,16 +19,16 @@ public class Bitacora {
     private String tabla;
     //Almacena el estado despues de la accion, se almacenará en forma de JSON
     private String estado;
-    
+
     //Variables de Tablas
-    public static final String TABLA_SANGRIA_PRUEBA= "CABALLERIZA.SANGRIAS_PRUEBAS";
-    public static final String TABLA_SANGRIA= "CABALLERIZA.SANGRIAS";
-    public static final String TABLA_INOCULO= "CABALLERIZA.INOCULOS";
-    public static final String TABLA_TIPO_EVENTO= "CABALLERIZA.TIPOS_EVENTOS";
-    public static final String TABLA_GRUPO_DE_CABALLOS= "CABALLERIZA.GRUPOS_DE_CABALLOS";
-    public static final String TABLA_CABALLO= "CABALLERIZA.CABALLOS";
-    public static final String TABLA_EVENTO_CLINICO= "CABALLERIZA.EVENTOS_CLINICOS";
-    public static final String TABLA_EVENTOSCLINICOSCABALLOS= "CABALLERIZA.EVENTOS_CLINICOS_CABALLOS";
+    public static final String TABLA_SANGRIA_PRUEBA = "CABALLERIZA.SANGRIAS_PRUEBAS";
+    public static final String TABLA_SANGRIA = "CABALLERIZA.SANGRIAS";
+    public static final String TABLA_INOCULO = "CABALLERIZA.INOCULOS";
+    public static final String TABLA_TIPO_EVENTO = "CABALLERIZA.TIPOS_EVENTOS";
+    public static final String TABLA_GRUPO_DE_CABALLOS = "CABALLERIZA.GRUPOS_DE_CABALLOS";
+    public static final String TABLA_CABALLO = "CABALLERIZA.CABALLOS";
+    public static final String TABLA_EVENTO_CLINICO = "CABALLERIZA.EVENTOS_CLINICOS";
+    public static final String TABLA_EVENTOSCLINICOSCABALLOS = "CABALLERIZA.EVENTOS_CLINICOS_CABALLOS";
     public static final String TABLA_ACTIVOFIJO = "BODEGA.ACTIVOS_FIJOS";
     public static final String TABLA_CATALOGOEXTERNO = "BODEGA.CATALOGO_EXTERNO";
     public static final String TABLA_CATALOGOEXTERNOINTERNO = "BODEGA.CATALOGOS_INTERNOS_EXTERNOS";
@@ -67,9 +67,22 @@ public class Bitacora {
     public static final String TABLA_CATALOGOTEJIDO = "SERPENTARIO.CATALOGO_TEJIDO";
     public static final String TABLA_COLECCIONHUMEDA = "SERPENTARIO.COLECCION_HUMEDA";
     public static final String TABLA_RESTRICCION = "SERPENTARIO.RESTRICCION";
-    
-    
-    
+    public static final String TABLA_TIPOEQUIPO = "CONTROL_CALIDAD.TIPOS_EQUIPOS";
+    public static final String TABLA_TIPOREACTIVO = "CONTROL_CALIDAD.TIPOS_REACTIVOS";
+    public static final String TABLA_EQUIPO = "CONTROL_CALIDAD.EQUIPOS";
+    public static final String TABLA_REACTIVOCC = "CONTROL_CALIDAD.REACTIVOS";
+    public static final String TABLA_ANALISIS = "CONTROL_CALIDAD.ANALISIS";
+    public static final String TABLA_ANALISISGRUPOSOLICITUD = "CONTROL_CALIDAD.ANALISIS_GRUPO_SOLICITUD";
+    public static final String TABLA_CERTIFICADOEQUIPO = "CONTROL_CALIDAD.CERTIFICADOS_EQUIPOS";
+    public static final String TABLA_CERTIFICADOREACTIVO = "CONTROL_CALIDAD.CERTIFICADOS_REACTIVOS";
+    public static final String TABLA_GRUPO = "CONTROL_CALIDAD.GRUPOS";
+    public static final String TABLA_MUESTRA = "CONTROL_CALIDAD.MUESTRAS";
+    public static final String TABLA_RESULTADO = "CONTROL_CALIDAD.RESULTADOS";
+    public static final String TABLA_SOLICITUDCC = "CONTROL_CALIDAD.SOLICITUDES";
+    public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
+    public static final String TABLA_INFORME = "CONTROL_CALIDAD.INFORMES";
+    public static final String TABLA_PATRON = "CONTROL_CALIDAD.PATRONES";
+
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";
     public static final String ACCION_EDITAR = "EDITAR";
@@ -82,15 +95,13 @@ public class Bitacora {
     public static final String ACCION_REPONER = "REPONER";
     public static final String ACCION_ANULAR = "ANULAR";
     public static final String ACCION_REGISTRAR_EXTRACCION = "REGISTRAR EXTRACCIÓN";
+    public static final String ACCION_RECIBIR = "RECIBIR";
 
-   
-    
-    
-    public Bitacora(){
-   
+    public Bitacora() {
+
     }
-    
-    public Bitacora(int id_bitacora, Timestamp fecha_accion, String nombre_usuario, String ip, String accion, String tabla,String estado){
+
+    public Bitacora(int id_bitacora, Timestamp fecha_accion, String nombre_usuario, String ip, String accion, String tabla, String estado) {
         this.id_bitacora = id_bitacora;
         this.fecha_accion = fecha_accion;
         this.nombre_usuario = nombre_usuario;
@@ -98,9 +109,10 @@ public class Bitacora {
         this.accion = accion;
         this.tabla = tabla;
         this.estado = estado;
-        
+
     }
-    public Bitacora(String nombre_usuario, String ip, String accion, String tabla, String estado){
+
+    public Bitacora(String nombre_usuario, String ip, String accion, String tabla, String estado) {
         Timestamp date = new Timestamp(new Date().getTime());
         this.fecha_accion = date;
         this.nombre_usuario = nombre_usuario;
@@ -108,89 +120,88 @@ public class Bitacora {
         this.accion = accion;
         this.tabla = tabla;
         this.estado = estado;
-        
+
     }
-    
-    public int getId_bitacora(){
+
+    public int getId_bitacora() {
         return this.id_bitacora;
     }
-    
-    public JSONObject getEstado_parse(){
-        try{
+
+    public JSONObject getEstado_parse() {
+        try {
             return new JSONObject(this.estado);
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
-        
+
     }
-    
-    public String getFecha_accion_parse(){
-          String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(this.fecha_accion); 
-          return date;
+
+    public String getFecha_accion_parse() {
+        String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(this.fecha_accion);
+        return date;
     }
-    
-    public Timestamp getFecha_accion(){
+
+    public Timestamp getFecha_accion() {
         return this.fecha_accion;
     }
-    
-    public String getAccion(){
+
+    public String getAccion() {
         return this.accion;
     }
-    
-    public String getEstado(){
+
+    public String getEstado() {
         return this.estado;
     }
-    
-    public String getIp(){
+
+    public String getIp() {
         return this.ip;
     }
-    
-    public String getNombre_usuario(){
+
+    public String getNombre_usuario() {
         return this.nombre_usuario;
     }
-    
-    public int getId_objeto(){
+
+    public int getId_objeto() {
         int id_objeto = 0;
-        try{
+        try {
             JSONObject json = new JSONObject(this.estado);
             id_objeto = json.getInt("id_objeto");
-        }catch (Exception e){
-            
+        } catch (Exception e) {
+
         }
         return id_objeto;
     }
-    
-    public String getTabla(){
+
+    public String getTabla() {
         return this.tabla;
     }
-    
-    public void setId_bitacora(int id_bitacora){
+
+    public void setId_bitacora(int id_bitacora) {
         this.id_bitacora = id_bitacora;
     }
-    
-    public void setFecha_accion(Timestamp fecha_accion){
+
+    public void setFecha_accion(Timestamp fecha_accion) {
         this.fecha_accion = fecha_accion;
     }
-    
-    public void setAccion(String accion){
+
+    public void setAccion(String accion) {
         this.accion = accion;
     }
-    
-    public void setEstado(String estado){
+
+    public void setEstado(String estado) {
         this.estado = estado;
     }
-    
-    public void setIp(String ip){
+
+    public void setIp(String ip) {
         this.ip = ip;
     }
-    
-    public void setNombre_usuario(String nombre_usuario){
+
+    public void setNombre_usuario(String nombre_usuario) {
         this.nombre_usuario = nombre_usuario;
     }
-    
-    public void setTabla(String tabla){
+
+    public void setTabla(String tabla) {
         this.tabla = tabla;
     }
-        
 
 }

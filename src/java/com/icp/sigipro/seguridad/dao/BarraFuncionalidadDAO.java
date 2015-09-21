@@ -46,7 +46,7 @@ public class BarraFuncionalidadDAO
                                         + "   Where id_usuario = ? "
                                         + "     And "
                                         + "     ( "
-                                        + "       fecha_activacion = fecha_desactivacion "
+                                        + "       (fecha_activacion = fecha_desactivacion and fecha_activacion <= current_date) "
                                         + "       or "
                                         + "       (fecha_activacion < current_date and fecha_desactivacion > current_date) "
                                         + "     ) "
