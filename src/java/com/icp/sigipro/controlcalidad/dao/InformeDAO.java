@@ -23,7 +23,7 @@ public class InformeDAO extends DAO {
     public InformeDAO() {
     }
 
-    public Informe ingresarInforme(Informe informe) throws SIGIPROException {
+    public Informe ingresarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
 
         boolean resultado = false;
         boolean resultado_informe = false;
@@ -80,7 +80,7 @@ public class InformeDAO extends DAO {
 
             List<PreparedStatement> consultas_asociacion = informe.getSolicitud().obtenerConsultasInsertarAsociacion(getConexion());
             List<PreparedStatement> consultas_asociacion_informe = informe.getSolicitud().obtenerConsultasInsertarAsociacionInforme(getConexion());
-            
+
             consultas_asociacion.addAll(consultas_asociacion_informe);
 
             for (PreparedStatement ps : consultas_asociacion) {
@@ -91,7 +91,12 @@ public class InformeDAO extends DAO {
                     " UPDATE control_calidad.solicitudes SET estado = ?, fecha_cierre=? WHERE id_solicitud = ? "
             );
 
-            update_solicitud.setString(1, "Completada");
+            if (cerrar) {
+                update_solicitud.setString(1, "Completada");
+            } else {
+                update_solicitud.setString(1, "Resultado Parcial");
+            }
+
             update_solicitud.setTimestamp(2, informe.getSolicitud().getFecha_cierre());
             update_solicitud.setInt(3, informe.getSolicitud().getId_solicitud());
 
@@ -123,11 +128,12 @@ public class InformeDAO extends DAO {
         return informe;
     }
 
-    public Informe editarInforme(Informe informe) throws SIGIPROException {
+    public Informe editarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
 
         boolean resultado = false;
         boolean resultado_informe = false;
         boolean resultado_resultados = false;
+        boolean resultado_solicitud = false;
 
         PreparedStatement consulta_update_informe = null;
         int rs_informe;
@@ -153,11 +159,11 @@ public class InformeDAO extends DAO {
             } else {
                 throw new SQLException("Informe no se ingresó correctamente.");
             }
-            
+
             consulta_eliminacion_resultados = getConexion().prepareStatement(
                     " DELETE FROM control_calidad.resultados_informes WHERE id_informe = ?"
             );
-            
+
             consulta_eliminacion_resultados.setInt(1, informe.getId_informe());
             consulta_eliminacion_resultados.executeUpdate();
 
@@ -190,7 +196,21 @@ public class InformeDAO extends DAO {
                 ps.executeBatch();
             }
 
-            resultado = resultado_resultados && resultado_informe;
+            if (cerrar) {
+                update_solicitud = getConexion().prepareStatement(
+                        " UPDATE control_calidad.solicitudes SET estado = ?, fecha_cierre=? WHERE id_solicitud = ? "
+                );
+
+                update_solicitud.setString(1, "Completada");
+                update_solicitud.setTimestamp(2, informe.getSolicitud().getFecha_cierre());
+                update_solicitud.setInt(3, informe.getSolicitud().getId_solicitud());
+
+                resultado_solicitud = update_solicitud.executeUpdate() == 1;
+            } else {
+                resultado_solicitud = true;
+            }
+
+            resultado = resultado_resultados && resultado_informe && resultado_solicitud;
 
         } catch (SQLException ex) {
             ex.printStackTrace();

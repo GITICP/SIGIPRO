@@ -120,126 +120,124 @@
                                     </table>
                                 </div>
                             </div>
-                            <c:choose>
-                                <c:when test="${solicitud.getEstado().equals('Recibido') && helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
-                                    <div class="widget widget-table">
-                                        <div class="widget-header">
-                                            <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
-                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 556)}">
-                                                <div class="btn-group widget-header-toolbar">                                    
-                                                    <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
-                                                </div>
-                                            </c:if>
-                                        </div>
-
-                                        <div class="widget-content">
-                                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
-                                                <!-- Columnas -->
-                                                <thead> 
-                                                    <tr>
-                                                        <th>Identificadores de Muestras (Tipo)</th>
-                                                        <th>Análisis Solicitado</th>
-                                                        <th>Acción</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
-                                                        <tr id='${ags.getId_analisis_grupo_solicitud()}'>
-                                                            <td>
-                                                                <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                    ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
-                                                                </c:forEach>
-                                                            </td>
-                                                            <td>
-                                                                ${ags.getAnalisis().getNombre()}
-                                                            </td>
-                                                            <td>
-                                                                <c:choose>
-                                                                    <c:when test="${solicitud.getEstado().equals('Recibido')}">
-                                                                        <c:choose>
-                                                                            <c:when test="${ags.getResultados() == null}">
-                                                                                <a class="btn btn-primary btn-sm boton-accion" 
-                                                                                   href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
-                                                                                    Realizar
-                                                                                </a>
-                                                                            </c:when>
-                                                                            <c:otherwise>
-                                                                                <a class="btn btn-primary btn-sm boton-accion" 
-                                                                                   href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
-                                                                                    Repetir
-                                                                                </a>
-                                                                                <a class="btn btn-primary btn-sm boton-accion" 
-                                                                                   href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
-                                                                                    Ver Resultados (${ags.getResultados().size()})
-                                                                                </a>
-                                                                            </c:otherwise>
-                                                                        </c:choose>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        Solicitud aún no ha sido recibida.
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </td>
-                                                        </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                            <c:if test="${(solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')) && helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
+                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 556)}">
+                                            <div class="btn-group widget-header-toolbar">                                    
+                                                <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
+                                            </div>
+                                        </c:if>
                                     </div>
-                                </c:when>
-                                <c:when test="${solicitud.getEstado().equals('Completada') && helper_permisos.validarPermiso(sessionScope.listaPermisos, 559)}">
-                                    <div class="widget widget-table">
-                                        <div class="widget-header">
-                                            <h3><i class="fa fa-gears"></i> Informe de la Solicitud ${solicitud.getNumero_solicitud()} </h3>
-                                        </div>
-                                        <div class="widget-content">
-                                            <table class="tabla-ver">
-                                                <tr><td> <strong>Realizado Por: </strong> <td>${solicitud.getInforme().getUsuario().getNombre_completo()} </td></tr>
-                                                <tr><td> <strong>Fecha de Informe:</strong> <td>${solicitud.getInforme().getFechaAsString()} </td></tr>
-                                            </table>
-                                            <br>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="widget widget-table">
-                                                <div class="widget-header">
-                                                    <h3><i class="fa fa-check-square-o"></i> Resultados</h3>
-                                                </div>
 
-                                                <div class="widget-content">
-                                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
-                                                        <!-- Columnas -->
-                                                        <thead> 
-                                                            <tr>
-                                                                <th>Identificadores de Muestras (Tipo)</th>
-                                                                <th>Análisis Solicitado</th>
-                                                                <th>Resultado</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
-                                                                <tr id='${resultado.getId_resultado()}'>
-                                                                    <td>
-                                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
-                                                                        </c:forEach>
-                                                                    </td>
-                                                                    <td>
-                                                                        ${resultado.getAgs().getAnalisis().getNombre()}
-                                                                    </td>
-                                                                    <td>
-                                                                        ${resultado.getResultado()}
-                                                                    </td>
-                                                                </tr>
+                                    <div class="widget-content">
+                                        <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                            <!-- Columnas -->
+                                            <thead> 
+                                                <tr>
+                                                    <th>Identificadores de Muestras (Tipo)</th>
+                                                    <th>Análisis Solicitado</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
+                                                    <tr id='${ags.getId_analisis_grupo_solicitud()}'>
+                                                        <td>
+                                                            <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
                                                             </c:forEach>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                        </td>
+                                                        <td>
+                                                            ${ags.getAnalisis().getNombre()}
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')}">
+                                                                    <c:choose>
+                                                                        <c:when test="${ags.getResultados() == null}">
+                                                                            <a class="btn btn-primary btn-sm boton-accion" 
+                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                                Realizar
+                                                                            </a>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <a class="btn btn-primary btn-sm boton-accion" 
+                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                                Repetir
+                                                                            </a>
+                                                                            <a class="btn btn-primary btn-sm boton-accion" 
+                                                                               href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
+                                                                                Ver Resultados (${ags.getResultados().size()})
+                                                                            </a>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    Solicitud aún no ha sido recibida.
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </c:if>
+                            <c:if test="${(solicitud.getEstado().equals('Completada') || solicitud.getEstado().equals('Resultado Parcial')) && helper_permisos.validarPermiso(sessionScope.listaPermisos, 559)}">
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-gears"></i> Informe ${(!solicitud.getEstado().equals('Resultado Parcial')) ? "" : "Parcial"} de la Solicitud ${solicitud.getNumero_solicitud()} </h3>
+                                    </div>
+                                    <div class="widget-content">
+                                        <table class="tabla-ver">
+                                            <tr><td> <strong>Realizado Por: </strong> <td>${solicitud.getInforme().getUsuario().getNombre_completo()} </td></tr>
+                                            <tr><td> <strong>Fecha de Informe:</strong> <td>${solicitud.getInforme().getFechaAsString()} </td></tr>
+                                        </table>
+                                        <br>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="widget widget-table">
+                                            <div class="widget-header">
+                                                <h3><i class="fa fa-check-square-o"></i> Resultados</h3>
+                                            </div>
+
+                                            <div class="widget-content">
+                                                <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                                    <!-- Columnas -->
+                                                    <thead> 
+                                                        <tr>
+                                                            <th>Identificadores de Muestras (Tipo)</th>
+                                                            <th>Análisis Solicitado</th>
+                                                            <th>Resultado</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
+                                                            <tr id='${resultado.getId_resultado()}'>
+                                                                <td>
+                                                                    <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                        ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                    </c:forEach>
+                                                                </td>
+                                                                <td>
+                                                                    ${resultado.getAgs().getAnalisis().getNombre()}
+                                                                </td>
+                                                                <td>
+                                                                    ${resultado.getResultado()}
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
-                                        <!-- END WIDGET TICKET TABLE -->
                                     </div>
-                                </c:when>
-                            </c:choose>
+                                    <!-- END WIDGET TICKET TABLE -->
+                                </div>
+                            </c:if>
                         </div>
                         <!-- END WIDGET TICKET TABLE -->
                     </div>

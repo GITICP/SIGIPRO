@@ -86,6 +86,21 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <c:if test="${solicitud.getEstado() != 'Completada'}">
+                                        <div class="col-md-6">
+                                            <label for="cerrar" class="control-label">Estado</label>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div class="input-group">
+                                                        <label class="fancy-checkbox">
+                                                            <input type="checkbox" value="true" name="cerrar">
+                                                            <span>Cerrar Solicitud</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
                                 </div>                                
                                 <c:choose>
                                     <c:when test="${solicitud.tieneTipoAsociacion()}">
@@ -266,7 +281,7 @@
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
-                    
+
                 </c:if>
             </select>
 

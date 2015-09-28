@@ -235,7 +235,7 @@ public class SolicitudDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
                     + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
-                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido'; ");
+                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial'; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 SolicitudCC solicitud = new SolicitudCC();
@@ -268,7 +268,7 @@ public class SolicitudDAO extends DAO {
                     + "FROM control_calidad.solicitudes as s "
                     + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
-                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido' "
+                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial' "
                     + "AND u.id_seccion=u2.id_seccion");
             consulta.setInt(1, id_usuario);
             rs = consulta.executeQuery();
