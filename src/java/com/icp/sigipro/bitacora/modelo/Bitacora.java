@@ -96,6 +96,7 @@ public class Bitacora {
     public static final String ACCION_ANULAR = "ANULAR";
     public static final String ACCION_REGISTRAR_EXTRACCION = "REGISTRAR EXTRACCIÓN";
     public static final String ACCION_RECIBIR = "RECIBIR";
+    public static final String ACCION_RETIRAR = "RETIRAR";
 
     public Bitacora() {
 

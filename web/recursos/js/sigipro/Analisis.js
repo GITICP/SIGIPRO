@@ -7,6 +7,11 @@ $(document).on("click", ".aprobar-Modal", function () {
     $("#id_analisis_aprobar").val(id_analisis);
 });
 
+$(document).on("click", ".retirar-Modal", function () {
+    var id_analisis = $(this).data('id');
+    $("#id_analisis_retirar").val(id_analisis);
+});
+
 function agregarCampo() {
     fila = "<div class=\"widget widget-table campo_" + contador + "\" id=\"" + contador + "\">";
     fila += "<input hidden=\"true\" id=\"elemento_" + contador + "\" value=\"campo\">";
