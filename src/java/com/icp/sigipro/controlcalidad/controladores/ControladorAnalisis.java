@@ -121,6 +121,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             add("agregareditar");
             add("realizar");
             add("aprobar");
+            add("retirar");
         }
     };
 
@@ -396,13 +397,41 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultado = dao.aprobarAnalisis(id_analisis);
             if (resultado) {
                 Analisis a = dao.obtenerAnalisis(id_analisis);
-                request.setAttribute("mensaje", helper.mensajeDeExito("Analisis aprobado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis aprobado correctamente"));
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
                 this.getIndex(request, response);
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Analisis no pudo ser aprobado. Inténtelo de nuevo."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Análisisno pudo ser aprobado. Inténtelo de nuevo."));
+                this.getIndex(request, response);
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Usuario o contraseña incorrectos."));
+            this.getIndex(request, response);
+        }
+    }
+    
+    protected void postRetirar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resultado = false;
+
+        String usuario = request.getParameter("usuario_aprobacion");
+        String contrasenna = request.getParameter("passw");
+
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis_aprobar"));
+
+        boolean autenticacion = usuariodao.autorizarRecibo(usuario, contrasenna);
+        if (autenticacion) {
+            resultado = dao.retirarAnalisis(id_analisis);
+            if (resultado) {
+                Analisis a = dao.obtenerAnalisis(id_analisis);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis retirado correctamente"));
+                //Funcion que genera la bitacora
+                bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_RETIRAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
+                //*----------------------------*
+                this.getIndex(request, response);
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Análisis no pudo ser retirado. Inténtelo de nuevo."));
                 this.getIndex(request, response);
             }
         } else {

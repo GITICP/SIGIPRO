@@ -24,13 +24,17 @@ public class Analisis {
     private String estructuraString;
     private String machote;
     private Usuario encargado;
-    private boolean aprobado;
+    private String estado;
 
     private List<TipoEquipo> tipos_equipos_analisis;
     private List<TipoReactivo> tipos_reactivos_analisis;
     private List<TipoMuestra> tipos_muestras_analisis;
 
     private boolean isTipoMuestra;
+    
+    public static final String APROBADO = "Aprobado";
+    public static final String PENDIENTE = "Pendiente";
+    public static final String RETIRADO = "Retirado";
 
     public Analisis() {
     }
@@ -86,12 +90,12 @@ public class Analisis {
         return respuesta;
     }
 
-    public boolean isAprobado() {
-        return aprobado;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setAprobado(boolean aprobado) {
-        this.aprobado = aprobado;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public void setIsTipoMuestra(boolean isTipoMuestra) {

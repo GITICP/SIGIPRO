@@ -33,7 +33,7 @@ public class AnalisisDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis (nombre,estructura,machote,aprobado) "
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.analisis (nombre,estructura,machote,estado) "
                     + " VALUES (?,?,?,?) RETURNING id_analisis");
 
             SQLXML xmlVal = getConexion().createSQLXML();
@@ -41,7 +41,7 @@ public class AnalisisDAO extends DAO {
             consulta.setString(1, analisis.getNombre());
             consulta.setSQLXML(2, xmlVal);
             consulta.setString(3, analisis.getMachote());
-            consulta.setBoolean(4, analisis.isAprobado());
+            consulta.setString(4, Analisis.PENDIENTE);
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -207,9 +207,31 @@ public class AnalisisDAO extends DAO {
         try {
 
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
-                    + "SET aprobado=? "
+                    + "SET estado=? "
                     + "WHERE id_analisis = ?; ");
-            consulta.setBoolean(1, true);
+            consulta.setString(1, Analisis.APROBADO);
+            consulta.setInt(2, id_analisis);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean retirarAnalisis(int id_analisis) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+
+            consulta = getConexion().prepareStatement(" UPDATE control_calidad.analisis "
+                    + "SET estado=? "
+                    + "WHERE id_analisis = ?; ");
+            consulta.setString(1, Analisis.RETIRADO);
             consulta.setInt(2, id_analisis);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -228,7 +250,7 @@ public class AnalisisDAO extends DAO {
         ResultSet rs = null;
         List<Analisis> resultado = new ArrayList<Analisis>();
         try {
-            consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre,analisis.aprobado, count(ags.id_analisis) as cantidad "
+            consulta = getConexion().prepareStatement("SELECT analisis.id_analisis, analisis.nombre,analisis.estado, count(ags.id_analisis) as cantidad "
                     + "FROM control_calidad.analisis as analisis "
                     + "LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
                     + "LEFT OUTER JOIN control_calidad.grupos as grupo ON grupo.id_grupo = ags.id_grupo "
@@ -237,7 +259,7 @@ public class AnalisisDAO extends DAO {
                     + "AND solicitud.id_solicitud not in (SELECT id_solicitud FROM control_calidad.informes) "
                     + "GROUP BY analisis.id_analisis "
                     + "UNION "
-                    + "SELECT analisis.id_analisis, analisis.nombre,analisis.aprobado, 0 as cantidad "
+                    + "SELECT analisis.id_analisis, analisis.nombre,analisis.estado, 0 as cantidad "
                     + "FROM CONTROL_CALIDAD.ANALISIS AS ANALISIS "
                     + "LEFT OUTER JOIN control_calidad.analisis_grupo_solicitud as ags ON analisis.id_analisis = ags.id_analisis "
                     + "LEFT OUTER JOIN control_calidad.grupos as grupo ON grupo.id_grupo = ags.id_grupo "
@@ -256,7 +278,7 @@ public class AnalisisDAO extends DAO {
                 analisis.setId_analisis(rs.getInt("id_analisis"));
                 analisis.setNombre(rs.getString("nombre"));
                 analisis.setCantidad_pendiente(rs.getInt("cantidad"));
-                analisis.setAprobado(rs.getBoolean("aprobado"));
+                analisis.setEstado(rs.getString("estado"));
                 resultado.add(analisis);
             }
         } catch (Exception ex) {
@@ -274,7 +296,7 @@ public class AnalisisDAO extends DAO {
         ResultSet rs = null;
         Analisis resultado = new Analisis();
         try {
-            consulta = getConexion().prepareStatement(" SELECT analisis.id_analisis, analisis.nombre, analisis.estructura, analisis.machote, analisis.aprobado "
+            consulta = getConexion().prepareStatement(" SELECT analisis.id_analisis, analisis.nombre, analisis.estructura, analisis.machote, analisis.estado "
                     + "FROM control_calidad.analisis as analisis "
                     + "WHERE analisis.id_analisis = ?; ");
             consulta.setInt(1, id_analisis);
@@ -284,7 +306,7 @@ public class AnalisisDAO extends DAO {
                 resultado.setMachote(rs.getString("machote"));
                 resultado.setEstructura(rs.getSQLXML("estructura"));
                 resultado.setNombre(rs.getString("nombre"));
-                resultado.setAprobado(rs.getBoolean("aprobado"));
+                resultado.setEstado(rs.getString("estado"));
             }
             resultado.setTipos_equipos_analisis(this.obtenerTipoEquipos(id_analisis));
             resultado.setTipos_reactivos_analisis(this.obtenerTipoReactivos(id_analisis));
