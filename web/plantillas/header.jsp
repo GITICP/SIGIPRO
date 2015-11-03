@@ -59,27 +59,30 @@
     request.setAttribute("nombre_usr", nombre_usr);
     request.setAttribute("nD", nD);
 %>
-            <li class="notification-item" onclick="${nD.marcarNotificacionesLeidas(nombre_usr)}">
-                    <a href="#" id="campana_notificaciones" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-bell"></i>
-                        <span id="numero_notificaciones" class="count">
-                            <c:if test="${numeroNotificacionesNoLeidas > 0}">
-                                <c:out value="${numeroNotificacionesNoLeidas}"/>
-                            </c:if>
-                        </span>
-                    </a>
-                <ul class="dropdown-menu" role="menu">
-                        <!-- Iteración sobre las notificaciones -->
-                        <c:forEach items="${notificaciones}" var="notificacion">
-                            <li>
-                                <a href="/SIGIPRO${notificacion.getRedirect()}">
-                                    <i class="${notificacion.getIcono()}"></i>
-                                    <span class="text">${notificacion.getDescripcion()}</span>
-                                    <span class="timestamp"> - ${notificacion.getDateTime()}</span>
-                                </a>
-                            </li>
-                        </c:forEach>
-                    
+            <li class="notification-item">  
+                <a href="#" id="campana_notificaciones" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-bell" ></i>
+                    <span id="numero_notificaciones" class="count">
+                        <c:if test="${numeroNotificacionesNoLeidas > 0}">
+                            <c:out value="${numeroNotificacionesNoLeidas}"/>
+                        </c:if>
+                    </span>
+                    <span class="circle"></span>
+                </a>
+                <ul class="dropdown-menu" id="notificaciones-dropdown" role="menu">
+                    <!-- Iteración sobre las notificaciones -->
+                    <li class="notification-header">
+                        <em id="notificaciones-header-dropdown">Notificaciones.</em>
+                    </li>
+                    <c:forEach items="${notificaciones}" var="notificacion">
+                        <li>
+                            <a href="/SIGIPRO${notificacion.getRedirect()}">
+                                <i class="${notificacion.getIcono()}"></i>
+                                <span class="text">${notificacion.getDescripcion()}</span>
+                                <span class="timestamp"> - ${notificacion.getDateTime()}</span>
+                            </a>
+                        </li>
+                    </c:forEach>
                 </ul>
             </li>
             
@@ -92,7 +95,5 @@
         </ul>
     </div><!--/.nav-collapse -->
 </div>
-                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-                <script src="/SIGIPRO/recursos/js/sigipro/notificaciones.js"></script>
                 
                 

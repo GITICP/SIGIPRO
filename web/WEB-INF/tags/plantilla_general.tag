@@ -38,6 +38,7 @@
         <link href="${direccion_contexto}/recursos/css/sigipro/jquery.smartmenus.bootstrap.css" rel="stylesheet" type="text/css" media="screen">
         <link href="${direccion_contexto}/recursos/css/sigipro-icons.css" rel="stylesheet" type="text/css"/>
         <link href="${direccion_contexto}/recursos/css/sigipro-icons-fix.css" rel="stylesheet" type="text/css"/>
+        <link href="${direccion_contexto}/recursos/css/libnotify.css" rel="stylesheet" type="text/css"/>
         
         <jsp:invoke fragment="css" />
 
@@ -59,9 +60,9 @@
         <div class="wrapper">
 
             <!-- Header -->
-            <jsp:include page="/plantillas/header.jsp" />
+            <jsp:include page="/plantillas/header.jsp" /> 
             <!-- /Header -->
-
+            
             <!-- Main -->
             <jsp:invoke fragment="contenido" />
             <!-- /Main -->
@@ -106,6 +107,11 @@
         <script src="${direccion_contexto}/recursos/js/sigipro/Serpiente.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/Extraccion.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/Veneno.js"></script>
+        
+        <!-- Scripts para uso de notificaciones -->
+        <script src="${direccion_contexto}/recursos/js/notify/notify.js"></script>
+        <script src="${direccion_contexto}/recursos/js/notify/notify.min.js"></script>
+        <script src="${direccion_contexto}/recursos/js/sigipro/notificaciones.js"></script>
         
         <script>
             $(document).ready(function () {

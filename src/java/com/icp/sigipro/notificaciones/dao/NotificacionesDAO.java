@@ -66,7 +66,7 @@ public class NotificacionesDAO extends DAO {
     public List<Notificacion> obtenerNotificaciones(String nombre_usr) throws SIGIPROException
     {
         List<Notificacion> resultado = new ArrayList<Notificacion>();
-        if (nombre_usr.equals("")){
+        if ((nombre_usr == null) || (nombre_usr.equals(""))){
             return resultado;
         }
         try {
