@@ -50,7 +50,7 @@
                 <div class="tab-pane activity" id="notificaciones-tab">
                     <ul class="list-unstyled activity-list" id="notificaciones-totales">
                         <c:forEach items="${notificaciones}" var="notificacion">
-                            <li onclick="marcarNotificacionesleidas()">
+                            <li onclick="marcarNotificacionesleidas(${notificacion.getId()})">
                                 <i class="${notificacion.getIcono()} activity-icon pull-left"></i>
                                 <p>
                                     <a href="/SIGIPRO${notificacion.getRedirect()}">

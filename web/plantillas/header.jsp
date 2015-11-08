@@ -79,7 +79,7 @@
                     <c:set var="cantidadNotificacionesCargadas" value="${0}" />
                     <c:forEach items="${notificaciones}" var="notificacion">
                         <c:if test="${cantidadNotificacionesCargadas < 10}">
-                            <li onclick="marcarNotificacionesleidas()">
+                            <li onclick="marcarNotificacionesleidas(${notificacion.getId()})">
                                 <a href="/SIGIPRO${notificacion.getRedirect()}">
                                     <i class="${notificacion.getIcono()}" width="30" height="30"></i>
                                         <c:choose>

@@ -74,16 +74,17 @@ public class ControladorMarcarNotificaciones extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession sesion = request.getSession();
-        String nombre_usr = (String) sesion.getAttribute("usuario");
+        String id = request.getParameter("id");
+        System.out.println("CONTROLADOR id = "+id);
         NotificacionesDAO nDAO = new NotificacionesDAO();
         try {
-            nDAO.marcarNotificacionesLeidas(nombre_usr);
+            nDAO.marcarNotificacionesLeidas(id);
         } catch (SIGIPROException ex) {
             Logger.getLogger(ControladorObtenerNuevasNotificaciones.class.getName()).log(Level.SEVERE, null, ex);
         }
         response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
         response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
-        response.getWriter().write("Se marcaron las notificaciones como leídas.");
+        response.getWriter().write("Se marco la notificacion como leida.");
     }
 
     /**

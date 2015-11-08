@@ -84,6 +84,7 @@ public class ControladorObtenerNotificaciones extends HttpServlet {
             sb.append("<notificaciones>");
             for (Notificacion n : resultado){
                 sb.append("<notificacion>");
+                sb.append("<id>").append(n.getId()).append("</id>");
                 sb.append("<redirect>").append(n.getRedirect()).append("</redirect>");
                 sb.append("<icono>").append(n.getIcono()).append("</icono>");
                 sb.append("<descripcion>").append(n.getDescripcion()).append("</descripcion>");

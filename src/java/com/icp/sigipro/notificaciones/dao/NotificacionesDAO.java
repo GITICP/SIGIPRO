@@ -22,13 +22,11 @@ public class NotificacionesDAO extends DAO {
     
     public NotificacionesDAO(){    }
 
-    public void marcarNotificacionesLeidas(String nombre_usr) throws SIGIPROException{
+    public void marcarNotificacionesLeidas(String id) throws SIGIPROException{
         try {
-            UsuarioDAO usrDAO = new UsuarioDAO();
-            int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
             
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" UPDATE calendario.notificaciones SET leida = true WHERE id_usuario = " + id_usuario);
+            consulta = getConexion().prepareStatement(" UPDATE calendario.notificaciones SET leida = true WHERE id_notificacion = "+id);
             consulta.executeUpdate();
             consulta.close();
             cerrarConexion();

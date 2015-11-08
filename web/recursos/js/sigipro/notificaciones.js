@@ -64,13 +64,15 @@ function recargarNotificacionesNuevasEnTotales(notificacionesACargar){
             var datetime;
             var redirect;
             var notificacion;
+            var idn;
             for (var i = 0; i < notificacionesACargar - numeroNotificacionesNuevasActualesEnTotales; i++) {   
                 notificacion = notificaciones[i];
+                idn = notificacion.getElementsByTagName('id')[0].firstChild.nodeValue;
                 descripcion = notificacion.getElementsByTagName('descripcion')[0].firstChild.nodeValue;
                 icono = notificacion.getElementsByTagName('icono')[0].firstChild.nodeValue;
                 datetime = notificacion.getElementsByTagName('datetime')[0].firstChild.nodeValue;
                 redirect = notificacion.getElementsByTagName('redirect')[0].firstChild.nodeValue;
-                nuevaNotificacionATotales(redirect, icono, descripcion, datetime);
+                nuevaNotificacionATotales(idn, redirect, icono, descripcion, datetime);
             }
         }
     };
@@ -94,6 +96,7 @@ function recargarNotificaciones(notificacionesACargar){
             var datetime;
             var redirect;
             var notificacion;
+            var idn;
             //Quitar las últimas notificaciones anteriores 
             $("#notificaciones-dropdown li").last().remove(); //remover el footer
             $("#notificaciones-dropdown li").first().remove(); //remover el header
@@ -104,11 +107,12 @@ function recargarNotificaciones(notificacionesACargar){
             }
             for (var i = 0; i < notificacionesACargar - numeroNotificacionesNuevasActuales; i++) {   
                 notificacion = notificaciones[i];
+                idn = notificacion.getElementsByTagName('id')[0].firstChild.nodeValue;
                 descripcion = notificacion.getElementsByTagName('descripcion')[0].firstChild.nodeValue;
                 icono = notificacion.getElementsByTagName('icono')[0].firstChild.nodeValue;
                 datetime = notificacion.getElementsByTagName('datetime')[0].firstChild.nodeValue;
                 redirect = notificacion.getElementsByTagName('redirect')[0].firstChild.nodeValue;
-                nuevaNotificacionACampana(redirect, icono, descripcion, datetime);
+                nuevaNotificacionACampana(idn, redirect, icono, descripcion, datetime);
             }
             
             if (window.location.pathname === '/SIGIPRO/Inicio/Notificaciones/'){
@@ -128,7 +132,7 @@ function recargarNotificaciones(notificacionesACargar){
     enviarPeticionXHTTP("notificaciones");
 }
 
-function marcarNotificacionesleidas(){
+function marcarNotificacionesleidas(id){
     if (window.XMLHttpRequest) {
         xhttp = new XMLHttpRequest();
         } else {
@@ -138,11 +142,10 @@ function marcarNotificacionesleidas(){
     
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
-            numeroNotificacionesNuevasActuales = 0;
-            document.getElementById("numero_notificaciones").innerHTML = '';
+            alert("Notificacion con id = "+id+", fue marcada como leida.");
         }
     };
-    enviarPeticionXHTTP("marcarNotificaciones");
+    enviarPeticionXHTTP("marcarNotificaciones?id="+id);
 }
 
 function enviarPeticionXHTTP(path){
@@ -166,8 +169,8 @@ function enviarPeticionXHTTP(path){
     }
 }
 
-function nuevaNotificacionACampana(redirect, icono, descripcion, datetime){
-    $("#notificaciones-dropdown").prepend("<li onclick='marcarNotificacionesleidas()'><a href='/SIGIPRO" + redirect + "'>\
+function nuevaNotificacionACampana(id, redirect, icono, descripcion, datetime){
+    $("#notificaciones-dropdown").prepend("<li onclick='marcarNotificacionesleidas("+id+")'><a href='/SIGIPRO" + redirect + "'>\
                 <i class='" + icono + "'></i>\
                 <b><span class='text'>" + descripcion + "</span></b>\
                 <span class='timestamp'> - " + datetime + "</span>\
@@ -175,8 +178,8 @@ function nuevaNotificacionACampana(redirect, icono, descripcion, datetime){
         </li>");
 }
 
-function nuevaNotificacionATotales(redirect, icono, descripcion, datetime){
-    $("#notificaciones-totales").prepend("<li><i class='" + icono + " activity-icon pull-left'></i>\
+function nuevaNotificacionATotales(id, redirect, icono, descripcion, datetime){
+    $("#notificaciones-totales").prepend("<li onclick='marcarNotificacionesleidas("+id+")'><i class='" + icono + " activity-icon pull-left'></i>\
                 <p><b><a href='/SIGIPRO" + redirect + "'>" + descripcion + "</a></b>\
                 <span class='timestamp'>" + datetime + "</span></p>\
         </li>");      
