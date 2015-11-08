@@ -5,11 +5,21 @@
  */
 
 setInterval(function(){
-   revisarNotificacionesNuevas();
+    revisarNotificacionesNuevas();
 }, 1000 * 10);//* 60 * 5);
 
 var xhttp;
 var xmlDoc;
+var numeroNotificacionesNuevasActuales;
+if (parseInt(document.getElementById("numero_notificaciones").innerHTML) > 0){
+    numeroNotificacionesNuevasActuales = parseInt(document.getElementById("numero_notificaciones").innerHTML);
+}
+else{
+    numeroNotificacionesNuevasActuales = 0;
+}
+
+var numeroNotificacionesNuevasActualesEnTotales;
+
 function revisarNotificacionesNuevas(){
     if (window.XMLHttpRequest) {
         xhttp = new XMLHttpRequest();
@@ -22,16 +32,22 @@ function revisarNotificacionesNuevas(){
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             var numeroNotificaciones = xhttp.responseText;
             if (numeroNotificaciones !== "0"){
-                document.getElementById("numero_notificaciones").innerHTML = numeroNotificaciones;
-                recargarNotificaciones();
-                crearNotificacionPush(numeroNotificaciones + " notificaciones nuevas.");
+                if (numeroNotificacionesNuevasActuales < parseInt(numeroNotificaciones)){
+                    recargarNotificaciones(parseInt(numeroNotificaciones));
+                    document.getElementById("numero_notificaciones").innerHTML = numeroNotificaciones;
+                    
+                    crearNotificacionPush(numeroNotificaciones + " notificaciones nuevas.");
+                }
+                else{
+                    crearNotificacionPush(numeroNotificaciones + " notificaciones nuevas.");
+                }
             }
         }
     };
     enviarPeticionXHTTP("notificacionesNuevas");
 }
 
-function recargarNotificaciones(){
+function recargarNotificacionesNuevasEnTotales(notificacionesACargar){
     if (window.XMLHttpRequest) {
         xhttp = new XMLHttpRequest();
         } else {
@@ -48,10 +64,45 @@ function recargarNotificaciones(){
             var datetime;
             var redirect;
             var notificacion;
-            //Quitar notificaciones anteriores 
-            document.getElementById("notificaciones-dropdown").innerHTML = '';
-            $("#notificaciones-dropdown").append("<li class='notification-header'><em id='notificaciones-header-dropdown'>Notificaciones.</em></li>");
-            for (var i = 0; i < notificaciones.length; i++) {   
+            for (var i = 0; i < notificacionesACargar - numeroNotificacionesNuevasActualesEnTotales; i++) {   
+                notificacion = notificaciones[i];
+                descripcion = notificacion.getElementsByTagName('descripcion')[0].firstChild.nodeValue;
+                icono = notificacion.getElementsByTagName('icono')[0].firstChild.nodeValue;
+                datetime = notificacion.getElementsByTagName('datetime')[0].firstChild.nodeValue;
+                redirect = notificacion.getElementsByTagName('redirect')[0].firstChild.nodeValue;
+                nuevaNotificacionATotales(redirect, icono, descripcion, datetime);
+            }
+        }
+    };
+    enviarPeticionXHTTP("notificaciones");
+}
+
+function recargarNotificaciones(notificacionesACargar){
+    if (window.XMLHttpRequest) {
+        xhttp = new XMLHttpRequest();
+        } else {
+        // code for IE6, IE5
+        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            xmlDoc = xhttp.responseXML;
+            var notificaciones = xmlDoc.getElementsByTagName("notificacion");
+            var descripcion;
+            var icono;
+            var datetime;
+            var redirect;
+            var notificacion;
+            //Quitar las últimas notificaciones anteriores 
+            $("#notificaciones-dropdown li").last().remove(); //remover el footer
+            $("#notificaciones-dropdown li").first().remove(); //remover el header
+            var lis = $("#notificaciones-dropdown li").length;
+            while (lis + notificacionesACargar - numeroNotificacionesNuevasActuales > 10){
+                $("#notificaciones-dropdown li").eq(lis-1).remove();
+                lis = lis - 1;
+            }
+            for (var i = 0; i < notificacionesACargar - numeroNotificacionesNuevasActuales; i++) {   
                 notificacion = notificaciones[i];
                 descripcion = notificacion.getElementsByTagName('descripcion')[0].firstChild.nodeValue;
                 icono = notificacion.getElementsByTagName('icono')[0].firstChild.nodeValue;
@@ -59,6 +110,19 @@ function recargarNotificaciones(){
                 redirect = notificacion.getElementsByTagName('redirect')[0].firstChild.nodeValue;
                 nuevaNotificacionACampana(redirect, icono, descripcion, datetime);
             }
+            
+            if (window.location.pathname === '/SIGIPRO/Inicio/Notificaciones/'){
+                numeroNotificacionesNuevasActualesEnTotales = numeroNotificacionesNuevasActuales;
+                recargarNotificacionesNuevasEnTotales(notificacionesACargar);
+            }
+            
+            numeroNotificacionesNuevasActuales = notificacionesACargar;
+            //append footer
+            $("#notificaciones-dropdown").append("<li class='notification-footer'>\
+                        <center><u><a href='/SIGIPRO/Inicio/Notificaciones'>Ver todas las notificaciones</a></u></center>\
+                    </li>");
+            //prepend header
+            $("#notificaciones-dropdown").prepend("<li class='notification-header'><center><em id='notificaciones-header-dropdown'>Notificaciones recientes</em></center></li>");
         }
     };
     enviarPeticionXHTTP("notificaciones");
@@ -74,6 +138,7 @@ function marcarNotificacionesleidas(){
     
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
+            numeroNotificacionesNuevasActuales = 0;
             document.getElementById("numero_notificaciones").innerHTML = '';
         }
     };
@@ -82,25 +147,41 @@ function marcarNotificacionesleidas(){
 
 function enviarPeticionXHTTP(path){
     var pathArray = window.location.pathname.split( '/' );
+    if (pathArray[pathArray.length-1] === '/'){
+        pathArray.pop();
+    }
     if (pathArray.length === 3){
         xhttp.open("GET", path, true);
         xhttp.send();
     }
     if (pathArray.length > 3){
-        xhttp.open("GET", "../"+path, true);
+        var carpetasEnElPath = pathArray.length;
+        var irAtras = "";
+        while(!(carpetasEnElPath < 3)){
+            irAtras += "../";
+            carpetasEnElPath = carpetasEnElPath - 2;
+        }
+        xhttp.open("GET", irAtras + path, true);
         xhttp.send();
     }
 }
 
 function nuevaNotificacionACampana(redirect, icono, descripcion, datetime){
-    $("#notificaciones-dropdown").append("<li onclick='marcarNotificacionesleidas()'><a href='/SIGIPRO" + redirect + "'>\
+    $("#notificaciones-dropdown").prepend("<li onclick='marcarNotificacionesleidas()'><a href='/SIGIPRO" + redirect + "'>\
                 <i class='" + icono + "'></i>\
-                <span class='text'>" + descripcion + "</span>\
+                <b><span class='text'>" + descripcion + "</span></b>\
                 <span class='timestamp'> - " + datetime + "</span>\
             </a>\
         </li>");
 }
 
+function nuevaNotificacionATotales(redirect, icono, descripcion, datetime){
+    $("#notificaciones-totales").prepend("<li><i class='" + icono + " activity-icon pull-left'></i>\
+                <p><b><a href='/SIGIPRO" + redirect + "'>" + descripcion + "</a></b>\
+                <span class='timestamp'>" + datetime + "</span></p>\
+        </li>");      
+}
+
 function crearNotificacionPush(texto){
-    $("#campana_notificaciones").notify(texto,"success", {clickToHide: true, arrowSize: 10} );
+    $("#campana_notificaciones").notify(texto,"success", { clickToHide: true , autoHide: false , arrowSize: 10});
 }

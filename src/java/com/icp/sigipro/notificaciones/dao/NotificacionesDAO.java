@@ -74,7 +74,7 @@ public class NotificacionesDAO extends DAO {
             int id_usuario = usrDAO.obtenerIDUsuario(nombre_usr);
             
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM calendario.notificaciones WHERE id_usuario = " + id_usuario + "order by time_stamp desc limit 10");
+            consulta = getConexion().prepareStatement(" SELECT * FROM calendario.notificaciones WHERE id_usuario = " + id_usuario + "order by time_stamp desc"); // limit 10");
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {

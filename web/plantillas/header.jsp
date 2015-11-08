@@ -59,6 +59,7 @@
     request.setAttribute("nombre_usr", nombre_usr);
     request.setAttribute("nD", nD);
 %>
+            
             <li class="notification-item">  
                 <a href="#" id="campana_notificaciones" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-bell" ></i>
@@ -70,19 +71,36 @@
                     <span class="circle"></span>
                 </a>
                 <ul class="dropdown-menu" id="notificaciones-dropdown" role="menu">
-                    <!-- Iteración sobre las notificaciones -->
+                    <!-- Header de las notificaciones -->
                     <li class="notification-header">
-                        <em id="notificaciones-header-dropdown">Notificaciones.</em>
+                        <center><em id="notificaciones-header-dropdown">Notificaciones recientes</em></center>
                     </li>
+                    <!-- Iteración sobre las notificaciones -->
+                    <c:set var="cantidadNotificacionesCargadas" value="${0}" />
                     <c:forEach items="${notificaciones}" var="notificacion">
-                        <li>
-                            <a href="/SIGIPRO${notificacion.getRedirect()}">
-                                <i class="${notificacion.getIcono()}"></i>
-                                <span class="text">${notificacion.getDescripcion()}</span>
-                                <span class="timestamp"> - ${notificacion.getDateTime()}</span>
-                            </a>
-                        </li>
+                        <c:if test="${cantidadNotificacionesCargadas < 10}">
+                            <li onclick="marcarNotificacionesleidas()">
+                                <a href="/SIGIPRO${notificacion.getRedirect()}">
+                                    <i class="${notificacion.getIcono()}" width="30" height="30"></i>
+                                        <c:choose>
+                                            <c:when test="${!(notificacion.isLeida())}">
+                                                <b><span class="text">${notificacion.getDescripcion()}</span></b>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="text">${notificacion.getDescripcion()}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    <span class="timestamp"> - ${notificacion.getDateTime()}</span>
+                                </a>
+                            </li>
+                            <c:set var="cantidadNotificacionesCargadas" value="${cantidadNotificacionesCargadas + 1}"/>
+                        </c:if>
                     </c:forEach>
+                    
+                    <!-- Footer de las notificaciones -->
+                    <li class="notification-footer">
+                        <center><u><a href="/SIGIPRO/Inicio/Notificaciones">Ver todas las notificaciones</a></u></center>
+                    </li>
                 </ul>
             </li>
             

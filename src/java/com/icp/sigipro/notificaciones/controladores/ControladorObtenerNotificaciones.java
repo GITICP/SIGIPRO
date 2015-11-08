@@ -88,6 +88,7 @@ public class ControladorObtenerNotificaciones extends HttpServlet {
                 sb.append("<icono>").append(n.getIcono()).append("</icono>");
                 sb.append("<descripcion>").append(n.getDescripcion()).append("</descripcion>");
                 sb.append("<datetime>").append(n.getDateTime()).append("</datetime>");
+                sb.append("<leida>").append(n.isLeida()).append("</leida>");
                 sb.append("</notificacion>");
                 hayNotificaciones = true;
             }
