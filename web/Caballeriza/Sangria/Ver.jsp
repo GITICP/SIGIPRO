@@ -113,7 +113,7 @@
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
                                         <thead>
                                             <tr>
-                                                <th rowspan="2">Nombre y Número de Caballo</th>
+                                                <th rowspan="2">Número y Nombre de Caballo</th>
                                                 <th colspan="3">Día 1 - ${sangria.getFecha_dia1AsString()}</th>
                                                 <th colspan="3">Día 2 - ${sangria.getFecha_dia2AsString()}</th>
                                                 <th colspan="3">Día 3 - ${sangria.getFecha_dia3AsString()}</th>
@@ -139,7 +139,7 @@
                                                         data-observaciones-dia2="${sangria_caballo.getObservaciones_dia2()}"
                                                         data-observaciones-dia3="${sangria_caballo.getObservaciones_dia3()}">
 
-                                                        ${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})
+                                                        ${sangria_caballo.getCaballo().getNumero()} - ${sangria_caballo.getCaballo().getNombre()} 
 
                                                         <c:if test="${sangria_caballo.tieneObservaciones()}">
                                                             <i class="fa fa-info-circle boton-observaciones"></i>
