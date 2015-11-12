@@ -10,8 +10,8 @@ import java.sql.SQLXML;
  * @author Amed
  */
 public class Respuestas_AA {
-  private int id_protocolo;
-  private int id_paso;
+  private int id_respuesta;
+  private int id_pxp;
   private int id_actividad;
   private SQLXML respuesta;
 }

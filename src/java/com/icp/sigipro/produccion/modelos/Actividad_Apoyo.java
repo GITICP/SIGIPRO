@@ -13,7 +13,7 @@ public class Actividad_Apoyo {
   private int id_actividad;
   private String nombre;
   private SQLXML estructura;
-  private String categoria;
+  private Categoria_AA categoria;
   private String estado_calidad;
   private String estado_direccion;
   private String version;

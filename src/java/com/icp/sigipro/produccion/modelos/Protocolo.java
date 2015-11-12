@@ -17,6 +17,6 @@ public class Protocolo {
   private Catalogo_PT producto;
   private String aprobacion_calidad;
   private String aprobacion_direccion;
-  private String version;
+  private String version_p;
  
 }

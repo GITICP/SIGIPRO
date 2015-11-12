@@ -10,6 +10,7 @@ package com.icp.sigipro.produccion.modelos;
  * @author Amed
  */
 public class Paso_Protocolo {
+  private int id_pxp;
   private int id_protocolo;
   private int id_paso;
   private Protocolo protocolo;

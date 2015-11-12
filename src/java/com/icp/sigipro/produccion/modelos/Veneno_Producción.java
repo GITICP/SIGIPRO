@@ -18,5 +18,5 @@ public class Veneno_Producción {
   private String veneno;
   private int cantidad;
   private Date fecha_ingreso;
-  private String observacion;
+  private String observaciones;
 }
