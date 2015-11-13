@@ -9,7 +9,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <c:if test="${sessionScope.usuario == null}">
-    <c:redirect url="/Cuenta/IniciarSesion" />
+    <c:redirect url="/Cuenta/IniciarSesion?expiro=true" />
 </c:if>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>
@@ -74,6 +74,7 @@
 
         <!-- Scripts Externos -->
         <script src="${direccion_contexto}/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+        <script src="${direccion_contexto}/recursos/js/jquery-ui/jquery-ui-1.10.4.custom.js"></script>
         <script src="${direccion_contexto}/recursos/js/bootstrap/bootstrap.js"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/modernizr/modernizr.js"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>

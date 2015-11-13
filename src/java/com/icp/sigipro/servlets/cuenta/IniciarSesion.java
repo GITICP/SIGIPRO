@@ -28,6 +28,9 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "IniciarSesion", urlPatterns= {"/Cuenta/IniciarSesion"})
 public class IniciarSesion extends HttpServlet
 {
+    
+    private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
    * methods.
@@ -68,6 +71,10 @@ public class IniciarSesion extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
   {
+      Boolean expiro = Boolean.parseBoolean(request.getParameter("expiro"));
+      if (expiro) {
+          request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Debe tener una sesión activa para realizar esta operación."));
+      }
     request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
   }
 

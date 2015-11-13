@@ -222,6 +222,30 @@ public class EventoDAO extends DAO{
         return resultado;
     }
     
+    public boolean editarEvento(Evento evento)
+    {
+        boolean resultado = false;
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE serpentario.eventos "
+                    + " SET fecha_evento=?, observaciones=? "
+                    + " WHERE id_evento=?; "
+            );
+            consulta.setDate(1, evento.getFecha_evento());
+            consulta.setString(2, evento.getObservaciones());
+            consulta.setInt(3, evento.getId_evento());
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
     public Evento obtenerEvento(int id_evento){
         Evento e = new Evento();
         try{

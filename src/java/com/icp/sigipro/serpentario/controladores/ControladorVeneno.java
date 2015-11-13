@@ -78,6 +78,11 @@ public class ControladorVeneno extends SIGIPROServlet {
             Veneno v = dao.obtenerVeneno(id_veneno);
             request.setAttribute("veneno", v);
             List<Lote> lotes = lotedao.obtenerLotes(v.getEspecie());
+            float cantidad = 0;
+            for (Lote l : lotes){
+                cantidad += l.getCantidad_actual();
+            }
+            v.setCantidad(cantidad);
             request.setAttribute("lotes", lotes);
             redireccionar(request, response, redireccion);
         }

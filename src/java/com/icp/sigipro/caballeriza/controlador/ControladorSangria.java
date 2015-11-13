@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.caballeriza.controlador;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
@@ -12,6 +13,7 @@ import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
+import com.icp.sigipro.caballeriza.modelos.SangriaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -20,6 +22,7 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Date;
@@ -53,6 +56,8 @@ public class ControladorSangria extends SIGIPROServlet
             add("editar");
             add("extraccion");
             add("editarextraccion");
+            add("sangriasajax");
+            add("caballossangriaajax");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -184,6 +189,61 @@ public class ControladorSangria extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
     
+    protected void getSangriasajax (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        response.setContentType("application/json");
+        
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+        
+        try {
+            List<Sangria> sangrias = dao.obtenerSangriasLALPendiente();
+            
+            List<SangriaAJAX> sangrias_ajax = new ArrayList<SangriaAJAX>();
+            
+            for (Sangria s : sangrias) {
+                SangriaAJAX s_ajax = new SangriaAJAX(s);
+                sangrias_ajax.add(s_ajax);
+            }
+            
+            Gson gson = new Gson();
+            resultado = gson.toJson(sangrias_ajax);
+            
+        } catch(SIGIPROException sig_ex) {
+            // Enviar error al AJAX
+        }
+        
+        out.print(resultado);
+        
+        out.flush();
+    }
+    
+    protected void getCaballossangriaajax (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        response.setContentType("application/json");
+        
+        int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
+        int dia = Integer.parseInt(request.getParameter("dia"));
+        
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+        
+        try {
+            List<Caballo> caballos = dao.obtenerCaballosSangriaDia(id_sangria, dia);
+            
+            Gson gson = new Gson();
+            resultado = gson.toJson(caballos);
+            
+        } catch(SIGIPROException sig_ex) {
+            // Enviar error al AJAX
+        }
+        
+        out.print(resultado);
+        
+        out.flush();
+        
+    }
+    
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
@@ -240,9 +300,10 @@ public class ControladorSangria extends SIGIPROServlet
         int dia = Integer.parseInt(request.getParameter("dia"));
         Sangria sangria = new Sangria();
         sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
-        String redireccion = "Sangria/Agregar.jsp";
+        String redireccion; // Esta línea se cambió
 
         String[] ids_caballos = request.getParameterValues("caballos");
+        String[] ids_caballos_false = request.getParameterValues("caballos_false"); // Se agregó esta línea
         String fecha = request.getParameter("fecha_extraccion");
 
         try {
@@ -260,18 +321,36 @@ public class ControladorSangria extends SIGIPROServlet
 
                 String sangre_str = request.getParameter("sangre_" + id_caballo);
                 String plasma_str = request.getParameter("plasma_" + id_caballo);
-                String lal_str = request.getParameter("lal_" + id_caballo);
+                String observaciones = request.getParameter("observaciones_" + id_caballo); // Esta línea se cambió
 
                 float sangre = (sangre_str.isEmpty()) ? 0.0f : Float.parseFloat(sangre_str);
                 float plasma = (plasma_str.isEmpty()) ? 0.0f : Float.parseFloat(plasma_str);
-                float lal = (lal_str.isEmpty()) ? 0.0f : Float.parseFloat(lal_str);
+                // Aquí se borró algo
 
                 sangria_caballo.setPlasma(dia, plasma);
                 sangria_caballo.setSangre(dia, sangre);
-                sangria_caballo.setLal(dia, lal);
+                sangria_caballo.setObservaciones(dia, observaciones); // Esta línea se cambió
 
                 
                 sangria.agregarSangriaCaballo(sangria_caballo);
+                
+            }
+            
+            // Se agregó todo este bloque.
+            for (String id_caballo : ids_caballos_false) {
+
+                SangriaCaballo sangria_caballo = new SangriaCaballo();
+
+                Caballo caballo = new Caballo();
+                caballo.setId_caballo(Integer.parseInt(id_caballo));
+
+                sangria_caballo.setCaballo(caballo);
+
+                String observaciones = request.getParameter("observaciones_" + id_caballo);
+
+                sangria_caballo.setObservaciones(dia, observaciones);
+                
+                sangria.agregarSangriaCaballoSinParticipacion(sangria_caballo);
                 
             }
         }
@@ -285,13 +364,23 @@ public class ControladorSangria extends SIGIPROServlet
             bitacora.setBitacora(sangria.parseJSON(), Bitacora.ACCION_REGISTRAR_EXTRACCION, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Extracción registrada correctamente."));
-            request.setAttribute("lista_sangrias", dao.obtenerSangrias());
-            redireccion = "Sangria/index.jsp";
+
+            // Código nuevo
+            boolean volver = Boolean.parseBoolean(request.getParameter("volver"));
+            
+            if (volver) {
+                this.getEditarextraccion(request, response);
+            } else {
+                request.setAttribute("lista_sangrias", dao.obtenerSangrias());
+                redireccion = "Sangria/index.jsp";
+                redireccionar(request, response, redireccion);
+            }
+            // Código nuevo
         }
         catch (SIGIPROException sig_ex) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Extracción no se registró correctamente."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Extracción no se registró correctamente."));
         }
-        redireccionar(request, response, redireccion);
+        // Aquí se borró algo
     }
     
     // </editor-fold>
@@ -314,9 +403,6 @@ public class ControladorSangria extends SIGIPROServlet
         String potencia = request.getParameter("potencia");
         String volumen_plasma_total = request.getParameter("volumen_plasma");
 
-        if (!numero_informe_calidad.isEmpty()) {
-            sangria.setNum_inf_cc(Integer.parseInt(numero_informe_calidad));
-        }
         if (!potencia.isEmpty()) {
             sangria.setPotencia(Float.parseFloat(potencia));
         }

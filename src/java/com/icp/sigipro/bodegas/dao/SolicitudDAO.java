@@ -106,7 +106,7 @@ public class SolicitudDAO extends DAO
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE bodega.solicitudes"
-                    + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?"
+                    + " SET cantidad=?, estado=?, fecha_entrega=?, id_usuario_recibo=?, observaciones=?, id_inventario = ?"
                     + " WHERE id_solicitud=? AND cantidad <= (Select cantidad from bodega.inventarios where id_inventario =? ) "
             );
 
@@ -120,8 +120,9 @@ public class SolicitudDAO extends DAO
                 consulta.setInt(4, p.getId_usuario_recibo());
             }
             consulta.setString(5, p.getObservaciones());
-            consulta.setInt(6, p.getId_solicitud());
-            consulta.setInt(7, p.getId_inventario());
+            consulta.setInt(6, p.getId_inventario());
+            consulta.setInt(7, p.getId_solicitud());
+            consulta.setInt(8, p.getId_inventario());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -177,6 +178,7 @@ public class SolicitudDAO extends DAO
                     + "         ci.nombre AS nombre_producto, "
                     + "         ci.codigo_icp AS cod_icp ,"
                     + "         ci.id_producto, "
+                    + "         ci.presentacion, "
                     + "         i.stock_actual "
                     + " FROM ( "
                     + "         SELECT * FROM bodega.solicitudes where id_solicitud = ? "
@@ -217,7 +219,7 @@ public class SolicitudDAO extends DAO
                 p.setId_producto(rs.getInt("id_producto"));
                 p.setCodigo_icp(rs.getString("cod_icp"));
                 p.setNombre(rs.getString("nombre_producto"));
-
+                p.setPresentacion(rs.getString("presentacion"));
                 i.setId_producto(rs.getInt("id_producto"));
 
                 Seccion s = new Seccion();

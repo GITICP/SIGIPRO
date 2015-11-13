@@ -5,7 +5,9 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
+import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperVarios;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -25,7 +27,9 @@ public class Sangria {
     private Date fecha_dia2;
     private Date fecha_dia3;
     private float hematrocito_promedio;
-    private int num_inf_cc;
+    private Informe informe_dia1;
+    private Informe informe_dia2;
+    private Informe informe_dia3;
     private Usuario responsable;
     private int cantidad_de_caballos;
     private float sangre_total;
@@ -35,26 +39,11 @@ public class Sangria {
     private float potencia;
     private GrupoDeCaballos grupo;
     List<SangriaCaballo> sangrias_caballos;
+    List<SangriaCaballo> sangrias_caballos_sin_participacion;
     
     List<Caballo> caballos; //Este atributo es para ayudar y no se encuentra en la base de datos
 
     public Sangria() {
-    }
-
-    public Sangria(int id_sangria, Date fecha_dia1, Date fecha_dia2, Date fecha_dia3, float hematrocito_promedio, int num_inf_cc, Usuario responsable, int cantidad_de_caballos, float sangre_total, float peso_plasma_total, float volumen_plasma_total, float plasma_por_caballo, float potencia) {
-        this.id_sangria = id_sangria;
-        this.fecha_dia1 = fecha_dia1;
-        this.fecha_dia2 = fecha_dia2;
-        this.fecha_dia3 = fecha_dia3;
-        this.hematrocito_promedio = hematrocito_promedio;
-        this.num_inf_cc = num_inf_cc;
-        this.responsable = responsable;
-        this.cantidad_de_caballos = cantidad_de_caballos;
-        this.sangre_total = sangre_total;
-        this.peso_plasma_total = peso_plasma_total;
-        this.volumen_plasma_total = volumen_plasma_total;
-        this.plasma_por_caballo = plasma_por_caballo;
-        this.potencia = potencia;
     }
 
     public int getId_sangria() {
@@ -118,7 +107,6 @@ public class Sangria {
     public void setFecha_dia3(Date fecha_dia3) {
         this.fecha_dia3 = fecha_dia3;
     }
-    
 
     public float getHematrocito_promedio() {
         return hematrocito_promedio;
@@ -128,12 +116,28 @@ public class Sangria {
         this.hematrocito_promedio = hematrocito_promedio;
     }
 
-    public int getNum_inf_cc() {
-        return num_inf_cc;
+    public Informe getInforme_dia1() {
+        return informe_dia1;
     }
 
-    public void setNum_inf_cc(int num_inf_cc) {
-        this.num_inf_cc = num_inf_cc;
+    public void setInforme_dia1(Informe informe_dia1) {
+        this.informe_dia1 = informe_dia1;
+    }
+
+    public Informe getInforme_dia2() {
+        return informe_dia2;
+    }
+
+    public void setInforme_dia2(Informe informe_dia2) {
+        this.informe_dia2 = informe_dia2;
+    }
+
+    public Informe getInforme_dia3() {
+        return informe_dia3;
+    }
+
+    public void setInforme_dia3(Informe informe_dia3) {
+        this.informe_dia3 = informe_dia3;
     }
 
     public Usuario getResponsable() {
@@ -153,7 +157,7 @@ public class Sangria {
     }
 
     public float getSangre_total() {
-        return sangre_total;
+        return formatearResultado(sangre_total);// Esta línea se cambió
     }
 
     public void setSangre_total(float sangre_total) {
@@ -161,7 +165,7 @@ public class Sangria {
     }
 
     public float getPeso_plasma_total() {
-        return peso_plasma_total;
+        return formatearResultado(peso_plasma_total);// Esta línea se cambió
     }
 
     public void setPeso_plasma_total(float peso_plasma_total) {
@@ -169,7 +173,7 @@ public class Sangria {
     }
 
     public float getVolumen_plasma_total() {
-        return volumen_plasma_total;
+        return formatearResultado(volumen_plasma_total);// Esta línea se cambió
     }
 
     public void setVolumen_plasma_total(float volumen_plasma_total) {
@@ -177,7 +181,7 @@ public class Sangria {
     }
 
     public float getPlasma_por_caballo() {
-        return plasma_por_caballo;
+        return formatearResultado(plasma_por_caballo);// Esta línea se cambió
     }
 
     public void setPlasma_por_caballo(float plasma_por_caballo) {
@@ -185,7 +189,7 @@ public class Sangria {
     }
 
     public float getPotencia() {
-        return potencia;
+        return formatearResultado(potencia); // Esta línea se cambió
     }
 
     public void setPotencia(float potencia) {
@@ -195,6 +199,12 @@ public class Sangria {
     public List<SangriaCaballo> getSangrias_caballos()
     {
         return sangrias_caballos;
+    }
+    
+    // Se agregó esta función
+    public List<SangriaCaballo> getSangrias_caballos_sin_participacion()
+    {
+        return sangrias_caballos_sin_participacion;
     }
 
     public void setSangrias_caballos(List<SangriaCaballo> sangrias_caballos)
@@ -222,11 +232,94 @@ public class Sangria {
         this.caballos = caballos;
     }
     
+    public float getSubtotalSangre(int dia) {
+        if (dia == 1) {
+            return getSubtotalSangreDia1();
+        } else if (dia == 2) {
+            return getSubtotalSangreDia2();
+        } else if (dia == 3) {
+            return getSubtotalSangreDia3();
+        } else {
+            return 0;
+        }
+    }
+    
+    private float getSubtotalSangreDia1() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia1();
+        }
+        return formatearResultado(resultado);
+    }
+    
+    private float getSubtotalSangreDia2() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia2();
+        }
+        return formatearResultado(resultado);
+    }
+    private float getSubtotalSangreDia3() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getSangre_dia3();
+        }
+        return formatearResultado(resultado);
+    }
+    
+    public float getSubtotalPlasma(int dia) {
+        if (dia == 1) {
+            return getSubtotalPlasmaDia1();
+        } else if (dia == 2) {
+            return getSubtotalPlasmaDia2();
+        } else if (dia == 3) {
+            return getSubtotalPlasmaDia3();
+        } else {
+            return 0;
+        }
+    }
+    
+    private float getSubtotalPlasmaDia1() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia1();
+        }
+        return formatearResultado(resultado);
+    }
+    
+    private float getSubtotalPlasmaDia2() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia2();
+        }
+        return formatearResultado(resultado);
+    }
+    private float getSubtotalPlasmaDia3() {
+        float resultado = 0.0f;
+        for (SangriaCaballo sc : sangrias_caballos) {
+            resultado += sc.getPlasma_dia3();
+        }
+        return formatearResultado(resultado);
+    }
+    
     public void agregarSangriaCaballo(SangriaCaballo sangria_caballo) {
         if(sangrias_caballos == null) {
             sangrias_caballos = new ArrayList<SangriaCaballo>();
         }
         sangrias_caballos.add(sangria_caballo);
+    }
+    
+    // Se agregó esta función
+    public void agregarSangriaCaballoSinParticipacion(SangriaCaballo sangria_caballo) {
+        if(sangrias_caballos_sin_participacion == null) {
+            sangrias_caballos_sin_participacion = new ArrayList<SangriaCaballo>();
+        }
+        sangrias_caballos_sin_participacion.add(sangria_caballo);
+    }
+    
+    private float formatearResultado(float sumatoria) {
+        HelperVarios hv = HelperVarios.getSingletonHelperVarios();
+        return hv.redondearFloat(sumatoria, 2);
     }
     
     public boolean valididarCaballoEnSangria(Caballo c){

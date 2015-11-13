@@ -17,15 +17,18 @@ import org.json.JSONObject;
 public class SolicitudRatonera {
   private int id_solicitud;
   private Date fecha_solicitud;
+  private Date fecha_necesita;
   private int numero_animales;
   private String peso_requerido;
   private int numero_cajas;
   private String sexo;
   private Cepa cepa;
   private Usuario usuario_solicitante;
+  private Usuario usuario_utiliza;
   private String observaciones;
   private String observaciones_rechazo;
   private String estado;
+  private EntregaRatonera entrega;
 
   public String parseJSON(){
         Class _class = this.getClass();
@@ -41,17 +44,42 @@ public class SolicitudRatonera {
                 }
             }       
             JSON.put("id_cepa",this.cepa.getId_cepa());
-            JSON.put("usuario_solicitante",this.usuario_solicitante.getId_usuario());
+            JSON.put("usuario_solicitante",this.usuario_solicitante.getID());
+            JSON.put("usuario_utiliza",this.usuario_utiliza.getID());
         }catch (Exception e){
             
         }
         return JSON.toString();
     } 
+
+  public Usuario getUsuario_utiliza() {
+    return usuario_utiliza;
+  }
+
+  public void setUsuario_utiliza(Usuario usuario_utiliza) {
+    this.usuario_utiliza = usuario_utiliza;
+  }
+  
+  
   private String formatearFecha(Date fecha)
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
-    }  
+    } 
+  public String getFecha_necesita_S(){
+    if (this.fecha_necesita != null)
+    {return formatearFecha(fecha_necesita);}
+    else
+    {return "";}}
+
+  public Date getFecha_necesita() {
+    return fecha_necesita;
+  }
+
+  public void setFecha_necesita(Date fecha_necesita) {
+    this.fecha_necesita = fecha_necesita;
+  }
+  
   public String getFecha_solicitud_S(){
     if (this.fecha_solicitud != null)
     {return formatearFecha(fecha_solicitud);}
@@ -145,5 +173,13 @@ public class SolicitudRatonera {
   public void setEstado(String estado) {
     this.estado = estado;
   }
+
+    public EntregaRatonera getEntrega() {
+        return entrega;
+    }
+
+    public void setEntrega(EntregaRatonera entrega) {
+        this.entrega = entrega;
+    }
 
 }
