@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
  *
  * @author Amed
  */
-public class Veneno_Producción {
+public class Veneno_Produccion {
   
   private int id_veneno;
   private String veneno;

@@ -19,7 +19,7 @@ public class Inoculo {
   private String identificador;
   private Date fecha_preparacion;
   private Usuario encargado_preparacion;
-  private Veneno_Producción veneno;
+  private Veneno_Produccion veneno;
   private int peso;
 
     public String parseJSON(){
@@ -88,11 +88,11 @@ public class Inoculo {
         this.encargado_preparacion = encargado_preparacion;
     }
 
-    public Veneno_Producción getVeneno() {
+    public Veneno_Produccion getVeneno() {
         return veneno;
     }
 
-    public void setVeneno(Veneno_Producción veneno) {
+    public void setVeneno(Veneno_Produccion veneno) {
         this.veneno = veneno;
     }
 
