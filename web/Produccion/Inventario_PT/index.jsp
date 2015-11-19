@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Produccion</li>
             <li> 
-              <a href="/SIGIPRO/Produccion/InventarioPT?">Inventario de Producto Terminado</a>
+              <a href="/SIGIPRO/Produccion/Inventario_PT?">Inventario de Producto Terminado</a>
             </li>
           </ul>
         </div>
