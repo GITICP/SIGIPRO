@@ -196,8 +196,8 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (606, '[p
 
 --Entradas del Menu de produccion
 DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 600;
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0, null);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (602, 600, 'Inventario de Producto T.', '/Produccion/InventarioPT');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0,'Produccion', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (602, 600, 'Inventario de Producto T.', '/Produccion/Inventario_PT');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (604, 600, 'Inoculo', '/Produccion/Inoculo'); 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (606, 600, 'Catalogo de Producto T.', '/Produccion/Catalogo_PT');
