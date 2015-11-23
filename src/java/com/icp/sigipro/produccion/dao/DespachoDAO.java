@@ -29,15 +29,13 @@ public class DespachoDAO extends DAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, id_coordinador, fecha_coordinador, )"
-              + " VALUES (?,?,?,?,?,?) RETURNING id_despacho");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, estado_coordinador, estado_regente)"
+              + " VALUES (?,?,?,?) RETURNING id_despacho");
 
-      consulta.setString(1, p.getLote());
-      consulta.setInt(2, p.getCantidad());
-      consulta.setDate(3, p.getFecha_vencimiento());
-      consulta.setInt(4, p.getProtocolo().getId_protocolo());
-      consulta.setInt(5, p.getProducto().getId_catalogo_pt());
-      consulta.setInt(6, p.getCantidad());
+      consulta.setDate(1, p.getFecha());
+      consulta.setString(2, p.getDestino());
+      consulta.setBoolean(3, false);
+      consulta.setBoolean(4, false);
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -61,17 +59,13 @@ public class DespachoDAO extends DAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE produccion.despacho "
-              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_protocolo=?, id_catalogo_pt=?, cantidad_disponible=?"
+              + " SET  destino=?, fecha=?"
               + " WHERE id_despacho=?; "
       );
 
-     consulta.setString(1, p.getLote());
-     consulta.setInt(2, p.getCantidad());
-     consulta.setDate(3, p.getFecha_vencimiento());
-     consulta.setInt(4, p.getProtocolo().getId_protocolo());
-     consulta.setInt(5, p.getProducto().getId_catalogo_pt());
-     consulta.setInt(6, p.getCantidad());
-     consulta.setInt(7, p.getId_despacho());
+     consulta.setString(1, p.getDestino());
+     consulta.setDate(3, p.getFecha());
+
      Inventario_PTDAO inv = new Inventario_PTDAO();
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -187,6 +181,69 @@ public class DespachoDAO extends DAO {
     }
     return resultado;
   }
-  
+    public boolean update_total(Despacho p) throws SIGIPROException {
+
+    boolean resultado = false;
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(
+              " UPDATE produccion.despacho "
+              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_protocolo=?, id_catalogo_pt=?, cantidad_disponible=?"
+              + " WHERE id_despacho=?; "
+      );
+
+     consulta.setString(1, p.getLote());
+     consulta.setInt(2, p.getCantidad());
+     consulta.setDate(3, p.getFecha_vencimiento());
+     consulta.setInt(4, p.getProtocolo().getId_protocolo());
+     consulta.setInt(5, p.getProducto().getId_catalogo_pt());
+     consulta.setInt(6, p.getCantidad());
+     consulta.setInt(7, p.getId_despacho());
+     Inventario_PTDAO inv = new Inventario_PTDAO();
+      if (consulta.executeUpdate() == 1) {
+        resultado = true;
+      }
+      consulta.close();
+      cerrarConexion();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      String mensaje = ex.getMessage();
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
+      
+    }
+    return resultado;
+  }
+    public boolean aprobar(String tipo, int id_usuario) throws SIGIPROException {
+
+    boolean resultado = false;
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(
+              " UPDATE produccion.despacho "
+              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_protocolo=?, id_catalogo_pt=?, cantidad_disponible=?"
+              + " WHERE id_despacho=?; "
+      );
+
+     consulta.setString(1, p.getLote());
+     consulta.setInt(2, p.getCantidad());
+     consulta.setDate(3, p.getFecha_vencimiento());
+     consulta.setInt(4, p.getProtocolo().getId_protocolo());
+     consulta.setInt(5, p.getProducto().getId_catalogo_pt());
+     consulta.setInt(6, p.getCantidad());
+     consulta.setInt(7, p.getId_despacho());
+     Inventario_PTDAO inv = new Inventario_PTDAO();
+      if (consulta.executeUpdate() == 1) {
+        resultado = true;
+      }
+      consulta.close();
+      cerrarConexion();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      String mensaje = ex.getMessage();
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
+      
+    }
+    return resultado;
+  }
   
 }
