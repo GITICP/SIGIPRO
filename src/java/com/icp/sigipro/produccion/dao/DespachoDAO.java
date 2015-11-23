@@ -29,7 +29,7 @@ public class DespachoDAO extends DAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (lote, cantidad, fecha_vencimiento, id_protocolo, id_catalogo_pt, cantidad_disponible)"
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, id_coordinador, fecha_coordinador, )"
               + " VALUES (?,?,?,?,?,?) RETURNING id_despacho");
 
       consulta.setString(1, p.getLote());
