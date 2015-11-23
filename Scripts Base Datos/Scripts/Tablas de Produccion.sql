@@ -25,11 +25,11 @@ CREATE TABLE produccion.categoria_aa(
 	id_despacho serial NOT NULL,
 	fecha date NOT NULL,
 	destino character varying(100) NOT NULL,
-	id_coordinador integer NOT NULL, 
-	fecha_coordinador date NOT NULL,
+	id_coordinador integer, 
+	fecha_coordinador date,
 	estado_coordinador boolean NOT NULL,
-	id_regente integer NOT NULL, 
-	fecha_regente date NOT NULL,
+	id_regente integer, 
+	fecha_regente date,
 	estado_regente boolean NOT NULL,
 	total int
 	);
@@ -73,7 +73,7 @@ CREATE TABLE produccion.categoria_aa(
  CREATE TABLE produccion.reservacion( 
 	id_reservacion serial NOT NULL,
 	hasta date NOT NULL,
-	observaciones character varying(200) NOT NULL,
+	observaciones character varying(200),
 	total int
  );
  
@@ -81,7 +81,7 @@ CREATE TABLE produccion.categoria_aa(
 	id_salida serial NOT NULL,
 	fecha date NOT NULL,
 	tipo character varying(30) NOT NULL,
-	observaciones character varying(200) NOT NULL,
+	observaciones character varying(200),
 	total int
  );
 
