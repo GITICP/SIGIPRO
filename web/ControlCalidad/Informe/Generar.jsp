@@ -70,6 +70,7 @@
                                 </c:if>
 
                                 <div class="row">
+                                    <%--
                                     <div class="col-md-6">
                                         <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
                                         <div class="form-group">
@@ -86,6 +87,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    --%>
                                     <c:if test="${solicitud.getEstado() != 'Completada'}">
                                         <div class="col-md-6">
                                             <label for="cerrar" class="control-label">Estado</label>
@@ -101,42 +103,13 @@
                                             </div>
                                         </div>
                                     </c:if>
-                                </div>                                
+                                </div>
                                 <c:choose>
                                     <c:when test="${solicitud.tieneTipoAsociacion()}">
                                         <t:editar_solicitud_sangria derecha="false" />
-                                    </c:when>
+                                    </c:when >
                                     <c:otherwise>
-                                        <div id="fila-select-sangria" class="row" hidden="true">
-                                            <div class="col-md-6">
-                                                <label for="sangria" class="control-label"> Sangría por asociar</label>
-                                                <div class="form-group">
-                                                    <div class="col-sm-12">
-                                                        <div class="input-group">
-                                                            <select id="seleccion-sangria" name="sangria"
-                                                                    style='background-color: #fff;'>
-                                                                <option value=''></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="fila-select-dia" class="row" hidden="true">
-                                            <div class="col-md-6">
-                                                <label for="sangria" class="control-label"> Día por asignar</label>
-                                                <div class="form-group">
-                                                    <div class="col-sm-12">
-                                                        <div class="input-group">
-                                                            <select id="seleccion-dia" name="dia"
-                                                                    style='background-color: #fff;'>
-                                                                <option value=''></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <input type="hidden" name="objeto-relacionado" value="">
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="row">
