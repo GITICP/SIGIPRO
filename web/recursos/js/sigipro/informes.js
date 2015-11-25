@@ -4,6 +4,8 @@ SELECTOR_TABLA_RESULTADOS_POR_REPORTAR = "#resultados-por-reportar";
 TABLA_RESULTADOS_POR_REPORTAR = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR);
 TABLA_RESULTADOS_OBTENIDOS = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_OBTENIDOS);
 
+ELEMENTO_CABALLOS = $("#caballos-numeros");
+
 FLAG_ELIMINAR = 1;
 FLAG_REPORTAR = 2;
 
@@ -88,7 +90,26 @@ funcion_validar_general = function() {
 funcion_reportar_sangria = function () {
     var fila = $(this).parents("tr");
     id_resultado_seleccionado = fila.attr("id");
-    $("#modal-asociar-caballo").modal("show");
+    
+    var columna_caballos = fila.find("td:nth-child(2) > span");
+    var ids_caballos = [];
+    
+    columna_caballos.each( function() {
+        var numero_caballo = $(this).text().split(" ")[0];
+        var id_caballo = obtener_id_caballo(numero_caballo);
+        ids_caballos.push( id_caballo );
+    });
+    
+    var boton = fila.find("button");
+    desasignar_evento_boton(boton, FLAG_ELIMINAR);
+    mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
+
+    var input_caballos = $("<input type='hidden'>");
+    input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
+    input_caballos.prop("value", ids_caballos.toString());
+
+    var form = $("#form-informe");
+    form.prepend(input_caballos);
 };
 
 funcion_eliminar_sangria = function () {
@@ -113,6 +134,8 @@ funcion_validar_sangria = function () {
     return $("#seleccion-caballos").find("option:not(.opcion-escondida)").length === 0;
 };
 
+
+/*
 funcion_asociar_resultado_caballos = function () {
     var fila = $("tr[id=" + id_resultado_seleccionado + "]");
 
@@ -135,7 +158,7 @@ funcion_asociar_resultado_caballos = function () {
 
     var form = $("#form-informe");
     form.prepend(input_caballos);
-};
+}; */
 
 /*
  * Funciones de eventos
@@ -299,6 +322,16 @@ function asignar_eventos_botones(funcion) {
         $(this).unbind("click");
         $(this).click(funcion_eliminar);
     });
+}
+
+function obtener_id_caballo(numero) {
+    var consulta = "div[data-numero=" + numero + "]";
+    var elemento_caballo = ELEMENTO_CABALLOS.find(consulta);
+    if (elemento_caballo) {
+        return elemento_caballo.attr("id");
+    } else {
+        alert("Error grave. Refresque la página.");
+    }
 }
 
 funcion_eliminar = funcion_eliminar_general;

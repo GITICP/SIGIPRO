@@ -138,7 +138,7 @@
                                                                     <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}"></td>
                                                                     <td>
                                                                         <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                            <span>${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})</span><br>
                                                                         </c:forEach>
                                                                     </td>
                                                                     <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
@@ -181,7 +181,7 @@
                                                                     <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
                                                                     <td class="">
                                                                         <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                            ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                            <span>${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})</span><br>
                                                                         </c:forEach>
                                                                     </td>
                                                                     <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
@@ -223,7 +223,20 @@
             </div>
         </div>
 
-        <div id="flag-asociacion" data-tipo="${tipo}" />
+        <div id="flag-asociacion" data-tipo="${tipo}"></div>
+
+        <div id="caballos-numeros">
+            <c:forEach items="${caballos_sangria}" var="caballo">
+                <c:choose>
+                    <c:when test="${accion == 'Generar'}">
+                        <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
+                    </c:when>
+                    <c:otherwise>
+                        <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="true"></div>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </div>
 
     </jsp:attribute>
 
@@ -232,46 +245,6 @@
     </jsp:attribute>
 
 </t:plantilla_general>
-
-
-<t:modal idModal="modal-asociar-caballo" titulo="Asociar Resultado a Caballo(s)">
-
-    <jsp:attribute name="form">
-
-        <form name="form-agregar-agrupaciones" id="form-asociacion-resultados-caballos" class="form-horizontal">
-
-            <label for="ids-caballos" class="control-label">Seleccione los caballos</label>
-            <select id="seleccion-caballos" class="select2" style="background-color: #fff" name="ids_caballos" multiple="multiple" required
-                    oninvalid="setCustomValidity('El campo de muestras es requerido.')">
-                <c:if test="${tipo == 'sangria'}">
-                    <c:forEach items="${caballos_sangria}" var="caballo">
-                        <c:choose>
-                            <c:when test="${accion == 'Generar'}">
-                                <option value="${caballo.getId_caballo()}">${caballo.getNombre()} (${caballo.getNumero()})</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${caballo.getId_caballo()}" class="opcion-escondida">${caballo.getNombre()} (${caballo.getNumero()})</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-
-                </c:if>
-            </select>
-
-            <br/>
-
-            <div class="form-group">
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="funcion_asociar_resultado_caballos()"><i class="fa fa-check-circle"></i> Asociar Resultados</button>
-                </div>
-            </div>
-
-        </form>
-
-    </jsp:attribute>
-
-</t:modal>
 
 <t:modal idModal="modal-error" titulo="Error en el Formulario">
     <jsp:attribute name="form">
