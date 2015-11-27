@@ -22,11 +22,11 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Bioterio - Ratonera</li>
+            <li>Produccion</li>
             <li> 
-              <a href="/SIGIPRO/Ratonera/Cepas?">Cepas</a>
+              <a href="/SIGIPRO/Produccion/Inventario_PT?">Despachos</a>
             </li>
-            <li class="active">Cepa ${cepa.getNombre()}</li>
+            <li class="active"> Editar Despacho </li>
 
           </ul>
         </div>
@@ -43,7 +43,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="sigipro-mouse-1"></i> Editar Cepa </h3>
+              <h3><i class="fa fa-list-alt"></i> Editar  Despacho </h3>
             </div>
             ${mensaje}
             <div class="widget-content">

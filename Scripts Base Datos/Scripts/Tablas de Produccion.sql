@@ -178,12 +178,12 @@ ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
 
-ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rpt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_ptd FOREIGN KEY (id_despacho) REFERENCES produccion.despacho(id_despacho) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rptr FOREIGN KEY (id_reservacion) REFERENCES produccion.reservacion(id_reservacion) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KEY (id_salida) REFERENCES produccion.salida_ext(id_salida) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rpt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_ptd FOREIGN KEY (id_despacho) REFERENCES produccion.despacho(id_despacho) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rptr FOREIGN KEY (id_reservacion) REFERENCES produccion.reservacion(id_reservacion) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KEY (id_salida) REFERENCES produccion.salida_ext(id_salida) ON DELETE CASCADE;
 --Indices unicos esquema produccion
 
 --Permisos asociados a produccion
@@ -196,7 +196,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (606, '[p
 
 --Entradas del Menu de produccion
 DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 600;
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0,'Produccion', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0, 'Produccion', null);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (602, 600, 'Inventario de Producto T.', '/Produccion/Inventario_PT');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (604, 600, 'Inoculo', '/Produccion/Inoculo'); 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion');

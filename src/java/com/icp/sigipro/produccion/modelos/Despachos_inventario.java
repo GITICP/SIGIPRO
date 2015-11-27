@@ -17,4 +17,54 @@ public class Despachos_inventario {
   
   private Despacho despacho;
   private Inventario_PT inventario;
+
+  public int getId_dxi() {
+    return id_dxi;
+  }
+
+  public void setId_dxi(int id_dxi) {
+    this.id_dxi = id_dxi;
+  }
+
+  public int getId_despacho() {
+    return id_despacho;
+  }
+
+  public void setId_despacho(int id_despacho) {
+    this.id_despacho = id_despacho;
+  }
+
+  public int getId_inventario_pt() {
+    return id_inventario_pt;
+  }
+
+  public void setId_inventario_pt(int id_inventario_pt) {
+    this.id_inventario_pt = id_inventario_pt;
+  }
+
+  public int getCantidad() {
+    return cantidad;
+  }
+
+  public void setCantidad(int cantidad) {
+    this.cantidad = cantidad;
+  }
+
+  public Despacho getDespacho() {
+    return despacho;
+  }
+
+  public void setDespacho(Despacho despacho) {
+    this.despacho = despacho;
+  }
+
+  public Inventario_PT getInventario() {
+    return inventario;
+  }
+
+  public void setInventario(Inventario_PT inventario) {
+    this.inventario = inventario;
+  }
+  
+  
 }

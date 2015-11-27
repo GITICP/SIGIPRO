@@ -55,49 +55,35 @@
         <!-- /main -->
       </div>
 
-  
-  <!-- Los modales de Agregar Inventario empiezan acá -->      
-    <t:modal idModal="modalAgregarLotes" titulo="Agregar Lote">
-       <jsp:attribute name="form">
+
+      <!-- Los modales de Agregar Inventario empiezan acá -->      
+    <t:modal idModal="modalAgregarLote" titulo="Agregar Lote">
+      <jsp:attribute name="form">
         <form class="form-horizontal" id="formAgregarRolUsuario">
           <input type="text" name="rol"  hidden="true">
-          <label for="idrol" class="control-label">*Usuario</label>
+          <label for="idrol" class="control-label">*Lote</label>
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group" id='inputGroupSeleccionRol'>
-                <select id="seleccionRol" class="select2" style='background-color: #fff;' name="idrol" required
+                <select id="seleccionLote" class="select2" style='background-color: #fff;' name="idrol" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         onchange="setCustomValidity('')">
-                <option value=''></option>
-                  <c:forEach items="${usuariosRestantes}" var="rol">
-                    <option value=${rol.getID()}>${rol.getNombreCompleto()} (${rol.getNombreUsuario()}) </option>
+                  <option value=''></option>
+                  <c:forEach items="${lotes}" var="lote">
+                    <option value=${lote.getId_inventario_pt()}>${lote.getLote()} (Producto: ${lote.getProducto().getNombre()}) (Disponible: ${lote.getCantidad_disponible()}) </option>
                   </c:forEach>
                 </select>
               </div>
             </div>
           </div>
-          <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
+          <label for="cantidad" class="control-label">*Cantidad</label>
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaActivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                <input type="number"  id="agregarcantidad" class="form-control" name="agregarcantidad"  required
+                       oninvalid="setCustomValidity('Este campo es requerido. La cantidad debe ser mayor a uno')"
                        onchange="setCustomValidity('')">
-              </div>
-            </div>
-          </div>
-          <div title="Fecha de Desactivación: Si desea un rol permanente, introduzca la misma fecha de activación">
-            <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <div class="input-group" style="display:table;">
-                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="agregarFechaDesactivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
-                         oninvalid="setCustomValidity('Este campo es requerido ')"
-                         onchange="setCustomValidity('')">
-                </div>
-                <p id='mensajeFechasModalAgregar' style='color:red;'><p>
               </div>
             </div>
           </div>
@@ -105,54 +91,42 @@
           <div class="form-group">
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarRol()"><i class="fa fa-check-circle"></i> Agregar Usuario</button>
+              <button id="btn-agregarRol" type="button" class="btn btn-primary" onclick="agregarRol()"><i class="fa fa-check-circle"></i> Agregar Lote</button>
             </div>
           </div>
         </form>
-        </jsp:attribute>
+      </jsp:attribute>
     </t:modal>
 
-    <t:modal idModal="modalEditarLotes" titulo="Editar Lote">
+    <t:modal idModal="modalEditarLote" titulo="Editar Lote">
       <jsp:attribute name="form">
         <form class="form-horizontal" id="formEditarRolUsuario">
           <input type="text" id="idRolUsuarioEditar"     name="idRolEditar"      hidden="true">
           <input type="text" name="rol"  hidden="true">
-          <label for="fechaActivacion" class="control-label">*Fecha de Activación</label>
+          <label for="cantidad" class="control-label">*Cantidad</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group"  style="display:table;">
+              <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaActivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaActivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
+                <input type="number"  id="editarcantidad" class="form-control" name="editarcantidad"  required
+                       oninvalid="setCustomValidity('Este campo es requerido. La cantidad debe ser mayor a uno')"
                        onchange="setCustomValidity('')">
               </div>
-            </div>
-          </div>
-          <label for="fechaDesactivacion" class="control-label">*Fecha de Desactivación</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group"  style="display:table;">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarFechaDesactivacion" class="form-control sigiproDatePickerEspecial" name="editarFechaDesactivacion" data-date-format="dd/mm/yyyy" required
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
-              </div>
-              <p id='mensajeFechasModalEditar' style='color:red;'><p>
             </div>
           </div>
           <div class="form-group">
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-              <button id="btn-editarRol" type="button" class="btn btn-primary" onclick="confirmarEdicion()"><i class="fa fa-check-circle"></i> Editar Rol</button>
+              <button id="btn-editarRol" type="button" class="btn btn-primary" onclick="confirmarEdicion()"><i class="fa fa-check-circle"></i> Editar Lote</button>
             </div>
           </div>
         </form>
-        </jsp:attribute>
+      </jsp:attribute>
     </t:modal>
-  
-</jsp:attribute>
-    <jsp:attribute name="scripts">
-      <script src="/SIGIPRO/recursos/js/sigipro/Produccion/Inventario/Seleccionar_Lotes.js"></script>
-    </jsp:attribute>
+
+  </jsp:attribute>
+  <jsp:attribute name="scripts">
+    <script src="/SIGIPRO/recursos/js/sigipro/Produccion/Inventario/Seleccionar_Lotes.js"></script>
+  </jsp:attribute>
 </t:plantilla_general>
 

@@ -11,9 +11,14 @@ import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.produccion.modelos.Catalogo_PT;
 import com.icp.sigipro.produccion.modelos.Protocolo;
+import com.icp.sigipro.seguridad.modelos.Usuario;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 /**
  *
@@ -66,7 +71,6 @@ public class DespachoDAO extends DAO {
      consulta.setString(1, p.getDestino());
      consulta.setDate(3, p.getFecha());
 
-     Inventario_PTDAO inv = new Inventario_PTDAO();
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
@@ -110,10 +114,12 @@ public class DespachoDAO extends DAO {
     Despacho despacho = new Despacho();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT pt.id_despacho, pt.lote, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, p.id_protocolo, "
-              + "p.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
-              + "FROM produccion.despacho pt, produccion.catalogo_pt c, produccion.protocolo p "
-              + "where pt.id_despacho = ? AND pt.id_protocolo = p.id_protocolo AND pt.id_catalogo_pt = c.id_catalogo_pt");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, "
+              + " d.fecha_coordinador, d.fecha_regente, d.total,"
+              + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador "
+              + "s.id_usuario AS id_regente, s.nombre_usuario AS regente "
+              + "FROM produccion.despacho d, seguridad.usuarios u, seguridad.usuarios s "
+              + "where d.id_despacho = ? AND d.id_coordinador = u.id_usuario AND d.id_egente = s.id_usuario");
 
       consulta.setInt(1, id);
 
@@ -121,18 +127,21 @@ public class DespachoDAO extends DAO {
 
       if (rs.next()) {
         despacho.setId_despacho(rs.getInt("id_despacho"));
-        despacho.setLote(rs.getString("lote"));
-        despacho.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
-        despacho.setCantidad(rs.getInt("cantidad"));
-        despacho.setCantidad_disponible(rs.getInt("cantidad_disponible"));
-        Protocolo p = new Protocolo();
-        p.setId_protocolo(rs.getInt("id_protocolo"));
-        p.setNombre(rs.getString("nombre_protocolo"));
-        Catalogo_PT c = new Catalogo_PT();
-        c.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
-        c.setNombre(rs.getString("nombre"));
-        despacho.setProtocolo(p);
-        despacho.setProducto(c);
+        despacho.setTotal(rs.getInt("total"));
+        despacho.setFecha(rs.getDate("fecha"));
+        despacho.setDestino(rs.getString("destino"));
+        despacho.setEstado_regente(rs.getBoolean("estado_regente"));
+        despacho.setEstado_coordinador(rs.getBoolean("estado_coordinador"));
+        despacho.setFecha_regente(rs.getDate("fecha_regente"));
+        despacho.setFecha_coordinador(rs.getDate("fecha_coordinador"));
+        Usuario c = new Usuario();
+        Usuario r = new Usuario();
+        c.setId_usuario(rs.getInt("id_coordinador"));
+        c.setNombre_usuario(rs.getString("coordinador"));
+        r.setId_usuario(rs.getInt("id_regente"));
+        r.setNombre_usuario(rs.getString("regente"));
+        despacho.setCoordinador(c);
+        despacho.setRegente(r);
       }
       rs.close();
       consulta.close();
@@ -150,26 +159,34 @@ public class DespachoDAO extends DAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT pt.id_despacho, pt.lote, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, p.id_protocolo, "
-              + "p.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre FROM produccion.despacho pt Inner Join produccion.protocolo p ON p.id_protocolo = pt.id_protocolo "
-              + "INNER JOIN produccion.catalogo_pt c on c.id_catalogo_pt = p.id_catalogo_pt ");
+      consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, "
+              + " d.fecha_coordinador, d.fecha_regente, d.total, "
+              + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador, "
+              + "s.id_usuario AS id_regente, s.nombre_usuario AS regente "
+              + "FROM produccion.despacho d "
+              + "INNER JOIN seguridad.usuarios u ON d.id_coordinador = u.id_usuario "
+              + "INNER JOIN seguridad.usuarios s ON d.id_regente = s.id_usuario "
+              );
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
         Despacho despacho = new Despacho();
         despacho.setId_despacho(rs.getInt("id_despacho"));
-        despacho.setLote(rs.getString("lote"));
-        despacho.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
-        despacho.setCantidad(rs.getInt("cantidad"));
-        despacho.setCantidad_disponible(rs.getInt("cantidad_disponible"));
-        Protocolo p = new Protocolo();
-        p.setId_protocolo(rs.getInt("id_protocolo"));
-        p.setNombre(rs.getString("nombre_protocolo"));
-        Catalogo_PT c = new Catalogo_PT();
-        c.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
-        c.setNombre(rs.getString("nombre"));
-        despacho.setProtocolo(p);
-        despacho.setProducto(c);
+        despacho.setTotal(rs.getInt("total"));
+        despacho.setFecha(rs.getDate("fecha"));
+        despacho.setDestino(rs.getString("destino"));
+        despacho.setEstado_regente(rs.getBoolean("estado_regente"));
+        despacho.setEstado_coordinador(rs.getBoolean("estado_coordinador"));
+        despacho.setFecha_regente(rs.getDate("fecha_regente"));
+        despacho.setFecha_coordinador(rs.getDate("fecha_coordinador"));
+        Usuario c = new Usuario();
+        Usuario r = new Usuario();
+        c.setId_usuario(rs.getInt("id_coordinador"));
+        c.setNombre_usuario(rs.getString("coordinador"));
+        r.setId_usuario(rs.getInt("id_regente"));
+        r.setNombre_usuario(rs.getString("regente"));
+        despacho.setCoordinador(c);
+        despacho.setRegente(r);
         resultado.add(despacho);
       }
       rs.close();
@@ -181,25 +198,20 @@ public class DespachoDAO extends DAO {
     }
     return resultado;
   }
-    public boolean update_total(Despacho p) throws SIGIPROException {
+    public boolean update_total(int id_despacho, int cantidad) throws SIGIPROException {
 
     boolean resultado = false;
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE produccion.despacho "
-              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_protocolo=?, id_catalogo_pt=?, cantidad_disponible=?"
+              + " SET  total= total + ?"
               + " WHERE id_despacho=?; "
       );
 
-     consulta.setString(1, p.getLote());
-     consulta.setInt(2, p.getCantidad());
-     consulta.setDate(3, p.getFecha_vencimiento());
-     consulta.setInt(4, p.getProtocolo().getId_protocolo());
-     consulta.setInt(5, p.getProducto().getId_catalogo_pt());
-     consulta.setInt(6, p.getCantidad());
-     consulta.setInt(7, p.getId_despacho());
-     Inventario_PTDAO inv = new Inventario_PTDAO();
+     consulta.setInt(1, cantidad);
+     consulta.setInt(2, id_despacho);
+
       if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
@@ -213,26 +225,78 @@ public class DespachoDAO extends DAO {
     }
     return resultado;
   }
-    public boolean aprobar(String tipo, int id_usuario) throws SIGIPROException {
+      public boolean reset_total(int id_despacho) throws SIGIPROException {
 
     boolean resultado = false;
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE produccion.despacho "
-              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_protocolo=?, id_catalogo_pt=?, cantidad_disponible=?"
+              + " SET  total=0 "
               + " WHERE id_despacho=?; "
       );
 
-     consulta.setString(1, p.getLote());
-     consulta.setInt(2, p.getCantidad());
-     consulta.setDate(3, p.getFecha_vencimiento());
-     consulta.setInt(4, p.getProtocolo().getId_protocolo());
-     consulta.setInt(5, p.getProducto().getId_catalogo_pt());
-     consulta.setInt(6, p.getCantidad());
-     consulta.setInt(7, p.getId_despacho());
-     Inventario_PTDAO inv = new Inventario_PTDAO();
+     consulta.setInt(1, id_despacho);
+
       if (consulta.executeUpdate() == 1) {
+        resultado = true;
+      }
+      consulta.close();
+      cerrarConexion();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      String mensaje = ex.getMessage();
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
+      
+    }
+    return resultado;
+  }
+    public boolean aprobar_Coordinador(int id_usuario, int id_despacho) throws SIGIPROException {
+
+    boolean resultado = false;
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(
+              " UPDATE produccion.despacho "
+              + " SET   fecha_coordinador=?, id_coordinador=?, estado_coordinador=true"
+              + " WHERE id_despacho=?; "
+      );
+     Date fechahoy = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+     df.format(fechahoy);
+     consulta.setDate(1, fechahoy);
+     consulta.setInt(2, id_usuario);
+     consulta.setInt(3, id_despacho);
+     if (consulta.executeUpdate() == 1) {
+        resultado = true;
+      }
+      consulta.close();
+      cerrarConexion();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      String mensaje = ex.getMessage();
+      throw new SIGIPROException("Se produjo un error al procesar la edición");
+      
+    }
+    return resultado;
+  }
+   public boolean aprobar_Regente(int id_usuario, int id_despacho) throws SIGIPROException {
+
+    boolean resultado = false;
+
+    try {
+      PreparedStatement consulta = getConexion().prepareStatement(
+              " UPDATE produccion.despacho "
+              + " SET   fecha_regente=?, id_regente=?, estado_coordinador=true"
+              + " WHERE id_despacho=?; "
+      );
+     Date fechahoy = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+     df.format(fechahoy);
+     consulta.setDate(1, fechahoy);
+     consulta.setInt(2, id_usuario);
+     consulta.setInt(3, id_despacho);
+     if (consulta.executeUpdate() == 1) {
         resultado = true;
       }
       consulta.close();

@@ -49,7 +49,7 @@
                 <a href="#reservaciones" role="tab" data-toggle="tab">Reservaciones</a>
               </li>
             </c:if>
-            <li id="desp" class="${desp_tab}">
+            <li id="desp" class="${des_tab}">
               <a href="#despachos" role="tab" data-toggle="tab">Despachos</a>
             </li>
           </ul>
@@ -59,7 +59,7 @@
               <div class="widget widget-table">
                 <div class="widget-header">
                   <h3><i class="fa fa-list-alt"></i> Inventario de Producto Terminado </h3>
-                   <div class="btn-group widget-header-toolbar">
+                  <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=agregar_inventario">Agregar Entrada de Inventario</a>
                   </div>
                 </div>
@@ -94,7 +94,7 @@
                           <td>${inventario.getFecha_vencimiento_S()}</td>
                           <td>
                             <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_inventario&id_inventario_pt=${inventario.getId_inventario_pt()}">Editar</a>
-                            <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${inventario.getId_inventario_pt()},'eliminar esta entrada de inventario','inventario')">Eliminar</a>                          </td>
+                            <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${inventario.getId_inventario_pt()}, 'eliminar esta entrada de inventario', 'inventario')">Eliminar</a>                          </td>
                         </tr>
 
                       </c:forEach>
@@ -123,22 +123,26 @@
                         <th>Tipo</th>
                         <th>Observaciones</th>
                         <th>Cantidad Total de Salida</th>
+                        <th>Cambio de Estado</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <c:forEach items="${inventarios}" var="inventario">
+                      <c:forEach items="${salidas}" var="salida">
 
                         <tr>
                           <td>
-                            <a href="/SIGIPRO/Conejera/Machos?accion=ver&id_macho=${inventario.getId_macho()}">
+                            <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_salida&id_macho=${salida.getId_salida()}">
                               <div style="height:100%;width:100%">
-                                ${inventario.getIdentificacion()}
+                                ${salida.getFecha_S()}
                               </div>
                             </a>
                           </td>
-                          <td>${inventario.getFecha_ingreso_S()}</td>
-                          <td>${inventario.getFecha_retiro_S()}</td>
-                          <td>${inventario.getDescripcion()}</td>
+                          <td>${salida.getTipo()}</td>
+                          <td>${salida.getObservaciones()}</td>
+                          <td>${salida.getTotal()}</td>
+                          <td> <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_salida&id_salida=${salida.getId_salida()}">Editar</a>
+                            <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${salida.getId_salida()}, 'eliminar esta salida', 'salida')">Eliminar</a>                          </td>
+
                         </tr>
 
                       </c:forEach>
@@ -167,33 +171,53 @@
                       <tr>
                         <th>Fecha</th>
                         <th>Destino</th>
-                        <th>Aprobacion de Coordinador</th>
-                        <th>Aprobacion de Regente</th>
+                        <th>Firma de Coordinador</th>
+                        <th>Firma de Regente</th>
                         <th>Cantidad Total a Despachar</th>
                         <th>Cambio de Estado </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <c:forEach items="${inventarios}" var="inventario">
+                      <c:forEach items="${despachos}" var="despacho">
 
                         <tr>
                           <td>
-                            <a href="/SIGIPRO/Conejera/Machos?accion=ver&id_macho=${inventario.getId_macho()}">
+                            <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_despacho&id_despacho=${despacho.getId_despacho()}">
                               <div style="height:100%;width:100%">
-                                ${inventario.getIdentificacion()}
+                                ${despacho.getFecha_S()}
                               </div>
                             </a>
                           </td>
-                          <td>${inventario.getFecha_ingreso_S()}</td>
-                          <td>${inventario.getFecha_retiro_S()}</td>
-                          <td>${inventario.getDescripcion()}</td>
+                          <td>${despacho.getDestino()}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${despacho.isEstado_coordinador()}">
+                                Firmada
+
+                              </c:when>
+                              <c:otherwise>
+                                Pendiente
+                              </c:otherwise>
+                            </c:choose>
+
+                          <td>
+                          <c:choose>
+                              <c:when test="${despacho.isEstado_regente()}">
+                                Firmada
+
+                              </c:when>
+                              <c:otherwise>
+                                Pendiente
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                          <td>${despacho.getTotal()}</td>
                           <c:choose>
                             <c:when test="${autorizador}">
                               <c:choose>
-                                <c:when test="${solicitud.getEstado().equals('Pendiente')}">
+                                <c:when test="${!(despacho.isEstado_coordinador()) or !(despacho.isEstado_regente())}">
                                   <td>
-                                    <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="aprobar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=aprobar&id_solicitud=" onclick="AprobarSolicitud(${solicitud.getId_solicitud()})">Aprobar</a>
-                                    <a class="btn btn-danger btn-sm boton-accion" onclick="RechazarSolicitud(${solicitud.getId_solicitud()})">Rechazar</a>
+                                    <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="firmar esta solicitud" data-href="/SIGIPRO/Produccion/Inventario_PT?accion=firmar_despacho&id_despacho=" onclick="AprobarSolicitud(${despacho.getId_despacho()})">Firmar</a>
                                   </td>
                                 </c:when>
                                 <c:otherwise>
@@ -205,11 +229,12 @@
                             </c:when>
                             <c:otherwise>
                               <c:choose>
-                                <c:when test="${solicitud.getEstado().equals('Pendiente')}">
+                                <c:when test="${!(despacho.isEstado_coordinador()) or !(despacho.isEstado_regente())}">
                                   <td>
-                                    <a class="btn btn-primary btn-sm boton-accion "  onclick="" >Editar</a>
-                                    <a class="btn btn-danger btn-sm boton-accion confirmableEliminar" data-texto-confirmacion="eliminar esta solicitud" data-href="/SIGIPRO/Conejera/SolicitudesConejera?accion=cerrar&tipo=Anulada&id_solicitud=" onclick="CerrarSolicitud(${solicitud.getId_solicitud()})">Eliminar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_despacho&id_despacho=${despacho.getId_despacho()}">Editar</a>
+                                    <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${despacho.getId_despacho()}, 'eliminar este despacho', 'despacho')">Eliminar</a>  
                                   </td>
+
                                 </c:when>
                                 <c:otherwise>
                                   <td>
@@ -243,26 +268,26 @@
                     <thead> 
                       <tr>
                         <th>Identificación</th>
-                        <th>Fecha Ingreso</th>
-                        <th>Fecha Retiro</th>
-                        <th>Descripción</th>
-                        <th> Cambio Estado</th>
+                        <th>Reservado Hasta</th>
+                        <th>Observaciones</th>
+                        <th>Total</th>
+                        <th>Cambio Estado</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <c:forEach items="${inventarios}" var="inventario">
+                      <c:forEach items="${reservaciones}" var="reservacion">
 
                         <tr>
                           <td>
-                            <a href="/SIGIPRO/Conejera/Machos?accion=ver&id_macho=${inventario.getId_macho()}">
+                            <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_reservacion&id_reservacion=${reservacion.getId_reservacion()}">
                               <div style="height:100%;width:100%">
-                                ${inventario.getIdentificacion()}
+                                ${reservacion.getId_reservacion()}
                               </div>
                             </a>
                           </td>
-                          <td>${inventario.getFecha_ingreso_S()}</td>
-                          <td>${inventario.getFecha_retiro_S()}</td>
-                          <td>${inventario.getDescripcion()}</td>
+                          <td>${reservacion.getHasta_S()}</td>
+                          <td>${reservacion.getObservaciones()}</td>
+                          <td>${reservacion.getTotal()}</td>
                         </tr>
 
                       </c:forEach>
@@ -281,7 +306,7 @@
       <!-- /main -->
     </div>
   </jsp:attribute>
-<jsp:attribute name="scripts">
+  <jsp:attribute name="scripts">
     <script src="/SIGIPRO/recursos/js/sigipro/Produccion/Inventario/Eliminar.js"></script>
-</jsp:attribute>
+  </jsp:attribute>
 </t:plantilla_general>
