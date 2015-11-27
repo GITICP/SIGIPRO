@@ -160,6 +160,9 @@ ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT pk_protocolo PRIMARY KEY (i
 ALTER TABLE ONLY produccion.reservacion ADD CONSTRAINT pk_reservacion PRIMARY KEY (id_reservacion);
 ALTER TABLE ONLY produccion.salida_ext ADD CONSTRAINT pk_salida_ext PRIMARY KEY (id_salida);
 ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT pk_veneno_produccion PRIMARY KEY (id_veneno);
+ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT pk_rxi PRIMARY KEY (id_rxi);
+ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT pk_sxi PRIMARY KEY (id_sxi);
+ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT pk_dxi PRIMARY KEY (id_dxi);
 
 --Llaves foraneas esquema produccion
 
