@@ -29,22 +29,23 @@ public class DespachoDAO extends DAO {
   public DespachoDAO() {
   }
 
-  public boolean insertarDespacho(Despacho p) throws SIGIPROException {
+  public int insertarDespacho(Despacho p) throws SIGIPROException {
 
-    boolean resultado = false;
+    int resultado = 0;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, estado_coordinador, estado_regente)"
-              + " VALUES (?,?,?,?) RETURNING id_despacho");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, estado_coordinador, estado_regente, total)"
+              + " VALUES (?,?,?,?,?) RETURNING id_despacho");
 
       consulta.setDate(1, p.getFecha());
       consulta.setString(2, p.getDestino());
       consulta.setBoolean(3, false);
       consulta.setBoolean(4, false);
+      consulta.setInt(5,0);
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
-        resultado = true;
+        resultado = resultadoConsulta.getInt("id_despacho");
       }
       resultadoConsulta.close();
       consulta.close();
@@ -69,7 +70,8 @@ public class DespachoDAO extends DAO {
       );
 
      consulta.setString(1, p.getDestino());
-     consulta.setDate(3, p.getFecha());
+     consulta.setDate(2, p.getFecha());
+     consulta.setInt(3, p.getId_despacho());
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -116,10 +118,12 @@ public class DespachoDAO extends DAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, "
               + " d.fecha_coordinador, d.fecha_regente, d.total,"
-              + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador "
+              + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador, "
               + "s.id_usuario AS id_regente, s.nombre_usuario AS regente "
-              + "FROM produccion.despacho d, seguridad.usuarios u, seguridad.usuarios s "
-              + "where d.id_despacho = ? AND d.id_coordinador = u.id_usuario AND d.id_egente = s.id_usuario");
+              + "FROM produccion.despacho d "
+              + "LEFT JOIN seguridad.usuarios u ON d.id_coordinador = u.id_usuario "
+              + "LEFT JOIN seguridad.usuarios s ON d.id_regente = s.id_usuario "
+              + "where d.id_despacho = ?");
 
       consulta.setInt(1, id);
 
@@ -164,8 +168,8 @@ public class DespachoDAO extends DAO {
               + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador, "
               + "s.id_usuario AS id_regente, s.nombre_usuario AS regente "
               + "FROM produccion.despacho d "
-              + "INNER JOIN seguridad.usuarios u ON d.id_coordinador = u.id_usuario "
-              + "INNER JOIN seguridad.usuarios s ON d.id_regente = s.id_usuario "
+              + "LEFT JOIN seguridad.usuarios u ON d.id_coordinador = u.id_usuario "
+              + "LEFT JOIN seguridad.usuarios s ON d.id_regente = s.id_usuario "
               );
       ResultSet rs = consulta.executeQuery();
 

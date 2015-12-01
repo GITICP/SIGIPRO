@@ -33,23 +33,23 @@ function confirmarEdicion() {
     $('#modalEditarRolUsuario').modal('hide');
 
     //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
-    campoOcultoRoles = $('#rolesUsuario');
-    var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
-    var nuevoValorCampoOculto = "";
-    a.splice(0, 1);
-    for (var i = 0; i < a.length; i++)
-    {
-      var cadarol = a[i].split("#c#");
-      if (cadarol[0] === id)
-      {
-      }
-      else
-      {
-        nuevoValorCampoOculto = nuevoValorCampoOculto + "#r#" + a[i];
-      }
-
-    }
-    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarcantidad').val());
+//    campoOcultoRoles = $('#rolesUsuario');
+//    var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
+//    var nuevoValorCampoOculto = "";
+//    a.splice(0, 1);
+//    for (var i = 0; i < a.length; i++)
+//    {
+//      var cadarol = a[i].split("#c#");
+//      if (cadarol[0] === id)
+//      {
+//      }
+//      else
+//      {
+//        nuevoValorCampoOculto = nuevoValorCampoOculto + "#r#" + a[i];
+//      }
+//
+//    }
+//    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarcantidad').val());
   }
 }
 
@@ -83,8 +83,9 @@ function agregarRol() {
   fila += '</td>';
   fila += '</tr>';
 
-  campoOcultoRoles = $('#rolesUsuario');
-  campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + idRol + "#c#" + fechaAct);
+  //campoOcultoRoles = $('#rolesUsuario');
+  //alert(idRol);
+ // campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + idRol + "#c#" + fechaAct);
   //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
 
   $('#datatable-column-filter-roles > tbody:last').append(fila);
@@ -104,17 +105,16 @@ function confirmacion() {
     rolesCodificados += fila.attr('id');
     rolesCodificados += "#c#";
     rolesCodificados += fila.children('td').eq(1).text();
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(2).text();
     rolesCodificados += "#r#";
   });
   $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
+  //alert("el valor del campo oculto es: " + $('#rolesUsuario').val());
 
-  if (!$('#editarUsuario')[0].checkValidity()) {
-    $('<input type="submit">').hide().appendTo($('#editarUsuario')).click().remove();
-    $('#editarUsuario').find(':submit').click();
+  if (!$('#form-Principal')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#form-Principal')).click().remove();
+    $('#form-Principal').find(':submit').click();
   }
   else {
-    $('#editarUsuario').submit();
+    $('#form-Principal').submit();
   }
 }

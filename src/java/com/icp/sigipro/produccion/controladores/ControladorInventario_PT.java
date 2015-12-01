@@ -82,8 +82,9 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     request = request_index(request);
     String redireccion = "Inventario_PT/index.jsp";
-    redireccionar(request, response, redireccion);
     request.setAttribute("inv_tab", "active");
+    redireccionar(request, response, redireccion);
+  
   }
   protected HttpServletRequest request_index(HttpServletRequest request)throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
@@ -241,11 +242,13 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     try {
       Despacho despacho = construirDespacho(request);
 
-      despacho_dao.insertarDespacho(despacho);
-
+      int id_despacho = despacho_dao.insertarDespacho(despacho);
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(despacho.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_DESPACHOS, request.getRemoteAddr());
 
+      ArrayList<int[]> lotes = construirLotes(request);
+      despachos_inventario_dao.insertarDespachos_inventario(lotes, id_despacho);
+     
       redireccion = "Inventario_PT/index.jsp";
       request = request_index(request);
       request.setAttribute("des_tab", "active");
@@ -253,6 +256,12 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     } catch (SIGIPROException ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
     }
+    catch (NumberFormatException ex){
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("des_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Despacho agregado sin Lotes de Producto"));
+              }
      
     redireccionar(request, response, redireccion);
   }
@@ -290,8 +299,11 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     String redireccion = "Inventario_PT/Editar_despacho.jsp";
         try {
             Despacho despacho = construirDespacho(request);
-
+            ArrayList<int[]> lotes = construirLotes(request);
       despacho_dao.editarDespacho(despacho);
+      despacho_dao.reset_total(despacho.getId_despacho());
+      despachos_inventario_dao.eliminarDespachos_inventario(despacho.getId_despacho());
+      despachos_inventario_dao.insertarDespachos_inventario(lotes, despacho.getId_despacho());
 
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(despacho.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_DESPACHOS, request.getRemoteAddr());
@@ -299,10 +311,16 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       redireccion = "Inventario_PT/index.jsp";
       request = request_index(request);
       request.setAttribute("des_tab", "active");
-      request.setAttribute("mensaje", helper.mensajeDeExito("Despacho agregado correctamente."));
+      request.setAttribute("mensaje", helper.mensajeDeExito("Despacho editado correctamente."));
     } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-    }
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));}
+      catch (NumberFormatException ex){
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("des_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeError("Error al editar despacho: Debe seleccionar uno o varios Lotes de Producto"));
+              }
+    
     redireccionar(request, response, redireccion);
   }
 
@@ -336,7 +354,7 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     int id_despacho = Integer.parseInt(request.getParameter("id_eliminar"));
     String redireccion = "Inventario_PT/index.jsp";
     try {
-      Despacho despacho = despacho_dao.obtenerDespacho(id_despacho);
+      //Despacho despacho = despacho_dao.obtenerDespacho(id_despacho);
       despacho_dao.eliminarDespacho(id_despacho);
 
       BitacoraDAO bitacora = new BitacoraDAO();
@@ -392,7 +410,22 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     }
     return despacho;
   }
-
+  private ArrayList<int[]> construirLotes (HttpServletRequest request) throws NumberFormatException{
+    ArrayList<int[]> resultado = new ArrayList<>();
+    String lotes = request.getParameter("rolesUsuario");
+    String[] split_lotes_1 = lotes.split("#r#");
+    for(int i=0;  i<split_lotes_1.length; i++)
+    {
+        int[] sub_lista;
+        sub_lista = new int[2];
+        String[] split_lote = split_lotes_1[i].split("#c#");
+        sub_lista[0] = Integer.parseInt(split_lote[0]);
+        sub_lista[1] = Integer.parseInt(split_lote[1]);
+        resultado.add(sub_lista);
+      
+    }
+    return resultado;
+  }
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
   @Override

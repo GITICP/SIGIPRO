@@ -21,21 +21,25 @@ import java.util.List;
  */
 public class Despachos_inventarioDAO extends DAO {
   
-  public boolean insertarDespachos_inventario(int id_d, int id_i, int cantidad) throws SIGIPROException {
+  public boolean insertarDespachos_inventario(ArrayList<int[]> lotes, int id_d) throws SIGIPROException {
 
     boolean resultado = false;
-
+    
+    for (int i=0; i<lotes.size(); i++){
     try {
       PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despachos_inventario (id_despacho, id_inventario_pt, cantidad)"
               + " VALUES (?,?,?) RETURNING id_despacho");
 
       consulta.setInt(1, id_d);
-      consulta.setInt(2, id_i);
-      consulta.setInt(3, cantidad);
+      consulta.setInt(2, lotes.get(i)[0]);
+      consulta.setInt(3, lotes.get(i)[1]);
     
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
         resultado = true;
+      }
+      else{
+        resultado = false;
       }
       resultadoConsulta.close();
       consulta.close();
@@ -45,6 +49,8 @@ public class Despachos_inventarioDAO extends DAO {
       String mensaje = ex.getMessage();
         throw new SIGIPROException("Se produjo un error al procesar el ingreso");
     }
+    }
+    
     return resultado;
   }
 

@@ -13,7 +13,7 @@
     <div class="col-md-6">
       <input hidden="true" name="id_despacho" value="${despacho.getId_despacho()}">
       <input hidden="true" name="accion" value="${accion}">
-      <input hidden="true" name="rolesUsuario" value="">
+      <input hidden="true" id="rolesUsuario" name="rolesUsuario" value="">
       <label for="identificacion" class="control-label">Destino</label>
       <div class="form-group">
         <div class="col-md-12">
@@ -28,7 +28,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha" value="${despacho.getFecha()}" class="form-control sigiproDatePickerEspecial" name="fecha" data-date-format="dd/mm/yyyy" required
+            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha" value="${despacho.getFecha_S()}" class="form-control sigiproDatePickerEspecial" name="fecha" data-date-format="dd/mm/yyyy" required
                     oninvalid="setCustomValidity('Este campo es requerido ')"
                     onchange="setCustomValidity('')">    </div>
         </div>
@@ -53,12 +53,12 @@
         </thead>
         <tbody>
           <c:forEach items="${despachos_inventarios}" var="inventario">
-            <tr id="${inventario.getInventario().getId_inventario_pt()}">
+            <tr id="${inventario.getId_inventario_pt()}">
               <td>${inventario.getInventario().getLote()} (${inventario.getInventario().getProducto().getNombre()})</td>
               <td>${inventario.getCantidad()}</td>
               <td>
-                <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${inventario.getInventario().getId_inventario_pt()})"   >Editar</button>
-                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${inventario.getInventario().getId_inventario_pt()})" >Eliminar</button>
+                <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${inventario.getId_inventario_pt()})"   >Editar</button>
+                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${inventario.getId_inventario_pt()})" >Eliminar</button>
               </td>
             </tr>
           </c:forEach>
@@ -76,10 +76,10 @@
           <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
           <c:choose>
             <c:when test= "${accion.equals('Editar_despacho')}">
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+              <button onclick="confirmacion()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
             </c:when>
             <c:otherwise>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Despacho</button>
+              <button onclick="confirmacion()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Despacho</button>
             </c:otherwise>
           </c:choose>
         </div>

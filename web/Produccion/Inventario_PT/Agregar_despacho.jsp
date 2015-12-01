@@ -10,7 +10,7 @@
 
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:plantilla_general title="Depacho" direccion_contexto="/SIGIPRO">
+<t:plantilla_general title="Despacho" direccion_contexto="/SIGIPRO">
 
   <jsp:attribute name="contenido">
     <!-- content-wrapper -->
@@ -65,7 +65,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group" id='inputGroupSeleccionRol'>
-                <select id="seleccionLote" class="select2" style='background-color: #fff;' name="idrol" required
+                <select id="seleccionLote" class="select2" style='background-color: #fff;' name="seleccionLote" required
                         oninvalid="setCustomValidity('Este campo es requerido')"
                         onchange="setCustomValidity('')">
                   <option value=''></option>

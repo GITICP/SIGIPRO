@@ -54,7 +54,7 @@
             </li>
           </ul>
           <div class="tab-content">
-            <div class="tab-pane fade active in" id="inventario"> <!--------------------------------------------------------------------------------------------- Inventario -->
+            <div class="tab-pane fade ${inv_tab} in" id="inventario"> <!--------------------------------------------------------------------------------------------- Inventario -->
               <!-- COLUMN FILTER DATA TABLE -->
               <div class="widget widget-table">
                 <div class="widget-header">
@@ -104,7 +104,7 @@
               </div>
               <!-- COLUMN FILTER DATA TABLE -->
             </div>
-            <div class="tab-pane fade" id="salidas"> <!--------------------------------------------------------------------- SALIDAS -->
+            <div class="tab-pane fade ${sal_tab} in" id="salidas"> <!--------------------------------------------------------------------- SALIDAS -->
               <!-- COLUMN FILTER DATA TABLE -->
               <div class="widget widget-table">
                 <div class="widget-header">
@@ -152,7 +152,7 @@
               </div>
               <!-- COLUMN FILTER DATA TABLE --> 
             </div>
-            <div class="tab-pane fade" id="despachos"> <!--------------------------------------------------------------------- Despachos -->
+            <div class="tab-pane fade ${des_tab} in" id="despachos"> <!--------------------------------------------------------------------- Despachos -->
               <!-- COLUMN FILTER DATA TABLE -->
               <div class="widget widget-table">
                 <div class="widget-header">
@@ -252,7 +252,7 @@
                 </div>
               </div>
               <!-- COLUMN FILTER DATA TABLE -->    </div>
-            <div class="tab-pane fade" id="reservaciones"> <!--------------------------------------------------------------------------------------------- Reservaciones -->
+            <div class="tab-pane fade ${res_tab} in" id="reservaciones"> <!--------------------------------------------------------------------------------------------- Reservaciones -->
               <!-- COLUMN FILTER DATA TABLE -->
               <div class="widget widget-table">
                 <div class="widget-header">
