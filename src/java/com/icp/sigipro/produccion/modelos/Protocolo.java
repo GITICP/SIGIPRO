@@ -36,7 +36,7 @@ public class Protocolo {
                 }
             }
             JSON.put("id_producto",this.producto.getId_catalogo_pt());
-            JSON.put("id_formula_m",this.formula_maestra.getId_formula_m());
+            JSON.put("id_formula_m",this.formula_maestra.getId_formula_maestra());
         }catch (Exception e){
             
         }
