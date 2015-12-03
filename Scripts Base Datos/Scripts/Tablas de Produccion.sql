@@ -198,6 +198,12 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (605, '[p
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (606, '[produccion]AdministrarCatalogoPT', 'Permite agregar/editar/eliminar CatalogoPT');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (607, '[produccion]AutorizarDespachosCoordinador', 'Permite autorizar despachos por parte del Coordinador');
 
+
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (630, '[produccion]AdministrarCategoriaAA', 'Permite agregar/editar/eliminar categorías de actividades de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (635, '[produccion]AdministrarFormulaMaestra', 'Permite agregar/editar/eliminar categorías de actividades de apoyo.');
+
+
 --Entradas del Menu de produccion
 DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 600;
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0, 'Produccion', null);
