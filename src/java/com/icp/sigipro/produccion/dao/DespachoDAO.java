@@ -291,7 +291,7 @@ public class DespachoDAO extends DAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE produccion.despacho "
-              + " SET   fecha_regente=?, id_regente=?, estado_coordinador=true"
+              + " SET   fecha_regente=?, id_regente=?, estado_regente=true"
               + " WHERE id_despacho=?; "
       );
      Date fechahoy = new java.sql.Date(Calendar.getInstance().getTime().getTime());

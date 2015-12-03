@@ -119,6 +119,7 @@
                     <!-- Columnas -->
                     <thead> 
                       <tr>
+                        <th>Número de Salida</th>
                         <th>Fecha</th>
                         <th>Tipo</th>
                         <th>Observaciones</th>
@@ -133,10 +134,11 @@
                           <td>
                             <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_salida&id_macho=${salida.getId_salida()}">
                               <div style="height:100%;width:100%">
-                                ${salida.getFecha_S()}
+                                ${salida.getId_salida()}
                               </div>
                             </a>
                           </td>
+                          <td>${salida.getFecha_S()}</td>
                           <td>${salida.getTipo()}</td>
                           <td>${salida.getObservaciones()}</td>
                           <td>${salida.getTotal()}</td>
@@ -169,6 +171,7 @@
                     <!-- Columnas -->
                     <thead> 
                       <tr>
+                        <th>Número de Despacho</th>
                         <th>Fecha</th>
                         <th>Destino</th>
                         <th>Firma de Coordinador</th>
@@ -184,64 +187,63 @@
                           <td>
                             <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_despacho&id_despacho=${despacho.getId_despacho()}">
                               <div style="height:100%;width:100%">
-                                ${despacho.getFecha_S()}
+                                ${despacho.getId_despacho()}
                               </div>
                             </a>
                           </td>
+                          <td>${despacho.getFecha_S()}</td>
                           <td>${despacho.getDestino()}</td>
                           <td>
                             <c:choose>
                               <c:when test="${despacho.isEstado_coordinador()}">
-                                Firmada
+                                Firmado
 
                               </c:when>
                               <c:otherwise>
-                                Pendiente
-                              </c:otherwise>
-                            </c:choose>
+                                <c:choose>
+                                  <c:when test="${coordinador}">
 
+                                    <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="firmar este despacho" data-href="/SIGIPRO/Produccion/Inventario_PT?accion=firmar_despacho&tipo=c&id_despacho=" onclick="AprobarSolicitud(${despacho.getId_despacho()})">Firmar</a>
+
+                                </c:when>
+                                <c:otherwise>
+                                  Pendiente
+                                </c:otherwise>
+                              </c:choose>
+                            </c:otherwise>
+                          </c:choose>
+                          </td>
                           <td>
-                          <c:choose>
+                            <c:choose>
                               <c:when test="${despacho.isEstado_regente()}">
-                                Firmada
+                                Firmado
 
                               </c:when>
                               <c:otherwise>
-                                Pendiente
-                              </c:otherwise>
-                            </c:choose>
+                                <c:choose>
+                                  <c:when test="${regente}">
+                                    <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="firmar este despacho" data-href="/SIGIPRO/Produccion/Inventario_PT?accion=firmar_despacho&tipo=r&id_despacho=" onclick="AprobarSolicitud(${despacho.getId_despacho()})">Firmar</a>
+                                </c:when>
+                                <c:otherwise>
+                                  Pendiente
+                                </c:otherwise>
+                              </c:choose>
+                            </c:otherwise>
+                          </c:choose>
                           </td>
                           <td>${despacho.getTotal()}</td>
                           <c:choose>
-                            <c:when test="${autorizador}">
-                              <c:choose>
-                                <c:when test="${!(despacho.isEstado_coordinador()) or !(despacho.isEstado_regente())}">
-                                  <td>
-                                    <a class="btn btn-primary btn-sm boton-accion confirmableAprobar" data-texto-confirmacion="firmar esta solicitud" data-href="/SIGIPRO/Produccion/Inventario_PT?accion=firmar_despacho&id_despacho=" onclick="AprobarSolicitud(${despacho.getId_despacho()})">Firmar</a>
-                                  </td>
-                                </c:when>
-                                <c:otherwise>
-                                  <td>
-                                    <button class="btn btn-danger btn-sm boton-accion" disabled >Despacho Completado</a>
-                                  </td>
-                                </c:otherwise>
-                              </c:choose>
+                            <c:when test="${!(despacho.isEstado_coordinador()) and !(despacho.isEstado_regente())}">
+                              <td>
+                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_despacho&id_despacho=${despacho.getId_despacho()}">Editar</a>
+                                <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${despacho.getId_despacho()}, 'eliminar este despacho', 'despacho')">Eliminar</a>  
+                              </td>
+
                             </c:when>
                             <c:otherwise>
-                              <c:choose>
-                                <c:when test="${!(despacho.isEstado_coordinador()) or !(despacho.isEstado_regente())}">
-                                  <td>
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_despacho&id_despacho=${despacho.getId_despacho()}">Editar</a>
-                                    <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${despacho.getId_despacho()}, 'eliminar este despacho', 'despacho')">Eliminar</a>  
-                                  </td>
-
-                                </c:when>
-                                <c:otherwise>
-                                  <td>
-                                    <button class="btn btn-danger btn-sm boton-accion" disabled >Despacho Completado</a>
-                                  </td>
-                                </c:otherwise>
-                              </c:choose>
+                              <td>
+                                <button class="btn btn-danger btn-sm boton-accion" disabled >Despacho Completado o en Proceso de Aprobación</a>
+                              </td>
                             </c:otherwise>
                           </c:choose>
                         </tr>
@@ -267,7 +269,7 @@
                     <!-- Columnas -->
                     <thead> 
                       <tr>
-                        <th>Identificación</th>
+                        <th>Número de Reservación</th>
                         <th>Reservado Hasta</th>
                         <th>Observaciones</th>
                         <th>Total</th>
@@ -308,5 +310,6 @@
   </jsp:attribute>
   <jsp:attribute name="scripts">
     <script src="/SIGIPRO/recursos/js/sigipro/Produccion/Inventario/Eliminar.js"></script>
+    <script src="/SIGIPRO/recursos/js/sigipro/Produccion/Inventario/Firma.js"></script>
   </jsp:attribute>
 </t:plantilla_general>

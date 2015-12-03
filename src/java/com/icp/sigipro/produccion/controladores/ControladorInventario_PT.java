@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorInventario_PT", urlPatterns = {"/Produccion/Inventario_PT"})
 public class ControladorInventario_PT extends SIGIPROServlet {
 
-  private final int[] permisos = {602, 601, 603};
+  private final int[] permisos = {602, 607, 603};
   private final Inventario_PTDAO dao = new Inventario_PTDAO();
   private final DespachoDAO despacho_dao = new DespachoDAO();
   private final Despachos_inventarioDAO despachos_inventario_dao = new Despachos_inventarioDAO();
@@ -59,6 +59,7 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       add("editar_inventario");
       add("editar_salida");
       add("editar_reservacion");
+      add("firmar_despacho");
     }
   };
   protected final List<String> accionesPost = new ArrayList<String>() {
@@ -80,20 +81,35 @@ public class ControladorInventario_PT extends SIGIPROServlet {
 
   // <editor-fold defaultstate="collapsed" desc="Método Index">
   protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    request = request_index(request);
-    String redireccion = "Inventario_PT/index.jsp";
     request.setAttribute("inv_tab", "active");
+    request = request_index(request);
+    String redireccion = "Inventario_PT/index.jsp"; 
     redireccionar(request, response, redireccion);
-  
+
   }
-  protected HttpServletRequest request_index(HttpServletRequest request)throws ServletException, IOException {
+
+  protected HttpServletRequest request_index(HttpServletRequest request) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     Boolean admin = true;
-    if (verificarPermiso(603, listaPermisos) && !(verificarPermiso(602, listaPermisos)) && !(verificarPermiso(601, listaPermisos))) {
+    Boolean coordinador = false;
+    Boolean regente = false;
+    if ((verificarPermiso(603, listaPermisos) || (verificarPermiso(607, listaPermisos))) && !(verificarPermiso(602, listaPermisos))) {
       admin = false;
+      if (verificarPermiso(603, listaPermisos)) {
+        regente = true;
+        request.setAttribute("inv_tab", "");
+        request.setAttribute("des_tab", "active");
+      }
+      if (verificarPermiso(607, listaPermisos)) {
+        coordinador = true;
+        request.setAttribute("inv_tab", "");
+        request.setAttribute("des_tab", "active");
+      }
     };
     request.setAttribute("admin", admin);
-    
+    request.setAttribute("regente", regente);
+    request.setAttribute("coordinador", coordinador);
+
     try {
       List<Inventario_PT> inventario = dao.obtenerInventario_PTs();
       request.setAttribute("inventario", inventario);
@@ -102,9 +118,10 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     } catch (SIGIPROException sig_ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
     }
-    
+
     return request;
   }
+
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Agregar">
   protected void getAgregar_inventario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -188,10 +205,36 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     }
     redireccionar(request, response, redireccion);
   }
+  
+  protected void getFirmar_despacho(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    boolean resultado = false;
+    String redireccion = "Inventario_PT/Index.jsp";
+    int id_despacho = Integer.parseInt(request.getParameter("id_despacho"));
+    int id_usuario = getIdUsuario(request);
+    String tipo = request.getParameter("tipo");
+    try {
+      if (tipo.equals("c")) {
+        despacho_dao.aprobar_Coordinador(id_usuario, id_despacho);
+      } else {
+        despacho_dao.aprobar_Regente(id_usuario, id_despacho);
+      }
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(id_despacho, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_DESPACHOS, request.getRemoteAddr());
+
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("des_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeExito("Despacho firmado correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+
+    redireccionar(request, response, redireccion);
+  }
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Ver">
 
-  protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void getVer_despacho(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     String redireccion = "Inventario_PT/Ver.jsp";
@@ -248,21 +291,20 @@ public class ControladorInventario_PT extends SIGIPROServlet {
 
       ArrayList<int[]> lotes = construirLotes(request);
       despachos_inventario_dao.insertarDespachos_inventario(lotes, id_despacho);
-     
+
       redireccion = "Inventario_PT/index.jsp";
       request = request_index(request);
       request.setAttribute("des_tab", "active");
       request.setAttribute("mensaje", helper.mensajeDeExito("Despacho agregado correctamente."));
     } catch (SIGIPROException ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-    }
-    catch (NumberFormatException ex){
+    } catch (NumberFormatException ex) {
       redireccion = "Inventario_PT/index.jsp";
       request = request_index(request);
       request.setAttribute("des_tab", "active");
       request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Despacho agregado sin Lotes de Producto"));
-              }
-     
+    }
+
     redireccionar(request, response, redireccion);
   }
   // </editor-fold>
@@ -294,12 +336,13 @@ public class ControladorInventario_PT extends SIGIPROServlet {
 //        }
     redireccionar(request, response, redireccion);
   }
-    protected void postEditar_despacho(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+  protected void postEditar_despacho(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     boolean resultado = false;
     String redireccion = "Inventario_PT/Editar_despacho.jsp";
-        try {
-            Despacho despacho = construirDespacho(request);
-            ArrayList<int[]> lotes = construirLotes(request);
+    try {
+      Despacho despacho = construirDespacho(request);
+      ArrayList<int[]> lotes = construirLotes(request);
       despacho_dao.editarDespacho(despacho);
       despacho_dao.reset_total(despacho.getId_despacho());
       despachos_inventario_dao.eliminarDespachos_inventario(despacho.getId_despacho());
@@ -313,16 +356,18 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       request.setAttribute("des_tab", "active");
       request.setAttribute("mensaje", helper.mensajeDeExito("Despacho editado correctamente."));
     } catch (SIGIPROException ex) {
-      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));}
-      catch (NumberFormatException ex){
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    } catch (NumberFormatException ex) {
       redireccion = "Inventario_PT/index.jsp";
       request = request_index(request);
       request.setAttribute("des_tab", "active");
       request.setAttribute("mensaje", helper.mensajeDeError("Error al editar despacho: Debe seleccionar uno o varios Lotes de Producto"));
-              }
-    
+    }
+
     redireccionar(request, response, redireccion);
   }
+
+
 
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Post Eliminar">
@@ -410,22 +455,23 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     }
     return despacho;
   }
-  private ArrayList<int[]> construirLotes (HttpServletRequest request) throws NumberFormatException{
+
+  private ArrayList<int[]> construirLotes(HttpServletRequest request) throws NumberFormatException {
     ArrayList<int[]> resultado = new ArrayList<>();
     String lotes = request.getParameter("rolesUsuario");
     String[] split_lotes_1 = lotes.split("#r#");
-    for(int i=0;  i<split_lotes_1.length; i++)
-    {
-        int[] sub_lista;
-        sub_lista = new int[2];
-        String[] split_lote = split_lotes_1[i].split("#c#");
-        sub_lista[0] = Integer.parseInt(split_lote[0]);
-        sub_lista[1] = Integer.parseInt(split_lote[1]);
-        resultado.add(sub_lista);
-      
+    for (int i = 0; i < split_lotes_1.length; i++) {
+      int[] sub_lista;
+      sub_lista = new int[2];
+      String[] split_lote = split_lotes_1[i].split("#c#");
+      sub_lista[0] = Integer.parseInt(split_lote[0]);
+      sub_lista[1] = Integer.parseInt(split_lote[1]);
+      resultado.add(sub_lista);
+
     }
     return resultado;
   }
+
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
   @Override

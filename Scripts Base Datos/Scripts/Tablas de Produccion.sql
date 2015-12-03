@@ -192,10 +192,11 @@ ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KE
 --Permisos asociados a produccion
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (601, '[produccion]AdministrarModuloProduccion', 'Permite gestionar el modulo de produccion');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (602, '[produccion]AdministrarInventarioPT', 'Permite agregar/editar/eliminar inventario de producto terminado');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (603, '[produccion]AutorizarDespachos', 'Permite autorizar despachos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (603, '[produccion]AutorizarDespachosRegente', 'Permite autorizar despachos por parte del Regente Farmacéutico');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (604, '[produccion]AdministrarInoculos', 'Permite agregar/editar/eliminar inoculos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (605, '[produccion]AdministrarVenenoProduccion', 'Permite agregar/editar/eliminar venenos de produccion');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (606, '[produccion]AdministrarCatalogoPT', 'Permite agregar/editar/eliminar CatalogoPT');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (607, '[produccion]AutorizarDespachosCoordinador', 'Permite autorizar despachos por parte del Coordinador');
 
 --Entradas del Menu de produccion
 DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 600;
@@ -208,6 +209,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 --Permisos del menu principal de produccion
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (602, 602);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (603, 602);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (607, 602);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (604, 604);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (605, 605);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (606, 606);

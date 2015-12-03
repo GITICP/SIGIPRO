@@ -30,7 +30,7 @@ function confirmarEdicion() {
     var id = $('#idRolUsuarioEditar').val();
     fila = $('#' + id);
     fila.children('td').eq(1).text($('#editarcantidad').val());
-    $('#modalEditarRolUsuario').modal('hide');
+    $('#modalEditarLote').modal('hide');
 
     //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
 //    campoOcultoRoles = $('#rolesUsuario');
@@ -60,7 +60,7 @@ function agregarRol() {
     $('#formAgregarRolUsuario').find(':submit').click();
   }
   else {
-  $('#modalAgregarRolUsuario').modal('hide');
+  $('#modalAgregarLote').modal('hide');
   //$('#inputGroupSeleccionRol').find('#select2-chosen-1').text("");
   rolSeleccionado = $('#seleccionLote :selected');
   inputFechaAct = $('#agregarcantidad');
