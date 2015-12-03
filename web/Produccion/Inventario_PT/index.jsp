@@ -233,7 +233,7 @@
                           </td>
                           <td>${despacho.getTotal()}</td>
                           <c:choose>
-                            <c:when test="${!(despacho.isEstado_coordinador()) and !(despacho.isEstado_regente())}">
+                            <c:when test="${!(despacho.isEstado_coordinador()) and !(despacho.isEstado_regente()) and admin}">
                               <td>
                                 <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_despacho&id_despacho=${despacho.getId_despacho()}">Editar</a>
                                 <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${despacho.getId_despacho()}, 'eliminar este despacho', 'despacho')">Eliminar</a>  
@@ -290,6 +290,10 @@
                           <td>${reservacion.getHasta_S()}</td>
                           <td>${reservacion.getObservaciones()}</td>
                           <td>${reservacion.getTotal()}</td>
+                          <td>
+                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_reservacion&id_reservacion=${reservacion.getId_reservacion()}">Editar</a>
+                                <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${reservacion.getId_reservacion()}, 'eliminar esta reservacion', 'reservacion')">Eliminar</a>  
+                          </td>
                         </tr>
 
                       </c:forEach>

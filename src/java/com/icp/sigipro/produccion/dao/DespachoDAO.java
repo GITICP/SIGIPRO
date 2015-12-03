@@ -6,11 +6,8 @@
 package com.icp.sigipro.produccion.dao;
 
 import com.icp.sigipro.produccion.modelos.Despacho;
-import com.icp.sigipro.produccion.dao.Inventario_PTDAO;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import com.icp.sigipro.produccion.modelos.Catalogo_PT;
-import com.icp.sigipro.produccion.modelos.Protocolo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -202,34 +199,7 @@ public class DespachoDAO extends DAO {
     }
     return resultado;
   }
-    public boolean update_total(int id_despacho, int cantidad) throws SIGIPROException {
-
-    boolean resultado = false;
-
-    try {
-      PreparedStatement consulta = getConexion().prepareStatement(
-              " UPDATE produccion.despacho "
-              + " SET  total= total + ?"
-              + " WHERE id_despacho=?; "
-      );
-
-     consulta.setInt(1, cantidad);
-     consulta.setInt(2, id_despacho);
-
-      if (consulta.executeUpdate() == 1) {
-        resultado = true;
-      }
-      consulta.close();
-      cerrarConexion();
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      String mensaje = ex.getMessage();
-      throw new SIGIPROException("Se produjo un error al procesar la edición");
-      
-    }
-    return resultado;
-  }
-      public boolean reset_total(int id_despacho) throws SIGIPROException {
+  public boolean reset_total(int id_despacho) throws SIGIPROException {
 
     boolean resultado = false;
 

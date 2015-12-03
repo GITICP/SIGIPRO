@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.produccion.controladores;
 
-import com.icp.sigipro.produccion.controladores.ControladorInventario_PT;
 import com.icp.sigipro.produccion.modelos.Inventario_PT;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
@@ -14,8 +13,16 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.produccion.dao.DespachoDAO;
 import com.icp.sigipro.produccion.dao.Despachos_inventarioDAO;
 import com.icp.sigipro.produccion.dao.Inventario_PTDAO;
+import com.icp.sigipro.produccion.dao.ReservacionDAO;
+import com.icp.sigipro.produccion.dao.Reservaciones_inventarioDAO;
+import com.icp.sigipro.produccion.dao.Salida_ExtDAO;
+import com.icp.sigipro.produccion.dao.Salidas_inventarioDAO;
 import com.icp.sigipro.produccion.modelos.Despacho;
 import com.icp.sigipro.produccion.modelos.Despachos_inventario;
+import com.icp.sigipro.produccion.modelos.Reservacion;
+import com.icp.sigipro.produccion.modelos.Reservaciones_inventario;
+import com.icp.sigipro.produccion.modelos.Salida_Ext;
+import com.icp.sigipro.produccion.modelos.Salidas_inventario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
@@ -41,6 +48,10 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   private final Inventario_PTDAO dao = new Inventario_PTDAO();
   private final DespachoDAO despacho_dao = new DespachoDAO();
   private final Despachos_inventarioDAO despachos_inventario_dao = new Despachos_inventarioDAO();
+  private final ReservacionDAO reservacion_dao = new ReservacionDAO();
+  private final Reservaciones_inventarioDAO reservaciones_inventario_dao = new Reservaciones_inventarioDAO();
+  private final Salida_ExtDAO salida_ext_dao = new Salida_ExtDAO();
+  private final Salidas_inventarioDAO salidas_inventario_dao = new Salidas_inventarioDAO();
   private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
 
   protected final Class clase = ControladorInventario_PT.class;
@@ -76,6 +87,14 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       add("eliminar_inventario");
       add("eliminar_reservacion");
       add("eliminar_salida");
+    }
+  };
+  protected final List<String> tipos_salidas = new ArrayList<String>() {
+    {
+      add("Pérdida");
+      add("Destrucción");
+      add("Uso Interno");
+      add("Otro");
     }
   };
 
@@ -115,6 +134,10 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       request.setAttribute("inventario", inventario);
       List<Despacho> despachos = despacho_dao.obtenerDespachos();
       request.setAttribute("despachos", despachos);
+      List<Reservacion> reservaciones = reservacion_dao.obtenerReservaciones();
+      request.setAttribute("reservaciones", reservaciones);
+      List<Salida_Ext> salidas = salida_ext_dao.obtenerSalida_Exts();
+      request.setAttribute("salidas", salidas);
     } catch (SIGIPROException sig_ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
     }
@@ -148,23 +171,28 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     redireccionar(request, response, redireccion);
   }
 
-  protected void getAgregar_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void getAgregar_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     String redireccion = "Inventario_PT/Agregar_reservacion.jsp";
-//        Inventario_PT pie = new Inventario_PT();
-//        request.setAttribute("pie", pie);
+    Reservacion reservacion = new Reservacion();
+    List<Inventario_PT> lotes = dao.obtenerInventario_PTs();
+    request.setAttribute("lotes", lotes);
+    request.setAttribute("reservacion", reservacion);
     request.setAttribute("accion", "agregar_reservacion");
 
     redireccionar(request, response, redireccion);
   }
 
-  protected void getAgregar_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void getAgregar_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException  {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
     String redireccion = "Inventario_PT/Agregar_salida.jsp";
-//        Inventario_PT pie = new Inventario_PT();
-//        request.setAttribute("pie", pie);
+    Salida_Ext salida = new Salida_Ext();
+    List<Inventario_PT> lotes = dao.obtenerInventario_PTs();
+    request.setAttribute("tipos", tipos_salidas);
+    request.setAttribute("lotes", lotes);
+    request.setAttribute("salida", salida);
     request.setAttribute("accion", "agregar_salida");
 
     redireccionar(request, response, redireccion);
@@ -231,6 +259,43 @@ public class ControladorInventario_PT extends SIGIPROServlet {
 
     redireccionar(request, response, redireccion);
   }
+    protected void getEditar_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    String redireccion = "Inventario_PT/Editar_reservacion.jsp";
+    int id_reservacion = Integer.parseInt(request.getParameter("id_reservacion"));
+    request.setAttribute("accion", "Editar_reservacion");
+    try {
+      Reservacion reservacion = reservacion_dao.obtenerReservacion(id_reservacion);
+      request.setAttribute("reservacion", reservacion);
+      List<Inventario_PT> lotes = dao.obtenerInventario_PTs();
+      request.setAttribute("lotes", lotes);
+      List<Reservaciones_inventario> reservaciones_inventarios = reservaciones_inventario_dao.obtenerReservaciones_inventarios(id_reservacion);
+      request.setAttribute("reservaciones_inventarios", reservaciones_inventarios);
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+    redireccionar(request, response, redireccion);
+  }
+    protected void getEditar_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    String redireccion = "Inventario_PT/Editar_salida.jsp";
+    int id_salida = Integer.parseInt(request.getParameter("id_salida"));
+    request.setAttribute("accion", "Editar_salida");
+    try {
+      Salida_Ext salida = salida_ext_dao.obtenerSalida_Ext(id_salida);
+      request.setAttribute("salida", salida);
+      List<Inventario_PT> lotes = dao.obtenerInventario_PTs();
+      request.setAttribute("lotes", lotes);
+      List<Salidas_inventario> salidas_inventarios = salidas_inventario_dao.obtenerSalidas_inventarios(id_salida);
+      request.setAttribute("salidas_inventarios", salidas_inventarios);
+      request.setAttribute("tipos", tipos_salidas);
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+    redireccionar(request, response, redireccion);
+  }
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Ver">
 
@@ -286,6 +351,7 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       Despacho despacho = construirDespacho(request);
 
       int id_despacho = despacho_dao.insertarDespacho(despacho);
+      despacho.setId_despacho(id_despacho);
       BitacoraDAO bitacora = new BitacoraDAO();
       bitacora.setBitacora(despacho.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_DESPACHOS, request.getRemoteAddr());
 
@@ -303,6 +369,64 @@ public class ControladorInventario_PT extends SIGIPROServlet {
       request = request_index(request);
       request.setAttribute("des_tab", "active");
       request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Despacho agregado sin Lotes de Producto"));
+    }
+
+    redireccionar(request, response, redireccion);
+  }
+    protected void postAgregar_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    boolean resultado = false;
+    String redireccion = "Inventario_PT/Agregar_reservacion.jsp";
+    try {
+      Reservacion reservacion = construirReservacion(request);
+
+      int id_reservacion = reservacion_dao.insertarReservacion(reservacion);
+      reservacion.setId_reservacion(id_reservacion);
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(reservacion.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESERVACIONES, request.getRemoteAddr());
+
+      ArrayList<int[]> lotes = construirLotes(request);
+      reservaciones_inventario_dao.insertarReservaciones_inventario(lotes, id_reservacion);
+
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("res_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeExito("Reservación agregada correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    } catch (NumberFormatException ex) {
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("res_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Reservación agregada sin Lotes de Producto"));
+    }
+
+    redireccionar(request, response, redireccion);
+  }
+  protected void postAgregar_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    boolean resultado = false;
+    String redireccion = "Inventario_PT/Agregar_salida.jsp";
+    try {
+      Salida_Ext salida = construirSalida(request);
+
+      int id_salida = salida_ext_dao.insertarSalida_Ext(salida);
+      salida.setId_salida(id_salida);
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(salida.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SALIDAS_EXT, request.getRemoteAddr());
+
+      ArrayList<int[]> lotes = construirLotes(request);
+      salidas_inventario_dao.insertarSalidas_inventario(lotes, id_salida);
+
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("sal_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeExito("Salida Extraordinaria agregada correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    } catch (NumberFormatException ex) {
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("sal_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Salida Extraordinaria agregada sin Lotes de Producto"));
     }
 
     redireccionar(request, response, redireccion);
@@ -366,7 +490,64 @@ public class ControladorInventario_PT extends SIGIPROServlet {
 
     redireccionar(request, response, redireccion);
   }
+  protected void postEditar_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    boolean resultado = false;
+    String redireccion = "Inventario_PT/Editar_salida.jsp";
+    try {
+      Salida_Ext salida = construirSalida(request);
+      ArrayList<int[]> lotes = construirLotes(request);
+      salida_ext_dao.editarSalida_Ext(salida);
+      salida_ext_dao.reset_total(salida.getId_salida());
+      salidas_inventario_dao.eliminarSalidas_inventario(salida.getId_salida());
+      salidas_inventario_dao.insertarSalidas_inventario(lotes, salida.getId_salida());
 
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(salida.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SALIDAS_EXT, request.getRemoteAddr());
+
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("sal_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeExito("Salida Extraordinaria editada correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    } catch (NumberFormatException ex) {
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("sal_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeError("Error al editar salida: Debe seleccionar uno o varios Lotes de Producto"));
+    }
+
+    redireccionar(request, response, redireccion);
+  }
+    protected void postEditar_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    boolean resultado = false;
+    String redireccion = "Inventario_PT/Editar_reservacion.jsp";
+    try {
+      Reservacion reservacion = construirReservacion(request);
+      ArrayList<int[]> lotes = construirLotes(request);
+      reservacion_dao.editarReservacion(reservacion);
+      reservacion_dao.reset_total(reservacion.getId_reservacion());
+      reservaciones_inventario_dao.eliminarReservaciones_inventario(reservacion.getId_reservacion());
+      reservaciones_inventario_dao.insertarReservaciones_inventario(lotes, reservacion.getId_reservacion());
+
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(reservacion.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESERVACIONES, request.getRemoteAddr());
+
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("res_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeExito("Reservación editada correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    } catch (NumberFormatException ex) {
+      redireccion = "Inventario_PT/index.jsp";
+      request = request_index(request);
+      request.setAttribute("res_tab", "active");
+      request.setAttribute("mensaje", helper.mensajeDeError("Error al editar reservación: Debe seleccionar uno o varios Lotes de Producto"));
+    }
+
+    redireccionar(request, response, redireccion);
+  }
 
 
   // </editor-fold>
@@ -415,7 +596,50 @@ public class ControladorInventario_PT extends SIGIPROServlet {
 
     redireccionar(request, response, redireccion);
   }
+  protected void postEliminar_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    int id_salida = Integer.parseInt(request.getParameter("id_eliminar"));
+    String redireccion = "Inventario_PT/index.jsp";
+    try {
+      //Despacho despacho = despacho_dao.obtenerDespacho(id_despacho);
+      salida_ext_dao.eliminarSalida_Ext(id_salida);
 
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(id_salida, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SALIDAS_EXT, request.getRemoteAddr());
+
+      request.setAttribute("mensaje", helper.mensajeDeExito("Salida Extraordinaria eliminada correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+      redireccionar(request, response, redireccion);
+    }
+    request = request_index(request);
+    request.setAttribute("sal_tab", "active");
+
+    redireccionar(request, response, redireccion);
+  }
+  protected void postEliminar_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    int id_reservacion = Integer.parseInt(request.getParameter("id_eliminar"));
+    String redireccion = "Inventario_PT/index.jsp";
+    try {
+      //Despacho despacho = despacho_dao.obtenerDespacho(id_despacho);
+      reservacion_dao.eliminarReservacion(id_reservacion);
+
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(id_reservacion, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESERVACIONES, request.getRemoteAddr());
+
+      request.setAttribute("mensaje", helper.mensajeDeExito("Reservación eliminada correctamente."));
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+      redireccionar(request, response, redireccion);
+    }
+    request = request_index(request);
+    request.setAttribute("res_tab", "active");
+
+    redireccionar(request, response, redireccion);
+  }
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   private Inventario_PT construirObjeto(HttpServletRequest request) throws SIGIPROException {
@@ -455,7 +679,39 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     }
     return despacho;
   }
+  private Reservacion construirReservacion(HttpServletRequest request) throws SIGIPROException {
+    Reservacion reservacion = new Reservacion();
 
+    int id_reservacion = Integer.parseInt(request.getParameter("id_reservacion"));
+    reservacion.setId_reservacion(id_reservacion);
+    reservacion.setObservaciones(request.getParameter("observaciones"));
+    String fecha = request.getParameter("hasta");
+
+    try {
+      HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+      reservacion.setHasta(helper_fechas.formatearFecha(fecha));
+    } catch (ParseException ex) {
+      ex.printStackTrace();
+    }
+    return reservacion;
+  }
+  private Salida_Ext construirSalida(HttpServletRequest request) throws SIGIPROException {
+    Salida_Ext salida = new Salida_Ext();
+
+    int id_salida = Integer.parseInt(request.getParameter("id_salida"));
+    salida.setId_salida(id_salida);
+    salida.setTipo(request.getParameter("tipo"));
+    salida.setObservaciones(request.getParameter("observaciones"));
+    String fecha = request.getParameter("fecha");
+
+    try {
+      HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+      salida.setFecha(helper_fechas.formatearFecha(fecha));
+    } catch (ParseException ex) {
+      ex.printStackTrace();
+    }
+    return salida;
+  }
   private ArrayList<int[]> construirLotes(HttpServletRequest request) throws NumberFormatException {
     ArrayList<int[]> resultado = new ArrayList<>();
     String lotes = request.getParameter("rolesUsuario");

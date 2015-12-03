@@ -14,7 +14,7 @@
       <input hidden="true" name="id_despacho" value="${despacho.getId_despacho()}">
       <input hidden="true" name="accion" value="${accion}">
       <input hidden="true" id="rolesUsuario" name="rolesUsuario" value="">
-      <label for="identificacion" class="control-label">Destino</label>
+      <label for="identificacion" class="control-label">*Destino</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <label for="fecha" class="control-label">Fecha</label>
+      <label for="fecha" class="control-label">*Fecha</label>
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">

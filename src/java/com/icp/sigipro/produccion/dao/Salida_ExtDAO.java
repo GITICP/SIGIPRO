@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.produccion.dao;
 
-import com.icp.sigipro.produccion.modelos.Reservacion;
+import com.icp.sigipro.produccion.modelos.Salida_Ext;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
@@ -16,26 +16,27 @@ import java.util.List;
  *
  * @author Amed
  */
-public class ReservacionDAO extends DAO {
+public class Salida_ExtDAO extends DAO {
   
-  public ReservacionDAO() {
+  public Salida_ExtDAO() {
   }
 
-  public int insertarReservacion(Reservacion p) throws SIGIPROException {
+  public int insertarSalida_Ext(Salida_Ext p) throws SIGIPROException {
 
     int resultado = 0;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.reservacion (hasta, observaciones, total)"
-              + " VALUES (?,?,?) RETURNING id_reservacion");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.salida_ext (fecha, tipo, observaciones, total)"
+              + " VALUES (?,?,?,?) RETURNING id_salida");
 
-      consulta.setDate(1, p.getHasta());
-      consulta.setString(2, p.getObservaciones());
-      consulta.setInt(3,0);
+      consulta.setDate(1, p.getFecha());
+      consulta.setString(2, p.getTipo());
+      consulta.setString(3, p.getObservaciones());
+      consulta.setInt(4,0);
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
-        resultado = resultadoConsulta.getInt("id_reservacion");
+        resultado = resultadoConsulta.getInt("id_salida");
       }
       resultadoConsulta.close();
       consulta.close();
@@ -48,20 +49,21 @@ public class ReservacionDAO extends DAO {
     return resultado;
   }
 
-  public boolean editarReservacion(Reservacion p) throws SIGIPROException {
+  public boolean editarSalida_Ext(Salida_Ext p) throws SIGIPROException {
 
     boolean resultado = false;
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " UPDATE produccion.reservacion "
-              + " SET  hasta=?, observaciones=?"
-              + " WHERE id_reservacion=?; "
+              " UPDATE produccion.salida_ext "
+              + " SET  fecha=?, tipo=?, observaciones=?"
+              + " WHERE id_salida=?; "
       );
 
-     consulta.setString(2, p.getObservaciones());
-     consulta.setDate(1, p.getHasta());
-     consulta.setInt(3, p.getId_reservacion());
+     consulta.setString(3, p.getObservaciones());
+     consulta.setString(2, p.getTipo());
+     consulta.setDate(1, p.getFecha());
+     consulta.setInt(4, p.getId_salida());
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -77,17 +79,17 @@ public class ReservacionDAO extends DAO {
     return resultado;
   }
 
-  public boolean eliminarReservacion(int id_reservacion) throws SIGIPROException {
+  public boolean eliminarSalida_Ext(int id_salida) throws SIGIPROException {
 
     boolean resultado = false;
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " DELETE FROM produccion.reservacion "
-              + " WHERE id_reservacion=?; "
+              " DELETE FROM produccion.salida_ext "
+              + " WHERE id_salida=?; "
       );
 
-      consulta.setInt(1, id_reservacion);
+      consulta.setInt(1, id_salida);
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -101,24 +103,25 @@ public class ReservacionDAO extends DAO {
     return resultado;
   }
 
-  public Reservacion obtenerReservacion(int id) throws SIGIPROException {
+  public Salida_Ext obtenerSalida_Ext(int id) throws SIGIPROException {
 
-    Reservacion reservacion = new Reservacion();
+    Salida_Ext salida_ext = new Salida_Ext();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT d.id_reservacion, d.hasta, d.observaciones, d.total "
-              + "FROM produccion.reservacion d "
-              + "where d.id_reservacion = ?");
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT d.id_salida, d.tipo, d.fecha, d.observaciones, d.total "
+              + "FROM produccion.salida_ext d "
+              + "where d.id_salida = ?");
 
       consulta.setInt(1, id);
 
       ResultSet rs = consulta.executeQuery();
 
       if (rs.next()) {
-        reservacion.setId_reservacion(rs.getInt("id_reservacion"));
-        reservacion.setTotal(rs.getInt("total"));
-        reservacion.setHasta(rs.getDate("hasta"));
-        reservacion.setObservaciones(rs.getString("observaciones"));
+        salida_ext.setId_salida(rs.getInt("id_salida"));
+        salida_ext.setTotal(rs.getInt("total"));
+        salida_ext.setFecha(rs.getDate("fecha"));
+        salida_ext.setObservaciones(rs.getString("observaciones"));
+        salida_ext.setTipo(rs.getString("tipo"));
       }
       rs.close();
       consulta.close();
@@ -127,27 +130,28 @@ public class ReservacionDAO extends DAO {
       ex.printStackTrace();
       throw new SIGIPROException("Se produjo un error al procesar la solicitud");
     }
-    return reservacion;
+    return salida_ext;
   }
 
-  public List<Reservacion> obtenerReservaciones() throws SIGIPROException {
+  public List<Salida_Ext> obtenerSalida_Exts() throws SIGIPROException {
 
-    List<Reservacion> resultado = new ArrayList<Reservacion>();
+    List<Salida_Ext> resultado = new ArrayList<Salida_Ext>();
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement("SELECT d.id_reservacion, d.hasta, d.observaciones, d.total "
-              + "FROM produccion.reservacion d "
+      consulta = getConexion().prepareStatement("SELECT d.id_salida, d.fecha, d.tipo, d.observaciones, d.total "
+              + "FROM produccion.salida_ext d "
               );
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {
-        Reservacion reservacion = new Reservacion();
-        reservacion.setId_reservacion(rs.getInt("id_reservacion"));
-        reservacion.setTotal(rs.getInt("total"));
-        reservacion.setHasta(rs.getDate("hasta"));
-        reservacion.setObservaciones(rs.getString("observaciones"));
-        resultado.add(reservacion);
+        Salida_Ext salida_ext = new Salida_Ext();
+        salida_ext.setId_salida(rs.getInt("id_salida"));
+        salida_ext.setTotal(rs.getInt("total"));
+        salida_ext.setFecha(rs.getDate("fecha"));
+        salida_ext.setObservaciones(rs.getString("observaciones"));
+        salida_ext.setTipo(rs.getString("tipo"));
+        resultado.add(salida_ext);
       }
       rs.close();
       consulta.close();
@@ -158,18 +162,18 @@ public class ReservacionDAO extends DAO {
     }
     return resultado;
   }
- public boolean reset_total(int id_reservacion) throws SIGIPROException {
+ public boolean reset_total(int id_salida) throws SIGIPROException {
 
     boolean resultado = false;
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
-              " UPDATE produccion.reservacion "
+              " UPDATE produccion.salida_ext "
               + " SET  total=0 "
-              + " WHERE id_reservacion=?; "
+              + " WHERE id_salida=?; "
       );
 
-     consulta.setInt(1, id_reservacion);
+     consulta.setInt(1, id_salida);
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;

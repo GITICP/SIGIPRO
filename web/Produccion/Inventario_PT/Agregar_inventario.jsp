@@ -21,7 +21,7 @@
       <div class="row">
         <div class="col-md-4 ">
           <ul class="breadcrumb">
-            <li>Produccion</li>
+            <li>Producción</li>
             <li> 
               <a href="/SIGIPRO/Produccion/Inventario_PT?">Inventario de Producto Terminado</a>
             </li>

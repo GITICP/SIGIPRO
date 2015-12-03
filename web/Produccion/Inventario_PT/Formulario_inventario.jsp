@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="col-md-6">
-      <label for="cantidad" class="control-label">Cantidad</label>
+      <label for="cantidad" class="control-label">*Cantidad</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
@@ -81,7 +81,7 @@
       </div>
     </div>
      <div class="col-md-6">
-      <label for="lote" class="control-label">Lote</label>
+      <label for="lote" class="control-label">*Lote</label>
       <div class="form-group">
         <div class="col-md-12">
           <div class="input-group">
