@@ -302,17 +302,66 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   protected void getVer_despacho(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     List<Integer> listaPermisos = getPermisosUsuario(request);
     validarPermisos(permisos, listaPermisos);
-    String redireccion = "Inventario_PT/Ver.jsp";
-    int id_pie = Integer.parseInt(request.getParameter("id_pie"));
-//        try {
-//            Inventario_PT pie = dao.obtenerInventario_PT(id_pie);
-//            request.setAttribute("pie", pie);
-//        }
-//        catch (SIGIPROException ex) {
-//            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-//        }
+    String redireccion = "Inventario_PT/Ver_despacho.jsp";
+    int id_despacho = Integer.parseInt(request.getParameter("id_despacho"));
+        try {
+            Despacho despacho = despacho_dao.obtenerDespacho(id_despacho);
+            request.setAttribute("despacho", despacho);
+            List<Despachos_inventario> despachos_inventarios = despachos_inventario_dao.obtenerDespachos_inventarios(id_despacho);
+            request.setAttribute("despachos_inventarios", despachos_inventarios);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
     redireccionar(request, response, redireccion);
   }
+  protected void getVer_salida(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    String redireccion = "Inventario_PT/Ver_salida.jsp";
+    int id_salida = Integer.parseInt(request.getParameter("id_salida"));
+        try {
+            Salida_Ext salida = salida_ext_dao.obtenerSalida_Ext(id_salida);
+            request.setAttribute("salida", salida);
+            List<Salidas_inventario> salidas_inventarios = salidas_inventario_dao.obtenerSalidas_inventarios(id_salida);
+            request.setAttribute("salidas_inventarios", salidas_inventarios);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+    redireccionar(request, response, redireccion);
+  }
+  protected void getVer_reservacion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    String redireccion = "Inventario_PT/Ver_reservacion.jsp";
+    int id_reservacion = Integer.parseInt(request.getParameter("id_reservacion"));
+        try {
+            Reservacion reservacion = reservacion_dao.obtenerReservacion(id_reservacion);
+            request.setAttribute("reservacion", reservacion);
+            List<Reservaciones_inventario> reservaciones_inventarios = reservaciones_inventario_dao.obtenerReservaciones_inventarios(id_reservacion);
+            request.setAttribute("reservaciones_inventarios", reservaciones_inventarios);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+    redireccionar(request, response, redireccion);
+  }
+  protected void getVer_inventario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    List<Integer> listaPermisos = getPermisosUsuario(request);
+    validarPermisos(permisos, listaPermisos);
+    String redireccion = "Inventario_PT/Ver_inventario.jsp";
+    int id_inventario_pt = Integer.parseInt(request.getParameter("id_inventario_pt"));
+        try {
+            Inventario_PT inventario = dao.obtenerInventario_PT(id_inventario_pt);
+            request.setAttribute("inventario", inventario);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+    redireccionar(request, response, redireccion);
+  }
+
 
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Post Agregar">

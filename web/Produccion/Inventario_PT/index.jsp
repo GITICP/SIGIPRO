@@ -132,7 +132,7 @@
 
                         <tr>
                           <td>
-                            <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_salida&id_macho=${salida.getId_salida()}">
+                            <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_salida&id_salida=${salida.getId_salida()}">
                               <div style="height:100%;width:100%">
                                 ${salida.getId_salida()}
                               </div>
