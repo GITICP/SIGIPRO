@@ -14,5 +14,69 @@ public class Paso {
   private String nombre;
   private SQLXML estructura;
   private boolean requiere_ap;
-  private String version;
+  private int version;
+  private int id_historial;
+  private int posicion;
+
+    public Paso() {
+    }
+
+    public int getId_paso() {
+        return id_paso;
+    }
+
+    public void setId_paso(int id_paso) {
+        this.id_paso = id_paso;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public SQLXML getEstructura() {
+        return estructura;
+    }
+
+    public void setEstructura(SQLXML estructura) {
+        this.estructura = estructura;
+    }
+
+    public boolean isRequiere_ap() {
+        return requiere_ap;
+    }
+
+    public void setRequiere_ap(boolean requiere_ap) {
+        this.requiere_ap = requiere_ap;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public int getId_historial() {
+        return id_historial;
+    }
+
+    public void setId_historial(int id_historial) {
+        this.id_historial = id_historial;
+    }
+
+    public int getPosicion() {
+        return posicion;
+    }
+
+    public void setPosicion(int posicion) {
+        this.posicion = posicion;
+    }
+  
+  
+  
 }

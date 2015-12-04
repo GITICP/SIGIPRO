@@ -1,5 +1,3 @@
-﻿--Esquema produccion
---HACEN FALTA LOS PERMISOS, ENTRADAS DEL MENU, PERMISOS DEL MENU DE LAS TABLAS DINÁMICAS
 DROP SCHEMA IF EXISTS produccion CASCADE;
 CREATE SCHEMA produccion;
 --Tablas esquema produccion
@@ -16,7 +14,7 @@ CREATE TABLE produccion.categoria_aa(
  );
 
  CREATE TABLE produccion.formula_maestra( 
-	id_formula_m serial NOT NULL,
+	id_formula_maestra serial NOT NULL,
 	nombre character varying(100) NOT NULL,
 	descripcion character varying(200)
  );
@@ -54,20 +52,32 @@ CREATE TABLE produccion.categoria_aa(
  );
 
  CREATE TABLE produccion.protocolo( 
-	id_protocolo serial NOT NULL,
-	nombre character varying(100) NOT NULL,
-	descripcion character varying(200) NOT NULL,
-	id_formula_m integer NOT NULL,
-	id_catalogo_pt integer NOT NULL,
-	aprobacion_calidad character varying(20) NOT NULL,
-	aprobacion_direccion character varying(20) NOT NULL,
-	version_p character varying(10) NOT NULL
- );
+    id_protocolo serial NOT NULL,
+    version int NOT NULL,
+    aprobacion_calidad boolean NOT NULL,
+    aprobacion_direccion boolean NOT NULL,
+    aprobacion_regente boolean NOT NULL,
+    aprobacion_coordinador boolean NOT NULL,
+    observaciones character varying(200)
+);
+	
+
+CREATE TABLE produccion.historial_protocolo(
+    id_historial serial NOT NULL,
+    id_protocolo int NOT NULL,
+    version int NOT NULL,
+    nombre character varying(100) NOT NULL UNIQUE,
+    descripcion character varying(200) NOT NULL,
+    id_formula_maestra integer NOT NULL,
+    id_catalogo_pt integer NOT NULL
+    );
 
   CREATE TABLE produccion.paso_protocolo(
 	id_pxp serial NOT NULL,
 	id_protocolo integer NOT NULL,
-	id_paso integer NOT NULL
+	id_paso integer NOT NULL,
+        posicion integer NOT NULL,
+        version integer NOT NULL
 );
 
  CREATE TABLE produccion.reservacion( 
@@ -115,22 +125,36 @@ CREATE TABLE produccion.reservaciones_inventario(
 ----TABLAS DINÁMICAS-----
  CREATE TABLE produccion.paso (
     id_paso serial  NOT NULL,
-    estructura xml  NULL,
-    nombre character varying(40) NOT NULL,
-    requiere_ap boolean Not NULL,
-    version_paso character varying(10) NOT NULL,
+    version int NOT NULL,
     CONSTRAINT pk_paso PRIMARY KEY (id_paso)
 );
 
+CREATE TABLE produccion.historial_paso(
+id_historial serial NOT NULL,
+    id_paso int NOT NULL,
+    version int NOT NULL,
+    estructura xml NOT NULL,
+    nombre character varying(40) NOT NULL,
+    requiere_ap boolean Not NULL
+);
+
+
  CREATE TABLE produccion.actividad_apoyo (
     id_actividad serial  NOT NULL,
+    aprobacion_calidad boolean NOT NULL,
+    aprobacion_direccion boolean NOT NULL,
+    aprobacion_regente boolean NOT NULL,
+    aprobacion_coordinador boolean NOT NULL,
+    CONSTRAINT pk_actividada PRIMARY KEY (id_actividad)
+);
+
+CREATE TABLE produccion.historial_actividad_apoyo(
+id_historial serial NOT NULL,
+    id_actividad int NOT NULL,
+    version int NOT NULL,
     estructura xml  NULL,
     nombre character varying(40) NOT NULL,
-    id_categoria_aa  integer NOT NULL,
-    estado_calidad character varying(10) NOT NULL,
-    estado_direccion character varying(10) NOT NULL,
-    version_paso character varying(10) NOT NULL,
-    CONSTRAINT pk_actividada PRIMARY KEY (id_actividad)
+    id_categoria_aa  integer NOT NULL
 );
 
  CREATE TABLE produccion.respuesta_pxp (
@@ -152,7 +176,7 @@ CREATE TABLE produccion.respuesta_aa (
 ALTER TABLE ONLY produccion.catalogo_pt ADD CONSTRAINT pk_catalogo_pt PRIMARY KEY (id_catalogo_pt);
 ALTER TABLE ONLY produccion.categoria_aa ADD CONSTRAINT pk_categoria_aa PRIMARY KEY (id_categoria_aa);
 ALTER TABLE ONLY produccion.despacho ADD CONSTRAINT pk_despacho PRIMARY KEY (id_despacho);
-ALTER TABLE ONLY produccion.formula_maestra ADD CONSTRAINT pk_fm PRIMARY KEY (id_formula_m);
+ALTER TABLE ONLY produccion.formula_maestra ADD CONSTRAINT pk_fm PRIMARY KEY (id_formula_maestra);
 ALTER TABLE ONLY produccion.inoculo ADD CONSTRAINT pk_inoculo PRIMARY KEY (id_inoculo);
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT pk_inventario_pt PRIMARY KEY (id_inventario_pt);
 ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT pk_pxp PRIMARY KEY (id_pxp);
@@ -163,6 +187,10 @@ ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT pk_veneno_produccio
 ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT pk_rxi PRIMARY KEY (id_rxi);
 ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT pk_sxi PRIMARY KEY (id_sxi);
 ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT pk_dxi PRIMARY KEY (id_dxi);
+ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT pk_historial_protocolo PRIMARY KEY (id_historial);
+ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT pk_historial_actividad_apoyo PRIMARY KEY (id_historial);
+ALTER TABLE ONLY produccion.historial_paso ADD CONSTRAINT pk_historial_paso PRIMARY KEY (id_historial);
+
 
 --Llaves foraneas esquema produccion
 
@@ -174,9 +202,9 @@ ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_protocolo FOREIGN
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt (id_catalogo_pt) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_paso FOREIGN KEY (id_paso) REFERENCES produccion.paso(id_paso) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT fk_id_formula_m FOREIGN KEY (id_formula_m) REFERENCES produccion.formula_maestra(id_formula_m) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT fk_id_catalago_pt FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt(id_catalogo_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (id_categoria_aa) REFERENCES produccion.categoria_aa(id_categoria_aa) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_formula_maestra FOREIGN KEY (id_formula_maestra) REFERENCES produccion.formula_maestra(id_formula_maestra) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_catalago_pt FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt(id_catalogo_pt) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (id_categoria_aa) REFERENCES produccion.categoria_aa(id_categoria_aa) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
@@ -187,6 +215,12 @@ ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spt FOREIGN KEY
 ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_ptd FOREIGN KEY (id_despacho) REFERENCES produccion.despacho(id_despacho) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rptr FOREIGN KEY (id_reservacion) REFERENCES produccion.reservacion(id_reservacion) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KEY (id_salida) REFERENCES produccion.salida_ext(id_salida) ON DELETE CASCADE;
+
+ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_historial_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.historial_paso ADD CONSTRAINT fk_historial_paso FOREIGN KEY (id_paso) REFERENCES produccion.paso(id_paso) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_historial_actividad_apoyo FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE CASCADE;
+
+
 --Indices unicos esquema produccion
 
 --Permisos asociados a produccion
@@ -202,6 +236,11 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (607, '[p
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (630, '[produccion]AdministrarCategoriaAA', 'Permite agregar/editar/eliminar categorías de actividades de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (635, '[produccion]AdministrarFormulaMaestra', 'Permite agregar/editar/eliminar fórmulas maestras.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (640, '[produccion]AdministrarProtocolo', 'Permite agregar/editar/eliminar protocolos de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (642, '[produccion]AprobarRegente', 'Permite a un regente farmacéutico aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (643, '[produccion]AprobarCoordinador', 'Permite al coordinador aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (644, '[produccion]AprobarDirector', 'Permite al director aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (641, '[produccion]AprobarCalidad', 'Permite a control de calidad aprobar o rechazar un protocolo de producción.');
 
 
 --Entradas del Menu de produccion

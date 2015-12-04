@@ -6,6 +6,7 @@
 package com.icp.sigipro.produccion.modelos;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -14,13 +15,36 @@ import org.json.JSONObject;
  */
 public class Protocolo {
   private int id_protocolo;
+  private int id_historial;
   private String nombre;
   private String descripcion;
   private Formula_Maestra formula_maestra;
   private Catalogo_PT producto;
-  private String aprobacion_calidad;
-  private String aprobacion_direccion;
-  private String version_p;
+  private boolean aprobacion_calidad;
+  private boolean aprobacion_direccion;
+  private boolean aprobacion_regente;
+  private boolean aprobacion_coordinador;
+  private String observaciones;
+  private int version;
+  private List<Paso> pasos;
+  private List<Protocolo> historial;
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public List<Protocolo> getHistorial() {
+        return historial;
+    }
+
+    public void setHistorial(List<Protocolo> historial) {
+        this.historial = historial;
+    }
+  
   
  public String parseJSON(){
         Class _class = this.getClass();
@@ -41,6 +65,40 @@ public class Protocolo {
             
         }
         return JSON.toString();
+    }
+
+    public List<Paso> getPasos() {
+        return pasos;
+    }
+
+    public void setPasos(List<Paso> pasos) {
+        this.pasos = pasos;
+    }
+    
+ 
+ 
+    public int getId_historial() {
+        return id_historial;
+    }
+
+    public void setId_historial(int id_historial) {
+        this.id_historial = id_historial;
+    }
+
+    public boolean getAprobacion_regente() {
+        return aprobacion_regente;
+    }
+
+    public void setAprobacion_regente(boolean aprobacion_regente) {
+        this.aprobacion_regente = aprobacion_regente;
+    }
+
+    public boolean getAprobacion_coordinador() {
+        return aprobacion_coordinador;
+    }
+
+    public void setAprobacion_coordinador(boolean aprobacion_coordinador) {
+        this.aprobacion_coordinador = aprobacion_coordinador;
     }
 
   public int getId_protocolo() {
@@ -83,28 +141,28 @@ public class Protocolo {
     this.producto = producto;
   }
 
-  public String getAprobacion_calidad() {
+  public boolean getAprobacion_calidad() {
     return aprobacion_calidad;
   }
 
-  public void setAprobacion_calidad(String aprobacion_calidad) {
+  public void setAprobacion_calidad(boolean aprobacion_calidad) {
     this.aprobacion_calidad = aprobacion_calidad;
   }
 
-  public String getAprobacion_direccion() {
+  public boolean getAprobacion_direccion() {
     return aprobacion_direccion;
   }
 
-  public void setAprobacion_direccion(String aprobacion_direccion) {
+  public void setAprobacion_direccion(boolean aprobacion_direccion) {
     this.aprobacion_direccion = aprobacion_direccion;
   }
 
-  public String getVersion_p() {
-    return version_p;
+  public int getVersion() {
+    return version;
   }
 
-  public void setVersion_p(String version_p) {
-    this.version_p = version_p;
+  public void setVersion(int version) {
+    this.version = version;
   }
  
 }

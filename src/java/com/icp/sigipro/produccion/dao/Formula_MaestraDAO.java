@@ -25,13 +25,13 @@ public class Formula_MaestraDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.formula_maestra (nombre,descripcion) "
-                                                                        + " VALUES (?,?) RETURNING id_formula_m");
+                                                                        + " VALUES (?,?) RETURNING id_formula_maestra");
             consulta.setString(1, formula.getNombre());
             consulta.setString(2, formula.getDescripcion());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
-                formula.setId_formula_maestra(rs.getInt("id_formula_m"));
+                formula.setId_formula_maestra(rs.getInt("id_formula_maestra"));
             }
             consulta.close();
             cerrarConexion();
@@ -54,7 +54,7 @@ public class Formula_MaestraDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(" UPDATE produccion.formula_maestra "
                     + "SET nombre=?, descripcion=? "
-                    + "WHERE id_formula_m = ?; ");
+                    + "WHERE id_formula_maestra= ?; ");
             consulta.setString(1, formula.getNombre());
             consulta.setString(2, formula.getDescripcion());
             consulta.setInt(3, formula.getId_formula_maestra());
@@ -79,11 +79,11 @@ public class Formula_MaestraDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT id_formula_m, nombre, descripcion FROM produccion.formula_maestra; ");
+            consulta = getConexion().prepareStatement(" SELECT id_formula_maestra, nombre, descripcion FROM produccion.formula_maestra; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 Formula_Maestra formula = new Formula_Maestra();
-                formula.setId_formula_maestra(rs.getInt("id_formula_m"));
+                formula.setId_formula_maestra(rs.getInt("id_formula_maestra"));
                 formula.setNombre(rs.getString("nombre"));
                 formula.setDescripcion(rs.getString("descripcion"));
                 resultado.add(formula);
@@ -105,11 +105,11 @@ public class Formula_MaestraDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT * FROM produccion.formula_maestra WHERE id_formula_m=?; ");
+            consulta = getConexion().prepareStatement(" SELECT * FROM produccion.formula_maestra WHERE id_formula_maestra=?; ");
             consulta.setInt(1, id_formula_maestra);
             rs = consulta.executeQuery();
             if (rs.next()) {
-                resultado.setId_formula_maestra(rs.getInt("id_formula_m"));
+                resultado.setId_formula_maestra(rs.getInt("id_formula_maestra"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
             }
@@ -128,7 +128,7 @@ public class Formula_MaestraDAO extends DAO {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
-            consulta = getConexion().prepareStatement(" DELETE FROM produccion.formula_maestra WHERE id_formula_m=?; ");
+            consulta = getConexion().prepareStatement(" DELETE FROM produccion.formula_maestra WHERE id_formula_maestra=?; ");
             consulta.setInt(1, id_formula_maestra);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
