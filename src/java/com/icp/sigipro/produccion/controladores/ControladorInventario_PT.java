@@ -10,15 +10,19 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.produccion.dao.Catalogo_PTDAO;
 import com.icp.sigipro.produccion.dao.DespachoDAO;
 import com.icp.sigipro.produccion.dao.Despachos_inventarioDAO;
 import com.icp.sigipro.produccion.dao.Inventario_PTDAO;
+import com.icp.sigipro.produccion.dao.ProtocoloDAO;
 import com.icp.sigipro.produccion.dao.ReservacionDAO;
 import com.icp.sigipro.produccion.dao.Reservaciones_inventarioDAO;
 import com.icp.sigipro.produccion.dao.Salida_ExtDAO;
 import com.icp.sigipro.produccion.dao.Salidas_inventarioDAO;
+import com.icp.sigipro.produccion.modelos.Catalogo_PT;
 import com.icp.sigipro.produccion.modelos.Despacho;
 import com.icp.sigipro.produccion.modelos.Despachos_inventario;
+import com.icp.sigipro.produccion.modelos.Protocolo;
 import com.icp.sigipro.produccion.modelos.Reservacion;
 import com.icp.sigipro.produccion.modelos.Reservaciones_inventario;
 import com.icp.sigipro.produccion.modelos.Salida_Ext;
@@ -53,7 +57,9 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   private final Salida_ExtDAO salida_ext_dao = new Salida_ExtDAO();
   private final Salidas_inventarioDAO salidas_inventario_dao = new Salidas_inventarioDAO();
   private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-
+  private final ProtocoloDAO protocolo_dao = new ProtocoloDAO();
+  private final Catalogo_PTDAO catalogo_pt_dao = new Catalogo_PTDAO();
+  
   protected final Class clase = ControladorInventario_PT.class;
   protected final List<String> accionesGet = new ArrayList<String>() {
     {
@@ -152,6 +158,10 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     validarPermisos(permisos, listaPermisos);
     String redireccion = "Inventario_PT/Agregar_inventario.jsp";
     Inventario_PT inventario = new Inventario_PT();
+    List<Protocolo> protocolos = protocolo_dao.obtenerProtocolos();
+    List<Catalogo_PT> productos = catalogo_pt_dao.obtenerCatalogo_PTs();
+    request.setAttribute("protocolos", protocolos);
+    request.setAttribute("productos", productos);
     request.setAttribute("inventario", inventario);
     request.setAttribute("accion", "agregar_inventario");
 
@@ -209,6 +219,10 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     try {
       Inventario_PT inventario_pt = dao.obtenerInventario_PT(id_inventario_pt);
       request.setAttribute("inventario", inventario_pt);
+      List<Protocolo> protocolos = protocolo_dao.obtenerProtocolos();
+      List<Catalogo_PT> productos = catalogo_pt_dao.obtenerCatalogo_PTs();
+      request.setAttribute("protocolos", protocolos);
+      request.setAttribute("productos", productos);
     } catch (SIGIPROException ex) {
       request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
     }
@@ -368,28 +382,22 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   protected void postAgregar_inventario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     boolean resultado = false;
     String redireccion = "Inventario_PT/Agregar_inventario.jsp";
-//        try {
-//            Inventario_PT pie = construirObjeto(request);
-//
-//            dao.insertarInventario_PT(pie);
-//
-//            BitacoraDAO bitacora = new BitacoraDAO();
-//            bitacora.setBitacora(pie.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-//
-//            redireccion = "Inventario_PT/index.jsp";
-//            request.setAttribute("mensaje", helper.mensajeDeExito("Inventario_PT agregado correctamente."));
-//        }
-//        catch (SIGIPROException ex) {
-//            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-//        }
-//
-//        try {
-//            List<Inventario_PT> pies = dao.obtenerInventario_PT();
-//            request.setAttribute("pies", pies);
-//        }
-//        catch (SIGIPROException sig_ex) {
-//            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
-//        }
+        try {
+            Inventario_PT pie = construirInventario(request);
+
+            dao.insertarInventario_PT(pie);
+
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(pie.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INVENTARIO_PT, request.getRemoteAddr());
+
+            redireccion = "Inventario_PT/index.jsp";
+            request = request_index(request);
+            request.setAttribute("inv_tab", "active");
+            request.setAttribute("mensaje", helper.mensajeDeExito("Entrada de inventario de producto terminado agregada correctamente."));
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
     redireccionar(request, response, redireccion);
   }
 
@@ -486,27 +494,24 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   protected void postEditar_inventario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     boolean resultado = false;
     String redireccion = "Inventario_PT/Editar_inventario.jsp";
-//        try {
-//            Inventario_PT pie = construirObjeto(request);
-//            dao.editarInventario_PT(pie);
-//
-//            BitacoraDAO bitacora = new BitacoraDAO();
-//            bitacora.setBitacora(pie.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-//
-//            redireccion = "Inventario_PT/index.jsp";
-//            request.setAttribute("mensaje", helper.mensajeDeExito("Inventario_PT editado correctamente."));
-//        }
-//        catch (SIGIPROException ex) {
-//            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-//        }
-//
-//        try {
-//            List<Inventario_PT> pies = dao.obtenerInventario_PT();
-//            request.setAttribute("pies", pies);
-//        }
-//        catch (SIGIPROException sig_ex) {
-//            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
-//        }
+        try {
+            Inventario_PT pie = construirInventario(request);
+
+            dao.editarInventario_PT(pie);
+
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(pie.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INVENTARIO_PT, request.getRemoteAddr());
+
+            redireccion = "Inventario_PT/index.jsp";
+            request = request_index(request);
+            request.setAttribute("inv_tab", "active");
+            request.setAttribute("mensaje", helper.mensajeDeExito("Entrada de inventario de producto terminado editada correctamente."));
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+
+
     redireccionar(request, response, redireccion);
   }
 
@@ -691,25 +696,31 @@ public class ControladorInventario_PT extends SIGIPROServlet {
   }
   // </editor-fold>
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-  private Inventario_PT construirObjeto(HttpServletRequest request) throws SIGIPROException {
-    Inventario_PT pie = new Inventario_PT();
+  private Inventario_PT construirInventario(HttpServletRequest request) throws SIGIPROException {
+    Inventario_PT inventario = new Inventario_PT();
 
-//        int id_pie = Integer.parseInt(request.getParameter("id_pie"));
-//        pie.setId_pie(id_pie);
-//        pie.setCodigo(request.getParameter("codigo"));
-//        pie.setFuente(request.getParameter("fuente"));
-//        String fecha_ingreso_str = request.getParameter("fecha_ingreso");
-//        String fecha_retiro_str = request.getParameter("fecha_retiro");
-//
-//        try {
-//            HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
-//            pie.setFecha_ingreso(helper_fechas.formatearFecha(fecha_ingreso_str));
-//            pie.setFecha_retiro(helper_fechas.formatearFecha(fecha_retiro_str));
-//        }
-//        catch (ParseException ex) {
-//            ex.printStackTrace();
-//        }
-    return pie;
+        int id_catalogo = Integer.parseInt(request.getParameter("id_catalogo_pt"));
+        int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        String lote = request.getParameter("lote");
+        String fecha_vencimiento = request.getParameter("fecha_vencimiento");
+        Protocolo protocolo = new Protocolo();
+        Catalogo_PT producto = new Catalogo_PT();
+        protocolo.setId_protocolo(id_protocolo);
+        producto.setId_catalogo_pt(id_catalogo);
+        inventario.setLote(lote);
+        inventario.setCantidad(cantidad);
+        inventario.setProducto(producto);
+        inventario.setProtocolo(protocolo);
+
+        try {
+            HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+            inventario.setFecha_vencimiento(helper_fechas.formatearFecha(fecha_vencimiento));
+        }
+        catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+    return inventario;
   }
 
   private Despacho construirDespacho(HttpServletRequest request) throws SIGIPROException {
