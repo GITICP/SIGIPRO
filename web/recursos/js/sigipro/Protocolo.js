@@ -73,9 +73,7 @@ function agregarPaso() {
         $("#orden").val(orden + ',' + contador);
     }
     $(".campos").append(fila);
-
-    $("#paso_" + contador).select2();
-    contador++;
+    
     var listaPasos = $("#listaPasos").val();
     var parseLista = JSON.parse(listaPasos);
     $("#paso_" + contador).append('<optgroup id="listapasos_' + contador + '" label="Pasos de Protocolo"></optgroup>');
@@ -83,6 +81,8 @@ function agregarPaso() {
         $("#paso_" + contador).append("<option value=" + value[0] + ">" + value[1] + "</option>");
     });
     
+    $("#paso_" + contador).select2();
+    contador++;
 }
 
 Array.prototype.remove = function (x) {

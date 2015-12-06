@@ -14,7 +14,7 @@
             <input hidden="true" name="id_protocolo" value="${protocolo.getId_protocolo()}">
             <input hidden="true" name="accion" value="${accion}">
             <input hidden="true" name="orden" id='orden' value="">
-            <input hidden="true" id='listaPasos' name='listaPasos' value="${pasos}">
+            <input hidden="true" id='listaPasos' name='listaPasos' value='${pasos}'>
             <label for="nombre" class="control-label">* Nombre</label>
             <div class="form-group">
                 <div class="col-sm-12">

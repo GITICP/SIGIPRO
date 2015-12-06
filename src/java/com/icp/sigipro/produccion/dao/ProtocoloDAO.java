@@ -44,8 +44,18 @@ public class ProtocoloDAO extends DAO {
                 if (rs.next()) {
                     resultado = true;
                     protocolo.setId_historial(rs.getInt("id_historial"));
-                    //Meter los pasos del protocolo
-
+                    
+                    consulta = getConexion().prepareStatement(" INSERT INTO produccion.paso_protocolo (id_protocolo, version, id_paso, posicion, requiere_ap) "
+                        + " VALUES (?,1,?,?,?) RETURNING id_pxp");
+                    
+                    consulta.setInt(1, protocolo.getId_protocolo());
+                    for (Paso p : protocolo.getPasos()){
+                        consulta.setInt(2, p.getId_paso());
+                        consulta.setInt(3, p.getPosicion());
+                        consulta.setBoolean(4, p.isRequiere_ap());
+                        consulta.addBatch();
+                    }
+                    consulta.executeBatch();
                 }
 
             }
@@ -184,7 +194,7 @@ public class ProtocoloDAO extends DAO {
                     protocolo.getHistorial().add(p);
                 }
 
-                consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.nombre, h.requiere_ap, pxp.posicion "
+                consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.nombre, pxp.requiere_ap, pxp.posicion "
                         + "FROM produccion.protocolo as pro "
                         + "LEFT JOIN produccion.paso_protocolo as pxp ON (pro.id_protocolo = pxp.id_protocolo AND pro.version = pxp.version) "
                         + "LEFT JOIN produccion.paso as p ON pxp.id_paso = p.id_paso "

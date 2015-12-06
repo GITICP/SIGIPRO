@@ -77,6 +77,7 @@ CREATE TABLE produccion.historial_protocolo(
 	id_protocolo integer NOT NULL,
 	id_paso integer NOT NULL,
         posicion integer NOT NULL,
+        requiere_ap boolean Not NULL,
         version integer NOT NULL
 );
 
@@ -130,12 +131,11 @@ CREATE TABLE produccion.reservaciones_inventario(
 );
 
 CREATE TABLE produccion.historial_paso(
-id_historial serial NOT NULL,
+    id_historial serial NOT NULL,
     id_paso int NOT NULL,
     version int NOT NULL,
     estructura xml NOT NULL,
-    nombre character varying(40) NOT NULL,
-    requiere_ap boolean Not NULL
+    nombre character varying(40) NOT NULL
 );
 
 

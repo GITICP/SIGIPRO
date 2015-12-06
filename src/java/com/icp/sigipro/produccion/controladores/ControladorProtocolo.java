@@ -9,6 +9,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.produccion.dao.Catalogo_PTDAO;
 import com.icp.sigipro.produccion.dao.Formula_MaestraDAO;
+import com.icp.sigipro.produccion.dao.PasoDAO;
 import com.icp.sigipro.produccion.dao.ProtocoloDAO;
 import com.icp.sigipro.produccion.modelos.Catalogo_PT;
 import com.icp.sigipro.produccion.modelos.Formula_Maestra;
@@ -37,6 +38,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
     private final ProtocoloDAO dao = new ProtocoloDAO();
     private final Formula_MaestraDAO formuladao = new Formula_MaestraDAO();
     private final Catalogo_PTDAO catalogodao = new Catalogo_PTDAO();
+    private final PasoDAO pasodao = new PasoDAO();
 
     protected final Class clase = ControladorProtocolo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -70,7 +72,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
         //Meter Catalogo de Producto Terminado
         request.setAttribute("catalogo_pt", catalogodao.obtenerCatalogos_PT());
         //Meter Pasos de Protocolo
-        //request.setAttribute("pasos","['1','Nombre']");
+        request.setAttribute("pasos", this.parseListaPasos(pasodao.obtenerPasos()));
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
     }
@@ -222,7 +224,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
             this.getEditar(request, response);
         }
     }
-    
+
     protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(640, request);
         boolean resultado = false;
@@ -231,7 +233,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
         p.setId_protocolo(id_protocolo);
         String observaciones = request.getParameter("observaciones");
         String actor = request.getParameter("actor");
-        p.setObservaciones(observaciones + " - Rechazada por: "+actor);
+        p.setObservaciones(observaciones + " - Rechazada por: " + actor);
         resultado = dao.rechazarProtocolo(p.getId_protocolo(), p.getObservaciones());
         if (resultado) {
             //Funcion que genera la bitacora
@@ -252,17 +254,36 @@ public class ControladorProtocolo extends SIGIPROServlet {
         p.setNombre(request.getParameter("nombre"));
         p.setDescripcion(request.getParameter("descripcion"));
         Catalogo_PT pt = new Catalogo_PT();
-        //pt.setId_catalogo_pt(Integer.parseInt(request.getParameter("id_catalogo_pt")));
+        pt.setId_catalogo_pt(Integer.parseInt(request.getParameter("id_catalogo_pt")));
         p.setProducto(pt);
         Formula_Maestra fm = new Formula_Maestra();
         fm.setId_formula_maestra(Integer.parseInt(request.getParameter("id_formula_maestra")));
         p.setFormula_maestra(fm);
-        
-        //Meter los pasos
-        
+
+        String orden = request.getParameter("orden");
+        String[] listaOrden = orden.split(",");
+
+        List<Paso> pasos = new ArrayList<Paso>();
+        int posicion = 1;
+        for (String i : listaOrden) {
+            System.out.println(i);
+            if (!"".equals(i)) {
+                Paso paso = new Paso();
+                paso.setId_paso(Integer.parseInt(request.getParameter("paso_" + i)));
+                if (request.getParameter("aprobar_" + i) != null) {
+                    paso.setRequiere_ap(true);
+                } else {
+                    paso.setRequiere_ap(false);
+                }
+                paso.setPosicion(posicion);
+                posicion++;
+                pasos.add(paso);
+            }
+        }
+        p.setPasos(pasos);
         return p;
     }
-    
+
     public List<String> parseListaPasos(List<Paso> pasos) {
         List<String> respuesta = new ArrayList<String>();
         for (Paso p : pasos) {
@@ -271,6 +292,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
             tipo += "\"" + p.getNombre() + "\"]";
             respuesta.add(tipo);
         }
+        System.out.println(respuesta.toString());
         return respuesta;
     }
 

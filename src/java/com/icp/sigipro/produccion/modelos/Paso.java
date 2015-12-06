@@ -4,19 +4,33 @@
  * and open the template in the editor.
  */
 package com.icp.sigipro.produccion.modelos;
+
+import java.lang.reflect.Field;
 import java.sql.SQLXML;
+import org.json.JSONObject;
+
 /**
  *
- * @author Amed
- * FALTA EL XML */ 
+ * @author Amed FALTA EL XML
+ */
 public class Paso {
-  private int id_paso;
-  private String nombre;
-  private SQLXML estructura;
-  private boolean requiere_ap;
-  private int version;
-  private int id_historial;
-  private int posicion;
+
+    private int id_paso;
+    private String nombre;
+    private SQLXML estructura;
+    private String estructuraString;
+    private boolean requiere_ap;
+    private int version;
+    private int id_historial;
+    private int posicion;
+
+    public String getEstructuraString() {
+        return estructuraString;
+    }
+
+    public void setEstructuraString(String estructuraString) {
+        this.estructuraString = estructuraString;
+    }
 
     public Paso() {
     }
@@ -76,7 +90,25 @@ public class Paso {
     public void setPosicion(int posicion) {
         this.posicion = posicion;
     }
-  
-  
-  
+
+    public String parseJSON() {
+        Class _class = this.getClass();
+        JSONObject JSON = new JSONObject();
+        try {
+            Field properties[] = _class.getDeclaredFields();
+            for (int i = 0; i < properties.length; i++) {
+                Field field = properties[i];
+                if (i != 0) {
+                    JSON.put(field.getName(), field.get(this));
+                } else {
+                    JSON.put("id_objeto", field.get(this));
+                }
+            }
+
+        } catch (Exception e) {
+
+        }
+        return JSON.toString();
+    }
+
 }

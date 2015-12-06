@@ -705,6 +705,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             //Se transforma el diccionario en un XML
             System.out.println(diccionario_formulario);
             String xml = this.parseDictXML(diccionario_formulario, orden, columnas_filas);
+            System.out.println(xml);
             a.setEstructuraString(xml);
         }
         return a;
@@ -745,7 +746,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         //Se obtiene el orden de los campos
         String[] orden_formulario = orden.split(",");
         int contador_tablas = 0;
-        HelperXML xml = new HelperXML();
+        HelperXML xml = new HelperXML("analisis");
         //Se itera sobre los IDS del orden de los campos
         for (String i : orden_formulario) {
             if (!i.equals("")) {

@@ -49,13 +49,13 @@ public class HelperXML {
     //int filas;
     HashMap<Integer, HashMap> dictionary;
 
-    public HelperXML() {
+    public HelperXML(String name) {
         try {
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
             doc = dBuilder.newDocument();
             // root element
-            root = doc.createElement("analisis");
+            root = doc.createElement(name);
 
             doc.appendChild(root);
 

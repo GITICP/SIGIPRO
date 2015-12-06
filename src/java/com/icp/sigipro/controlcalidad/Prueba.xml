@@ -15,6 +15,22 @@
         <resultado>False</resultado>
     </campo>
     <campo>
+        <tipo>checkbox</tipo>
+        <nombre>Checkbox</nombre>
+        <opciones>
+            <opcion>
+                <etiqueta>Pablo</etiqueta>
+                <valor>Valor</valor>
+                <check>true</check>
+            </opcion>
+            <opcion>
+                <etiqueta>Karla</etiqueta>
+                <valor>Valorcito</valor>
+                <check>false</check>
+            </opcion>
+        </opciones>
+    </campo>
+    <campo>
         <tipo>table</tipo>
         <nombre>Tabla de Reactivos</nombre>
         <columnas>
@@ -197,3 +213,28 @@
         <resultado>True</resultado>
     </campo>
 </analisis>
+
+<paso>
+    <campo>
+        <tipo>seleccion</tipo>
+        <nombre-campo>Seleccion1_1</nombre-campo>
+        <etiqueta>Seleccion1</etiqueta>
+        <opciones>
+            <opcion>
+                <etiqueta>A</etiqueta>
+                <valor>A_2</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>B</etiqueta>
+                <valor>B_3</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>C</etiqueta>
+                <valor>C_4</valor>
+                <check>false</check>
+            </opcion>
+        </opciones>
+    </campo>
+</paso>

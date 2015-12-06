@@ -85,6 +85,7 @@ public class Bitacora {
     public static final String TABLA_CATEGORIA_AA = "PRODUCCION.CATEGORIA_AA";
     public static final String TABLA_FORMULAMAESTRA = "PRODUCCION.FORMULA_MAESTRA";
     public static final String TABLA_PROTOCOLO = "PRODUCCION.PROTOCOLO";
+    public static final String TABLA_PASO = "PRODUCCION.PASO";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";
