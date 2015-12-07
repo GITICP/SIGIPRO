@@ -49,6 +49,8 @@ public class ControladorProtocolo extends SIGIPROServlet {
             add("eliminar");
             add("editar");
             add("aprobar");
+            add("verhistorial");
+            add("activar");
 
         }
     };
@@ -68,10 +70,10 @@ public class ControladorProtocolo extends SIGIPROServlet {
         Protocolo p = new Protocolo();
         List<Formula_Maestra> formulas_maestras = formuladao.obtenerFormulas_Maestras();
         request.setAttribute("protocolo", p);
+        request.setAttribute("contador", 0);
+        request.setAttribute("orden", "");
         request.setAttribute("formulas_maestras", formulas_maestras);
-        //Meter Catalogo de Producto Terminado
         request.setAttribute("catalogo_pt", catalogodao.obtenerCatalogos_PT());
-        //Meter Pasos de Protocolo
         request.setAttribute("pasos", this.parseListaPasos(pasodao.obtenerPasos()));
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
@@ -91,6 +93,22 @@ public class ControladorProtocolo extends SIGIPROServlet {
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
         try {
             Protocolo p = dao.obtenerProtocolo(id_protocolo);
+            System.out.println(p.getNombre());
+            request.setAttribute("protocolo", p);
+            redireccionar(request, response, redireccion);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+    
+    protected void getVerhistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Protocolo/VerHistorial.jsp";
+        int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
+        int id_historial = Integer.parseInt(request.getParameter("id_historial"));
+        try {
+            Protocolo p = dao.obtenerHistorial(id_historial, id_protocolo);
             request.setAttribute("protocolo", p);
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {
@@ -104,7 +122,14 @@ public class ControladorProtocolo extends SIGIPROServlet {
         String redireccion = "Protocolo/Editar.jsp";
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
         Protocolo p = dao.obtenerProtocolo(id_protocolo);
+        List<Paso> pasos = pasodao.obtenerPasos();
+        request.setAttribute("contador", p.getPasos().size());
+        request.setAttribute("orden", this.parseOrdenPasos(p.getPasos()));
         request.setAttribute("protocolo", p);
+        request.setAttribute("formulas_maestras", formuladao.obtenerFormulas_Maestras());
+        request.setAttribute("catalogo_pt", catalogodao.obtenerCatalogos_PT());
+        request.setAttribute("pasosEditar", pasos );
+        request.setAttribute("pasos", this.parseListaPasos(pasos));
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -128,6 +153,35 @@ public class ControladorProtocolo extends SIGIPROServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Protocolo no pudo ser eliminado ya que tiene elementos asociados."));
+            this.getIndex(request, response);
+        }
+
+    }
+    
+    protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(640, request);
+        int id_historial = Integer.parseInt(request.getParameter("id_historial"));
+        int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
+        int version = dao.obtenerVersion(id_historial);
+        boolean resultado = false;
+        try {
+            resultado = dao.activarVersion(version, id_protocolo);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                Protocolo protocolo = new Protocolo();
+                protocolo.setId_historial(id_historial);
+                protocolo.setId_protocolo(id_protocolo);
+                protocolo.setVersion(version);
+                bitacora.setBitacora(protocolo.parseJSON(), Bitacora.ACCION_ACTIVAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PROTOCOLO, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Versión de Protocolo activado correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Versión de Protocolo no pudo ser activado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Versión de Protocolo no pudo ser activado."));
             this.getIndex(request, response);
         }
 
@@ -184,8 +238,10 @@ public class ControladorProtocolo extends SIGIPROServlet {
         }
 
     }
-    // </editor-fold>
 
+    //Activar
+    //Ver Historial
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(640, request);
@@ -259,7 +315,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
         Formula_Maestra fm = new Formula_Maestra();
         fm.setId_formula_maestra(Integer.parseInt(request.getParameter("id_formula_maestra")));
         p.setFormula_maestra(fm);
-
+        p.setVersion(Integer.parseInt(request.getParameter("version")));
         String orden = request.getParameter("orden");
         String[] listaOrden = orden.split(",");
 
@@ -290,6 +346,17 @@ public class ControladorProtocolo extends SIGIPROServlet {
             String tipo = "[";
             tipo += p.getId_paso() + ",";
             tipo += "\"" + p.getNombre() + "\"]";
+            respuesta.add(tipo);
+        }
+        System.out.println(respuesta.toString());
+        return respuesta;
+    }
+    
+    public List<String> parseOrdenPasos(List<Paso> pasos) {
+        List<String> respuesta = new ArrayList<String>();
+        for (Paso p : pasos) {
+            String tipo = "";
+            tipo += p.getContador() + "";
             respuesta.add(tipo);
         }
         System.out.println(respuesta.toString());

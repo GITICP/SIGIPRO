@@ -101,6 +101,7 @@ public class Bitacora {
     public static final String ACCION_REGISTRAR_EXTRACCION = "REGISTRAR EXTRACCIÓN";
     public static final String ACCION_RECIBIR = "RECIBIR";
     public static final String ACCION_RETIRAR = "RETIRAR";
+    public static final String ACCION_ACTIVAR = "ACTIVAR";
 
     public Bitacora() {
 

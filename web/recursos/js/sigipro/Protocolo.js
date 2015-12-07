@@ -1,4 +1,4 @@
-contador = 1;
+contador = parseInt($("#contador").val())+1;;
 
 
 $(document).on("click", ".aprobar-Modal", function () {
@@ -16,6 +16,8 @@ $(document).on("click", ".rechazar-Modal", function () {
 });
 
 $(function () {
+    contador = parseInt($("#contador").val())+1;
+
     $("#sortable").sortable({
         placeholder: "ui-state-highlight",
         update: function () {
@@ -24,6 +26,10 @@ $(function () {
         }
     });
     $("#sortable").disableSelection();
+    
+    var ordenActual = $("#orden").val();
+    var ordenNuevo = ordenActual.replace("]","").replace("[","").replace(" ","");
+    $("#orden").val(ordenNuevo);
 });
 
 function agregarPaso() {

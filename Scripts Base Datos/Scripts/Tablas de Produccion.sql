@@ -66,7 +66,7 @@ CREATE TABLE produccion.historial_protocolo(
     id_historial serial NOT NULL,
     id_protocolo int NOT NULL,
     version int NOT NULL,
-    nombre character varying(100) NOT NULL UNIQUE,
+    nombre character varying(100) NOT NULL,
     descripcion character varying(200) NOT NULL,
     id_formula_maestra integer NOT NULL,
     id_catalogo_pt integer NOT NULL
@@ -201,7 +201,7 @@ ALTER TABLE ONLY produccion.inoculo ADD CONSTRAINT fk_id_veneno FOREIGN KEY (id_
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo (id_protocolo) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt (id_catalogo_pt) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_paso FOREIGN KEY (id_paso) REFERENCES produccion.paso(id_paso) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_formula_maestra FOREIGN KEY (id_formula_maestra) REFERENCES produccion.formula_maestra(id_formula_maestra) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_catalago_pt FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt(id_catalogo_pt) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (id_categoria_aa) REFERENCES produccion.categoria_aa(id_categoria_aa) ON DELETE SET NULL;

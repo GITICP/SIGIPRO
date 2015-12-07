@@ -23,7 +23,18 @@ public class Paso {
     private int version;
     private int id_historial;
     private int posicion;
+    private int contador;
 
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
+
+    
+    
     public String getEstructuraString() {
         return estructuraString;
     }

@@ -44,12 +44,12 @@ public class ProtocoloDAO extends DAO {
                 if (rs.next()) {
                     resultado = true;
                     protocolo.setId_historial(rs.getInt("id_historial"));
-                    
+
                     consulta = getConexion().prepareStatement(" INSERT INTO produccion.paso_protocolo (id_protocolo, version, id_paso, posicion, requiere_ap) "
-                        + " VALUES (?,1,?,?,?) RETURNING id_pxp");
-                    
+                            + " VALUES (?,1,?,?,?);");
+
                     consulta.setInt(1, protocolo.getId_protocolo());
-                    for (Paso p : protocolo.getPasos()){
+                    for (Paso p : protocolo.getPasos()) {
                         consulta.setInt(2, p.getId_paso());
                         consulta.setInt(3, p.getPosicion());
                         consulta.setBoolean(4, p.isRequiere_ap());
@@ -73,6 +73,7 @@ public class ProtocoloDAO extends DAO {
 
     public boolean editarProtocolo(Protocolo protocolo) {
         boolean resultado = false;
+        ResultSet rs = null;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_protocolo (id_protocolo, version, nombre, descripcion, id_formula_maestra, id_catalogo_pt) "
@@ -83,7 +84,8 @@ public class ProtocoloDAO extends DAO {
             consulta.setString(4, protocolo.getDescripcion());
             consulta.setInt(5, protocolo.getFormula_maestra().getId_formula_maestra());
             consulta.setInt(6, protocolo.getProducto().getId_catalogo_pt());
-            if (consulta.executeUpdate() == 1) {
+            rs = consulta.executeQuery();
+            if (rs.next()) {
                 resultado = true;
                 consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
                         + "SET version=?, aprobacion_calidad = false, aprobacion_regente = false, aprobacion_coordinador = false, aprobacion_direccion=false  "
@@ -92,7 +94,18 @@ public class ProtocoloDAO extends DAO {
                 consulta.setInt(1, protocolo.getVersion() + 1);
                 consulta.setInt(2, protocolo.getId_protocolo());
                 if (consulta.executeUpdate() == 1) {
-                    //Meter los pasos nuevos
+                    consulta = getConexion().prepareStatement(" INSERT INTO produccion.paso_protocolo (id_protocolo, version, id_paso, posicion, requiere_ap) "
+                            + " VALUES (?,?,?,?,?); ");
+
+                    consulta.setInt(1, protocolo.getId_protocolo());
+                    for (Paso p : protocolo.getPasos()) {
+                        consulta.setInt(2, protocolo.getVersion() + 1);
+                        consulta.setInt(3, p.getId_paso());
+                        consulta.setInt(4, p.getPosicion());
+                        consulta.setBoolean(5, p.isRequiere_ap());
+                        consulta.addBatch();
+                    }
+                    consulta.executeBatch();
 
                 }
             }
@@ -107,9 +120,29 @@ public class ProtocoloDAO extends DAO {
         return resultado;
     }
 
-    //ActivarProtocolo
-    //Aprobaciones
-    //Desaprobar
+    public boolean activarVersion(int version, int id_protocolo) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
+                    + "SET version=? "
+                    + "WHERE id_protocolo= ?; ");
+            consulta.setInt(1, version);
+            consulta.setInt(2, id_protocolo);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
     public List<Protocolo> obtenerProtocolos() {
         List<Protocolo> resultado = new ArrayList<Protocolo>();
         PreparedStatement consulta = null;
@@ -155,30 +188,30 @@ public class ProtocoloDAO extends DAO {
             consulta = getConexion().prepareStatement(" SELECT pro.*, h.*, pt.id_catalogo_pt, pt.nombre as nombrept, fm.id_formula_maestra, fm.nombre as nombrefm "
                     + "FROM produccion.protocolo as pro "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (pro.id_protocolo = h.id_protocolo AND pro.version = h.version) "
-                    + "LEFT JOIN produccion.paso_protocolo as pxp ON (pxp.id_protocolo = pro.id_protocolo AND pxp.version = pro.version) "
                     + "LEFT JOIN produccion.catalogo_pt as pt ON pt.id_catalogo_pt = h.id_catalogo_pt "
                     + "LEFT JOIN produccion.formula_maestra as fm ON fm.id_formula_maestra = h.id_formula_maestra "
                     + "WHERE pro.id_protocolo = ?; ");
             consulta.setInt(1, id_protocolo);
+            System.out.println(consulta);
             rs = consulta.executeQuery();
             if (rs.next()) {
-                Protocolo protocolo = new Protocolo();
-                protocolo.setId_protocolo(rs.getInt("id_protocolo"));
-                protocolo.setNombre(rs.getString("nombre"));
-                protocolo.setDescripcion(rs.getString("descripcion"));
-                protocolo.setAprobacion_calidad(rs.getBoolean("aprobacion_calidad"));
-                protocolo.setAprobacion_coordinador(rs.getBoolean("aprobacion_coordinador"));
-                protocolo.setAprobacion_direccion(rs.getBoolean("aprobacion_direccion"));
-                protocolo.setAprobacion_regente(rs.getBoolean("aprobacion_regente"));
-                protocolo.setVersion(rs.getInt("version"));
+                resultado.setId_protocolo(rs.getInt("id_protocolo"));
+                resultado.setNombre(rs.getString("nombre"));
+                resultado.setDescripcion(rs.getString("descripcion"));
+                resultado.setAprobacion_calidad(rs.getBoolean("aprobacion_calidad"));
+                resultado.setAprobacion_coordinador(rs.getBoolean("aprobacion_coordinador"));
+                resultado.setAprobacion_direccion(rs.getBoolean("aprobacion_direccion"));
+                resultado.setAprobacion_regente(rs.getBoolean("aprobacion_regente"));
+                resultado.setObservaciones(rs.getString("observaciones"));
+                resultado.setVersion(rs.getInt("version"));
                 Catalogo_PT pt = new Catalogo_PT();
                 pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
                 pt.setNombre(rs.getString("nombrept"));
-                protocolo.setProducto(pt);
+                resultado.setProducto(pt);
                 Formula_Maestra fm = new Formula_Maestra();
                 fm.setId_formula_maestra(rs.getInt("id_formula_maestra"));
                 fm.setNombre(rs.getString("nombrefm"));
-                protocolo.setFormula_maestra(fm);
+                resultado.setFormula_maestra(fm);
 
                 consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.version "
                         + "FROM produccion.historial_protocolo as h "
@@ -186,15 +219,15 @@ public class ProtocoloDAO extends DAO {
                 consulta.setInt(1, id_protocolo);
 
                 rs = consulta.executeQuery();
-                protocolo.setHistorial(new ArrayList<Protocolo>());
+                resultado.setHistorial(new ArrayList<Protocolo>());
                 while (rs.next()) {
                     Protocolo p = new Protocolo();
                     p.setId_historial(rs.getInt("id_historial"));
                     p.setVersion(rs.getInt("version"));
-                    protocolo.getHistorial().add(p);
+                    resultado.getHistorial().add(p);
                 }
 
-                consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.nombre, pxp.requiere_ap, pxp.posicion "
+                consulta = getConexion().prepareStatement(" SELECT p.id_paso, h.id_historial, h.nombre, pxp.requiere_ap, pxp.posicion "
                         + "FROM produccion.protocolo as pro "
                         + "LEFT JOIN produccion.paso_protocolo as pxp ON (pro.id_protocolo = pxp.id_protocolo AND pro.version = pxp.version) "
                         + "LEFT JOIN produccion.paso as p ON pxp.id_paso = p.id_paso "
@@ -203,14 +236,102 @@ public class ProtocoloDAO extends DAO {
                         + "ORDER BY pxp.posicion; ");
                 consulta.setInt(1, id_protocolo);
                 rs = consulta.executeQuery();
-                protocolo.setPasos(new ArrayList<Paso>());
+                int contador = 1;
+                resultado.setPasos(new ArrayList<Paso>());
                 while (rs.next()) {
                     Paso p = new Paso();
+                    p.setContador(contador);
+                    p.setId_paso(rs.getInt("id_paso"));
                     p.setId_historial(rs.getInt("id_historial"));
                     p.setNombre(rs.getString("nombre"));
                     p.setRequiere_ap(rs.getBoolean("requiere_ap"));
                     p.setPosicion(rs.getInt("posicion"));
-                    protocolo.getPasos().add(p);
+                    contador++;
+                    resultado.getPasos().add(p);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerVersion(int id_historial)
+    {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT h.version FROM produccion.historial_protocolo WHERE id_historial=?; ");
+            consulta.setInt(1, id_historial);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public Protocolo obtenerHistorial(int id_historial, int id_protocolo) {
+        Protocolo resultado = new Protocolo();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT h.*, pt.id_catalogo_pt, pt.nombre as nombrept, fm.id_formula_maestra, fm.nombre as nombrefm "
+                    + "FROM produccion.historial_protocolo as h "
+                    + "LEFT JOIN produccion.catalogo_pt as pt ON pt.id_catalogo_pt = h.id_catalogo_pt "
+                    + "LEFT JOIN produccion.formula_maestra as fm ON fm.id_formula_maestra = h.id_formula_maestra "
+                    + "WHERE h.id_historial = ?; ");
+            consulta.setInt(1, id_historial);
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_protocolo(id_protocolo);
+                resultado.setId_historial(rs.getInt("id_historial"));
+                resultado.setNombre(rs.getString("nombre"));
+                resultado.setDescripcion(rs.getString("descripcion"));
+                resultado.setVersion(rs.getInt("version"));
+                Catalogo_PT pt = new Catalogo_PT();
+                pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
+                pt.setNombre(rs.getString("nombrept"));
+                resultado.setProducto(pt);
+                Formula_Maestra fm = new Formula_Maestra();
+                fm.setId_formula_maestra(rs.getInt("id_formula_maestra"));
+                fm.setNombre(rs.getString("nombrefm"));
+                resultado.setFormula_maestra(fm);
+
+                consulta = getConexion().prepareStatement(" SELECT h.id_historial,p.id_paso, h.nombre, pxp.requiere_ap, pxp.posicion "
+                        + "FROM produccion.historial_protocolo as hpro "
+                        + "LEFT JOIN produccion.paso_protocolo as pxp ON (hpro.id_protocolo = pxp.id_protocolo AND hpro.version = pxp.version) "
+                        + "LEFT JOIN produccion.paso as p ON pxp.id_paso = p.id_paso "
+                        + "LEFT JOIN produccion.historial_paso as h ON (h.id_paso = p.id_paso AND h.version = p.version) "
+                        + "WHERE hpro.id_historial=? "
+                        + "ORDER BY pxp.posicion; ");
+                consulta.setInt(1, id_historial);
+                rs = consulta.executeQuery();
+                int contador = 1;
+                resultado.setPasos(new ArrayList<Paso>());
+                while (rs.next()) {
+                    Paso p = new Paso();
+                    p.setContador(contador);
+                    p.setId_paso(rs.getInt("id_paso"));
+                    p.setId_historial(rs.getInt("id_historial"));
+                    p.setNombre(rs.getString("nombre"));
+                    p.setRequiere_ap(rs.getBoolean("requiere_ap"));
+                    p.setPosicion(rs.getInt("posicion"));
+                    contador++;
+                    resultado.getPasos().add(p);
                 }
             }
         } catch (Exception ex) {
@@ -286,7 +407,7 @@ public class ProtocoloDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean aprobarProtocolo(int id_protocolo, int actor) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -297,20 +418,20 @@ public class ProtocoloDAO extends DAO {
                             + "SET aprobacion_calidad = true "
                             + "WHERE id_protocolo=?; ");
                     break;
-                case(2):
+                case (2):
                     consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
-                    + "SET aprobacion_regente=true "
-                    + "WHERE id_protocolo=?; ");
+                            + "SET aprobacion_regente=true "
+                            + "WHERE id_protocolo=?; ");
                     break;
-                case(3):
+                case (3):
                     consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
-                    + "SET aprobacion_coordinador= true "
-                    + "WHERE id_protocolo=?; ");
+                            + "SET aprobacion_coordinador= true "
+                            + "WHERE id_protocolo=?; ");
                     break;
-                case(4):
+                case (4):
                     consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
-                    + "SET aprobacion_direccion = true "
-                    + "WHERE id_protocolo=?; ");
+                            + "SET aprobacion_direccion = true "
+                            + "WHERE id_protocolo=?; ");
                     break;
             }
             consulta.setInt(1, id_protocolo);
@@ -325,7 +446,5 @@ public class ProtocoloDAO extends DAO {
         }
         return resultado;
     }
-    
-    
 
 }
