@@ -6,10 +6,6 @@
 package com.icp.sigipro.produccion.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.controlcalidad.modelos.Analisis;
-import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
-import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
-import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
@@ -18,17 +14,15 @@ import com.icp.sigipro.produccion.dao.PasoDAO;
 import com.icp.sigipro.produccion.modelos.Paso;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
 import com.icp.sigipro.utilidades.HelperXML;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +33,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -69,6 +62,8 @@ public class ControladorPaso extends SIGIPROServlet {
             add("eliminar");
             add("editar");
             add("realizar");
+            add("verhistorial");
+            add("activar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -88,6 +83,9 @@ public class ControladorPaso extends SIGIPROServlet {
         Paso p = new Paso();
         request.setAttribute("paso", p);
         request.setAttribute("accion", "Agregar");
+        request.setAttribute("orden", "");
+        request.setAttribute("cantidad", 0);
+        request.setAttribute("contador", 0);
         redireccionar(request, response, redireccion);
     }
 
@@ -123,14 +121,90 @@ public class ControladorPaso extends SIGIPROServlet {
         }
 
     }
-//PENDIENTE
+    
+    protected void getVerhistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Paso/VerHistorial.jsp";
+        int id_historial = Integer.parseInt(request.getParameter("id_historial"));
+        ProduccionXSLT xslt;
+        Paso p;
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            p = dao.obtenerHistorial(id_historial);
+            xslt = produccionxsltdao.obtenerProduccionXSLTVerFormulario();
+            if (p.getEstructura() != null) {
+                String formulario = helper_transformaciones.transformar(xslt, p.getEstructura());
+                request.setAttribute("cuerpo_datos", formulario);
+            } else {
+                request.setAttribute("cuerpo_datos", null);
+            }
+            request.setAttribute("paso", p);
+            redireccionar(request, response, redireccion);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+    }
+    
+    protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(650, request);
+        int id_historial = Integer.parseInt(request.getParameter("id_historial"));
+        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
+        int version = dao.obtenerVersion(id_historial);
+        boolean resultado = false;
+        try {
+            resultado = dao.activarVersion(version, id_paso);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                Paso paso = new Paso();
+                paso.setId_historial(id_historial);
+                paso.setId_paso(id_paso);
+                paso.setVersion(version);
+                bitacora.setBitacora(paso.parseJSON(), Bitacora.ACCION_ACTIVAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PASO, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Versión de Paso activado correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Versión de Paso no pudo ser activado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Versión de paso no pudo ser activado."));
+            this.getIndex(request, response);
+        }
+
+    }
+
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
         validarPermiso(650, request);
         String redireccion = "Paso/Editar.jsp";
         int id_paso = Integer.parseInt(request.getParameter("id_paso"));
         Paso p = dao.obtenerPaso(id_paso);
+
+        HelperXML xml = new HelperXML(p.getEstructura(), "produccion");
+
+        HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
+
+        List<Integer> lista = new ArrayList<Integer>();
+        int cantidad = 0;
+        if (diccionario_formulario != null) {
+            Set<Integer> it = diccionario_formulario.keySet();
+            lista.addAll(it);
+
+            for (Integer i : lista) {
+                if (diccionario_formulario.get(i).containsKey("cantidad")) {
+                    cantidad += ((Integer) diccionario_formulario.get(i).get("cantidad"));
+                }
+
+            }
+        }
+
         request.setAttribute("paso", p);
+        request.setAttribute("lista", lista);
+        request.setAttribute("contador", lista.size());
+        request.setAttribute("cantidad", cantidad);
+        request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
 
@@ -148,12 +222,12 @@ public class ControladorPaso extends SIGIPROServlet {
                 //----------------------------
                 request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo eliminado correctamente"));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser eliminado ya que tiene protocolos asociadas."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser eliminado ya que tiene protocolos asociados."));
             }
             this.getIndex(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser eliminado ya que tiene protocolos asociadas."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser eliminado ya que tiene protocolos asociados."));
             this.getIndex(request, response);
         }
 
@@ -216,7 +290,7 @@ public class ControladorPaso extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser editado. Inténtelo de nuevo."));
                 request.setAttribute("id_paso", p.getId_paso());
-                this.getEditar(request, response);
+                this.getIndex(request, response);
             }
         }
     }
@@ -247,6 +321,10 @@ public class ControladorPaso extends SIGIPROServlet {
                     case "id_paso":
                         int id_paso = Integer.parseInt(fieldValue);
                         p.setId_paso(id_paso);
+                        break;
+                    case "version":
+                        int version = Integer.parseInt(fieldValue);
+                        p.setVersion(version);
                         break;
                     case "orden":
                         orden = fieldValue;
@@ -330,24 +408,24 @@ public class ControladorPaso extends SIGIPROServlet {
         xml.agregarSubelemento("valor", "", campo);
         xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
     }
-    
+
     private void crearSeleccion(HelperXML xml, HashMap<String, String> hash, Element campo) {
         xml.agregarSubelemento("tipo", "seleccion", campo);
         xml.agregarSubelemento("nombre-campo", hash.get("snombre") + "_" + this.nombre_campo, campo);
         xml.agregarSubelemento("etiqueta", hash.get("snombre"), campo);
         this.nombre_campo++;
         Element opciones = xml.agregarElemento("opciones", campo);
-        for (String i : hash.keySet()){
+        for (String i : hash.keySet()) {
             System.out.println(i);
-            if (i.contains("opcion")){
+            if (i.contains("opcion")) {
                 Element opcion = xml.agregarElemento("opcion", opciones);
                 xml.agregarSubelemento("etiqueta", hash.get(i), opcion);
-                xml.agregarSubelemento("valor", hash.get(i)+"_"+this.nombre_campo, opcion);
+                xml.agregarSubelemento("valor", hash.get(i) + "_" + this.nombre_campo, opcion);
                 xml.agregarSubelemento("check", "false", opcion);
                 this.nombre_campo++;
             }
         }
-       
+
     }
 
     // </editor-fold>
@@ -375,8 +453,8 @@ public class ControladorPaso extends SIGIPROServlet {
             metodo.invoke(this, request, response);
         }
     }
-    
-        private void obtenerParametros(HttpServletRequest request) {
+
+    private void obtenerParametros(HttpServletRequest request) {
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload upload = new ServletFileUpload(factory);

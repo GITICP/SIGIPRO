@@ -1,5 +1,5 @@
 contador = 1;
-opciones=1;
+opciones=  1;
 
 $(function () {
     $("#sortable").sortable({
@@ -10,6 +10,13 @@ $(function () {
         }
     });
     $("#sortable").disableSelection();
+    
+    var ordenActual = $("#orden").val();
+    var ordenNuevo = ordenActual.replace("]","").replace("[","").replace(/ /g,"");
+    $("#orden").val(ordenNuevo);
+    contador = parseInt($("#contador").val())+1;
+    opciones = parseInt($("#cantidad").val())+1;
+    
 });
 
 function agregarCampo() {

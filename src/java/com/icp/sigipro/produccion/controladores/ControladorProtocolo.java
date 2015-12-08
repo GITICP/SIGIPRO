@@ -192,6 +192,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
         //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director
         int actor = Integer.parseInt(request.getParameter("actor"));
         Protocolo p = dao.obtenerAprobaciones(id_protocolo);
+        System.out.println(actor);
         boolean resultado = false;
         try {
             switch (actor) {

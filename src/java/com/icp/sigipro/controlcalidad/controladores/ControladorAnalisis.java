@@ -240,7 +240,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         Analisis a = dao.obtenerAnalisis(id_analisis);
 
-        HelperXML xml = new HelperXML(a.getEstructura());
+        HelperXML xml = new HelperXML(a.getEstructura(),"control");
 
         HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
 

@@ -65,7 +65,7 @@ public class HelperXML {
 
     }
 
-    public HelperXML(SQLXML xml) throws SQLException, ParserConfigurationException, SAXException, IOException {
+    public HelperXML(SQLXML xml, String tipo) throws SQLException, ParserConfigurationException, SAXException, IOException {
         if (xml != null) {
             InputStream binaryStream = xml.getBinaryStream();
             DocumentBuilder parser
@@ -77,8 +77,11 @@ public class HelperXML {
             //columnas = 0;
             //filasespeciales = 0;
             //filas = 0;
-
-            leerXML(doc.getDocumentElement().getFirstChild());
+            if (tipo.equals("control")) {
+                leerXML(doc.getDocumentElement().getFirstChild());
+            } else {
+                leerXMLProduccion(doc.getDocumentElement().getFirstChild());
+            }
 
             System.out.println(dictionary);
         }
@@ -108,6 +111,35 @@ public class HelperXML {
         Node nextNode = node.getNextSibling();
         if (nextNode != null) {
             leerXML(nextNode);
+        }
+
+    }
+
+    public void leerXMLProduccion(Node node) {
+        String name = node.getNodeName();
+        String text = node.getTextContent();
+
+        NodeList nodosTipo = node.getChildNodes();
+
+        boolean isCampo = true;
+        for (int i = 0, len = nodosTipo.getLength(); i < len; i++) {
+            Node nodo = nodosTipo.item(i);
+            System.out.println(nodo.getNodeName());
+            System.out.println(nodo.getTextContent());
+            if (nodo.getNodeName().equals("tipo") && nodo.getTextContent().equals("seleccion")) {
+                isCampo = false;
+                break;
+            }
+        }
+        if (isCampo) {
+            parseCampos(node.getChildNodes());
+        } else {
+            parseCheckbox(node.getChildNodes());
+        }
+
+        Node nextNode = node.getNextSibling();
+        if (nextNode != null) {
+            leerXMLProduccion(nextNode);
         }
 
     }
@@ -147,6 +179,29 @@ public class HelperXML {
 
             }
         }
+    }
+
+    public void parseCheckbox(NodeList nodos) {
+        contador++;
+        HashMap<String, Object> hash = new HashMap<String, Object>();
+        dictionary.put(contador, hash);
+        dictionary.get(contador).put("tipo", "checkbox");
+
+        for (int i = 0, len = nodos.getLength(); i < len; i++) {
+            Node currentNode = nodos.item(i);
+            String name = currentNode.getNodeName();
+            String text = currentNode.getTextContent();
+            switch (name) {
+                case "etiqueta":
+                    dictionary.get(contador).put("nombre", text);
+                    break;
+                case "opciones":
+                    NodeList nodosOpciones = currentNode.getChildNodes();
+                    parseOpciones(nodosOpciones);
+                    break;
+            }
+        }
+
     }
 
     public void parseTabla(NodeList nodos) {
@@ -192,6 +247,31 @@ public class HelperXML {
             }
         }
         dictionary.get(contador).put("columnas", columnas);
+
+    }
+
+    private void parseOpciones(NodeList nodosOpciones) {
+
+        List<String> opciones = new ArrayList<String>();
+        int pivot = 1;
+        for (int j = 0, lenOpciones = nodosOpciones.getLength(); j < lenOpciones; j++) {
+            Node opcion = nodosOpciones.item(j);
+            NodeList nodosOpcion = opcion.getChildNodes();
+            
+            for (int i = 0, len = nodosOpcion.getLength(); i < len; i++) {
+                Node currentNode = nodosOpcion.item(i);
+                String name = currentNode.getNodeName();
+                String text = currentNode.getTextContent();
+                System.out.println(pivot);
+                switch (name) {
+                    case "etiqueta":
+                        dictionary.get(contador).put("opcion"+pivot, text);
+                        pivot++;
+                        break;
+                }
+            }
+        }
+        dictionary.get(contador).put("cantidad", pivot-1);
 
     }
 

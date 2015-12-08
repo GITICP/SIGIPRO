@@ -14,6 +14,9 @@
             <input hidden="true" name="id_paso" value="${paso.getId_paso()}">
             <input hidden="true" name="accion" value="${accion}">
             <input hidden="true" name="orden" id="orden" value="${lista.toString().replace("]","").replace("[","").replace(" ","")}">
+            <input hidden="true" name="contador" id="contador" value="${contador}">
+            <input hidden="true" name="cantidad" id="cantidad" value="${cantidad}">
+            <input hidden="true" name="version" id="version" value="${paso.getVersion()}">
 
             <label for="nombre" class="control-label">*Nombre del Paso</label>
             <div class="form-group">
@@ -104,7 +107,54 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <%--Aqui iria lo de los checkboxs--%>
+                                    <div class="widget widget-table seleccion_${i}" id="${i}">
+                                        <input hidden="true" id="elemento_${i}" value="seleccion">
+                                        <div class="widget-header">
+                                            <h3><i class="fa fa-edit"></i> Selección Múltiple #${i}</h3>
+                                            <div class="btn-group widget-header-toolbar">
+                                                <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo('seleccion_' + contador + '')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
+                                            </div>
+                                        </div>
+                                        <div class="widget-content">
+                                            <div class="col-md-12">
+                                                <label for="tipo" class="control-label"> *Nombre de Selección Múltiple</label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <input type="text" maxlength="45" placeholder="Nombre" class="form-control" name="s_snombre_${i}" value="${diccionario.get(i).get('nombre')}"
+                                                                   required
+                                                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                   oninput="setCustomValidity('')" > 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <label for="nombre" class="control-label">*Opciones</label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group opciones_${i}">
+                                                            <input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
+                                                                   required
+                                                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                   oninput="setCustomValidity('')" >
+                                                            <c:forEach var="id" begin="2" end="${diccionario.get(i).get('cantidad')}">
+                                                                <c:set var="idstring">${id}</c:set>
+                                                                <div class='col-md-8 o_opcion${id}_${i}_${id}'> 
+                                                                    <br><input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion${id}_${i}_${id}" value="${diccionario.get(i).get('opcion'.concat(idstring))}"
+                                                                               required
+                                                                               oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                               oninput="setCustomValidity('')" ></div> 
+                                                                <div class='col-md-4 o_opcion${id}_${i}_${id}'> <br> <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarOpcion('o_opcion${id}_${i}_${id}')" style="margin-left:7px;margin-right:5px;">Eliminar</button> </div>
+                                                                </c:forEach>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-12 form-group'>
+                                                    <button type="button" onclick="agregarOpcion(${i})" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Opción</button>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>    

@@ -7,6 +7,7 @@ package com.icp.sigipro.produccion.modelos;
 
 import java.lang.reflect.Field;
 import java.sql.SQLXML;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -24,6 +25,7 @@ public class Paso {
     private int id_historial;
     private int posicion;
     private int contador;
+    private List<Paso> historial;
 
     public int getContador() {
         return contador;
@@ -31,6 +33,14 @@ public class Paso {
 
     public void setContador(int contador) {
         this.contador = contador;
+    }
+
+    public List<Paso> getHistorial() {
+        return historial;
+    }
+
+    public void setHistorial(List<Paso> historial) {
+        this.historial = historial;
     }
 
     

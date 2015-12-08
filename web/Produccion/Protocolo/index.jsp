@@ -79,12 +79,12 @@
                                                                 <c:choose>
                                                                     <c:when test="${!protocolo.getAprobacion_direccion()}">
                                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 644)}">
-                                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='1' data-toggle="modal" data-target="#modalAprobarProtocolo">[Director] Aprobar</a>
+                                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='4' data-toggle="modal" data-target="#modalAprobarProtocolo">[Director] Aprobar</a>
                                                                             <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Director' data-toggle="modal" data-target="#modalRechazarProtocolo">[Director] Rechazar</a>
                                                                         </c:if>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <a class="btn btn-warning btn-sm boton-accion"disabled='true'>Protocolo Aprobado</a>
+                                                                        <a class="btn btn-warning btn-sm boton-accion" disabled='true'>Protocolo Aprobado</a>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </c:when>

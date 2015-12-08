@@ -21,9 +21,9 @@
                     <ul class="breadcrumb">
                         <li>Producción</li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Protocolo?">Historial de Protocolo de Producción</a>
+                            <a href="/SIGIPRO/Produccion/Protocolo?">Protocolo de Producción</a>
                         </li>
-                        <li><a href="/SIGIPRO/Produccion/Protocolo?accion=ver&id_protocolo=${protocolo.getId_protocolo()}">${protocolo.getNombre()}</a> </li>
+                        <li><a href="/SIGIPRO/Produccion/Protocolo?accion=ver&id_protocolo=${protocolo.getId_protocolo()}">Historial de ${protocolo.getNombre()}</a> </li>
                         <li class="active">Versión ${protocolo.getVersion()}</li>
                     </ul>
                 </div>

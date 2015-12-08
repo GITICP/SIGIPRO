@@ -51,6 +51,60 @@
                             </table>
                             <br>
                             ${cuerpo_datos}
+                            
+                            
+                            <div class="col-sm-12">
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-flask"></i> Historial del paso de protocolo </h3>
+                                    </div>
+                                    <div class="widget-content">
+                                        <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                            <!-- Columnas -->
+                                            <thead> 
+                                                <tr>
+                                                    <th>Version</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${paso.getHistorial()}" var="historial">
+
+                                                    <tr id ="${historial.getId_historial()}">
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${historial.getVersion()!= paso.getVersion()}">
+                                                                    <a href="/SIGIPRO/Produccion/Paso?accion=verhistorial&id_historial=${historial.getId_historial()}&id_paso=${paso.getId_paso()}">
+                                                                        <div style="height:100%;width:100%">
+                                                                            Version ${historial.getVersion()}
+                                                                        </div>
+                                                                    </a>                                                                
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    Version ${historial.getVersion()}
+                                                                </c:otherwise>
+                                                            </c:choose>
+
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${historial.getVersion()!= paso.getVersion()}">
+                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 650)}">
+                                                                        <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Paso?accion=activar&id_historial=${historial.getId_historial()}&id_paso=${paso.getId_paso()}">Activar</a>
+                                                                    </c:if>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a class="btn btn-warning btn-sm boton-accion" disabled>Activo</a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

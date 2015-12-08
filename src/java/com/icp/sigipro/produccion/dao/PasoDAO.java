@@ -9,6 +9,7 @@ import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.produccion.modelos.Formula_Maestra;
 import com.icp.sigipro.produccion.modelos.Paso;
+import com.icp.sigipro.produccion.modelos.Protocolo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLXML;
@@ -65,19 +66,19 @@ public class PasoDAO extends DAO {
             SQLXML xmlVal = getConexion().createSQLXML();
             xmlVal.setString(paso.getEstructuraString());
             consulta.setInt(1, paso.getId_paso());
-            consulta.setInt(2, paso.getVersion()+1);
+            consulta.setInt(2, paso.getVersion() + 1);
             consulta.setSQLXML(3, xmlVal);
             consulta.setString(4, paso.getNombre());
             rs = consulta.executeQuery();
             if (rs.next()) {
+                resultado = true;
                 paso.setId_historial(rs.getInt("id_historial"));
                 consulta = getConexion().prepareStatement(" UPDATE produccion.paso "
                         + "SET version = ? "
                         + "WHERE id_paso = ?; ");
-                consulta.setInt(1, paso.getVersion()+1);
+                consulta.setInt(1, paso.getVersion() + 1);
                 consulta.setInt(2, paso.getId_paso());
-                rs = consulta.executeQuery();
-                if (rs.next()) {
+                if (consulta.executeUpdate() == 1) {
                     resultado = true;
                 }
             }
@@ -90,9 +91,8 @@ public class PasoDAO extends DAO {
         }
         return resultado;
     }
-    
-    public List<Paso> obtenerPasos()
-    {
+
+    public List<Paso> obtenerPasos() {
         List<Paso> resultado = new ArrayList<Paso>();
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -107,19 +107,17 @@ public class PasoDAO extends DAO {
                 paso.setVersion(rs.getInt("version"));
                 resultado.add(paso);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
         return resultado;
     }
-    
-    public Paso obtenerPaso(int id_paso)
-    {
+
+    public Paso obtenerPaso(int id_paso) {
         Paso resultado = new Paso();
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -134,12 +132,98 @@ public class PasoDAO extends DAO {
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setVersion(rs.getInt("version"));
                 resultado.setEstructura(rs.getSQLXML("estructura"));
+
+                consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.version "
+                        + "FROM produccion.historial_paso as h "
+                        + "WHERE h.id_paso = ?; ");
+                consulta.setInt(1, id_paso);
+
+                rs = consulta.executeQuery();
+                resultado.setHistorial(new ArrayList<Paso>());
+                while (rs.next()) {
+                    Paso p = new Paso();
+                    p.setId_historial(rs.getInt("id_historial"));
+                    p.setVersion(rs.getInt("version"));
+                    resultado.getHistorial().add(p);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public Paso obtenerHistorial(int id_historial) {
+        Paso resultado = new Paso();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT h.id_paso, h.nombre, h.version, h.estructura  FROM produccion.historial_paso as h "
+                    + "WHERE h.id_historial = ?; ");
+            consulta.setInt(1, id_historial);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_paso(rs.getInt("id_paso"));
+                resultado.setNombre(rs.getString("nombre"));
+                resultado.setVersion(rs.getInt("version"));
+                resultado.setEstructura(rs.getSQLXML("estructura"));
+
+                
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerVersion(int id_historial)
+    {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_paso WHERE id_historial=?; ");
+            consulta.setInt(1, id_historial);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
             }
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }finally {
             cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean activarVersion(int version, int id_protocolo) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.paso "
+                    + "SET version=? "
+                    + "WHERE id_paso= ?; ");
+            consulta.setInt(1, version);
+            consulta.setInt(2, id_protocolo);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

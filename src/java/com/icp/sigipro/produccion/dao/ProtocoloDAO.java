@@ -125,7 +125,7 @@ public class ProtocoloDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
-                    + "SET version=? "
+                    + "SET version=?, aprobacion_calidad = false, aprobacion_regente = false, aprobacion_coordinador = false, aprobacion_direccion=false  "
                     + "WHERE id_protocolo= ?; ");
             consulta.setInt(1, version);
             consulta.setInt(2, id_protocolo);
@@ -179,7 +179,6 @@ public class ProtocoloDAO extends DAO {
         return resultado;
     }
 
-    //Cada protocolo muestra la info del mismo, una tabla de versiones y una tabla de pasos del protocolo
     public Protocolo obtenerProtocolo(int id_protocolo) {
         Protocolo resultado = new Protocolo();
         PreparedStatement consulta = null;
@@ -266,7 +265,7 @@ public class ProtocoloDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT h.version FROM produccion.historial_protocolo WHERE id_historial=?; ");
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_protocolo WHERE id_historial=?; ");
             consulta.setInt(1, id_historial);
             rs = consulta.executeQuery();
             if (rs.next()) {
@@ -430,7 +429,7 @@ public class ProtocoloDAO extends DAO {
                     break;
                 case (4):
                     consulta = getConexion().prepareStatement(" UPDATE produccion.protocolo "
-                            + "SET aprobacion_direccion = true "
+                            + "SET aprobacion_direccion = true, observaciones='' "
                             + "WHERE id_protocolo=?; ");
                     break;
             }
