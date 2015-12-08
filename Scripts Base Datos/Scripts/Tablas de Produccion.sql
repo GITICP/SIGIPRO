@@ -1,6 +1,4 @@
-﻿--Esquema produccion
---HACEN FALTA LOS PERMISOS, ENTRADAS DEL MENU, PERMISOS DEL MENU DE LAS TABLAS DINÁMICAS
-DROP SCHEMA IF EXISTS produccion CASCADE;
+﻿DROP SCHEMA IF EXISTS produccion CASCADE;
 CREATE SCHEMA produccion;
 --Tablas esquema produccion
 CREATE TABLE produccion.catalogo_pt(
