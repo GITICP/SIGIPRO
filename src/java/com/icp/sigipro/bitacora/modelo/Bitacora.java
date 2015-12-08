@@ -82,7 +82,7 @@ public class Bitacora {
     public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
     public static final String TABLA_INFORME = "CONTROL_CALIDAD.INFORMES";
     public static final String TABLA_PATRON = "CONTROL_CALIDAD.PATRONES";
-    public static final String TABLA_INVENTARIO_PT = "PRODUCCION.INVNETARIO_PT";
+    public static final String TABLA_INVENTARIO_PT = "PRODUCCION.INVENTARIO_PT";
     public static final String TABLA_CATALOGO_PT = "PRODUCCION.CATALOGO_PT";
     public static final String TABLA_DESPACHOS = "PRODUCCION.DESPACHOS";
     public static final String TABLA_SALIDAS_EXT = "PRODUCCION.SALIDAS_EXT";
