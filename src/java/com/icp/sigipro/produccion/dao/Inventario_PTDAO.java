@@ -116,9 +116,9 @@ public class Inventario_PTDAO extends DAO {
 
     try {
       PreparedStatement consulta = getConexion().prepareStatement("SELECT pt.id_inventario_pt, pt.lote, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, p.id_protocolo, "
-              + "p.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
-              + "FROM produccion.inventario_pt pt, produccion.catalogo_pt c, produccion.protocolo p "
-              + "where pt.id_inventario_pt = ? AND pt.id_protocolo = p.id_protocolo AND pt.id_catalogo_pt = c.id_catalogo_pt");
+              + "h.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
+              + "FROM produccion.inventario_pt pt, produccion.catalogo_pt c, produccion.protocolo p, produccion.historial_protocolo h "
+              + "where pt.id_inventario_pt = ? AND pt.id_protocolo = p.id_protocolo AND pt.id_catalogo_pt = c.id_catalogo_pt AND p.id_protocolo = h.id_protocolo AND p.version = h.version");
 
       consulta.setInt(1, id);
 
@@ -156,8 +156,10 @@ public class Inventario_PTDAO extends DAO {
     try {
       PreparedStatement consulta;
       consulta = getConexion().prepareStatement(" SELECT pt.id_inventario_pt, pt.lote, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, p.id_protocolo, "
-              + "p.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre FROM produccion.inventario_pt pt Inner Join produccion.protocolo p ON p.id_protocolo = pt.id_protocolo "
-              + "INNER JOIN produccion.catalogo_pt c on c.id_catalogo_pt = p.id_catalogo_pt ");
+              + "h.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
+              + "FROM produccion.inventario_pt pt Inner Join produccion.protocolo p ON p.id_protocolo = pt.id_protocolo "
+              + "INNER JOIN produccion.catalogo_pt c on c.id_catalogo_pt = pt.id_catalogo_pt "
+              + "LEFT JOIN produccion.historial_protocolo as h ON (p.id_protocolo = h.id_protocolo AND p.version = h.version)");
       ResultSet rs = consulta.executeQuery();
 
       while (rs.next()) {

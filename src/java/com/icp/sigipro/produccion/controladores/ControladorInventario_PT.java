@@ -159,10 +159,10 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     String redireccion = "Inventario_PT/Agregar_inventario.jsp";
     Inventario_PT inventario = new Inventario_PT();
     List<Protocolo> protocolos = protocolo_dao.obtenerProtocolos();
-    List<Catalogo_PT> productos = catalogo_pt_dao.obtenerCatalogo_PTs();
+    List<Catalogo_PT> productos = catalogo_pt_dao.obtenerCatalogos_PT();
     request.setAttribute("protocolos", protocolos);
     request.setAttribute("productos", productos);
-    request.setAttribute("inventario", inventario);
+    request.setAttribute("inventario_pt", inventario);
     request.setAttribute("accion", "agregar_inventario");
 
     redireccionar(request, response, redireccion);
@@ -218,9 +218,9 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     request.setAttribute("accion", "Editar_inventario");
     try {
       Inventario_PT inventario_pt = dao.obtenerInventario_PT(id_inventario_pt);
-      request.setAttribute("inventario", inventario_pt);
+      request.setAttribute("inventario_pt", inventario_pt);
       List<Protocolo> protocolos = protocolo_dao.obtenerProtocolos();
-      List<Catalogo_PT> productos = catalogo_pt_dao.obtenerCatalogo_PTs();
+      List<Catalogo_PT> productos = catalogo_pt_dao.obtenerCatalogos_PT();
       request.setAttribute("protocolos", protocolos);
       request.setAttribute("productos", productos);
     } catch (SIGIPROException ex) {

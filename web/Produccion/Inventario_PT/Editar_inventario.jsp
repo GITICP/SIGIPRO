@@ -61,4 +61,7 @@
    
 
   </jsp:attribute>
+    <jsp:attribute name="scripts">
+      <script src="/SIGIPRO/recursos/js/sigipro/Produccion/Inventario/Formulario.js"></script>
+    </jsp:attribute>
 </t:plantilla_general>
