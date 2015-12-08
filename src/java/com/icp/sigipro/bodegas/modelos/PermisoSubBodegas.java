@@ -58,6 +58,10 @@ public class PermisoSubBodegas
         this.encargado = encargado;
     }
     
+    public boolean tieneAlgunPermiso() {
+        return ver || ingresar || consumir || encargado;
+    }
+    
     @SuppressWarnings("ConvertToStringSwitch")
     public void asignarPermiso(String permiso) {
         if (permiso.equals("ingresos")){

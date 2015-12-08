@@ -73,7 +73,7 @@ public class IniciarSesion extends HttpServlet
   {
       Boolean expiro = Boolean.parseBoolean(request.getParameter("expiro"));
       if (expiro) {
-          request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Debe tener una sesión para realizar esta operación."));
+          request.setAttribute("mensaje", helper.mensajeDeAdvertencia("Debe tener una sesión activa para realizar esta operación."));
       }
     request.getRequestDispatcher("/Cuenta/IniciarSesion.jsp").forward(request, response);
   }

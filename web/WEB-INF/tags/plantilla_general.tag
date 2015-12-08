@@ -75,6 +75,7 @@
 
         <!-- Scripts Externos -->
         <script src="${direccion_contexto}/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+        <script src="${direccion_contexto}/recursos/js/jquery-ui/jquery-ui-1.10.4.custom.js"></script>
         <script src="${direccion_contexto}/recursos/js/bootstrap/bootstrap.js"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/modernizr/modernizr.js"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/bootstrap-tour/bootstrap-tour.custom.js"></script>

@@ -433,7 +433,7 @@ public class CaballoDAO extends DAO
 
     public List<SangriaCaballo> ObtenerSangriasCaballo(int id_caballo) throws SIGIPROException
     {
-        List<SangriaCaballo> resultado = new ArrayList<SangriaCaballo>();
+        List<SangriaCaballo> resultado = new ArrayList<>();
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -442,10 +442,16 @@ public class CaballoDAO extends DAO
             consulta = getConexion().prepareStatement(
                     " SELECT s.id_sangria, s.fecha, s.fecha_dia1, s.fecha_dia2, s.fecha_dia3, "
                     + " g.id_grupo_de_caballo, g.nombre, "
-                    + " sc.sangre_dia1, sc.sangre_dia2, sc.sangre_dia3, sc.plasma_dia1, sc.plasma_dia2, sc.plasma_dia3, sc.lal_dia1, sc.lal_dia2, sc.lal_dia3, sc.participo_dia1, sc.participo_dia2, sc.participo_dia3 "
+                    + " sc.sangre_dia1, sc.sangre_dia2, sc.sangre_dia3, sc.plasma_dia1, sc.plasma_dia2, sc.plasma_dia3, sc.participo_dia1, sc.participo_dia2, sc.participo_dia3, "
+                    + " r1.resultado as resultado_dia1, "
+                    + " r2.resultado as resultado_dia2, "
+                    + " r3.resultado as resultado_dia3 "
                     + " FROM caballeriza.sangrias s "
                     + "     INNER JOIN caballeriza.grupos_de_caballos g ON g.id_grupo_de_caballo = s.id_grupo_caballos "
-                    + "     LEFT OUTER JOIN caballeriza.sangrias_caballos sc ON s.id_sangria= sc.id_sangria"
+                    + "     LEFT OUTER JOIN caballeriza.sangrias_caballos sc ON s.id_sangria= sc.id_sangria "
+                    + "     LEFT JOIN control_calidad.resultados r1 ON r1.id_resultado = sc.id_resultado_lal_dia1 "
+                    + "     LEFT JOIN control_calidad.resultados r2 ON r2.id_resultado = sc.id_resultado_lal_dia2 "
+                    + "     LEFT JOIN control_calidad.resultados r3 ON r3.id_resultado = sc.id_resultado_lal_dia3 "
                     + " WHERE id_caballo=?; "
             );
 
@@ -476,9 +482,9 @@ public class CaballoDAO extends DAO
                 sangriac.setPlasma_dia1(rs.getFloat("plasma_dia1"));
                 sangriac.setPlasma_dia2(rs.getFloat("plasma_dia2"));
                 sangriac.setPlasma_dia3(rs.getFloat("plasma_dia3"));
-                sangriac.setLal_dia1(rs.getFloat("lal_dia1"));
-                sangriac.setLal_dia2(rs.getFloat("lal_dia2"));
-                sangriac.setLal_dia3(rs.getFloat("lal_dia3"));
+                sangriac.setLal_dia1(rs.getString("resultado_dia1"));
+                sangriac.setLal_dia2(rs.getString("resultado_dia2"));
+                sangriac.setLal_dia3(rs.getString("resultado_dia3"));
                 sangriac.setParticipo_dia1(rs.getBoolean("participo_dia1"));
                 sangriac.setParticipo_dia2(rs.getBoolean("participo_dia2"));
                 sangriac.setParticipo_dia3(rs.getBoolean("participo_dia3"));
