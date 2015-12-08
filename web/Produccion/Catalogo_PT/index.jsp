@@ -39,7 +39,7 @@
               <h3><i class="fa fa-list-alt"></i> Catalogo de Producto Terminado</h3>
 
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Conejera/Machos?accion=agregar">Agregar Producto</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Catalogo_PT?accion=agregar">Agregar Producto</a>
                 </div>
             </div>
             ${mensaje}
@@ -53,13 +53,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${conejos}" var="conejo">
+                  <c:forEach items="${productos}" var="producto">
                       
                     <tr>
                       <td>
-                        <a href="/SIGIPRO/Conejera/Machos?accion=ver&id_macho=${conejo.getId_macho()}">
+                        <a href="/SIGIPRO/Produccion/Catalogo_PT?accion=ver&id_catalogo_pt=${producto.getId_catalogo_pt()}">
                           <div style="height:100%;width:100%">
-                            ${conejo.getIdentificacion()}
+                            ${producto.getIdentificacion()}
                           </div>
                         </a>
                       </td>
