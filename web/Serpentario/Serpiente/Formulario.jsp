@@ -47,33 +47,23 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <c:choose>
-                        <c:when test='${serpiente.getEspecie()==null}'>
-                            <select id="seleccionEspecie" class="select2" name="especie"
-                                    style='background-color: #fff;' required
-                                    oninvalid="setCustomValidity('Este campo es requerido')"
-                                    onchange="setCustomValidity('')">
-                                <option value=''></option>
-                                <c:forEach items="${especies}" var="especie">
-                                    <c:choose>
-                                        <c:when test="${especie.getId_especie() == serpiente.getEspecie().getId_especie()}" >
-                                            <option value=${especie.getId_especie()} selected> ${especie.getGenero_especie()}</option>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <option value=${especie.getId_especie()}>${especie.getGenero_especie()}</option>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:forEach>
-                            </select>
-                        </c:when>
-                        <c:otherwise>
-                            <input hidden="true" name='especie' value="${serpiente.getEspecie().getId_especie()}">
-                            <select id="seleccionEspecie" class="select2" name="selectEspecie" disabled="true"
-                                    style='background-color: #fff;'>
-                                <option value='${serpiente.getEspecie().getId_especie()}' selected>${serpiente.getEspecie().getGenero_especie()}</option>
-                            </select>
-                        </c:otherwise>
-                    </c:choose>
+                    <select id="seleccionEspecie" class="select2" name="especie"
+                            style='background-color: #fff;' required
+                            oninvalid="setCustomValidity('Este campo es requerido')"
+                            onchange="setCustomValidity('')">
+                        <option value=''></option>
+                        <c:forEach items="${especies}" var="especie">
+                            <c:choose>
+                                <c:when test="${especie.getId_especie() == serpiente.getEspecie().getId_especie()}" >
+                                    <option value=${especie.getId_especie()} selected> ${especie.getGenero_especie()}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value=${especie.getId_especie()}>${especie.getGenero_especie()}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
+
                 </div>
             </div>
         </div>
@@ -88,7 +78,7 @@
                                    onchange="setCustomValidity('')">
                         </c:when>
                         <c:otherwise>
-                            <input type="text" disabled='true' value="${serpiente.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepicker" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
+                            <input type="text" value="${serpiente.getFecha_ingresoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="datepickerSerpiente" class="form-control sigiproDatePicker" name="fecha_ingreso" data-date-format="dd/mm/yyyy" required
                                    oninvalid="setCustomValidity('Este campo es requerido ')"
                                    onchange="setCustomValidity('')">
                         </c:otherwise>
@@ -157,11 +147,11 @@
 
             </c:when>
             <c:otherwise>
-                <label for="recibida" class="control-label">*Recibida por</label>
+                <label for="recibida" class="control-label">*Registrada al sistema por</label>
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getRecibida().getNombre_usuario()}">               
+                            <input type="text" disabled='true' class="form-control" name="recibida" value="${serpiente.getRecibida().getNombre_completo()}">               
                         </div>
                     </div>
                 </div>

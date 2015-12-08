@@ -7,6 +7,7 @@ package com.icp.sigipro.core;
 
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.utilidades.HelperFechas;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;

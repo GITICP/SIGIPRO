@@ -55,16 +55,6 @@
                 </div>
             </div>
         </div>
-        <label for="potencia" class="control-label">Número de Informe de Control de Calidad</label>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div class="input-group">
-                    <input type="number" step="any" placeholder="" class="form-control" name="num_inf_cc" 
-                           value="${sangria.getNum_inf_cc()}" oninput="setCustomValidity(\'\')" 
-                           oninvalid="setCustomValidity(\'Ingrese solo números\')">
-                </div>
-            </div>
-        </div>
     </div>
     <div class="col-md-6">
         <label for="grupo" class="control-label">*Grupo de Caballos</label>
