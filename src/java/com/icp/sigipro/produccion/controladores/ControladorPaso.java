@@ -6,12 +6,16 @@
 package com.icp.sigipro.produccion.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
+import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLTDAO;
 import com.icp.sigipro.produccion.dao.PasoDAO;
 import com.icp.sigipro.produccion.modelos.Paso;
+import com.icp.sigipro.seguridad.dao.SeccionDAO;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.IOException;
@@ -48,6 +52,8 @@ public class ControladorPaso extends SIGIPROServlet {
     //-----------------
     private final PasoDAO dao = new PasoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
+    private final SubBodegaDAO subbodegadao = new SubBodegaDAO();
+    private final SeccionDAO secciondao = new SeccionDAO();
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
 
@@ -76,13 +82,15 @@ public class ControladorPaso extends SIGIPROServlet {
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         validarPermiso(650, request);
 
         String redireccion = "Paso/Agregar.jsp";
         Paso p = new Paso();
         request.setAttribute("paso", p);
         request.setAttribute("accion", "Agregar");
+        request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
+        request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
         request.setAttribute("orden", "");
         request.setAttribute("cantidad", 0);
         request.setAttribute("contador", 0);
@@ -121,7 +129,7 @@ public class ControladorPaso extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getVerhistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Paso/VerHistorial.jsp";
@@ -146,7 +154,7 @@ public class ControladorPaso extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(650, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
@@ -176,7 +184,7 @@ public class ControladorPaso extends SIGIPROServlet {
 
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
         validarPermiso(650, request);
         String redireccion = "Paso/Editar.jsp";
         int id_paso = Integer.parseInt(request.getParameter("id_paso"));
@@ -186,6 +194,7 @@ public class ControladorPaso extends SIGIPROServlet {
 
         HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
 
+        System.out.println(diccionario_formulario);
         List<Integer> lista = new ArrayList<Integer>();
         int cantidad = 0;
         if (diccionario_formulario != null) {
@@ -194,15 +203,26 @@ public class ControladorPaso extends SIGIPROServlet {
 
             for (Integer i : lista) {
                 if (diccionario_formulario.get(i).containsKey("cantidad")) {
-                    cantidad += ((Integer) diccionario_formulario.get(i).get("cantidad"));
+                    try {
+                        cantidad += ((Integer) diccionario_formulario.get(i).get("cantidad"));
+                    }catch (Exception e){
+                        
+                    }
                 }
 
             }
         }
 
+        List<SubBodega> subbodegas = subbodegadao.obtenerSubBodegas();
+        List<Seccion> secciones = secciondao.obtenerSecciones();
+
         request.setAttribute("paso", p);
         request.setAttribute("lista", lista);
         request.setAttribute("contador", lista.size());
+        request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegas));
+        request.setAttribute("listaSecciones", this.parseListaSecciones(secciones));
+        request.setAttribute("subbodegas", subbodegas);
+        request.setAttribute("secciones", secciones);
         request.setAttribute("cantidad", cantidad);
         request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
@@ -263,7 +283,7 @@ public class ControladorPaso extends SIGIPROServlet {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
 
         Paso p = construirObjeto(parametros, request);
@@ -343,10 +363,19 @@ public class ControladorPaso extends SIGIPROServlet {
                             //Se crea el Hash en el diccionario, en caso de que no se haya creado
                             if (!diccionario_formulario.containsKey(id)) {
                                 HashMap<String, String> llaves = new HashMap<String, String>();
-                                if (values[0].equals("c")) {
-                                    llaves.put("tipo", "campo");
-                                } else {
-                                    llaves.put("tipo", "seleccion");
+                                switch (values[0]) {
+                                    case ("c"):
+                                        llaves.put("tipo", "campo");
+                                        break;
+                                    case ("s"):
+                                        llaves.put("tipo", "seleccion");
+                                        break;
+                                    case ("a"):
+                                        llaves.put("tipo", "subbodega");
+                                        break;
+                                    case ("u"):
+                                        llaves.put("tipo", "usuario");
+                                        break;
                                 }
                                 diccionario_formulario.put(id, llaves);
                             }
@@ -390,10 +419,19 @@ public class ControladorPaso extends SIGIPROServlet {
                 int key = Integer.parseInt(i);
                 Element campo = xml.agregarElemento("campo");
                 HashMap<String, String> hash = diccionario_formulario.get(key);
-                if (hash.get("tipo").equals("campo")) {
-                    this.crearCampo(xml, hash, campo);
-                } else {
-                    this.crearSeleccion(xml, hash, campo);
+                switch (hash.get("tipo")) {
+                    case ("campo"):
+                        this.crearCampo(xml, hash, campo);
+                        break;
+                    case ("seleccion"):
+                        this.crearSeleccion(xml, hash, campo);
+                        break;
+                    case ("subbodega"):
+                        this.crearSubbodega(xml, hash, campo);
+                        break;
+                    case ("usuario"):
+                        this.crearUsuario(xml, hash, campo);
+                        break;
                 }
             }
         }
@@ -406,7 +444,46 @@ public class ControladorPaso extends SIGIPROServlet {
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
-        xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+        switch (hash.get("tipocampo")) {
+            case ("cc"):
+                xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+                xml.agregarSubelemento("especial", "true", campo);
+                break;
+            case ("sangria"):
+                xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+                xml.agregarSubelemento("especial", "true", campo);
+                break;
+            default:
+                xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+                break;
+        }
+    }
+
+    private void crearSubbodega(HelperXML xml, HashMap<String, String> hash, Element campo) {
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre") + "_" + this.nombre_campo, campo);
+        this.nombre_campo++;
+        xml.agregarSubelemento("tipo", "subbodega", campo);
+        xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
+        xml.agregarSubelemento("valor", "", campo);
+        xml.agregarSubelemento("nombre-subbodega", hash.get("nombresubbodega"), campo);
+        xml.agregarSubelemento("subbodega", hash.get("subbodega"), campo);
+        if (hash.containsKey("cantidad")) {
+            xml.agregarSubelemento("cantidad", "true", campo);
+            xml.agregarSubelemento("valor-cantidad", "", campo);
+        } else {
+            xml.agregarSubelemento("cantidad", "false", campo);
+        }
+
+    }
+
+    private void crearUsuario(HelperXML xml, HashMap<String, String> hash, Element campo) {
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre") + "_" + this.nombre_campo, campo);
+        this.nombre_campo++;
+        xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
+        xml.agregarSubelemento("tipo", "usuario", campo);
+        xml.agregarSubelemento("valor", "", campo);
+        xml.agregarSubelemento("nombre-seccion", hash.get("nombreseccion"), campo);
+        xml.agregarSubelemento("seccion", hash.get("seccion"), campo);
     }
 
     private void crearSeleccion(HelperXML xml, HashMap<String, String> hash, Element campo) {
@@ -416,7 +493,6 @@ public class ControladorPaso extends SIGIPROServlet {
         this.nombre_campo++;
         Element opciones = xml.agregarElemento("opciones", campo);
         for (String i : hash.keySet()) {
-            System.out.println(i);
             if (i.contains("opcion")) {
                 Element opcion = xml.agregarElemento("opcion", opciones);
                 xml.agregarSubelemento("etiqueta", hash.get(i), opcion);
@@ -426,6 +502,30 @@ public class ControladorPaso extends SIGIPROServlet {
             }
         }
 
+    }
+
+    public List<String> parseListaSecciones(List<Seccion> secciones) {
+        List<String> respuesta = new ArrayList<String>();
+        for (Seccion s : secciones) {
+            String tipo = "[";
+            tipo += s.getId_seccion() + ",";
+            tipo += "\"" + s.getNombre_seccion() + "\"]";
+            respuesta.add(tipo);
+        }
+        System.out.println(respuesta.toString());
+        return respuesta;
+    }
+
+    public List<String> parseListaSubbodegas(List<SubBodega> subbodegas) {
+        List<String> respuesta = new ArrayList<String>();
+        for (SubBodega s : subbodegas) {
+            String tipo = "[";
+            tipo += s.getId_sub_bodega() + ",";
+            tipo += "\"" + s.getNombre() + "\"]";
+            respuesta.add(tipo);
+        }
+        System.out.println(respuesta.toString());
+        return respuesta;
     }
 
     // </editor-fold>

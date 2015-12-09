@@ -121,20 +121,27 @@ public class HelperXML {
 
         NodeList nodosTipo = node.getChildNodes();
 
-        boolean isCampo = true;
+        String campo = "";
         for (int i = 0, len = nodosTipo.getLength(); i < len; i++) {
             Node nodo = nodosTipo.item(i);
             System.out.println(nodo.getNodeName());
             System.out.println(nodo.getTextContent());
-            if (nodo.getNodeName().equals("tipo") && nodo.getTextContent().equals("seleccion")) {
-                isCampo = false;
-                break;
+            if (nodo.getNodeName().equals("tipo")) {
+                switch (nodo.getTextContent()) {
+                    case ("seleccion"):
+                        parseCheckbox(node.getChildNodes());
+                        break;
+                    case ("usuario"):
+                        parseUsuarios(node.getChildNodes());
+                        break;
+                    case ("subbodega"):
+                        parseSubbodegas(node.getChildNodes());
+                        break;
+                    default:
+                        parseCampos(node.getChildNodes());
+                        break;
+                }
             }
-        }
-        if (isCampo) {
-            parseCampos(node.getChildNodes());
-        } else {
-            parseCheckbox(node.getChildNodes());
         }
 
         Node nextNode = node.getNextSibling();
@@ -181,11 +188,70 @@ public class HelperXML {
         }
     }
 
+    private void parseUsuarios(NodeList nodos) {
+        contador++;
+        HashMap<String, Object> hash = new HashMap<String, Object>();
+        dictionary.put(contador, hash);
+        dictionary.get(contador).put("tipocampo", "usuario");
+
+        for (int i = 0, len = nodos.getLength(); i < len; i++) {
+            Node currentNode = nodos.item(i);
+            String name = currentNode.getNodeName();
+            String text = currentNode.getTextContent();
+            switch (name) {
+                case "tipo":
+                    dictionary.get(contador).put(name, text);
+                    break;
+                case "etiqueta":
+                    dictionary.get(contador).put("nombre", text);
+                    break;
+                case "seccion":
+                    dictionary.get(contador).put("seccion", text);
+                    break;
+                case "nombre-seccion":
+                    dictionary.get(contador).put("nombreseccion", text);
+                    break;
+            }
+        }
+    }
+
+    private void parseSubbodegas(NodeList nodos) {
+        contador++;
+        HashMap<String, Object> hash = new HashMap<String, Object>();
+        dictionary.put(contador, hash);
+        dictionary.get(contador).put("tipocampo", "subbodega");
+
+        for (int i = 0, len = nodos.getLength(); i < len; i++) {
+            Node currentNode = nodos.item(i);
+            String name = currentNode.getNodeName();
+            String text = currentNode.getTextContent();
+            switch (name) {
+                case "tipo":
+                    dictionary.get(contador).put(name, text);
+                    break;
+                case "etiqueta":
+                    dictionary.get(contador).put("nombre", text);
+                    break;
+                case "subbodega":
+                    dictionary.get(contador).put("subbodega", text);
+                    break;
+                case "nombre-subbodega":
+                    dictionary.get(contador).put("nombresubbodega", text);
+                    break;
+                case "cantidad":
+                    if (text.equals("true")) {
+                        dictionary.get(contador).put("cantidad", text);
+                    }
+                    break;
+            }
+        }
+    }
+
     public void parseCheckbox(NodeList nodos) {
         contador++;
         HashMap<String, Object> hash = new HashMap<String, Object>();
         dictionary.put(contador, hash);
-        dictionary.get(contador).put("tipo", "checkbox");
+        dictionary.get(contador).put("tipocampo", "checkbox");
 
         for (int i = 0, len = nodos.getLength(); i < len; i++) {
             Node currentNode = nodos.item(i);
@@ -257,7 +323,7 @@ public class HelperXML {
         for (int j = 0, lenOpciones = nodosOpciones.getLength(); j < lenOpciones; j++) {
             Node opcion = nodosOpciones.item(j);
             NodeList nodosOpcion = opcion.getChildNodes();
-            
+
             for (int i = 0, len = nodosOpcion.getLength(); i < len; i++) {
                 Node currentNode = nodosOpcion.item(i);
                 String name = currentNode.getNodeName();
@@ -265,13 +331,13 @@ public class HelperXML {
                 System.out.println(pivot);
                 switch (name) {
                     case "etiqueta":
-                        dictionary.get(contador).put("opcion"+pivot, text);
+                        dictionary.get(contador).put("opcion" + pivot, text);
                         pivot++;
                         break;
                 }
             }
         }
-        dictionary.get(contador).put("cantidad", pivot-1);
+        dictionary.get(contador).put("cantidad", pivot - 1);
 
     }
 

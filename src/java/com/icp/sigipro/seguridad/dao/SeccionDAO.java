@@ -7,15 +7,10 @@ package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.*;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 

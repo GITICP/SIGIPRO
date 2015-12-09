@@ -17,6 +17,8 @@
             <input hidden="true" name="contador" id="contador" value="${contador}">
             <input hidden="true" name="cantidad" id="cantidad" value="${cantidad}">
             <input hidden="true" name="version" id="version" value="${paso.getVersion()}">
+            <input hidden="true" id='listaSecciones' name='listaSecciones' value='${listaSecciones}'>
+            <input hidden="true" id='listaSubbodegas' name='listaSubbodegas' value='${listaSubbodegas}'>
 
             <label for="nombre" class="control-label">*Nombre del Paso</label>
             <div class="form-group">
@@ -68,24 +70,48 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('text')}">
                                                                     <option value="number">Número</option>
                                                                     <option value="text" selected>Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('textarea')}">
                                                                     <option value="number">Número</option>
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea" selected>Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('fecha')}">
                                                                     <option value="number">Número</option>
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha" selected>Fecha</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('cc')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="cc" selected>Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('sangria')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria" selected>Referencia a Sangría</option>
                                                                 </c:if>
                                                             </select>
                                                         </div>
@@ -107,54 +133,182 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <div class="widget widget-table seleccion_${i}" id="${i}">
-                                        <input hidden="true" id="elemento_${i}" value="seleccion">
-                                        <div class="widget-header">
-                                            <h3><i class="fa fa-edit"></i> Selección Múltiple #${i}</h3>
-                                            <div class="btn-group widget-header-toolbar">
-                                                <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo('seleccion_' + contador + '')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content">
-                                            <div class="col-md-12">
-                                                <label for="tipo" class="control-label"> *Nombre de Selección Múltiple</label>
-                                                <div class="form-group">
-                                                    <div class="col-sm-12">
-                                                        <div class="input-group">
-                                                            <input type="text" maxlength="45" placeholder="Nombre" class="form-control" name="s_snombre_${i}" value="${diccionario.get(i).get('nombre')}"
-                                                                   required
-                                                                   oninvalid="setCustomValidity('Este campo es requerido')"
-                                                                   oninput="setCustomValidity('')" > 
+                                    <c:choose>
+                                        <c:when test="${diccionario.get(i).get('tipocampo').equals('checkbox')}">
+                                            <div class="widget widget-table seleccion_${i}" id="${i}">
+                                                <input hidden="true" id="elemento_${i}" value="seleccion">
+                                                <div class="widget-header">
+                                                    <h3><i class="fa fa-edit"></i> Selección Múltiple #${i}</h3>
+                                                    <div class="btn-group widget-header-toolbar">
+                                                        <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo('seleccion_${i}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
+                                                    </div>
+                                                </div>
+                                                <div class="widget-content">
+                                                    <div class="col-md-12">
+                                                        <label for="tipo" class="control-label"> *Nombre de Selección Múltiple</label>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <div class="input-group">
+                                                                    <input type="text" maxlength="45" placeholder="Nombre" class="form-control" name="s_snombre_${i}" value="${diccionario.get(i).get('nombre')}"
+                                                                           required
+                                                                           oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                           oninput="setCustomValidity('')" > 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <label for="nombre" class="control-label">*Opciones</label>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <div class="input-group opciones_${i}">
+                                                                    <input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
+                                                                           required
+                                                                           oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                           oninput="setCustomValidity('')" >
+                                                                    <c:forEach var="id" begin="2" end="${diccionario.get(i).get('cantidad')}">
+                                                                        <c:set var="idstring">${id}</c:set>
+                                                                        <div class='col-md-8 o_opcion${id}_${i}_${id}'> 
+                                                                            <br><input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion${id}_${i}_${id}" value="${diccionario.get(i).get('opcion'.concat(idstring))}"
+                                                                                       required
+                                                                                       oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                                       oninput="setCustomValidity('')" ></div> 
+                                                                        <div class='col-md-4 o_opcion${id}_${i}_${id}'> <br> <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarOpcion('o_opcion${id}_${i}_${id}')" style="margin-left:7px;margin-right:5px;">Eliminar</button> </div>
+                                                                        </c:forEach>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-12 form-group'>
+                                                            <button type="button" onclick="agregarOpcion(${i})" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Opción</button>
+                                                            <br>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <label for="nombre" class="control-label">*Opciones</label>
-                                                <div class="form-group">
-                                                    <div class="col-sm-12">
-                                                        <div class="input-group opciones_${i}">
-                                                            <input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
-                                                                   required
-                                                                   oninvalid="setCustomValidity('Este campo es requerido')"
-                                                                   oninput="setCustomValidity('')" >
-                                                            <c:forEach var="id" begin="2" end="${diccionario.get(i).get('cantidad')}">
-                                                                <c:set var="idstring">${id}</c:set>
-                                                                <div class='col-md-8 o_opcion${id}_${i}_${id}'> 
-                                                                    <br><input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion${id}_${i}_${id}" value="${diccionario.get(i).get('opcion'.concat(idstring))}"
-                                                                               required
-                                                                               oninvalid="setCustomValidity('Este campo es requerido')"
-                                                                               oninput="setCustomValidity('')" ></div> 
-                                                                <div class='col-md-4 o_opcion${id}_${i}_${id}'> <br> <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarOpcion('o_opcion${id}_${i}_${id}')" style="margin-left:7px;margin-right:5px;">Eliminar</button> </div>
-                                                                </c:forEach>
+                                            </div>
+
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:choose>
+                                                <c:when test="${diccionario.get(i).get('tipocampo').equals('subbodega')}">
+                                                    <div class="widget widget-table articulo_${i}" id="${i}">
+                                                        <input hidden="true" id="elemento_${i}" value="articulo">
+                                                        <input hidden="true" id="nombresub_${i}" name="a_nombresubbodega_${i}" value="${diccionario.get(i).get('nombresubbodega')}">
+                                                        <div class="widget-header">
+                                                            <h3><i class="fa fa-edit"></i> Artículo de SubBodega #${i}</h3>
+                                                            <div class="btn-group widget-header-toolbar">
+                                                                <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo('articulo_${i}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="widget-content">
+                                                            <div class="col-md-12">
+                                                                <label for="tipo" class="control-label"> *Sub bodega</label>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="input-group">
+                                                                            <select id="subbodega_${i}" class="select2" name="a_subbodega_${i}" onchange="actualizarNombre_subbodega('${i}')"  
+                                                                                    style='background-color: #fff;' required
+                                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                                    onchange="setCustomValidity('')">
+                                                                                <option value=''></option>
+                                                                                <c:forEach items="${subbodegas}" var="subbodega">
+                                                                                    <c:choose>
+                                                                                        <c:when test="${subbodega.getId_sub_bodega() == diccionario.get(i).get('subbodega')}" >
+                                                                                            <option value=${subbodega.getId_sub_bodega()} selected> ${subbodega.getNombre()}</option>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <option value=${subbodega.getId_sub_bodega()}> ${subbodega.getNombre()}</option>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="nombre" class="control-label">*Nombre del Campo</label>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="input-group">
+                                                                            <input type="text" maxlength="45" placeholder="Nombre del Campo" class="form-control" name="a_nombre_${i}" value="${diccionario.get(i).get('nombre')}" 
+                                                                                   required
+                                                                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                                   oninput="setCustomValidity('')" > 
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="input-group"> <br>
+                                                                            <c:choose>
+                                                                                <c:when test="${diccionario.get(i).containsKey('cantidad')}">
+                                                                                    <input id="cantidad_${i}" type="checkbox" checked name="a_cantidad_${i}" style="width:20px; height:20px;"><span> Con cantidades</span>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <input id="cantidad_${i}" type="checkbox" name="a_cantidad_${i}" style="width:20px; height:20px;"><span> Con cantidades</span>
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class='col-md-12 form-group'>
-                                                    <button type="button" onclick="agregarOpcion(${i})" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Opción</button>
-                                                    <br>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="widget widget-table usuario_${i}" id="${i}">
+                                                        <input hidden="true" id="elemento_${i}" value="usuario">
+                                                        <input hidden="true" id="nombresec_${i}" name="u_nombreseccion_${i}" value="${diccionario.get(i).get('nombreseccion')}">
+                                                        <div class="widget-header">
+                                                            <h3><i class="fa fa-edit"></i> Grupo de Usuarios #${i}</h3>
+                                                            <div class="btn-group widget-header-toolbar">
+                                                                <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo('usuario_${i}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="widget-content">
+                                                            <div class="col-md-12">
+                                                                <label for="tipo" class="control-label"> *Sección de Usuarios</label>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="input-group">
+                                                                            <select id="seccion_${i}" class="select2" name="u_seccion_${i}" onchange="actualizarNombre_seccion('${i}')"  
+                                                                                    style='background-color: #fff;' required
+                                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                                    onchange="setCustomValidity('')">
+                                                                                <option value=''></option>
+                                                                                <c:forEach items="${secciones}" var="seccion">
+                                                                                    <c:choose>
+                                                                                        <c:when test="${seccion.getId_seccion() == diccionario.get(i).get('seccion')}" >
+                                                                                            <option value=${seccion.getId_seccion()} selected> ${seccion.getNombre_seccion()}</option>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <option value=${seccion.getId_seccion()}> ${seccion.getNombre_seccion()}</option>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <label for="nombre" class="control-label">*Nombre del Campo</label>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="input-group">
+                                                                            <input type="text" maxlength="45" placeholder="Nombre del Campo" class="form-control" name="u_nombre_${i}" value="${diccionario.get(i).get("nombre")}"
+                                                                                   required
+                                                                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                                                                   oninput="setCustomValidity('')" > 
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:otherwise>
+                                    </c:choose>
+
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>    
@@ -165,6 +319,8 @@
                                 <br>
                                 <button type="button" onclick="agregarCampo()" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Agregar Campo</button>
                                 <button type="button" onclick="agregarSeleccion()" class="btn btn-primary"><i class="fa fa-plus-square"></i> Agregar Selección Múltiple </button>
+                                <button type="button" onclick="agregarUsuario()" class="btn btn-primary"><i class="fa fa-plus-square-o"></i> Agregar Grupo de Usuarios </button>
+                                <button type="button" onclick="agregarSubbodega()" class="btn btn-primary"><i class="fa fa-plus-square-o"></i> Agregar Artículos de Subbodegas </button>
                             </div>
                         </div>
                     </div>

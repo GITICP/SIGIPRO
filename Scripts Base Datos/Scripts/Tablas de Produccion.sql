@@ -157,19 +157,32 @@ id_historial serial NOT NULL,
     id_categoria_aa  integer NOT NULL
 );
 
- CREATE TABLE produccion.respuesta_pxp (
-    id_respuesta serial  NOT NULL,
-    respuesta xml  NOT NULL,
-    id_pxp integer NOT NULL,
-    CONSTRAINT pk_respuesta_pxp PRIMARY KEY (id_respuesta)
-);
-
 CREATE TABLE produccion.respuesta_aa (
     id_respuesta serial  NOT NULL,
     respuesta xml  NOT NULL,
     id_pxp integer NOT NULL,
     id_actividad integer NOT NULL,
     CONSTRAINT pk_respuesta_aa PRIMARY KEY (id_respuesta)
+);
+
+
+--Tabla de Lotes 
+
+CREATE TABLE produccion.lote (
+    id_lote serial NOT NULL,
+    id_protocolo int NOT NULL,
+    nombre character varying(100) NOT NULL,
+    estado boolean NOT NULL,
+    posicion_actual int NOT NULL,
+    CONSTRAINT pk_lote PRIMARY KEY (id_lote)
+);
+
+ CREATE TABLE produccion.respuesta_pxp (
+    id_respuesta serial  NOT NULL,
+    id_lote int NOT NULL,
+    respuesta xml  NOT NULL,
+    id_pxp integer NOT NULL,
+    CONSTRAINT pk_respuesta_pxp PRIMARY KEY (id_respuesta)
 );
  
 --Llaves primarias esquema de produccion 
@@ -206,6 +219,8 @@ ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_formula_mae
 ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_catalago_pt FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt(id_catalogo_pt) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (id_categoria_aa) REFERENCES produccion.categoria_aa(id_categoria_aa) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
+
+ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxp_lote FOREIGN KEY (id_lote) REFERENCES produccion.lote(id_lote) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
 
@@ -219,7 +234,7 @@ ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KE
 ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_historial_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.historial_paso ADD CONSTRAINT fk_historial_paso FOREIGN KEY (id_paso) REFERENCES produccion.paso(id_paso) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_historial_actividad_apoyo FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE CASCADE;
-
+ALTER TABLE ONLY produccion.lote ADD CONSTRAINT fk_lote_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo);
 
 --Indices unicos esquema produccion
 
