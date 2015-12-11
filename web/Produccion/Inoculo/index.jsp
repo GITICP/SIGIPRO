@@ -54,10 +54,11 @@
 
                     <tr id ="${inoculo.getId_inoculo()}">
                       <td>
-                        <a href="/SIGIPRO/Produccion/Inoculo?accion=ver&id_inoculo=${inoculo.getId_inoculo()}"></a>
+                        <a href="/SIGIPRO/Produccion/Inoculo?accion=ver&id_inoculo=${inoculo.getId_inoculo()}">
                         <div style="height:100%;width:100%">
                             ${inoculo.getIdentificador()}
                         </div>
+                        </a>
                       </td>
                       <td>${inoculo.getFecha_preparacion_S()}</td>
                       <td>${inoculo.getEncargado_preparacion()}</td>

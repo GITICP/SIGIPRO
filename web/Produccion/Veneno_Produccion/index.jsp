@@ -53,10 +53,11 @@
 
                     <tr id ="${veneno.getId_veneno()}">
                       <td>
-                        <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${veneno.getId_veneno()}"></a>
+                        <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${veneno.getId_veneno()}">
                         <div style="height:100%;width:100%">
                             ${veneno.getVeneno()}
                         </div>
+                        </a>
                       </td>
                       <td>${veneno.getFecha_ingreso_S()}</td>
                       <td>${veneno.getCantidad()}</td>

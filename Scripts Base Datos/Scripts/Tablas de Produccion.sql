@@ -90,7 +90,8 @@ CREATE TABLE produccion.categoria_aa(
 	veneno character varying(40) NOT NULL, 
 	fecha_ingreso date NOT NULL,
 	cantidad integer NOT NULL,
-	observaciones character varying(200) NOT NULL
+	observaciones character varying(200) NOT NULL,
+	id_veneno_serpentario integer NOT NULL
  );
 ----TABLAS MUCHOS A MUCHOS INVENTARIO-----
 CREATE TABLE produccion.despachos_inventario(
@@ -180,6 +181,7 @@ ALTER TABLE ONLY produccion.actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (i
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT fk_id_veneno_serpentario FOREIGN KEY (id_veneno_serpentario) REFERENCES serpentario.venenos (id_veneno) ON DELETE SET NULL;
 
 ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rpt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
