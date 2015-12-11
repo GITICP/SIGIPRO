@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Producción</li>
             <li> 
-              <a href="/SIGIPRO/Produccion/Inoculo?">Catálogo de Inóculos</a>
+              <a href="/SIGIPRO/Produccion/Veneno_Produccion?">Catálogo de Venenos de Producción</a>
             </li>
           </ul>
         </div>
@@ -31,9 +31,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-flask"></i> Catálogo de Inóculos </h3>
+                <h3><i class="fa fa-flask"></i> Catálogo de Venenos de Producción </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Inoculo?accion=agregar">Agregar Inóculo</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion?accion=agregar">Agregar Veneno de Producción</a>
                 </div>  
             </div>
             ${mensaje}
@@ -42,31 +42,25 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Identificador</th>
-                    <th>Fecha de Preparación</th>
-                    <th>Encargado de Preparación</th>
-                    <th>Veneno asociado</th>
-                    <th>Peso (gramos)</th>
+                    <th>Veneno</th>
+                    <th>Fecha de Ingreso</th>
+                    <th>Cantidad</th>
+                    <th>Observaciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaInoculos}" var="inoculo">
+                  <c:forEach items="${listaVenenos}" var="veneno">
 
-                    <tr id ="${inoculo.getId_inoculo()}">
+                    <tr id ="${veneno.getId_veneno()}">
                       <td>
-                        <a href="/SIGIPRO/Produccion/Inoculo?accion=ver&id_inoculo=${inoculo.getId_inoculo()}"></a>
+                        <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${veneno.getId_veneno()}"></a>
                         <div style="height:100%;width:100%">
-                            ${inoculo.getIdentificador()}
+                            ${veneno.getVeneno()}
                         </div>
                       </td>
-                      <td>${inoculo.getFecha_preparacion_S()}</td>
-                      <td>${inoculo.getEncargado_preparacion()}</td>
-                      <td>
-                            <a href="/SIGIPRO/Produccion/Veneno?accion=ver&id_veneno=${inoculo.getVeneno().getId_veneno()}">
-                                ${inoculo.getVeneno().getId_veneno()}
-                            </a>
-                      </td>
-                      <td>${inoculo.getPeso()}</td>
+                      <td>${veneno.getFecha_ingreso_S()}</td>
+                      <td>${veneno.getCantidad()}</td>
+                      <td>${veneno.getObservaciones()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

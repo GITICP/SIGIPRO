@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form class="form-horizontal" autocomplete="off" method="post" action="Veneno">
+<form class="form-horizontal" autocomplete="off" method="post" action="Inoculo">
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_inoculo" value="${inoculo.getId_inoculo()}">
@@ -29,7 +29,7 @@
               <div class="col-sm-12">
                 <!-- Peso -->
                 <div class="input-group">
-                    <input id="peso" type="number" step="any" class="form-control" name="peso" value="${inoculo.getPeso()}" disabled="true" required
+                    <input id="peso" type="number" min="0" class="form-control" name="peso" value="${inoculo.getPeso()}" disabled="false" required
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
                 </div>
@@ -68,7 +68,21 @@
                         <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_preparacion" class="form-control sigiproDatePickerEspecial" name="fecha_preparacion" data-date-format="dd/mm/yyyy" required
                         oninvalid="setCustomValidity('Este campo es requerido ')"
                         onchange="setCustomValidity('')"> 
-                        <script>document.getElementById("fecha_preparacion").value = new Date().toJSON().slice(0,10)</script>
+                        <script>
+                            var today = new Date();
+                            var dd = today.getDate();
+                            var mm = today.getMonth()+1; //January is 0!
+
+                            var yyyy = today.getFullYear();
+                            if(dd<10){
+                                dd='0'+dd
+                            } 
+                            if(mm<10){
+                                mm='0'+mm
+                            } 
+                            var today = dd+'/'+mm+'/'+yyyy;
+                            document.getElementById("fecha_preparacion").value = today;
+                        </script>
                       </c:when>
                       <c:otherwise>
                         <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_preparacion" value="${inoculo.getFecha_preparacion_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_preparacion" data-date-format="dd/mm/yyyy" required

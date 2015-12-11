@@ -43,7 +43,7 @@
                 </c:forEach>
                 <c:if test="${contienePermisoEditarYBorrar}">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inoculo?accion=editar&id_inoculo=${inoculo.getId_inoculo()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Inóculo" data-href="/SIGIPRO/Produccion/Inoculo?accion=eliminar&id_producto=${inoculo.getId_inoculo()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Inóculo" data-href="/SIGIPRO/Produccion/Inoculo?accion=eliminar&id_inoculo=${inoculo.getId_inoculo()}">Eliminar</a>
                 </c:if>
               </div>
             </div>
@@ -53,13 +53,32 @@
                 <tr><td> <strong>Identificador:</strong></td> <td>${inoculo.getIdentificador()} </td></tr>
                 <tr><td> <strong>Fecha de Preparación:</strong> <td>${inoculo.getFecha_preparacion_S()} </td></tr>
                 <tr><td> <strong>Encargado de Preparación:</strong> <td>${inoculo.getEncargado_preparacion()} </td></tr>
-                <tr><td> <strong>Veneno asociado:</strong> <td>
-                            <a href="/SIGIPRO/Produccion/Veneno?accion=ver&id_veneno=${inoculo.getVeneno().getId_veneno()}">
-                                ${inoculo.getVeneno().getId_veneno()}
-                            </a> </td></tr>
                 <tr><td> <strong>Peso:</strong> <td>${inoculo.getPeso()} gramos </td></tr>
               </table>
               <br>
+              
+              <div class="widget widget-table">
+                <div class="widget-header">
+                  <h3><i class="fa fa-check"></i> Veneno Asociado</h3>
+                </div>
+                <div class="widget-content">
+                  <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                    <thead>
+                      <tr>
+                        <th>Nombre del Veneno</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                        <tr id="${inoculo.getVeneno().getId_veneno()}">
+                          <td>${inoculo.getVeneno().getVeneno()}</td>
+                        </tr>
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
             </div>
           </div>
           <!-- END WIDGET TICKET TABLE -->

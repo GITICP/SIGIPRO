@@ -37,11 +37,10 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ControladorInoculo", urlPatterns = {"/Produccion/Inoculo"})
 public class ControladorInoculo extends SIGIPROServlet {
 
-    private final int[] permisos = {604, 1};
+    private final int[] permisos = {604, 1, 1};
     private final InoculoDAO dao = new InoculoDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
-    private boolean admin = false;
-
+    
     protected final Class clase = ControladorInoculo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
@@ -49,13 +48,13 @@ public class ControladorInoculo extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
-            add("eliminar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
             add("editar");
+            add("eliminar");
         }
     };
 
@@ -64,6 +63,8 @@ public class ControladorInoculo extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(604, listaPermisos);
 
+        System.out.println("ENTRE A GET AGREGAR.");
+        
         HttpSession sesion = request.getSession();
         String nombre_usr = (String) sesion.getAttribute("usuario");
         int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
@@ -73,7 +74,7 @@ public class ControladorInoculo extends SIGIPROServlet {
         List<Veneno_Produccion> venenos = new Veneno_ProduccionDAO().obtenerVenenos_Produccion();
         
         request.setAttribute("usuarios", usuarios);
-        request.setAttribute("venenos", usuarios);
+        request.setAttribute("venenos", venenos);
         
         String redireccion = "Inoculo/Agregar.jsp";
         Inoculo ds = new Inoculo();
@@ -86,15 +87,10 @@ public class ControladorInoculo extends SIGIPROServlet {
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        request.setAttribute("admin", admin);
         String redireccion = "Inoculo/index.jsp";
-        InoculoDAO iDAO = new InoculoDAO();
         List<Inoculo> inoculos;
         try {
-            //HttpSession sesion = request.getSession();
-            //int id_usuario = (int) sesion.getAttribute("idusuario");
-            //Usuario u = dao_us.obtenerUsuario(id_usuario);
-            inoculos = iDAO.obtenerInoculos();
+            inoculos = dao.obtenerInoculos();
             request.setAttribute("listaInoculos", inoculos);
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
@@ -289,12 +285,14 @@ public class ControladorInoculo extends SIGIPROServlet {
         }
         redireccionar(request, response, redireccion);
     }
-
+*/
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<String> lista_acciones;
+        System.out.println("Accion HTTP = "+accionHTTP);
+        System.out.println("Accion = "+accion);
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
         } else {
@@ -309,7 +307,7 @@ public class ControladorInoculo extends SIGIPROServlet {
             metodo.invoke(this, request, response);
         }
     }
-*/
+
     @Override
     protected int getPermiso() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
