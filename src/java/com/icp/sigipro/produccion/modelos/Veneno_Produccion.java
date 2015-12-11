@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.icp.sigipro.produccion.modelos;
+import com.icp.sigipro.serpentario.modelos.Veneno;
 import java.lang.reflect.Field;
 import org.json.JSONObject;
 import java.sql.Date;
@@ -20,6 +21,7 @@ public class Veneno_Produccion {
   private int cantidad;
   private Date fecha_ingreso;
   private String observaciones;
+  private Veneno veneno_serpentario;
 
     public String parseJSON(){
         Class _class = this.getClass();
@@ -34,6 +36,7 @@ public class Veneno_Produccion {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
+            JSON.put("id_veneno_serpentario",this.veneno_serpentario.getId_veneno());
         }catch (Exception e){
             
         }
@@ -93,6 +96,13 @@ public class Veneno_Produccion {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-  
-  
+
+    public Veneno getVeneno_serpentario() {
+        return veneno_serpentario;
+    }
+
+    public void setVeneno_serpentario(Veneno veneno_serpentario) {
+        this.veneno_serpentario = veneno_serpentario;
+    }
+
 }
