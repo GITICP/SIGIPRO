@@ -38,8 +38,16 @@
                     </div>
                 </div>
             </div>
-            <label id="label-fecha-vencimiento" for="fechaVencimiento" class="control-label">* Fecha de Vencimiento</label>
-            <div id="campo-fecha-vencimiento" class="form-group">
+            <label id="label-fecha" for="numero_lote" class="control-label">Número de Lote</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="text" id="numero_lote" class="form-control" name="numero_lote" placeholder="Número de Lote (si no tiene dejar en blanco)">
+                    </div>
+                </div>
+            </div>
+            <label id="label-fecha-vencimiento" for="fechaVencimiento" class="control-label" style="display:none">* Fecha de Vencimiento</label>
+            <div id="campo-fecha-vencimiento" class="form-group" style="display:none">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input type="text" value="${ingreso.getFecha_vencimientoAsString()}" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fechaVencimiento" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required

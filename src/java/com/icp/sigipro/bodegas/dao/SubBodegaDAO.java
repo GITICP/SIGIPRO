@@ -623,51 +623,77 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
             String segunda_parte_consulta = "     INSERT INTO bodega.inventarios_sub_bodegas(id_producto, "
                                             + "                                                id_sub_bodega, "
                                             + "                                                fecha_vencimiento, "
-                                            + "                                                cantidad"
+                                            + "                                                numero_lote, "
+                                            + "                                                cantidad "
                                             + "                                               ) "
                                             + "                                               SELECT ?, "
+                                            + "                                                      ?, "
                                             + "                                                      ?, "
                                             + "                                                      ?, "
                                             + "                                                      ?  "
                                             + "                                                      WHERE NOT EXISTS (SELECT * FROM upsert); ";
 
             String consulta_final;
-            boolean fechas_null = false;
+            String consulta_temp;
+            boolean fecha_vencimiento = true;
+            boolean numero_lote = true;
             if (inventario_sub_bodega.getFecha_vencimiento() != null) {
-                consulta_final = primera_parte_consulta + " = ? RETURNING *) " + segunda_parte_consulta;
+                consulta_temp = primera_parte_consulta + " = ? ";
             }
             else {
-                fechas_null = true;
-                consulta_final = primera_parte_consulta + " is null RETURNING *) " + segunda_parte_consulta;
+                fecha_vencimiento = false;
+                consulta_temp = primera_parte_consulta + " is null ";
+            }
+            
+            if (inventario_sub_bodega.getNumero_lote() != null) {
+                consulta_final = consulta_temp + " and numero_lote = ? RETURNING *) " + segunda_parte_consulta;
+            } else {
+                numero_lote = false;
+                consulta_final = consulta_temp + " and numero_lote is null RETURNING *) " + segunda_parte_consulta;
             }
 
             upsert_inventario = getConexion().prepareStatement(consulta_final);
+            
+            upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
+            upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
+            upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
 
-            if (fechas_null) {
-                upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
-                upsert_inventario.setInt(7, inventario_sub_bodega.getCantidad());
-
-                upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
-                upsert_inventario.setInt(4, inventario_sub_bodega.getProducto().getId_producto());
-
-                upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-                upsert_inventario.setInt(5, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-
-                upsert_inventario.setNull(6, java.sql.Types.DATE);
-
-            }
-            else {
-                upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
-                upsert_inventario.setInt(8, inventario_sub_bodega.getCantidad());
-
-                upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
-                upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
-
-                upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-                upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-
+            if (fecha_vencimiento && numero_lote) {
+                
                 upsert_inventario.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+                upsert_inventario.setString(5, inventario_sub_bodega.getNumero_lote());
+                upsert_inventario.setInt(6, inventario_sub_bodega.getProducto().getId_producto());
+                upsert_inventario.setInt(7, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                upsert_inventario.setDate(8, inventario_sub_bodega.getFecha_vencimiento());
+                upsert_inventario.setString(9, inventario_sub_bodega.getNumero_lote());
+                upsert_inventario.setInt(10, inventario_sub_bodega.getCantidad());
+                
+            } else if (numero_lote) {
+                
+                upsert_inventario.setString(4, inventario_sub_bodega.getNumero_lote());
+                upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
+                upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                upsert_inventario.setNull(7, java.sql.Types.DATE);
+                upsert_inventario.setString(8, inventario_sub_bodega.getNumero_lote());
+                upsert_inventario.setInt(9, inventario_sub_bodega.getCantidad());
+                
+            } else if (fecha_vencimiento) {
+                
+                upsert_inventario.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+                upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
+                upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
                 upsert_inventario.setDate(7, inventario_sub_bodega.getFecha_vencimiento());
+                upsert_inventario.setNull(8, java.sql.Types.VARCHAR);
+                upsert_inventario.setInt(9, inventario_sub_bodega.getCantidad());
+                
+            } else {
+                
+                upsert_inventario.setInt(4, inventario_sub_bodega.getProducto().getId_producto());
+                upsert_inventario.setInt(5, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                upsert_inventario.setNull(6, java.sql.Types.DATE);
+                upsert_inventario.setNull(7, java.sql.Types.VARCHAR);
+                upsert_inventario.setInt(8, inventario_sub_bodega.getCantidad());
+                
             }
 
             upsert_inventario.executeUpdate();
