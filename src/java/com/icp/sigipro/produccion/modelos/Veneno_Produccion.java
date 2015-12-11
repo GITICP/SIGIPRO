@@ -20,6 +20,7 @@ public class Veneno_Produccion {
   private int cantidad;
   private Date fecha_ingreso;
   private String observaciones;
+  private int id_veneno_serpentario;
 
     public String parseJSON(){
         Class _class = this.getClass();
@@ -92,6 +93,14 @@ public class Veneno_Produccion {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public int getId_veneno_serpentario() {
+        return id_veneno_serpentario;
+    }
+
+    public void setId_veneno_serpentario(int id_veneno_serpentario) {
+        this.id_veneno_serpentario = id_veneno_serpentario;
     }
   
   

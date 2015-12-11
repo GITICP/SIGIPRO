@@ -25,11 +25,11 @@ CREATE TABLE produccion.categoria_aa(
 	id_despacho serial NOT NULL,
 	fecha date NOT NULL,
 	destino character varying(100) NOT NULL,
-	id_coordinador integer NOT NULL, 
-	fecha_coordinador date NOT NULL,
+	id_coordinador integer, 
+	fecha_coordinador date,
 	estado_coordinador boolean NOT NULL,
-	id_regente integer NOT NULL, 
-	fecha_regente date NOT NULL,
+	id_regente integer, 
+	fecha_regente date,
 	estado_regente boolean NOT NULL,
 	total int
 	);
@@ -73,7 +73,7 @@ CREATE TABLE produccion.categoria_aa(
  CREATE TABLE produccion.reservacion( 
 	id_reservacion serial NOT NULL,
 	hasta date NOT NULL,
-	observaciones character varying(200) NOT NULL,
+	observaciones character varying(200),
 	total int
  );
  
@@ -81,7 +81,7 @@ CREATE TABLE produccion.categoria_aa(
 	id_salida serial NOT NULL,
 	fecha date NOT NULL,
 	tipo character varying(30) NOT NULL,
-	observaciones character varying(200) NOT NULL,
+	observaciones character varying(200),
 	total int
  );
 
@@ -90,7 +90,8 @@ CREATE TABLE produccion.categoria_aa(
 	veneno character varying(40) NOT NULL, 
 	fecha_ingreso date NOT NULL,
 	cantidad integer NOT NULL,
-	observaciones character varying(200) NOT NULL
+	observaciones character varying(200) NOT NULL,
+	id_veneno_serpentario integer NOT NULL
  );
 ----TABLAS MUCHOS A MUCHOS INVENTARIO-----
 CREATE TABLE produccion.despachos_inventario(
@@ -160,6 +161,9 @@ ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT pk_protocolo PRIMARY KEY (i
 ALTER TABLE ONLY produccion.reservacion ADD CONSTRAINT pk_reservacion PRIMARY KEY (id_reservacion);
 ALTER TABLE ONLY produccion.salida_ext ADD CONSTRAINT pk_salida_ext PRIMARY KEY (id_salida);
 ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT pk_veneno_produccion PRIMARY KEY (id_veneno);
+ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT pk_rxi PRIMARY KEY (id_rxi);
+ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT pk_sxi PRIMARY KEY (id_sxi);
+ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT pk_dxi PRIMARY KEY (id_dxi);
 
 --Llaves foraneas esquema produccion
 
@@ -177,27 +181,29 @@ ALTER TABLE ONLY produccion.actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (i
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT fk_id_veneno_serpentario FOREIGN KEY (id_veneno_serpentario) REFERENCES serpentario.venenos (id_veneno) ON DELETE SET NULL;
 
-ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rpt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_ptd FOREIGN KEY (id_despacho) REFERENCES produccion.despacho(id_despacho) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rptr FOREIGN KEY (id_reservacion) REFERENCES produccion.reservacion(id_reservacion) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KEY (id_salida) REFERENCES produccion.salida_ext(id_salida) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rpt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_ptd FOREIGN KEY (id_despacho) REFERENCES produccion.despacho(id_despacho) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT fk_rptr FOREIGN KEY (id_reservacion) REFERENCES produccion.reservacion(id_reservacion) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT fk_spts FOREIGN KEY (id_salida) REFERENCES produccion.salida_ext(id_salida) ON DELETE CASCADE;
 --Indices unicos esquema produccion
 
 --Permisos asociados a produccion
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (601, '[produccion]AdministrarModuloProduccion', 'Permite gestionar el modulo de produccion');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (602, '[produccion]AdministrarInventarioPT', 'Permite agregar/editar/eliminar inventario de producto terminado');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (603, '[produccion]AutorizarDespachos', 'Permite autorizar despachos');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (603, '[produccion]AutorizarDespachosRegente', 'Permite autorizar despachos por parte del Regente Farmacéutico');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (604, '[produccion]AdministrarInoculos', 'Permite agregar/editar/eliminar inoculos');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (605, '[produccion]AdministrarVenenoProduccion', 'Permite agregar/editar/eliminar venenos de produccion');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (606, '[produccion]AdministrarCatalogoPT', 'Permite agregar/editar/eliminar CatalogoPT');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (607, '[produccion]AutorizarDespachosCoordinador', 'Permite autorizar despachos por parte del Coordinador');
 
 --Entradas del Menu de produccion
 DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 600;
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0, null);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (602, 600, 'Inventario de Producto T.', '/Produccion/InventarioPT');
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0, 'Produccion', null);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (602, 600, 'Inventario de Producto T.', '/Produccion/Inventario_PT');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (604, 600, 'Inoculo', '/Produccion/Inoculo'); 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (606, 600, 'Catalogo de Producto T.', '/Produccion/Catalogo_PT');
@@ -205,7 +211,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 --Permisos del menu principal de produccion
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (602, 602);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (603, 602);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (607, 602);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (604, 604);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (605, 605);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (606, 606);
-
