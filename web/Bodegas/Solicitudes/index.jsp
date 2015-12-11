@@ -189,6 +189,7 @@
                         <th>Producto</th>
                         <th>Cantidad</th>
                         <th hidden="true">Fecha de Vencimiento</th>
+                        <th hidden="true">Número de Lote</th>
                         </thead>
                         <tbody>
                         </tbody>

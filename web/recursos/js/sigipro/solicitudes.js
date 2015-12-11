@@ -121,26 +121,31 @@ $(document).ready(function () {
 
         if ($(this).prop("checked")) {
 
-            tabla.find('th:eq(4)').show();
+            tabla.find('th[hidden=true]').show();
             $("#select-sub-bodegas").show();
             $("#seleccion-sub-bodega").prop("required", true);
 
             tabla.find('tbody > tr').each(function () {
                 var id = $(this).find('td:eq(0)');
-                var celda = $("<td>");
+                var celda_fecha = $("<td>");
                 if ($(this).data('perecedero')) {
                     var input = $('<input type="text" \
                                           value="" \
-                                          class="form-control sigiproDatePicker" \
+                                          class="form-control tabla-entregas sigiproDatePicker" \
                                           name="fecha_vencimiento_' + id.html() + '" \
                                           data-date-format="dd/mm/yyyy" \
                                           required \>');
-                    celda.append(input);
+                    celda_fecha.append(input);
                 } else {
-                    celda.text('Producto No Perecedero');
+                    celda_fecha.text('Producto No Perecedero');
                 }
+                
+                var celda_numero_lote = $("<td>");
+                var input_num_lote = $('<input type="text" value="" name="numero_lote_' + id.html() + '" class="form-control tabla-entregas" placeholder="Opcional">');
+                celda_numero_lote.append(input_num_lote);
 
-                $(this).append(celda);
+                $(this).append(celda_fecha);
+                $(this).append(celda_numero_lote);
 
                 $('.sigiproDatePicker').each(function () {
                     $(this).datepicker()
@@ -154,9 +159,10 @@ $(document).ready(function () {
 
             tabla.find("tbody > tr").each(function () {
                 $(this).find('td:last').remove();
+                $(this).find('td:last').remove();
             });
 
-            tabla.find('th:eq(4)').hide();
+            tabla.find('th[hidden=true]').hide();
             $("#select-sub-bodegas").hide();
             $("#seleccion-sub-bodega").prop("required", false);
 

@@ -430,17 +430,20 @@ public class ControladorSolicitudes extends SIGIPROServlet
                     boolean resultado = false;
                     try {
                         if (request.getParameter("entrega_sub_bodega") == null) {
-                            resultado = dao.entregarMasivo(ids, id_us_recibo, null, 0);
+                            resultado = dao.entregarMasivo(ids, id_us_recibo, null, null, 0);
                         }
                         else {
                             String[] ids_parseados = parsearAsociacion("#af#", ids);
                             HashMap fechas_vencimiento = new HashMap(ids_parseados.length);
+                            HashMap numeros_lote = new HashMap(ids_parseados.length);
                             int id_sub_bodega = Integer.parseInt(request.getParameter("sub_bodega"));
                             for (String id : ids_parseados) {
                                 String fecha = request.getParameter("fecha_vencimiento_" + id);
                                 fechas_vencimiento.put(id, fecha);
+                                String numero_lote = request.getParameter("numero_lote_" + id);
+                                numeros_lote.put(id, numero_lote);
                             }
-                            resultado = dao.entregarMasivo(ids, id_us_recibo, fechas_vencimiento, id_sub_bodega);
+                            resultado = dao.entregarMasivo(ids, id_us_recibo, fechas_vencimiento, numeros_lote, id_sub_bodega);
                         }
 
                         //Funcion que genera la bitacora

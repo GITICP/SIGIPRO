@@ -459,6 +459,8 @@ public class ControladorSubBodegas extends SIGIPROServlet
             ProductoInterno producto = new ProductoInterno();
             producto.setId_producto(Integer.parseInt(request.getParameter("producto")));
             inventario_sub_bodega.setProducto(producto);
+            
+            inventario_sub_bodega.setNumero_lote(request.getParameter("numero_lote"));
 
             int cantidad = Integer.parseInt(request.getParameter("cantidad"));
             inventario_sub_bodega.setCantidad(cantidad);
