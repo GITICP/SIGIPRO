@@ -334,7 +334,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
         ResultSet resultado = null;
 
         try {
-            String codigoConsulta = " SELECT sb.id_sub_bodega, sb.nombre, u.nombre_completo, s.nombre_seccion, isb.id_inventario_sub_bodega, ci.id_producto, ci.nombre as nombre_producto, ci.codigo_icp, isb.cantidad, isb.fecha_vencimiento "
+            String codigoConsulta = " SELECT sb.id_sub_bodega, sb.nombre, u.nombre_completo, s.nombre_seccion, isb.id_inventario_sub_bodega, ci.id_producto, ci.nombre as nombre_producto, ci.codigo_icp, isb.cantidad, isb.fecha_vencimiento, isb.numero_lote "
                                     + " FROM bodega.sub_bodegas sb "
                                     + "  INNER JOIN seguridad.usuarios u on sb.id_usuario = u.id_usuario "
                                     + "   INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
@@ -370,6 +370,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega>
                         inventario_sb.setCantidad(resultado.getInt("cantidad"));
 
                         inventario_sb.setFecha_vencimiento(resultado.getDate("fecha_vencimiento"));
+                        inventario_sb.setNumero_lote(resultado.getString("numero_lote"));
 
                         ProductoInterno p = new ProductoInterno();
 
