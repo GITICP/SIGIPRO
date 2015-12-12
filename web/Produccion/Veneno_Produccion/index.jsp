@@ -46,6 +46,7 @@
                     <th>Fecha de Ingreso</th>
                     <th>Cantidad</th>
                     <th>Observaciones</th>
+                    <th>Veneno Asociado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -62,6 +63,13 @@
                       <td>${veneno.getFecha_ingreso_S()}</td>
                       <td>${veneno.getCantidad()}</td>
                       <td>${veneno.getObservaciones()}</td>
+                      <td>
+                        <a href="/SIGIPRO/Serpentario/Veneno?accion=ver&id_veneno=${veneno.getVeneno_serpentario().getId_veneno()}">
+                        <div style="height:100%;width:100%">
+                            ${veneno.getVeneno_serpentario().getId_veneno()}
+                        </div>
+                        </a>
+                      </td>
                     </tr>
                   </c:forEach>
                 </tbody>

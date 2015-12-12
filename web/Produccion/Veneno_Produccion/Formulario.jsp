@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form class="form-horizontal" autocomplete="off" method="post" action="Veneno">
+<form class="form-horizontal" autocomplete="off" method="post" action="Veneno_Produccion">
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_veneno" value="${veneno.getId_veneno()}">
@@ -59,6 +59,27 @@
                 </div>
             </div>
         </div>
+        <label for="id_veneno" class="control-label"> *Veneno del Serpentario Asociado</label>
+            <!-- Id Veneno Serpentario-->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="id_veneno_serpentario" class="select2" name="id_veneno_serpentario" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                          <c:forEach items="${listaVenenos}" var="veneno_serpentario">
+                            <c:choose>
+                              <c:when test="${veneno.getVeneno_serpentario().getId_veneno() == veneno_serpentario.getId_veneno()}" >
+                                <option value=${veneno_serpentario.getId_veneno()} selected> Especie ${veneno_serpentario.getEspecie().getEspecie()}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value=${veneno_serpentario.getId_veneno()}> Especie ${veneno_serpentario.getEspecie().getEspecie()}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                    </div>
+                </div>
+            </div>
     </div>    
     <div class="col-md-6">
 <!-- Cantidad -->

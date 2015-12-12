@@ -14,6 +14,11 @@
 
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
+    <form id="form-eliminar-veneno_produccion" method="post" action="Veneno_Produccion">
+        <input name="accion" value="Eliminar" hidden> 
+        <input name="id_veneno" value="${veneno.getId_veneno()}" hidden>
+    </form>
+    
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
@@ -38,12 +43,12 @@
                 <c:set var="contienePermisoEditarYBorrar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 605}">
-                    <c:set var="contienePermisoEditar" value="true" />
+                    <c:set var="contienePermisoEditarYBorrar" value="true" />
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditarYBorrar}">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Veneno_Produccion?accion=editar&id_veneno=${veneno.getId_veneno()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Veneno de Producción" data-href="/SIGIPRO/Produccion/Veneno_Produccion?accion=eliminar&id_veneno=${veneno.getId_veneno()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este veneno de producción" data-form-id="form-eliminar-veneno_produccion">Eliminar</a>
                 </c:if>
               </div>
             </div>
@@ -56,6 +61,29 @@
                 <tr><td> <strong>Observaciones:</strong> <td>${veneno.getObservaciones()} </td></tr>
               </table>
               <br>
+              
+              <div class="widget widget-table">
+                <div class="widget-header">
+                  <h3><i class="fa fa-check"></i> Veneno del Serpentario Asociado</h3>
+                </div>
+                <div class="widget-content">
+                  <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                    <thead>
+                      <tr>
+                        <th>Especie del Veneno</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                        <tr id="${veneno.getVeneno_serpentario().getId_veneno()}">
+                          <td>${veneno.getVeneno_serpentario().getEspecie().getEspecie()}</td>
+                        </tr>
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
             </div>
           </div>
           <!-- END WIDGET TICKET TABLE -->

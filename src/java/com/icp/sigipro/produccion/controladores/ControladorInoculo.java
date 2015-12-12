@@ -37,6 +37,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ControladorInoculo", urlPatterns = {"/Produccion/Inoculo"})
 public class ControladorInoculo extends SIGIPROServlet {
 
+
     private final int[] permisos = {604, 1, 1};
     private final InoculoDAO dao = new InoculoDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
@@ -62,8 +63,6 @@ public class ControladorInoculo extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(604, listaPermisos);
-
-        System.out.println("ENTRE A GET AGREGAR.");
         
         HttpSession sesion = request.getSession();
         String nombre_usr = (String) sesion.getAttribute("usuario");
@@ -97,196 +96,7 @@ public class ControladorInoculo extends SIGIPROServlet {
         }
         redireccionar(request, response, redireccion);
     }
-/*
-    
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        admin = verificarPermiso(604, listaPermisos);
-        request.setAttribute("admin", admin);
-        String redireccion = "Inoculo/Ver.jsp";
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-        try {
-            Inoculo s = dao.obtenerInoculo(id_solicitud);
-            List<EntregaRatonera> e = dao_en.obtenerEntregasRatonera(id_solicitud);
-            request.setAttribute("solicitud", s);
-            request.setAttribute("entregas", e);
-        } catch (Exception ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        redireccionar(request, response, redireccion);
-    }
 
-    
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        String redireccion = "Inoculo/Editar.jsp";
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-        HttpSession sesion = request.getSession();
-        int id_usuario = (int) sesion.getAttribute("idusuario");
-        Usuario us = dao_us.obtenerUsuario(id_usuario);
-        List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
-        request.setAttribute("usuarios", usuarios);
-        request.setAttribute("accion", "Editar");
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
-        try {
-            Inoculo s = dao.obtenerInoculo(id_solicitud);
-            request.setAttribute("solicitud", s);
-            List<Cepa> cepas = dao_ce.obtenerCepas();
-            request.setAttribute("cepas", cepas);
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        redireccionar(request, response, redireccion);
-    }
-
-    protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-        admin = verificarPermiso(604, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
-        try {
-            List<Cepa> cepas = dao_ce.obtenerCepas();
-            request.setAttribute("cepas", cepas);
-            dao.eliminarInoculo(id_solicitud);
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(id_solicitud, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-            //*----------------------------* 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Inoculo eliminada correctamente."));
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        try {
-            List<Inoculo> solicitudes_ratonera;
-            if (admin) {
-                try {
-                    solicitudes_ratonera = dao.obtenerInoculoAdm();
-                    request.setAttribute("listaInoculo", solicitudes_ratonera);
-                } catch (SIGIPROException ex) {
-                    request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                }
-            } else {
-                HttpSession sesion = request.getSession();
-                int id_usuario = (int) sesion.getAttribute("idusuario");
-                Usuario u = dao_us.obtenerUsuario(id_usuario);
-                solicitudes_ratonera = dao.obtenerInoculo(u.getIdSeccion());
-                request.setAttribute("listaInoculo", solicitudes_ratonera);
-            }
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        String redireccion = "Inoculo/index.jsp";
-        redireccionar(request, response, redireccion);
-    }
-
-    // </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean resultado = false;
-        String redireccion = "Inoculo/Agregar.jsp";
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        admin = verificarPermiso(604, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
-        try {
-            Inoculo solicitud = construirObjeto(request);
-            solicitud.setEstado("Pendiente");
-            resultado = dao.insertarInoculo(solicitud);
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-            //*----------------------------*
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
-        }
-        if (resultado) {
-            redireccion = "Inoculo/index.jsp";
-            List<Inoculo> solicitudes_ratonera;
-            try {
-                List<Cepa> cepas = dao_ce.obtenerCepas();
-                request.setAttribute("cepas", cepas);
-                if (admin) {
-                    try {
-                        solicitudes_ratonera = dao.obtenerInoculoAdm();
-                        request.setAttribute("listaInoculo", solicitudes_ratonera);
-                    } catch (SIGIPROException ex) {
-                        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                    }
-                } else {
-                    HttpSession sesion = request.getSession();
-                    int id_usuario = (int) sesion.getAttribute("idusuario");
-                    Usuario u = dao_us.obtenerUsuario(id_usuario);
-                    solicitudes_ratonera = dao.obtenerInoculo(u.getIdSeccion());
-                    request.setAttribute("listaInoculo", solicitudes_ratonera);
-                }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada con éxito"));
-            } catch (SIGIPROException ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-            }
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-        }
-        redireccionar(request, response, redireccion);
-    }
-
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean resultado = false;
-        String redireccion = "Inoculo/Editar.jsp";
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        admin = verificarPermiso(604, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
-        try {
-            Inoculo solicitud = construirObjeto(request);
-            solicitud.setEstado("Pendiente");
-            resultado = dao.editarInoculo(solicitud);
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-            //*----------------------------*
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
-        }
-        if (resultado) {
-            redireccion = "Inoculo/index.jsp";
-            List<Inoculo> solicitudes_ratonera;
-            try {
-                List<Cepa> cepas = dao_ce.obtenerCepas();
-                request.setAttribute("cepas", cepas);
-                if (admin) {
-                    try {
-                        solicitudes_ratonera = dao.obtenerInoculoAdm();
-                        request.setAttribute("listaInoculo", solicitudes_ratonera);
-                    } catch (SIGIPROException ex) {
-                        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                    }
-                } else {
-                    HttpSession sesion = request.getSession();
-                    int id_usuario = (int) sesion.getAttribute("idusuario");
-                    Usuario u = dao_us.obtenerUsuario(id_usuario);
-                    solicitudes_ratonera = dao.obtenerInoculo(u.getIdSeccion());
-                    request.setAttribute("listaInoculo", solicitudes_ratonera);
-                }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada con éxito"));
-
-            } catch (SIGIPROException ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-            }
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-        }
-        redireccionar(request, response, redireccion);
-    }
-*/
-    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

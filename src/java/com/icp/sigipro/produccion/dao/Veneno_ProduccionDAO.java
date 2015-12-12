@@ -14,6 +14,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.serpentario.dao.VenenoDAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -39,12 +40,14 @@ public class Veneno_ProduccionDAO extends DAO {
 
             while (rs.next()) {
                 Veneno_Produccion veneno_produccion = new Veneno_Produccion();
-
+                VenenoDAO vDAO = new VenenoDAO();
+                
                 veneno_produccion.setId_veneno(rs.getInt("id_veneno"));
                 veneno_produccion.setVeneno(rs.getString("veneno"));
                 veneno_produccion.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 veneno_produccion.setCantidad(rs.getInt("cantidad"));
                 veneno_produccion.setObservaciones(rs.getString("observaciones"));
+                veneno_produccion.setVeneno_serpentario(vDAO.obtenerVeneno(rs.getInt("id_veneno_serpentario")));
                 resultado.add(veneno_produccion);
 
             }
@@ -69,11 +72,14 @@ public class Veneno_ProduccionDAO extends DAO {
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
+                VenenoDAO vDAO = new VenenoDAO();
+                
                 resultado.setId_veneno(rs.getInt("id_veneno"));
                 resultado.setVeneno(rs.getString("veneno"));
                 resultado.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 resultado.setCantidad(rs.getInt("cantidad"));
                 resultado.setObservaciones(rs.getString("observaciones"));
+                resultado.setVeneno_serpentario(vDAO.obtenerVeneno(rs.getInt("id_veneno_serpentario")));
             }
             rs.close();
             consulta.close();
@@ -85,27 +91,20 @@ public class Veneno_ProduccionDAO extends DAO {
         return resultado;
     }
     
-    /*public boolean insertarSolicitudRatonera(SolicitudRatonera p) throws SIGIPROException {
+    public boolean insertarVeneno_Produccion(Veneno_Produccion p) throws SIGIPROException {
 
         boolean resultado = false;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bioterio.solicitudes_ratonera (fecha_solicitud, numero_animales, peso_requerido, "
-                    + "numero_cajas,sexo,id_cepa,usuario_solicitante,observaciones,observaciones_rechazo,estado, fecha_necesita, usuario_utiliza)"
-                    + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id_solicitud");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.veneno_produccion (veneno, fecha_ingreso, cantidad, "
+                    + "observaciones, id_veneno_serpentario)"
+                    + " VALUES (?,?,?,?,?) RETURNING id_veneno");
 
-            consulta.setDate(1, p.getFecha_solicitud());
-            consulta.setInt(2, p.getNumero_animales());
-            consulta.setString(3, p.getPeso_requerido());
-            consulta.setInt(4, p.getNumero_cajas());
-            consulta.setString(5, p.getSexo());
-            consulta.setInt(6, p.getCepa().getId_cepa());
-            consulta.setInt(7, p.getUsuario_solicitante().getID());
-            consulta.setString(8, p.getObservaciones());
-            consulta.setString(9, p.getObservaciones_rechazo());
-            consulta.setString(10, p.getEstado());
-            consulta.setDate(11, p.getFecha_necesita());
-            consulta.setInt(12, p.getUsuario_utiliza().getID());
+            consulta.setString(1, p.getVeneno());
+            consulta.setDate(2, p.getFecha_ingreso());
+            consulta.setInt(3, p.getCantidad());
+            consulta.setString(4, p.getObservaciones());
+            consulta.setInt(5, p.getVeneno_serpentario().getId_veneno());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -121,37 +120,27 @@ public class Veneno_ProduccionDAO extends DAO {
         return resultado;
     }
 
-    public boolean editarSolicitudRatonera(SolicitudRatonera p) throws SIGIPROException {
+    public boolean editarVeneno_Produccion(Veneno_Produccion p) throws SIGIPROException {
 
         boolean resultado = false;
 
+        System.out.println("veneno="+p.getVeneno()+", fecha_ingreso="+p.getFecha_ingreso()+", cantidad="+p.getCantidad()+
+                ", observaciones="+p.getObservaciones()+", id_veneno_serpentario="+p.getVeneno_serpentario().getId_veneno()+". Id_veneno="+p.getId_veneno());
+        
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " UPDATE bioterio.solicitudes_ratonera "
-                    + " SET   fecha_solicitud=?, numero_animales=?, peso_requerido=?, "
-                    + " numero_cajas=?,sexo=?,id_cepa=?,usuario_solicitante=?,observaciones=?,observaciones_rechazo=?,estado=?, fecha_necesita=?, usuario_utiliza=?"
-                    + " WHERE id_solicitud=?; "
+                    " UPDATE produccion.veneno_produccion"
+                    + " SET veneno=?, fecha_ingreso=?, cantidad=?, observaciones=?, id_veneno_serpentario=?"
+                    + " WHERE id_veneno=?; "
             );
 
-            consulta.setDate(1, p.getFecha_solicitud());
-            consulta.setInt(2, p.getNumero_animales());
-            consulta.setString(3, p.getPeso_requerido());
-            consulta.setInt(4, p.getNumero_cajas());
-            consulta.setString(5, p.getSexo());
-            consulta.setInt(6, p.getCepa().getId_cepa());
-            consulta.setInt(7, p.getUsuario_solicitante().getID());
-            consulta.setString(8, p.getObservaciones());
-            consulta.setString(9, p.getObservaciones_rechazo());
-            consulta.setString(10, p.getEstado());
-            consulta.setDate(11, p.getFecha_necesita());
-            if (p.getUsuario_utiliza() != null) {
-                consulta.setInt(12, p.getUsuario_utiliza().getID());
-            } else {
-                consulta.setNull(12, java.sql.Types.INTEGER);
-            }
-
-            consulta.setInt(13, p.getId_solicitud());
-
+            consulta.setString(1, p.getVeneno());
+            consulta.setDate(2, p.getFecha_ingreso());
+            consulta.setInt(3, p.getCantidad());
+            consulta.setString(4, p.getObservaciones());
+            consulta.setInt(5, p.getVeneno_serpentario().getId_veneno());
+            consulta.setInt(6, p.getId_veneno());
+            
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
@@ -161,20 +150,21 @@ public class Veneno_ProduccionDAO extends DAO {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la edición");
         }
+        System.out.println("Resultado del editar: "+resultado);
         return resultado;
     }
 
-    public boolean eliminarSolicitudRatonera(int id_solicitud) throws SIGIPROException {
+    public boolean eliminarVeneno_Produccion(int id_veneno) throws SIGIPROException {
 
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM bioterio.solicitudes_ratonera "
-                    + " WHERE id_solicitud=?; "
+                    " DELETE FROM produccion.veneno_produccion "
+                    + " WHERE id_veneno=?; "
             );
 
-            consulta.setInt(1, id_solicitud);
+            consulta.setInt(1, id_veneno);
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -188,7 +178,7 @@ public class Veneno_ProduccionDAO extends DAO {
         return resultado;
     }
 
-    public SolicitudRatonera obtenerSolicitudRatonera(int id) throws SIGIPROException {
+    /*public SolicitudRatonera obtenerSolicitudRatonera(int id) throws SIGIPROException {
 
         SolicitudRatonera solicitud_ratonera = new SolicitudRatonera();
 

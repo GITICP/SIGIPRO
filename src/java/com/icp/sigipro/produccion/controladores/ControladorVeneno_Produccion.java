@@ -13,11 +13,14 @@ import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.serpentario.dao.VenenoDAO;
+import com.icp.sigipro.serpentario.modelos.Veneno;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,7 +68,9 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
        
         String redireccion = "Veneno_Produccion/Agregar.jsp";
         Veneno_Produccion ds = new Veneno_Produccion();
+        List<Veneno> listaVenenos = new VenenoDAO().obtenerVenenos();
         request.setAttribute("veneno", ds);
+        request.setAttribute("listaVenenos", listaVenenos);
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
@@ -81,267 +86,151 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         
         redireccionar(request, response, redireccion);
     }
-/*
+
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        admin = verificarPermiso(203, listaPermisos);
-        request.setAttribute("admin", admin);
-        String redireccion = "SolicitudesRatonera/Ver.jsp";
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        
+        String redireccion = "Veneno_Produccion/Ver.jsp";
+        int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
         try {
-            SolicitudRatonera s = dao.obtenerSolicitudRatonera(id_solicitud);
-            List<EntregaRatonera> e = dao_en.obtenerEntregasRatonera(id_solicitud);
-            request.setAttribute("solicitud", s);
-            request.setAttribute("entregas", e);
+            Veneno_Produccion v = dao.obtenerVeneno_Produccion(id_veneno);
+            request.setAttribute("veneno", v);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "SolicitudesRatonera/Editar.jsp";
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
-        HttpSession sesion = request.getSession();
-        int id_usuario = (int) sesion.getAttribute("idusuario");
-        Usuario us = dao_us.obtenerUsuario(id_usuario);
-        List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
-        request.setAttribute("usuarios", usuarios);
+        
+        String redireccion = "Veneno_Produccion/Editar.jsp";
+        int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
+        Veneno_Produccion ds = dao.obtenerVeneno_Produccion(id_veneno);
+        List<Veneno> listaVenenos = new VenenoDAO().obtenerVenenos();
+        request.setAttribute("veneno", ds);
+        request.setAttribute("listaVenenos", listaVenenos);
         request.setAttribute("accion", "Editar");
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
-        try {
-            SolicitudRatonera s = dao.obtenerSolicitudRatonera(id_solicitud);
-            request.setAttribute("solicitud", s);
-            List<Cepa> cepas = dao_ce.obtenerCepas();
-            request.setAttribute("cepas", cepas);
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
+        
         redireccionar(request, response, redireccion);
     }
-*/
-/*
+
+
     // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         boolean resultado = false;
-        String redireccion = "SolicitudesRatonera/Agregar.jsp";
+        String redireccion = "Veneno_Produccion/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        admin = verificarPermiso(203, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
+        validarPermisos(permisos, listaPermisos);
         try {
-            SolicitudRatonera solicitud = construirObjeto(request);
-            solicitud.setEstado("Pendiente");
-            resultado = dao.insertarSolicitudRatonera(solicitud);
+            Veneno_Produccion veneno_nuevo = construirObjeto(request);
+            
+            resultado = dao.insertarVeneno_Produccion(veneno_nuevo);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(veneno_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
-            redireccion = "SolicitudesRatonera/index.jsp";
-            List<SolicitudRatonera> solicitudes_ratonera;
-            try {
-                List<Cepa> cepas = dao_ce.obtenerCepas();
-                request.setAttribute("cepas", cepas);
-                if (admin) {
-                    try {
-                        solicitudes_ratonera = dao.obtenerSolicitudesRatoneraAdm();
-                        request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-                    } catch (SIGIPROException ex) {
-                        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                    }
-                } else {
-                    HttpSession sesion = request.getSession();
-                    int id_usuario = (int) sesion.getAttribute("idusuario");
-                    Usuario u = dao_us.obtenerUsuario(id_usuario);
-                    solicitudes_ratonera = dao.obtenerSolicitudesRatonera(u.getIdSeccion());
-                    request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-                }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada con éxito"));
-            } catch (SIGIPROException ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-            }
+            redireccion = "Veneno_Produccion/index.jsp";
+            List<Veneno_Produccion> venenos = new Veneno_ProduccionDAO().obtenerVenenos_Produccion();
+            request.setAttribute("listaVenenos", venenos);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
-        String redireccion = "SolicitudesRatonera/Editar.jsp";
+        String redireccion = "Veneno_Produccion/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        admin = verificarPermiso(203, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
+        validarPermisos(permisos, listaPermisos);
+        
         try {
-            SolicitudRatonera solicitud = construirObjeto(request);
-            solicitud.setEstado("Pendiente");
-            resultado = dao.editarSolicitudRatonera(solicitud);
+            Veneno_Produccion veneno_nuevo = construirObjetoEditar(request);
+            
+            resultado = dao.editarVeneno_Produccion(veneno_nuevo);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(veneno_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
-            redireccion = "SolicitudesRatonera/index.jsp";
-            List<SolicitudRatonera> solicitudes_ratonera;
-            try {
-                List<Cepa> cepas = dao_ce.obtenerCepas();
-                request.setAttribute("cepas", cepas);
-                if (admin) {
-                    try {
-                        solicitudes_ratonera = dao.obtenerSolicitudesRatoneraAdm();
-                        request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-                    } catch (SIGIPROException ex) {
-                        request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                    }
-                } else {
-                    HttpSession sesion = request.getSession();
-                    int id_usuario = (int) sesion.getAttribute("idusuario");
-                    Usuario u = dao_us.obtenerUsuario(id_usuario);
-                    solicitudes_ratonera = dao.obtenerSolicitudesRatonera(u.getIdSeccion());
-                    request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-                }
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud editada con éxito"));
-
-            } catch (SIGIPROException ex) {
-                request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-            }
+            redireccion = "Veneno_Produccion/index.jsp";
+            List<Veneno_Produccion> venenos = new Veneno_ProduccionDAO().obtenerVenenos_Produccion();
+            request.setAttribute("listaVenenos", venenos);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
         redireccionar(request, response, redireccion);
     }
-
-    protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    
+    protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
+        boolean resultado = false;
+        String redireccion = "Veneno_Produccion/index.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_rech"));
-        String obs = request.getParameter("observaciones_rechazo");
-        boolean resultado = false;
-        admin = verificarPermiso(203, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
+        
         try {
-            List<Cepa> cepas = dao_ce.obtenerCepas();
-            request.setAttribute("cepas", cepas);
-            SolicitudRatonera solicitud = dao.obtenerSolicitudRatonera(id_solicitud);
-            solicitud.setEstado("Rechazada");
-            solicitud.setObservaciones_rechazo(obs);
-            resultado = dao.editarSolicitudRatonera(solicitud);
+            Veneno_Produccion veneno_a_eliminar = dao.obtenerVeneno_Produccion(Integer.parseInt(request.getParameter("id_veneno")));
+            
+            resultado = dao.eliminarVeneno_Produccion(veneno_a_eliminar.getId_veneno());
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(id_solicitud, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-            //*----------------------------* 
-
-            if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud rechazada"));
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-            }
+            bitacora.setBitacora(veneno_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+            request.setAttribute("mensaje", ex.getMessage());
         }
-        try {
-            List<SolicitudRatonera> solicitudes_ratonera;
-            if (admin) {
-                try {
-                    solicitudes_ratonera = dao.obtenerSolicitudesRatoneraAdm();
-                    request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-                } catch (SIGIPROException ex) {
-                    request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                }
-            } else {
-                HttpSession sesion = request.getSession();
-                int id_usuario = (int) sesion.getAttribute("idusuario");
-                Usuario u = dao_us.obtenerUsuario(id_usuario);
-                solicitudes_ratonera = dao.obtenerSolicitudesRatonera(u.getIdSeccion());
-                request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-            }
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        if (resultado) {
+            redireccion = "Veneno_Produccion/index.jsp";
+            List<Veneno_Produccion> venenos = new Veneno_ProduccionDAO().obtenerVenenos_Produccion();
+            request.setAttribute("listaVenenos", venenos);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
-        String redireccion = "SolicitudesRatonera/index.jsp";
         redireccionar(request, response, redireccion);
     }
+    
+    private Veneno_Produccion construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
+        Veneno_Produccion veneno = new Veneno_Produccion();
+        veneno.setVeneno(request.getParameter("veneno"));
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date result = df.parse(request.getParameter("fecha_ingreso"));
+        java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
+        veneno.setFecha_ingreso(fecha_solicitudSQL);
+        VenenoDAO vDAO = new VenenoDAO();
+        veneno.setVeneno_serpentario(vDAO.obtenerVeneno(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
+        veneno.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+        veneno.setObservaciones(request.getParameter("observaciones"));
 
-    protected void postEntregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_auth2"));
-        boolean resultado = false;
-        boolean resultado2 = false;
-        admin = verificarPermiso(203, listaPermisos);
-        request.setAttribute("admin", admin);
-        request.setAttribute("pesos", pesos);
-        request.setAttribute("sexos", sexos);
-        try {
-            List<Cepa> cepas = dao_ce.obtenerCepas();
-            request.setAttribute("cepas", cepas);
-            String usuario = request.getParameter("usr");
-            String contrasena = request.getParameter("passw");
-            SolicitudRatonera solicitud = dao.obtenerSolicitudRatonera(id_solicitud);
-            EntregaRatonera entrega = construirSubObjeto(request);
-            boolean auth = dao_us.AutorizarRecibo(usuario, contrasena);
-            if (auth) {
-                int id_us_recibo = dao_us.obtenerIDUsuario(usuario);
-                entrega.setUsuario_recipiente(dao_us.obtenerUsuario(id_us_recibo));
-                solicitud.setEstado("Abierta");
-                resultado = dao.editarSolicitudRatonera(solicitud);
-                resultado2 = dao_en.insertarEntregaRatonera(entrega);
-            } else {
-                request.setAttribute("mensaje_auth", helper.mensajeDeError("El usuario o contraseña son incorrectos"));
-            }
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(id_solicitud, Bitacora.ACCION_ENTREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
-            //*----------------------------* 
-
-            if (resultado && resultado2) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Entrega registrada."));
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-            }
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        try {
-            List<SolicitudRatonera> solicitudes_ratonera;
-            if (admin) {
-                try {
-                    solicitudes_ratonera = dao.obtenerSolicitudesRatoneraAdm();
-                    request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-                } catch (SIGIPROException ex) {
-                    request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-                }
-            } else {
-                HttpSession sesion = request.getSession();
-                int id_usuario = (int) sesion.getAttribute("idusuario");
-                Usuario u = dao_us.obtenerUsuario(id_usuario);
-                solicitudes_ratonera = dao.obtenerSolicitudesRatonera(u.getIdSeccion());
-                request.setAttribute("listaSolicitudesRatonera", solicitudes_ratonera);
-            }
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
-        String redireccion = "SolicitudesRatonera/index.jsp";
-        redireccionar(request, response, redireccion);
+        return veneno;
     }
-*/
+    
+    private Veneno_Produccion construirObjetoEditar(HttpServletRequest request) throws SIGIPROException, ParseException {
+        Veneno_Produccion veneno = new Veneno_Produccion();
+        veneno.setId_veneno(Integer.parseInt(request.getParameter("id_veneno")));
+        veneno.setVeneno(request.getParameter("veneno"));
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date result = df.parse(request.getParameter("fecha_ingreso"));
+        java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
+        veneno.setFecha_ingreso(fecha_solicitudSQL);
+        VenenoDAO vDAO = new VenenoDAO();
+        veneno.setVeneno_serpentario(vDAO.obtenerVeneno(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
+        veneno.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+        veneno.setObservaciones(request.getParameter("observaciones"));
+
+        return veneno;
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

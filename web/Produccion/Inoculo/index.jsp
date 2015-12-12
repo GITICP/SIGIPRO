@@ -46,7 +46,7 @@
                     <th>Fecha de Preparación</th>
                     <th>Encargado de Preparación</th>
                     <th>Veneno asociado</th>
-                    <th>Peso (gramos)</th>
+                    <th>Peso (miligramos)</th>
                   </tr>
                 </thead>
                 <tbody>
