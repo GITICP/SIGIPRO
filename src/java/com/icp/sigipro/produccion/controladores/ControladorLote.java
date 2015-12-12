@@ -266,14 +266,11 @@ public class ControladorLote extends SIGIPROServlet {
                             String[] opciones = this.obtenerParametros(nombre_campo_resultado);
                             List<String> lista_opciones = new ArrayList<String>();
                             lista_opciones.addAll(Arrays.asList(opciones));
-                            System.out.println(lista_opciones);
                             NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
                             for (int j = 0; j < elemento_opciones.getLength(); j++) {
                                 Node opcion = elemento_opciones.item(j);
                                 Element elemento_opcion = (Element) opcion;
                                 String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
-                                System.out.println(nombre_opcion);
-                                System.out.println(lista_opciones.contains(nombre_opcion));
                                 if (lista_opciones.contains(nombre_opcion)) {
                                     nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
                                     nodo_valor.setTextContent("true");
@@ -284,7 +281,6 @@ public class ControladorLote extends SIGIPROServlet {
                             nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                             String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
                             List<String> lista_usuarios = new ArrayList<String>();
-                            System.out.println("USUARIOS: ");
                             lista_usuarios.addAll(Arrays.asList(usuarios));
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
                             nodo_valor.setTextContent(lista_usuarios.toString());

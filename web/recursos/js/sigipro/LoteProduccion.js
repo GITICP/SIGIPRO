@@ -15,6 +15,22 @@ $(function () {
        
     });
     
+    var cc = $("#cc");
+    
+    $.each(cc, function(index, element){
+        $(element).on("change",generar_link_cc);
+        $.ajax({
+            url: "/SIGIPRO/ControlCalidad/Solicitud",
+            type: "GET",
+            data: {"accion": "solicitudesajax"},
+            dataType: "json",
+            success: function (datos) {
+                generar_select_cc(datos,element);
+            }
+        });
+       
+    });
+    
     var usuarios = $("select[id^='usuario']");
     
     $.each(usuarios, function(index, element){
@@ -36,7 +52,6 @@ $(function () {
     
     $.each(subbodegas, function(index, element){
         var id = $(element).prop("id").split("_")[1];
-        alert(id);
         $.ajax({
             url: "/SIGIPRO/Bodegas/SubBodegas",
             type: "GET",
@@ -60,6 +75,22 @@ function generar_select_sangria(datos,element) {
         var opcion_string = "<option value=\""+ elemento.id_sangria + "\">";
         var opcion = $(opcion_string);
         opcion.text(elemento.identificador);
+
+        $(element).append(opcion);
+    }
+    
+    $(element).select2();
+     
+}
+
+function generar_select_cc(datos,element) {
+    
+    $(element).append("<option value=\"\"></option>");
+    for (var i = 0; i < datos.length; i++) {
+        var elemento = datos[i];
+        var opcion_string = "<option value=\""+ elemento.id_solicitud + "\">";
+        var opcion = $(opcion_string);
+        opcion.text(elemento.numero_solicitud);
 
         $(element).append(opcion);
     }
@@ -109,5 +140,17 @@ function generar_link_sangria(){
     
     $("."+div +" .ver > a").remove();
 
-    elemento.append("<br> <a target=\"_blank\" href=\"/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria="+id+"\"> Ver Sangría </a>");
+    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria="+id+"\"> Ver Sangría </a>");
+}
+
+function generar_link_cc(){
+    var div = ($(this).prop("name"));
+    
+    var elemento = $("."+div +" .ver");
+    
+    var id = ($(this).val());
+    
+    $("."+div +" .ver > a").remove();
+
+    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud="+id+"\"> Ver Solicitud de CC </a>");
 }

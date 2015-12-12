@@ -239,7 +239,9 @@ VALUES (1, 'Generador Formularios Calidad',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="cc" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>          
+                        <select id="cc" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+<div class="ver">
+                        </div>         
                     </div>
                 </div>
             </div>
@@ -270,6 +272,9 @@ VALUES (1, 'Generador Formularios Calidad',
                         <select id="subbodega_{$subbodega}" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <xsl:if test="$cantidad = ''true''">
                             <br>
+                                <label for="{$nombre-cantidad}" class="control-label">
+                                    Cantidad
+                                </label>
                                 <input type="number" name="{$nombre-cantidad}" class="form-control" value="{$valor-cantidad}" step="any"></input>
                             </br>
                         </xsl:if>      
