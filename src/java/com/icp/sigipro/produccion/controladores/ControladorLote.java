@@ -139,40 +139,70 @@ public class ControladorLote extends SIGIPROServlet {
 
     }
 
+    protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(662, request);
+        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int posicion_actual = Integer.parseInt(request.getParameter("posicion_actual"));
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        boolean resultado = false;
+        try {
+            resultado = dao.aprobarPasoActual(id_lote, id_respuesta, id_usuario, posicion_actual);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                bitacora.setBitacora(id_lote, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LOTEPRODUCCION, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo aprobado correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
+            this.getIndex(request, response);
+        }
+
+    }
+
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         validarPermiso(661, request);
         String redireccion = "Lote/Realizar.jsp";
 
         int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        request.setAttribute("id_lote", id_lote);
+        Lote lote = dao.obtenerLote(id_lote);
+        if (!lote.isAprobacion()) {
+            request.setAttribute("id_lote", id_lote);
 
-        ProduccionXSLT xslt;
-        Paso paso;
+            ProduccionXSLT xslt;
+            Paso paso;
 
-        try {
-            xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
+            try {
+                xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
 
-            paso = dao.obtenerPasoActual(id_lote);
+                paso = dao.obtenerPasoActual(id_lote);
 
-            System.out.println(paso.getEstructura().getString());
+                System.out.println(paso.getEstructura().getString());
 
-            String formulario = helper_transformaciones.transformar(xslt, paso.getEstructura());
+                String formulario = helper_transformaciones.transformar(xslt, paso.getEstructura());
 
-            request.setAttribute("cuerpo_formulario", formulario);
+                request.setAttribute("cuerpo_formulario", formulario);
 
-            request.setAttribute("paso", paso);
+                request.setAttribute("paso", paso);
 
-            Lote lote = dao.obtenerLote(id_lote);
+                request.setAttribute("lote", lote);
 
-            request.setAttribute("lote", lote);
+            } catch (TransformerException | SIGIPROException | SQLException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+            }
 
-        } catch (TransformerException | SIGIPROException | SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+            redireccionar(request, response, redireccion);
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            this.getIndex(request, response);
         }
-
-        redireccionar(request, response, redireccion);
     }
 
     protected void getUsuariosajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -237,7 +267,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         Usuario u = new Usuario();
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
-        u.setIdUsuario(id_usuario);
+        u.setId_usuario(id_usuario);
 
         resultado.setUsuario(u);
 
@@ -320,7 +350,6 @@ public class ControladorLote extends SIGIPROServlet {
             System.out.println(string_xml_resultado);
 
             resultado.setRespuestaString(string_xml_resultado);
-
             dao.insertarRespuesta(resultado);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 

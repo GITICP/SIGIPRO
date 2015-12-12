@@ -1,5 +1,5 @@
 $(function () {
-    var sangrias = $("#sangria");
+    var sangrias = $(".sangria");
     
     $.each(sangrias, function(index, element){
         $(element).on("change",generar_link_sangria);
@@ -12,10 +12,9 @@ $(function () {
                 generar_select_sangria(datos,element);
             }
         });
-       
     });
     
-    var cc = $("#cc");
+    var cc = $(".cc");
     
     $.each(cc, function(index, element){
         $(element).on("change",generar_link_cc);

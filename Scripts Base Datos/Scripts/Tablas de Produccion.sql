@@ -174,6 +174,7 @@ CREATE TABLE produccion.lote (
     nombre character varying(100) NOT NULL,
     estado boolean NOT NULL,
     posicion_actual int NOT NULL,
+    aprobacion boolean NOT NULL,
     CONSTRAINT pk_lote PRIMARY KEY (id_lote)
 );
 
@@ -181,16 +182,18 @@ CREATE TABLE produccion.lote (
     id_respuesta serial  NOT NULL,
     id_lote int NOT NULL,
     id_pxp integer NOT NULL,
+    id_usuario_aprobar int,
     version int NOT NULL,
     CONSTRAINT pk_respuesta_pxp PRIMARY KEY (id_respuesta)
 );
 
 CREATE TABLE produccion.historial_respuesta_pxp(
-    id_historial_respuesta_pxp serial NOT NULL,
+    id_historial serial NOT NULL,
     id_respuesta int NOT NULL,
     respuesta xml  NOT NULL,
+    id_usuario_realizar int,
     version int NOT NULL,
-    CONSTRAINT pk_HISTORIAL_respuesta_pxp PRIMARY KEY (id_historial_respuesta_pxp)
+    CONSTRAINT pk_HISTORIAL_respuesta_pxp PRIMARY KEY (id_historial)
 
 );
  
@@ -245,6 +248,9 @@ ALTER TABLE ONLY produccion.historial_paso ADD CONSTRAINT fk_historial_paso FORE
 ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_historial_actividad_apoyo FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.lote ADD CONSTRAINT fk_lote_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo);
 ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_respuesta FOREIGN KEY (id_respuesta) REFERENCES produccion.respuesta_pxp(id_respuesta);
+
+ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_usuario FOREIGN KEY (id_usuario_realizar) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxp_usuario FOREIGN KEY (id_usuario_aprobar) REFERENCES seguridad.usuarios(id_usuario);
 
 --Indices unicos esquema produccion
 

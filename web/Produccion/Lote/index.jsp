@@ -64,7 +64,19 @@
                                                 ${lote.getProtocolo().getNombre()}
                                             </td>
                                             <td>
-                                                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_lote=${lote.getId_lote()}">${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()}</a>
+                                                <c:choose>
+                                                    <c:when test="${lote.isAprobacion()}">
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 662)}">
+                                                            <div class="btn-group widget-header-toolbar">
+                                                                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=aprobar&id_lote=${lote.getId_lote()}&id_respuesta=${lote.getId_respuesta_actual()}&posicion_actual=${lote.getPosicion_actual()}">Aprobar</a>
+                                                            </div>
+                                                        </c:if>
+
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_lote=${lote.getId_lote()}">${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()}</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>

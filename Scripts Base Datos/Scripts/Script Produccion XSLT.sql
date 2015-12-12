@@ -189,7 +189,7 @@ VALUES (1, 'Generador Formularios Calidad',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
+                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
                         <div class="ver">
                         </div> 
                     </div>
@@ -239,7 +239,7 @@ VALUES (1, 'Generador Formularios Calidad',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="cc" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
 <div class="ver">
                         </div>         
                     </div>
