@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.bodegas.controladores;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.ProductoInternoDAO;
@@ -22,6 +23,7 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -63,6 +65,7 @@ public class ControladorSubBodegas extends SIGIPROServlet
             add("consumir");
             add("mover");
             add("historial");
+            add("subbodegasajax");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -324,6 +327,34 @@ public class ControladorSubBodegas extends SIGIPROServlet
         // Obtener todo
         // Setear
         // request.setAttribute("listaProductos", productos);
+    }
+    
+    protected void getSubbodegasajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("application/json");
+
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+
+        int id_sub_bodega = Integer.parseInt(request.getParameter("id_subbodega"));
+
+        try {
+            SubBodega subbodega = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+            List<InventarioSubBodega> inventario = subbodega.getInventarios();
+            List<ProductoInterno> productos = new ArrayList<>();
+            for (InventarioSubBodega i : inventario){
+                productos.add(i.getProducto());
+            }
+            Gson gson = new Gson();
+            resultado = gson.toJson(productos);
+
+        } catch (SIGIPROException sig_ex) {
+            // Enviar error al AJAX
+        }
+
+        out.print(resultado);
+
+        out.flush();
     }
 
     protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException

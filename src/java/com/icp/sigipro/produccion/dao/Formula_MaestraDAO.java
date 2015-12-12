@@ -17,15 +17,14 @@ import java.util.List;
  * @author ld.conejo
  */
 public class Formula_MaestraDAO extends DAO {
-    
-    public boolean insertarFormula_Maestra(Formula_Maestra formula)
-    {
+
+    public boolean insertarFormula_Maestra(Formula_Maestra formula) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.formula_maestra (nombre,descripcion) "
-                                                                        + " VALUES (?,?) RETURNING id_formula_maestra");
+                    + " VALUES (?,?) RETURNING id_formula_maestra");
             consulta.setString(1, formula.getNombre());
             consulta.setString(2, formula.getDescripcion());
             rs = consulta.executeQuery();
@@ -35,20 +34,17 @@ public class Formula_MaestraDAO extends DAO {
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
         return resultado;
     }
-    
-    public boolean editarFormula_Maestra(Formula_Maestra formula)
-    {
+
+    public boolean editarFormula_Maestra(Formula_Maestra formula) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
@@ -58,23 +54,21 @@ public class Formula_MaestraDAO extends DAO {
             consulta.setString(1, formula.getNombre());
             consulta.setString(2, formula.getDescripcion());
             consulta.setInt(3, formula.getId_formula_maestra());
-            if (consulta.executeUpdate()==1) {
+            if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
         return resultado;
     }
-    
-    public List<Formula_Maestra> obtenerFormulas_Maestras()
-    {
+
+    public List<Formula_Maestra> obtenerFormulas_Maestras() {
         List<Formula_Maestra> resultado = new ArrayList<Formula_Maestra>();
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -88,19 +82,17 @@ public class Formula_MaestraDAO extends DAO {
                 formula.setDescripcion(rs.getString("descripcion"));
                 resultado.add(formula);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
         return resultado;
     }
-    
-    public Formula_Maestra obtenerFormula_Maestra(int id_formula_maestra)
-    {
+
+    public Formula_Maestra obtenerFormula_Maestra(int id_formula_maestra) {
         Formula_Maestra resultado = new Formula_Maestra();
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -113,17 +105,16 @@ public class Formula_MaestraDAO extends DAO {
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
         return resultado;
     }
-    
+
     public boolean eliminarFormula_Maestra(int id_formula_maestra) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -141,5 +132,5 @@ public class Formula_MaestraDAO extends DAO {
         }
         return resultado;
     }
-    
+
 }

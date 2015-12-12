@@ -180,9 +180,18 @@ CREATE TABLE produccion.lote (
  CREATE TABLE produccion.respuesta_pxp (
     id_respuesta serial  NOT NULL,
     id_lote int NOT NULL,
-    respuesta xml  NOT NULL,
     id_pxp integer NOT NULL,
+    version int NOT NULL,
     CONSTRAINT pk_respuesta_pxp PRIMARY KEY (id_respuesta)
+);
+
+CREATE TABLE produccion.historial_respuesta_pxp(
+    id_historial_respuesta_pxp serial NOT NULL,
+    id_respuesta int NOT NULL,
+    respuesta xml  NOT NULL,
+    version int NOT NULL,
+    CONSTRAINT pk_HISTORIAL_respuesta_pxp PRIMARY KEY (id_historial_respuesta_pxp)
+
 );
  
 --Llaves primarias esquema de produccion 
@@ -235,6 +244,7 @@ ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_historial_prot
 ALTER TABLE ONLY produccion.historial_paso ADD CONSTRAINT fk_historial_paso FOREIGN KEY (id_paso) REFERENCES produccion.paso(id_paso) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_historial_actividad_apoyo FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE CASCADE;
 ALTER TABLE ONLY produccion.lote ADD CONSTRAINT fk_lote_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo);
+ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_respuesta FOREIGN KEY (id_respuesta) REFERENCES produccion.respuesta_pxp(id_respuesta);
 
 --Indices unicos esquema produccion
 

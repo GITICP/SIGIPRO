@@ -84,7 +84,8 @@
                                                                         </c:if>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <a class="btn btn-warning btn-sm boton-accion" disabled='true'>Protocolo Aprobado</a>
+                                                                        <a class="btn btn-primary btn-sm boton-accion lote-Modal" data-id='${protocolo.getId_protocolo()}' data-toggle="modal" data-target="#modalComenzarLote">Iniciar Nuevo Lote</a>
+
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </c:when>
@@ -172,3 +173,32 @@
     </jsp:attribute>
 
 </t:modal>
+        
+<t:modal idModal="modalComenzarLote" titulo="Iniciar Nuevo Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-lote-protocolo">
+            <form class="form-horizontal" id="loteProtocolo" autocomplete="off" method="post" action="Lote">
+                <input hidden="true" name="accion" value="Agregar">
+                <input hidden="true" id='id_protocolo' name='id_protocolo' value="">
+                <label for="observaciones" class="control-label"> *Nombre/Identificador de Lote de Producción</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" maxlength="45" placeholder="Nombre/Identificador" class="form-control" name="nombre"
+                               required
+                               oninvalid="setCustomValidity('Este campo es requerido')"
+                               oninput="setCustomValidity('')" >
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Iniciar Lote</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>        

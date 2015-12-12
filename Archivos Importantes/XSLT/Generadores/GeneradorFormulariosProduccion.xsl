@@ -133,24 +133,137 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'checkbox']">
-        <xsl:param name="nombre" select="nombre" />
-        <div class="col-md-6">
-            <label for="{$nombre}" class="control-label">
-                <xsl:value-of select="$nombre" />
-            </label>
+    <xsl:template match="campo[tipo = 'sangria']">
         
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="sangria" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
+                        <div class="ver">
+                        </div>      
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <xsl:template match="campo[tipo = 'usuario']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        <xsl:param name="seccion" select="seccion" />
+        <xsl:param name="nombre-seccion" select="nombre-seccion" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="usuario_{$seccion}" multiple="multiple" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>          
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <xsl:template match="campo[tipo = 'cc']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="cc" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>          
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <xsl:template match="campo[tipo = 'subbodega']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        <xsl:param name="subbodega" select="subbodega" />
+        <xsl:param name="nombre-subbodega" select="nombre-subbodega" />
+        <xsl:param name="cantidad" select="cantidad" />
+        <xsl:param name="valor-cantidad" select="valor-cantidad" />
+        <xsl:param name="nombre-cantidad" select="nombre-cantidad" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="subbodega_{$subbodega}" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
+                        <xsl:if test="$cantidad = 'true'">
+                            <br>
+                                <input type="number" name="{$nombre-cantidad}" class="form-control" value="{$valor-cantidad}" step="any"></input>
+                            </br>
+                        </xsl:if>      
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <xsl:template match="campo[tipo = 'seleccion']">
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+        <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
             <xsl:for-each select="opciones/opcion">
                 <xsl:param name="etiqueta" select="etiqueta" />
                 <xsl:param name="valor" select="valor" />
                 <xsl:param name="check" select="check" />
-                
-                <input type="checkbox" name="{$nombre}" value="{$valor}"> 
+                <div class="col-sm-12">
+                <input type="checkbox" name="{$nombre-campo}" value="{$valor}"> 
                     <xsl:value-of select="$etiqueta"></xsl:value-of>
                 </input>
+                </div>
             
                 
             </xsl:for-each>
+                    </div>
+                </div>
+        </div>
         </div>
     </xsl:template>
     

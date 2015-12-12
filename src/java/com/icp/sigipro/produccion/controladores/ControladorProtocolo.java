@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorProtocolo", urlPatterns = {"/Produccion/Protocolo"})
 public class ControladorProtocolo extends SIGIPROServlet {
 
-    //Falta implementar
-    private final int[] permisos = {640, 641, 642, 643, 644};
+    //CRUD, Aprobaciones (4), Activar
+    private final int[] permisos = {640, 641, 642, 643, 644, 645};
     //-----------------
     private final ProtocoloDAO dao = new ProtocoloDAO();
     private final Formula_MaestraDAO formuladao = new Formula_MaestraDAO();

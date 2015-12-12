@@ -16,6 +16,7 @@ import org.json.JSONObject;
  */
 public class Paso {
 
+    private int id_pxp;
     private int id_paso;
     private String nombre;
     private SQLXML estructura;
@@ -26,6 +27,14 @@ public class Paso {
     private int posicion;
     private int contador;
     private List<Paso> historial;
+
+    public int getId_pxp() {
+        return id_pxp;
+    }
+
+    public void setId_pxp(int id_pxp) {
+        this.id_pxp = id_pxp;
+    }
 
     public int getContador() {
         return contador;

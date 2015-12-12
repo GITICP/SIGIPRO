@@ -4,7 +4,6 @@ contador = parseInt($("#contador").val())+1;;
 $(document).on("click", ".aprobar-Modal", function () {
     var id_protocolo = $(this).data('id');
     var actor = $(this).data('actor'); 
-    alert(actor);
     $('#class-aprobar-protocolo #id_protocolo').val(id_protocolo);
     $("#class-aprobar-protocolo #actor").val(actor);
 });
@@ -14,6 +13,11 @@ $(document).on("click", ".rechazar-Modal", function () {
     var actor = $(this).data('actor');
     $('#class-rechazar-protocolo #id_protocolo').val(id_protocolo);
     $("#class-rechazar-protocolo #actor").val(actor);
+});
+
+$(document).on("click", ".lote-Modal", function () {
+    var id_protocolo = $(this).data('id');
+    $('#class-lote-protocolo #id_protocolo').val(id_protocolo);
 });
 
 $(function () {

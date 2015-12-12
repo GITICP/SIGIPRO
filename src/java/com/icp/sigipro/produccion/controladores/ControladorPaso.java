@@ -47,8 +47,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorPaso", urlPatterns = {"/Produccion/Paso"})
 public class ControladorPaso extends SIGIPROServlet {
 
-    //Falta implementar
-    private final int[] permisos = {650};
+    //CRUD, Activar
+    private final int[] permisos = {650, 651};
     //-----------------
     private final PasoDAO dao = new PasoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -469,6 +469,7 @@ public class ControladorPaso extends SIGIPROServlet {
         xml.agregarSubelemento("subbodega", hash.get("subbodega"), campo);
         if (hash.containsKey("cantidad")) {
             xml.agregarSubelemento("cantidad", "true", campo);
+            xml.agregarSubelemento("nombre-cantidad", hash.get("nombre")+"_cantidad", campo);
             xml.agregarSubelemento("valor-cantidad", "", campo);
         } else {
             xml.agregarSubelemento("cantidad", "false", campo);
