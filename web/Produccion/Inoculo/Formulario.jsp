@@ -29,7 +29,7 @@
               <div class="col-sm-12">
                 <!-- Peso -->
                 <div class="input-group">
-                    <input id="peso" type="number" min="0" class="form-control" name="peso" value="${inoculo.getPeso()}" disabled="false" required
+                    <input id="peso" type="number" min="0" class="form-control" name="peso" value="${inoculo.getPeso()}" required
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
                 </div>
@@ -44,11 +44,11 @@
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                           <c:forEach items="${venenos}" var="veneno">
                             <c:choose>
-                              <c:when test="${inoculo.getVeneno().getId_veneno() == veneno}" >
-                                <option value=${veneno} selected> ${veneno}</option>
+                              <c:when test="${inoculo.getVeneno().getId_veneno() == veneno.getId_veneno()}" >
+                                <option value=${veneno.getId_veneno()} selected> ${veneno.getVeneno()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value=${veneno}> ${veneno}</option>
+                                <option value=${veneno.getId_veneno()}> ${veneno.getVeneno()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -102,7 +102,7 @@
                     oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                       <c:forEach items="${usuarios}" var="us">
                         <c:choose>
-                          <c:when test="${us.getID() == inoculo.getEncargado_preparacion()}" >
+                          <c:when test="${us.getID() == inoculo.getEncargado_preparacion().getID()}" >
                             <option value=${us.getID()} selected> ${us.getNombreCompleto()}</option>
                           </c:when>
                           <c:otherwise>

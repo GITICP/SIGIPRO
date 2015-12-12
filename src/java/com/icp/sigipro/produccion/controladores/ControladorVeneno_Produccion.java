@@ -12,26 +12,20 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
-import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.serpentario.dao.VenenoDAO;
 import com.icp.sigipro.serpentario.modelos.Veneno;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -119,7 +113,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
 
 
     // </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         boolean resultado = false;
         String redireccion = "Veneno_Produccion/Agregar.jsp";
@@ -199,7 +193,8 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         }
         redireccionar(request, response, redireccion);
     }
-    
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos del Modelo">
     private Veneno_Produccion construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Veneno_Produccion veneno = new Veneno_Produccion();
         veneno.setVeneno(request.getParameter("veneno"));
@@ -230,7 +225,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
 
         return veneno;
     }
-    
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

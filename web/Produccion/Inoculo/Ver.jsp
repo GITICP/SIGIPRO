@@ -14,6 +14,11 @@
 
     <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
+    <form id="form-eliminar-inoculo" method="post" action="Inoculo">
+        <input name="accion" value="Eliminar" hidden> 
+        <input name="id_inoculo" value="${inoculo.getId_inoculo()}" hidden>
+    </form>
+    
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
@@ -38,12 +43,12 @@
                 <c:set var="contienePermisoEditarYBorrar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
                   <c:if test="${permiso == 1 || permiso == 604}">
-                    <c:set var="contienePermisoEditar" value="true" />
+                    <c:set var="contienePermisoEditarYBorrar" value="true" />
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditarYBorrar}">
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inoculo?accion=editar&id_inoculo=${inoculo.getId_inoculo()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el Inóculo" data-href="/SIGIPRO/Produccion/Inoculo?accion=eliminar&id_inoculo=${inoculo.getId_inoculo()}">Eliminar</a>
+                  <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este inóculo" data-form-id="form-eliminar-inoculo">Eliminar</a>
                 </c:if>
               </div>
             </div>
@@ -52,7 +57,7 @@
               <table>
                 <tr><td> <strong>Identificador:</strong></td> <td>${inoculo.getIdentificador()} </td></tr>
                 <tr><td> <strong>Fecha de Preparación:</strong> <td>${inoculo.getFecha_preparacion_S()} </td></tr>
-                <tr><td> <strong>Encargado de Preparación:</strong> <td>${inoculo.getEncargado_preparacion()} </td></tr>
+                <tr><td> <strong>Encargado de Preparación:</strong> <td>${inoculo.getEncargado_preparacion().getNombreCompleto()} </td></tr>
                 <tr><td> <strong>Peso:</strong> <td>${inoculo.getPeso()} gramos </td></tr>
               </table>
               <br>

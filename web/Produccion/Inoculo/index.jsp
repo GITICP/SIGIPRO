@@ -61,10 +61,10 @@
                         </a>
                       </td>
                       <td>${inoculo.getFecha_preparacion_S()}</td>
-                      <td>${inoculo.getEncargado_preparacion()}</td>
+                      <td>${inoculo.getEncargado_preparacion().getNombreCompleto()}</td>
                       <td>
-                            <a href="/SIGIPRO/Produccion/Veneno?accion=ver&id_veneno=${inoculo.getVeneno().getId_veneno()}">
-                                ${inoculo.getVeneno().getId_veneno()}
+                            <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${inoculo.getVeneno().getId_veneno()}">
+                                ${inoculo.getVeneno().getVeneno()}
                             </a>
                       </td>
                       <td>${inoculo.getPeso()}</td>
