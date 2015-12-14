@@ -52,14 +52,6 @@ public class Paso {
         this.historial = historial;
     }
 
-    public List<Paso> getHistorial() {
-        return historial;
-    }
-
-    public void setHistorial(List<Paso> historial) {
-        this.historial = historial;
-    }
-
     
     
     public String getEstructuraString() {
