@@ -37,7 +37,7 @@ $BODY$
 	DECLARE lista_usuarios integer[];
 	DECLARE lista_permisos integer[];
 	BEGIN
-		lista_permisos := array(Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 1);
+		lista_permisos := (Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 1);
 		FOR e IN array_lower(lista_permisos, 1) .. array_upper(lista_permisos, 1)
 		LOOP
 		lista_usuarios := lista_usuarios || array
@@ -70,7 +70,7 @@ $BODY$
 	DECLARE lista_usuarios integer[];
 	DECLARE lista_permisos integer[];
 	BEGIN
-		lista_permisos := array(Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 100);
+		lista_permisos := (Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 100);
 		FOR e IN array_lower(lista_permisos, 1) .. array_upper(lista_permisos, 1)
 		LOOP
 		lista_usuarios := lista_usuarios || array
@@ -103,7 +103,7 @@ $BODY$
 	DECLARE lista_usuarios integer[];
 	DECLARE lista_permisos integer[];
 	BEGIN
-		lista_permisos := array(Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 150);
+		lista_permisos := (Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 150);
 		FOR e IN array_lower(lista_permisos, 1) .. array_upper(lista_permisos, 1)
 		LOOP
 		lista_usuarios := lista_usuarios || array
@@ -136,7 +136,7 @@ $BODY$
 	DECLARE lista_usuarios integer[];
 	DECLARE lista_permisos integer[];
 	BEGIN
-		lista_permisos := array(Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 200);
+		lista_permisos := (Select id_permisos from calendario.tipo_notificaciones where id_tipo_notificacion = 200);
 		FOR e IN array_lower(lista_permisos, 1) .. array_upper(lista_permisos, 1)
 		LOOP
 		lista_usuarios := lista_usuarios || array

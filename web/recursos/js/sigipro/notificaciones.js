@@ -142,7 +142,7 @@ function marcarNotificacionesleidas(id){
     
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
-            alert("Notificacion con id = "+id+", fue marcada como leida.");
+            //$("#notificacion"+id).notify("Marcada como leída.","success", { clickToHide: false , autoHide: true , arrowSize: 10});
         }
     };
     enviarPeticionXHTTP("marcarNotificaciones?id="+id);
