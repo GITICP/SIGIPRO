@@ -45,6 +45,12 @@
                             <span class="text" data-toggle="modal" data-target="#modalCambiarContrasena">Cambiar Contraseña</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="/SIGIPRO/Calendario/Calendario">
+                            <i class="fa fa-calendar"></i>
+                            <span class="text" href="/SIGIPRO/Calendario/Calendario">Calendario</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <!-- Notificaciones -->

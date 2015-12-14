@@ -12,8 +12,8 @@
 
   <jsp:attribute name="contenido">
 
-    <jsp:include page="plantillas/barraFuncionalidad.jsp" />
-    
+    <jsp:include page="../plantillas/barraFuncionalidad.jsp" />
+
     <!-- content-wrapper -->
     <div class="col-md-12 content-wrapper">
       <div class="row">
@@ -64,4 +64,3 @@
     </jsp:attribute>
 
   </t:plantilla_general>
-
