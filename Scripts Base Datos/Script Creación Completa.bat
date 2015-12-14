@@ -1,7 +1,7 @@
 SET PGCLIENTENCODING=utf-8
 chcp 1252
 
-set PGPASSWORD=Akr^&Oma92
+set PGPASSWORD=Solaris2014
 set PGUSER=postgres
 
 @echo on
