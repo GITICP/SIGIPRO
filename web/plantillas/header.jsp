@@ -23,7 +23,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/SIGIPRO">SIGIPRO</a>
+        <a class="navbar-brand" href="/SIGIPRO/Inicio">SIGIPRO</a>
     </div>
     <div class="navbar-collapse collapse" id="navbar_content">
 
@@ -85,7 +85,7 @@
                     <c:set var="cantidadNotificacionesCargadas" value="${0}" />
                     <c:forEach items="${notificaciones}" var="notificacion">
                         <c:if test="${cantidadNotificacionesCargadas < 10}">
-                            <li onclick="marcarNotificacionesleidas(${notificacion.getId()})">
+                            <li id="notificacion${notificacion.getId()}" onclick="marcarNotificacionesleidas(${notificacion.getId()})">
                                 <a href="/SIGIPRO${notificacion.getRedirect()}">
                                     <i class="${notificacion.getIcono()}" width="30" height="30"></i>
                                         <c:choose>
