@@ -161,6 +161,7 @@ public class SangriaDAO extends DAO
                     + "   LEFT JOIN control_calidad.solicitudes s2 ON s2.id_solicitud = i2.id_solicitud "
                     + "   LEFT JOIN control_calidad.informes i3 ON s.id_informe_dia3 = i3.id_informe "
                     + "   LEFT JOIN control_calidad.solicitudes s3 ON s3.id_solicitud = i3.id_solicitud "
+                    + " ORDER BY c.numero; "
             );
 
             consulta.setInt(1, id_sangria);

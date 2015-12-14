@@ -23,7 +23,10 @@
                                 oninput="setCustomValidity('')">
                             <c:forEach items="${inventarios}" var="inventario">
                                 <option value="${inventario.getId_inventario_sub_bodega()}" data-cantidad-disponible=${inventario.getCantidad()}>
-                                    ${inventario.getProducto().getNombre()} (${inventario.getProducto().getCodigo_icp()}) ${inventario.getFecha_vencimiento() != null ? " Vencimiento: ".concat(inventario.getFecha_vencimientoAsString()) : "Producto no perecedero"}
+                                    ${inventario.getProducto().getNombre()} 
+                                    (${inventario.getProducto().getCodigo_icp()}) - 
+                                    ${inventario.getNumero_lote() != null ? "Lote: ".concat(inventario.getNumero_lote()) : "Sin lote"} - 
+                                    ${inventario.getFecha_vencimiento() != null ? " Vencimiento: ".concat(inventario.getFecha_vencimientoAsString()) : "Producto no perecedero"}
                                 </option>
                             </c:forEach>
                         </select>

@@ -19,6 +19,7 @@ public class InventarioSubBodega
     ProductoInterno producto;
     int cantidad;
     Date fecha_vencimiento;
+    private String numero_lote;
 
     public InventarioSubBodega()
     {
@@ -87,5 +88,17 @@ public class InventarioSubBodega
     {
         HelperFechas h = HelperFechas.getSingletonHelperFechas();
         return h.formatearFecha(fecha);
+    }
+
+    public String getNumero_lote() {
+        return numero_lote;
+    }
+
+    public void setNumero_lote(String numero_lote) {
+        if (numero_lote != null) {
+            if (!numero_lote.isEmpty()) {
+                this.numero_lote = numero_lote;
+            }
+        }
     }
 }

@@ -87,7 +87,7 @@
                                                     </c:when>
                                                     <c:otherwise>
                                                         <c:choose>
-                                                            <c:when test="${solicitud.getEstado().equals('Recibido')}">
+                                                            <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')}">
                                                                 <c:choose>
                                                                     <c:when test="${boolrealizar}">
                                                                         <td>

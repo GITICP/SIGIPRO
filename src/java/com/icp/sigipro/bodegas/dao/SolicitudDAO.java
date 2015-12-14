@@ -31,19 +31,18 @@ import java.util.List;
  *
  * @author Amed
  */
-public class SolicitudDAO extends DAO
-{
+public class SolicitudDAO extends DAO {
 
-    public SolicitudDAO() { }
+    public SolicitudDAO() {
+    }
 
-    public boolean insertarSolicitud(Solicitud p)
-    {
+    public boolean insertarSolicitud(Solicitud p) {
 
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes ( id_usuario, id_inventario, cantidad, fecha_solicitud, estado) "
-                                                                        + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
+                    + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
 
             consulta.setInt(1, p.getId_usuario());
             consulta.setInt(2, p.getId_inventario());
@@ -57,21 +56,19 @@ public class SolicitudDAO extends DAO
             resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public boolean insertarSolicitud_Prestamo(Solicitud p, Prestamo pr)
-    {
+    public boolean insertarSolicitud_Prestamo(Solicitud p, Prestamo pr) {
 
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO bodega.solicitudes ( id_usuario, id_inventario, cantidad, fecha_solicitud, estado) "
-                                                                        + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
+                    + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
 
             consulta.setInt(1, p.getId_usuario());
             consulta.setInt(2, p.getId_inventario());
@@ -91,15 +88,13 @@ public class SolicitudDAO extends DAO
             resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public boolean editarSolicitud(Solicitud p)
-    {
+    public boolean editarSolicitud(Solicitud p) {
 
         boolean resultado = false;
 
@@ -115,8 +110,7 @@ public class SolicitudDAO extends DAO
             consulta.setDate(3, p.getFecha_entregaAsDate());
             if (p.getId_usuario_recibo() == 0) {
                 consulta.setNull(4, java.sql.Types.INTEGER);
-            }
-            else {
+            } else {
                 consulta.setInt(4, p.getId_usuario_recibo());
             }
             consulta.setString(5, p.getObservaciones());
@@ -129,15 +123,13 @@ public class SolicitudDAO extends DAO
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public boolean eliminarSolicitud(int id_solicitud)
-    {
+    public boolean eliminarSolicitud(int id_solicitud) {
 
         boolean resultado = false;
 
@@ -154,15 +146,13 @@ public class SolicitudDAO extends DAO
             }
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
 
-    public Solicitud obtenerSolicitud(int id)
-    {
+    public Solicitud obtenerSolicitud(int id) {
 
         Solicitud solicitud = new Solicitud();
 
@@ -241,61 +231,58 @@ public class SolicitudDAO extends DAO
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return solicitud;
     }
 
-    public List<Solicitud> obtenerSolicitudes(int id_usuario)
-    {
+    public List<Solicitud> obtenerSolicitudes(int id_usuario) {
 
         List<Solicitud> resultado = new ArrayList<Solicitud>();
         String parte_1 = " SELECT solicitud.*, "
-                         + "         u.nombre_completo AS nombre_solicitante, "
-                         + "         u_rec.nombre_completo AS nombre_recibe, "
-                         + "         s.id_seccion AS seccion_inventario, "
-                         + "         s.nombre_seccion AS nombre_seccion, "
-                         + "         u.id_seccion AS id_seccion, "
-                         + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
-                         + "         ci.nombre AS nombre_producto, "
-                         + "         ci.codigo_icp AS cod_icp ,"
-                         + "         ci.perecedero, "
-                         + "         ci.id_producto, "
-                         + "         i.stock_actual "
-                         + " FROM ( ";
+                + "         u.nombre_completo AS nombre_solicitante, "
+                + "         u_rec.nombre_completo AS nombre_recibe, "
+                + "         s.id_seccion AS seccion_inventario, "
+                + "         s.nombre_seccion AS nombre_seccion, "
+                + "         u.id_seccion AS id_seccion, "
+                + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
+                + "         ci.nombre AS nombre_producto, "
+                + "         ci.codigo_icp AS cod_icp ,"
+                + "         ci.perecedero, "
+                + "         ci.id_producto, "
+                + "         i.stock_actual "
+                + " FROM ( ";
 
         String codigo_consulta;
 
         String parte_2 = "         ) AS solicitud "
-                         + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
-                         + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
-                         + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
-                         + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
-                         + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
-                         + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
+                + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
+                + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
+                + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
+                + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
+                + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
+                + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            
+
             if (id_usuario == 0) {
                 codigo_consulta = parte_1
-                                  + " SELECT * "
-                                  + " FROM bodega.solicitudes "
-                                  + " Where ( estado in ('Pendiente','Aprobada') ) OR ( (estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < fecha_entrega) ) "
-                                  + " ORDER BY fecha_solicitud DESC " 
-                                  + parte_2;
+                        + " SELECT * "
+                        + " FROM bodega.solicitudes "
+                        + " Where ( estado in ('Pendiente','Aprobada') ) OR ( (estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < fecha_entrega) ) "
+                        + " ORDER BY fecha_solicitud DESC "
+                        + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
-            }
-            else {
-                codigo_consulta = parte_1 
-                                  + " SELECT s.* FROM bodega.solicitudes s "
-                                  + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND (( s.estado in ('Pendiente','Aprobada') ) OR ( (s.estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < s.fecha_entrega) )) "
-                                  + " ORDER BY s.id_solicitud DESC " 
-                                  + parte_2;
+            } else {
+                codigo_consulta = parte_1
+                        + " SELECT s.* FROM bodega.solicitudes s "
+                        + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
+                        + " WHERE u.id_seccion = ? AND (( s.estado in ('Pendiente','Aprobada') ) OR ( (s.estado in ('Cerrada', 'Entregada', 'Rechazada') AND current_date - 7 < s.fecha_entrega) )) "
+                        + " ORDER BY s.id_solicitud DESC "
+                        + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
                 consulta.setInt(1, id_usuario);
             }
@@ -351,53 +338,50 @@ public class SolicitudDAO extends DAO
             rs.close();
             consulta.close();
             cerrarConexion();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return resultado;
     }
-    
-    public List<Solicitud> obtenerSolicitudesEntregadas(int seccion_usuario)
-    {
+
+    public List<Solicitud> obtenerSolicitudesEntregadas(int seccion_usuario) {
 
         List<Solicitud> resultado = new ArrayList<Solicitud>();
         String parte_1 = " SELECT solicitud.*, "
-                         + "         u.nombre_completo AS nombre_solicitante, "
-                         + "         u_rec.nombre_completo AS nombre_recibe, "
-                         + "         s.id_seccion AS seccion_inventario, "
-                         + "         s.nombre_seccion AS nombre_seccion, "
-                         + "         u.id_seccion AS id_seccion, "
-                         + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
-                         + "         ci.nombre AS nombre_producto, "
-                         + "         ci.codigo_icp AS cod_icp ,"
-                         + "         ci.perecedero, "
-                         + "         ci.id_producto, "
-                         + "         i.stock_actual "
-                         + " FROM ( ";
+                + "         u.nombre_completo AS nombre_solicitante, "
+                + "         u_rec.nombre_completo AS nombre_recibe, "
+                + "         s.id_seccion AS seccion_inventario, "
+                + "         s.nombre_seccion AS nombre_seccion, "
+                + "         u.id_seccion AS id_seccion, "
+                + "         s_usuario.nombre_seccion AS nombre_seccion_usuario, "
+                + "         ci.nombre AS nombre_producto, "
+                + "         ci.codigo_icp AS cod_icp ,"
+                + "         ci.perecedero, "
+                + "         ci.id_producto, "
+                + "         i.stock_actual "
+                + " FROM ( ";
 
         String codigo_consulta;
 
         String parte_2 = "         ) AS solicitud "
-                         + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
-                         + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
-                         + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
-                         + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
-                         + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
-                         + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
+                + "         INNER JOIN bodega.inventarios i ON i.id_inventario = solicitud.id_inventario "
+                + "         INNER JOIN bodega.catalogo_interno ci ON i.id_producto = ci.id_producto "
+                + "         INNER JOIN seguridad.secciones s ON i.id_seccion = s.id_seccion "
+                + "         INNER JOIN seguridad.usuarios u ON solicitud.id_usuario = u.id_usuario "
+                + "         INNER JOIN seguridad.secciones s_usuario ON u.id_seccion = s_usuario.id_seccion "
+                + "         LEFT JOIN seguridad.usuarios u_rec ON solicitud.id_usuario_recibo = u_rec.id_usuario ";
         PreparedStatement consulta = null;
         ResultSet rs = null;
 
         try {
-            
+
             if (seccion_usuario == 0) {
                 codigo_consulta = parte_1 + " SELECT * FROM bodega.solicitudes Where estado = 'Entregada' OR estado = 'Cerrada' OR estado = 'Rechazada' ORDER BY fecha_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
-            }
-            else {
+            } else {
                 codigo_consulta = parte_1 + " SELECT s.* FROM bodega.solicitudes s "
-                                  + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
-                                  + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR s.estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
+                        + " INNER JOIN seguridad.usuarios u on s.id_usuario = u.id_usuario "
+                        + " WHERE u.id_seccion = ? AND (s.estado = 'Entregada' OR s.estado = 'Cerrada' OR s.estado = 'Rechazada') ORDER BY s.id_solicitud DESC " + parte_2;
                 consulta = getConexion().prepareStatement(codigo_consulta);
                 consulta.setInt(1, seccion_usuario);
             }
@@ -450,11 +434,9 @@ public class SolicitudDAO extends DAO
 
                 resultado.add(solicitud);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
@@ -462,13 +444,12 @@ public class SolicitudDAO extends DAO
         return resultado;
     }
 
-    public boolean entregarMasivo(String ids, int id_usuario_recibo, HashMap fechas_vencimiento, int id_sub_bodega) throws SIGIPROException
-    {
+    public boolean entregarMasivo(String ids, int id_usuario_recibo, HashMap fechas_vencimiento, HashMap numeros_lote, int id_sub_bodega) throws SIGIPROException {
         boolean resultado = false;
-        
+
         boolean resultado_entregar;
         boolean resultado_sb = true;
-        
+
         PreparedStatement consulta_entregar = null;
         PreparedStatement upsert_inventario = null;
         PreparedStatement insert_bitacora = null;
@@ -514,12 +495,18 @@ public class SolicitudDAO extends DAO
 
                     isb.setCantidad(rs_solicitudes.getInt("cantidad"));
                     String fecha = String.valueOf(fechas_vencimiento.get(String.valueOf(rs_solicitudes.getInt("id_solicitud"))));
+                    String numero_lote = String.valueOf(numeros_lote.get(String.valueOf(rs_solicitudes.getInt("id_solicitud"))));
 
                     if (!fecha.equals("null")) {
                         isb.setFecha_vencimiento(helper_fechas.formatearFecha(fecha));
-                    }
-                    else {
+                    } else {
                         isb.setFecha_vencimiento(null);
+                    }
+
+                    if (!numero_lote.isEmpty()) {
+                        isb.setNumero_lote(numero_lote);
+                    } else {
+                        isb.setNumero_lote(null);
                     }
 
                     ProductoInterno p = new ProductoInterno();
@@ -540,59 +527,84 @@ public class SolicitudDAO extends DAO
                 for (InventarioSubBodega inventario_sub_bodega : inventarios_sub_bodegas) {
 
                     String primera_parte_consulta = " WITH upsert AS "
-                                                    + " (UPDATE bodega.inventarios_sub_bodegas "
-                                                    + "  SET cantidad = cantidad + ? "
-                                                    + "  WHERE id_producto = ? and id_sub_bodega = ? and fecha_vencimiento";
+                            + " (UPDATE bodega.inventarios_sub_bodegas "
+                            + "  SET cantidad = cantidad + ? "
+                            + "  WHERE id_producto = ? and id_sub_bodega = ? and fecha_vencimiento";
                     String segunda_parte_consulta = "     INSERT INTO bodega.inventarios_sub_bodegas(id_producto, "
-                                                    + "                                                id_sub_bodega, "
-                                                    + "                                                fecha_vencimiento, "
-                                                    + "                                                cantidad"
-                                                    + "                                               ) "
-                                                    + "                                               SELECT ?, "
-                                                    + "                                                      ?, "
-                                                    + "                                                      ?, "
-                                                    + "                                                      ?  "
-                                                    + "                                                      WHERE NOT EXISTS (SELECT * FROM upsert); ";
+                            + "                                                id_sub_bodega, "
+                            + "                                                fecha_vencimiento, "
+                            + "                                                numero_lote, "
+                            + "                                                cantidad "
+                            + "                                               ) "
+                            + "                                               SELECT ?, "
+                            + "                                                      ?, "
+                            + "                                                      ?, "
+                            + "                                                      ?, "
+                            + "                                                      ?  "
+                            + "                                                      WHERE NOT EXISTS (SELECT * FROM upsert); ";
 
                     String consulta_final;
-                    boolean fechas_null = false;
+                    String consulta_temp;
+                    boolean fecha_vencimiento = true;
+                    boolean numero_lote = true;
                     if (inventario_sub_bodega.getFecha_vencimiento() != null) {
-                        consulta_final = primera_parte_consulta + " = ? RETURNING *) " + segunda_parte_consulta;
+                        consulta_temp = primera_parte_consulta + " = ? ";
+                    } else {
+                        fecha_vencimiento = false;
+                        consulta_temp = primera_parte_consulta + " is null ";
                     }
-                    else {
-                        fechas_null = true;
-                        consulta_final = primera_parte_consulta + " is null RETURNING *) " + segunda_parte_consulta;
+
+                    if (inventario_sub_bodega.getNumero_lote() != null) {
+                        consulta_final = consulta_temp + " and numero_lote = ? RETURNING *) " + segunda_parte_consulta;
+                    } else {
+                        numero_lote = false;
+                        consulta_final = consulta_temp + " and numero_lote is null RETURNING *) " + segunda_parte_consulta;
                     }
 
                     upsert_inventario = getConexion().prepareStatement(consulta_final);
 
-                    if (fechas_null) {
-                        upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
-                        upsert_inventario.setInt(7, inventario_sub_bodega.getCantidad());
+                    upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
+                    upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
+                    upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
 
-                        upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
-                        upsert_inventario.setInt(4, inventario_sub_bodega.getProducto().getId_producto());
-
-                        upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-                        upsert_inventario.setInt(5, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-
-                        upsert_inventario.setNull(6, java.sql.Types.DATE);
-
-                    }
-                    else {
-                        upsert_inventario.setInt(1, inventario_sub_bodega.getCantidad());
-                        upsert_inventario.setInt(8, inventario_sub_bodega.getCantidad());
-
-                        upsert_inventario.setInt(2, inventario_sub_bodega.getProducto().getId_producto());
-                        upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
-
-                        upsert_inventario.setInt(3, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
-                        upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                    if (fecha_vencimiento && numero_lote) {
 
                         upsert_inventario.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+                        upsert_inventario.setString(5, inventario_sub_bodega.getNumero_lote());
+                        upsert_inventario.setInt(6, inventario_sub_bodega.getProducto().getId_producto());
+                        upsert_inventario.setInt(7, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                        upsert_inventario.setDate(8, inventario_sub_bodega.getFecha_vencimiento());
+                        upsert_inventario.setString(9, inventario_sub_bodega.getNumero_lote());
+                        upsert_inventario.setInt(10, inventario_sub_bodega.getCantidad());
+
+                    } else if (numero_lote) {
+
+                        upsert_inventario.setString(4, inventario_sub_bodega.getNumero_lote());
+                        upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
+                        upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                        upsert_inventario.setNull(7, java.sql.Types.DATE);
+                        upsert_inventario.setString(8, inventario_sub_bodega.getNumero_lote());
+                        upsert_inventario.setInt(9, inventario_sub_bodega.getCantidad());
+
+                    } else if (fecha_vencimiento) {
+
+                        upsert_inventario.setDate(4, inventario_sub_bodega.getFecha_vencimiento());
+                        upsert_inventario.setInt(5, inventario_sub_bodega.getProducto().getId_producto());
+                        upsert_inventario.setInt(6, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
                         upsert_inventario.setDate(7, inventario_sub_bodega.getFecha_vencimiento());
+                        upsert_inventario.setNull(8, java.sql.Types.VARCHAR);
+                        upsert_inventario.setInt(9, inventario_sub_bodega.getCantidad());
+
+                    } else {
+
+                        upsert_inventario.setInt(4, inventario_sub_bodega.getProducto().getId_producto());
+                        upsert_inventario.setInt(5, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
+                        upsert_inventario.setNull(6, java.sql.Types.DATE);
+                        upsert_inventario.setNull(7, java.sql.Types.VARCHAR);
+                        upsert_inventario.setInt(8, inventario_sub_bodega.getCantidad());
+
                     }
-                    
+
                     upsert_inventario.executeUpdate();
 
                     insert_bitacora.setInt(1, inventario_sub_bodega.getSub_bodega().getId_sub_bodega());
@@ -602,7 +614,6 @@ public class SolicitudDAO extends DAO
                     insert_bitacora.setInt(5, id_usuario_recibo);
                     insert_bitacora.setDate(6, hoysql);
                     insert_bitacora.setString(7, "Sin observaciones.");
-                    
 
                     insert_bitacora.addBatch();
                 }
@@ -614,28 +625,23 @@ public class SolicitudDAO extends DAO
             }
 
             resultado = resultado_entregar && resultado_sb;
-        }
-        catch (ParseException ex) {
+        } catch (ParseException ex) {
             resultado = false;
             throw new SIGIPROException("Las fechas no son válidas.");
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.getNextException().printStackTrace();
             try {
                 getConexion().rollback();
                 throw new SIGIPROException("No se pudo realizar la entrega múltiple.");
-            }
-            catch (SQLException roll_ex) {
+            } catch (SQLException roll_ex) {
                 roll_ex.printStackTrace();
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
-        }
-        finally {
+        } finally {
             try {
                 if (resultado) {
                     getConexion().commit();
-                }
-                else {
+                } else {
                     getConexion().rollback();
                     throw new SIGIPROException("No se pudo realizar la entrega múltiple.");
                 }
@@ -654,8 +660,7 @@ public class SolicitudDAO extends DAO
                 if (rs_solicitudes != null) {
                     rs_solicitudes.close();
                 }
-            }
-            catch (SQLException roll_ex) {
+            } catch (SQLException roll_ex) {
                 roll_ex.printStackTrace();
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
@@ -663,14 +668,12 @@ public class SolicitudDAO extends DAO
         return resultado;
     }
 
-    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas)
-    {
+    public String[] parsearAsociacion(String pivote, String asociacionesCodificadas) {
         String[] idsTemp = asociacionesCodificadas.split(pivote);
         return Arrays.copyOfRange(idsTemp, 1, idsTemp.length);
     }
 
-    private String pasar_ids_solicitudes(String[] ids_solicitudes)
-    {
+    private String pasar_ids_solicitudes(String[] ids_solicitudes) {
         String solicitudes = "(";
         for (String s : ids_solicitudes) {
             solicitudes = solicitudes + s;

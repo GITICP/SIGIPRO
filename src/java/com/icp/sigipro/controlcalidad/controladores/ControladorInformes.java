@@ -153,6 +153,8 @@ public class ControladorInformes extends SIGIPROServlet
         s.setTipoAsociacion(objeto_por_asociar);
         s.asociar(request);
         
+        boolean cerrar = Boolean.parseBoolean(request.getParameter("cerrar"));
+        
         for (String resultado : ids_resultados) {
             Resultado r = new Resultado();
             r.setId_resultado(Integer.parseInt(resultado));
@@ -160,7 +162,7 @@ public class ControladorInformes extends SIGIPROServlet
         }
         
         try {
-            informe = dao.ingresarInforme(informe);
+            informe = dao.ingresarInforme(informe, cerrar);
             bitacora.setBitacora(informe.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INFORME, request.getRemoteAddr());
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
             request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));
@@ -193,6 +195,8 @@ public class ControladorInformes extends SIGIPROServlet
         s.setTipoAsociacion(objeto_por_asociar);
         s.asociar(request);
         
+        boolean cerrar = Boolean.parseBoolean(request.getParameter("cerrar"));
+        
         for (String resultado : ids_resultados) {
             Resultado r = new Resultado();
             r.setId_resultado(Integer.parseInt(resultado));
@@ -200,7 +204,7 @@ public class ControladorInformes extends SIGIPROServlet
         }
         
         try {
-            informe = dao.editarInforme(informe);
+            informe = dao.editarInforme(informe, cerrar);
             bitacora.setBitacora(informe.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INFORME, request.getRemoteAddr());
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
             request.setAttribute("mensaje", helper.mensajeDeExito("Informe editado correctamente."));

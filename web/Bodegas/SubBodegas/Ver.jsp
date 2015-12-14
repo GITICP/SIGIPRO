@@ -57,7 +57,7 @@
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ver&id_sub_bodega=${sub_bodega.getId_sub_bodega()}&agrupar=true">Agrupar Por Producto</a>
                                             </c:when>
                                             <c:otherwise>
-                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ver&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Agrupar Por Fecha de Vencimiento</a>
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/SubBodegas?accion=ver&id_sub_bodega=${sub_bodega.getId_sub_bodega()}">Agrupar Por Fecha de Vencimiento/Número Lote</a>
                                             </c:otherwise>
                                         </c:choose>
 
@@ -78,12 +78,13 @@
                                 </div>
                                 ${mensaje}
                                 <div class="widget-content">
-                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter" data-filas-defecto="50">
                                         <!-- Columnas -->
                                         <thead> 
                                             <tr>
                                                 <th>Producto</th>
                                                 <th>Código</th>
+                                                <th>Número de Lote</th>
                                                 <th>Fecha de Vencimiento</th>
                                                 <th>Cantidad</th>
                                             </tr>
@@ -93,6 +94,7 @@
                                                 <tr id="${subBodega.getId_sub_bodega()}">
                                                     <td>${inventario.getProducto().getNombre()}</td>
                                                     <td>${inventario.getProducto().getCodigo_icp()}</td>
+                                                    <td>${inventario.getNumero_lote() != null ? "Lote: ".concat(inventario.getNumero_lote()) : "Sin número de lote"}</td>
                                                     <td>${inventario.getFecha_vencimiento() != null ? " Vencimiento: ".concat(inventario.getFecha_vencimientoAsString()) : "Producto no perecedero"}</td>
                                                     <td>${inventario.getCantidad()}</td>
                                                 </tr>

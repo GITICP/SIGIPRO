@@ -83,7 +83,7 @@
                                                 <c:forEach items="${sangria.getSangrias_caballos()}" var="sangria_caballo">
                                                     <c:set var="deshabilitado" value="false"></c:set>
                                                     <tr id="${caballo.getId_caballo()}">
-                                                        <td>${sangria_caballo.getCaballo().getNombre()} (${sangria_caballo.getCaballo().getNumero()})</td>
+                                                        <td>${sangria_caballo.getCaballo().getNumero()} - ${sangria_caballo.getCaballo().getNombre()}</td>
                                                         <td>
 
                                                             <c:choose>
