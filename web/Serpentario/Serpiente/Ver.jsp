@@ -125,6 +125,12 @@
                                         <c:set var="contienePermisoEditarEvento" value="true" />
                                     </c:if>
                                 </c:forEach>
+                                <c:set var="contienePermisoEliminarEvento" value="false" />
+                                <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
+                                    <c:if test="${permiso == 1 || permiso == 319}">
+                                        <c:set var="contienePermisoEliminarEvento" value="true" />
+                                    </c:if>
+                                </c:forEach>
                                 -->
 
                             </div>
@@ -245,6 +251,12 @@
                                                         </c:if>
                                                         <c:if test="${contienePermisoEditarEvento}">
                                                             <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Serpentario/Serpiente?accion=editarevento&id_evento=${eventos.getId_evento()}">Editar</a>
+                                                        </c:if>
+                                                        <c:if test="${contienePermisoEliminarEvento}">
+                                                            <c:if test="${eventos.getId_categoria()==1||eventos.getId_categoria()==2||eventos.getId_categoria()==3||eventos.getId_categoria()==4||eventos.getId_categoria()==15}">
+                                                                <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el evento" data-href="/SIGIPRO/Serpentario/Serpiente?accion=eliminarevento&id_evento=${eventos.getId_evento()}">Eliminar</a>
+                                                            </c:if>
+
                                                         </c:if>
                                                     </td>
                                                 </tr>
