@@ -1,0 +1,2 @@
+﻿ALTER TABLE ONLY produccion.inventario_pt DROP CONSTRAINT fk_id_producto;
+ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt (id_catalogo_pt) ON DELETE CASCADE;

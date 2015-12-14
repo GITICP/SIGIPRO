@@ -59,11 +59,11 @@
                       <td>
                         <a href="/SIGIPRO/Produccion/Catalogo_PT?accion=ver&id_catalogo_pt=${producto.getId_catalogo_pt()}">
                           <div style="height:100%;width:100%">
-                            ${producto.getIdentificacion()}
+                            ${producto.getNombre()}
                           </div>
                         </a>
                       </td>
-                      <td>${conejo.getFecha_ingreso_S()}</td>
+                      <td>${producto.getDescripcion()}</td>
                     </tr>
 
                   </c:forEach>
