@@ -12,7 +12,7 @@ package com.icp.sigipro.produccion.modelos;
 public class Catalogo_PT {
   private int id_catalogo_pt;
   private String nombre;
-  private String descripción;
+  private String descripcion;
 
   public int getId_catalogo_pt() {
     return id_catalogo_pt;
@@ -30,12 +30,12 @@ public class Catalogo_PT {
     this.nombre = nombre;
   }
 
-  public String getDescripción() {
-    return descripción;
+  public String getDescripcion() {
+    return descripcion;
   }
 
-  public void setDescripción(String descripción) {
-    this.descripción = descripción;
+  public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
   }
  
 }
