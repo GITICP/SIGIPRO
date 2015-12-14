@@ -78,7 +78,12 @@ function Eliminar(id, texto, accion){
           </div>\
         </div>");
   $('#id_eliminar').val(id);
+  if (accion !== ''){
   $('#accion').val("eliminar_"+accion);
+  }
+  else {
+    $('#accion').val("eliminar");
+  }
   $("#ModalConfirmacionGenerico2").modal('show');
 }
 

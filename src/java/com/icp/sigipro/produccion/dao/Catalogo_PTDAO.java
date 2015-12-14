@@ -6,6 +6,7 @@
 package com.icp.sigipro.produccion.dao;
 
 import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.produccion.modelos.Catalogo_PT;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,21 +18,110 @@ import java.util.List;
  * @author Amed
  */
 public class Catalogo_PTDAO extends DAO{
-  public boolean insertarCatalogo_PT(Catalogo_PT protocolo) {
-        boolean resultado = false;
+  public boolean insertarCatalogo_PT(Catalogo_PT p) throws SIGIPROException {
         
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.catalogo_pt (nombre, descripcion)"
+                                                                        + " VALUES (?,?) RETURNING id_catalogo_pt");
+
+            consulta.setString(1, p.getNombre());
+            consulta.setString(2, p.getDescripcion());
+
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = true;
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+        }
         return resultado;
     }
 
-    public boolean editarCatalogo_PT(Catalogo_PT protocolo) {
+    public boolean editarCatalogo_PT(Catalogo_PT p) throws SIGIPROException {
         boolean resultado = false;
-        
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE produccion.catalogo_pt "
+                    + " SET  nombre=?, descripcion=?"
+                    + " WHERE id_catalogo_pt=?; "
+            );
+            consulta.setString(1, p.getNombre());
+            consulta.setString(2, p.getDescripcion());
+            consulta.setInt(3, p.getId_catalogo_pt());
+
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la edición");
+        }
         return resultado;
     }
-    //Cada protocolo muestra la info del mismo, una tabla de versiones y una tabla de pasos del protocolo
-    public Catalogo_PT obtenerCatalogo_PT(int id_protocolo) {
-        Catalogo_PT resultado = new Catalogo_PT();
+     public boolean eliminarCatalogo_PT(int id_catalogo_pt) throws SIGIPROException
+    {
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " DELETE FROM produccion.catalogo_pt "
+                    + " WHERE id_catalogo_pt=?; "
+            );
+
+            consulta.setInt(1, id_catalogo_pt);
+
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la eliminación");
+        }
         return resultado;
+    }
+    public Catalogo_PT obtenerCatalogo_PT(int id) throws SIGIPROException
+    {
+
+        Catalogo_PT catalogo_pt = new Catalogo_PT();
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM produccion.catalogo_pt where id_catalogo_pt = ?");
+
+            consulta.setInt(1, id);
+
+            ResultSet rs = consulta.executeQuery();
+
+            if (rs.next()) {
+                catalogo_pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
+                catalogo_pt.setNombre(rs.getString("nombre"));
+                catalogo_pt.setDescripcion(rs.getString("descripcion"));
+
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return catalogo_pt;
     }
     public List<Catalogo_PT> obtenerCatalogos_PT()
     {
