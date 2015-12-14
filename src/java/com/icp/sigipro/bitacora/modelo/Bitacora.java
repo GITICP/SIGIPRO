@@ -82,11 +82,12 @@ public class Bitacora {
     public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
     public static final String TABLA_INFORME = "CONTROL_CALIDAD.INFORMES";
     public static final String TABLA_PATRON = "CONTROL_CALIDAD.PATRONES";
-    public static final String TABLA_INVENTARIO_PT = "PRODUCCION.INVENTARIO_PT";
-    public static final String TABLA_CATALOGO_PT = "PRODUCCION.CATALOGO_PT";
-    public static final String TABLA_DESPACHOS = "PRODUCCION.DESPACHOS";
-    public static final String TABLA_SALIDAS_EXT = "PRODUCCION.SALIDAS_EXT";
-    public static final String TABLA_RESERVACIONES = "PRODUCCION.RESERVACIONES";
+    public static final String TABLA_CATEGORIA_AA = "PRODUCCION.CATEGORIA_AA";
+    public static final String TABLA_FORMULAMAESTRA = "PRODUCCION.FORMULA_MAESTRA";
+    public static final String TABLA_PROTOCOLO = "PRODUCCION.PROTOCOLO";
+    public static final String TABLA_PASO = "PRODUCCION.PASO";
+    public static final String TABLA_LOTEPRODUCCION = "PRODUCCION.LOTE";
+    public static final String TABLA_RESPUESTAPXP = "PRODUCCION.RESPUESTA_PXP";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";
