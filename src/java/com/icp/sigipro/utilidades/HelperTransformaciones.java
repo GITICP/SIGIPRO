@@ -6,6 +6,7 @@
 package com.icp.sigipro.utilidades;
 
 import com.icp.sigipro.core.formulariosdinamicos.ControlXSLT;
+import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -37,6 +38,17 @@ public class HelperTransformaciones
     }
 
     public String transformar(ControlXSLT xslt, SQLXML estructura) throws TransformerException, SQLException {
+        TransformerFactory tff = TransformerFactory.newInstance();
+        InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
+        InputStream streamXML = estructura.getBinaryStream();
+        Transformer transformador = tff.newTransformer(new StreamSource(streamXSLT));
+        StreamSource stream_source = new StreamSource(streamXML);
+        StreamResult stream_result = new StreamResult(new StringWriter());
+        transformador.transform(stream_source, stream_result);
+        return stream_result.getWriter().toString();
+    }
+    
+    public String transformar(ProduccionXSLT xslt, SQLXML estructura) throws TransformerException, SQLException {
         TransformerFactory tff = TransformerFactory.newInstance();
         InputStream streamXSLT = xslt.getEstructura().getBinaryStream();
         InputStream streamXML = estructura.getBinaryStream();
