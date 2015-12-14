@@ -72,8 +72,9 @@ public abstract class SIGIPROServlet extends HttpServlet {
         } catch (InvocationTargetException ex) {
             try {
                 throw ex.getCause();
-            } catch (AuthenticationException auth) {
-                RequestDispatcher vista = request.getRequestDispatcher("/index.jsp");
+            }
+            catch (AuthenticationException auth) {
+                RequestDispatcher vista = request.getRequestDispatcher("/Inicio");
                 vista.forward(request, response);
             } catch (SIGIPROException sigipro) {
                 request.setAttribute("mensaje", helper.mensajeDeError(sigipro.getMessage()));
