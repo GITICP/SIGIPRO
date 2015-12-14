@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoMuestraDAO;
@@ -19,6 +20,7 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
@@ -56,6 +58,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
+            add("solicitudesajax");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -110,6 +113,27 @@ public class ControladorSolicitud extends SIGIPROServlet {
         }
 
         redireccionar(request, response, redireccion);
+    }
+
+    protected void getSolicitudesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("application/json");
+
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+
+        try {
+            List<SolicitudCC> solicitudes = dao.obtenerTodasSolicitudes();
+            Gson gson = new Gson();
+            resultado = gson.toJson(solicitudes);
+
+        } catch (Exception sig_ex) {
+            // Enviar error al AJAX
+        }
+
+        out.print(resultado);
+
+        out.flush();
     }
 
     protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

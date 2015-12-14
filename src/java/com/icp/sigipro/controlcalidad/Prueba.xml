@@ -1,3 +1,90 @@
+<paso>
+    <campo>
+        <nombre-campo>CC_1</nombre-campo>
+        <etiqueta>CC</etiqueta>
+        <valor>2</valor>
+        <tipo>cc</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <tipo>seleccion</tipo>
+        <nombre-campo>Selecciones_2</nombre-campo>
+        <etiqueta>Selecciones</etiqueta>
+        <opciones>
+            <opcion>
+                <etiqueta>A Hola</etiqueta>
+                <valor>A Hola_3</valor>
+                <check>true</check>
+            </opcion>
+            <opcion>
+                <etiqueta>Benecia Mia</etiqueta>
+                <valor>Benecia Mia_4</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>Carol A</etiqueta>
+                <valor>Carol A_5</valor>
+                <check>false</check>
+            </opcion>
+        </opciones>
+    </campo>
+    <campo>
+        <nombre-campo>Usuarios_6</nombre-campo>
+        <etiqueta>Usuarios</etiqueta>
+        <tipo>usuario</tipo>
+        <valor>[2, 3]</valor>
+        <nombre-seccion>Produccion</nombre-seccion>
+        <seccion>1</seccion>
+    </campo>
+    <campo>
+        <nombre-campo>Sub bodegas mias_7</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Sub bodegas mias</etiqueta>
+        <valor>1</valor>
+        <nombre-subbodega>Productos mios</nombre-subbodega>
+        <subbodega>2</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Sub bodegas mias_cantidad</nombre-cantidad>
+        <valor-cantidad>432</valor-cantidad>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
+        <nombre-campo>Produ_1</nombre-campo>
+        <etiqueta>Produ</etiqueta>
+        <tipo>usuario</tipo>
+        <valor/>
+        <nombre-seccion>Produccion</nombre-seccion>
+        <seccion>1</seccion>
+    </campo>
+    <campo>
+        <nombre-campo>Subbodega c_2</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Subbodega c</etiqueta>
+        <valor/>
+        <nombre-subbodega>Subbodega</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <valor-cantidad/>
+    </campo>
+    <campo>
+        <nombre-campo>Articulos_3</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Articulos</etiqueta>
+        <valor/>
+        <nombre-subbodega>Productos mios</nombre-subbodega>
+        <subbodega>2</subbodega>
+        <cantidad>false</cantidad>
+    </campo>
+    <campo>
+        <nombre-campo>Numero_4</nombre-campo>
+        <etiqueta>Numero</etiqueta>
+        <valor/>
+        <tipo>number</tipo>
+    </campo>
+</paso>
+
 <analisis>
     <campo>
         <nombre-campo>Numero_1</nombre-campo>
@@ -197,3 +284,81 @@
         <resultado>True</resultado>
     </campo>
 </analisis>
+
+<paso>
+    <campo>
+        <tipo>seleccion</tipo>
+        <nombre-campo>Seleccion1_1</nombre-campo>
+        <etiqueta>Seleccion1</etiqueta>
+        <opciones>
+            <opcion>
+                <etiqueta>A</etiqueta>
+                <valor>A_2</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>B</etiqueta>
+                <valor>B_3</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>C</etiqueta>
+                <valor>C_4</valor>
+                <check>false</check>
+            </opcion>
+        </opciones>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
+        <nombre-campo>Control de Calidad_1</nombre-campo>
+        <etiqueta>Control de Calidad</etiqueta>
+        <valor/>
+        <tipo>cc</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <tipo>seleccion</tipo>
+        <nombre-campo>Seleccion2_2</nombre-campo>
+        <etiqueta>Seleccion2</etiqueta>
+        <opciones>
+            <opcion>
+                <etiqueta>A</etiqueta>
+                <valor>A_3</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>B</etiqueta>
+                <valor>B_4</valor>
+                <check>false</check>
+            </opcion>
+            <opcion>
+                <etiqueta>C</etiqueta>
+                <valor>C_5</valor>
+                <check>false</check>
+            </opcion>
+        </opciones>
+    </campo>
+    <campo>
+        <nombre-campo>Usuarios de Produccion_6</nombre-campo>
+        <etiqueta>Usuarios de Produccion</etiqueta>
+        <valor/>
+        <seccion>1</seccion>
+    </campo>
+    <campo>
+        <nombre-campo>Con Cantidades_7</nombre-campo>
+        <etiqueta>Con Cantidades</etiqueta>
+        <valor/>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <valor-cantidad/>
+    </campo>
+    <campo>
+        <nombre-campo>Sin Cantidades_8</nombre-campo>
+        <etiqueta>Sin Cantidades</etiqueta>
+        <valor/>
+        <subbodega>2</subbodega>
+        <cantidad>false</cantidad>
+    </campo>
+</paso>
