@@ -6,7 +6,7 @@
         <xsl:apply-templates />
     </xsl:template>
     
-    <xsl:template match="paso">
+    <xsl:template match="paso | actividad">
         <div class="widget widget-table">
             <div class="widget-header">
                 <h3>
@@ -24,13 +24,15 @@
                     </thead>
                     <tbody>
                         <!-- Campos diferentes de tablas -->
-                        <xsl:apply-templates select="campo[not(tipo = 'seleccion') and not(tipo = 'usuario') and not(tipo = 'subbodega')]"/>
+                        <xsl:apply-templates select="campo[not(tipo = 'seleccion') and not(tipo = 'aa') and not(tipo = 'usuario') and not(tipo = 'subbodega')]"/>
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- Campos de selecciones -->
         <xsl:apply-templates select="campo[tipo = 'seleccion']"/>
+        
+        <xsl:apply-templates select="campo[tipo = 'aa']"/>
         
         <div class="widget widget-table">
             <div class="widget-header">
@@ -87,7 +89,7 @@
     -->
         
     <!-- Campo de tipos diferentes de tabla -->
-    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = 'usuario') and not(tipo = 'subbodega')]">
+    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = 'aa') and not(tipo = 'usuario') and not(tipo = 'subbodega')]">
         
         <tr>
             <td>
@@ -154,6 +156,38 @@
                             </tr>
 
                         </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="campo[tipo = 'aa']">
+        <div class="widget widget-table">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-table"></i> 
+                    <xsl:value-of select="'Referencia a Actividad de Apoyo'" /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Nombre de Campo</th>
+                            <th>Actividad de Apoyo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <tr>
+                            <td>
+                                <xsl:value-of select="etiqueta" />
+                            </td>
+                            <td>
+                                <xsl:value-of select="nombre-actividad" />
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

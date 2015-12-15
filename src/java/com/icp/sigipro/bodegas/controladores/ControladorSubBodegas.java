@@ -339,13 +339,14 @@ public class ControladorSubBodegas extends SIGIPROServlet
         int id_sub_bodega = Integer.parseInt(request.getParameter("id_subbodega"));
 
         try {
-            SubBodega subbodega = dao.buscarSubBodegaEInventarios(id_sub_bodega);
+            SubBodega subbodega = dao.buscarSubBodegaEInventariosProduccion(id_sub_bodega);
             List<InventarioSubBodega> inventario = subbodega.getInventarios();
             List<ProductoInterno> productos = new ArrayList<>();
             for (InventarioSubBodega i : inventario){
                 productos.add(i.getProducto());
             }
             Gson gson = new Gson();
+            System.out.println(gson.toJson(productos));
             resultado = gson.toJson(productos);
 
         } catch (SIGIPROException sig_ex) {

@@ -144,6 +144,68 @@ function agregarUsuario() {
 
 }
 
+function agregarActividadApoyo() {
+    fila = "<div class=\"widget widget-table aa_" + contador + "\" id=\"" + contador + "\">";
+    fila += "<input hidden=\"true\" id=\"elemento_" + contador + "\" value=\"aa\">";
+    fila += "<input hidden=\"true\" id=\"nombreactividad_" + contador + "\" name=\"aa_nombreactividad_" + contador + "\" value=\"\">";
+    fila += "   <div class=\"widget-header\">";
+    fila += "       <h3><i class=\"fa fa-edit\"></i> Referencia a Actividad de Apoyo #" + contador + "</h3>";
+    fila += "       <div class=\"btn-group widget-header-toolbar\">";
+    fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo(\'aa_' + contador + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+    fila += "       </div>";
+    fila += "   </div>";
+    fila += "   <div class=\"widget-content\">";
+    fila += "       <div class=\"col-md-12\">";
+    fila += "           <label for=\"tipo\" class=\"control-label\"> *Actividad de Apoyo</label>";
+    fila += "           <div class=\"form-group\">";
+    fila += "               <div class=\"col-sm-12\">";
+    fila += "                   <div class=\"input-group\">";
+    fila += "                       <select id=\"actividad_" + contador + "\" class=\"select2\" name=\"aa_actividad_" + contador + "\" onchange=\"actualizarNombre_actividad('" + contador + "')\"  ";
+    fila += "                           style=\'background-color: #fff;\' required";
+    fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
+    fila += "                           onchange=\"setCustomValidity(\'\')\">";
+    fila += "                           <option value=\'\'></option>";
+    fila += "                       </select>";
+    fila += "                   </div>";
+    fila += "               </div>";
+    fila += "           </div>";
+    fila += "           <label for=\"nombre\" class=\"control-label\">*Nombre del Campo</label>";
+    fila += "           <div class=\"form-group\">";
+    fila += "               <div class=\"col-sm-12\">";
+    fila += "                   <div class=\"input-group\">";
+    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"aa_nombre_" + contador + "\"";
+    fila += "                           required";
+    fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
+    fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
+    fila += "                   </div>";
+    fila += "               </div>";
+    fila += "           </div>";
+    fila += "       </div>";
+    fila += "   </div>";
+    fila += "</div>";
+    var orden = $("#orden").val();
+    if (orden === '') {
+        $("#orden").val(contador);
+    } else {
+        $("#orden").val(orden + ',' + contador);
+    }
+    var orden = $("#orden").val();
+    $(".campos").append(fila);
+
+    $("#actividad_" + contador).select2();
+    var listaActividades = $("#listaActividades").val();
+    alert(listaActividades);
+    var parseLista = JSON.parse(listaActividades);
+    $("#actividad_" + contador).append('<optgroup id="listaactividad_' + contador + '" label="Actividades de Apoyo"></optgroup>');
+    $.each(parseLista, function (index, value) {
+        $("#actividad_" + contador).append("<option value=" + value[0] + ">" + value[1] + "</option>");
+    });
+
+
+    contador++;
+
+}
+
 function agregarSubbodega() {
     fila = "<div class=\"widget widget-table articulo_" + contador + "\" id=\"" + contador + "\">";
     fila += "<input hidden=\"true\" id=\"elemento_" + contador + "\" value=\"articulo\">";
@@ -228,6 +290,14 @@ function actualizarNombre_seccion(id) {
     var text = $("#seccion_" + id + " option:selected").text();
 
     $("#nombresec_" + id).val(text);
+
+
+}
+
+function actualizarNombre_actividad(id) {
+    var text = $("#actividad_" + id + " option:selected").text();
+
+    $("#nombreactividad_" + id).val(text);
 
 
 }

@@ -148,8 +148,9 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
+                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
                         <div class="ver">
+                            <a>Ver Sangría</a>
                         </div>      
                     </div>
                 </div>
@@ -183,6 +184,34 @@
         
     </xsl:template>
     
+    <xsl:template match="campo[tipo = 'aa']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        <xsl:param name="actividad" select="actividad" />
+        <xsl:param name="nombre-actividad" select="nombre-actividad" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>
+                        <div class="ver">
+                            <a>Ver Actividad de Apoyo</a>
+                        </div>              
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
     <xsl:template match="campo[tipo = 'cc']">
         
         <!-- Parámetros -->
@@ -198,8 +227,9 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="cc" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select> 
+                        <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select> 
                         <div class="ver">
+                            <a>Ver Solicitud</a>
                         </div>         
                     </div>
                 </div>

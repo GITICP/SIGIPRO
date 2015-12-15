@@ -20,10 +20,29 @@ public class Lote {
     boolean estado;
     int posicion_actual;
     Paso paso_actual;
+    boolean aprobacion;
+    
+    int id_respuesta_actual;
     
     List <Respuesta_pxp> respuestas;
 
     public Lote() {
+    }
+
+    public boolean isAprobacion() {
+        return aprobacion;
+    }
+
+    public void setAprobacion(boolean aprobacion) {
+        this.aprobacion = aprobacion;
+    }
+
+    public int getId_respuesta_actual() {
+        return id_respuesta_actual;
+    }
+
+    public void setId_respuesta_actual(int id_respuesta_actual) {
+        this.id_respuesta_actual = id_respuesta_actual;
     }
 
     public Paso getPaso_actual() {

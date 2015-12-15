@@ -48,7 +48,6 @@ public class ControladorProtocolo extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
-            add("aprobar");
             add("verhistorial");
             add("activar");
 
@@ -59,6 +58,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("rechazar");
+            add("aprobar");
         }
     };
 
@@ -159,7 +159,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
     }
     
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
+        validarPermiso(645, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
         int version = dao.obtenerVersion(id_historial);
@@ -187,7 +187,47 @@ public class ControladorProtocolo extends SIGIPROServlet {
 
     }
 
-    protected void getAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(640, request);
+        boolean resultado = false;
+        Protocolo p = construirObjeto(request);
+        resultado = dao.insertarProtocolo(p);
+        if (resultado) {
+            request.setAttribute("mensaje", helper.mensajeDeExito("Protocolo agregado correctamente"));
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PROTOCOLO, request.getRemoteAddr());
+            //*----------------------------*
+            this.getIndex(request, response);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Protocolo no pudo ser agregado. Inténtelo de nuevo."));
+            this.getAgregar(request, response);
+        }
+
+    }
+
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(640, request);
+        boolean resultado = false;
+        Protocolo p = construirObjeto(request);
+        int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
+        p.setId_protocolo(id_protocolo);
+        resultado = dao.editarProtocolo(p);
+        if (resultado) {
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PROTOCOLO, request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Protocolo editado correctamente"));
+            this.getIndex(request, response);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Protocolo no pudo ser editado. Inténtelo de nuevo."));
+            request.setAttribute("id_protocolo", id_protocolo);
+            this.getEditar(request, response);
+        }
+    }
+    
+    protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
         //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director
         int actor = Integer.parseInt(request.getParameter("actor"));
@@ -240,50 +280,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
 
     }
 
-    //Activar
-    //Ver Historial
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
-        boolean resultado = false;
-        Protocolo p = construirObjeto(request);
-        resultado = dao.insertarProtocolo(p);
-        if (resultado) {
-            request.setAttribute("mensaje", helper.mensajeDeExito("Protocolo agregado correctamente"));
-            //Funcion que genera la bitacora
-            bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PROTOCOLO, request.getRemoteAddr());
-            //*----------------------------*
-            this.getIndex(request, response);
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Protocolo no pudo ser agregado. Inténtelo de nuevo."));
-            this.getAgregar(request, response);
-        }
-
-    }
-
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
-        boolean resultado = false;
-        Protocolo p = construirObjeto(request);
-        int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
-        p.setId_protocolo(id_protocolo);
-        resultado = dao.editarProtocolo(p);
-        if (resultado) {
-            //Funcion que genera la bitacora
-            bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PROTOCOLO, request.getRemoteAddr());
-            //*----------------------------*
-            request.setAttribute("mensaje", helper.mensajeDeExito("Protocolo editado correctamente"));
-            this.getIndex(request, response);
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Protocolo no pudo ser editado. Inténtelo de nuevo."));
-            request.setAttribute("id_protocolo", id_protocolo);
-            this.getEditar(request, response);
-        }
-    }
-
     protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
         boolean resultado = false;
         Protocolo p = new Protocolo();
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
