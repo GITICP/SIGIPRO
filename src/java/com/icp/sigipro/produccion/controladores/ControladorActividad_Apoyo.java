@@ -278,7 +278,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
         try {
             raa = dao.obtenerHistorialRespuesta(id_historial);
-            xslt = produccionxsltdao.obtenerProduccionXSLTVerFormulario();
+            raa.setActividad(dao.obtenerActividad_Apoyo(raa.getActividad().getId_actividad()));
+            xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (raa.getRespuesta() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, raa.getRespuesta());
                 request.setAttribute("cuerpo_datos", formulario);
@@ -744,6 +745,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
         Respuesta_AA resultado = dao.obtenerRespuesta(id_respuesta);
+        resultado.setActividad(dao.obtenerActividad_Apoyo(resultado.getActividad().getId_actividad()));
         Usuario u = new Usuario();
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         u.setId_usuario(id_usuario);
@@ -845,7 +847,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
-            this.getVer(request, response);
+            this.getVeractividad(request, response, resultado.getActividad().getId_actividad());
 
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
