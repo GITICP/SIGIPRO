@@ -25,7 +25,7 @@
                         </li>
                         <li> 
                             <a href="/SIGIPRO/Produccion/Categoria_AA?accion=ver&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">${respuesta.getActividad().getCategoria().getNombre()}</a></li>
-                        <li> <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=ver&id_actividad=${respuesta.getActividad().getId_actividad()}">${respuesta.getActividad().getNombre()}</a> </li>
+                        <li> <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">${respuesta.getActividad().getNombre()}</a> </li>
                         <li class="active"> Historial - Respuesta Version ${respuesta.getVersion()} </li>
                     </ul>
                 </div>
@@ -38,7 +38,9 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} - Versión ${respuesta.getVersion()}  </h3>
                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 676)}">
-                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=activarrespuesta&id_historial=${respuesta.getId_historial()}&id_respuesta=${respuesta.getId_respuesta()}">Activar</a>
+                                <div class="btn-group widget-header-toolbar">
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=activarrespuesta&id_historial=${respuesta.getId_historial()}&id_respuesta=${respuesta.getId_respuesta()}">Activar</a>
+                                </div>
                             </c:if>
                         </div>
                         ${mensaje}

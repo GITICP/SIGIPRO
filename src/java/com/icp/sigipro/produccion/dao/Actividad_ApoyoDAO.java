@@ -614,9 +614,9 @@ public class Actividad_ApoyoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT r.id_respuesta, r.version, r.id_actividad, hr.nombre,hr.respuesta, ht.id_usuario_realizar, u.nombre_completo, hr.fecha "
+            consulta = getConexion().prepareStatement(" SELECT r.id_respuesta, r.version, r.id_actividad, hr.nombre,hr.respuesta, hr.id_usuario_realizar, u.nombre_completo, hr.fecha "
                     + "FROM produccion.historial_respuesta_aa as hr  "
-                    + "LEFT JOIN produccion.respuesta_aa as r ON (hr.id_respuesta = r.id_respuesta AND hr.version = r.version) "
+                    + "LEFT JOIN produccion.respuesta_aa as r ON (hr.id_respuesta = r.id_respuesta) "
                     + "LEFT JOIN seguridad.usuarios as u ON (hr.id_usuario_realizar = u.id_usuario) "
                     + "WHERE hr.id_historial=?; ");
             consulta.setInt(1, id_historial);
@@ -627,7 +627,7 @@ public class Actividad_ApoyoDAO extends DAO {
                 resultado.setVersion(rs.getInt("version"));
                 resultado.setFecha(rs.getTimestamp("fecha"));
                 Usuario usuario = new Usuario();
-                usuario.setId_usuario(rs.getInt("id_usuario"));
+                usuario.setId_usuario(rs.getInt("id_usuario_realizar"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
                 resultado.setUsuario_realizar(usuario);
                 resultado.setNombre(rs.getString("nombre"));
