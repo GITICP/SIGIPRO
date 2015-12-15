@@ -200,11 +200,8 @@ function generar_link_sangria(){
 }
 
 function generar_link_cc(){
-    alert("hola");
     var div = ($(this).prop("name"));
-    alert(div);
     var elemento = $("."+div +" .ver");
-    alert(elemento.prop("class"));
     var id = ($(this).val());
     
     $("."+div +" .ver > a").remove();
