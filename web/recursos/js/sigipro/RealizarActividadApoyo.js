@@ -56,27 +56,6 @@ $(function () {
        
     });
     
-    var actividades = $("select[id^='aa']");
-    
-    $.each(actividades, function(index, element){
-        $(element).on("change",generar_link_aa);
-        var id = $(element).prop("id").split("_")[1];
-        $.ajax({
-            url: "/SIGIPRO/Produccion/Actividad_Apoyo",
-            type: "GET",
-            data: {"accion": "actividadesajax",
-                    "id_actividad" : id},
-            dataType: "json",
-            success: function (datos) {
-                generar_select_actividades(datos,element);
-            },
-            error: function(){
-                alert("Error");
-            }
-        });
-       
-    });
-    
     var subbodegas = $("select[id^='subbodega']");
     
     $.each(subbodegas, function(index, element){
@@ -156,21 +135,6 @@ function generar_select_usuarios(datos,element) {
      
 }
 
-function generar_select_actividades(datos,element) {
-    $(element).append("<option value=\"\"></option>");
-    for (var i = 0; i < datos.length; i++) {
-        var elemento = datos[i];
-        var opcion_string = "<option value=\""+ elemento.id_respuesta + "\">";
-        var opcion = $(opcion_string);
-        opcion.text(elemento.nombre + " ["+elemento.fecha+"]");
-
-        $(element).append(opcion);
-    }
-    
-    $(element).select2();
-     
-}
-
 function generar_select_subbodegas(datos,element) {
     
     $(element).append("<option value=\"\"></option>");
@@ -209,16 +173,4 @@ function generar_link_cc(){
     $("."+div +" .ver > a").remove();
 
     elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud="+id+"\"> Ver Solicitud de CC </a>");
-}
-
-function generar_link_aa(){
-    var div = ($(this).prop("name"));
-    
-    var elemento = $("."+div +" .ver");
-    
-    var id = ($(this).val());
-    
-    $("."+div +" .ver > a").remove();
-
-    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&id_respuesta="+id+"\"> Ver Actividad de Apoyo </a>");
 }

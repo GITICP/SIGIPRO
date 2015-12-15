@@ -88,6 +88,8 @@ public class Bitacora {
     public static final String TABLA_PASO = "PRODUCCION.PASO";
     public static final String TABLA_LOTEPRODUCCION = "PRODUCCION.LOTE";
     public static final String TABLA_RESPUESTAPXP = "PRODUCCION.RESPUESTA_PXP";
+    public static final String TABLA_ACTIVIDADAPOYO = "PRODUCCION.ACTIVIDAD_APOYO";
+    public static final String TABLA_RESPUESTAAA = "PRODUCCION.RESPUESTA_AA";
     public static final String TABLA_INVENTARIO_PT = "PRODUCCION.INVENTARIO_PT";
     public static final String TABLA_CATALOGO_PT = "PRODUCCION.CATALOGO_PT";
     public static final String TABLA_DESPACHOS = "PRODUCCION.DESPACHOS";
@@ -109,6 +111,7 @@ public class Bitacora {
     public static final String ACCION_RECIBIR = "RECIBIR";
     public static final String ACCION_RETIRAR = "RETIRAR";
     public static final String ACCION_ACTIVAR = "ACTIVAR";
+    public static final String ACCION_REPETIR = "REPETIR";
 
     public Bitacora() {
 

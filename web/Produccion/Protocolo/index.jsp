@@ -90,20 +90,26 @@
                                                                 </c:choose>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <c:if test="${!protocolo.getAprobacion_regente()}">
-                                                                    <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='2' data-toggle="modal" data-target="#modalAprobarProtocolo">[Regente] Aprobar</a>
-                                                                    <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Regente' data-toggle="modal" data-target="#modalRechazarProtocolo">[Regente] Rechazar</a>
+                                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 642)}">
+                                                                    <c:if test="${!protocolo.getAprobacion_regente()}">
+                                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='2' data-toggle="modal" data-target="#modalAprobarProtocolo">[Regente] Aprobar</a>
+                                                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Regente' data-toggle="modal" data-target="#modalRechazarProtocolo">[Regente] Rechazar</a>
+                                                                    </c:if>
                                                                 </c:if>
-                                                                <c:if test="${!protocolo.getAprobacion_coordinador()}">
-                                                                    <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='3' data-toggle="modal" data-target="#modalAprobarProtocolo">[Coordinador] Aprobar</a>
-                                                                    <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Coordinador' data-toggle="modal" data-target="#modalRechazarProtocolo">[Coordinador] Rechazar</a>
+                                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 643)}">
+                                                                    <c:if test="${!protocolo.getAprobacion_coordinador()}">
+                                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='3' data-toggle="modal" data-target="#modalAprobarProtocolo">[Coordinador] Aprobar</a>
+                                                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Coordinador' data-toggle="modal" data-target="#modalRechazarProtocolo">[Coordinador] Rechazar</a>
+                                                                    </c:if>
                                                                 </c:if>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='1' data-toggle="modal" data-target="#modalAprobarProtocolo">[Calidad] Aprobar</a>
-                                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Calidad' data-toggle="modal" data-target="#modalRechazarProtocolo">[Calidad] Rechazar</a>
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 641)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='1' data-toggle="modal" data-target="#modalAprobarProtocolo">[Calidad] Aprobar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Calidad' data-toggle="modal" data-target="#modalRechazarProtocolo">[Calidad] Rechazar</a>
+                                                        </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
@@ -130,7 +136,7 @@
 <t:modal idModal="modalAprobarProtocolo" titulo="Aprobar Protocolo de Producción">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-aprobar-protocolo">
-            <form class="form-horizontal" id="aprobarProtocolo" autocomplete="off" method="get" action="Protocolo">
+            <form class="form-horizontal" id="aprobarProtocolo" autocomplete="off" method="post" action="Protocolo">
                 <input hidden="true" name="accion" value="Aprobar">
                 <input hidden="true" id='id_protocolo' name='id_protocolo' value="">
                 <input hidden="true" id='actor' name='actor' value="">
@@ -173,7 +179,7 @@
     </jsp:attribute>
 
 </t:modal>
-        
+
 <t:modal idModal="modalComenzarLote" titulo="Iniciar Nuevo Lote de Producción">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-lote-protocolo">
@@ -185,9 +191,9 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <input type="text" maxlength="45" placeholder="Nombre/Identificador" class="form-control" name="nombre"
-                               required
-                               oninvalid="setCustomValidity('Este campo es requerido')"
-                               oninput="setCustomValidity('')" >
+                                   required
+                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                   oninput="setCustomValidity('')" >
                         </div>
                     </div>
                 </div>

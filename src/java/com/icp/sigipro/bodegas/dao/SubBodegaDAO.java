@@ -318,6 +318,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega> {
 
             consulta = getConexion().prepareStatement(codigoConsulta);
             consulta.setInt(1, id);
+            System.out.println(codigoConsulta);
             resultado = ejecutarConsulta(consulta);
 
             if (resultado.next()) {
@@ -351,6 +352,60 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega> {
                         p.setId_producto(resultado.getInt("id_producto"));
                         p.setNombre(resultado.getString("nombre_producto"));
                         p.setCodigo_icp(resultado.getString("codigo_icp"));
+
+                        inventario_sb.setProducto(p);
+                        inventario_sb.setSub_bodega(sub_bodega);
+
+                        inventarios.add(inventario_sb);
+                    }
+                } while (resultado.next());
+
+                sub_bodega.setInventarios(inventarios);
+            } else {
+                throw new SIGIPROException("No se encontraron registros de inventario para esta sub bodega");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener sub bodega");
+        } finally {
+            cerrarSilencioso(resultado);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return sub_bodega;
+    }
+
+    public SubBodega buscarSubBodegaEInventariosProduccion(int id_subbodega) throws SIGIPROException {
+        SubBodega sub_bodega = null;
+        PreparedStatement consulta = null;
+        ResultSet resultado = null;
+
+        try {
+            String codigoConsulta = " SELECT sb.id_sub_bodega, isb.id_inventario_sub_bodega, ci.id_producto, ci.nombre as nombre_producto "
+                    + " FROM bodega.sub_bodegas sb "
+                    + "  INNER JOIN seguridad.usuarios u on sb.id_usuario = u.id_usuario "
+                    + "  INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
+                    + "  LEFT JOIN bodega.inventarios_sub_bodegas isb on isb.id_sub_bodega = sb.id_sub_bodega and isb.cantidad > 0 "
+                    + "  LEFT JOIN bodega.catalogo_interno ci on ci.id_producto = isb.id_producto "
+                    + " WHERE sb.id_sub_bodega = ?;";
+
+            consulta = getConexion().prepareStatement(codigoConsulta);
+            consulta.setInt(1, id_subbodega);
+            resultado = ejecutarConsulta(consulta);
+            if (resultado.next()) {
+                sub_bodega = new SubBodega();
+                sub_bodega.setId_sub_bodega(id_subbodega);
+                List<InventarioSubBodega> inventarios = new ArrayList<InventarioSubBodega>();
+                do {
+                    InventarioSubBodega inventario_sb = new InventarioSubBodega();
+                    int id_inventario_sub_bodega = resultado.getInt("id_inventario_sub_bodega");
+                    if (id_inventario_sub_bodega != 0) {
+                        inventario_sb.setId_inventario_sub_bodega(id_inventario_sub_bodega);
+
+                        ProductoInterno p = new ProductoInterno();
+
+                        p.setId_producto(resultado.getInt("id_producto"));
+                        p.setNombre(resultado.getString("nombre_producto"));
 
                         inventario_sb.setProducto(p);
                         inventario_sb.setSub_bodega(sub_bodega);

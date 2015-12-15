@@ -1,4 +1,4 @@
-﻿DROP SCHEMA IF EXISTS produccion CASCADE;
+DROP SCHEMA IF EXISTS produccion CASCADE;
 CREATE SCHEMA produccion;
 --Tablas esquema produccion
 CREATE TABLE produccion.catalogo_pt(
@@ -14,7 +14,7 @@ CREATE TABLE produccion.categoria_aa(
  );
 
  CREATE TABLE produccion.formula_maestra( 
-	id_formula_m serial NOT NULL,
+	id_formula_maestra serial NOT NULL,
 	nombre character varying(100) NOT NULL,
 	descripcion character varying(200)
  );
@@ -145,6 +145,8 @@ CREATE TABLE produccion.historial_paso(
     aprobacion_direccion boolean NOT NULL,
     aprobacion_regente boolean NOT NULL,
     aprobacion_coordinador boolean NOT NULL,
+    observaciones character varying(200),
+    version int NOT NULL,
     CONSTRAINT pk_actividada PRIMARY KEY (id_actividad)
 );
 
@@ -159,12 +161,23 @@ id_historial serial NOT NULL,
 
 CREATE TABLE produccion.respuesta_aa (
     id_respuesta serial  NOT NULL,
-    respuesta xml  NOT NULL,
-    id_pxp integer NOT NULL,
+    id_respuesta_pxp integer,
     id_actividad integer NOT NULL,
+    version integer NOT NULL,
     CONSTRAINT pk_respuesta_aa PRIMARY KEY (id_respuesta)
 );
 
+CREATE TABLE produccion.historial_respuesta_aa(
+    id_historial serial NOT NULL,
+    id_respuesta int NOT NULL,
+    respuesta xml  NOT NULL,
+    nombre character varying(20) NOT NULL,
+    fecha timestamp without time zone NOT NULL,
+    id_usuario_realizar int,
+    version int NOT NULL,
+    CONSTRAINT pk_HISTORIAL_respuesta_aa PRIMARY KEY (id_historial)
+
+);
 
 --Tabla de Lotes 
 
@@ -174,6 +187,7 @@ CREATE TABLE produccion.lote (
     nombre character varying(100) NOT NULL,
     estado boolean NOT NULL,
     posicion_actual int NOT NULL,
+    aprobacion boolean NOT NULL,
     CONSTRAINT pk_lote PRIMARY KEY (id_lote)
 );
 
@@ -181,16 +195,18 @@ CREATE TABLE produccion.lote (
     id_respuesta serial  NOT NULL,
     id_lote int NOT NULL,
     id_pxp integer NOT NULL,
+    id_usuario_aprobar int,
     version int NOT NULL,
     CONSTRAINT pk_respuesta_pxp PRIMARY KEY (id_respuesta)
 );
 
 CREATE TABLE produccion.historial_respuesta_pxp(
-    id_historial_respuesta_pxp serial NOT NULL,
+    id_historial serial NOT NULL,
     id_respuesta int NOT NULL,
     respuesta xml  NOT NULL,
+    id_usuario_realizar int,
     version int NOT NULL,
-    CONSTRAINT pk_HISTORIAL_respuesta_pxp PRIMARY KEY (id_historial_respuesta_pxp)
+    CONSTRAINT pk_HISTORIAL_respuesta_pxp PRIMARY KEY (id_historial)
 
 );
  
@@ -198,7 +214,7 @@ CREATE TABLE produccion.historial_respuesta_pxp(
 ALTER TABLE ONLY produccion.catalogo_pt ADD CONSTRAINT pk_catalogo_pt PRIMARY KEY (id_catalogo_pt);
 ALTER TABLE ONLY produccion.categoria_aa ADD CONSTRAINT pk_categoria_aa PRIMARY KEY (id_categoria_aa);
 ALTER TABLE ONLY produccion.despacho ADD CONSTRAINT pk_despacho PRIMARY KEY (id_despacho);
-ALTER TABLE ONLY produccion.formula_maestra ADD CONSTRAINT pk_fm PRIMARY KEY (id_formula_m);
+ALTER TABLE ONLY produccion.formula_maestra ADD CONSTRAINT pk_fm PRIMARY KEY (id_formula_maestra);
 ALTER TABLE ONLY produccion.inoculo ADD CONSTRAINT pk_inoculo PRIMARY KEY (id_inoculo);
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT pk_inventario_pt PRIMARY KEY (id_inventario_pt);
 ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT pk_pxp PRIMARY KEY (id_pxp);
@@ -223,14 +239,13 @@ ALTER TABLE ONLY produccion.inoculo ADD CONSTRAINT fk_id_veneno FOREIGN KEY (id_
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo (id_protocolo) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.inventario_pt ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt (id_catalogo_pt) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_paso FOREIGN KEY (id_paso) REFERENCES produccion.paso(id_paso) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT fk_id_formula_m FOREIGN KEY (id_formula_m) REFERENCES produccion.formula_maestra(id_formula_m) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT fk_id_catalago_pt FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt(id_catalogo_pt) ON DELETE SET NULL;
-ALTER TABLE ONLY produccion.actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (id_categoria_aa) REFERENCES produccion.categoria_aa(id_categoria_aa) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.paso_protocolo ADD CONSTRAINT fk_id_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo) ON DELETE CASCADE;
+ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_formula_maestra FOREIGN KEY (id_formula_maestra) REFERENCES produccion.formula_maestra(id_formula_maestra) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT fk_id_catalago_pt FOREIGN KEY (id_catalogo_pt) REFERENCES produccion.catalogo_pt(id_catalogo_pt) ON DELETE SET NULL;
+ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_aac FOREIGN KEY (id_categoria_aa) REFERENCES produccion.categoria_aa(id_categoria_aa) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxp_lote FOREIGN KEY (id_lote) REFERENCES produccion.lote(id_lote) ON DELETE CASCADE;
-ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
 
 ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
@@ -246,6 +261,11 @@ ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_historia
 ALTER TABLE ONLY produccion.lote ADD CONSTRAINT fk_lote_protocolo FOREIGN KEY (id_protocolo) REFERENCES produccion.protocolo(id_protocolo);
 ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_respuesta FOREIGN KEY (id_respuesta) REFERENCES produccion.respuesta_pxp(id_respuesta);
 
+ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_usuario FOREIGN KEY (id_usuario_realizar) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxp_usuario FOREIGN KEY (id_usuario_aprobar) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY produccion.historial_respuesta_aa ADD CONSTRAINT fk_aa_usuario FOREIGN KEY (id_usuario_realizar) REFERENCES seguridad.usuarios(id_usuario);
+
+
 --Indices unicos esquema produccion
 
 --Permisos asociados a produccion
@@ -260,12 +280,33 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (607, '[p
 
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (630, '[produccion]AdministrarCategoriaAA', 'Permite agregar/editar/eliminar categorías de actividades de apoyo.');
+
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (635, '[produccion]AdministrarFormulaMaestra', 'Permite agregar/editar/eliminar fórmulas maestras.');
+
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (640, '[produccion]AdministrarProtocolo', 'Permite agregar/editar/eliminar protocolos de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (642, '[produccion]AprobarRegente', 'Permite a un regente farmacéutico aprobar o rechazar un protocolo de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (643, '[produccion]AprobarCoordinador', 'Permite al coordinador aprobar o rechazar un protocolo de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (644, '[produccion]AprobarDirector', 'Permite al director aprobar o rechazar un protocolo de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (641, '[produccion]AprobarCalidad', 'Permite a control de calidad aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (641, '[produccion]AprobarCalidadProtocolo', 'Permite a control de calidad aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (642, '[produccion]AprobarRegenteProtocolo', 'Permite a un regente farmacéutico aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (643, '[produccion]AprobarCoordinadorProtocolo', 'Permite al coordinador aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (644, '[produccion]AprobarDirectorProtocolo', 'Permite al director aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (645, '[produccion]ActivarProtocolo', 'Permite activar versiones anteriores de un protocolo de producción.');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (650, '[produccion]AdministrarPaso', 'Permite agregar/editar/eliminar pasos de protocolos.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (651, '[produccion]ActivarPaso', 'Permite activar versiones anteriores de un paso de protocolo.');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (660, '[produccion]AdministrarLote', 'Permite agregar/editar/eliminar lotes de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (661, '[produccion]RealizarLote', 'Permite empezar a realizar los pasos del lote de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (662, '[produccion]AprobarPaso', 'Permite aprobar los pasos de producción de un lote, cuando se requiera.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (663, '[produccion]ActivarRespuestaPaso', 'Permite activar versiones anteriores de una respuesta de paso de protocolo de un lote.');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (670, '[produccion]AdministrarActividadApoyo', 'Permite agregar/editar/eliminar actividades de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (671, '[produccion]ActivarActividadApoyo', 'Permite activar versiones anteriores de una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (672, '[produccion]AprobarCalidadActividad', 'Permite a control de calidad aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (673, '[produccion]AprobarRegenteActividad', 'Permite a un regente farmacéutico aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (674, '[produccion]AprobarCoordinadorActividad', 'Permite al coordinador aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (675, '[produccion]AprobarDirectorActividad', 'Permite al director aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (676, '[produccion]ActivarRespuestaActividad', 'Permite activar versiones anteriores de una respuesta de actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (677, '[produccion]RealizarActividadApoyo', 'Permite empezar a realizar una actividad de apoyo.');
+
 
 
 --Entradas del Menu de produccion
@@ -276,6 +317,29 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (606, 600, 'Catalogo de Producto T.', '/Produccion/Catalogo_PT');
 
+
+
+--Menu de Protocolos
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (610, 600, 'Protocolo', null, 1);
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (611, 610, 'Pasos', '/Produccion/Paso', 1);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (612, 610, 'Protocolos', '/Produccion/Protocolo', 2);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (613, 610, 'Lotes', '/Produccion/Lote', 3);
+
+
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (620, 600, 'Catálogos', null, 2);
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (621, 620, 'Fórmula Maestra', '/Produccion/Formula_Maestra', 1);
+
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (630, 600, 'Actividad de Apoyo', null, 3);
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (632, 630, 'Actividades de Apoyo', '/Produccion/Actividad_Apoyo', 2);
+
+
+
 --Permisos del menu principal de produccion
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (602, 602);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (603, 602);
@@ -283,3 +347,33 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (604, 604);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (605, 605);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (606, 606);
+
+
+--Permisos del menu de la parte de Protocolo
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (635, 621);
+
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (650, 611);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (651, 611);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (640, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (641, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (642, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (643, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (644, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (645, 612);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (660, 613);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (661, 613);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (662, 613);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (663, 613);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (630, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (670, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (671, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (672, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (673, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (674, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (675, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (676, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (677, 632);

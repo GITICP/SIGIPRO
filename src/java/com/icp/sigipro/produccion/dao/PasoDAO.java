@@ -5,11 +5,8 @@
  */
 package com.icp.sigipro.produccion.dao;
 
-import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.core.DAO;
-import com.icp.sigipro.produccion.modelos.Formula_Maestra;
 import com.icp.sigipro.produccion.modelos.Paso;
-import com.icp.sigipro.produccion.modelos.Protocolo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLXML;
@@ -207,7 +204,7 @@ public class PasoDAO extends DAO {
         return resultado;
     }
     
-    public boolean activarVersion(int version, int id_protocolo) {
+    public boolean activarVersion(int version, int id_paso) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
@@ -215,7 +212,7 @@ public class PasoDAO extends DAO {
                     + "SET version=? "
                     + "WHERE id_paso= ?; ");
             consulta.setInt(1, version);
-            consulta.setInt(2, id_protocolo);
+            consulta.setInt(2, id_paso);
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }

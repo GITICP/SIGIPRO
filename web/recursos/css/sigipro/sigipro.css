@@ -17,28 +17,28 @@
 }
 
 .input-group{
-  display: block;
+    display: block;
 }
 
 .alert-warning{
-  background-color: #F0E39E;
+    background-color: #F0E39E;
 }
 
 .boton-accion{
-  margin-left:5px !important;
-  margin-right:5px !important;
-  color:#fff !important;
-  padding-top: 3px !important;
-  font-family: "Helvetica";
+    margin-left:5px !important;
+    margin-right:5px !important;
+    color:#fff !important;
+    padding-top: 3px !important;
+    font-family: "Helvetica";
 }
 
 .campos-requeridos {
-  padding-left: 1.5em;
+    padding-left: 1.5em;
 }
 
 .error-form {
-  margin-bottom: 0px;
-  color: red;
+    margin-bottom: 0px;
+    color: red;
 }
 
 .cuadro-opciones {
@@ -73,11 +73,11 @@
 }
 
 .sigipro-tab-content {
-  padding: 0px;
+    padding: 0px;
 }
 
 .sigipro-nav-tabs li {
-  float: right;
+    float: right;
 }
 
 .cajas {

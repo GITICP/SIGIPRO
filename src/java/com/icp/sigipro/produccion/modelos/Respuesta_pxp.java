@@ -22,12 +22,22 @@ public class Respuesta_pxp {
     private Paso paso;
     private Lote lote;
     private SQLXML respuesta;
-    private Usuario usuario;
+    private Usuario usuario_aprobar;
+    private Usuario usuario_realizar;
     private String respuestaString;
+    private int version;
 
     private List<Respuesta_pxp> historial;
 
     public Respuesta_pxp() {
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public int getId_historial() {
@@ -46,12 +56,20 @@ public class Respuesta_pxp {
         this.respuestaString = respuestaString;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getUsuario_aprobar() {
+        return usuario_aprobar;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setUsuario_aprobar(Usuario usuario) {
+        this.usuario_aprobar = usuario;
+    }
+
+    public Usuario getUsuario_realizar() {
+        return usuario_realizar;
+    }
+
+    public void setUsuario_realizar(Usuario usuario_realizar) {
+        this.usuario_realizar = usuario_realizar;
     }
 
     public int getId_respuesta() {
@@ -107,7 +125,8 @@ public class Respuesta_pxp {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_usuario", this.getUsuario().getId_usuario());
+            JSON.put("id_usuario_aprobar", this.getUsuario_aprobar().getId_usuario());
+            JSON.put("id_usuario_realizar", this.getUsuario_realizar().getId_usuario());
             JSON.put("id_paso", this.getPaso().getId_paso());
             JSON.put("id_lote", this.getLote().getId_lote());
 

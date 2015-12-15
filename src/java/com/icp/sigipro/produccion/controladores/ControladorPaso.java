@@ -12,7 +12,9 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLTDAO;
+import com.icp.sigipro.produccion.dao.Actividad_ApoyoDAO;
 import com.icp.sigipro.produccion.dao.PasoDAO;
+import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
 import com.icp.sigipro.produccion.modelos.Paso;
 import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.modelos.Seccion;
@@ -54,6 +56,7 @@ public class ControladorPaso extends SIGIPROServlet {
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
     private final SubBodegaDAO subbodegadao = new SubBodegaDAO();
     private final SeccionDAO secciondao = new SeccionDAO();
+    private final Actividad_ApoyoDAO actividaddao = new Actividad_ApoyoDAO();
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
 
@@ -67,7 +70,6 @@ public class ControladorPaso extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
-            add("realizar");
             add("verhistorial");
             add("activar");
         }
@@ -75,9 +77,6 @@ public class ControladorPaso extends SIGIPROServlet {
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregareditar");
-            add("realizar");
-            add("agregar");
-            add("editar");
         }
     };
 
@@ -91,6 +90,7 @@ public class ControladorPaso extends SIGIPROServlet {
         request.setAttribute("accion", "Agregar");
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
+        request.setAttribute("listaActividades", this.parseListaActividades(actividaddao.obtenerActividades_Apoyo()));
         request.setAttribute("orden", "");
         request.setAttribute("cantidad", 0);
         request.setAttribute("contador", 0);
@@ -205,8 +205,8 @@ public class ControladorPaso extends SIGIPROServlet {
                 if (diccionario_formulario.get(i).containsKey("cantidad")) {
                     try {
                         cantidad += ((Integer) diccionario_formulario.get(i).get("cantidad"));
-                    }catch (Exception e){
-                        
+                    } catch (Exception e) {
+
                     }
                 }
 
@@ -215,14 +215,17 @@ public class ControladorPaso extends SIGIPROServlet {
 
         List<SubBodega> subbodegas = subbodegadao.obtenerSubBodegas();
         List<Seccion> secciones = secciondao.obtenerSecciones();
+        List<Actividad_Apoyo> actividades = actividaddao.obtenerActividades_Apoyo();
 
         request.setAttribute("paso", p);
         request.setAttribute("lista", lista);
         request.setAttribute("contador", lista.size());
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegas));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciones));
+        request.setAttribute("listaActividades", this.parseListaActividades(actividades));
         request.setAttribute("subbodegas", subbodegas);
         request.setAttribute("secciones", secciones);
+        request.setAttribute("actividades", actividades);
         request.setAttribute("cantidad", cantidad);
         request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
@@ -253,35 +256,7 @@ public class ControladorPaso extends SIGIPROServlet {
 
     }
 
-    protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        validarPermiso(650, request);
-        String redireccion = "Paso/Realizar.jsp";
-
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
-        request.setAttribute("id_paso", id_paso);
-
-        ProduccionXSLT xslt;
-        Paso p;
-
-        try {
-            xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
-            p = dao.obtenerPaso(id_paso);
-
-            String formulario = helper_transformaciones.transformar(xslt, p.getEstructura());
-
-            request.setAttribute("cuerpo_formulario", formulario);
-
-            request.setAttribute("paso", p);
-        } catch (TransformerException | SIGIPROException | SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
-        }
-
-        redireccionar(request, response, redireccion);
-    }
     // </editor-fold>
-
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
@@ -376,6 +351,9 @@ public class ControladorPaso extends SIGIPROServlet {
                                     case ("u"):
                                         llaves.put("tipo", "usuario");
                                         break;
+                                    case ("aa"):
+                                        llaves.put("tipo", "aa");
+                                        break;
                                 }
                                 diccionario_formulario.put(id, llaves);
                             }
@@ -432,6 +410,9 @@ public class ControladorPaso extends SIGIPROServlet {
                     case ("usuario"):
                         this.crearUsuario(xml, hash, campo);
                         break;
+                    case ("aa"):
+                        this.crearActividadApoyo(xml, hash, campo);
+                        break;
                 }
             }
         }
@@ -469,11 +450,22 @@ public class ControladorPaso extends SIGIPROServlet {
         xml.agregarSubelemento("subbodega", hash.get("subbodega"), campo);
         if (hash.containsKey("cantidad")) {
             xml.agregarSubelemento("cantidad", "true", campo);
-            xml.agregarSubelemento("nombre-cantidad", hash.get("nombre")+"_cantidad", campo);
+            xml.agregarSubelemento("nombre-cantidad", hash.get("nombre") + "_cantidad", campo);
             xml.agregarSubelemento("valor-cantidad", "", campo);
         } else {
             xml.agregarSubelemento("cantidad", "false", campo);
         }
+
+    }
+    
+    private void crearActividadApoyo(HelperXML xml, HashMap<String, String> hash, Element campo) {
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre") + "_" + this.nombre_campo, campo);
+        this.nombre_campo++;
+        xml.agregarSubelemento("tipo", "aa", campo);
+        xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
+        xml.agregarSubelemento("valor", "", campo);
+        xml.agregarSubelemento("nombre-actividad", hash.get("nombreactividad"), campo);
+        xml.agregarSubelemento("actividad", hash.get("actividad"), campo);
 
     }
 
@@ -524,6 +516,18 @@ public class ControladorPaso extends SIGIPROServlet {
             tipo += s.getId_sub_bodega() + ",";
             tipo += "\"" + s.getNombre() + "\"]";
             respuesta.add(tipo);
+        }
+        System.out.println(respuesta.toString());
+        return respuesta;
+    }
+
+    public List<String> parseListaActividades(List<Actividad_Apoyo> actividades) {
+        List<String> respuesta = new ArrayList<String>();
+        for (Actividad_Apoyo aa : actividades) {
+            String actividad = "[";
+            actividad += aa.getId_actividad() + ",";
+            actividad += "\"" + aa.getNombre() + "\"]";
+            respuesta.add(actividad);
         }
         System.out.println(respuesta.toString());
         return respuesta;

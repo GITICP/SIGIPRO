@@ -137,6 +137,9 @@ public class HelperXML {
                     case ("subbodega"):
                         parseSubbodegas(node.getChildNodes());
                         break;
+                    case ("aa"):
+                        parseActividadApoyo(node.getChildNodes());
+                        break;
                     default:
                         parseCampos(node.getChildNodes());
                         break;
@@ -242,6 +245,33 @@ public class HelperXML {
                     if (text.equals("true")) {
                         dictionary.get(contador).put("cantidad", text);
                     }
+                    break;
+            }
+        }
+    }
+    
+    private void parseActividadApoyo(NodeList nodos) {
+        contador++;
+        HashMap<String, Object> hash = new HashMap<String, Object>();
+        dictionary.put(contador, hash);
+        dictionary.get(contador).put("tipocampo", "aa");
+
+        for (int i = 0, len = nodos.getLength(); i < len; i++) {
+            Node currentNode = nodos.item(i);
+            String name = currentNode.getNodeName();
+            String text = currentNode.getTextContent();
+            switch (name) {
+                case "tipo":
+                    dictionary.get(contador).put(name, text);
+                    break;
+                case "etiqueta":
+                    dictionary.get(contador).put("nombre", text);
+                    break;
+                case "actividad":
+                    dictionary.get(contador).put("actividad", text);
+                    break;
+                case "nombre-actividad":
+                    dictionary.get(contador).put("nombreactividad", text);
                     break;
             }
         }
