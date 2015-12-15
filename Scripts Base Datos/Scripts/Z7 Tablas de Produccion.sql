@@ -101,7 +101,8 @@ CREATE TABLE produccion.historial_protocolo(
 	veneno character varying(40) NOT NULL, 
 	fecha_ingreso date NOT NULL,
 	cantidad integer NOT NULL,
-	observaciones character varying(200) NOT NULL
+	observaciones character varying(200) NOT NULL,
+	id_veneno_serpentario integer NOT NULL
  );
 ----TABLAS MUCHOS A MUCHOS INVENTARIO-----
 CREATE TABLE produccion.despachos_inventario(
@@ -222,12 +223,14 @@ ALTER TABLE ONLY produccion.protocolo ADD CONSTRAINT pk_protocolo PRIMARY KEY (i
 ALTER TABLE ONLY produccion.reservacion ADD CONSTRAINT pk_reservacion PRIMARY KEY (id_reservacion);
 ALTER TABLE ONLY produccion.salida_ext ADD CONSTRAINT pk_salida_ext PRIMARY KEY (id_salida);
 ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT pk_veneno_produccion PRIMARY KEY (id_veneno);
+ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT fk_id_veneno_serpentario FOREIGN KEY (id_veneno_serpentario) REFERENCES serpentario.venenos (id_veneno) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.reservaciones_inventario ADD CONSTRAINT pk_rxi PRIMARY KEY (id_rxi);
 ALTER TABLE ONLY produccion.salidas_inventario ADD CONSTRAINT pk_sxi PRIMARY KEY (id_sxi);
 ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT pk_dxi PRIMARY KEY (id_dxi);
 ALTER TABLE ONLY produccion.historial_protocolo ADD CONSTRAINT pk_historial_protocolo PRIMARY KEY (id_historial);
 ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT pk_historial_actividad_apoyo PRIMARY KEY (id_historial);
 ALTER TABLE ONLY produccion.historial_paso ADD CONSTRAINT pk_historial_paso PRIMARY KEY (id_historial);
+
 
 
 --Llaves foraneas esquema produccion
@@ -312,16 +315,21 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (677, '[p
 --Entradas del Menu de produccion
 DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 600;
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (600, 0, 'Produccion', null);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (602, 600, 'Inventario de Producto T.', '/Produccion/Inventario_PT');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (604, 600, 'Inoculo', '/Produccion/Inoculo'); 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion');
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (606, 600, 'Catalogo de Producto T.', '/Produccion/Catalogo_PT');
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (640, 600, 'Producto Terminado', null, 6);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (602, 640, 'Inventario de Producto T.', '/Produccion/Inventario_PT', 1);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (606, 640, 'Catalogo de Producto T.', '/Produccion/Catalogo_PT', 2);
+
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (604, 600, 'Inoculo', '/Produccion/Inoculo', 3); 
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion', 2);
+
 
 
 
 --Menu de Protocolos
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (610, 600, 'Protocolo', null, 1);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (610, 600, 'Protocolo', null, 4);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (611, 610, 'Pasos', '/Produccion/Paso', 1);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (612, 610, 'Protocolos', '/Produccion/Protocolo', 2);
@@ -329,12 +337,12 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 
 
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (620, 600, 'Catálogos', null, 2);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (620, 600, 'Formula Maestra', null, 1);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (621, 620, 'Fórmula Maestra', '/Produccion/Formula_Maestra', 1);
 
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (630, 600, 'Actividad de Apoyo', null, 3);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (630, 600, 'Actividad de Apoyo', null, 5);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (632, 630, 'Actividades de Apoyo', '/Produccion/Actividad_Apoyo', 2);
 
