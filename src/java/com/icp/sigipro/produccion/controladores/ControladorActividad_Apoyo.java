@@ -15,17 +15,26 @@ import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLTDAO;
 import com.icp.sigipro.produccion.dao.Actividad_ApoyoDAO;
 import com.icp.sigipro.produccion.dao.Categoria_AADAO;
 import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
-import com.icp.sigipro.produccion.modelos.Protocolo;
+import com.icp.sigipro.produccion.modelos.Categoria_AA;
+import com.icp.sigipro.produccion.modelos.Respuesta_AA;
 import com.icp.sigipro.seguridad.dao.SeccionDAO;
+import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Seccion;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -33,13 +42,24 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -57,6 +77,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     private final SubBodegaDAO subbodegadao = new SubBodegaDAO();
     private final SeccionDAO secciondao = new SeccionDAO();
     private final Categoria_AADAO categoriadao = new Categoria_AADAO();
+    private final UsuarioDAO usuariodao = new UsuarioDAO();
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
 
@@ -66,6 +87,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
+            add("indexnormal");
+            add("indexactividades");
+            add("veractividad");
+            add("verrespuesta");
+            add("verhistorialrespuesta");
             add("ver");
             add("agregar");
             add("eliminar");
@@ -73,12 +99,15 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             add("realizar");
             add("verhistorial");
             add("activar");
+            add("activarrespuesta");
+            add("repetir");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregareditar");
             add("realizar");
+            add("repetir");
             add("rechazar");
             add("aprobar");
         }
@@ -90,21 +119,47 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
         String redireccion = "Actividad_Apoyo/Agregar.jsp";
         Actividad_Apoyo aa = new Actividad_Apoyo();
+        try {
+            Categoria_AA categoria = new Categoria_AA();
+            categoria.setId_categoria_aa(Integer.parseInt(request.getParameter("id_categoria_aa")));
+            aa.setCategoria(categoria);
+        } catch (Exception e) {
+
+        }
         request.setAttribute("actividad", aa);
         request.setAttribute("accion", "Agregar");
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
-        request.setAttribute("listaCategorias", categoriadao.obtenerCategorias_AA());
+        request.setAttribute("categorias", categoriadao.obtenerCategorias_AA());
         request.setAttribute("orden", "");
         request.setAttribute("cantidad", 0);
         request.setAttribute("contador", 0);
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getIndexnormal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/index.jsp";
         List<Actividad_Apoyo> actividades = dao.obtenerActividades_Apoyo();
+        request.setAttribute("listaActividades", actividades);
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/indexBotonesCategoria.jsp";
+        List<Categoria_AA> categorias = categoriadao.obtenerCategorias_AA();
+        request.setAttribute("listaCategorias", categorias);
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void getIndexactividades(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/indexBotonesActividad.jsp";
+        int id_categoria_aa = Integer.parseInt(request.getParameter("id_categoria_aa"));
+        Categoria_AA categoria = categoriadao.obtenerCategoria_AA(id_categoria_aa);
+        request.setAttribute("categoria", categoria);
+        List<Actividad_Apoyo> actividades = dao.obtenerActividades_Apoyo(id_categoria_aa);
         request.setAttribute("listaActividades", actividades);
         redireccionar(request, response, redireccion);
     }
@@ -134,6 +189,29 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     }
 
+    protected void getVeractividad(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/VerActividad.jsp";
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        List<Respuesta_AA> respuestas = dao.obtenerRespuestas(actividad);
+        request.setAttribute("actividad", actividad);
+        request.setAttribute("listaRespuestas", respuestas);
+        redireccionar(request, response, redireccion);
+
+    }
+    
+    protected void getVeractividad(HttpServletRequest request, HttpServletResponse response,int id_actividad) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/VerActividad.jsp";
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        List<Respuesta_AA> respuestas = dao.obtenerRespuestas(actividad);
+        request.setAttribute("actividad", actividad);
+        request.setAttribute("listaRespuestas", respuestas);
+        redireccionar(request, response, redireccion);
+
+    }
+
     protected void getVerhistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerHistorial.jsp";
@@ -151,6 +229,86 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                 request.setAttribute("cuerpo_datos", null);
             }
             request.setAttribute("actividad", aa);
+            redireccionar(request, response, redireccion);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+    }
+    
+    protected void getActivarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(640, request);
+        int id_historial = Integer.parseInt(request.getParameter("id_historial"));
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int version = dao.obtenerVersionRespuesta(id_historial);
+        boolean resultado = false;
+        try {
+            resultado = dao.activarVersionRespuesta(version, id_respuesta);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                Respuesta_AA respuesta = new Respuesta_AA();
+                respuesta.setId_historial(id_historial);
+                respuesta.setId_respuesta(id_respuesta);
+                respuesta.setVersion(version);
+                bitacora.setBitacora(respuesta.parseJSON(), Bitacora.ACCION_ACTIVAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Versión de Respuesta activado correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Versión de Respuesta no pudo ser activado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Versión de Respuesta no pudo ser activado."));
+            this.getIndex(request, response);
+        }
+
+    }
+    
+    protected void getVerhistorialrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/VerHistorialRespuesta.jsp";
+        int id_historial = Integer.parseInt(request.getParameter("id_historial"));
+        ProduccionXSLT xslt;
+        Respuesta_AA raa;
+
+        try {
+            raa = dao.obtenerHistorialRespuesta(id_historial);
+            xslt = produccionxsltdao.obtenerProduccionXSLTVerFormulario();
+            if (raa.getRespuesta() != null) {
+                String formulario = helper_transformaciones.transformar(xslt, raa.getRespuesta());
+                request.setAttribute("cuerpo_datos", formulario);
+            } else {
+                request.setAttribute("cuerpo_datos", null);
+            }
+            request.setAttribute("respuesta", raa);
+            redireccionar(request, response, redireccion);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+    }
+    
+    protected void getVerrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/VerRespuesta.jsp";
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        ProduccionXSLT xslt;
+        Respuesta_AA r;
+
+        try {
+            r = dao.obtenerRespuesta(id_respuesta);
+            r.setActividad(dao.obtenerActividad_Apoyo(r.getActividad().getId_actividad()));
+            xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
+            if (r.getRespuesta() != null) {
+                String formulario = helper_transformaciones.transformar(xslt, r.getRespuesta());
+                request.setAttribute("cuerpo_datos", formulario);
+            } else {
+                request.setAttribute("cuerpo_datos", null);
+            }
+            request.setAttribute("respuesta", r);
             redireccionar(request, response, redireccion);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
@@ -209,8 +367,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                 if (diccionario_formulario.get(i).containsKey("cantidad")) {
                     try {
                         cantidad += ((Integer) diccionario_formulario.get(i).get("cantidad"));
-                    }catch (Exception e){
-                        
+                    } catch (Exception e) {
+
                     }
                 }
 
@@ -225,7 +383,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         request.setAttribute("contador", lista.size());
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegas));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciones));
-        request.setAttribute("listaCategorias", categoriadao.obtenerCategorias_AA());
+        request.setAttribute("categorias", categoriadao.obtenerCategorias_AA());
         request.setAttribute("subbodegas", subbodegas);
         request.setAttribute("secciones", secciones);
         request.setAttribute("cantidad", cantidad);
@@ -258,31 +416,61 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         validarPermiso(670, request);
         String redireccion = "Actividad_Apoyo/Realizar.jsp";
 
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
-        request.setAttribute("id_actividad", id_actividad);
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        if (actividad.isAprobacion_direccion()) {
+            request.setAttribute("actividad", actividad);
+            ProduccionXSLT xslt;
+            try {
+                xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
 
-        ProduccionXSLT xslt;
-        Actividad_Apoyo aa;
+                System.out.println(actividad.getEstructura().getString());
 
-        try {
-            xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
-            aa = dao.obtenerActividad_Apoyo(id_actividad);
+                String formulario = helper_transformaciones.transformar(xslt, actividad.getEstructura());
 
-            String formulario = helper_transformaciones.transformar(xslt, aa.getEstructura());
+                request.setAttribute("cuerpo_formulario", formulario);
 
-            request.setAttribute("cuerpo_formulario", formulario);
+            } catch (TransformerException | SIGIPROException | SQLException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+            }
 
-            request.setAttribute("actividad", aa);
-        } catch (TransformerException | SIGIPROException | SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+            redireccionar(request, response, redireccion);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            this.getIndex(request, response);
         }
+    }
 
-        redireccionar(request, response, redireccion);
+    protected void getRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        validarPermiso(670, request);
+        String redireccion = "Actividad_Apoyo/Repetir.jsp";
+
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
+        respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
+        if (!respuesta.getActividad().isAprobacion_direccion()) {
+            request.setAttribute("respuesta", respuesta);
+            ProduccionXSLT xslt;
+            try {
+                xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
+                System.out.println(respuesta.getActividad().getEstructura().getString());
+                String formulario = helper_transformaciones.transformar(xslt, respuesta.getActividad().getEstructura());
+                request.setAttribute("cuerpo_formulario", formulario);
+                request.setAttribute("respuesta", respuesta);
+            } catch (TransformerException | SIGIPROException | SQLException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+            }
+            redireccionar(request, response, redireccion);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            this.getIndex(request, response);
+        }
     }
     // </editor-fold>
 
@@ -318,7 +506,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             }
         }
     }
-    
+
     protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director
@@ -362,11 +550,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada. Le faltan otras aprobaciones para estar validado."));
             }
-            this.getIndex(request, response);
+            this.getVeractividad(request, response,aa.getId_actividad());
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response,aa.getId_actividad());
         }
 
     }
@@ -392,8 +580,257 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             this.getIndex(request, response);
         }
     }
-  // </editor-fold>
 
+    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        int id_actividad = Integer.parseInt(this.obtenerParametro("id_actividad"));
+
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+
+        Respuesta_AA resultado = new Respuesta_AA();
+        resultado.setActividad(actividad);
+
+        Usuario u = new Usuario();
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        u.setId_usuario(id_usuario);
+
+        resultado.setUsuario_realizar(u);
+
+        resultado.setNombre(this.obtenerParametro("nombre"));
+
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        Timestamp fecha = new java.sql.Timestamp(new Date().getTime());
+        resultado.setFecha(fecha);
+
+        String redireccion = "Actividad_Apoyo/index.jsp";
+
+        try {
+            InputStream binary_stream = resultado.getActividad().getEstructura().getBinaryStream();
+
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document documento_resultado = parser.parse(binary_stream);
+            Element elemento_resultado = documento_resultado.getDocumentElement();
+
+            NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
+
+            for (int i = 0; i < lista_nodos.getLength(); i++) {
+                Node nodo = lista_nodos.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String nombre_campo_resultado;
+                    Node nodo_valor;
+                    String valor;
+                    String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
+                    switch (tipo_campo) {
+                        case ("seleccion"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            String[] opciones = this.obtenerParametros(nombre_campo_resultado);
+                            List<String> lista_opciones = new ArrayList<String>();
+                            lista_opciones.addAll(Arrays.asList(opciones));
+                            NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
+                            for (int j = 0; j < elemento_opciones.getLength(); j++) {
+                                Node opcion = elemento_opciones.item(j);
+                                Element elemento_opcion = (Element) opcion;
+                                String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
+                                if (lista_opciones.contains(nombre_opcion)) {
+                                    nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
+                                    nodo_valor.setTextContent("true");
+                                }
+                            }
+                            break;
+                        case ("usuario"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
+                            List<String> lista_usuarios = new ArrayList<String>();
+                            lista_usuarios.addAll(Arrays.asList(usuarios));
+
+                            nodo_valor = elemento.getElementsByTagName("seccion").item(0);
+                            int seccion = Integer.parseInt(nodo_valor.getTextContent());
+                            List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
+                            List<String> nombre_usuarios = new ArrayList<>();
+                            List<Integer> id_usuarios = new ArrayList<>();
+
+                            for (String id : lista_usuarios) {
+                                id_usuarios.add(Integer.parseInt(id));
+                            }
+                            for (Usuario usuario : usuarios_seccion) {
+                                if (id_usuarios.contains(usuario.getId_usuario())) {
+                                    nombre_usuarios.add(usuario.getNombre_completo());
+                                }
+                            }
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(nombre_usuarios.toString());
+                            break;
+                        case ("subbodega"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(valor);
+                            valor = elemento.getElementsByTagName("cantidad").item(0).getTextContent();
+                            if (valor.equals("true")) {
+                                String nombre_cantidad_resultado = elemento.getElementsByTagName("nombre-cantidad").item(0).getTextContent();
+                                String valor_cantidad = this.obtenerParametro(nombre_cantidad_resultado);
+                                nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
+                                nodo_valor.setTextContent(valor_cantidad);
+                            }
+                            break;
+                        default:
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            nodo_valor.setTextContent(valor);
+                            break;
+                    }
+
+                }
+            }
+
+            String string_xml_resultado;
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
+            string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
+
+            System.out.println(string_xml_resultado);
+
+            resultado.setRespuestaString(string_xml_resultado);
+            dao.insertarRespuesta(resultado);
+            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
+
+            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+            this.getVeractividad(request, response, actividad.getId_actividad());
+
+        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        }
+
+    }
+
+    protected void postRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
+        Respuesta_AA resultado = dao.obtenerRespuesta(id_respuesta);
+        Usuario u = new Usuario();
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        u.setId_usuario(id_usuario);
+        resultado.setUsuario_realizar(u);
+        String redireccion = "Actividad_Apoyo/index.jsp";
+        try {
+            InputStream binary_stream = resultado.getActividad().getEstructura().getBinaryStream();
+
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document documento_resultado = parser.parse(binary_stream);
+            Element elemento_resultado = documento_resultado.getDocumentElement();
+
+            NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
+
+            for (int i = 0; i < lista_nodos.getLength(); i++) {
+                Node nodo = lista_nodos.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String nombre_campo_resultado;
+                    Node nodo_valor;
+                    String valor;
+                    String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
+                    switch (tipo_campo) {
+                        case ("seleccion"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            String[] opciones = this.obtenerParametros(nombre_campo_resultado);
+                            List<String> lista_opciones = new ArrayList<String>();
+                            lista_opciones.addAll(Arrays.asList(opciones));
+                            NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
+                            for (int j = 0; j < elemento_opciones.getLength(); j++) {
+                                Node opcion = elemento_opciones.item(j);
+                                Element elemento_opcion = (Element) opcion;
+                                String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
+                                if (lista_opciones.contains(nombre_opcion)) {
+                                    nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
+                                    nodo_valor.setTextContent("true");
+                                }
+                            }
+                            break;
+                        case ("usuario"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
+                            List<String> lista_usuarios = new ArrayList<String>();
+                            lista_usuarios.addAll(Arrays.asList(usuarios));
+
+                            nodo_valor = elemento.getElementsByTagName("seccion").item(0);
+                            int seccion = Integer.parseInt(nodo_valor.getTextContent());
+                            List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
+                            List<String> nombre_usuarios = new ArrayList<>();
+                            List<Integer> id_usuarios = new ArrayList<>();
+
+                            for (String id : lista_usuarios) {
+                                id_usuarios.add(Integer.parseInt(id));
+                            }
+                            for (Usuario usuario : usuarios_seccion) {
+                                if (id_usuarios.contains(usuario.getId_usuario())) {
+                                    nombre_usuarios.add(usuario.getNombre_completo());
+                                }
+                            }
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(nombre_usuarios.toString());
+                            break;
+                        case ("subbodega"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(valor);
+                            valor = elemento.getElementsByTagName("cantidad").item(0).getTextContent();
+                            if (valor.equals("true")) {
+                                String nombre_cantidad_resultado = elemento.getElementsByTagName("nombre-cantidad").item(0).getTextContent();
+                                String valor_cantidad = this.obtenerParametro(nombre_cantidad_resultado);
+                                nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
+                                nodo_valor.setTextContent(valor_cantidad);
+                            }
+                            break;
+                        default:
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            nodo_valor.setTextContent(valor);
+                            break;
+                    }
+
+                }
+            }
+
+            String string_xml_resultado;
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
+            string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
+
+            System.out.println(string_xml_resultado);
+
+            resultado.setRespuestaString(string_xml_resultado);
+            dao.repetirRespuesta(resultado);
+            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
+
+            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+            this.getVer(request, response);
+
+        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        }
+
+    }
+
+  // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Actividad_Apoyo construirObjeto(List<FileItem> items, HttpServletRequest request) {
         Actividad_Apoyo aa = new Actividad_Apoyo();
@@ -415,6 +852,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                 switch (fieldName) {
                     case "nombre":
                         aa.setNombre(fieldValue);
+                        break;
+                    case "id_categoria_aa":
+                        Categoria_AA categoria = new Categoria_AA();
+                        categoria.setId_categoria_aa(Integer.parseInt(fieldValue));
+                        aa.setCategoria(categoria);
                         break;
                     case "id_actividad":
                         int id_actividad = Integer.parseInt(fieldValue);
@@ -547,7 +989,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         xml.agregarSubelemento("subbodega", hash.get("subbodega"), campo);
         if (hash.containsKey("cantidad")) {
             xml.agregarSubelemento("cantidad", "true", campo);
-            xml.agregarSubelemento("nombre-cantidad", hash.get("nombre")+"_cantidad", campo);
+            xml.agregarSubelemento("nombre-cantidad", hash.get("nombre") + "_cantidad", campo);
             xml.agregarSubelemento("valor-cantidad", "", campo);
         } else {
             xml.agregarSubelemento("cantidad", "false", campo);
@@ -618,9 +1060,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             lista_acciones = accionesPost;
             if (ServletFileUpload.isMultipartContent(request)) {
                 this.obtenerParametros(request);
-                if (this.obtenerParametro("accion").equals("realizar")) {
-                    accion = "realizar";
-                }
+                accion = this.obtenerParametro("accion");
+                System.out.println(accion);
             }
         }
         if (lista_acciones.contains(accion.toLowerCase())) {

@@ -6,7 +6,7 @@
         <xsl:apply-templates />
     </xsl:template>
     
-    <xsl:template match="paso">
+    <xsl:template match="paso | actividad">
         <div class="widget widget-table">
             <div class="widget-header">
                 <h3>

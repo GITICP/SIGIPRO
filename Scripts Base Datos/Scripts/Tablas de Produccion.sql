@@ -161,12 +161,23 @@ id_historial serial NOT NULL,
 
 CREATE TABLE produccion.respuesta_aa (
     id_respuesta serial  NOT NULL,
-    respuesta xml  NOT NULL,
-    id_pxp integer NOT NULL,
+    id_respuesta_pxp integer,
     id_actividad integer NOT NULL,
+    version integer NOT NULL,
     CONSTRAINT pk_respuesta_aa PRIMARY KEY (id_respuesta)
 );
 
+CREATE TABLE produccion.historial_respuesta_aa(
+    id_historial serial NOT NULL,
+    id_respuesta int NOT NULL,
+    respuesta xml  NOT NULL,
+    nombre character varying(20) NOT NULL,
+    fecha timestamp without time zone NOT NULL,
+    id_usuario_realizar int,
+    version int NOT NULL,
+    CONSTRAINT pk_HISTORIAL_respuesta_aa PRIMARY KEY (id_historial)
+
+);
 
 --Tabla de Lotes 
 
@@ -235,7 +246,6 @@ ALTER TABLE ONLY produccion.historial_actividad_apoyo ADD CONSTRAINT fk_aac FORE
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxpr FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxp_lote FOREIGN KEY (id_lote) REFERENCES produccion.lote(id_lote) ON DELETE CASCADE;
-ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_pxpraa FOREIGN KEY (id_pxp) REFERENCES produccion.paso_protocolo(id_pxp) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.respuesta_aa ADD CONSTRAINT fk_acraa FOREIGN KEY (id_actividad) REFERENCES produccion.actividad_apoyo(id_actividad) ON DELETE SET NULL;
 
 ALTER TABLE ONLY produccion.despachos_inventario ADD CONSTRAINT fk_pt FOREIGN KEY (id_inventario_pt) REFERENCES produccion.inventario_pt(id_inventario_pt) ON DELETE CASCADE;
@@ -253,6 +263,8 @@ ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_
 
 ALTER TABLE ONLY produccion.historial_respuesta_pxp ADD CONSTRAINT fk_historial_usuario FOREIGN KEY (id_usuario_realizar) REFERENCES seguridad.usuarios(id_usuario);
 ALTER TABLE ONLY produccion.respuesta_pxp ADD CONSTRAINT fk_pxp_usuario FOREIGN KEY (id_usuario_aprobar) REFERENCES seguridad.usuarios(id_usuario);
+ALTER TABLE ONLY produccion.historial_respuesta_aa ADD CONSTRAINT fk_aa_usuario FOREIGN KEY (id_usuario_realizar) REFERENCES seguridad.usuarios(id_usuario);
+
 
 --Indices unicos esquema produccion
 
@@ -299,7 +311,8 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (621, 620, 'Fórmula Maestra', '/Produccion/Formula_Maestra', 1);
 
 
-
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (630, 600, 'Actividad de Apoyo', null, 3);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (632, 630, 'Actividades de Apoyo', '/Produccion/Actividad_Apoyo', 2);
 
 
 

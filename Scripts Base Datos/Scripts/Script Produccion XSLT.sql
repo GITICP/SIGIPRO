@@ -9,7 +9,7 @@ CREATE TABLE produccion_xslt.produccion_xslt (
 );
 
 INSERT INTO produccion_xslt.produccion_xslt (id_produccion_xslt, nombre, estructura) 
-VALUES (1, 'Generador Formularios Calidad', 
+VALUES (1, 'Generador Formularios Produccion', 
                 XML(
                 '
                 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
@@ -303,7 +303,7 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
         <xsl:apply-templates />
     </xsl:template>
     
-    <xsl:template match="paso">
+    <xsl:template match="paso|actividad">
         <div class="widget-content row">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
@@ -640,7 +640,7 @@ VALUES (4, 'Generador Ver Paso de Protocolo',
         <xsl:apply-templates />
     </xsl:template>
     
-    <xsl:template match="paso">
+    <xsl:template match="paso|actividad">
         <div class="widget widget-table">
             <div class="widget-header">
                 <h3>

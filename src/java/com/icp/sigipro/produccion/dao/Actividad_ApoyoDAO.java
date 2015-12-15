@@ -6,9 +6,10 @@
 package com.icp.sigipro.produccion.dao;
 
 import com.icp.sigipro.core.DAO;
-import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
 import com.icp.sigipro.produccion.modelos.Categoria_AA;
 import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
+import com.icp.sigipro.produccion.modelos.Respuesta_AA;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLXML;
@@ -99,7 +100,81 @@ public class Actividad_ApoyoDAO extends DAO {
             consulta = getConexion().prepareStatement(" SELECT aa.*, haa.nombre as nombreaa, aa.version, c.id_categoria_aa, c.nombre as nombrec "
                     + "FROM produccion.actividad_apoyo as aa "
                     + "LEFT JOIN produccion.historial_actividad_apoyo as haa ON (haa.id_actividad = aa.id_actividad AND haa.version = aa.version) "
-                    + "LEFT JOIN produccion.categoria_aa ON (haa.id_categoria_aa = c.id_categoria_aa); ");
+                    + "LEFT JOIN produccion.categoria_aa as c ON (haa.id_categoria_aa = c.id_categoria_aa); ");
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Actividad_Apoyo actividad = new Actividad_Apoyo();
+                actividad.setId_actividad(rs.getInt("id_actividad"));
+                actividad.setAprobacion_calidad(rs.getBoolean("aprobacion_calidad"));
+                actividad.setAprobacion_coordinador(rs.getBoolean("aprobacion_coordinador"));
+                actividad.setAprobacion_direccion(rs.getBoolean("aprobacion_direccion"));
+                actividad.setAprobacion_regente(rs.getBoolean("aprobacion_regente"));
+                actividad.setNombre(rs.getString("nombreaa"));
+                actividad.setVersion(rs.getInt("version"));
+                Categoria_AA categoria = new Categoria_AA();
+                categoria.setId_categoria_aa(rs.getInt("id_categoria_aa"));
+                categoria.setNombre(rs.getString("nombrec"));
+                actividad.setCategoria(categoria);
+                resultado.add(actividad);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public List<Respuesta_AA> obtenerRespuestas(Actividad_Apoyo actividad) {
+        List<Respuesta_AA> resultado = new ArrayList<>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT raa.id_respuesta, raa.version as versionr,hraa.id_usuario_realizar,hraa.respuesta, u.nombre_completo, hraa.fecha, hraa.nombre "
+                    + "FROM produccion.respuesta_aa as raa "
+                    + "LEFT JOIN produccion.historial_respuesta_aa as hraa ON (hraa.id_respuesta = raa.id_respuesta and hraa.version = raa.version) "
+                    + "LEFT JOIN seguridad.usuarios as u ON (u.id_usuario = hraa.id_usuario_realizar) "
+                    + "WHERE raa.id_actividad = ?");
+            System.out.println(consulta);
+            consulta.setInt(1, actividad.getId_actividad());
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Respuesta_AA respuesta = new Respuesta_AA();
+                respuesta.setId_respuesta(rs.getInt("id_respuesta"));
+                respuesta.setRespuesta(rs.getSQLXML("respuesta"));
+                respuesta.setVersion(rs.getInt("versionr"));
+                respuesta.setNombre(rs.getString("nombre"));
+                respuesta.setFecha(rs.getTimestamp("fecha"));
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario_realizar"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                respuesta.setUsuario_realizar(usuario);
+                respuesta.setActividad(actividad);
+                resultado.add(respuesta);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public List<Actividad_Apoyo> obtenerActividades_Apoyo(int id_categoria_aa) {
+        List<Actividad_Apoyo> resultado = new ArrayList<Actividad_Apoyo>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT aa.*, haa.nombre as nombreaa, aa.version, c.id_categoria_aa, c.nombre as nombrec "
+                    + "FROM produccion.actividad_apoyo as aa "
+                    + "LEFT JOIN produccion.historial_actividad_apoyo as haa ON (haa.id_actividad = aa.id_actividad AND haa.version = aa.version) "
+                    + "LEFT JOIN produccion.categoria_aa as c ON (haa.id_categoria_aa = c.id_categoria_aa)"
+                    + "WHERE haa.id_categoria_aa = ?; ");
+            consulta.setInt(1, id_categoria_aa);
             rs = consulta.executeQuery();
             while (rs.next()) {
                 Actividad_Apoyo actividad = new Actividad_Apoyo();
@@ -134,7 +209,7 @@ public class Actividad_ApoyoDAO extends DAO {
             consulta = getConexion().prepareStatement(" SELECT aa.*, haa.nombre, haa.estructura, c.id_categoria_aa, c.nombre as nombrec   "
                     + "FROM produccion.actividad_apoyo as aa "
                     + "LEFT JOIN produccion.historial_actividad_apoyo as haa ON (haa.id_actividad = aa.id_actividad AND haa.version = aa.version) "
-                    + "LEFT JOIN produccion.categoria_aa ON (haa.id_categoria_aa = c.id_categoria_aa) "
+                    + "LEFT JOIN produccion.categoria_aa as c ON (haa.id_categoria_aa = c.id_categoria_aa) "
                     + "WHERE aa.id_actividad = ?; ");
             consulta.setInt(1, id_actividad);
             rs = consulta.executeQuery();
@@ -147,6 +222,7 @@ public class Actividad_ApoyoDAO extends DAO {
                 resultado.setAprobacion_coordinador(rs.getBoolean("aprobacion_coordinador"));
                 resultado.setAprobacion_direccion(rs.getBoolean("aprobacion_direccion"));
                 resultado.setAprobacion_regente(rs.getBoolean("aprobacion_regente"));
+                resultado.setObservaciones(rs.getString("observaciones"));
                 Categoria_AA categoria = new Categoria_AA();
                 categoria.setId_categoria_aa(rs.getInt("id_categoria_aa"));
                 categoria.setNombre(rs.getString("nombrec"));
@@ -267,7 +343,7 @@ public class Actividad_ApoyoDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public Actividad_Apoyo obtenerAprobaciones(int id_actividad) {
         Actividad_Apoyo resultado = new Actividad_Apoyo();
         PreparedStatement consulta = null;
@@ -292,7 +368,7 @@ public class Actividad_ApoyoDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean rechazarActividad_Apoyo(int id_actividad, String observaciones) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -353,4 +429,214 @@ public class Actividad_ApoyoDAO extends DAO {
         return resultado;
     }
 
+    public int obtenerVersionRespuesta(int id_historial) {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_respuesta_aa WHERE id_historial=?; ");
+            consulta.setInt(1, id_historial);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean insertarRespuesta(Respuesta_AA respuesta) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            //Inserta la respuesta general
+            consulta = getConexion().prepareStatement(" INSERT INTO produccion.respuesta_aa (id_actividad, version) "
+                    + " VALUES (?,1) RETURNING id_respuesta");
+            consulta.setInt(1, respuesta.getActividad().getId_actividad());
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                respuesta.setId_respuesta(rs.getInt("id_respuesta"));
+                //Inserta la version 1 de la respuesta
+                consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_respuesta_aa (id_respuesta, respuesta, version,id_usuario_realizar,nombre,fecha) "
+                        + " VALUES (?,?,1,?,?,?) RETURNING id_historial");
+                SQLXML xmlVal = getConexion().createSQLXML();
+                xmlVal.setString(respuesta.getRespuestaString());
+                consulta.setInt(1, respuesta.getId_respuesta());
+                consulta.setSQLXML(2, xmlVal);
+                consulta.setInt(3, respuesta.getUsuario_realizar().getId_usuario());
+                consulta.setString(4, respuesta.getNombre());
+                consulta.setTimestamp(5, respuesta.getFecha());
+                rs = consulta.executeQuery();
+                if (rs.next()) {
+                    resultado = true;
+                    respuesta.setId_historial(rs.getInt("id_historial"));
+
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean repetirRespuesta(Respuesta_AA respuesta) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            //Inserta la respuesta general
+            consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_respuesta_aa (id_respuesta, respuesta,id_usuario_realizar, version, nombre, fecha) "
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_historial");
+            consulta.setInt(1, respuesta.getId_respuesta());
+            SQLXML xmlVal = getConexion().createSQLXML();
+            xmlVal.setString(respuesta.getRespuestaString());
+            consulta.setSQLXML(2, xmlVal);
+            consulta.setInt(3, respuesta.getUsuario_realizar().getId_usuario());
+            consulta.setInt(4, respuesta.getVersion() + 1);
+            consulta.setString(5, respuesta.getNombre());
+            consulta.setTimestamp(6, respuesta.getFecha());
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                respuesta.setId_historial(rs.getInt("id_historial"));
+                resultado = true;
+                //Inserta la version 1 de la respuesta
+                consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_aa "
+                        + "SET version = ? "
+                        + "WHERE id_respuesta = ?; ");
+                consulta.setInt(1, respuesta.getVersion() + 1);
+                consulta.setInt(2, respuesta.getId_respuesta());
+                if (consulta.executeUpdate() == 1) {
+                    resultado = true;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public Respuesta_AA obtenerRespuesta(int id_respuesta) {
+        Respuesta_AA resultado = new Respuesta_AA();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT r.id_respuesta, r.version, r.id_actividad, hr.nombre,hr.respuesta, hr.id_usuario_realizar, u.nombre_completo, hr.fecha "
+                    + "FROM produccion.respuesta_aa as r "
+                    + "LEFT JOIN produccion.historial_respuesta_aa as hr ON (hr.id_respuesta = r.id_respuesta AND hr.version = r.version) "
+                    + "LEFT JOIN seguridad.usuarios as u ON (hr.id_usuario_realizar = u.id_usuario) "
+                    + "WHERE r.id_respuesta=?; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_respuesta(rs.getInt("id_respuesta"));
+                resultado.setVersion(rs.getInt("version"));
+                resultado.setFecha(rs.getTimestamp("fecha"));
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario_realizar"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                resultado.setUsuario_realizar(usuario);
+                resultado.setNombre(rs.getString("nombre"));
+                resultado.setRespuesta(rs.getSQLXML("respuesta"));
+                Actividad_Apoyo actividad = new Actividad_Apoyo();
+                actividad.setId_actividad(rs.getInt("id_actividad"));
+                resultado.setActividad(actividad);
+
+                consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.version "
+                        + "FROM produccion.historial_respuesta_aa as h "
+                        + "WHERE h.id_respuesta = ?; ");
+                consulta.setInt(1, resultado.getId_respuesta());
+
+                rs = consulta.executeQuery();
+                resultado.setHistorial(new ArrayList<Respuesta_AA>());
+                while (rs.next()) {
+                    Respuesta_AA r = new Respuesta_AA();
+                    r.setId_historial(rs.getInt("id_historial"));
+                    r.setVersion(rs.getInt("version"));
+                    resultado.getHistorial().add(r);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public Respuesta_AA obtenerHistorialRespuesta(int id_historial) {
+        Respuesta_AA resultado = new Respuesta_AA();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT r.id_respuesta, r.version, r.id_actividad, hr.nombre,hr.respuesta, ht.id_usuario_realizar, u.nombre_completo, hr.fecha "
+                    + "FROM produccion.historial_respuesta_aa as hr  "
+                    + "LEFT JOIN produccion.respuesta_aa as r ON (hr.id_respuesta = r.id_respuesta AND hr.version = r.version) "
+                    + "LEFT JOIN seguridad.usuarios as u ON (hr.id_usuario_realizar = u.id_usuario) "
+                    + "WHERE hr.id_historial=?; ");
+            consulta.setInt(1, id_historial);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_historial(id_historial);
+                resultado.setId_respuesta(rs.getInt("id_respuesta"));
+                resultado.setVersion(rs.getInt("version"));
+                resultado.setFecha(rs.getTimestamp("fecha"));
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                resultado.setUsuario_realizar(usuario);
+                resultado.setNombre(rs.getString("nombre"));
+                resultado.setRespuesta(rs.getSQLXML("respuesta"));
+                Actividad_Apoyo actividad = new Actividad_Apoyo();
+                actividad.setId_actividad(rs.getInt("id_actividad"));
+                resultado.setActividad(actividad);
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean activarVersionRespuesta(int version, int id_respuesta) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_aa "
+                    + "SET version=? "
+                    + "WHERE id_respuesta= ?; ");
+            consulta.setInt(1, version);
+            consulta.setInt(2, id_respuesta);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
 }
