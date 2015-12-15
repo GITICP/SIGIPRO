@@ -61,7 +61,6 @@ $(function () {
     $.each(actividades, function(index, element){
         $(element).on("change",generar_link_aa);
         var id = $(element).prop("id").split("_")[1];
-        alert(id);
         $.ajax({
             url: "/SIGIPRO/Produccion/Actividad_Apoyo",
             type: "GET",
@@ -158,7 +157,6 @@ function generar_select_usuarios(datos,element) {
 }
 
 function generar_select_actividades(datos,element) {
-    alert("Aqui");
     $(element).append("<option value=\"\"></option>");
     for (var i = 0; i < datos.length; i++) {
         var elemento = datos[i];
