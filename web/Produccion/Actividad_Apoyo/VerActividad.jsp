@@ -79,7 +79,7 @@
                                             </c:if>
                                         </c:otherwise>
                                     </c:choose>
-                                    <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=ver&id_actividad=${actividad.getId_actividad()}">Ver</a>            
+                                    <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=ver&id_actividad=${actividad.getId_actividad()}">Ver Actividad de Apoyo</a>            
                                 </div>
                             </c:if>
                         </div>

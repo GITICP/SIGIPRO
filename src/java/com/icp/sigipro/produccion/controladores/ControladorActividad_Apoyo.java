@@ -453,7 +453,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
         respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
-        if (!respuesta.getActividad().isAprobacion_direccion()) {
+        if (respuesta.getActividad().isAprobacion_direccion()) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
