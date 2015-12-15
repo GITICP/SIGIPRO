@@ -108,7 +108,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
-            add("agregareditar");
+            add("agregar");
+            add("editar");
             add("realizar");
             add("repetir");
             add("rechazar");
@@ -203,8 +204,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
 
     }
-    
-    protected void getVeractividad(HttpServletRequest request, HttpServletResponse response,int id_actividad) throws ServletException, IOException {
+
+    protected void getVeractividad(HttpServletRequest request, HttpServletResponse response, int id_actividad) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerActividad.jsp";
         Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
@@ -239,7 +240,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getActivarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(676, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
@@ -268,7 +269,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getVerhistorialrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerHistorialRespuesta.jsp";
@@ -294,7 +295,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getVerrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerRespuesta.jsp";
@@ -418,7 +419,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getActividadesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("application/json");
@@ -503,36 +504,41 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
+    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
 
         Actividad_Apoyo aa = construirObjeto(parametros, request);
-        if (aa.getId_actividad() == 0) {
-            resultado = dao.insertarActividad_Apoyo(aa);
-            if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo agregada correctamente"));
-                //Funcion que genera la bitacora
-                bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
-                //*----------------------------*
-                this.getIndex(request, response);
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser agregado. Inténtelo de nuevo."));
-                this.getAgregar(request, response);
-            }
+        resultado = dao.insertarActividad_Apoyo(aa);
+        if (resultado) {
+            request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo agregada correctamente"));
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+            //*----------------------------*
+            this.getIndex(request, response);
         } else {
-            resultado = dao.editarActividad_Apoyo(aa);
-            if (resultado) {
-                //Funcion que genera la bitacora
-                bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
-                //*----------------------------*
-                request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo editada correctamente"));
-                this.getIndex(request, response);
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));
-                request.setAttribute("id_actividad", aa.getId_actividad());
-                this.getIndex(request, response);
-            }
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser agregado. Inténtelo de nuevo."));
+            this.getAgregar(request, response);
         }
+
+    }
+
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
+        boolean resultado = false;
+
+        Actividad_Apoyo aa = construirObjeto(parametros, request);
+        resultado = dao.editarActividad_Apoyo(aa);
+        if (resultado) {
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo editada correctamente"));
+            this.getIndex(request, response);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));
+            request.setAttribute("id_actividad", aa.getId_actividad());
+            this.getIndex(request, response);
+        }
+
     }
 
     protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -578,11 +584,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada. Le faltan otras aprobaciones para estar validado."));
             }
-            this.getVeractividad(request, response,aa.getId_actividad());
+            this.getVeractividad(request, response, aa.getId_actividad());
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada."));
-            this.getVeractividad(request, response,aa.getId_actividad());
+            this.getVeractividad(request, response, aa.getId_actividad());
         }
 
     }
@@ -859,7 +865,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     }
 
-  // </editor-fold>
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Actividad_Apoyo construirObjeto(List<FileItem> items, HttpServletRequest request) {
         Actividad_Apoyo aa = new Actividad_Apoyo();
