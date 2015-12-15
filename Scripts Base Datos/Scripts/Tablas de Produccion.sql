@@ -322,6 +322,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 --Menu de Protocolos
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (610, 600, 'Protocolo', null, 1);
+
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (611, 610, 'Pasos', '/Produccion/Paso', 1);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (612, 610, 'Protocolos', '/Produccion/Protocolo', 2);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (613, 610, 'Lotes', '/Produccion/Lote', 3);
@@ -329,10 +330,12 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (620, 600, 'Catálogos', null, 2);
+
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (621, 620, 'Fórmula Maestra', '/Produccion/Formula_Maestra', 1);
 
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (630, 600, 'Actividad de Apoyo', null, 3);
+
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (632, 630, 'Actividades de Apoyo', '/Produccion/Actividad_Apoyo', 2);
 
 
@@ -345,3 +348,32 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (605, 605);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (606, 606);
 
+
+--Permisos del menu de la parte de Protocolo
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (635, 621);
+
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (650, 611);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (651, 611);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (640, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (641, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (642, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (643, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (644, 612);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (645, 612);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (660, 613);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (661, 613);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (662, 613);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (663, 613);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (630, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (670, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (671, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (672, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (673, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (674, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (675, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (676, 632);
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (677, 632);
