@@ -7,9 +7,6 @@ package com.icp.sigipro.produccion.controladores;
 
 import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.controlcalidad.modelos.Analisis;
-import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
-import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
@@ -22,9 +19,7 @@ import com.icp.sigipro.produccion.modelos.Protocolo;
 import com.icp.sigipro.produccion.modelos.Respuesta_pxp;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.utilidades.HelperExcel;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -158,7 +153,7 @@ public class ControladorLote extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getVer(HttpServletRequest request, HttpServletResponse response, int id_lote) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Lote/Ver.jsp";
@@ -196,7 +191,7 @@ public class ControladorLote extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void getVerhistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Lote/VerHistorial.jsp";
@@ -477,6 +472,12 @@ public class ControladorLote extends SIGIPROServlet {
                                 nodo_valor.setTextContent(valor_cantidad);
                             }
                             break;
+                        case ("aa"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(valor);
+                            break;
                         default:
                             nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
@@ -593,6 +594,12 @@ public class ControladorLote extends SIGIPROServlet {
                                 nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
                                 nodo_valor.setTextContent(valor_cantidad);
                             }
+                            break;
+                        case ("aa"):
+                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(valor);
                             break;
                         default:
                             nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();

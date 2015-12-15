@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.produccion.controladores;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
@@ -25,6 +26,7 @@ import com.icp.sigipro.utilidades.HelperTransformaciones;
 import com.icp.sigipro.utilidades.HelperXML;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -101,6 +103,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             add("activar");
             add("activarrespuesta");
             add("repetir");
+            add("actividadesajax");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -413,6 +416,30 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             this.getIndex(request, response);
         }
 
+    }
+    
+    protected void getActividadesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("application/json");
+
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+
+        try {
+            List<Respuesta_AA> respuestas = dao.obtenerRespuestasAjax(id_actividad);
+            System.out.println(respuestas);
+            Gson gson = new Gson();
+            resultado = gson.toJson(respuestas);
+
+        } catch (Exception sig_ex) {
+            // Enviar error al AJAX
+        }
+
+        out.print(resultado);
+
+        out.flush();
     }
 
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

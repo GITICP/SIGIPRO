@@ -163,6 +163,36 @@ public class Actividad_ApoyoDAO extends DAO {
         }
         return resultado;
     }
+    
+    public List<Respuesta_AA> obtenerRespuestasAjax(int id_actividad) {
+        List<Respuesta_AA> resultado = new ArrayList<>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT raa.id_respuesta, hraa.nombre, hraa.fecha "
+                    + "FROM produccion.respuesta_aa as raa "
+                    + "LEFT JOIN produccion.historial_respuesta_aa as hraa ON (hraa.id_respuesta = raa.id_respuesta and hraa.version = raa.version) "
+                    + "LEFT JOIN seguridad.usuarios as u ON (u.id_usuario = hraa.id_usuario_realizar) "
+                    + "WHERE raa.id_actividad = ?");
+            System.out.println(consulta);
+            consulta.setInt(1, id_actividad);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Respuesta_AA respuesta = new Respuesta_AA();
+                respuesta.setId_respuesta(rs.getInt("id_respuesta"));
+                respuesta.setNombre(rs.getString("nombre"));
+                respuesta.setFecha(rs.getTimestamp("fecha"));
+                resultado.add(respuesta);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
 
     public List<Actividad_Apoyo> obtenerActividades_Apoyo(int id_categoria_aa) {
         List<Actividad_Apoyo> resultado = new ArrayList<Actividad_Apoyo>();
