@@ -564,8 +564,7 @@ public class LoteDAO extends DAO {
                 resultado.setPaso_actual(p);
                 consulta = getConexion().prepareStatement("SELECT pxp.id_pxp, pxp.id_paso, pxp.posicion, pxp.requiere_ap, pxp.version as versionpxp, h.nombre, r.id_respuesta, r.id_usuario_aprobar, ua.nombre_completo as nombre_aprobar, hr.id_usuario_realizar, ur.nombre_completo as nombre_realizar, hr.version as versionr "
                         + "FROM produccion.paso_protocolo as pxp "
-                        + "LEFT JOIN produccion.protocolo as pro "
-                        + "ON (pro.id_protocolo = pxp.id_protocolo and pxp.version = pro.version) "
+                        + "LEFT JOIN produccion.protocolo as pro ON (pro.id_protocolo = pxp.id_protocolo and pxp.version = pro.version) "
                         + "LEFT JOIN produccion.paso as p ON pxp.id_paso = p.id_paso "
                         + "LEFT JOIN produccion.historial_paso as h ON (h.id_paso = p.id_paso and h.version = p.version) "
                         + "LEFT JOIN produccion.lote as l ON (l.id_protocolo = pro.id_protocolo) "
@@ -655,6 +654,7 @@ public class LoteDAO extends DAO {
             consulta = getConexion().prepareStatement(" SELECT pxp.id_paso, h.nombre, h.estructura  "
                     + "FROM produccion.paso_protocolo as pxp "
                     + "LEFT JOIN produccion.paso as p ON pxp.id_paso = p.id_paso "
+                    + "RIGHT JOIN produccion.protocolo as pro ON (pxp.id_protocolo = pro.id_protocolo AND pxp.version = pro.version) "
                     + "LEFT JOIN produccion.historial_paso as h ON (h.id_paso = p.id_paso and h.version = p.version) "
                     + "LEFT JOIN produccion.lote as l ON l.id_protocolo = pxp.id_protocolo "
                     + "WHERE pxp.posicion=l.posicion_actual and l.id_lote = ?; ");
