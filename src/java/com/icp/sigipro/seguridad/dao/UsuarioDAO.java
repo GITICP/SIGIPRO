@@ -8,6 +8,7 @@ package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.produccion.modelos.Categoria_AA;
 import com.icp.sigipro.seguridad.modelos.*;
 import com.icp.sigipro.utilidades.UtilidadEmail;
 import java.math.BigInteger;
@@ -130,6 +131,34 @@ public class UsuarioDAO extends DAO
                 cerrarSilencioso(consultaContrasena);
                 cerrarSilencioso(conexion);
             }
+        }
+        return resultado;
+    }
+    
+    public List<Usuario> obtenerUsuariosProduccion(int id_seccion)
+    {
+        List<Usuario> resultado = new ArrayList<Usuario>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT id_usuario, nombre_completo "
+                    + "FROM seguridad.usuarios "
+                    + "WHERE id_seccion = ?; ");
+            consulta.setInt(1, id_seccion);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId_usuario(rs.getInt("id_usuario"));
+                usuario.setNombre_completo(rs.getString("nombre_completo"));
+                resultado.add(usuario);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
         return resultado;
     }

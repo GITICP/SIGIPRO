@@ -150,6 +150,7 @@
                     <div class="input-group {$nombre-campo}">
                         <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
                         <div class="ver">
+                            <a>Ver Sangría</a>
                         </div>      
                     </div>
                 </div>
@@ -200,6 +201,7 @@
                     <div class="input-group {$nombre-campo}">
                         <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select> 
                         <div class="ver">
+                            <a>Ver Solicitud</a>
                         </div>         
                     </div>
                 </div>

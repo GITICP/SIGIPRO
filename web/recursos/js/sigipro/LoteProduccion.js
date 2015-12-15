@@ -10,6 +10,9 @@ $(function () {
             dataType: "json",
             success: function (datos) {
                 generar_select_sangria(datos,element);
+            },
+            error: function(){
+                alert("Error");
             }
         });
     });
@@ -25,6 +28,9 @@ $(function () {
             dataType: "json",
             success: function (datos) {
                 generar_select_cc(datos,element);
+            },
+            error: function(){
+                alert("Error");
             }
         });
        
@@ -42,6 +48,9 @@ $(function () {
             dataType: "json",
             success: function (datos) {
                 generar_select_usuarios(datos,element);
+            },
+            error: function(){
+                alert("Error");
             }
         });
        
@@ -59,11 +68,23 @@ $(function () {
             dataType: "json",
             success: function (datos) {
                 generar_select_subbodegas(datos,element);
+            },
+            error: function(){
+                alert("Error");
             }
         });
        
     });
     
+});
+
+$(document).on("click", ".aprobar-Modal", function () {
+    var id_lote = $(this).data('id');
+    var id_respuesta_actual = $(this).data('respuesta'); 
+    var posicion_actual = $(this).data('posicion')
+    $('#class-aprobar-paso #id_lote').val(id_lote);
+    $("#class-aprobar-paso #id_respuesta_actual").val(id_respuesta_actual);
+    $("#class-aprobar-paso #posicion_actual").val(posicion_actual);
 });
 
 function generar_select_sangria(datos,element) {

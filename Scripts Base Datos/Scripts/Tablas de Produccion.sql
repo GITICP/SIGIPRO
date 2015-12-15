@@ -145,6 +145,8 @@ CREATE TABLE produccion.historial_paso(
     aprobacion_direccion boolean NOT NULL,
     aprobacion_regente boolean NOT NULL,
     aprobacion_coordinador boolean NOT NULL,
+    observaciones character varying(200),
+    version int NOT NULL,
     CONSTRAINT pk_actividada PRIMARY KEY (id_actividad)
 );
 
@@ -281,6 +283,25 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (604, 600, 'Inoculo', '/Produccion/Inoculo'); 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (605, 600, 'Venenos de Produccion', '/Produccion/Veneno_Produccion');
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (606, 600, 'Catalogo de Producto T.', '/Produccion/Catalogo_PT');
+
+
+
+--Menu de Protocolos
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (610, 600, 'Protocolo', null, 1);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (611, 610, 'Pasos', '/Produccion/Paso', 1);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (612, 610, 'Protocolos', '/Produccion/Protocolo', 2);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (613, 610, 'Lotes', '/Produccion/Lote', 3);
+
+
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (620, 600, 'Catálogos', null, 2);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (621, 620, 'Fórmula Maestra', '/Produccion/Formula_Maestra', 1);
+
+
+
+
+
 
 --Permisos del menu principal de produccion
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (602, 602);

@@ -130,7 +130,7 @@
 <t:modal idModal="modalAprobarProtocolo" titulo="Aprobar Protocolo de Producción">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-aprobar-protocolo">
-            <form class="form-horizontal" id="aprobarProtocolo" autocomplete="off" method="get" action="Protocolo">
+            <form class="form-horizontal" id="aprobarProtocolo" autocomplete="off" method="post" action="Protocolo">
                 <input hidden="true" name="accion" value="Aprobar">
                 <input hidden="true" id='id_protocolo' name='id_protocolo' value="">
                 <input hidden="true" id='actor' name='actor' value="">

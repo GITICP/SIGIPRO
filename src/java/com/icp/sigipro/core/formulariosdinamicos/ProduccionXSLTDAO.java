@@ -28,6 +28,10 @@ public class ProduccionXSLTDAO extends DAO {
         return obtenerProduccionXSLT(4);
     }
     
+    public ProduccionXSLT obtenerProduccionXSLTVerResultado() throws SIGIPROException {
+        return obtenerProduccionXSLT(2);
+    }
+    
     public ProduccionXSLT obtenerProduccionXSLT(int id_produccion) throws SIGIPROException{
         
         ProduccionXSLT resultado = new ProduccionXSLT();

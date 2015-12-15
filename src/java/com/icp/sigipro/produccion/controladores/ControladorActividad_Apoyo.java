@@ -12,8 +12,10 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLTDAO;
-import com.icp.sigipro.produccion.dao.PasoDAO;
-import com.icp.sigipro.produccion.modelos.Paso;
+import com.icp.sigipro.produccion.dao.Actividad_ApoyoDAO;
+import com.icp.sigipro.produccion.dao.Categoria_AADAO;
+import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
+import com.icp.sigipro.produccion.modelos.Protocolo;
 import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
@@ -44,22 +46,23 @@ import org.xml.sax.SAXException;
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorPaso", urlPatterns = {"/Produccion/Paso"})
-public class ControladorPaso extends SIGIPROServlet {
+@WebServlet(name = "ControladorActividad_Apoyo", urlPatterns = {"/Produccion/Actividad_Apoyo"})
+public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
-    //CRUD, Activar
-    private final int[] permisos = {650, 651};
+    //CRUD, Activar, Aprobaciones (4)
+    private final int[] permisos = {670, 671, 672, 673, 674, 675};
     //-----------------
-    private final PasoDAO dao = new PasoDAO();
+    private final Actividad_ApoyoDAO dao = new Actividad_ApoyoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
     private final SubBodegaDAO subbodegadao = new SubBodegaDAO();
     private final SeccionDAO secciondao = new SeccionDAO();
+    private final Categoria_AADAO categoriadao = new Categoria_AADAO();
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
 
     private int nombre_campo;
 
-    protected final Class clase = ControladorPaso.class;
+    protected final Class clase = ControladorActividad_Apoyo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
@@ -75,6 +78,9 @@ public class ControladorPaso extends SIGIPROServlet {
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregareditar");
+            add("realizar");
+            add("rechazar");
+            add("aprobar");
         }
     };
 
@@ -82,12 +88,13 @@ public class ControladorPaso extends SIGIPROServlet {
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         validarPermiso(650, request);
 
-        String redireccion = "Paso/Agregar.jsp";
-        Paso p = new Paso();
-        request.setAttribute("paso", p);
+        String redireccion = "Actividad_Apoyo/Agregar.jsp";
+        Actividad_Apoyo aa = new Actividad_Apoyo();
+        request.setAttribute("actividad", aa);
         request.setAttribute("accion", "Agregar");
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
+        request.setAttribute("listaCategorias", categoriadao.obtenerCategorias_AA());
         request.setAttribute("orden", "");
         request.setAttribute("cantidad", 0);
         request.setAttribute("contador", 0);
@@ -96,29 +103,29 @@ public class ControladorPaso extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
-        String redireccion = "Paso/index.jsp";
-        List<Paso> pasos = dao.obtenerPasos();
-        request.setAttribute("listaPasos", pasos);
+        String redireccion = "Actividad_Apoyo/index.jsp";
+        List<Actividad_Apoyo> actividades = dao.obtenerActividades_Apoyo();
+        request.setAttribute("listaActividades", actividades);
         redireccionar(request, response, redireccion);
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
-        String redireccion = "Paso/Ver.jsp";
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
+        String redireccion = "Actividad_Apoyo/Ver.jsp";
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         ProduccionXSLT xslt;
-        Paso p;
+        Actividad_Apoyo aa;
 
         try {
-            p = dao.obtenerPaso(id_paso);
+            aa = dao.obtenerActividad_Apoyo(id_actividad);
             xslt = produccionxsltdao.obtenerProduccionXSLTVerFormulario();
-            if (p.getEstructura() != null) {
-                String formulario = helper_transformaciones.transformar(xslt, p.getEstructura());
+            if (aa.getEstructura() != null) {
+                String formulario = helper_transformaciones.transformar(xslt, aa.getEstructura());
                 request.setAttribute("cuerpo_datos", formulario);
             } else {
                 request.setAttribute("cuerpo_datos", null);
             }
-            request.setAttribute("paso", p);
+            request.setAttribute("actividad", aa);
             redireccionar(request, response, redireccion);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
@@ -129,21 +136,21 @@ public class ControladorPaso extends SIGIPROServlet {
 
     protected void getVerhistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
-        String redireccion = "Paso/VerHistorial.jsp";
+        String redireccion = "Actividad_Apoyo/VerHistorial.jsp";
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
         ProduccionXSLT xslt;
-        Paso p;
+        Actividad_Apoyo aa;
 
         try {
-            p = dao.obtenerHistorial(id_historial);
+            aa = dao.obtenerHistorial(id_historial);
             xslt = produccionxsltdao.obtenerProduccionXSLTVerFormulario();
-            if (p.getEstructura() != null) {
-                String formulario = helper_transformaciones.transformar(xslt, p.getEstructura());
+            if (aa.getEstructura() != null) {
+                String formulario = helper_transformaciones.transformar(xslt, aa.getEstructura());
                 request.setAttribute("cuerpo_datos", formulario);
             } else {
                 request.setAttribute("cuerpo_datos", null);
             }
-            request.setAttribute("paso", p);
+            request.setAttribute("actividad", aa);
             redireccionar(request, response, redireccion);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
@@ -153,41 +160,41 @@ public class ControladorPaso extends SIGIPROServlet {
     }
 
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(650, request);
+        validarPermiso(671, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         int version = dao.obtenerVersion(id_historial);
         boolean resultado = false;
         try {
-            resultado = dao.activarVersion(version, id_paso);
+            resultado = dao.activarVersion(version, id_actividad);
             if (resultado) {
                 //Funcion que genera la bitacora 
-                Paso paso = new Paso();
-                paso.setId_historial(id_historial);
-                paso.setId_paso(id_paso);
-                paso.setVersion(version);
-                bitacora.setBitacora(paso.parseJSON(), Bitacora.ACCION_ACTIVAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PASO, request.getRemoteAddr());
+                Actividad_Apoyo actividad = new Actividad_Apoyo();
+                actividad.setId_historial(id_historial);
+                actividad.setId_actividad(id_actividad);
+                actividad.setVersion(version);
+                bitacora.setBitacora(actividad.parseJSON(), Bitacora.ACCION_ACTIVAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
                 //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Versión de Paso activado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Versión de Actividad de Apoyo activada correctamente"));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Versión de Paso no pudo ser activado."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Versión de Actividad de Apoyo no pudo ser activada."));
             }
             this.getIndex(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Versión de paso no pudo ser activado."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Versión de Actividad de Apoyo no pudo ser activado."));
             this.getIndex(request, response);
         }
 
     }
 
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
-        validarPermiso(650, request);
-        String redireccion = "Paso/Editar.jsp";
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
-        Paso p = dao.obtenerPaso(id_paso);
+        validarPermiso(670, request);
+        String redireccion = "Actividad_Apoyo/Editar.jsp";
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        Actividad_Apoyo aa = dao.obtenerActividad_Apoyo(id_actividad);
 
-        HelperXML xml = new HelperXML(p.getEstructura(), "produccion");
+        HelperXML xml = new HelperXML(aa.getEstructura(), "produccion");
 
         HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
 
@@ -213,38 +220,38 @@ public class ControladorPaso extends SIGIPROServlet {
         List<SubBodega> subbodegas = subbodegadao.obtenerSubBodegas();
         List<Seccion> secciones = secciondao.obtenerSecciones();
 
-        request.setAttribute("paso", p);
+        request.setAttribute("actividad", aa);
         request.setAttribute("lista", lista);
         request.setAttribute("contador", lista.size());
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegas));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciones));
+        request.setAttribute("listaCategorias", categoriadao.obtenerCategorias_AA());
         request.setAttribute("subbodegas", subbodegas);
         request.setAttribute("secciones", secciones);
         request.setAttribute("cantidad", cantidad);
         request.setAttribute("diccionario", diccionario_formulario);
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
-
     }
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(650, request);
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
+        validarPermiso(670, request);
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         boolean resultado = false;
         try {
-            resultado = dao.eliminarPaso(id_paso);
+            resultado = dao.eliminarActividad_Apoyo(id_actividad);
             if (resultado) {
                 //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_paso, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PASO, request.getRemoteAddr());
+                bitacora.setBitacora(id_actividad, Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
                 //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo eliminado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo eliminada correctamente"));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser eliminado ya que tiene protocolos asociados."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser eliminado ya que tiene referencias asociados."));
             }
             this.getIndex(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser eliminado ya que tiene protocolos asociados."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser eliminado ya que tiene referencias asociados."));
             this.getIndex(request, response);
         }
 
@@ -252,24 +259,24 @@ public class ControladorPaso extends SIGIPROServlet {
 
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(650, request);
-        String redireccion = "Paso/Realizar.jsp";
+        validarPermiso(670, request);
+        String redireccion = "Actividad_Apoyo/Realizar.jsp";
 
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
-        request.setAttribute("id_paso", id_paso);
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        request.setAttribute("id_actividad", id_actividad);
 
         ProduccionXSLT xslt;
-        Paso p;
+        Actividad_Apoyo aa;
 
         try {
             xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
-            p = dao.obtenerPaso(id_paso);
+            aa = dao.obtenerActividad_Apoyo(id_actividad);
 
-            String formulario = helper_transformaciones.transformar(xslt, p.getEstructura());
+            String formulario = helper_transformaciones.transformar(xslt, aa.getEstructura());
 
             request.setAttribute("cuerpo_formulario", formulario);
 
-            request.setAttribute("paso", p);
+            request.setAttribute("actividad", aa);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
@@ -283,39 +290,113 @@ public class ControladorPaso extends SIGIPROServlet {
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, SIGIPROException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
 
-        Paso p = construirObjeto(parametros, request);
-        if (p.getId_paso() == 0) {
-            resultado = dao.insertarPaso(p);
+        Actividad_Apoyo aa = construirObjeto(parametros, request);
+        if (aa.getId_actividad() == 0) {
+            resultado = dao.insertarActividad_Apoyo(aa);
             if (resultado) {
-                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo agregado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo agregada correctamente"));
                 //Funcion que genera la bitacora
-                bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PASO, request.getRemoteAddr());
+                bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
                 //*----------------------------*
                 this.getIndex(request, response);
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser agregado. Inténtelo de nuevo."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser agregado. Inténtelo de nuevo."));
                 this.getAgregar(request, response);
             }
         } else {
-            resultado = dao.editarPaso(p);
+            resultado = dao.editarActividad_Apoyo(aa);
             if (resultado) {
                 //Funcion que genera la bitacora
-                bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PASO, request.getRemoteAddr());
+                bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
                 //*----------------------------*
-                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo editado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo editada correctamente"));
                 this.getIndex(request, response);
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser editado. Inténtelo de nuevo."));
-                request.setAttribute("id_paso", p.getId_paso());
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));
+                request.setAttribute("id_actividad", aa.getId_actividad());
                 this.getIndex(request, response);
             }
+        }
+    }
+    
+    protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director
+        int actor = Integer.parseInt(request.getParameter("actor"));
+        Actividad_Apoyo aa = dao.obtenerAprobaciones(id_actividad);
+        boolean resultado = false;
+        try {
+            switch (actor) {
+                case 1:
+                    validarPermiso(672, request);
+                    resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
+                    aa.setAprobacion_calidad(true);
+                    break;
+                case 2:
+                    validarPermiso(673, request);
+                    if (aa.isAprobacion_calidad()) {
+                        resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
+                        aa.setAprobacion_regente(true);
+                    }
+                    break;
+                case 3:
+                    validarPermiso(674, request);
+                    if (aa.isAprobacion_calidad()) {
+                        resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
+                        aa.setAprobacion_coordinador(true);
+                    }
+                    break;
+                case 4:
+                    validarPermiso(675, request);
+                    if (aa.isAprobacion_calidad() && aa.isAprobacion_coordinador() && aa.isAprobacion_regente()) {
+                        resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
+                        aa.setAprobacion_direccion(true);
+                    }
+                    break;
+            }
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo aprobada correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada. Le faltan otras aprobaciones para estar validado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada."));
+            this.getIndex(request, response);
+        }
+
+    }
+
+    protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(670, request);
+        boolean resultado = false;
+        Actividad_Apoyo aa = new Actividad_Apoyo();
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        aa.setId_actividad(id_actividad);
+        String observaciones = request.getParameter("observaciones");
+        String actor = request.getParameter("actor");
+        aa.setObservaciones(observaciones + " - Rechazada por: " + actor);
+        resultado = dao.rechazarActividad_Apoyo(aa.getId_actividad(), aa.getObservaciones());
+        if (resultado) {
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_RECHAZAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo rechazada correctamente"));
+            this.getIndex(request, response);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser rechazada. Inténtelo de nuevo."));
+            this.getIndex(request, response);
         }
     }
   // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-    private Paso construirObjeto(List<FileItem> items, HttpServletRequest request) {
-        Paso p = new Paso();
+    private Actividad_Apoyo construirObjeto(List<FileItem> items, HttpServletRequest request) {
+        Actividad_Apoyo aa = new Actividad_Apoyo();
         //Se crea un diccionario con los elementos del Formulario Dinamico
         HashMap<Integer, HashMap> diccionario_formulario = new HashMap<Integer, HashMap>();
         //Variable donde se define el ID actual del campo o tabla del formulario
@@ -333,15 +414,15 @@ public class ControladorPaso extends SIGIPROServlet {
                 }
                 switch (fieldName) {
                     case "nombre":
-                        p.setNombre(fieldValue);
+                        aa.setNombre(fieldValue);
                         break;
-                    case "id_paso":
-                        int id_paso = Integer.parseInt(fieldValue);
-                        p.setId_paso(id_paso);
+                    case "id_actividad":
+                        int id_actividad = Integer.parseInt(fieldValue);
+                        aa.setId_actividad(id_actividad);
                         break;
                     case "version":
                         int version = Integer.parseInt(fieldValue);
-                        p.setVersion(version);
+                        aa.setVersion(version);
                         break;
                     case "orden":
                         orden = fieldValue;
@@ -400,16 +481,16 @@ public class ControladorPaso extends SIGIPROServlet {
             System.out.println(diccionario_formulario);
             String xml = this.parseDictXML(diccionario_formulario, orden);
             System.out.println(xml);
-            p.setEstructuraString(xml);
+            aa.setEstructuraString(xml);
         }
-        return p;
+        return aa;
     }
 
     private String parseDictXML(HashMap<Integer, HashMap> diccionario_formulario, String orden) {
         this.nombre_campo = 1;
         //Se obtiene el orden de los campos
         String[] orden_formulario = orden.split(",");
-        HelperXML xml = new HelperXML("paso");
+        HelperXML xml = new HelperXML("actividad");
         //Se itera sobre los IDS del orden de los campos
         for (String i : orden_formulario) {
             if (!i.equals("")) {

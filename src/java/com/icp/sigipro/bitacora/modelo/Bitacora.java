@@ -88,6 +88,7 @@ public class Bitacora {
     public static final String TABLA_PASO = "PRODUCCION.PASO";
     public static final String TABLA_LOTEPRODUCCION = "PRODUCCION.LOTE";
     public static final String TABLA_RESPUESTAPXP = "PRODUCCION.RESPUESTA_PXP";
+    public static final String TABLA_ACTIVIDADAPOYO = "PRODUCCION.ACTIVIDAD_APOYO";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";
@@ -104,6 +105,7 @@ public class Bitacora {
     public static final String ACCION_RECIBIR = "RECIBIR";
     public static final String ACCION_RETIRAR = "RETIRAR";
     public static final String ACCION_ACTIVAR = "ACTIVAR";
+    public static final String ACCION_REPETIR = "REPETIR";
 
     public Bitacora() {
 
