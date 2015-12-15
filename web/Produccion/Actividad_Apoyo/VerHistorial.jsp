@@ -36,7 +36,7 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> ${actividad.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 671)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=activar&id_historial=${actividad.getId_historial()}&id_actividad=${actividad.getId_actividad()}">Activar</a>
                                 </c:if>
                             </div>

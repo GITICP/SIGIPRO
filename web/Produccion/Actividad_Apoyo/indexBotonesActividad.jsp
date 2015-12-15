@@ -60,21 +60,22 @@
 
                                 </div>
                             </c:forEach>
-                            <div class="col-md-2 widget-content">
-                                <a style="height:200px;
-                                   width:200px;
-                                   font-size: 20px;
-                                   position:relative;
-                                   text-align: center;
-                                   display:table-cell;
-                                   vertical-align:middle;
-                                   color:#fff;
-                                   background-color:#3071a9;
-                                   border-color:#285e8e;" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=agregar&id_categoria_aa=${categoria.getId_categoria_aa()}">
-                                    Agregar Nueva Actividad
-                                </a>
-
-                            </div>
+                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
+                                <div class="col-md-2 widget-content">
+                                    <a style="height:200px;
+                                       width:200px;
+                                       font-size: 20px;
+                                       position:relative;
+                                       text-align: center;
+                                       display:table-cell;
+                                       vertical-align:middle;
+                                       color:#fff;
+                                       background-color:#3071a9;
+                                       border-color:#285e8e;" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=agregar&id_categoria_aa=${categoria.getId_categoria_aa()}">
+                                        Agregar Nueva Actividad
+                                    </a>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                     <!-- END COLUMN FILTER DATA TABLE -->

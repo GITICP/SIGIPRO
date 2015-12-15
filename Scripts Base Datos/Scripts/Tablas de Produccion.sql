@@ -280,12 +280,33 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (607, '[p
 
 
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (630, '[produccion]AdministrarCategoriaAA', 'Permite agregar/editar/eliminar categorías de actividades de apoyo.');
+
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (635, '[produccion]AdministrarFormulaMaestra', 'Permite agregar/editar/eliminar fórmulas maestras.');
+
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (640, '[produccion]AdministrarProtocolo', 'Permite agregar/editar/eliminar protocolos de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (642, '[produccion]AprobarRegente', 'Permite a un regente farmacéutico aprobar o rechazar un protocolo de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (643, '[produccion]AprobarCoordinador', 'Permite al coordinador aprobar o rechazar un protocolo de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (644, '[produccion]AprobarDirector', 'Permite al director aprobar o rechazar un protocolo de producción.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (641, '[produccion]AprobarCalidad', 'Permite a control de calidad aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (641, '[produccion]AprobarCalidadProtocolo', 'Permite a control de calidad aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (642, '[produccion]AprobarRegenteProtocolo', 'Permite a un regente farmacéutico aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (643, '[produccion]AprobarCoordinadorProtocolo', 'Permite al coordinador aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (644, '[produccion]AprobarDirectorProtocolo', 'Permite al director aprobar o rechazar un protocolo de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (645, '[produccion]ActivarProtocolo', 'Permite activar versiones anteriores de un protocolo de producción.');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (650, '[produccion]AdministrarPaso', 'Permite agregar/editar/eliminar pasos de protocolos.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (651, '[produccion]ActivarPaso', 'Permite activar versiones anteriores de un paso de protocolo.');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (660, '[produccion]AdministrarLote', 'Permite agregar/editar/eliminar lotes de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (661, '[produccion]RealizarLote', 'Permite empezar a realizar los pasos del lote de producción.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (662, '[produccion]AprobarPaso', 'Permite aprobar los pasos de producción de un lote, cuando se requiera.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (663, '[produccion]ActivarRespuestaPaso', 'Permite activar versiones anteriores de una respuesta de paso de protocolo de un lote.');
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (670, '[produccion]AdministrarActividadApoyo', 'Permite agregar/editar/eliminar actividades de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (671, '[produccion]ActivarActividadApoyo', 'Permite activar versiones anteriores de una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (672, '[produccion]AprobarCalidadActividad', 'Permite a control de calidad aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (673, '[produccion]AprobarRegenteActividad', 'Permite a un regente farmacéutico aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (674, '[produccion]AprobarCoordinadorActividad', 'Permite al coordinador aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (675, '[produccion]AprobarDirectorActividad', 'Permite al director aprobar o rechazar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (676, '[produccion]ActivarRespuestaActividad', 'Permite activar versiones anteriores de una respuesta de actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (677, '[produccion]RealizarActividadApoyo', 'Permite empezar a realizar una actividad de apoyo.');
+
 
 
 --Entradas del Menu de produccion

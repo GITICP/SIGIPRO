@@ -65,8 +65,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorLote", urlPatterns = {"/Produccion/Lote"})
 public class ControladorLote extends SIGIPROServlet {
 
-    //CRUD, Realizar, Aprobar
-    private final int[] permisos = {660, 661, 662};
+    //CRUD, Realizar, Aprobar, Activar Respuesta
+    private final int[] permisos = {660, 661, 662, 663};
     //-----------------
     private final LoteDAO dao = new LoteDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -131,7 +131,7 @@ public class ControladorLote extends SIGIPROServlet {
     }
 
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
+        validarPermiso(663, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         int version = dao.obtenerVersion(id_historial);

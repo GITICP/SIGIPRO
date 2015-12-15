@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorFormula_Maestra", urlPatterns = {"/Produccion/Formula_Maestra"})
 public class ControladorFormula_Maestra extends SIGIPROServlet {
 
-    //Falta implementar
+    //CRUD
     private final int[] permisos = {635};
     //-----------------
     private final Formula_MaestraDAO dao = new Formula_MaestraDAO();

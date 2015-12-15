@@ -37,6 +37,9 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} - Versión ${respuesta.getVersion()}  </h3>
+                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 676)}">
+                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=activarrespuesta&id_historial=${respuesta.getId_historial()}&id_respuesta=${respuesta.getId_respuesta()}">Activar</a>
+                            </c:if>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

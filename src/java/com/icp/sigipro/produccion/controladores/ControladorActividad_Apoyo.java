@@ -69,8 +69,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorActividad_Apoyo", urlPatterns = {"/Produccion/Actividad_Apoyo"})
 public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
-    //CRUD, Activar, Aprobaciones (4)
-    private final int[] permisos = {670, 671, 672, 673, 674, 675};
+    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad
+    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677};
     //-----------------
     private final Actividad_ApoyoDAO dao = new Actividad_ApoyoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -115,7 +115,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
-        validarPermiso(650, request);
+        validarPermiso(670, request);
 
         String redireccion = "Actividad_Apoyo/Agregar.jsp";
         Actividad_Apoyo aa = new Actividad_Apoyo();
@@ -238,7 +238,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
     
     protected void getActivarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
+        validarPermiso(676, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         int version = dao.obtenerVersionRespuesta(id_historial);
@@ -416,7 +416,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(670, request);
+        validarPermiso(677, request);
         String redireccion = "Actividad_Apoyo/Realizar.jsp";
 
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
@@ -447,7 +447,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     protected void getRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(670, request);
+        validarPermiso(677, request);
         String redireccion = "Actividad_Apoyo/Repetir.jsp";
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));

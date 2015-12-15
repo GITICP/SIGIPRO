@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorCategoria_AA", urlPatterns = {"/Produccion/Categoria_AA"})
 public class ControladorCategoria_AA extends SIGIPROServlet {
 
-    //Falta implementar
+    //CRUD
     private final int[] permisos = {630};
     //-----------------
     private final Categoria_AADAO dao = new Categoria_AADAO();

@@ -52,7 +52,9 @@
                                                             </c:if>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=realizar&id_actividad=${actividad.getId_actividad()}">Realizar</a>
+                                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
+                                                                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=realizar&id_actividad=${actividad.getId_actividad()}">Realizar</a>
+                                                            </c:if>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </c:when>
@@ -117,8 +119,9 @@
                                                 ${respuesta.getUsuario_realizar().getNombre_completo()}
                                             </td>
                                             <td>
-                                                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
-
+                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
+                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>

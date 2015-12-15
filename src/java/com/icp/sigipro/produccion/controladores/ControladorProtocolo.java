@@ -159,7 +159,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
     }
     
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
+        validarPermiso(645, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
         int version = dao.obtenerVersion(id_historial);
@@ -281,7 +281,6 @@ public class ControladorProtocolo extends SIGIPROServlet {
     }
 
     protected void postRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(640, request);
         boolean resultado = false;
         Protocolo p = new Protocolo();
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));

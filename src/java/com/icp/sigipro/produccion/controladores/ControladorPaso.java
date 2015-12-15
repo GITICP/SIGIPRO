@@ -67,7 +67,6 @@ public class ControladorPaso extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
-            add("realizar");
             add("verhistorial");
             add("activar");
         }
@@ -250,33 +249,6 @@ public class ControladorPaso extends SIGIPROServlet {
 
     }
 
-    protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        validarPermiso(650, request);
-        String redireccion = "Paso/Realizar.jsp";
-
-        int id_paso = Integer.parseInt(request.getParameter("id_paso"));
-        request.setAttribute("id_paso", id_paso);
-
-        ProduccionXSLT xslt;
-        Paso p;
-
-        try {
-            xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
-            p = dao.obtenerPaso(id_paso);
-
-            String formulario = helper_transformaciones.transformar(xslt, p.getEstructura());
-
-            request.setAttribute("cuerpo_formulario", formulario);
-
-            request.setAttribute("paso", p);
-        } catch (TransformerException | SIGIPROException | SQLException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
-        }
-
-        redireccionar(request, response, redireccion);
-    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
