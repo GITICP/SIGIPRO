@@ -38,14 +38,9 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table>
-                                <tr><td> <strong>Muestra:</strong></td> <td>${sangriap.getMuestra()} </td></tr>
-                                <tr><td> <strong>Solicitud N°:</strong></td> <td>${sangriap.getNum_solicitud()} </td></tr>
-                                <tr><td> <strong>Informe N°:</strong></td> <td>${sangriap.getNum_informe()} </td></tr>
-                                <tr><td> <strong>Fecha de recepción de la muestra:</strong></td> <td>${sangriap.getFecha_recepcion_muestraAsString()} </td></tr>
-                                <tr><td> <strong>Fecha del informe:</strong></td> <td>${sangriap.getFecha_informeAsString()} </td></tr>
-                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getResponsable()} </td></tr>
-                                <tr><td> <strong>Inóculo:</strong></td> <td>${sangriap.getInoculo().getId_inoculo()} </td></tr>                                
+                            <table class="tabla-ver">
+                                <tr><td> <strong>Fecha:</strong></td><td>${sangriap.getFechaAsString()}</td></tr>
+                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getUsuario().getId_usuario()} </td></tr>
                             </table>
                             <br>
                             <div class="widget widget-table">
@@ -63,12 +58,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${caballos}" var="caballo">
-                                                <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()}</td> 
-                                                    <td>${caballo.getNumero()}</td>
-                                                    <td>${caballo.getHematrocito()}</td>
-                                                    <td>${caballo.getHemoglibina()}</td>
+                                            <c:forEach items="${sangriap.getLista_sangrias_prueba_caballo()}" var="sangria_prueba_caballo">
+                                                <tr id="${sangria_prueba_caballo.getCaballo().getId_caballo()}">
+                                                    <td>${sangria_prueba_caballo.getCaballo().getNombre()}</td> 
+                                                    <td>${sangria_prueba_caballo.getCaballo().getNumero()}</td>
+                                                    <td>${sangria_prueba_caballo.getHematrocito()}</td>
+                                                    <td>${sangria_prueba_caballo.getHemoglobina()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

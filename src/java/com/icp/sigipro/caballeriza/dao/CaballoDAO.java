@@ -415,7 +415,7 @@ public class CaballoDAO extends DAO
             while (rs.next()) {
                 SangriaPruebaCaballo sangriapc = new SangriaPruebaCaballo();
                 sangriapc.setSangria_prueba(spdao.obtenerSangriaPrueba(rs.getInt("id_sangria_prueba")));
-                sangriapc.setHematrocito(rs.getFloat("hematrocito"));
+                sangriapc.setHematocrito(rs.getFloat("hematrocito"));
                 sangriapc.setHemoglobina(rs.getFloat("hemoglobina"));
                 resultado.add(sangriapc);
             }

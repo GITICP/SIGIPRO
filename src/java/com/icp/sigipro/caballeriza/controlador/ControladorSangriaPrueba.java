@@ -88,8 +88,6 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
         int id_sangria_prueba = Integer.parseInt(request.getParameter("id_sangria_prueba"));
         try {
             SangriaPrueba sp = dao.obtenerSangriaPrueba(id_sangria_prueba);
-            List<Caballo> listacaballos = dao.obtenerCaballosSangriaP(id_sangria_prueba);
-            request.setAttribute("caballos", listacaballos);
             request.setAttribute("sangriap", sp);
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {

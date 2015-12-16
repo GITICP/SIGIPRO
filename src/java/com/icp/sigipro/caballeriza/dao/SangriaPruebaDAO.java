@@ -175,25 +175,55 @@ public class SangriaPruebaDAO extends DAO
 
     public SangriaPrueba obtenerSangriaPrueba(int id_sangria_prueba) throws SIGIPROException
     {
-        InoculoDAO inoculodao = new InoculoDAO();
-        SangriaPrueba sangriap = new SangriaPrueba();
+        SangriaPrueba sp = new SangriaPrueba();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT * FROM caballeriza.sangrias_pruebas"
-                                                                        + " where id_sangria_prueba = ?");
+            consulta = getConexion().prepareStatement(
+                  " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo FROM caballeriza.sangrias_pruebas sp "
+                + "	INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario "
+                + "	INNER JOIN caballeriza.sangrias_pruebas_caballos csp ON sp.id_sangria_prueba = csp.id_sangria_prueba "
+                + "	INNER JOIN caballeriza.caballos c ON csp.id_caballo = c.id_caballo "
+                + " WHERE sp.id_sangria_prueba = ?; "
+            );
+            
             consulta.setInt(1, id_sangria_prueba);
-            ResultSet rs = consulta.executeQuery();
+            rs = consulta.executeQuery();
+            
             if (rs.next()) {
-                sangriap.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
+                sp.setId_sangria_prueba(id_sangria_prueba);
+                sp.setFecha(rs.getDate("fecha"));
+                Usuario u = new Usuario();
+                u.setId_usuario(rs.getInt("id_usuario"));
+                u.setNombreCompleto(rs.getString("nombre_completo"));
+                sp.setUsuario(u);
+                
+                List<SangriaPruebaCaballo> caballos = new ArrayList<SangriaPruebaCaballo>();
+                
+                do {
+                    SangriaPruebaCaballo informacion_caballo = new SangriaPruebaCaballo();
+                    Caballo c = new Caballo();
+                    c.setId_caballo(rs.getInt("id_caballo"));
+                    c.setNombre(rs.getString("nombre"));
+                    c.setNumero(rs.getInt("numero"));
+                    informacion_caballo.setCaballo(c);
+                    informacion_caballo.setSangria_prueba(sp);
+                    caballos.add(informacion_caballo);
+                } while(rs.next());
+                
+                sp.setLista_sangrias_prueba_caballo(caballos);
             }
-            consulta.close();
-            cerrarConexion();
-            rs.close();
         }
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new SIGIPROException("La sangría de prueba no puede ser obtenida.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
         }
-        return sangriap;
+        return sp;
     }
 
     public int obtenerIdSangriaPrueba(String muestra)
