@@ -10,6 +10,7 @@ import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -116,12 +117,19 @@ public class SangriaPruebaDAO extends DAO
     {
         List<SangriaPrueba> resultado = new ArrayList<SangriaPrueba>();
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" SELECT * FROM caballeriza.sangrias_pruebas");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  " SELECT sp.*, u.nombre_completo "
+                + " FROM caballeriza.sangrias_pruebas sp "
+                + "     INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario ");
             ResultSet rs = consulta.executeQuery();
-            InoculoDAO dao = new InoculoDAO();
             while (rs.next()) {
                 SangriaPrueba sangriap = new SangriaPrueba();
                 sangriap.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
+                sangriap.setFecha(rs.getDate("fecha"));
+                Usuario u = new Usuario();
+                u.setId_usuario(rs.getInt("id_usuario"));
+                u.setNombreCompleto(rs.getString("nombre_completo"));
+                sangriap.setUsuario(u);
                 resultado.add(sangriap);
             }
             consulta.close();

@@ -7,6 +7,7 @@ package com.icp.sigipro.caballeriza.modelos;
 
 import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.List;
@@ -52,6 +53,11 @@ public class SangriaPrueba extends IModelo {
 
     public Date getFecha() {
         return fecha;
+    }
+    
+    public String getFechaAsString() {
+        HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+        return helper_fechas.formatearFecha(fecha);
     }
 
     public void setFecha(Date fecha) {
