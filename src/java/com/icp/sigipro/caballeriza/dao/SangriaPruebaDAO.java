@@ -28,7 +28,7 @@ public class SangriaPruebaDAO extends DAO
     {
     }
 
-    public boolean insertarSangriaPrueba(SangriaPrueba sp, List<SangriaPruebaCaballo> informacion_caballos) throws SIGIPROException
+    public boolean insertarSangriaPrueba(SangriaPrueba sp) throws SIGIPROException
     {
         boolean resultado_insert_sangriap = false;
         boolean resultado_asociacion_caballos = false;
@@ -38,16 +38,12 @@ public class SangriaPruebaDAO extends DAO
         try {
             getConexion().setAutoCommit(false);
             consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.sangrias_pruebas "
-                                                      + " ( muestra, num_solicitud, num_informe, fecha_recepcion_muestra, fecha_informe, responsable, id_inoculo) "
-                                                      + " VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id_sangria_prueba;");
-            consulta.setString(1, sp.getMuestra());
-            consulta.setInt(2, sp.getNum_solicitud());
-            consulta.setInt(3, sp.getNum_informe());
-            consulta.setDate(4, sp.getFecha_recepcion_muestra());
-            consulta.setDate(5, sp.getFecha_informe());
-            consulta.setString(6, sp.getResponsable());
-            consulta.setInt(7, sp.getInoculo().getId_inoculo());
-
+                                                      + " (fecha, id_usuario) "
+                                                      + " VALUES (?,?) RETURNING id_sangria_prueba;");
+            
+            consulta.setDate(1, sp.getFecha());
+            consulta.setInt(2, sp.getUsuario().getID());
+            
             resultadoConsulta = consulta.executeQuery();
             
             if (resultadoConsulta.next()) {
@@ -55,14 +51,12 @@ public class SangriaPruebaDAO extends DAO
                 sp.setId_sangria_prueba(resultadoConsulta.getInt("id_sangria_prueba"));
             }
             
-            if (informacion_caballos.size() > 0) {
-                consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.sangrias_pruebas_caballos (id_sangria_prueba, id_caballo, hematrocito, hemoglobina) VALUES (?,?,?,?);");
+            if (sp.getLista_sangrias_prueba_caballo().size() > 0) {
+                consulta_caballos = getConexion().prepareStatement(" INSERT INTO caballeriza.sangrias_pruebas_caballos (id_sangria_prueba, id_caballo) VALUES (?,?);");
 
-                for (SangriaPruebaCaballo informacion_caballo : informacion_caballos) {
+                for (SangriaPruebaCaballo informacion_caballo : sp.getLista_sangrias_prueba_caballo()) {
                     consulta_caballos.setInt(1, sp.getId_sangria_prueba());
                     consulta_caballos.setInt(2, informacion_caballo.getCaballo().getId_caballo());
-                    consulta_caballos.setFloat(3, informacion_caballo.getHematrocito());
-                    consulta_caballos.setFloat(4, informacion_caballo.getHemoglobina());
                     consulta_caballos.addBatch();
                 }
 
@@ -128,13 +122,6 @@ public class SangriaPruebaDAO extends DAO
             while (rs.next()) {
                 SangriaPrueba sangriap = new SangriaPrueba();
                 sangriap.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
-                sangriap.setMuestra(rs.getString("muestra"));
-                sangriap.setNum_solicitud(rs.getInt("num_solicitud"));
-                sangriap.setNum_informe(rs.getInt("num_informe"));
-                sangriap.setFecha_recepcion_muestra(rs.getDate("fecha_recepcion_muestra"));
-                sangriap.setFecha_informe(rs.getDate("fecha_informe"));
-                sangriap.setResponsable(rs.getString("responsable"));
-                sangriap.setInoculo(dao.obtenerInoculo(rs.getInt("id_inoculo")));
                 resultado.add(sangriap);
             }
             consulta.close();
@@ -189,13 +176,6 @@ public class SangriaPruebaDAO extends DAO
             ResultSet rs = consulta.executeQuery();
             if (rs.next()) {
                 sangriap.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
-                sangriap.setMuestra(rs.getString("muestra"));
-                sangriap.setNum_solicitud(rs.getInt("num_solicitud"));
-                sangriap.setNum_informe(rs.getInt("num_informe"));
-                sangriap.setFecha_recepcion_muestra(rs.getDate("fecha_recepcion_muestra"));
-                sangriap.setFecha_informe(rs.getDate("fecha_informe"));
-                sangriap.setResponsable(rs.getString("responsable"));
-                sangriap.setInoculo(inoculodao.obtenerInoculo(rs.getInt("id_inoculo")));
             }
             consulta.close();
             cerrarConexion();
@@ -298,7 +278,7 @@ public class SangriaPruebaDAO extends DAO
                 c.setNombre(rs.getString("nombre"));
                 c.setNumero_microchip(rs.getString("numero_microchip"));
                 c.setNumero(rs.getInt("numero"));
-                sp.agregarCaballo(c);
+                //sp.agregarCaballo(c);
             }
             
             rs.close();

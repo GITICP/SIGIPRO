@@ -19,8 +19,6 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.utilidades.HelperFechas;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -43,8 +41,6 @@ public class ControladorSangria extends SIGIPROServlet
 
     private final int[] permisos = {1, 61, 62};
     private final SangriaDAO dao = new SangriaDAO();
-    private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
 
     protected final Class clase = ControladorSangria.class;
     protected final List<String> accionesGet = new ArrayList<String>()
@@ -399,7 +395,6 @@ public class ControladorSangria extends SIGIPROServlet
         g.setId_grupo_caballo(Integer.parseInt(request.getParameter("grupo")));
         sangria.setGrupo(g);
         
-        String numero_informe_calidad = request.getParameter("num_inf_cc");
         String potencia = request.getParameter("potencia");
         String volumen_plasma_total = request.getParameter("volumen_plasma");
 
