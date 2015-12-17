@@ -1,10 +1,15 @@
 SELECTOR_TABLA_RESULTADOS_OBTENIDOS = "#resultados-obtenidos";
 SELECTOR_TABLA_RESULTADOS_POR_REPORTAR = "#resultados-por-reportar";
+SELECTOR_TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA = "#resultados-por-reportar-hemoglobina";
 
 TABLA_RESULTADOS_POR_REPORTAR = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR);
 TABLA_RESULTADOS_OBTENIDOS = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_OBTENIDOS);
+TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA );
 
 ELEMENTO_CABALLOS = $("#caballos-numeros");
+
+HEMATOCRITO = "Hematocrito";
+HEMOGLOBINA = "Hemoglobina";
 
 FLAG_ELIMINAR = 1;
 FLAG_REPORTAR = 2;
@@ -46,6 +51,8 @@ $(document).ready(function () {
         asignar_eventos_botones("sangria");
         
         funcion_validar = funcion_validar_sangria;
+    } else if (tipo_asociacion === "sangria_prueba") {
+        asignar_eventos_botones("sangria_prueba");
     }
 
     $(".reportar-resultado").each(function () {
@@ -134,31 +141,48 @@ funcion_validar_sangria = function () {
     return $("#seleccion-caballos").find("option:not(.opcion-escondida)").length === 0;
 };
 
-
-/*
-funcion_asociar_resultado_caballos = function () {
-    var fila = $("tr[id=" + id_resultado_seleccionado + "]");
-
+funcion_reportar_sangria_prueba = function () {
+    var fila = $(this).parents("tr");
+    id_resultado_seleccionado = fila.attr("id");
+    
+    var columna_caballos = fila.find("td:nth-child(2) > span");
+    var ids_caballos = [];
+    
+    columna_caballos.each( function() {
+        var numero_caballo = $(this).text().split(" ")[0];
+        var id_caballo = obtener_id_caballo(numero_caballo);
+        ids_caballos.push( id_caballo );
+    });
+    
     var boton = fila.find("button");
     desasignar_evento_boton(boton, FLAG_ELIMINAR);
-    mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
-
+    
+    var tipo = $(this).data("tipo");
+    
+    if (tipo === "hematocrito") {
+        mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
+    } else {
+        mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA, true);
+    }
+    
+    $("button[data-tipo=hemoglobina]").hide();
+    
     var input_caballos = $("<input type='hidden'>");
-    input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
-    input_caballos.prop("value", $("#seleccion-caballos").val());
-
-    $("#modal-asociar-caballo").modal("hide");
-
-    $("#seleccion-caballos :selected").each(function () {
-        $(this).attr("selected", false);
-        $(this).addClass("opcion-escondida");
-    });
-
-    $("#seleccion-caballos").select2();
+    input_caballos.prop("name", "caballos_res_" + tipo + "_" + id_resultado_seleccionado);
+    input_caballos.prop("value", ids_caballos.toString());
 
     var form = $("#form-informe");
     form.prepend(input_caballos);
-}; */
+};
+
+funcion_eliminar_sangria_prueba = function () {
+    
+};
+
+funcion_validar_sangria_prueba = function () {
+    
+};
+
 
 /*
  * Funciones de eventos
@@ -307,6 +331,10 @@ function asignar_eventos_botones(funcion) {
         funcion_eliminar = funcion_eliminar_sangria;
         funcion_reportar = funcion_reportar_sangria;
         funcion_validar = funcion_validar_sangria;
+    } else if (funcion === "sangria_prueba") {
+        funcion_reportar = funcion_reportar_sangria_prueba;
+        funcion_eliminar = funcion_eliminar_sangria_prueba;
+        funcion_validar = funcion_validar_sangria_prueba;
     } else {
         funcion_eliminar = funcion_eliminar_general;
         funcion_reportar = funcion_reportar_general;

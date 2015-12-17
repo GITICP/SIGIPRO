@@ -5,19 +5,24 @@
  */
 package com.icp.sigipro.caballeriza.controlador;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.dao.SangriaPruebaDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
+import com.icp.sigipro.caballeriza.modelos.Sangria;
+import com.icp.sigipro.caballeriza.modelos.SangriaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
+import com.icp.sigipro.caballeriza.modelos.SangriaPruebaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Date;
@@ -48,6 +53,7 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
             add("index");
             add("ver");
             add("agregar");
+            add("sangrias_pruebas_ajax");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -93,6 +99,29 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    protected void getSangrias_pruebas_ajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        response.setContentType("application/json");
+        
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+        
+        try {
+            List<SangriaPruebaAJAX> sangrias_pruebas_ajax = dao.obtenerSangriasPruebaPendiente();
+            
+            Gson gson = new Gson();
+            resultado = gson.toJson(sangrias_pruebas_ajax);
+            
+        } catch(SIGIPROException sig_ex) {
+            // Enviar error al AJAX
+        }
+        
+        out.print(resultado);
+        
+        out.flush();
+        
     }
 
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {

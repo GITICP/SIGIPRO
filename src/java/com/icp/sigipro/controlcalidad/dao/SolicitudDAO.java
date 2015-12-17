@@ -57,6 +57,7 @@ public class SolicitudDAO extends DAO {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            ex.getNextException().printStackTrace();
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
