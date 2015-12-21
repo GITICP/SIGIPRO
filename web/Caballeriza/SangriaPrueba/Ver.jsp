@@ -51,8 +51,7 @@
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                                         <thead>
                                             <tr>
-                                                <th>Nombre</th>
-                                                <th>Número de Caballo</th>
+                                                <th>Nombre (Número) de Caballo</th>
                                                 <th>Hematrocito</th>
                                                 <th>Hemoglobina</th>
                                             </tr>
@@ -60,9 +59,8 @@
                                         <tbody>
                                             <c:forEach items="${sangriap.getLista_sangrias_prueba_caballo()}" var="sangria_prueba_caballo">
                                                 <tr id="${sangria_prueba_caballo.getCaballo().getId_caballo()}">
-                                                    <td>${sangria_prueba_caballo.getCaballo().getNombre()}</td> 
-                                                    <td>${sangria_prueba_caballo.getCaballo().getNumero()}</td>
-                                                    <td>${sangria_prueba_caballo.getHematrocito()}</td>
+                                                    <td>${sangria_prueba_caballo.getCaballo().getNombre()} (${sangria_prueba_caballo.getCaballo().getNumero()})</td> 
+                                                    <td>${sangria_prueba_caballo.getHematocrito()}</td>
                                                     <td>${sangria_prueba_caballo.getHemoglobina()}</td>
                                                 </tr>
                                             </c:forEach>

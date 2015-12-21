@@ -403,11 +403,13 @@ public class CaballoDAO extends DAO
         List<SangriaPruebaCaballo> resultado = new ArrayList<SangriaPruebaCaballo>();
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("select sp.id_sangria_prueba, muestra, fecha_recepcion_muestra, hematrocito, hemoglobina "
-                                                                        + " from caballeriza.sangrias_pruebas sp "
-                                                                        + " left outer join caballeriza.sangrias_pruebas_caballos spc "
-                                                                        + " on sp.id_sangria_prueba= spc.id_sangria_prueba"
-                                                                        + " where id_caballo=?; ");
+            PreparedStatement consulta = getConexion().prepareStatement(
+                  "select sp.id_sangria_prueba, muestra, fecha_recepcion_muestra, hematrocito, hemoglobina "
+                + " from caballeriza.sangrias_pruebas sp "
+                + " left outer join caballeriza.sangrias_pruebas_caballos spc "
+                + " on sp.id_sangria_prueba= spc.id_sangria_prueba"
+                + " where id_caballo=?; "
+            );
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
             SangriaPruebaDAO spdao = new SangriaPruebaDAO();
@@ -415,8 +417,6 @@ public class CaballoDAO extends DAO
             while (rs.next()) {
                 SangriaPruebaCaballo sangriapc = new SangriaPruebaCaballo();
                 sangriapc.setSangria_prueba(spdao.obtenerSangriaPrueba(rs.getInt("id_sangria_prueba")));
-                sangriapc.setHematocrito(rs.getFloat("hematrocito"));
-                sangriapc.setHemoglobina(rs.getFloat("hemoglobina"));
                 resultado.add(sangriapc);
             }
             rs.close();

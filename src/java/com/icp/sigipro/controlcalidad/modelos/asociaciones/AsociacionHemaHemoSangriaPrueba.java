@@ -119,10 +119,10 @@ public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
         
         for (ObjetoAsociacionMultiple osm : objetos_hemoglobina) {
             for (int id : osm.getIds()) {
-                consulta_caballos_hematocrito.setInt(1, osm.getResultado().getId_resultado());
-                consulta_caballos_hematocrito.setInt(2, id);
-                consulta_caballos_hematocrito.setInt(3, sangria_prueba.getId_sangria_prueba());
-                consulta_caballos_hematocrito.addBatch();
+                consulta_caballos_hemoglobina.setInt(1, osm.getResultado().getId_resultado());
+                consulta_caballos_hemoglobina.setInt(2, id);
+                consulta_caballos_hemoglobina.setInt(3, sangria_prueba.getId_sangria_prueba());
+                consulta_caballos_hemoglobina.addBatch();
             }
         }
         

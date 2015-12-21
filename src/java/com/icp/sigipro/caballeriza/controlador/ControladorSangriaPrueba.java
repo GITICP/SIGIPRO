@@ -12,8 +12,6 @@ import com.icp.sigipro.caballeriza.dao.GrupoDeCaballosDAO;
 import com.icp.sigipro.caballeriza.dao.SangriaPruebaDAO;
 import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
-import com.icp.sigipro.caballeriza.modelos.Sangria;
-import com.icp.sigipro.caballeriza.modelos.SangriaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
