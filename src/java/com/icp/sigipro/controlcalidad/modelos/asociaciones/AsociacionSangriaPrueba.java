@@ -26,6 +26,7 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
     
     private SangriaPrueba sangria_prueba;
     private final SangriaPruebaDAO sangria_prueba_dao = new SangriaPruebaDAO();
+    private final AsociacionHemaHemoSangriaPrueba asociacion_informe = new AsociacionHemaHemoSangriaPrueba(this);
     
     public AsociacionSangriaPrueba(SolicitudCC p_solicitud) {
         tipo = "sangria_prueba";
@@ -35,7 +36,8 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
 
     @Override
     public void asociar(HttpServletRequest request) {
-        int id_sangria_prueba = Integer.parseInt(request.getParameter("sangria_prueba"));
+        String id_sangria_prueba_str = request.getParameter("sangria_prueba");
+        int id_sangria_prueba = Integer.parseInt(id_sangria_prueba_str);
         sangria_prueba = new SangriaPrueba();
         sangria_prueba.setId_sangria_prueba(id_sangria_prueba);
     }
@@ -49,7 +51,7 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
 
     @Override
     public void asociarResultado(Resultado resultado, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        asociacion_informe.asociar(resultado, request);
     }
 
     @Override
@@ -63,7 +65,8 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
     public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria_prueba");
         request.setAttribute("id_sangria_prueba", sangria_prueba.getId_sangria_prueba());
-        request.setAttribute("caballos_sangria_prueba", sangria_prueba_dao.obtenerCaballosSangriaP(sangria_prueba.getId_sangria_prueba()));
+        request.setAttribute("sangria_prueba", sangria_prueba);
+        request.setAttribute("caballos_sangria", sangria_prueba_dao.obtenerCaballosSangriaP(sangria_prueba.getId_sangria_prueba()));
     }
 
     @Override
@@ -96,7 +99,7 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
 
     @Override
     public List<PreparedStatement> insertarSQLInforme(Connection conexion) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return asociacion_informe.insertarSQL(conexion);
     }
 
     @Override

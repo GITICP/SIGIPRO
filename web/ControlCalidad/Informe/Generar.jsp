@@ -106,7 +106,14 @@
                                 </div>
                                 <c:choose>
                                     <c:when test="${solicitud.tieneTipoAsociacion()}">
-                                        <t:editar_solicitud_sangria derecha="false" />
+                                        <c:choose>
+                                            <c:when test="${solicitud.getTipoAsociacionString() == 'sangria'}">
+                                                <t:editar_solicitud_sangria derecha="false" />
+                                            </c:when>
+                                            <c:when test="${solicitud.getTipoAsociacionString() == 'sangria_prueba'}">
+                                                <t:agregar_informe_sangria_prueba derecha="false" />
+                                            </c:when>
+                                        </c:choose>
                                     </c:when >
                                     <c:otherwise>
                                         <input type="hidden" name="objeto-relacionado" value="">

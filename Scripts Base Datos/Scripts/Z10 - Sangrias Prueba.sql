@@ -17,7 +17,7 @@
     CREATE TABLE caballeriza.sangrias_pruebas_caballos (
         id_sangria_prueba integer NOT NULL,
         id_caballo integer NOT NULL,
-        id_resultado_hematrocito integer,
+        id_resultado_hematocrito integer,
         id_resultado_hemoglobina integer 
     );
 

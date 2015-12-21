@@ -17,7 +17,11 @@ public abstract class Asociable {
     
     public AsociacionSolicitud getTipoAsociacion() {
         return asociacion;
-    } 
+    }
+    
+    public String getTipoAsociacionString() {
+        return asociacion.tipo;
+    }
     
     public abstract void setTipoAsociacion(String objeto);
     public abstract int getId();
