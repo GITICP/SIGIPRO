@@ -108,7 +108,7 @@
                                     <c:when test="${solicitud.tieneTipoAsociacion()}">
                                         <c:choose>
                                             <c:when test="${solicitud.getTipoAsociacionString() == 'sangria'}">
-                                                <t:editar_solicitud_sangria derecha="false" />
+                                                <t:agregar_informe_sangria derecha="false" />
                                             </c:when>
                                             <c:when test="${solicitud.getTipoAsociacionString() == 'sangria_prueba'}">
                                                 <t:agregar_informe_sangria_prueba derecha="false" />
