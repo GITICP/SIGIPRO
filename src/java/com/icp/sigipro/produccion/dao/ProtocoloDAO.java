@@ -12,6 +12,7 @@ import com.icp.sigipro.produccion.modelos.Paso;
 import com.icp.sigipro.produccion.modelos.Protocolo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class ProtocoloDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
+            getConexion().setAutoCommit(false);
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.protocolo (version, aprobacion_calidad, aprobacion_direccion, aprobacion_regente, aprobacion_coordinador) "
                     + " VALUES (1,false, false, false,false) RETURNING id_protocolo");
             rs = consulta.executeQuery();
@@ -56,11 +58,21 @@ public class ProtocoloDAO extends DAO {
                         consulta.addBatch();
                     }
                     consulta.executeBatch();
+                    getConexion().setAutoCommit(true);
+                    getConexion().commit();
                 }
 
             }
-            consulta.close();
-            cerrarConexion();
+        } catch (SQLException se) {
+            se.printStackTrace();
+            try {
+                if (getConexion() != null) {
+                    getConexion().rollback();
+                    getConexion().setAutoCommit(true);
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -76,6 +88,7 @@ public class ProtocoloDAO extends DAO {
         ResultSet rs = null;
         PreparedStatement consulta = null;
         try {
+            getConexion().setAutoCommit(false);
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_protocolo (id_protocolo, version, nombre, descripcion, id_formula_maestra, id_catalogo_pt) "
                     + " VALUES (?,?,?,?,?,?) RETURNING id_historial");
             consulta.setInt(1, protocolo.getId_protocolo());
@@ -106,14 +119,25 @@ public class ProtocoloDAO extends DAO {
                         consulta.addBatch();
                     }
                     consulta.executeBatch();
+                    getConexion().setAutoCommit(true);
+                    getConexion().commit();
 
                 }
             }
-            consulta.close();
-            cerrarConexion();
+        } catch (SQLException se) {
+            se.printStackTrace();
+            try {
+                if (getConexion() != null) {
+                    getConexion().rollback();
+                    getConexion().setAutoCommit(true);
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
+            cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
@@ -132,8 +156,6 @@ public class ProtocoloDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
-            consulta.close();
-            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -258,9 +280,8 @@ public class ProtocoloDAO extends DAO {
         }
         return resultado;
     }
-    
-    public int obtenerVersion(int id_historial)
-    {
+
+    public int obtenerVersion(int id_historial) {
         int resultado = 0;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -271,10 +292,9 @@ public class ProtocoloDAO extends DAO {
             if (rs.next()) {
                 resultado = rs.getInt("version");
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();

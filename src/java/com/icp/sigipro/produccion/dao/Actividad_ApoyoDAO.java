@@ -12,6 +12,7 @@ import com.icp.sigipro.produccion.modelos.Respuesta_AA;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class Actividad_ApoyoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
+            getConexion().setAutoCommit(false);
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.actividad_apoyo (version, aprobacion_calidad, aprobacion_direccion, aprobacion_regente, aprobacion_coordinador) "
                     + " VALUES (1,false, false, false,false) RETURNING id_actividad");
             rs = consulta.executeQuery();
@@ -44,7 +46,19 @@ public class Actividad_ApoyoDAO extends DAO {
                 if (rs.next()) {
                     resultado = true;
                     actividad.setId_historial(rs.getInt("id_historial"));
+                    getConexion().setAutoCommit(true);
+                    getConexion().commit();
                 }
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            try {
+                if (getConexion() != null) {
+                    getConexion().rollback();
+                    getConexion().setAutoCommit(true);
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -485,6 +499,7 @@ public class Actividad_ApoyoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
+            getConexion().setAutoCommit(false);
             //Inserta la respuesta general
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.respuesta_aa (id_actividad, version) "
                     + " VALUES (?,1) RETURNING id_respuesta");
@@ -506,8 +521,20 @@ public class Actividad_ApoyoDAO extends DAO {
                 if (rs.next()) {
                     resultado = true;
                     respuesta.setId_historial(rs.getInt("id_historial"));
+                    getConexion().setAutoCommit(true);
+                    getConexion().commit();
 
                 }
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            try {
+                if (getConexion() != null) {
+                    getConexion().rollback();
+                    getConexion().setAutoCommit(true);
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();

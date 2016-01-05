@@ -13,6 +13,7 @@ import com.icp.sigipro.produccion.modelos.Respuesta_pxp;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +49,8 @@ public class LoteDAO extends DAO {
         }
         return resultado;
     }
-    
-    public int obtenerVersion(int id_historial)
-    {
+
+    public int obtenerVersion(int id_historial) {
         int resultado = 0;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -61,10 +61,9 @@ public class LoteDAO extends DAO {
             if (rs.next()) {
                 resultado = rs.getInt("version");
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
@@ -108,6 +107,7 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
+            getConexion().setAutoCommit(false);
             //Inserta la respuesta general
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.respuesta_pxp (id_lote, id_pxp, version) "
                     + " VALUES (?,?,1) RETURNING id_respuesta");
@@ -130,7 +130,6 @@ public class LoteDAO extends DAO {
                     respuesta.setId_historial(rs.getInt("id_historial"));
                     int cantidad_pasos = respuesta.getLote().getRespuestas().size();
                     int paso_siguiente = respuesta.getLote().getPosicion_actual() + 1;
-                    System.out.println("Cantidad pasos: " + cantidad_pasos + " Paso siguiente: " + paso_siguiente);
                     boolean aprobacion = this.pasoActualAprobacion(respuesta.getLote().getId_lote());
                     if (aprobacion) {
                         //Si todavia faltan pasos y requiere aprobacion
@@ -154,8 +153,21 @@ public class LoteDAO extends DAO {
                     }
                     if (consulta.executeUpdate() == 1) {
                         resultado = true;
+                        getConexion().setAutoCommit(true);
+                        getConexion().commit();
                     }
                 }
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            try {
+                if (getConexion() != null) {
+                    getConexion().rollback();
+                    getConexion().setAutoCommit(true);
+
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -301,7 +313,7 @@ public class LoteDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean activarVersion(int version, int id_respuesta) {
         boolean resultado = false;
         PreparedStatement consulta = null;
