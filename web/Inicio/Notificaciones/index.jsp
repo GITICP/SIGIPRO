@@ -48,7 +48,7 @@
             
             <div class="widget widget-table">
                 <div class="widget-content">
-                    <table class="table table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                    <table id="tabla-notificaciones" class="table table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                         <thead> 
                             <tr>
                               <th>Tipo</th>
@@ -73,7 +73,7 @@
                                         </a>
                                     </p>
                                     </td>
-                                    <td>
+                                    <td data-order="${notificacion.getDateTimeISO()}">
                                         <span class="timestamp">${notificacion.getDateTime()}</span>
                                     </td>
                                 </tr>                            
@@ -92,5 +92,5 @@
     </jsp:attribute>
 
   </t:plantilla_general>
-  
-  <script src="${direccionContexto}/recursos/js/sigipro/notificaciones-api.js"></script>
+    
+  <script src="${direccionContexto}/SIGIPRO/recursos/js/sigipro/notificaciones-api.js"></script>

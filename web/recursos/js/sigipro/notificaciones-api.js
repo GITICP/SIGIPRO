@@ -4,5 +4,7 @@
  * and open the template in the editor.
  */
 
-var notificaciones_totales = document.getElementById("notificaciones-totales").size();
-
+$(document).ready(function() {
+    var tabla = $('#tabla-notificaciones').dataTable(); 
+    tabla.fnSort( [ [1,'desc'] ] );
+} );
