@@ -47,27 +47,39 @@
             </ul>
             
             <div class="widget widget-table">
-                <div class="tab-pane activity" id="notificaciones-tab">
-                    <ul class="list-unstyled activity-list" id="notificaciones-totales">
-                        <c:forEach items="${notificaciones}" var="notificacion">
-                            <li onclick="marcarNotificacionesleidas(${notificacion.getId()})">
-                                <i class="${notificacion.getIcono()} activity-icon pull-left"></i>
-                                <p>
-                                    <a href="/SIGIPRO${notificacion.getRedirect()}">
-                                        <c:choose>
-                                            <c:when test="${!(notificacion.isLeida())}">
-                                                <b>${notificacion.getDescripcion()}</b>
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${notificacion.getDescripcion()}
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </a>
-                                    <span class="timestamp">${notificacion.getDateTime()}</span>
-                                </p>
-                            </li>
-                        </c:forEach>
-                    </ul>
+                <div class="widget-content">
+                    <table class="table table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                        <thead> 
+                            <tr>
+                              <th>Tipo</th>
+                              <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${notificaciones}" var="notificacion">
+                                <tr id ="${notificacion.getId()}" onclick="marcarNotificacionesleidas(${notificacion.getId()})">
+                                    <td>
+                                    <i class="${notificacion.getIcono()} activity-icon pull-left"></i>
+                                    <p>
+                                        <a href="/SIGIPRO${notificacion.getRedirect()}">
+                                            <c:choose>
+                                                <c:when test="${!(notificacion.isLeida())}">
+                                                    <b>${notificacion.getDescripcion()}</b>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${notificacion.getDescripcion()}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </p>
+                                    </td>
+                                    <td>
+                                        <span class="timestamp">${notificacion.getDateTime()}</span>
+                                    </td>
+                                </tr>                            
+                            </c:forEach>    
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!-- END WIDGET TICKET TABLE -->     
@@ -80,4 +92,5 @@
     </jsp:attribute>
 
   </t:plantilla_general>
-
+  
+  <script src="${direccionContexto}/recursos/js/sigipro/notificaciones-api.js"></script>
