@@ -10,7 +10,9 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.produccion.dao.CronogramaDAO;
+import com.icp.sigipro.produccion.dao.Semanas_cronogramaDAO;
 import com.icp.sigipro.produccion.modelos.Cronograma;
+import com.icp.sigipro.produccion.modelos.Semanas_cronograma;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +36,7 @@ public class ControladorCronograma extends SIGIPROServlet {
 
     private final int[] permisos = {601, 1, 1};
     private final CronogramaDAO dao = new CronogramaDAO();
+    private final Semanas_cronogramaDAO sDAO = new Semanas_cronogramaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
 
     protected final Class clase = ControladorCronograma.class;
@@ -83,9 +86,11 @@ public class ControladorCronograma extends SIGIPROServlet {
         
         String redireccion = "Cronograma/Ver.jsp";
         int id_cronograma = Integer.parseInt(request.getParameter("id_cronograma"));
+        
         try {
             Cronograma c = dao.obtenerCronograma(id_cronograma);
             request.setAttribute("cronograma", c);
+
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
@@ -116,7 +121,11 @@ public class ControladorCronograma extends SIGIPROServlet {
         try {
             Cronograma cronograma_nuevo = construirObjeto(request);
             
-            resultado = dao.insertarCronograma(cronograma_nuevo);
+            int id_cronograma_nuevo = dao.insertarCronograma(cronograma_nuevo);
+            if (id_cronograma_nuevo != 0) resultado = true;
+            //Crear semanas automáticamente. crearSemanas_cronograma(startdate)
+            sDAO.crearSemanas_cronograma(cronograma_nuevo.getValido_desde(),id_cronograma_nuevo);
+            //Semanas Bitácora****
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
@@ -171,6 +180,9 @@ public class ControladorCronograma extends SIGIPROServlet {
             Cronograma cronograma_a_eliminar = dao.obtenerCronograma(Integer.parseInt(request.getParameter("id_cronograma")));
             
             resultado = dao.eliminarCronograma(cronograma_a_eliminar.getId_cronograma());
+            //Borrar semanas automáticamente
+            sDAO.eliminarSemanas_del_Cronograma(cronograma_a_eliminar.getId_cronograma());
+            //Semanas Bitácora****
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(cronograma_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());

@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Catálogo de Cronogramas de Producción </h3>
+              <h3><i class="fa fa-list-alt"></i> Catálogo de Cronogramas de Producción </h3>
               <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 601)}">
                 <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Cronograma?accion=agregar">Agregar Cronograma</a>

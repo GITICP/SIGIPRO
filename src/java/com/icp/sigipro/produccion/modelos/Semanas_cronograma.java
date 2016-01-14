@@ -18,7 +18,7 @@ import org.json.JSONObject;
 public class Semanas_cronograma {
     private int id_semana;
     private Cronograma cronograma;
-    private Date fecha;
+    private String fecha;
     private String sangria;
     private String plasma_proyectado;
     private String plasma_real;
@@ -67,7 +67,7 @@ public class Semanas_cronograma {
         this.cronograma = cronograma;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
@@ -78,13 +78,10 @@ public class Semanas_cronograma {
     }  
     
     public String getFecha_S(){
-        if (this.fecha != null)
-            {return formatearFecha(this.fecha);}
-        else
-            {return "";}
+        return this.fecha;
     }
     
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 

@@ -208,6 +208,48 @@ EditableGrid.prototype.init = function (name, config)
 	this.currentFilter = this.localisset('filter') ? this.localget('filter') : null;
 };
 
+//Funciones que se corren al editar
+var xhttp;
+var xmlDoc;
+
+function enviarPeticionXHTTP(path){
+    var pathArray = window.location.pathname.split( '/' );
+    if (pathArray[pathArray.length-1] === '/'){
+        pathArray.pop();
+    }
+    if (pathArray.length === 3){
+        xhttp.open("GET", path, true);
+        xhttp.send();
+    }
+    if (pathArray.length > 3){
+        var carpetasEnElPath = pathArray.length;
+        var irAtras = "";
+        while(!(carpetasEnElPath < 3)){
+            irAtras += "../";
+            carpetasEnElPath = carpetasEnElPath - 2;
+        }
+        xhttp.open("GET", irAtras + path, true);
+        xhttp.send();
+    }
+}
+
+function editarSemana(id, columna, nuevoValor){
+    
+    if (window.XMLHttpRequest) {
+        xhttp = new XMLHttpRequest();
+        } else {
+        // code for IE6, IE5
+        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            //worked
+        }
+    };
+    enviarPeticionXHTTP("editarSemana?id="+id+"&columna="+columna+"&nuevoValor="+nuevoValor);
+}
+    
 /**
  * Callback functions
  */
@@ -218,7 +260,7 @@ EditableGrid.prototype.tableRendered = function(containerid, className, tableid)
 EditableGrid.prototype.tableSorted = function(columnIndex, descending) {};
 EditableGrid.prototype.tableFiltered = function() {};
 EditableGrid.prototype.modelChanged = function(rowIndex, columnIndex, oldValue, newValue, row) { //Function that sets what to do when a cell is modified
-    alert("Value for '" + this.getColumnName(columnIndex) + "' in row " + this.getRowId(rowIndex) + " has changed from '" + oldValue + "' to '" + newValue + "'");
+    editarSemana(this.getRowId(rowIndex),this.getColumnName(columnIndex),newValue);
 };
 EditableGrid.prototype.rowSelected = function(oldRowIndex, newRowIndex) {};
 EditableGrid.prototype.isHeaderEditable = function(rowIndex, columnIndex) { return false; };
@@ -602,7 +644,7 @@ EditableGrid.prototype.processJSON = function(jsonData)
 				datatype: (columndata.datatype ? columndata.datatype : "string"),
 				editable: (columndata.editable ? true : false),
 				bar: (typeof columndata.bar == 'undefined' ? true : (columndata.bar || false)),
-				hidden: (typeof columndata.hidden == 'undefined' ? false : (columndata.hidden ? true : false)),
+				hidden: (typeof columndata.hidden == 'undefined' ? false : (columndata.hidden ? true : false)),//true
 				optionValuesForRender: optionValuesForRender,
 				optionValues: optionValues
 			}));

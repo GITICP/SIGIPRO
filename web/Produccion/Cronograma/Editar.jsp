@@ -1,4 +1,4 @@
-C<%-- 
+<%-- 
     Document   : Editar
     Created on : Mar 28, 2015, 11:37:30 PM
     Author     : ld.conejo
@@ -42,7 +42,7 @@ C<%--
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-flask"></i> Editar Cronograma de Producción </h3>
+              <h3><i class="fa fa-gears"></i> Editar Cronograma de Producción </h3>
             </div>
             ${mensaje}
             <div class="widget-content">

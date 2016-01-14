@@ -28,5 +28,5 @@ observaciones character varying(100),
 CONSTRAINT pk_semana_produccion PRIMARY KEY (id_semana),
 CONSTRAINT fk_semana_cronograma FOREIGN KEY (id_cronograma)
       REFERENCES produccion.cronograma (id_cronograma) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE SET NULL
+      ON UPDATE NO ACTION ON DELETE CASCADE
 );

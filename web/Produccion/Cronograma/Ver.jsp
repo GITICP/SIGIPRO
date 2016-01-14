@@ -16,7 +16,7 @@
         
         <form id="form-eliminar-cronograma" method="post" action="Cronograma">
             <input name="accion" value="Eliminar" hidden> 
-            <input name="id_cronograma" value="${cronograma.getId_cronograma()}" hidden>
+            <input id="id_cronograma" name="id_cronograma" value="${cronograma.getId_cronograma()}" hidden>
         </form>
 
         <!-- content-wrapper -->
@@ -38,7 +38,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> ${cronograma.getNombre()} </h3>
+                            <h3><i class="fa fa-list-alt"></i> ${cronograma.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEditarYBorrar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">

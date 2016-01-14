@@ -76,9 +76,9 @@ public class CronogramaDAO extends DAO {
         return resultado;
     }
     
-    public boolean insertarCronograma(Cronograma c) throws SIGIPROException {
+    public int insertarCronograma(Cronograma c) throws SIGIPROException {
 
-        boolean resultado = false;
+        int resultado=0;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.cronograma (nombre, observaciones, valido_desde)"
@@ -90,7 +90,7 @@ public class CronogramaDAO extends DAO {
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
-                resultado = true;
+                resultado = resultadoConsulta.getInt("id_cronograma");
             }
             resultadoConsulta.close();
             consulta.close();
