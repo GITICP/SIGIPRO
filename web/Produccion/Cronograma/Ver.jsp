@@ -57,6 +57,8 @@
                             <center><p><strong>${cronograma.getNombre()}</strong></p></center>
                             <center><p>Válido desde: <i>${cronograma.getValido_desde_S()}</i></p></center>
                             <center><p>Observaciones: ${cronograma.getObservaciones()}</p></center>
+                            <p><br></p>
+                            *Los cambios que realice se guardarán automáticamente al terminar de editar una celda.
                         </div>
                         <div id="table-content"></div>
                     </div>

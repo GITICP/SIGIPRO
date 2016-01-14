@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package com.icp.sigipro.produccion.controladores;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.notificaciones.controladores.*;
 import com.icp.sigipro.core.SIGIPROException;
 import java.io.IOException;
@@ -82,6 +84,9 @@ public class ControladorEditarSemana extends HttpServlet {
         String nuevoValor = request.getParameter("nuevoValor");
         try {
             sDAO.editarSemana(Integer.parseInt(id),columna,nuevoValor);
+            Semanas_cronograma sc = new Semanas_cronograma();
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(sc.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SEMANAS_CRONOGRAMA, request.getRemoteAddr());
         } catch (SIGIPROException ex) {
             Logger.getLogger(ControladorEditarSemana.class.getName()).log(Level.SEVERE, null, ex);
         }

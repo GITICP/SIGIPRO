@@ -128,7 +128,10 @@ public class ControladorCronograma extends SIGIPROServlet {
             //Semanas Bitácora****
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            for (Semanas_cronograma semana : sDAO.obtenerSemanas_cronograma(id_cronograma_nuevo)){
+                bitacora.setBitacora(semana.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SEMANAS_CRONOGRAMA, request.getRemoteAddr());
+            }
+            bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CRONOGRAMA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
@@ -155,7 +158,7 @@ public class ControladorCronograma extends SIGIPROServlet {
             resultado = dao.editarCronograma(cronograma_nuevo);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CRONOGRAMA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
@@ -180,12 +183,15 @@ public class ControladorCronograma extends SIGIPROServlet {
             Cronograma cronograma_a_eliminar = dao.obtenerCronograma(Integer.parseInt(request.getParameter("id_cronograma")));
             
             resultado = dao.eliminarCronograma(cronograma_a_eliminar.getId_cronograma());
+            BitacoraDAO bitacora = new BitacoraDAO();
             //Borrar semanas automáticamente
+            for (Semanas_cronograma semana : sDAO.obtenerSemanas_cronograma(cronograma_a_eliminar.getId_cronograma())){
+                bitacora.setBitacora(semana.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SEMANAS_CRONOGRAMA, request.getRemoteAddr());
+            }
             sDAO.eliminarSemanas_del_Cronograma(cronograma_a_eliminar.getId_cronograma());
             //Semanas Bitácora****
             //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(cronograma_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(cronograma_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CRONOGRAMA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
