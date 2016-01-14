@@ -95,6 +95,8 @@ public class Bitacora {
     public static final String TABLA_DESPACHOS = "PRODUCCION.DESPACHOS";
     public static final String TABLA_SALIDAS_EXT = "PRODUCCION.SALIDAS_EXT";
     public static final String TABLA_RESERVACIONES = "PRODUCCION.RESERVACIONES";
+    public static final String TABLA_NOTIFICACIONES = "CALENDARIO.NOTIFICACIONES";
+    public static final String TABLA_TIPO_NOTIFICACIONES = "CALENDARIO.TIPO_NOTIFICACIONES";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";
