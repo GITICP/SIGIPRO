@@ -107,7 +107,6 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            getConexion().setAutoCommit(false);
             //Inserta la respuesta general
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.respuesta_pxp (id_lote, id_pxp, version) "
                     + " VALUES (?,?,1) RETURNING id_respuesta");
@@ -153,8 +152,6 @@ public class LoteDAO extends DAO {
                     }
                     if (consulta.executeUpdate() == 1) {
                         resultado = true;
-                        getConexion().setAutoCommit(true);
-                        getConexion().commit();
                     }
                 }
             }
@@ -484,6 +481,34 @@ public class LoteDAO extends DAO {
                 } catch (Exception e) {
                     System.out.println("No tiene respuesta.");
                 }
+                resultado.add(lote);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public List<Lote> obtenerLotesSimple() {
+        List<Lote> resultado = new ArrayList<Lote>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, h.nombre as nombreprotocolo "
+                    + "FROM produccion.lote as l "
+                    + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
+                    + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) ");
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Lote lote = new Lote();
+                lote.setId_lote(rs.getInt("id_lote"));
+                lote.setNombre(rs.getString("nombrelote"));
+                lote.setNombreProtocolo(rs.getString("nombreprotocolo"));
                 resultado.add(lote);
             }
         } catch (Exception ex) {

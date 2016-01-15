@@ -422,7 +422,7 @@ public class ControladorPaso extends SIGIPROServlet {
     }
 
     private void crearCampo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
@@ -435,6 +435,10 @@ public class ControladorPaso extends SIGIPROServlet {
                 xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
                 xml.agregarSubelemento("especial", "true", campo);
                 break;
+            case ("lote"):
+                xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
+                xml.agregarSubelemento("especial", "true", campo);
+                break;
             default:
                 xml.agregarSubelemento("tipo", hash.get("tipocampo"), campo);
                 break;
@@ -442,7 +446,7 @@ public class ControladorPaso extends SIGIPROServlet {
     }
 
     private void crearSubbodega(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("tipo", "subbodega", campo);
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
@@ -458,9 +462,9 @@ public class ControladorPaso extends SIGIPROServlet {
         }
 
     }
-    
+
     private void crearActividadApoyo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("tipo", "aa", campo);
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
@@ -471,7 +475,7 @@ public class ControladorPaso extends SIGIPROServlet {
     }
 
     private void crearUsuario(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("tipo", "usuario", campo);
@@ -482,7 +486,7 @@ public class ControladorPaso extends SIGIPROServlet {
 
     private void crearSeleccion(HelperXML xml, HashMap<String, String> hash, Element campo) {
         xml.agregarSubelemento("tipo", "seleccion", campo);
-        xml.agregarSubelemento("nombre-campo", hash.get("snombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("snombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         xml.agregarSubelemento("etiqueta", hash.get("snombre"), campo);
         this.nombre_campo++;
         Element opciones = xml.agregarElemento("opciones", campo);

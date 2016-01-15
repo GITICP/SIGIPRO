@@ -78,6 +78,7 @@ public class ControladorLote extends SIGIPROServlet {
             add("eliminar");
             add("realizar");
             add("usuariosajax");
+            add("lotesajax");
             add("verrespuesta");
             add("historial");
             add("verhistorial");
@@ -326,6 +327,22 @@ public class ControladorLote extends SIGIPROServlet {
         } catch (SIGIPROException sig_ex) {
             // Enviar error al AJAX
         }
+
+        out.print(resultado);
+
+        out.flush();
+    }
+    
+    protected void getLotesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("application/json");
+
+        PrintWriter out = response.getWriter();
+        String resultado = "";
+
+        List<Lote> lotes = dao.obtenerLotesSimple();
+        Gson gson = new Gson();
+        resultado = gson.toJson(lotes);
 
         out.print(resultado);
 

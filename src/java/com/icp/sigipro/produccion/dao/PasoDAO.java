@@ -42,8 +42,8 @@ public class PasoDAO extends DAO {
                 if (rs.next()) {
                     resultado = true;
                     paso.setId_historial(rs.getInt("id_historial"));
-                    getConexion().setAutoCommit(true);
                     getConexion().commit();
+                    getConexion().setAutoCommit(true);
                 }
             }
         } catch (SQLException se) {

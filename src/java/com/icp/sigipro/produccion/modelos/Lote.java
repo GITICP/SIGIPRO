@@ -17,6 +17,8 @@ public class Lote {
     int id_lote;
     Protocolo protocolo;
     String nombre;
+    //Para el JSON creado en el RealizarLote
+    String nombreProtocolo;
     boolean estado;
     int posicion_actual;
     Paso paso_actual;
@@ -27,6 +29,14 @@ public class Lote {
     List <Respuesta_pxp> respuestas;
 
     public Lote() {
+    }
+
+    public String getNombreProtocolo() {
+        return nombreProtocolo;
+    }
+
+    public void setNombreProtocolo(String nombreProtocolo) {
+        this.nombreProtocolo = nombreProtocolo;
     }
 
     public boolean isAprobacion() {

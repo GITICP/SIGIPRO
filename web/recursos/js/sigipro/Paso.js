@@ -45,6 +45,7 @@ function agregarCampo() {
     fila += "                           <option value=\"fecha\">Fecha</option>";
     fila += "                           <option value=\"cc\">Referencia a Control de Calidad</option>";
     fila += "                           <option value=\"sangria\">Referencia a Sangría</option>";
+    fila += "                           <option value=\"lote\">Referencia a Lote de Producción</option>";
     fila += "                       </select>";
     fila += "                   </div>";
     fila += "               </div>";
@@ -381,7 +382,7 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
-    if (nombres[0] === "campo" || nombres[0] === "seleccion" ||nombres[0] === "articulo" || nombres[0]==="subbodega" || nombres[0] === "usuario") {
+    if (nombres[0] === "campo" || nombres[0] === "seleccion" || nombres[0] === "articulo" || nombres[0] === "subbodega" || nombres[0] === "usuario") {
         o.remove(nombres[1].toString());
         o = o.join();
         $("#orden").val(o);

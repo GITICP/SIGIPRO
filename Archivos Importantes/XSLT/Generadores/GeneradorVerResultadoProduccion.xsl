@@ -26,7 +26,7 @@
                         </thead>
                         <tbody>
                             <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[not(tipo = 'seleccion') and not(tipo = ''aa'') and not(tipo = 'usuario') and not(tipo = 'subbodega') and not(tipo = 'cc') and not(tipo = 'sangria')]"/>
+                            <xsl:apply-templates select="campo[not(tipo = 'seleccion') and not(tipo = ''aa'') and not(tipo = 'usuario') and not(tipo = 'subbodega') and not(tipo = 'cc') and not(tipo = 'lote') and not(tipo = 'sangria')]"/>
                         </tbody>
                     </table>
                 </div>
@@ -130,9 +130,32 @@
                 </div>
             </div>
             
-            <xsl:apply-templates select="campo[tipo = 'aa']"/>
+            <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="'Referencia a Lotes de Producción'" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Campos diferentes de tablas -->
+                            <xsl:apply-templates select="campo[(tipo = 'lote')]"/>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
         </div>
         <div class="widget-content row">
+            <xsl:apply-templates select="campo[tipo = 'aa']"/>
             <xsl:apply-templates select="campo[tipo = 'seleccion']"/>
         </div>
 
@@ -143,7 +166,7 @@
     -->
         
     <!-- Campo de tipos diferentes de tabla -->
-    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = ''aa'') and not(tipo = 'usuario') and not(tipo = 'subbodega') and not(tipo = 'cc') and not(tipo = 'sangria')]">
+    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = ''aa'') and not(tipo = 'usuario') and not(tipo = 'subbodega') and not(tipo = 'cc') and not(tipo = 'lote') and not(tipo = 'sangria')]">
         
         <tr>
             <td>
@@ -321,6 +344,19 @@
             </td>
             <td>
                 <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
+            </td>
+        </tr>
+        
+    </xsl:template>
+    
+    <xsl:template match="campo[(tipo = 'lote')]">
+        <xsl:param name="valor" select="'valor'"/>
+        <tr>
+            <td>
+                <xsl:value-of select="etiqueta" />
+            </td>
+            <td>
+                <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={valor}"> Ver Lote de Producción </a>
             </td>
         </tr>
         

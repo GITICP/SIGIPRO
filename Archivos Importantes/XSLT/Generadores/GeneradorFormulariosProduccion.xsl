@@ -159,6 +159,32 @@
         
     </xsl:template>
     
+    <xsl:template match="campo[tipo = 'lote']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="lote" class="select2 lote" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
+                        <div class="ver">
+                            <a>Ver Lote de Producción</a>
+                        </div>      
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
     <xsl:template match="campo[tipo = 'usuario']">
         
         <!-- Parámetros -->

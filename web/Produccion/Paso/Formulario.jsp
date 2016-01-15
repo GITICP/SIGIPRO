@@ -73,6 +73,7 @@
                                                                     <option value="fecha">Fecha</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('text')}">
                                                                     <option value="number">Número</option>
@@ -81,6 +82,7 @@
                                                                     <option value="fecha">Fecha</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('textarea')}">
                                                                     <option value="number">Número</option>
@@ -89,6 +91,7 @@
                                                                     <option value="fecha">Fecha</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('fecha')}">
                                                                     <option value="number">Número</option>
@@ -97,6 +100,7 @@
                                                                     <option value="fecha" selected>Fecha</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('cc')}">
                                                                     <option value="number">Número</option>
@@ -105,6 +109,7 @@
                                                                     <option value="fecha">Fecha</option>
                                                                     <option value="cc" selected>Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
                                                                 <c:if test="${diccionario.get(i).get('tipo').equals('sangria')}">
                                                                     <option value="number">Número</option>
@@ -113,7 +118,17 @@
                                                                     <option value="fecha">Fecha</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria" selected>Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
+                                                                    <c:if test="${diccionario.get(i).get('tipo').equals('lote')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote" selected>Referencia a Lote de Producción</option>
+                                                                    </c:if>
                                                             </select>
                                                         </div>
                                                     </div>

@@ -17,6 +17,23 @@ $(function () {
         });
     });
     
+    var lotes = $(".lote");
+    $.each(lotes, function(index, element){
+        $(element).on("change",generar_link_lote);
+        $.ajax({
+            url: "/SIGIPRO/Produccion/Lote",
+            type: "GET",
+            data: {"accion": "lotesajax"},
+            dataType: "json",
+            success: function (datos) {
+                generar_select_lote(datos,element);
+            },
+            error: function(){
+                alert("Error");
+            }
+        });
+    });
+    
     var cc = $(".cc");
     
     $.each(cc, function(index, element){
@@ -124,6 +141,22 @@ function generar_select_sangria(datos,element) {
      
 }
 
+function generar_select_lote(datos,element) {
+    
+    $(element).append("<option value=\"\"></option>");
+    for (var i = 0; i < datos.length; i++) {
+        var elemento = datos[i];
+        var opcion_string = "<option value=\""+ elemento.id_lote + "\">";
+        var opcion = $(opcion_string);
+        opcion.text(elemento.nombre + " [" +elemento.nombreProtocolo + "]");
+
+        $(element).append(opcion);
+    }
+    
+    $(element).select2();
+     
+}
+
 function generar_select_cc(datos,element) {
     
     $(element).append("<option value=\"\"></option>");
@@ -197,6 +230,18 @@ function generar_link_sangria(){
     $("."+div +" .ver > a").remove();
 
     elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria="+id+"\"> Ver Sangría </a>");
+}
+
+function generar_link_lote(){
+    var div = ($(this).prop("name"));
+    
+    var elemento = $("."+div +" .ver");
+    
+    var id = ($(this).val());
+    
+    $("."+div +" .ver > a").remove();
+
+    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Produccion/Lote?accion=ver&id_lote="+id+"\"> Ver Lote de Producción </a>");
 }
 
 function generar_link_cc(){
