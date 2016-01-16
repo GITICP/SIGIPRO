@@ -62,31 +62,6 @@
                 <div class="widget-header">
                     <h3>
                         <i class="fa fa-table"></i> 
-                        <xsl:value-of select="'Artículos de Sub Bodegas'" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Sub Bodega</th>
-                                <th>Con cantidades</th>
-                                <th>Producto Interno</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = 'subbodega')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
                         <xsl:value-of select="'Referencia a Control de Calidad'" /> 
                     </h3>
                 </div>
@@ -105,8 +80,6 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="widget-content row">
             <div class="widget widget-table col-sm-6">
                 <div class="widget-header">
                     <h3>
@@ -129,7 +102,8 @@
                     </table>
                 </div>
             </div>
-            
+        </div>
+        <div class="widget-content row">
             <div class="widget widget-table col-sm-6">
                 <div class="widget-header">
                     <h3>
@@ -152,11 +126,11 @@
                     </table>
                 </div>
             </div>
-            
+            <xsl:apply-templates select="campo[tipo = 'aa']"/>
         </div>
         <div class="widget-content row">
-            <xsl:apply-templates select="campo[tipo = 'aa']"/>
             <xsl:apply-templates select="campo[tipo = 'seleccion']"/>
+            <xsl:apply-templates select="campo[tipo = 'subbodega']"/>
         </div>
 
     </xsl:template>
@@ -255,6 +229,45 @@
         </xsl:choose>
     </xsl:template>
     
+    <!-- Campo de tipos de tabla -->
+    <xsl:template match="campo[tipo = 'subbodega']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select='etiqueta' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Producto Interno</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/producto">
+                            <xsl:param name="id" select="'id'"/>
+                            <xsl:param name="nombre" select="'nombre'"/>
+                            <xsl:param name="cantidad" select="'cantidad'"/>
+                            <tr>
+                                <td>
+                                   <a target="_blank" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&amp;id_producto={id}"><xsl:value-of select="nombre" /></a>
+                                </td>
+                                <td>
+                                    <xsl:value-of select="cantidad" />
+                                </td>
+                            </tr>
+
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+
     <xsl:template match="campo[tipo = 'aa']">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
@@ -289,37 +302,7 @@
             </div>
         </div>
     </xsl:template>
-    
-    <xsl:template match="campo[(tipo = 'subbodega')]">
-        <xsl:param name="cantidad" select="'cantidad'"/>
-        <xsl:param name="valor" select="'valor'"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <xsl:value-of select="nombre-subbodega" />
-            </td>
-            <td>
-                <xsl:choose>
-                    <xsl:when test="cantidad = 'true'">
-                        <xsl:value-of select="'Si'" />
-                    </xsl:when>
-                    <xsl:when test="cantidad = 'false'">
-                        <xsl:value-of select="'No'" />
-                    </xsl:when>
-                </xsl:choose> 
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&amp;id_producto={valor}"> Ver Producto </a>
-            </td>
-            <td>
-                <xsl:value-of select="valor-cantidad" />
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
+  
     <xsl:template match="campo[(tipo = 'usuario')]">
         
         <tr>

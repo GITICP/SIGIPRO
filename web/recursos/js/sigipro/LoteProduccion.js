@@ -98,6 +98,8 @@ $(function () {
     
     $.each(subbodegas, function(index, element){
         var id = $(element).prop("id").split("_")[1];
+        $(element).on("select2-selecting",function(e){ crear_cantidad(e,element);});
+        $(element).on("select2-removing",function(e){ remover_cantidad(e,element);});
         $.ajax({
             url: "/SIGIPRO/Bodegas/SubBodegas",
             type: "GET",
@@ -116,10 +118,41 @@ $(function () {
     
 });
 
+function crear_cantidad(e,element){
+    var valor = e.val;
+    var nombre = e.object.text;
+    var id = $(element).attr("name");
+   
+    var fila = "        <div class=\""+id+"_"+valor+"\"> <label for=\"nombre\" class=\"control-label\">Cantidad - "+nombre+"</label>";
+    fila += "           <div class=\"form-group\">";
+    fila += "               <div class=\"col-sm-12\">";
+    fila += "                   <div class=\"input-group\">";
+    fila += "                       <input type=\"number\" placeholder=\"Cantidad\" class=\"form-control\" name=\"" + id + "_"+valor+"\"";
+    fila += "                           required";
+    fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
+    fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
+    fila += "                   </div>";
+    fila += "               </div>";
+    fila += "           </div> </div>";
+    
+    var cantidad = $("."+id+"_cant");
+    
+    cantidad.append(fila);
+    
+}
+
+function remover_cantidad(e,element){
+    var valor = e.val;
+    var id = $(element).attr("name");
+   
+    $("div > ."+id + "_"+valor).remove();
+    
+}
+
 $(document).on("click", ".aprobar-Modal", function () {
     var id_lote = $(this).data('id');
     var id_respuesta_actual = $(this).data('respuesta'); 
-    var posicion_actual = $(this).data('posicion')
+    var posicion_actual = $(this).data('posicion');
     $('#class-aprobar-paso #id_lote').val(id_lote);
     $("#class-aprobar-paso #id_respuesta_actual").val(id_respuesta_actual);
     $("#class-aprobar-paso #posicion_actual").val(posicion_actual);

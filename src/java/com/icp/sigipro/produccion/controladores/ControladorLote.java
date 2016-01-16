@@ -7,6 +7,9 @@ package com.icp.sigipro.produccion.controladores;
 
 import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
+import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
+import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
@@ -29,6 +32,7 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -67,6 +71,7 @@ public class ControladorLote extends SIGIPROServlet {
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
     private final PasoDAO pasodao = new PasoDAO();
     private final UsuarioDAO usuariodao = new UsuarioDAO();
+    private SubBodegaDAO subbodegadao = new SubBodegaDAO();
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
 
@@ -177,6 +182,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         try {
             r = dao.obtenerRespuesta(id_respuesta);
+            System.out.println(r.getRespuesta().getString());
             xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (r.getRespuesta() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, r.getRespuesta());
@@ -332,7 +338,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         out.flush();
     }
-    
+
     protected void getLotesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("application/json");
@@ -478,15 +484,46 @@ public class ControladorLote extends SIGIPROServlet {
                             break;
                         case ("subbodega"):
                             nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            //Obtengo los productos seleccionados
+                            String[] productos = this.obtenerParametros(nombre_campo_resultado);
+                            List<String> lista_productos = new ArrayList<String>();
+                            lista_productos.addAll(Arrays.asList(productos));
+                            //Parseo los id's en String, a Int
+                            List<Integer> lista_id_productos = new ArrayList<>();
+                            for (String producto : lista_productos) {
+                                lista_id_productos.add(Integer.parseInt(producto));
+                            }
+                            //Obtengo los productos para poder almacenar los nombres de los productos
+                            int id_sub_bodega = Integer.parseInt(elemento.getElementsByTagName("subbodega").item(0).getTextContent());
+                            SubBodega subbodega = subbodegadao.buscarSubBodegaEInventariosProduccion(id_sub_bodega);
+                            List<InventarioSubBodega> inventario = subbodega.getInventarios();
+                            HashMap<Integer, String> nombre_productos = new HashMap<>();
+                            for (InventarioSubBodega inv : inventario) {
+                                if (lista_id_productos.contains(inv.getProducto().getId_producto())) {
+                                    nombre_productos.put(inv.getProducto().getId_producto(), inv.getProducto().getNombre());
+                                }
+                            }
+                            //Ingreso los valores dentro del XML
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(valor);
-                            valor = elemento.getElementsByTagName("cantidad").item(0).getTextContent();
-                            if (valor.equals("true")) {
-                                String nombre_cantidad_resultado = elemento.getElementsByTagName("nombre-cantidad").item(0).getTextContent();
-                                String valor_cantidad = this.obtenerParametro(nombre_cantidad_resultado);
-                                nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
-                                nodo_valor.setTextContent(valor_cantidad);
+                            for (Integer id : lista_id_productos) {
+                                Element e = documento_resultado.createElement("producto");
+                                
+                                Element id_producto = documento_resultado.createElement("id");
+                                id_producto.appendChild(documento_resultado.createTextNode(""+id));
+                                e.appendChild(id_producto);
+                                
+                                Element nombre_producto = documento_resultado.createElement("nombre");
+                                String nombre = nombre_productos.get(id);
+                                nombre_producto.appendChild(documento_resultado.createTextNode(nombre));
+                                e.appendChild(nombre_producto);
+                                
+                                Element cantidad_producto = documento_resultado.createElement("cantidad");
+                                String cantidad = this.obtenerParametro(nombre_campo_resultado+"_"+id);
+                                cantidad_producto.appendChild(documento_resultado.createTextNode(cantidad));
+                                e.appendChild(cantidad_producto);
+                                
+                                nodo_valor.appendChild(e);
+                                
                             }
                             break;
                         case ("aa"):
@@ -502,10 +539,8 @@ public class ControladorLote extends SIGIPROServlet {
                             nodo_valor.setTextContent(valor);
                             break;
                     }
-
                 }
             }
-
             String string_xml_resultado;
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
@@ -601,15 +636,46 @@ public class ControladorLote extends SIGIPROServlet {
                             break;
                         case ("subbodega"):
                             nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            valor = this.obtenerParametro(nombre_campo_resultado);
+                            //Obtengo los productos seleccionados
+                            String[] productos = this.obtenerParametros(nombre_campo_resultado);
+                            List<String> lista_productos = new ArrayList<String>();
+                            lista_productos.addAll(Arrays.asList(productos));
+                            //Parseo los id's en String, a Int
+                            List<Integer> lista_id_productos = new ArrayList<>();
+                            for (String producto : lista_productos) {
+                                lista_id_productos.add(Integer.parseInt(producto));
+                            }
+                            //Obtengo los productos para poder almacenar los nombres de los productos
+                            int id_sub_bodega = Integer.parseInt(elemento.getElementsByTagName("subbodega").item(0).getTextContent());
+                            SubBodega subbodega = subbodegadao.buscarSubBodegaEInventariosProduccion(id_sub_bodega);
+                            List<InventarioSubBodega> inventario = subbodega.getInventarios();
+                            HashMap<Integer, String> nombre_productos = new HashMap<>();
+                            for (InventarioSubBodega inv : inventario) {
+                                if (lista_id_productos.contains(inv.getProducto().getId_producto())) {
+                                    nombre_productos.put(inv.getProducto().getId_producto(), inv.getProducto().getNombre());
+                                }
+                            }
+                            //Ingreso los valores dentro del XML
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(valor);
-                            valor = elemento.getElementsByTagName("cantidad").item(0).getTextContent();
-                            if (valor.equals("true")) {
-                                String nombre_cantidad_resultado = elemento.getElementsByTagName("nombre-cantidad").item(0).getTextContent();
-                                String valor_cantidad = this.obtenerParametro(nombre_cantidad_resultado);
-                                nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
-                                nodo_valor.setTextContent(valor_cantidad);
+                            for (Integer id : lista_id_productos) {
+                                Element e = documento_resultado.createElement("producto");
+                                
+                                Element id_producto = documento_resultado.createElement("id");
+                                id_producto.appendChild(documento_resultado.createTextNode(""+id));
+                                e.appendChild(id_producto);
+                                
+                                Element nombre_producto = documento_resultado.createElement("nombre");
+                                String nombre = nombre_productos.get(id);
+                                nombre_producto.appendChild(documento_resultado.createTextNode(nombre));
+                                e.appendChild(nombre_producto);
+                                
+                                Element cantidad_producto = documento_resultado.createElement("cantidad");
+                                String cantidad = this.obtenerParametro(nombre_campo_resultado+"_"+id);
+                                cantidad_producto.appendChild(documento_resultado.createTextNode(cantidad));
+                                e.appendChild(cantidad_producto);
+                                
+                                nodo_valor.appendChild(e);
+                                
                             }
                             break;
                         case ("aa"):
