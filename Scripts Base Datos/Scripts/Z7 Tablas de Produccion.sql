@@ -197,6 +197,7 @@ CREATE TABLE produccion.lote (
     id_lote int NOT NULL,
     id_pxp integer NOT NULL,
     id_usuario_aprobar int,
+    estado int,
     version int NOT NULL,
     CONSTRAINT pk_respuesta_pxp PRIMARY KEY (id_respuesta)
 );

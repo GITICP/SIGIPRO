@@ -158,6 +158,24 @@ $(document).on("click", ".aprobar-Modal", function () {
     $("#class-aprobar-paso #posicion_actual").val(posicion_actual);
 });
 
+$(document).on("click", ".revisar", function () {
+    var id_lote = $(this).data('id');
+    var id_respuesta_actual = $(this).data('respuesta'); 
+    var posicion_actual = $(this).data('posicion');
+    $('#class-revisar-paso #id_lote').val(id_lote);
+    $("#class-revisar-paso #id_respuesta_actual").val(id_respuesta_actual);
+    $("#class-revisar-paso #posicion_actual").val(posicion_actual);
+});
+
+$(document).on("click", ".verificar-Modal", function () {
+    var id_lote = $(this).data('id');
+    var id_respuesta_actual = $(this).data('respuesta'); 
+    var posicion_actual = $(this).data('posicion');
+    $('#class-verificar-paso #id_lote').val(id_lote);
+    $("#class-verificar-paso #id_respuesta_actual").val(id_respuesta_actual);
+    $("#class-verificar-paso #posicion_actual").val(posicion_actual);
+});
+
 function generar_select_sangria(datos,element) {
     
     $(element).append("<option value=\"\"></option>");

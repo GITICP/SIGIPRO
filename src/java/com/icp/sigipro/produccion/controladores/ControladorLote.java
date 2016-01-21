@@ -253,29 +253,18 @@ public class ControladorLote extends SIGIPROServlet {
         validarPermiso(661, request);
         String redireccion = "Lote/Realizar.jsp";
 
-        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        Lote lote = dao.obtenerLote(id_lote);
-        if (!lote.isAprobacion()) {
-            request.setAttribute("id_lote", id_lote);
-
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
+        if (!respuesta.getLote().isAprobacion()) {
+            request.setAttribute("id_respuesta", id_respuesta);
             ProduccionXSLT xslt;
-            Paso paso;
-
             try {
                 xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
-
-                paso = dao.obtenerPasoActual(id_lote);
-
-                System.out.println(paso.getEstructura().getString());
-
-                String formulario = helper_transformaciones.transformar(xslt, paso.getEstructura());
-
+                System.out.println(respuesta.getPaso().getEstructura().getString());
+                String formulario = helper_transformaciones.transformar(xslt, respuesta.getPaso().getEstructura());
                 request.setAttribute("cuerpo_formulario", formulario);
-
-                request.setAttribute("paso", paso);
-
-                request.setAttribute("lote", lote);
-
+                request.setAttribute("paso", respuesta.getPaso());
+                request.setAttribute("lote", respuesta.getLote());
             } catch (TransformerException | SIGIPROException | SQLException ex) {
                 ex.printStackTrace();
                 request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
@@ -409,13 +398,9 @@ public class ControladorLote extends SIGIPROServlet {
 
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int id_lote = Integer.parseInt(this.obtenerParametro("id_lote"));
+        int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
 
-        Lote lote = dao.obtenerLote(id_lote);
-
-        Respuesta_pxp resultado = new Respuesta_pxp();
-        resultado.setLote(lote);
-        resultado.setPaso(lote.getPaso_actual());
+        Respuesta_pxp resultado = dao.obtenerRespuesta(id_respuesta);
 
         Usuario u = new Usuario();
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
@@ -426,7 +411,7 @@ public class ControladorLote extends SIGIPROServlet {
         String redireccion = "Lote/index.jsp";
 
         try {
-            InputStream binary_stream = lote.getPaso_actual().getEstructura().getBinaryStream();
+            InputStream binary_stream = resultado.getPaso().getEstructura().getBinaryStream();
 
             DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document documento_resultado = parser.parse(binary_stream);
@@ -507,23 +492,23 @@ public class ControladorLote extends SIGIPROServlet {
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
                             for (Integer id : lista_id_productos) {
                                 Element e = documento_resultado.createElement("producto");
-                                
+
                                 Element id_producto = documento_resultado.createElement("id");
-                                id_producto.appendChild(documento_resultado.createTextNode(""+id));
+                                id_producto.appendChild(documento_resultado.createTextNode("" + id));
                                 e.appendChild(id_producto);
-                                
+
                                 Element nombre_producto = documento_resultado.createElement("nombre");
                                 String nombre = nombre_productos.get(id);
                                 nombre_producto.appendChild(documento_resultado.createTextNode(nombre));
                                 e.appendChild(nombre_producto);
-                                
+
                                 Element cantidad_producto = documento_resultado.createElement("cantidad");
-                                String cantidad = this.obtenerParametro(nombre_campo_resultado+"_"+id);
+                                String cantidad = this.obtenerParametro(nombre_campo_resultado + "_" + id);
                                 cantidad_producto.appendChild(documento_resultado.createTextNode(cantidad));
                                 e.appendChild(cantidad_producto);
-                                
+
                                 nodo_valor.appendChild(e);
-                                
+
                             }
                             break;
                         case ("aa"):
@@ -659,23 +644,23 @@ public class ControladorLote extends SIGIPROServlet {
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
                             for (Integer id : lista_id_productos) {
                                 Element e = documento_resultado.createElement("producto");
-                                
+
                                 Element id_producto = documento_resultado.createElement("id");
-                                id_producto.appendChild(documento_resultado.createTextNode(""+id));
+                                id_producto.appendChild(documento_resultado.createTextNode("" + id));
                                 e.appendChild(id_producto);
-                                
+
                                 Element nombre_producto = documento_resultado.createElement("nombre");
                                 String nombre = nombre_productos.get(id);
                                 nombre_producto.appendChild(documento_resultado.createTextNode(nombre));
                                 e.appendChild(nombre_producto);
-                                
+
                                 Element cantidad_producto = documento_resultado.createElement("cantidad");
-                                String cantidad = this.obtenerParametro(nombre_campo_resultado+"_"+id);
+                                String cantidad = this.obtenerParametro(nombre_campo_resultado + "_" + id);
                                 cantidad_producto.appendChild(documento_resultado.createTextNode(cantidad));
                                 e.appendChild(cantidad_producto);
-                                
+
                                 nodo_valor.appendChild(e);
-                                
+
                             }
                             break;
                         case ("aa"):
