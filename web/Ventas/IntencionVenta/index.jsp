@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Ventas</li>
             <li> 
-              <a href="/SIGIPRO/Ventas/Producto_ventas?">Catálogo de Productos de Venta</a>
+              <a href="/SIGIPRO/Ventas/IntencionVenta?">Solicitudes o Intenciones de Venta</a>
             </li>
           </ul>
         </div>
@@ -31,9 +31,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-list-alt"></i> Catálogo de Productos de Venta </h3>
+                <h3><i class="fa fa-list-alt"></i> Solicitudes o Intenciones de Venta </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/Producto_ventas?accion=agregar">Agregar un Producto de Venta</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/IntencionVenta?accion=agregar">Agregar una Solicitud o Intención de Venta</a>
                 </div>  
             </div>
             ${mensaje}
@@ -42,26 +42,26 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Cantidad en Stock</th>
-                    <th>Precio Unitario</th>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Observaciones</th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaProductos}" var="producto">
+                  <c:forEach items="${listaIntenciones}" var="intencion">
 
-                    <tr id ="${producto.getId_producto()}">
+                    <tr id ="${intencion.getId_intencion()}">
                       <td>
-                        <a href="/SIGIPRO/Ventas/Producto_ventas?accion=ver&id_producto=${producto.getId_producto()}">
+                        <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${intencion.getId_intencion()}">
                         <div style="height:100%;width:100%">
-                            ${producto.getNombre()}
+                            ${intencion.getId_intencion()}
                         </div>
                         </a>
                       </td>
-                      <td>${producto.getDescripcion()}</td>
-                      <td>${producto.getStock()}</td>
-                      <td>${producto.getPrecio()}</td>
+                      <td>${intencion.getCliente().getNombre()}</td>
+                      <td>${intencion.getObservaciones()}</td>
+                      <td>${intencion.getEstado()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

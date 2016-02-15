@@ -1,7 +1,7 @@
 <%-- 
     Document   : Editar
     Created on : Mar 28, 2015, 11:37:30 PM
-    Author     : ld.conejo
+    Author     : jespinozac95
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

@@ -1,7 +1,7 @@
 <%-- 
     Document   : Ver
     Created on : Mar 28, 2015, 11:26:24 PM
-    Author     : ld.conejo
+    Author     : jespinozac95
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

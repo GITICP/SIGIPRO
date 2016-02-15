@@ -134,6 +134,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
             redireccion = "ContratoComercializacion/index.jsp";
             List<Contrato_comercializacion> contratos = dao.obtenerContratos_comercializacion();
             request.setAttribute("listaContratos", contratos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Contrato agregado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -161,6 +162,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
             redireccion = "ContratoComercializacion/index.jsp";
             List<Contrato_comercializacion> contratos = dao.obtenerContratos_comercializacion();
             request.setAttribute("listaContratos", contratos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Contrato editado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -188,6 +190,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
             redireccion = "ContratoComercializacion/index.jsp";
             List<Contrato_comercializacion> contratos = dao.obtenerContratos_comercializacion();
             request.setAttribute("listaContratos", contratos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Contrato eliminado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }

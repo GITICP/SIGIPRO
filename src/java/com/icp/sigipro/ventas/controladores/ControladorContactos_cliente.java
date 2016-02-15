@@ -124,6 +124,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             redireccion = "Clientes/index.jsp";
             List<Cliente> clientes = dao.obtenerClientes();
             request.setAttribute("listaClientes", clientes);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Contacto agregado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -152,6 +153,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             redireccion = "Clientes/index.jsp";
             List<Cliente> clientes = dao.obtenerClientes();
             request.setAttribute("listaClientes", clientes);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Contacto editado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -179,6 +181,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             redireccion = "Clientes/index.jsp";
             List<Cliente> clientes = dao.obtenerClientes();
             request.setAttribute("listaClientes", clientes);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Contacto eliminado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }

@@ -131,6 +131,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             redireccion = "Producto_ventas/index.jsp";
             List<Producto_venta> productos = dao.obtenerProductos_venta();
             request.setAttribute("listaProductos", productos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta agregado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -158,6 +159,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             redireccion = "Producto_ventas/index.jsp";
             List<Producto_venta> productos = dao.obtenerProductos_venta();
             request.setAttribute("listaProductos", productos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta editado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -185,6 +187,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             redireccion = "Producto_ventas/index.jsp";
             List<Producto_venta> productos = dao.obtenerProductos_venta();
             request.setAttribute("listaProductos", productos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta eliminado correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }

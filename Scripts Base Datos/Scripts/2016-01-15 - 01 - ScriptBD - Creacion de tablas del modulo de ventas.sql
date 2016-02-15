@@ -29,9 +29,20 @@ CREATE TABLE ventas.producto_venta(
 	cantidad_stock integer NOT NULL,
 	precio integer NOT NULL
 );
-
+CREATE TABLE ventas.intencion_venta(
+	id_intencion serial NOT NULL,
+	id_cliente integer NOT NULL,	
+	observaciones character varying(100),
+	estado character varying(20) NOT NULL
+);
+CREATE TABLE ventas.producto_intencion(
+	id_producto integer NOT NULL,
+	id_intencion integer NOT NULL,
+	cantidad integer NOT NULL,
+	posible_fecha_despacho date NOT NULL
+);
 --
-CREATE TABLE ventas.encuesta_satisfaccion(
+CREATE TABLE ventas.encuesta_satisfaccion(	
 	id_encuesta serial NOT NULL,
 	id_cliente integer NOT NULL,
 	fecha date NOT NULL,
@@ -50,10 +61,16 @@ CREATE TABLE ventas.reunion_produccion(
 ALTER TABLE ONLY ventas.cliente ADD CONSTRAINT pk_cliente PRIMARY KEY (id_cliente);
 ALTER TABLE ONLY ventas.contactos_cliente ADD CONSTRAINT pk_contactos_cliente PRIMARY KEY (id_contacto);
 ALTER TABLE ONLY ventas.contrato_comercializacion ADD CONSTRAINT pk_contrato_comercializacion PRIMARY KEY (id_contrato);
+ALTER TABLE ONLY ventas.producto_venta ADD CONSTRAINT pk_producto_venta PRIMARY KEY (id_producto);
+ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT pk_intencion_venta PRIMARY KEY (id_intencion);
+ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT pk_producto_intencion PRIMARY KEY (id_producto, id_intencion);
 
 --Llaves foraneas esquema ventas
 
 ALTER TABLE ONLY ventas.contactos_cliente ADD CONSTRAINT fk_contactos_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT fk_intenciones_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
 
 --Permisos asociados a ventas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (701, '[Ventas]AdministrarModuloVentas', 'Permite gestionar el modulo de ventas');
@@ -66,7 +83,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (702, 700, 'Contratos de Comercialización', '/Ventas/ContratoComercializacion', 2);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, orden) VALUES (703, 700, 'Proceso de Venta', 3);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (704, 703, 'Intenciones de Venta', '/Ventas/IntencionVenta', 1);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (704, 703, 'Solicitudes o Intenciones de Venta', '/Ventas/IntencionVenta', 1);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (705, 703, 'Cotizaciones', '/Ventas/Cotizacion', 2);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (706, 703, 'Órdenes de Compra', '/Ventas/OrdenCompra', 3);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (707, 703, 'Facturas', '/Ventas/Factura', 4);

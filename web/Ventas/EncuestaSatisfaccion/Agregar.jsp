@@ -1,7 +1,7 @@
 <%-- 
     Document   : Agregar
-    Created on : Apr 1, 2015, 5:55:36 PM
-    Author     : ld.conejo
+    Created on : Feb 11, 2016, 5:55:36 PM
+    Author     : jespinozac95
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
