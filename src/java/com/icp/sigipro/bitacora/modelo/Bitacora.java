@@ -101,6 +101,7 @@ public class Bitacora {
     public static final String TABLA_CONTRATO_COMERCIALIZACION = "VENTAS.CONTRATO_COMERCIALIZACION";
     public static final String TABLA_PRODUCTOS_VENTA = "VENTAS.PRODUCTO_VENTA";
     public static final String TABLA_INTENCION_VENTA = "VENTAS.INTENCION_VENTA";
+    public static final String TABLA_COTIZACION = "VENTAS.COTIZACION";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";

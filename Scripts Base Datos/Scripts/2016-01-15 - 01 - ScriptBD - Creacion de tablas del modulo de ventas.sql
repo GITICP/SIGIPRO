@@ -41,6 +41,19 @@ CREATE TABLE ventas.producto_intencion(
 	cantidad integer NOT NULL,
 	posible_fecha_despacho date NOT NULL
 );
+CREATE TABLE ventas.cotizacion(
+	id_cotizacion serial NOT NULL,
+	id_intencion integer,
+	id_cliente integer NOT NULL,
+	total integer NOT NULL,
+	flete integer NOT NULL
+);
+CREATE TABLE ventas.producto_cotizacion(
+	id_producto integer NOT NULL,
+	id_cotizacion integer NOT NULL,
+	cantidad integer NOT NULL,
+	posible_fecha_despacho date NOT NULL
+);
 --
 CREATE TABLE ventas.encuesta_satisfaccion(	
 	id_encuesta serial NOT NULL,
@@ -64,6 +77,8 @@ ALTER TABLE ONLY ventas.contrato_comercializacion ADD CONSTRAINT pk_contrato_com
 ALTER TABLE ONLY ventas.producto_venta ADD CONSTRAINT pk_producto_venta PRIMARY KEY (id_producto);
 ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT pk_intencion_venta PRIMARY KEY (id_intencion);
 ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT pk_producto_intencion PRIMARY KEY (id_producto, id_intencion);
+ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT pk_cotizacion_venta PRIMARY KEY (id_cotizacion);
+ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT pk_producto_cotizacion PRIMARY KEY (id_producto, id_cotizacion);
 
 --Llaves foraneas esquema ventas
 
@@ -71,6 +86,10 @@ ALTER TABLE ONLY ventas.contactos_cliente ADD CONSTRAINT fk_contactos_cliente FO
 ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT fk_intenciones_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT fk_cotizacion_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT fk_cotizacion_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT fk_id_cotizacion FOREIGN KEY (id_cotizacion) REFERENCES ventas.cotizacion(id_cotizacion) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
 
 --Permisos asociados a ventas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (701, '[Ventas]AdministrarModuloVentas', 'Permite gestionar el modulo de ventas');
