@@ -77,6 +77,11 @@ CREATE TABLE ventas.factura(
 	documento character varying(500) NOT NULL,
 	tipo character varying(20)
 );
+CREATE TABLE ventas.pago(
+	id_pago serial NOT NULL,
+	id_factura integer NOT NULL,
+	pago integer NOT NULL
+);
 --
 CREATE TABLE ventas.encuesta_satisfaccion(	
 	id_encuesta serial NOT NULL,
@@ -105,6 +110,7 @@ ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT pk_producto_cotizacio
 ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT pk_orden_compra PRIMARY KEY (id_orden);
 ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT pk_producto_orden PRIMARY KEY (id_producto, id_orden);
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT pk_factura PRIMARY KEY (id_factura);
+ALTER TABLE ONLY ventas.pago ADD CONSTRAINT pk_pago PRIMARY KEY (id_pago);
 
 --Llaves foraneas esquema ventas
 
@@ -123,6 +129,7 @@ ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_orden FOREIGN KEY (i
 ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.pago ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE CASCADE;
 
 --Permisos asociados a ventas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (701, '[Ventas]AdministrarModuloVentas', 'Permite gestionar el modulo de ventas');
