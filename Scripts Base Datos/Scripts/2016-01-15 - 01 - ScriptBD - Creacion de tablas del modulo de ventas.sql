@@ -82,20 +82,18 @@ CREATE TABLE ventas.pago(
 	id_factura integer NOT NULL,
 	pago integer NOT NULL
 );
+CREATE TABLE ventas.reunion_produccion(
+	id_reunion serial NOT NULL,
+	fecha date NOT NULL,
+	observaciones character varying(100),
+	minuta character varying(500) NOT NULL
+);
 --
 CREATE TABLE ventas.encuesta_satisfaccion(	
 	id_encuesta serial NOT NULL,
 	id_cliente integer NOT NULL,
 	fecha date NOT NULL,
 	observaciones character varying(100)
-	-- documento
-);
-CREATE TABLE ventas.reunion_produccion(
-	id_reunion serial NOT NULL,
-	fecha date NOT NULL,
-	id_usuarios_participantes integer[] NOT NULL,
-	observaciones character varying(100)
-	-- documento (minuta)
 );
 
 --Llaves primarias esquema de ventas 
@@ -111,6 +109,7 @@ ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT pk_orden_compra PRIMARY KEY 
 ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT pk_producto_orden PRIMARY KEY (id_producto, id_orden);
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT pk_factura PRIMARY KEY (id_factura);
 ALTER TABLE ONLY ventas.pago ADD CONSTRAINT pk_pago PRIMARY KEY (id_pago);
+ALTER TABLE ONLY ventas.reunion_produccion ADD CONSTRAINT pk_reunion_produccion PRIMARY KEY (id_reunion);
 
 --Llaves foraneas esquema ventas
 
@@ -149,6 +148,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (708, 703, 'Pagos', '/Ventas/Pago', 5);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (709, 700, 'Productos de Venta', '/Ventas/Producto_ventas', 4);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (710, 700, 'Reuniones de Producción', '/Ventas/ReunionProduccion', 5);
 
 --Permisos del menu principal de ventas
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (701, 701);

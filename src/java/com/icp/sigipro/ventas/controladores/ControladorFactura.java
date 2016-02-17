@@ -50,7 +50,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * @author Amed
  */
 @WebServlet(name = "ControladorFactura", urlPatterns = {"/Ventas/Factura"})
-public class ContoladorFactura extends SIGIPROServlet {
+public class ControladorFactura extends SIGIPROServlet {
 
     private final int[] permisos = {701, 702, 1};
     private final FacturaDAO dao = new FacturaDAO();
@@ -58,7 +58,7 @@ public class ContoladorFactura extends SIGIPROServlet {
     private final ClienteDAO cdao = new ClienteDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
 
-    protected final Class clase = ContoladorFactura.class;
+    protected final Class clase = ControladorFactura.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
