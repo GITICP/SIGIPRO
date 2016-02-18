@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Ventas</li>
             <li> 
-              <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?">Encuestas de Satisfacción</a>
+              <a href="/SIGIPRO/Ventas/SeguimientoVenta?">Seguimientos de Venta</a>
             </li>
           </ul>
         </div>
@@ -31,9 +31,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Encuestas de Satisfacción </h3>
+              <h3><i class="fa fa-gears"></i> Seguimientos de Venta </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=agregar">Agregar Encuesta de Satisfacción</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/SeguimientoVenta?accion=agregar">Agregar Seguimiento de Venta</a>
                 </div>
             </div>
             ${mensaje}
@@ -44,24 +44,26 @@
                   <tr>
                     <th>ID</th>
                     <th>Cliente</th>
-                    <th>Fecha</th>
+                    <th>Factura</th>
                     <th>Observaciones</th>
+                    <th>Tipo</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaEncuestas}" var="encuesta">
+                  <c:forEach items="${listaSeguimientos}" var="seguimiento">
 
-                    <tr id ="${encuesta.getId_encuesta()}">
+                    <tr id ="${seguimiento.getId_seguimiento()}">
                       <td>
-                        <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=ver&id_encuesta=${encuesta.getId_encuesta()}">
+                        <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=ver&id_seguimiento=${seguimiento.getId_seguimiento()}">
                           <div style="height:100%;width:100%">
-                            ${encuesta.getId_encuesta()}
+                            ${seguimiento.getId_seguimiento()}
                           </div>
                         </a>
                       </td>
-                      <td>${encuesta.getCliente().getNombre()}</td>
-                      <td>${encuesta.getFecha_S()}</td>
-                      <td>${encuesta.getObservaciones()}</td>
+                      <td>${seguimiento.getCliente().getNombre()}</td>
+                      <td>ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()}</td>
+                      <td>${seguimiento.getObservaciones()}</td>
+                      <td>${seguimiento.getTipo()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

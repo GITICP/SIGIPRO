@@ -106,6 +106,8 @@ public class Bitacora {
     public static final String TABLA_FACTURA = "VENTAS.FACTURA";
     public static final String TABLA_PAGO = "VENTAS.PAGO";
     public static final String TABLA_REUNION_PRODUCCION = "VENTAS.REUNION_PRODUCCION";
+    public static final String TABLA_ENCUESTA_SATISFACCION = "VENTAS.ENCUESTA_SATISFACCION";
+    public static final String TABLA_SEGUIMIENTO_VENTA = "VENTAS.SEGUIMIENTO_VENTA";
 
     //Variables de Accion
     public static final String ACCION_AGREGAR = "AGREGAR";

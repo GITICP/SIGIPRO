@@ -14,9 +14,9 @@
 
         <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
-        <form id="form-eliminar-encuesta" method="post" action="EncuestaSatisfaccion">
+        <form id="form-eliminar-seguimiento" method="post" action="SeguimientoVenta">
             <input name="accion" value="Eliminar" hidden> 
-            <input name="id_encuesta" value="${encuesta.getId_encuesta()}" hidden>
+            <input name="id_seguimiento" value="${seguimiento.getId_seguimiento()}" hidden>
         </form>
         
     
@@ -27,9 +27,9 @@
                     <ul class="breadcrumb">
                         <li>Ventas</li>
                         <li> 
-                            <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?">Encuestas de Satisfacción</a>
+                            <a href="/SIGIPRO/Ventas/SeguimientoVenta?">Seguimientos de Venta</a>
                         </li>
-                        <li class="active"> Encuesta de Satisfacción ${encuesta.getId_encuesta()} </li>
+                        <li class="active"> Seguimiento de Venta ${seguimiento.getId_seguimiento()} </li>
                     </ul>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Encuesta de Satisfacción ${encuesta.getId_encuesta()} </h3>
+                            <h3><i class="fa fa-gears"></i> Seguimiento de Venta ${seguimiento.getId_seguimiento()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:set var="contienePermisoEditarYBorrar" value="false" />
                                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -48,26 +48,27 @@
                                   </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditarYBorrar}">
-                                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=editar&id_encuesta=${encuesta.getId_encuesta()}">Editar</a>
-                                  <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar esta encuesta" data-form-id="form-eliminar-encuesta">Eliminar</a>
+                                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/SeguimientoVenta?accion=editar&id_seguimiento=${seguimiento.getId_seguimiento()}">Editar</a>
+                                  <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar esta seguimiento" data-form-id="form-eliminar-seguimiento">Eliminar</a>
                                 </c:if>
                             </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <table class="tabla-ver">
-                                <tr><td> <strong>ID: </strong></td> <td>${encuesta.getId_encuesta()} </td></tr>
-                                <tr><td> <strong>Cliente: </strong> <td>${encuesta.getCliente().getNombre()} </td></tr>
-                                <tr><td> <strong>Fecha: </strong> <td>${encuesta.getFecha_S()} </td></tr>
-                                <tr><td> <strong>Observaciones: </strong> <td>${encuesta.getObservaciones()} </td></tr>
+                                <tr><td> <strong>ID: </strong></td> <td>${seguimiento.getId_seguimiento()} </td></tr>
+                                <tr><td> <strong>Cliente: </strong> <td>${seguimiento.getCliente().getNombre()} </td></tr>
+                                <tr><td> <strong>Factura: </strong> <td>ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()} </td></tr>
+                                <tr><td> <strong>Observaciones: </strong> <td>${seguimiento.getObservaciones()} </td></tr>
+                                <tr><td> <strong>Tipo: </strong> <td>${seguimiento.getTipo()} </td></tr>
                                 <tr><td> <strong>Documento 1: </strong> 
                                     <td>
                                         <c:choose>
-                                            <c:when test="${encuesta.getDocumento_1() == ''}">
+                                            <c:when test="${seguimiento.getDocumento_1() == ''}">
                                                 Sin documento asociado.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}&documento=1">Descargar Documento</a>
+                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}&documento=1">Descargar Documento</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -75,11 +76,11 @@
                                 <tr><td> <strong>Documento 2: </strong> 
                                     <td>
                                         <c:choose>
-                                            <c:when test="${encuesta.getDocumento_2() == ''}">
+                                            <c:when test="${seguimiento.getDocumento_2() == ''}">
                                                 Sin documento asociado.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}&documento=2">Descargar Documento</a>
+                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}&documento=2">Descargar Documento</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -87,11 +88,11 @@
                                 <tr><td> <strong>Documento 3: </strong> 
                                     <td>
                                         <c:choose>
-                                            <c:when test="${encuesta.getDocumento_3() == ''}">
+                                            <c:when test="${seguimiento.getDocumento_3() == ''}">
                                                 Sin documento asociado.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}&documento=3">Descargar Documento</a>
+                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}&documento=3">Descargar Documento</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>

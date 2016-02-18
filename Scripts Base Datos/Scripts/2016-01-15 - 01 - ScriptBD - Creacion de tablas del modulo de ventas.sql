@@ -88,12 +88,19 @@ CREATE TABLE ventas.reunion_produccion(
 	observaciones character varying(100),
 	minuta character varying(500) NOT NULL
 );
---
 CREATE TABLE ventas.encuesta_satisfaccion(	
 	id_encuesta serial NOT NULL,
 	id_cliente integer NOT NULL,
 	fecha date NOT NULL,
 	observaciones character varying(100)
+);
+CREATE TABLE ventas.documento(
+	id_documento serial NOT NULL,
+	documento character varying(500) NOT NULL
+);
+CREATE TABLE ventas.documento_encuesta(	
+	id_documento integer NOT NULL,
+	id_encuesta integer NOT NULL
 );
 
 --Llaves primarias esquema de ventas 
@@ -110,6 +117,9 @@ ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT pk_producto_orden PRIMARY 
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT pk_factura PRIMARY KEY (id_factura);
 ALTER TABLE ONLY ventas.pago ADD CONSTRAINT pk_pago PRIMARY KEY (id_pago);
 ALTER TABLE ONLY ventas.reunion_produccion ADD CONSTRAINT pk_reunion_produccion PRIMARY KEY (id_reunion);
+ALTER TABLE ONLY ventas.encuesta_satisfaccion ADD CONSTRAINT pk_encuesta_satisfaccion PRIMARY KEY (id_encuesta);
+ALTER TABLE ONLY ventas.documento ADD CONSTRAINT pk_documento PRIMARY KEY (id_documento);
+ALTER TABLE ONLY ventas.documento_encuesta ADD CONSTRAINT pk_documento_encuesta PRIMARY KEY (id_documento, id_encuesta);
 
 --Llaves foraneas esquema ventas
 
@@ -129,6 +139,9 @@ ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_producto FOREIGN KEY
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.pago ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.encuesta_satisfaccion ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.documento_encuesta ADD CONSTRAINT fk_documento FOREIGN KEY (id_documento) REFERENCES ventas.documento(id_documento) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.documento_encuesta ADD CONSTRAINT fk_encuesta FOREIGN KEY (id_encuesta) REFERENCES ventas.encuesta_satisfaccion(id_encuesta) ON DELETE CASCADE;
 
 --Permisos asociados a ventas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (701, '[Ventas]AdministrarModuloVentas', 'Permite gestionar el modulo de ventas');
@@ -149,6 +162,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (709, 700, 'Productos de Venta', '/Ventas/Producto_ventas', 4);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (710, 700, 'Reuniones de Producción', '/Ventas/ReunionProduccion', 5);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (711, 700, 'Encuestas de Satisfacción', '/Ventas/EscuestaSatisfaccion', 6);
 
 --Permisos del menu principal de ventas
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (701, 701);

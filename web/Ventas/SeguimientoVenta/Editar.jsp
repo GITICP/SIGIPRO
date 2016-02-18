@@ -1,6 +1,6 @@
 <%-- 
-    Document   : Agregar
-    Created on : Jun 29, 2015, 5:02:37 PM
+    Document   : Editar
+    Created on : Jun 29, 2015, 5:02:44 PM
     Author     : ld.conejo
 --%>
 
@@ -23,9 +23,9 @@
           <ul class="breadcrumb">
             <li>Ventas</li>
             <li> 
-              <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?">Encuestas de Satisfacción</a>
+              <a href="/SIGIPRO/Ventas/SeguimientoVenta?">Seguimientos de Venta</a>
             </li>
-            <li class="active"> Agregar Encuesta de Satisfacción </li>
+            <li class="active"> Editar Seguimiento de Venta </li>
 
           </ul>
         </div>
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-list-alt"></i> Agregar Nueva Encuesta de Satisfacción </h3>
+              <h3><i class="fa fa-gears"></i> Editar Seguimiento de Venta </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -52,7 +52,8 @@
       </div>
       <!-- /main -->
     </div>
-
+        <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+        <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Seguimiento_venta.js"></script>
   </jsp:attribute>
 
 </t:plantilla_general>
