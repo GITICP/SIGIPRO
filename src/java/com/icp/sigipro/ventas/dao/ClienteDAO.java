@@ -155,4 +155,48 @@ public class ClienteDAO extends DAO {
         return resultado;
     }
 
+    public int relacionesConOtrasTablas(int id_cliente) throws SIGIPROException{
+        int resultado = 0;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" select " +
+                "(select count(*) from ventas.intencion_venta where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.cotizacion where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.orden_compra where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.factura where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.seguimiento_venta where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.tratamiento where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.encuesta_satisfaccion where id_cliente =?)" +
+                "+" +
+                "(select count(*) from ventas.lista where id_cliente =?)" +
+                "as count;");
+
+            consulta.setInt(1, id_cliente);
+            consulta.setInt(2, id_cliente);
+            consulta.setInt(3, id_cliente);
+            consulta.setInt(4, id_cliente);
+            consulta.setInt(5, id_cliente);
+            consulta.setInt(6, id_cliente);
+            consulta.setInt(7, id_cliente);
+            consulta.setInt(8, id_cliente);
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = resultadoConsulta.getInt("count");
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+        }
+        return resultado;
+    }
 }

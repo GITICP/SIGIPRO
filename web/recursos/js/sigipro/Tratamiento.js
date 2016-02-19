@@ -10,17 +10,6 @@ $( document ).ready(function() {
   }
 });
 
-/*$(function(){ 
-    $("#botonConfirmar").click(function () {
-        var tabla = document.getElementById("datatable-column-filter-acciones");
-        
-        if (tabla.rows.length === 1){
-           document.getElementById("texto").innerHTML = "La lista de acciones no puede estar vacía.";
-        }
-
-    });
-});*/
-
 function eliminarAccion(idRol) {
   fila = $('#' + idRol);
   $('#seleccionAccion')

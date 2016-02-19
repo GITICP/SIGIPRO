@@ -269,24 +269,32 @@ public class ControladorCliente extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_cliente = request.getParameter("id_cliente"); 
-        try {
-            Cliente cliente_a_eliminar = dao.obtenerCliente(Integer.parseInt(id_cliente));
-            
-            resultado = dao.eliminarCliente(cliente_a_eliminar.getId_cliente());
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(cliente_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CLIENTE, request.getRemoteAddr());
-            //*----------------------------*
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+        if(dao.relacionesConOtrasTablas(Integer.parseInt(id_cliente)) == 0){
+            try {
+                Cliente cliente_a_eliminar = dao.obtenerCliente(Integer.parseInt(id_cliente));
+
+                resultado = dao.eliminarCliente(cliente_a_eliminar.getId_cliente());
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(cliente_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CLIENTE, request.getRemoteAddr());
+                //*----------------------------*
+            } catch (SIGIPROException ex) {
+                request.setAttribute("mensaje", ex.getMessage());
+            }
+            if (resultado) {
+                redireccion = "Clientes/index.jsp";
+                List<Cliente> clientes = dao.obtenerClientes();
+                request.setAttribute("listaClientes", clientes);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Cliente eliminado correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
         }
-        if (resultado) {
+        else{
             redireccion = "Clientes/index.jsp";
             List<Cliente> clientes = dao.obtenerClientes();
             request.setAttribute("listaClientes", clientes);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Cliente eliminado correctamente"));
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            request.setAttribute("mensaje", helper.mensajeDeError("No se puede borrar el cliente debido a que tiene dependencias con otras secciones"));
         }
         redireccionar(request, response, redireccion);
     }

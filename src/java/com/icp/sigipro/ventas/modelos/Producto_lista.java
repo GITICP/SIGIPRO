@@ -17,7 +17,7 @@ import org.json.JSONObject;
  */
 public class Producto_lista {
     private Producto_venta producto;
-    private Orden_compra orden;
+    private Lista lista;
     private int cantidad;
     
     public Producto_venta getProducto() {
@@ -28,12 +28,12 @@ public class Producto_lista {
         this.producto = producto;
     }
 
-    public Orden_compra getOrden_compra() {
-        return orden;
+    public Lista getLista() {
+        return lista;
     }
 
-    public void setOrden_compra(Orden_compra orden) {
-        this.orden = orden;
+    public void setLista(Lista lista) {
+        this.lista = lista;
     }
 
     public int getCantidad() {
@@ -58,7 +58,7 @@ public class Producto_lista {
                 }
             }          
             JSON.put("id_producto",this.producto.getId_producto());
-            JSON.put("id_orden",this.orden.getId_orden());
+            JSON.put("id_lista",this.lista.getId_lista());
         }catch (Exception e){
             
         }

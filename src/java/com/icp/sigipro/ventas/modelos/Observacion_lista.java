@@ -9,9 +9,9 @@ package com.icp.sigipro.ventas.modelos;
  *
  * @author Josue
  */
-public class Observacion {
+public class Observacion_lista {
     private int id_observacion;
-    private String observacion;
+    private int id_lista;
 
     public int getId_observacion() {
         return id_observacion;
@@ -21,12 +21,12 @@ public class Observacion {
         this.id_observacion = id_observacion;
     }
 
-    public String getObservacion() {
-        return observacion;
+    public int getId_lista() {
+        return id_lista;
     }
 
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
+    public void setId_lista(int id_lista) {
+        this.id_lista = id_lista;
     }
     
     
