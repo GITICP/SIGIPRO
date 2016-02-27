@@ -17,23 +17,40 @@
     CREATE TABLE caballeriza.sangrias_pruebas_caballos (
         id_sangria_prueba integer NOT NULL,
         id_caballo integer NOT NULL,
-        id_resultado_hematocrito integer,
-        id_resultado_hemoglobina integer 
+        id_resultado integer
+    );
+
+    -- Análisis
+
+    INSERT INTO control_calidad.analisis(id_analisis,estructura,machote,nombre,estado) VALUES (2147483647,null,'','Por Definir','Aprobado');
+
+    CREATE TABLE control_calidad.resultados_analisis_sangrias_prueba(
+        id_resultado_analisis_sp serial NOT NULL,
+        id_ags integer NOT NULL,
+        WBC character varying(200),
+        RBC character varying(200),
+        hematocrito decimal NOT NULL,
+        hemoglobina decimal NOT NULL,
+        repeticion integer NOT NULL,
+        fecha date
     );
 
 -- PKs
+
+    ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT pk_resultados_analisis_sp PRIMARY KEY (id_resultado_analisis_sp);
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas  ADD CONSTRAINT pk_sangrias_pruebas PRIMARY KEY (id_sangria_prueba);
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangrias_pruebas_caballos PRIMARY KEY (id_sangria_prueba,id_caballo); 
 
 -- FKs
 
+    ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT fk_resultados_sp_ags FOREIGN KEY (id_ags) REFERENCES control_calidad.analisis_grupo_solicitud(id_analisis_grupo_solicitud);
+
     ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
-    ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_resultado_hematocrito FOREIGN KEY (id_resultado_hematrocito) REFERENCES control_calidad.resultados (id_resultado);
-    ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_resultado_hemoglobina FOREIGN KEY (id_resultado_hemoglobina) REFERENCES control_calidad.resultados (id_resultado);
+    ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_resultado_hematocrito FOREIGN KEY (id_resultado_hematrocito) REFERENCES control_calidad.resultados_analisis_sangrias_prueba (id_resultado_analisis_sp-);
 
 -- Permisos
 
@@ -48,3 +65,4 @@
     -- Asociaciones permisos
     INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (59, 406);
     INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
+
