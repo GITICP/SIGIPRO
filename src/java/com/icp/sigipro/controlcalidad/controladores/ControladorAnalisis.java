@@ -90,7 +90,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final int[] permisos = {540, 541, 542, 543, 544, 545, 546};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
-    private final ResultadoSangriaPruebaDAO resultado_spdao= new ResultadoSangriaPruebaDAO();
+    private final ResultadoSangriaPruebaDAO resultado_spdao = new ResultadoSangriaPruebaDAO();
     private final UsuarioDAO usuariodao = new UsuarioDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
     private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
@@ -312,6 +312,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         String redireccion = "Analisis/Realizar.jsp";
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        request.setAttribute("id_solicitud", request.getParameter("id_solicitud"));
         request.setAttribute("id_analisis", id_analisis);
         request.setAttribute("id_ags", request.getParameter("id_ags"));
         request.setAttribute("lista", request.getParameter("lista"));
@@ -568,25 +569,41 @@ public class ControladorAnalisis extends SIGIPROServlet {
         }
 
     }
-    
+
     protected void postRealizar_sp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String redireccion = "Sangria/Agregar.jsp";
+        String redireccion = "Analisis/index.jsp";
         ResultadoSangriaPrueba resultado_sp = construirObjectoSangriaPrueba(request);
-        
+
         try {
-          
+            
+            int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
+
             resultado_spdao.insertarResultadoSangriaPrueba(resultado_sp);
 
-            BitacoraDAO bitacora = new BitacoraDAO();
             //bitacora.setBitacora(resultado_sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
+            redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
+            try {
+                SolicitudCC s = solicituddao.obtenerSolicitud(resultado_sp.getAgs().getGrupo().getSolicitud().getId_solicitud());
+                request.setAttribute("solicitud", s);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Resultado registrado, pero no se pudo obtener la solicitud. Notifique al administrador del sistema."));
+            }
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Sangría agregada correctamente."));
-            redireccion = "Sangria/index.jsp";
+            if (!Boolean.parseBoolean(this.obtenerParametro("redirect_lista"))) {
+                this.redireccionar(request, response, redireccion);
+            } else {
+                Analisis a = dao.obtenerAnalisis(id_analisis);
 
-            //request.setAttribute("lista_sangrias", dao.obtenerSangrias());
-            redireccionar(request, response, redireccion);
-        }
-        catch (SIGIPROException sig_ex) {
+                redireccion = "Analisis/Lista.jsp";
+                List<AnalisisGrupoSolicitud> ags_lista = dao.obtenerSolicitudesAnalisis(id_analisis);
+                request.setAttribute("listaAGS", ags_lista);
+                request.setAttribute("nombreAnalisis", a.getNombre());
+                redireccionar(request, response, redireccion);
+            }
+
+        } catch (SIGIPROException sig_ex) {
             request.setAttribute("resultado_sp", resultado_sp);
             redireccionar(request, response, redireccion);
         }
@@ -740,10 +757,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
         }
         return a;
     }
-    
-    private ResultadoSangriaPrueba construirObjectoSangriaPrueba(HttpServletRequest request){
+
+    private ResultadoSangriaPrueba construirObjectoSangriaPrueba(HttpServletRequest request) {
         ResultadoSangriaPrueba resultado = new ResultadoSangriaPrueba();
-        
+
         try {
             resultado.setHematocrito(Float.parseFloat(this.obtenerParametro("hematocrito")));
             resultado.setHemoglobina(Float.parseFloat(this.obtenerParametro("hemoglobina")));
@@ -753,10 +770,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));
             resultado.setAgs(ags);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         return resultado;
     }
 
@@ -997,7 +1014,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 String accion_temp = this.obtenerParametro("accion");
                 if (accion_temp.equals("realizar")) {
                     accion = "realizar";
-                } else if (accion_temp.equals("realizar_sp")){ 
+                } else if (accion_temp.equals("realizar_sp")) {
                     accion = "realizar_sp";
                 }
             }

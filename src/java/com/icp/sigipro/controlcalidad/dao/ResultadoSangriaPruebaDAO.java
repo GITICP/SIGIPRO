@@ -5,7 +5,9 @@
  */
 package com.icp.sigipro.controlcalidad.dao;
 
+import com.icp.sigipro.controlcalidad.modelos.Grupo;
 import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
@@ -21,6 +23,8 @@ public class ResultadoSangriaPruebaDAO extends DAO {
     public ResultadoSangriaPrueba insertarResultadoSangriaPrueba(ResultadoSangriaPrueba resultado_sp) throws SIGIPROException {
         
         PreparedStatement consulta = null;
+        PreparedStatement consulta_solicitud = null;
+        ResultSet rs_solicitud = null;
         ResultSet rs = null;
         
         try {
@@ -45,9 +49,30 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                 throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");
             }
             
+            consulta_solicitud = getConexion().prepareStatement(
+                    " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
+                    + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                    + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+            );
+
+            consulta_solicitud.setInt(1, resultado_sp.getAgs().getId_analisis_grupo_solicitud());
+
+            rs_solicitud = consulta_solicitud.executeQuery();
+
+            if (rs_solicitud.next()) {
+                Grupo g = new Grupo();
+                SolicitudCC s = new SolicitudCC();
+                s.setId_solicitud(rs_solicitud.getInt("id_solicitud"));
+                g.setSolicitud(s);
+                resultado_sp.getAgs().setGrupo(g);
+                resultado_sp.getAgs().getGrupo().setSolicitud(s);
+            }
+            
         } catch (SQLException sql_ex) {
             sql_ex.printStackTrace();
         } finally {
+            cerrarSilencioso(rs_solicitud);
+            cerrarSilencioso(consulta_solicitud);
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();

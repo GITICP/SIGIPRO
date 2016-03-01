@@ -5,21 +5,17 @@
  */
 package com.icp.sigipro.controlcalidad.modelos;
 
-import java.sql.Date;
-
 /**
  *
  * @author Boga
  */
-public class ResultadoSangriaPrueba {
+public class ResultadoSangriaPrueba extends Resultado {
+
     private int id_resultado_sangria_prueba;
-    private AnalisisGrupoSolicitud ags;
     private String wbc;
     private String rbc;
     private float hematocrito;
     private float hemoglobina;
-    private int repeticion;
-    private Date fecha;
     
     public ResultadoSangriaPrueba(){}
 
@@ -27,8 +23,8 @@ public class ResultadoSangriaPrueba {
         return id_resultado_sangria_prueba;
     }
 
-    public void setId_resultado_sangria_prueba(int id_resultado_sangria_prueba) {
-        this.id_resultado_sangria_prueba = id_resultado_sangria_prueba;
+    public void setId_resultado_sangria_prueba(int id_resultado_sp) {
+        this.id_resultado_sangria_prueba = id_resultado_sp;
     }
 
     public String getWbc() {
@@ -62,30 +58,25 @@ public class ResultadoSangriaPrueba {
     public void setHemoglobina(float hemoglobina) {
         this.hemoglobina = hemoglobina;
     }
-
-    public AnalisisGrupoSolicitud getAgs() {
-        return ags;
-    }
-
-    public void setAgs(AnalisisGrupoSolicitud ags) {
-        this.ags = ags;
-    }
-
-    public int getRepeticion() {
-        return repeticion;
-    }
-
-    public void setRepeticion(int repeticion) {
-        this.repeticion = repeticion;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    
+    @Override
+    public String getResultado() {
+        return "Hto.: " + hematocrito + " // Hb.: " + hemoglobina;
     }
     
+    @Override
+    public String getTipo() {
+        return "SangriaPrueba";
+    }
+    
+    @Override
+    public void setId_resultado(int id_resultado) {
+        this.id_resultado_sangria_prueba = id_resultado;
+    }
+    
+    @Override 
+    public int getId_resultado(){
+        return this.id_resultado_sangria_prueba;
+    }
     
 }
