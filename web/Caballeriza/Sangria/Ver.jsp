@@ -55,7 +55,7 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${sangria.getInforme_dia1() == null}">
-                                                Sin solicitar.
+                                                Sin informe.
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="/SIGIPRO/ControlCalidad/Informe?accion=ver&id_solicitud=${sangria.getInforme_dia1().getSolicitud().getId_solicitud()}">${sangria.getInforme_dia1().getSolicitud().getNumero_solicitud()}</a>
@@ -63,8 +63,8 @@
                                         </c:choose>
                                     </td>
                                 </tr>
-                                <tr><td> <strong>Número de Informe de CC Día 2:</strong></td><td>${(sangria.getInforme_dia2() == null) ? "Sin solicitar." : sangria.getInforme_dia2().getSolicitud().getNumero_solicitud()}</td></tr>
-                                <tr><td> <strong>Número de Informe de CC Día 3:</strong></td><td>${(sangria.getInforme_dia3() == null) ? "Sin solicitar." : sangria.getInforme_dia3().getSolicitud().getNumero_solicitud()}</td></tr>
+                                <tr><td> <strong>Número de Informe de CC Día 2:</strong></td><td>${(sangria.getInforme_dia2() == null) ? "Sin informe." : sangria.getInforme_dia2().getSolicitud().getNumero_solicitud()}</td></tr>
+                                <tr><td> <strong>Número de Informe de CC Día 3:</strong></td><td>${(sangria.getInforme_dia3() == null) ? "Sin informe." : sangria.getInforme_dia3().getSolicitud().getNumero_solicitud()}</td></tr>
                                 <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>
                                 <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} </td></tr>
                                 <tr><td> <strong>Peso de Plasma Total:</strong></td> <td>${sangria.getPeso_plasma_total()} </td></tr>

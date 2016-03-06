@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
+import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperFechas;
@@ -23,6 +24,7 @@ public class SangriaPrueba extends IModelo {
     private Usuario usuario;
     private Date fecha;
     private List<SangriaPruebaCaballo> lista_sangrias_prueba_caballo;
+    private Informe informe;
 
     public SangriaPrueba() {
     }
@@ -62,6 +64,14 @@ public class SangriaPrueba extends IModelo {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public Informe getInforme() {
+        return informe;
+    }
+
+    public void setInforme(Informe informe) {
+        this.informe = informe;
     }
 
     public String parseJSON() {

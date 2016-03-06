@@ -9,6 +9,8 @@ import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
+import com.icp.sigipro.controlcalidad.modelos.Informe;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
@@ -176,12 +178,14 @@ public class SangriaPruebaDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo, rasp.hematocrito, rasp.hemoglobina "
+                    " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo, rasp.hematocrito, rasp.hemoglobina, i.id_informe, s.id_solicitud, s.numero_solicitud "
                     + " FROM caballeriza.sangrias_pruebas sp "
                     + "     INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario "
                     + "     INNER JOIN caballeriza.sangrias_pruebas_caballos csp ON sp.id_sangria_prueba = csp.id_sangria_prueba "
                     + "     INNER JOIN caballeriza.caballos c ON csp.id_caballo = c.id_caballo "
                     + "     LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba rasp ON csp.id_resultado = rasp.id_resultado_analisis_sp "
+                    + "     LEFT JOIN control_calidad.informes i ON i.id_informe = sp.id_informe "
+                    + "     LEFT JOIN control_calidad.solicitudes s ON s.id_solicitud = i.id_solicitud "
                     + " WHERE sp.id_sangria_prueba = ?; "
             );
 
@@ -195,8 +199,18 @@ public class SangriaPruebaDAO extends DAO {
                 u.setId_usuario(rs.getInt("id_usuario"));
                 u.setNombreCompleto(rs.getString("nombre_completo"));
                 sp.setUsuario(u);
+                
+                if (rs.getInt("id_informe") != 0) {
+                    Informe i = new Informe();
+                    i.setId_informe(rs.getInt("id_informe"));
+                    SolicitudCC s = new SolicitudCC();
+                    s.setId_solicitud(rs.getInt("id_solicitud"));
+                    s.setNumero_solicitud(rs.getString("numero_solicitud"));
+                    i.setSolicitud(s);
+                    sp.setInforme(i);
+                }
 
-                List<SangriaPruebaCaballo> caballos = new ArrayList<SangriaPruebaCaballo>();
+                List<SangriaPruebaCaballo> caballos = new ArrayList<>();
 
                 do {
                     SangriaPruebaCaballo informacion_caballo = new SangriaPruebaCaballo();
