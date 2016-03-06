@@ -29,7 +29,7 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
     private final AsociacionHemaHemoSangriaPrueba asociacion_informe = new AsociacionHemaHemoSangriaPrueba(this);
     
     public AsociacionSangriaPrueba(SolicitudCC p_solicitud) {
-        tipo = "sangria_prueba";
+        tipo = Asociable.SANGRIA_PRUEBA;
         tabla = "caballeriza.sangrias_prueba";
         solicitud = p_solicitud;
     }

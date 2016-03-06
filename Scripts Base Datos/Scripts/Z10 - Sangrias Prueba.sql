@@ -20,6 +20,19 @@
         id_resultado integer
     );
 
+    ALTER TABLE control_calidad.resultados_informes
+        ADD COLUMN id_resultado_informe serial NOT NULL;
+    ALTER TABLE control_calidad.resultados_informes
+        DROP CONSTRAINT pk_resultaods;
+    ALTER TABLE control_calidad.resultados_informes
+        ADD CONSTRAINT pk_resultado_informe PRIMARY KEY (id_resultado_informe);
+    ALTER TABLE control_calidad.resultados_informes
+        ADD COLUMN id_resultado_sp integer;
+    ALTER TABLE control_calidad.resultados_informes
+        ALTER COLUMN id_resultado DROP NOT NULL;
+    ALTER TABLE control_calidad.resultados_informes
+        ADD CONSTRAINT fk_informes_resultados_resultados_sp FOREIGN KEY (id_resultado_sp) REFERENCES control_calidad.resultados_analisis_sangrias_prueba (id_resultado_analisis_sp) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
     -- Análisis
 
     INSERT INTO control_calidad.analisis(id_analisis,estructura,machote,nombre,estado) VALUES (2147483647,null,'','Por Definir','Aprobado');

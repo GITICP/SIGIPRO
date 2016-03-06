@@ -11,8 +11,9 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
  */
 public abstract class Asociable {
     
-    protected final transient String SANGRIA = "sangria";
-    protected final transient String SANGRIA_PRUEBA = "sangria_prueba";
+    protected static final transient String SANGRIA = "sangria";
+    protected static final transient String SANGRIA_PRUEBA = "sangria_prueba";
+    protected static final transient String SIN_TIPO = "sin_tipo";
     protected transient AsociacionSolicitud asociacion;
     
     public AsociacionSolicitud getTipoAsociacion() {
@@ -20,7 +21,11 @@ public abstract class Asociable {
     }
     
     public String getTipoAsociacionString() {
-        return asociacion.tipo;
+        if (!(asociacion.tipo == null)){
+            return asociacion.tipo;
+        } else {
+            return SIN_TIPO;
+        }
     }
     
     public abstract void setTipoAsociacion(String objeto);

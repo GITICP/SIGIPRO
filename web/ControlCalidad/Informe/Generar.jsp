@@ -152,16 +152,7 @@
                                                                     <td>${resultado.getResultado()}</td>
                                                                     <td>${resultado.getRepeticion()}</td>
                                                                     <td>
-                                                                        <c:choose>
-                                                                            <c:when test="${tipo != 'sangria_prueba'}">
-                                                                                <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
-                                                                            </c:when>
-                                                                            <c:otherwise>
-                                                                                <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado" data-tipo="hematocrito">Reportar Resultado Hematocrito</button>
-                                                                                <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado" data-tipo="hemoglobina">Reportar Resultado Hemoglobina</button>
-                                                                            </c:otherwise>
-                                                                        </c:choose>
-
+                                                                        <button type="button" class="btn btn-primary btn-sm boton-accion reportar-resultado">Reportar Resultado</button>
                                                                     </td>
                                                                 </tr>
                                                             </c:if>
@@ -177,133 +168,40 @@
                                                 <h3><i class="fa fa-calendar"></i> Resultados por Reportar</h3>
                                             </div>
                                             <div class="widget-content">
-                                                <c:choose>
-                                                    <c:when test="${tipo != 'sangria_prueba'}">
-                                                        <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                                            <!-- Columnas -->
-                                                            <thead> 
-                                                                <tr>
-                                                                    <th class="columna-escondida">Control</th>
-                                                                    <th>ID Muestras (Tipo)</th>
-                                                                    <th>Análisis Solicitado</th>
-                                                                    <th>Resultado</th>
-                                                                    <th>Repetición</th>
-                                                                    <th>Acción</th>
+                                                <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                                                    <!-- Columnas -->
+                                                    <thead> 
+                                                        <tr>
+                                                            <th class="columna-escondida">Control</th>
+                                                            <th>ID Muestras (Tipo)</th>
+                                                            <th>Análisis Solicitado</th>
+                                                            <th>Resultado</th>
+                                                            <th>Repetición</th>
+                                                            <th>Acción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:if test="${accion == 'Editar'}">
+                                                            <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
+
+                                                                <tr id="${resultado.getId_resultado()}" class="fila-resultado">
+                                                                    <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
+                                                                    <td class="">
+                                                                        <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                            <span>${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})</span><br>
+                                                                        </c:forEach>
+                                                                    </td>
+                                                                    <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
+                                                                    <td>${resultado.getResultado()}</td>
+                                                                    <td>${resultado.getRepeticion()}</td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger btn-sm boton-accion eliminar-resultado">Eliminar de informe</button>
+                                                                    </td>
                                                                 </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <c:if test="${accion == 'Editar'}">
-                                                                    <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
-
-                                                                        <tr id="${resultado.getId_resultado()}" class="fila-resultado">
-                                                                            <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
-                                                                            <td class="">
-                                                                                <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                                    <span>${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})</span><br>
-                                                                                </c:forEach>
-                                                                            </td>
-                                                                            <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
-                                                                            <td>${resultado.getResultado()}</td>
-                                                                            <td>${resultado.getRepeticion()}</td>
-                                                                            <td>
-                                                                                <button type="button" class="btn btn-danger btn-sm boton-accion eliminar-resultado">Eliminar de informe</button>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </c:forEach>
-                                                                </c:if>
-                                                            </tbody>
-                                                        </table>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="col-md-12">
-                                                            <div class="widget widget-table">
-                                                                <div class="widget-header">
-                                                                    <h3><i class="fa fa-calendar"></i> Resultados Hematocrito</h3>
-                                                                </div>
-                                                                <div class="widget-content">
-                                                                    <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                                                        <!-- Columnas -->
-                                                                        <thead> 
-                                                                            <tr>
-                                                                                <th class="columna-escondida">Control</th>
-                                                                                <th>ID Muestras (Tipo)</th>
-                                                                                <th>Análisis Solicitado</th>
-                                                                                <th>Resultado</th>
-                                                                                <th>Repetición</th>
-                                                                                <th>Acción</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <c:if test="${accion == 'Editar'}">
-                                                                                <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
-
-                                                                                    <tr id="${resultado.getId_resultado()}" class="fila-resultado">
-                                                                                        <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
-                                                                                        <td class="">
-                                                                                            <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                                                <span>${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})</span><br>
-                                                                                            </c:forEach>
-                                                                                        </td>
-                                                                                        <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
-                                                                                        <td>${resultado.getResultado()}</td>
-                                                                                        <td>${resultado.getRepeticion()}</td>
-                                                                                        <td>
-                                                                                            <button type="button" class="btn btn-danger btn-sm boton-accion eliminar-resultado">Eliminar de informe</button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </c:forEach>
-                                                                            </c:if>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <div class="widget widget-table">
-                                                                <div class="widget-header">
-                                                                    <h3><i class="fa fa-calendar"></i> Resultados Hemoglobina</h3>
-                                                                </div>
-                                                                <div class="widget-content">
-                                                                    <table id="resultados-por-reportar-hemoglobina" class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                                                                        <!-- Columnas -->
-                                                                        <thead> 
-                                                                            <tr>
-                                                                                <th class="columna-escondida">Control</th>
-                                                                                <th>ID Muestras (Tipo)</th>
-                                                                                <th>Análisis Solicitado</th>
-                                                                                <th>Resultado</th>
-                                                                                <th>Repetición</th>
-                                                                                <th>Acción</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <c:if test="${accion == 'Editar'}">
-                                                                                <c:forEach items="${solicitud.getInforme().getResultados()}" var="resultado">
-
-                                                                                    <tr id="${resultado.getId_resultado()}" class="fila-resultado">
-                                                                                        <td class="columna-escondida"><input type="checkbox" name="resultados" value="${resultado.getId_resultado()}" checked='checked' /></td>
-                                                                                        <td class="">
-                                                                                            <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                                                <span>${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})</span><br>
-                                                                                            </c:forEach>
-                                                                                        </td>
-                                                                                        <td>${resultado.getAgs().getAnalisis().getNombre()}</td>
-                                                                                        <td>${resultado.getResultado()}</td>
-                                                                                        <td>${resultado.getRepeticion()}</td>
-                                                                                        <td>
-                                                                                            <button type="button" class="btn btn-danger btn-sm boton-accion eliminar-resultado">Eliminar de informe</button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </c:forEach>
-                                                                            </c:if>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </c:otherwise>
-                                                </c:choose>
-
+                                                            </c:forEach>
+                                                        </c:if>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>

@@ -21,19 +21,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
     
-    private final List<ObjetoAsociacionMultiple> objetos_hematocrito = new ArrayList<>();
-    private final List<ObjetoAsociacionMultiple> objetos_hemoglobina = new ArrayList<>();
+    private final List<ObjetoAsociacionMultiple> objetos = new ArrayList<>();
     private final String tabla;
-    private final String campo_hematocrito;
-    private final String campo_hemoglobina;
+    private final String campo;
     private SangriaPrueba sangria_prueba;
     private final AsociacionSangriaPrueba asociacion_sangria_prueba;
     
     public AsociacionHemaHemoSangriaPrueba(AsociacionSangriaPrueba p_asociacion_sangria_prueba) {
         tabla = "caballeriza.sangrias_pruebas_caballos";
         asociacion_sangria_prueba = p_asociacion_sangria_prueba;
-        campo_hematocrito = "id_resultado_hematocrito";
-        campo_hemoglobina = "id_resultado_hemoglobina";
+        campo = "id_resultado";
     }
     
     public void asociar(Resultado resultado, HttpServletRequest request) {
@@ -43,48 +40,22 @@ public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
             sangria_prueba = new SangriaPrueba();
             sangria_prueba.setId_sangria_prueba(id_sangria_prueba);
         }
+                
+        String ids_caballos = request.getParameter("caballos_res_" + resultado.getId_resultado());
         
-        String nombre_param = "caballos_res_";
-        
-        String ids_string_hematocrito = request.getParameter(nombre_param + "hematocrito_" + resultado.getId_resultado());
-        String ids_string_hemoglobina = request.getParameter(nombre_param + "hemoglobina_" + resultado.getId_resultado());
-        
-        asignarValores(ids_string_hematocrito, ids_string_hemoglobina, resultado);
+        asignarValores(ids_caballos, resultado);
         
         
     }
     
-    private void asignarValores(String ids_hematocrito, String ids_hemoglobina, Resultado resultado) {
+    private void asignarValores(String ids_caballos, Resultado resultado) {
         ObjetoAsociacionMultiple osm = new ObjetoAsociacionMultiple();
         osm.setResultado(resultado);
-        if (ids_hematocrito != null) {
-            if (!ids_hematocrito.isEmpty()) {
-                asignarResultadosHematocrito(ids_hematocrito, osm);
-            }
-        } else {
-            if (ids_hemoglobina != null) {
-                if (!ids_hemoglobina.isEmpty()) {
-                    asignarResultadosHemoglobina(ids_hemoglobina, osm);
-                }
-            }
-        }
-    }
-    
-    private void asignarResultadosHematocrito(String ids, ObjetoAsociacionMultiple osm) {        
-        String[] ids_separados = ids.split(",");
+        String[] ids_separados = ids_caballos.split(",");
         for (String id : ids_separados) {
             osm.agregarId(Integer.parseInt(id));
         }
-        objetos_hematocrito.add(osm);
-    }
-    
-    private void asignarResultadosHemoglobina(String ids, ObjetoAsociacionMultiple osm) {
-        String[] ids_separados = ids.split(",");
-        for (String id : ids_separados) {
-            osm.agregarId(Integer.parseInt(id));
-        
-        }
-        objetos_hemoglobina.add(osm);
+        objetos.add(osm);
     }
 
     @Override
@@ -100,35 +71,21 @@ public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
         consulta_sangria.setInt(2, sangria_prueba.getId_sangria_prueba());
         consulta_sangria.addBatch();
         
-        PreparedStatement consulta_caballos_hematocrito = conexion.prepareStatement(
-                "UPDATE " + tabla + " SET " + campo_hematocrito + " = ? WHERE id_caballo = ? AND id_sangria_prueba = ?; " 
+        PreparedStatement consulta_caballos = conexion.prepareStatement(
+                "UPDATE " + tabla + " SET " + campo + " = ? WHERE id_caballo = ? AND id_sangria_prueba = ?; " 
         );
         
-        for (ObjetoAsociacionMultiple osm : objetos_hematocrito) {
+        for (ObjetoAsociacionMultiple osm : objetos) {
             for (int id : osm.getIds()) {
-                consulta_caballos_hematocrito.setInt(1, osm.getResultado().getId_resultado());
-                consulta_caballos_hematocrito.setInt(2, id);
-                consulta_caballos_hematocrito.setInt(3, sangria_prueba.getId_sangria_prueba());
-                consulta_caballos_hematocrito.addBatch();
-            }
-        }
-        
-        PreparedStatement consulta_caballos_hemoglobina = conexion.prepareStatement(
-                "UPDATE " + tabla + " SET " + campo_hemoglobina + " = ? WHERE id_caballo = ? AND id_sangria_prueba = ?; " 
-        );
-        
-        for (ObjetoAsociacionMultiple osm : objetos_hemoglobina) {
-            for (int id : osm.getIds()) {
-                consulta_caballos_hemoglobina.setInt(1, osm.getResultado().getId_resultado());
-                consulta_caballos_hemoglobina.setInt(2, id);
-                consulta_caballos_hemoglobina.setInt(3, sangria_prueba.getId_sangria_prueba());
-                consulta_caballos_hemoglobina.addBatch();
+                consulta_caballos.setInt(1, osm.getResultado().getId_resultado());
+                consulta_caballos.setInt(2, id);
+                consulta_caballos.setInt(3, sangria_prueba.getId_sangria_prueba());
+                consulta_caballos.addBatch();
             }
         }
         
         resultado.add(consulta_sangria);
-        resultado.add(consulta_caballos_hematocrito);
-        resultado.add(consulta_caballos_hemoglobina);
+        resultado.add(consulta_caballos);
         
         return resultado;
     }
