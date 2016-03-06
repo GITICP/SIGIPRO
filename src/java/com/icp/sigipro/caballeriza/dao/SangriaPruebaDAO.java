@@ -176,13 +176,12 @@ public class SangriaPruebaDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo, rHema.resultado AS res_hematocrito, rHemo.resultado AS res_hemoglobina "
+                    " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo, rasp.hematocrito, rasp.hemoglobina "
                     + " FROM caballeriza.sangrias_pruebas sp "
-                    + "	INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario "
-                    + "	INNER JOIN caballeriza.sangrias_pruebas_caballos csp ON sp.id_sangria_prueba = csp.id_sangria_prueba "
-                    + "	INNER JOIN caballeriza.caballos c ON csp.id_caballo = c.id_caballo "
-                    + " LEFT JOIN control_calidad.resultados rHema ON csp.id_resultado_hematocrito = rHema.id_resultado "
-                    + " LEFT JOIN control_calidad.resultados rHemo ON csp.id_resultado_hemoglobina = rHemo.id_resultado "
+                    + "     INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario "
+                    + "     INNER JOIN caballeriza.sangrias_pruebas_caballos csp ON sp.id_sangria_prueba = csp.id_sangria_prueba "
+                    + "     INNER JOIN caballeriza.caballos c ON csp.id_caballo = c.id_caballo "
+                    + "     LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba rasp ON csp.id_resultado = rasp.id_resultado_analisis_sp "
                     + " WHERE sp.id_sangria_prueba = ?; "
             );
 
@@ -207,8 +206,8 @@ public class SangriaPruebaDAO extends DAO {
                     c.setNumero(rs.getInt("numero"));
                     informacion_caballo.setCaballo(c);
                     informacion_caballo.setSangria_prueba(sp);
-                    informacion_caballo.setHematocrito(rs.getString("res_hematocrito"));
-                    informacion_caballo.setHemoglobina(rs.getString("res_hemoglobina"));
+                    informacion_caballo.setHematocrito(rs.getFloat("hematocrito"));
+                    informacion_caballo.setHemoglobina(rs.getFloat("hemoglobina"));
                     caballos.add(informacion_caballo);
                 } while (rs.next());
 

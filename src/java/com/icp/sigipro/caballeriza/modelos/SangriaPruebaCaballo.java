@@ -13,8 +13,8 @@ public class SangriaPruebaCaballo
 {
     private Caballo caballo;
     private SangriaPrueba sangria_prueba;
-    private String hematocrito;
-    private String hemoglobina;
+    private float hematocrito;
+    private float hemoglobina;
     
     public SangriaPruebaCaballo() {
         
@@ -40,22 +40,22 @@ public class SangriaPruebaCaballo
         this.sangria_prueba = sangria_prueba;
     }
 
-    public String getHematocrito()
+    public float getHematocrito()
     {
         return hematocrito;
     }
 
-    public void setHematocrito(String hematrocito)
+    public void setHematocrito(float hematrocito)
     {
         this.hematocrito = hematrocito;
     }
 
-    public String getHemoglobina()
+    public float getHemoglobina()
     {
         return hemoglobina;
     }
 
-    public void setHemoglobina(String hemoglobina)
+    public void setHemoglobina(float hemoglobina)
     {
         this.hemoglobina = hemoglobina;
     }
