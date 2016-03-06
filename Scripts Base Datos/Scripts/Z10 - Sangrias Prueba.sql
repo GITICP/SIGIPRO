@@ -45,7 +45,8 @@
         hematocrito decimal NOT NULL,
         hemoglobina decimal NOT NULL,
         repeticion integer NOT NULL,
-        fecha date
+        fecha date,
+        id_usuario integer NOT NULL
     );
 
 -- PKs
@@ -58,6 +59,7 @@
 -- FKs
 
     ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT fk_resultados_sp_ags FOREIGN KEY (id_ags) REFERENCES control_calidad.analisis_grupo_solicitud(id_analisis_grupo_solicitud);
+    ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT fk_resultados_sp_usuarios FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios (id_usuario);
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
 
@@ -78,4 +80,15 @@
     -- Asociaciones permisos
     INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (59, 406);
     INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
+
+
+CREATE FUNCTION control_calidad.consecutivo_repeticiones_resultados_sp() RETURNS TRIGGER as $numero_repeticion$
+
+    BEGIN
+        NEW.repeticion = (SELECT count(id_resultado_analisis_sp) FROM control_calidad.resultados_analisis_sangrias_prueba where id_ags = NEW.id_ags);
+        RETURN NEW;
+    END;
+$numero_repeticion$ LANGUAGE plpgsql;
+
+CREATE TRIGGER actualizacion_repeticion BEFORE INSERT ON control_calidad.resultados_analisis_sangrias_prueba FOR EACH ROW EXECUTE PROCEDURE control_calidad.consecutivo_repeticiones_resultados_sp();
 

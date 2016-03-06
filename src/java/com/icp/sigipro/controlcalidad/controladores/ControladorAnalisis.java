@@ -329,7 +329,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             } else {
                 redireccion = "Analisis/FormularioSangriaPrueba.jsp";
             }
-
+ 
             List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
             List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
             List<List<Patron>> patrones_controles = patrondao.obtenerPatronesRealizarAnalisis();
@@ -762,6 +762,10 @@ public class ControladorAnalisis extends SIGIPROServlet {
         ResultadoSangriaPrueba resultado = new ResultadoSangriaPrueba();
 
         try {
+            Usuario u = new Usuario();
+            int id_usuario = (int) request.getSession().getAttribute("idusuario");
+            u.setIdUsuario(id_usuario);
+            resultado.setUsuario(u);
             resultado.setHematocrito(Float.parseFloat(this.obtenerParametro("hematocrito")));
             resultado.setHemoglobina(Float.parseFloat(this.obtenerParametro("hemoglobina")));
             resultado.setRbc(this.obtenerParametro("rbc"));
