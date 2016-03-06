@@ -11,6 +11,7 @@ import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.PatronDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
+import com.icp.sigipro.controlcalidad.dao.ResultadoSangriaPruebaDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Analisis;
 import com.icp.sigipro.controlcalidad.modelos.AnalisisGrupoSolicitud;
@@ -77,6 +78,7 @@ public class ControladorResultado extends SIGIPROServlet {
     private final AnalisisDAO analisisdao = new AnalisisDAO();
     private final ControlXSLTDAO controlxsltdao = new ControlXSLTDAO();
     private final ResultadoDAO dao = new ResultadoDAO();
+    private final ResultadoSangriaPruebaDAO dao_sp = new ResultadoSangriaPruebaDAO();
     private final EquipoDAO equipodao = new EquipoDAO();
     private final ReactivoDAO reactivodao = new ReactivoDAO();
     private final SolicitudDAO solicituddao = new SolicitudDAO();
@@ -143,22 +145,29 @@ public class ControladorResultado extends SIGIPROServlet {
         String redireccion = "Resultado/Ver.jsp";
 
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
 
         ControlXSLT xslt;
         Resultado resultado;
-
         try {
-            xslt = controlxsltdao.obtenerControlXSLTResultado();
-            resultado = dao.obtenerResultado(id_resultado);
 
-            String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
+            if (id_analisis != Integer.MAX_VALUE) {
+                xslt = controlxsltdao.obtenerControlXSLTResultado();
+                resultado = dao.obtenerResultado(id_resultado);
+
+                String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
+                request.setAttribute("cuerpo_datos", formulario);
+            } else {
+                resultado = dao_sp.obtenerResultadoSangriaPrueba(id_resultado);
+            }
+            
             Analisis analisis = resultado.getAgs().getAnalisis();
             SolicitudCC solicitud = resultado.getAgs().getGrupo().getSolicitud();
 
             request.setAttribute("resultado", resultado);
             request.setAttribute("analisis", analisis);
             request.setAttribute("solicitud", solicitud);
-            request.setAttribute("cuerpo_datos", formulario);
+            
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
@@ -219,20 +228,21 @@ public class ControladorResultado extends SIGIPROServlet {
         int id_ags = Integer.parseInt(request.getParameter("id_ags"));
         String id_solicitud = request.getParameter("id_solicitud");
         String numero_solicitud = request.getParameter("numero_solicitud");
-        String id_analisis = request.getParameter("id_analisis");
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
 
-        Analisis a = analisisdao.obtenerAnalisis(Integer.parseInt(id_analisis));
+        Analisis a = analisisdao.obtenerAnalisis(id_analisis);
 
         request.setAttribute("id_solicitud", id_solicitud);
         request.setAttribute("numero_solicitud", numero_solicitud);
         request.setAttribute("analisis", a);
 
         try {
-            AnalisisGrupoSolicitud ags = dao.obtenerAGS(id_ags);
+            AnalisisGrupoSolicitud ags = dao.obtenerAGS(id_ags, id_analisis == Integer.MAX_VALUE);
             request.setAttribute("ags", ags);
             request.setAttribute("resultados", ags.getResultados());
+            request.setAttribute("id_analisis", id_analisis);
         } catch (SIGIPROException sig_ex) {
-            request.setAttribute("mensaje", sig_ex.getMessage());
+            request.setAttribute("mensaje", this.helper.mensajeDeError(sig_ex.getMessage()));
         }
 
         redireccionar(request, response, redireccion);
