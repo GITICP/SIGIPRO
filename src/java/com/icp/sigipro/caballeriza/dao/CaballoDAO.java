@@ -13,6 +13,7 @@ import com.icp.sigipro.caballeriza.modelos.Inoculo;
 import com.icp.sigipro.caballeriza.modelos.Peso;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.caballeriza.modelos.SangriaCaballo;
+import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
 import com.icp.sigipro.caballeriza.modelos.TipoEvento;
 import com.icp.sigipro.core.DAO;
@@ -400,23 +401,27 @@ public class CaballoDAO extends DAO
 
     public List<SangriaPruebaCaballo> ObtenerSangriasPruebaCaballo(int id_caballo) throws SIGIPROException
     {
-        List<SangriaPruebaCaballo> resultado = new ArrayList<SangriaPruebaCaballo>();
+        List<SangriaPruebaCaballo> resultado = new ArrayList<>();
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                  "select sp.id_sangria_prueba, muestra, fecha_recepcion_muestra, hematrocito, hemoglobina "
-                + " from caballeriza.sangrias_pruebas sp "
-                + " left outer join caballeriza.sangrias_pruebas_caballos spc "
-                + " on sp.id_sangria_prueba= spc.id_sangria_prueba"
-                + " where id_caballo=?; "
+                  " SELECT sp.id_sangria_prueba, sp.fecha, rasp.hematocrito, rasp.hemoglobina "
+                + " FROM caballeriza.sangrias_pruebas sp "
+                + "     LEFT OUTER JOIN caballeriza.sangrias_pruebas_caballos spc on sp.id_sangria_prueba = spc.id_sangria_prueba "
+                + "     LEFT OUTER JOIN control_calidad.resultados_analisis_sangrias_prueba rasp on spc.id_resultado = rasp.id_resultado_analisis_sp "
+                + " WHERE id_caballo = ?; "
             );
             consulta.setInt(1, id_caballo);
             ResultSet rs = consulta.executeQuery();
-            SangriaPruebaDAO spdao = new SangriaPruebaDAO();
 
             while (rs.next()) {
+                SangriaPrueba sp = new SangriaPrueba();
+                sp.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
+                sp.setFecha(rs.getDate("fecha"));
                 SangriaPruebaCaballo sangriapc = new SangriaPruebaCaballo();
-                sangriapc.setSangria_prueba(spdao.obtenerSangriaPrueba(rs.getInt("id_sangria_prueba")));
+                sangriapc.setHematocrito(rs.getFloat("hematocrito"));
+                sangriapc.setHemoglobina(rs.getFloat("hemoglobina"));
+                sangriapc.setSangria_prueba(sp);
                 resultado.add(sangriapc);
             }
             rs.close();
