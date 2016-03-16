@@ -73,7 +73,7 @@
                                                         </c:if>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_lote=${lote.getId_lote()}&posicion=${lote.getPosicion_actual()}">${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()}</a>
+                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_lote=${lote.getId_lote()}&id_respuesta=${lote.getId_respuesta_actual()}">${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()}</a>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>

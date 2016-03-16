@@ -158,10 +158,10 @@
 
                                                                 </c:when>
                                                                 <c:when test="${respuesta.getEstado()==4}">
-                                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_lote=${lote.getId_lote()}">Realizar</a>
+                                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_respuesta=${respuesta.getId_respuesta()}">Realizar</a>
                                                                 </c:when>
                                                                 <c:when test="${respuesta.getEstado()==5}">
-                                                                    <a class="btn btn-primary btn-sm boton-warning " href="/SIGIPRO/Produccion/Lote?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
+                                                                    <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
                                                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
                                                                     <a class="btn btn-primary btn-sm boton-accion revisar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-posicion="${respuesta.getPaso().getPosicion()}" data-toggle="modal" data-target="#modalRevisarPaso">Revisar</a>
                                                                 </c:when>
