@@ -40,7 +40,7 @@ public class ResultadoSangriaPruebaDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " INSERT INTO control_calidad.resultados_analisis_sangrias_prueba "
-                  + " (id_ags,wbc,rbc,hematocrito,hemoglobina,fecha,id_usuario) VALUES (?,?,?,?,?,?,?) RETURNING id_resultado_analisis_sp;" 
+                  + " (id_ags,wbc,rbc,hematocrito,hemoglobina,fecha,id_usuario,observaciones) VALUES (?,?,?,?,?,?,?,?) RETURNING id_resultado_analisis_sp;" 
             );
             
             consulta.setInt(1, resultado_sp.getAgs().getId_analisis_grupo_solicitud());
@@ -50,6 +50,7 @@ public class ResultadoSangriaPruebaDAO extends DAO {
             consulta.setFloat(5, resultado_sp.getHemoglobina());
             consulta.setDate(6, resultado_sp.getFecha());
             consulta.setInt(7, resultado_sp.getUsuario().getId_usuario());
+            consulta.setString(8, resultado_sp.getObservaciones());
             
             rs = consulta.executeQuery();
             
@@ -128,6 +129,7 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                 resultado.setRbc(rs.getString("rbc"));
                 resultado.setWbc(rs.getString("wbc"));
                 resultado.setRepeticion(rs.getInt("repeticion"));
+                resultado.setObservaciones(rs.getString("observaciones"));
 
                 AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
                 ags.setId_analisis_grupo_solicitud(rs.getInt("id_ags"));

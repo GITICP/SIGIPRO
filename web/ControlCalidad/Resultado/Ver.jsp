@@ -57,6 +57,7 @@
                                             <tr><td> <strong>Hematocrito: </strong></td> <td>${resultado.getHematocrito()} </td></tr>
                                             <tr><td> <strong>Hemoglobina: </strong></td> <td>${resultado.getHemoglobina()} </td></tr>
                                             <tr><td> <strong>Repetición: </strong></td> <td>${resultado.getRepeticion()} </td></tr>
+                                            <tr><td> <strong>Observaciones:</strong></td> <td>${resultado.getObservaciones()}</td></tr>
                                         </table>
                                         <br>
                                     </div>

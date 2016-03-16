@@ -179,9 +179,9 @@
                                 </div>
 
                                 <div class="row">
-                                    
+
                                     <div class="col-md-6">
-                                        <label for="precio" class="control-label">WBC</label>
+                                        <label for="wbc" class="control-label">WBC</label>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
@@ -195,7 +195,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label for="precio" class="control-label">RBC</label>
+                                        <label for="rbc" class="control-label">RBC</label>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
@@ -211,7 +211,7 @@
                                 </div>
 
                                 <div class="row">
-                                    
+
                                     <div class="col-md-6">
                                         <label for="precio" class="control-label">Hemoglobina</label>
                                         <div class="form-group">
@@ -238,8 +238,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                        <label for="descripcion" class="control-label">Observaciones</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div class="form-group">

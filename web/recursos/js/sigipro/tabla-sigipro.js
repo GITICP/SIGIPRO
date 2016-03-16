@@ -65,6 +65,17 @@ $(document).ready(function () {
             crear_data_table($(this), configuracion_final);
         });
     }
+    
+    var cantidadTablas = $('.sin-paginacion').length;
+    if (cantidadTablas > 0) {
+        var selectorTabla = '.sin-paginacion';
+        $(selectorTabla).each(function () {
+            var configuracion_especifica = {"paging": false};
+            var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
+
+            crear_data_table($(this), configuracion_final);
+        });
+    }
 });
 
 function crear_data_table(elemento, configuracion) {
@@ -95,14 +106,20 @@ function crear_data_table(elemento, configuracion) {
     
 }
 
-function inicializar_tabla(selector_tabla) {
+function inicializar_tabla(selector_tabla, extra_params) {
     var elemento = $(selector_tabla);
-
-    var dtTable = elemento.DataTable({// use DataTable, not dataTable
+    
+    var params = {
         sDom:
                 "t" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>"
-    });
+    }
+
+    if (extra_params) {
+        params = $.extend({}, params, extra_params);
+    }
+
+    var dtTable = elemento.DataTable(params);
     var ths = '';
     var cantidadColumnas = elemento.find('thead th').not('.columna-escondida').length;
 

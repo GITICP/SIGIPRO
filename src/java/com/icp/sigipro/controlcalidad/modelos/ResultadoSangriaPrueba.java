@@ -16,6 +16,7 @@ public class ResultadoSangriaPrueba extends Resultado {
     private String rbc;
     private float hematocrito;
     private float hemoglobina;
+    private String observaciones;
     
     public ResultadoSangriaPrueba(){}
 
@@ -57,6 +58,20 @@ public class ResultadoSangriaPrueba extends Resultado {
 
     public void setHemoglobina(float hemoglobina) {
         this.hemoglobina = hemoglobina;
+    }
+
+    public String getObservaciones() {
+        String resultado = "Sin observaciones.";
+        if(observaciones != null){
+            if (!observaciones.isEmpty()){
+                resultado = observaciones;
+            }
+        }
+        return resultado;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
     
     @Override

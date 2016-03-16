@@ -736,7 +736,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                         String fecha = ft.format(dNow);
                         String extension = this.getFileExtension(item.getName());
-                        String nombre = a.getNombre() + "-" + fecha + "." + extension;
+                        String nombre_arreglado = a.getNombre().replaceAll("[/\\:*?<>|\"]","_");
+                        String nombre = nombre_arreglado + "-" + fecha + "." + extension;
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
@@ -796,7 +797,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                 String fecha = ft.format(dNow);
                 String extension = this.getFileExtension(item.getName());
-                String nombre = analisis.getNombre() + "-" + fecha + "." + extension;
+                String nombre_arreglado = analisis.getNombre().replaceAll("[/\\:*?<>|\"]","_");
+                String nombre = nombre_arreglado + "-" + fecha + "." + extension;
                 //---------------------
                 File archivo = new File(ubicacion, nombre);
                 item.write(archivo);

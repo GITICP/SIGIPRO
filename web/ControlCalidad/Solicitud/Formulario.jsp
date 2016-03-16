@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-6">
-                    <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
+                    <label for="objeto-relacionado" class="control-label"> Asociar a Sangría o Sangría de Prueba</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">

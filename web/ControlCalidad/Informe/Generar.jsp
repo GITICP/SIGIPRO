@@ -70,24 +70,6 @@
                                 </c:if>
 
                                 <div class="row">
-                                    <%--
-                                    <div class="col-md-6">
-                                        <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <select id="seleccion-objeto" class="select2" name="objeto-relacionado"
-                                                            style='background-color: #fff;'>
-                                                        <option value='' selected>Sin selección</option>
-                                                        <option value="sangria">
-                                                            Sangría
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    --%>
                                     <c:if test="${solicitud.getEstado() != 'Completada'}">
                                         <div class="col-md-6">
                                             <label for="cerrar" class="control-label">Estado</label>

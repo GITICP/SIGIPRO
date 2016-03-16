@@ -454,7 +454,8 @@ public class ControladorResultado extends SIGIPROServlet {
                 SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                 String fecha = ft.format(dNow);
                 String extension = this.getFileExtension(item.getName());
-                String nombre = analisis.getNombre() + "-" + fecha + "." + extension;
+                String nombre_arreglado = analisis.getNombre().replaceAll("[/\\:*?<>|\"]","_");
+                String nombre = nombre_arreglado + "-" + fecha + "." + extension;
                 //---------------------
                 File archivo = new File(ubicacion, nombre);
                 item.write(archivo);

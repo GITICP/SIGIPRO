@@ -46,7 +46,8 @@
         hemoglobina decimal NOT NULL,
         repeticion integer NOT NULL,
         fecha date,
-        id_usuario integer NOT NULL
+        id_usuario integer NOT NULL,
+        observaciones character varying(500)
     );
 
 -- PKs
