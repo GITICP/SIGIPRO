@@ -42,6 +42,9 @@
               <li id="inv" class="${inv_tab}">
                 <a href="#inventario" role="tab" data-toggle="tab">Inventario</a>
               </li>
+              <li id="inv_h" class="${invh_tab}">
+              <a href="#inventario_historial" role="tab" data-toggle="tab">Historial</a>
+              </li>
               <li id="sal" class="${sal_tab}"> <!--------------------------------------------------------------------AQUI HAY QUE MANDAR DESDE EL CONTROLADOR LA QUE ESTÁ ACTIVA--->
                 <a href="#salidas" role="tab" data-toggle="tab">Salidas</a>
               </li>
@@ -71,7 +74,7 @@
                       <tr>
                         <th>Lote</th>
                         <th>Producto</th>
-                        <th>Cantidad</th>
+                        <th>Cantidad Original</th>
                         <th>Cantidad Disponible</th>
                         <th>Fecha de Vencimiento</th>
                         <th>Cambio de Estado</th>
@@ -90,11 +93,53 @@
                           </td>
                           <td>${inventario.getProducto().getNombre()}</td>
                           <td>${inventario.getCantidad()}</td>
-                          <td>${inventario.getCantidad_disponible()}</td>
+                          <td>${inventario.getCantidad_disponible()}(${inventario.getReservado()})</td>
                           <td>${inventario.getFecha_vencimiento_S()}</td>
                           <td>
                             <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_inventario&id_inventario_pt=${inventario.getId_inventario_pt()}">Editar</a>
                             <a class="btn btn-danger btn-sm boton-accion" onclick="Eliminar(${inventario.getId_inventario_pt()}, 'eliminar esta entrada de inventario', 'inventario')">Eliminar</a>                          </td>
+                        </tr>
+
+                      </c:forEach>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- COLUMN FILTER DATA TABLE -->
+            </div>
+            <div class="tab-pane fade ${invh_tab} in" id="inventario_historial"> <!--------------------------------------------------------------------------------------------- Inventario -->
+              <!-- COLUMN FILTER DATA TABLE -->
+              <div class="widget widget-table">
+                <div class="widget-header">
+                  <h3><i class="fa fa-list-alt"></i> Historial de Inventario de Producto Terminado </h3>
+                </div>
+                ${mensaje}
+                <div class="widget-content">
+                  <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                    <!-- Columnas -->
+                    <thead> 
+                      <tr>
+                        <th>Lote</th>
+                        <th>Producto</th>
+                        <th>Cantidad Original</th>
+                        <th>Cantidad Disponible</th>
+                        <th>Fecha de Vencimiento</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <c:forEach items="${inventario_h}" var="inventario">
+                        <tr>
+                          <td>
+                            <a href="/SIGIPRO/Produccion/Inventario_PT?accion=ver_inventario&id_inventario_pt=${inventario.getId_inventario_pt()}">
+                              <div style="height:100%;width:100%">
+                                ${inventario.getLote()}
+                              </div>
+                            </a>
+                          </td>
+                          <td>${inventario.getProducto().getNombre()}</td>
+                          <td>${inventario.getCantidad()}</td>
+                          <td>${inventario.getCantidad_disponible()} </td>
+                          <td>${inventario.getFecha_vencimiento_S()}</td>
                         </tr>
 
                       </c:forEach>

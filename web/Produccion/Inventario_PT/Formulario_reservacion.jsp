@@ -78,7 +78,7 @@
               <button onclick="confirmacion()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
             </c:when>
             <c:otherwise>
-              <button onclick="confirmacion()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Despacho</button>
+              <button onclick="confirmacion()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Agregar Reservación</button>
             </c:otherwise>
           </c:choose>
         </div>
