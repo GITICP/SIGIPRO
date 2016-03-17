@@ -22,13 +22,13 @@ public class Respuesta_pxp {
     private Paso paso;
     private Lote lote;
     private SQLXML respuesta;
-    private Usuario usuario_aprobar;
+    private Usuario usuario_verificar;
+    private Usuario usuario_revisar;
     private Usuario usuario_realizar;
     private String respuestaString;
     private int version;
     //1-Deshabilitado,2-Terminado, requiere aprobacion,3-Deshabilitado, aprobacion, 4-Habilitado, 5-Incompleto, 6-Revisado, 7-Verificado, 
-    //8-Ultimo, sin aprobacion, deshabilitado, 9-Ultimo, con aprobacion, deshabilitado, 10-Ultimo, sin aprobacion, habilitado, 11-Ultimo, con aprobacion, habilitado
-    //12-Habilitado, aprobacion
+    //8-Ultimo, deshabilitado, 9-Ultimo, habilitado, 10-Ultimo, con aprobacion, habilitado, 11-Habilitado, aprobacion
     private int estado;
 
     private List<Respuesta_pxp> historial;
@@ -68,12 +68,20 @@ public class Respuesta_pxp {
         this.respuestaString = respuestaString;
     }
 
-    public Usuario getUsuario_aprobar() {
-        return usuario_aprobar;
+    public Usuario getUsuario_verificar() {
+        return usuario_verificar;
     }
 
-    public void setUsuario_aprobar(Usuario usuario) {
-        this.usuario_aprobar = usuario;
+    public void setUsuario_verificar(Usuario usuario) {
+        this.usuario_verificar = usuario;
+    }
+
+    public Usuario getUsuario_revisar() {
+        return usuario_revisar;
+    }
+
+    public void setUsuario_revisar(Usuario usuario_revisar) {
+        this.usuario_revisar = usuario_revisar;
     }
 
     public Usuario getUsuario_realizar() {
@@ -137,7 +145,8 @@ public class Respuesta_pxp {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_usuario_aprobar", this.getUsuario_aprobar().getId_usuario());
+            JSON.put("id_usuario_verificar", this.getUsuario_verificar().getId_usuario());
+            JSON.put("id_usuario_revisar", this.getUsuario_revisar().getId_usuario());
             JSON.put("id_usuario_realizar", this.getUsuario_realizar().getId_usuario());
             JSON.put("id_paso", this.getPaso().getId_paso());
             JSON.put("id_lote", this.getLote().getId_lote());

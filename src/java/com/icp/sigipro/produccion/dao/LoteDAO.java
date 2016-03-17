@@ -167,29 +167,15 @@ public class LoteDAO extends DAO {
                         + "WHERE id_respuesta = ?; ");
                 consulta.setInt(1, respuesta.getId_respuesta());
                 if (consulta.executeUpdate() == 1) {
-                    switch (respuesta.getEstado()) {
-                        case 11:
-                        case 2:
-                            //Si requiere aprobacion
-                            consulta = getConexion().prepareStatement(" UPDATE produccion.lote "
-                                    + "SET aprobacion = true "
-                                    + "WHERE id_lote = ?; ");
-                            consulta.setInt(1, respuesta.getLote().getId_lote());
-                            break;
-                        default:
-                            //Se pasa a un estado de incompleto
-                            consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
-                                    + "SET estado = 5 "
-                                    + "WHERE id_respuesta = ?; ");
-                            consulta.setInt(1, respuesta.getId_respuesta());
-                            break;
-
-                    }
+                    //Se pasa a un estado de incompleto
+                    consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
+                            + "SET estado = 5 "
+                            + "WHERE id_respuesta = ?; ");
+                    consulta.setInt(1, respuesta.getId_respuesta());
                     if (consulta.executeUpdate() == 1) {
                         resultado = true;
                     }
                 }
-
             }
         } catch (SQLException se) {
             se.printStackTrace();
@@ -212,36 +198,30 @@ public class LoteDAO extends DAO {
         return resultado;
     }
 
-    public boolean habilitarProximosPasos(Respuesta_pxp respuesta) throws SQLException {
+    public boolean habilitarPasos(List<Respuesta_pxp> respuestas, Respuesta_pxp respuesta) throws SQLException {
         boolean resultado = false;
-        Respuesta_pxp proximo = new Respuesta_pxp();
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT pxp.estado "
-                    + "FROM produccion.lote as l "
-                    + "LEFT JOIN produccion.protocolo as p "
-                    + "ON (l.id_protocolo = p.id_protocolo) "
-                    + "LEFT JOIN produccion.paso_protocolo as pxp "
-                    + "ON (p.id_protocolo = pxp.id_protocolo and p.version = pxp.version) "
-                    + "WHERE l.id_lote = ? and pxp.posicion = ?; ");
-            consulta.setInt(1, respuesta.getLote().getId_lote());
-            consulta.setInt(2, respuesta.getPaso().getPosicion() + 1);
-            rs = consulta.executeQuery();
-            if (rs.next()) {
-                int estado = rs.getInt("estado");
-                switch (estado) {
-                    case 1:
-                    //Habilitar los siguientes pasos hasta la proxima aprobacion requerida
-                    case 3:
-                    //Se debe habilitar pero poniendole que requiere aprobacion
-                    case 4:
-                    //No se hace nada, solo se actualiza la posicion
-
+            consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
+                    + "SET estado = ? "
+                    + "WHERE id_respuesta = ?; ");
+            
+            boolean pasoactual=false;
+            for (Respuesta_pxp r : respuestas){
+                if (r.getId_respuesta() == respuesta.getId_respuesta() ){
+                    pasoactual=true;
+                }else if (r.getPaso().isRequiere_ap()){
+                    consulta.setInt(1, 4);
+                    consulta.setInt(2, r.getId_respuesta());
+                    consulta.executeUpdate();
+                    break;
+                }else if(pasoactual){
+                    consulta.setInt(1, 4);
+                    consulta.setInt(2, r.getId_respuesta());
+                    consulta.executeUpdate();
                 }
-
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -352,6 +332,45 @@ public class LoteDAO extends DAO {
         return resultado;
     }
 
+    public List<Respuesta_pxp> obtenerRespuestas(Lote lote) {
+        List<Respuesta_pxp> resultado = new ArrayList();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement("SELECT r.id_respuesta, r.estado, pxp.id_pxp, pxp.id_paso, pxp.posicion, pxp.requiere_ap, pxp.version as versionpxp "
+                    + "FROM produccion.respuesta_pxp as r "
+                    + "LEFT JOIN produccion.paso_protocolo as pxp ON (pxp.id_pxp = r.id_pxp) "
+                    + "WHERE r.id_lote=? "
+                    + "ORDER BY pxp.posicion;");
+            consulta.setInt(1, lote.getProtocolo().getId_protocolo());
+            consulta.setInt(2, lote.getId_lote());
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Respuesta_pxp respuesta = new Respuesta_pxp();
+                Paso paso = new Paso();
+                paso.setId_paso(rs.getInt("id_paso"));
+                paso.setPosicion(rs.getInt("posicion"));
+                paso.setRequiere_ap(rs.getBoolean("requiere_ap"));
+                paso.setVersion(rs.getInt("versionpxp"));
+                paso.setId_pxp(rs.getInt("id_pxp"));
+                respuesta.setPaso(paso);
+                respuesta.setId_respuesta(rs.getInt("id_respuesta"));
+                respuesta.setEstado(rs.getInt("estado"));
+                resultado.add(respuesta);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+
+    }
+
     public Respuesta_pxp obtenerHistorial(int id_historial) {
         Respuesta_pxp resultado = new Respuesta_pxp();
         PreparedStatement consulta = null;
@@ -416,34 +435,33 @@ public class LoteDAO extends DAO {
     }
 
     //Revisar que la posicion actual sea la posicion del paso
-    public boolean aprobarPasoActual(int id_lote, int id_respuesta, int id_usuario, int posicion_actual) {
+    public boolean verificarPaso(Respuesta_pxp respuesta, int id_usuario) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE produccion.lote "
-                    + "SET aprobacion = false, posicion_actual = ?, estado = ? "
+                    + "SET posicion_actual = ?, estado = ? "
                     + "WHERE id_lote=?; ");
-            int paso_siguiente = posicion_actual + 1;
-            System.out.println("Lote: " + id_lote);
-            int cantidad_pasos = this.obtenerCantidadPasos(id_lote);
-            System.out.println("Cantidad de pasos: " + cantidad_pasos + " Paso siguiente: " + paso_siguiente);
-            if (cantidad_pasos < paso_siguiente) {
+            //Si el paso es el ultimo
+            if (respuesta.getEstado() == 9) {
                 consulta.setBoolean(2, true);
+                consulta.setInt(1, respuesta.getPaso().getPosicion());
             } else {
                 consulta.setBoolean(2, false);
+                consulta.setInt(1, respuesta.getPaso().getPosicion() + 1);
             }
-            consulta.setInt(1, paso_siguiente);
-            consulta.setInt(3, id_lote);
+            consulta.setInt(3, respuesta.getLote().getId_lote());
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
 
-                consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
-                        + "SET id_usuario_aprobar = ? "
+                consulta = getConexion().prepareStatement(" UPDATE produccion.historial_respuesta_pxp "
+                        + "SET id_usuario_verificar = ? "
                         + "WHERE id_respuesta = ?; ");
                 consulta.setInt(1, id_usuario);
-                consulta.setInt(2, id_respuesta);
+                consulta.setInt(2, respuesta.getId_respuesta());
                 if (consulta.executeUpdate() == 1) {
                     resultado = true;
+
                 }
             }
         } catch (Exception ex) {
