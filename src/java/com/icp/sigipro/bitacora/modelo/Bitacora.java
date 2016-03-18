@@ -114,6 +114,7 @@ public class Bitacora {
     public static final String ACCION_REPETIR = "REPETIR";
     public static final String ACCION_VERIFICAR = "VERIFICAR";
     public static final String ACCION_REVISAR = "REVISAR";
+    public static final String ACCION_COMPLETAR = "COMPLETAR";
     
 
     public Bitacora() {

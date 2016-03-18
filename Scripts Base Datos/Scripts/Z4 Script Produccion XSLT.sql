@@ -115,7 +115,9 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea rows="5" cols="50" maxlength="500" class="form-control" name="{$nombre-campo}" valor="{$valor}"></textarea>
+                        <textarea rows="5" cols="50" maxlength="500" class="form-control" name="{$nombre-campo}" valor="{$valor}">
+                            <xsl:value-of select="$valor" />
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -325,9 +327,18 @@ VALUES (1, 'Generador Formularios Produccion',
                 <xsl:param name="valor" select="valor" />
                 <xsl:param name="check" select="check" />
                 <div class="col-sm-12">
-                <input type="checkbox" name="{$nombre-campo}" value="{$valor}"> 
-                    <xsl:value-of select="$etiqueta"></xsl:value-of>
-                </input>
+                <xsl:choose>
+                    <xsl:when test="$check = ''true''">
+                        <input type="checkbox" name="{$nombre-campo}" checked="checked">
+                                            <xsl:value-of select="$etiqueta"></xsl:value-of>
+                                        </input>
+                                    </xsl:when>
+                                    <xsl:when test="$check = ''false''">
+                                        <input type="checkbox" name="{$nombre-campo}"> 
+                                            <xsl:value-of select="$etiqueta"></xsl:value-of>
+                                        </input>
+                                    </xsl:when>
+                                </xsl:choose>
                 </div>
             
                 

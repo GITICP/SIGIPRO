@@ -131,8 +131,8 @@
                                                         </td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${respuesta.getUsuario_aprobar().getId_usuario() != 0}">
-                                                                    ${respuesta.getUsuario_aprobar().getNombre_completo()}
+                                                                <c:when test="${respuesta.getUsuario_verificar().getId_usuario() != 0}">
+                                                                    ${respuesta.getUsuario_verificar().getNombre_completo()}
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <c:choose>

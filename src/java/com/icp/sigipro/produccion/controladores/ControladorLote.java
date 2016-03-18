@@ -91,13 +91,16 @@ public class ControladorLote extends SIGIPROServlet {
             add("verhistorial");
             add("repetir");
             add("activar");
+            add("completar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
             add("realizar");
-            add("aprobar");
+            add("verificar");
+            add("completar");
+            add("revisar");
             add("repetir");
         }
     };
@@ -278,6 +281,35 @@ public class ControladorLote extends SIGIPROServlet {
             this.getIndex(request, response);
         }
     }
+    
+    protected void getCompletar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        validarPermiso(661, request);
+        String redireccion = "Lote/Completar.jsp";
+
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
+        if (respuesta.getEstado()==5) {
+            request.setAttribute("respuesta", respuesta);
+            ProduccionXSLT xslt;
+            try {
+                xslt = produccionxsltdao.obtenerProduccionXSLTFormulario();
+                System.out.println(respuesta.getRespuesta().getString());
+                String formulario = helper_transformaciones.transformar(xslt, respuesta.getRespuesta());
+                request.setAttribute("cuerpo_formulario", formulario);
+                request.setAttribute("paso", respuesta.getPaso());
+                request.setAttribute("lote", respuesta.getLote());
+            } catch (TransformerException | SIGIPROException | SQLException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+            }
+
+            redireccionar(request, response, redireccion);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            this.getIndex(request, response);
+        }
+    }
 
     protected void getRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -356,8 +388,10 @@ public class ControladorLote extends SIGIPROServlet {
         boolean resultado = false;
         try {
             resultado = dao.verificarPaso(respuesta, id_usuario);
-            List<Respuesta_pxp> respuestas = dao.obtenerRespuestas(respuesta.getLote());
-            dao.habilitarPasos(respuestas, respuesta);
+            if (respuesta.getPaso().isRequiere_ap()) {
+                List<Respuesta_pxp> respuestas = dao.obtenerRespuestas(respuesta.getLote());
+                dao.habilitarPasos(respuestas, respuesta);
+            }
             if (resultado) {
                 //Funcion que genera la bitacora 
                 bitacora.setBitacora(respuesta.parseJSON(), Bitacora.ACCION_VERIFICAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
@@ -375,84 +409,61 @@ public class ControladorLote extends SIGIPROServlet {
 
     }
 
-     protected void postCompletar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(662, request);
-        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
+    protected void postCompletar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(661, request);
+        int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
+        Respuesta_pxp resultado = dao.obtenerRespuesta(id_respuesta);
+
+        Usuario u = new Usuario();
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        u.setId_usuario(id_usuario);
+        resultado.setUsuario_realizar(u);
+
+        String redireccion = "Lote/index.jsp";
+
+        try {
+            String string_xml_resultado = parseXML(resultado);
+            resultado.setRespuestaString(string_xml_resultado);
+            dao.editarRespuesta(resultado);
+            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_COMPLETAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+
+            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta completada correctamente."));
+            this.getIndex(request, response);
+
+        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        }
+
+    }
+
+    protected void postRevisar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(664, request);
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
-        int posicion_actual = Integer.parseInt(request.getParameter("posicion_actual"));
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         boolean resultado = false;
         try {
-            resultado = dao.aprobarPasoActual(id_lote, id_respuesta, id_usuario, posicion_actual);
+            resultado = dao.revisarPaso(id_respuesta, id_usuario);
             if (resultado) {
                 //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_lote, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LOTEPRODUCCION, request.getRemoteAddr());
+                bitacora.setBitacora(id_respuesta, Bitacora.ACCION_REVISAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
                 //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo aprobado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo revisado correctamente"));
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser revisado."));
             }
             this.getIndex(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
+            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser verificado."));
             this.getIndex(request, response);
         }
 
     }
-     
-      protected void postRevisar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(662, request);
-        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
-        int posicion_actual = Integer.parseInt(request.getParameter("posicion_actual"));
-        int id_usuario = (int) request.getSession().getAttribute("idusuario");
-        boolean resultado = false;
-        try {
-            resultado = dao.aprobarPasoActual(id_lote, id_respuesta, id_usuario, posicion_actual);
-            if (resultado) {
-                //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_lote, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LOTEPRODUCCION, request.getRemoteAddr());
-                //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo aprobado correctamente"));
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
-            }
-            this.getIndex(request, response);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
-            this.getIndex(request, response);
-        }
 
-    }
-      
-       protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(662, request);
-        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
-        int posicion_actual = Integer.parseInt(request.getParameter("posicion_actual"));
-        int id_usuario = (int) request.getSession().getAttribute("idusuario");
-        boolean resultado = false;
-        try {
-            resultado = dao.aprobarPasoActual(id_lote, id_respuesta, id_usuario, posicion_actual);
-            if (resultado) {
-                //Funcion que genera la bitacora 
-                bitacora.setBitacora(id_lote, Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LOTEPRODUCCION, request.getRemoteAddr());
-                //----------------------------
-                request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Protocolo aprobado correctamente"));
-            } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
-            }
-            this.getIndex(request, response);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser aprobado."));
-            this.getIndex(request, response);
-        }
-
-    }
-    
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(660, request);
         boolean resultado = false;
@@ -478,7 +489,7 @@ public class ControladorLote extends SIGIPROServlet {
     }
 
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        validarPermiso(661, request);
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
 
         Respuesta_pxp resultado = dao.obtenerRespuesta(id_respuesta);
@@ -511,7 +522,7 @@ public class ControladorLote extends SIGIPROServlet {
     }
 
     protected void postRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        validarPermiso(661, request);
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
         Respuesta_pxp resultado = dao.obtenerRespuesta(id_respuesta);
         Usuario u = new Usuario();
@@ -522,7 +533,7 @@ public class ControladorLote extends SIGIPROServlet {
         try {
             String string_xml_resultado = parseXML(resultado);
             resultado.setRespuestaString(string_xml_resultado);
-            dao.repetirRespuesta(resultado);
+            dao.editarRespuesta(resultado);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
