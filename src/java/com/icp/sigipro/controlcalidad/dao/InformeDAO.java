@@ -107,7 +107,7 @@ public class InformeDAO extends DAO {
             resultado = resultado_resultados && resultado_informe && resultado_solicitud;
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            ex.getNextException().printStackTrace();
             throw new SIGIPROException("Ha ocurrido un error al registrar el informe. Inténtelo nuevamente.");
         } finally {
             try {

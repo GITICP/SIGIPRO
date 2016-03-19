@@ -7,6 +7,9 @@
 
 -- Tablas --
 
+    DROP TABLE IF EXISTS caballeriza.sangrias_pruebas_caballos;
+    DROP TABLE IF EXISTS caballeriza.sangrias_pruebas;
+    
     CREATE TABLE caballeriza.sangrias_pruebas (
         id_sangria_prueba serial NOT NULL,
         id_informe integer,
@@ -20,22 +23,9 @@
         id_resultado integer
     );
 
-    ALTER TABLE control_calidad.resultados_informes
-        ADD COLUMN id_resultado_informe serial NOT NULL;
-    ALTER TABLE control_calidad.resultados_informes
-        DROP CONSTRAINT pk_resultaods;
-    ALTER TABLE control_calidad.resultados_informes
-        ADD CONSTRAINT pk_resultado_informe PRIMARY KEY (id_resultado_informe);
-    ALTER TABLE control_calidad.resultados_informes
-        ADD COLUMN id_resultado_sp integer;
-    ALTER TABLE control_calidad.resultados_informes
-        ALTER COLUMN id_resultado DROP NOT NULL;
-    ALTER TABLE control_calidad.resultados_informes
-        ADD CONSTRAINT fk_informes_resultados_resultados_sp FOREIGN KEY (id_resultado_sp) REFERENCES control_calidad.resultados_analisis_sangrias_prueba (id_resultado_analisis_sp) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
     -- Análisis
 
-    INSERT INTO control_calidad.analisis(id_analisis,estructura,machote,nombre,estado) VALUES (2147483647,null,'','Por Definir','Aprobado');
+    INSERT INTO control_calidad.analisis(id_analisis,estructura,machote,nombre,estado) VALUES (2147483647,null,'','Análisis Hematológico','Aprobado');
 
     CREATE TABLE control_calidad.resultados_analisis_sangrias_prueba(
         id_resultado_analisis_sp serial NOT NULL,
@@ -50,6 +40,19 @@
         observaciones character varying(500)
     );
 
+-- Cambios a otras tablas
+
+    ALTER TABLE control_calidad.resultados_informes
+        ADD COLUMN id_resultado_informe serial NOT NULL;
+    ALTER TABLE control_calidad.resultados_informes
+        DROP CONSTRAINT pk_resultaods;
+    ALTER TABLE control_calidad.resultados_informes
+        ADD CONSTRAINT pk_resultado_informe PRIMARY KEY (id_resultado_informe);
+    ALTER TABLE control_calidad.resultados_informes
+        ADD COLUMN id_resultado_sp integer;
+    ALTER TABLE control_calidad.resultados_informes
+        ALTER COLUMN id_resultado DROP NOT NULL;
+
 -- PKs
 
     ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT pk_resultados_analisis_sp PRIMARY KEY (id_resultado_analisis_sp);
@@ -59,6 +62,9 @@
 
 -- FKs
 
+    ALTER TABLE control_calidad.resultados_informes
+        ADD CONSTRAINT fk_informes_resultados_resultados_sp FOREIGN KEY (id_resultado_sp) REFERENCES control_calidad.resultados_analisis_sangrias_prueba (id_resultado_analisis_sp) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
     ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT fk_resultados_sp_ags FOREIGN KEY (id_ags) REFERENCES control_calidad.analisis_grupo_solicitud(id_analisis_grupo_solicitud);
     ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT fk_resultados_sp_usuarios FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios (id_usuario);
 
@@ -66,22 +72,33 @@
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);
-    ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_resultado_hematocrito FOREIGN KEY (id_resultado_hematrocito) REFERENCES control_calidad.resultados_analisis_sangrias_prueba (id_resultado_analisis_sp-);
+    ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_resultado FOREIGN KEY (id_resultado) REFERENCES control_calidad.resultados_analisis_sangrias_prueba (id_resultado_analisis_sp);
 
 -- Permisos
 
-    INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (59, '[Caballeriza]AgregarSangriaPrueba', 'Permite agregar una Sangría de Prueba');
-    INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (60, '[Caballeriza]EditarSangriaPrueba', 'Permite editar una Sangría de Prueba');
+    INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) 
+	SELECT 59, '[Caballeriza]AgregarSangriaPrueba', 'Permite agregar una Sangría de Prueba'
+	WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 59);
+	
+    INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) 
+	SELECT 60, '[Caballeriza]EditarSangriaPrueba', 'Permite editar una Sangría de Prueba'
+	WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos WHERE id_permiso = 60);
 
 -- Menú
     
     -- Ítem menú
-    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba');
+    INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) 
+	SELECT 406, 400, 'Pruebas Sangría', '/Caballeriza/SangriaPrueba'
+	WHERE NOT EXISTS (SELECT 1 FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 406);
     
     -- Asociaciones permisos
-    INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (59, 406);
-    INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (60, 406);
-
+    INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal)
+	SELECT 59, 406
+	WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos_menu_principal WHERE id_permiso = 59 AND id_menu_principal = 406);
+	
+    INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) 
+	SELECT 60, 406
+	WHERE NOT EXISTS (SELECT 1 FROM seguridad.permisos_menu_principal WHERE id_permiso = 60 AND id_menu_principal = 406);
 
 CREATE FUNCTION control_calidad.consecutivo_repeticiones_resultados_sp() RETURNS TRIGGER as $numero_repeticion$
 
