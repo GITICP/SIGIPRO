@@ -35,13 +35,13 @@
                     </div>
                 </div>
             </div>
-            <label for="id_intencion" class="control-label"> Solicitud o Intención de Venta</label>
+            <label for="id_intencion" class="control-label"> *Solicitud o Intención de Venta</label>
             <!-- Id Cliente -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <select id="id_intencion" class="select2" name="id_intencion" 
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')" required>
                           <option value=''></option>
                           <c:forEach items="${intenciones}" var="intencion">
                             <c:choose>
@@ -59,6 +59,17 @@
             </div>
     </div>
     <div class="col-md-6">
+            <label for="total" class="control-label"> Total (Sin Flete) </label>
+            <!-- Total Parcial -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input id="total_parcial" type="number" min="0" class="form-control" name="total_parcial" value="${cotizacion.getTotal() - cotizacion.getFlete()}"
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                oninput="setCustomValidity('')">
+                    </div>
+                </div>
+            </div>
             <label for="flete" class="control-label"> *Flete</label>
             <!-- Flete -->
             <div class="form-group">
@@ -70,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <label for="total" class="control-label"> Total (Auto Calculado)</label>
+            <label for="total" class="control-label"> Total Final </label>
             <!-- Total -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -83,26 +94,21 @@
             </div>
     </div>                    
          
-            <div class="col-md-12">
-        
-        <!-- Esta arte es la de los productos de la solicitud -->
-                <div class="widget widget-table">
+    <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> *Productos a Vender</h3>
+                    <h3><i class="fa fa-th-list"></i> Productos de la Solicitud / Intención de Venta</h3>
                     <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
-                    <table id="datatable-column-filter-productos" class="table table-sorting table-striped table-hover datatable">
+                    <table id="datatable-column-filter-productos" class="table table-striped table-hover datatable">
                       <thead>
                         <tr>
-                          <th>Producto</th>
+                          <th>Nombre del Producto</th>
                           <th>Cantidad</th>
-                          <th>Posible Fecha de Despacho</th>
+                          <th>Lote</th>
                           <th>Precio Unitario</th>
-                          <th>Editar/Eliminar</th>
-                          <th hidden="true">Stock</th>
+                          <th>Agregar/Cambiar Precio</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -110,21 +116,18 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
-                            <td>${producto.getFecha_S()}</td>
-                            <td>${producto.getProducto().getPrecio()}</td>
+                            <td>${producto.getProducto().getLote()}</td>
+                            <td>${producto.getPrecio()}</td>
                             <td>
-                              <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarProducto(${producto.getProducto().getId_producto()})"   >Editar</button>
-                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>
+                                <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarProducto(${producto.getProducto().getId_producto()})"   >Modificar Precio</button>
                             </td>
-                            <td hidden="true">${producto.getProducto().getStock()}</td>
                           </tr>
                         </c:forEach>
                       </tbody>
                     </table>
                   </div>
                 </div>
-                <!-- Esta parte es la de los productos de la solicitud -->
-            </div>
+                                
         </div>
   <div class="form-group">
     <div class="modal-footer">

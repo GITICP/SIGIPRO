@@ -39,9 +39,7 @@ public class Encuesta_satisfaccionDAO extends DAO {
                 encuesta.setCliente(cdao.obtenerCliente(Integer.parseInt(rs.getString("id_cliente"))));
                 encuesta.setFecha(rs.getDate("fecha"));
                 encuesta.setObservaciones(rs.getString("observaciones"));
-                encuesta.setDocumento_1(rs.getString("documento_1"));
-                encuesta.setDocumento_2(rs.getString("documento_2"));
-                encuesta.setDocumento_3(rs.getString("documento_3"));
+                encuesta.setDocumento(rs.getString("documento"));
                 resultado.add(encuesta);
 
             }
@@ -70,9 +68,7 @@ public class Encuesta_satisfaccionDAO extends DAO {
                 resultado.setCliente(cdao.obtenerCliente(Integer.parseInt(rs.getString("id_cliente"))));
                 resultado.setFecha(rs.getDate("fecha"));
                 resultado.setObservaciones(rs.getString("observaciones"));
-                resultado.setDocumento_1(rs.getString("documento_1"));
-                resultado.setDocumento_2(rs.getString("documento_2"));
-                resultado.setDocumento_3(rs.getString("documento_3"));
+                resultado.setDocumento(rs.getString("documento"));
             }
             rs.close();
             consulta.close();
@@ -89,15 +85,13 @@ public class Encuesta_satisfaccionDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.encuesta_satisfaccion (id_cliente, fecha, observaciones, documento_1, documento_2, documento_3)"
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_encuesta");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.encuesta_satisfaccion (id_cliente, fecha, observaciones, documento)"
+                    + " VALUES (?,?,?,?) RETURNING id_encuesta");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha());
             consulta.setString(3, p.getObservaciones());
-            consulta.setString(4, p.getDocumento_1());
-            consulta.setString(5, p.getDocumento_2());
-            consulta.setString(6, p.getDocumento_3());
+            consulta.setString(4, p.getDocumento());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -120,17 +114,15 @@ public class Encuesta_satisfaccionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.encuesta_satisfaccion"
-                    + " SET observaciones=?, fecha=?, id_cliente=?, documento_1=?, documento_2=?, documento_3=?"
+                    + " SET observaciones=?, fecha=?, id_cliente=?, documento=?"
                     + " WHERE id_encuesta=?; "
             );
 
             consulta.setString(1, p.getObservaciones());
             consulta.setDate(2, p.getFecha());
             consulta.setInt(3, p.getCliente().getId_cliente());
-            consulta.setString(4, p.getDocumento_1());
-            consulta.setString(5, p.getDocumento_2());
-            consulta.setString(6, p.getDocumento_3());
-            consulta.setInt(7, p.getId_encuesta());
+            consulta.setString(4, p.getDocumento());
+            consulta.setInt(5, p.getId_encuesta());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

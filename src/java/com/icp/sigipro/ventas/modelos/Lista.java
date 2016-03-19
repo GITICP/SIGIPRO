@@ -18,8 +18,8 @@ import org.json.JSONObject;
 public class Lista { //Lista de espera
     private int id_lista;
     private Cliente cliente;
-    private int prioridad;
-    private Date fecha_ingreso;
+    private Date fecha_solicitud;
+    private Date fecha_atencion;
 
     public int getId_lista() {
         return id_lista;
@@ -37,31 +37,40 @@ public class Lista { //Lista de espera
         this.cliente = cliente;
     }
 
-    public int getPrioridad() {
-        return prioridad;
-    }
-
-    public void setPrioridad(int prioridad) {
-        this.prioridad = prioridad;
-    }
-
-    public Date getFecha_ingreso() {
-        return fecha_ingreso;
-    }
-
-    public void setFecha_ingreso(Date fecha_ingreso) {
-        this.fecha_ingreso = fecha_ingreso;
-    }
+    
     
     private String formatearFecha(Date fecha)
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
     }  
+
+    public Date getFecha_solicitud() {
+        return fecha_solicitud;
+    }
+
+    public void setFecha_solicitud(Date fecha_solicitud) {
+        this.fecha_solicitud = fecha_solicitud;
+    }
     
-    public String getFecha_ingreso_S(){
-        if (this.fecha_ingreso != null)
-            {return formatearFecha(this.fecha_ingreso);}
+    public String getFecha_solicitud_S(){
+        if (this.fecha_solicitud != null)
+            {return formatearFecha(this.fecha_solicitud);}
+        else
+            {return "";}
+    }
+    
+    public Date getFecha_atencion() {
+        return fecha_atencion;
+    }
+
+    public void setFecha_atencion(Date fecha_atencion) {
+        this.fecha_atencion = fecha_atencion;
+    }
+    
+    public String getFecha_atencion_S(){
+        if (this.fecha_atencion != null)
+            {return formatearFecha(this.fecha_atencion);}
         else
             {return "";}
     }

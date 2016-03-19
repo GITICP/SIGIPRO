@@ -60,38 +60,14 @@
                                 <tr><td> <strong>Cliente: </strong> <td>${encuesta.getCliente().getNombre()} </td></tr>
                                 <tr><td> <strong>Fecha: </strong> <td>${encuesta.getFecha_S()} </td></tr>
                                 <tr><td> <strong>Observaciones: </strong> <td>${encuesta.getObservaciones()} </td></tr>
-                                <tr><td> <strong>Documento 1: </strong> 
+                                <tr><td> <strong>Documento: </strong> 
                                     <td>
                                         <c:choose>
-                                            <c:when test="${encuesta.getDocumento_1() == ''}">
+                                            <c:when test="${encuesta.getDocumento() == ''}">
                                                 Sin documento asociado.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}&documento=1">Descargar Documento</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                                <tr><td> <strong>Documento 2: </strong> 
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${encuesta.getDocumento_2() == ''}">
-                                                Sin documento asociado.
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}&documento=2">Descargar Documento</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                                <tr><td> <strong>Documento 3: </strong> 
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${encuesta.getDocumento_3() == ''}">
-                                                Sin documento asociado.
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}&documento=3">Descargar Documento</a>
+                                                <a href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=archivo&id_encuesta=${encuesta.getId_encuesta()}">Descargar Documento</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>

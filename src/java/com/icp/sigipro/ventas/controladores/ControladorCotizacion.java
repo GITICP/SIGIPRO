@@ -150,12 +150,9 @@ public class ControladorCotizacion extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         try {
             Cotizacion cotizacion_nuevo = construirObjeto(request);
-            if (cotizacion_nuevo.getIntencion().getId_intencion() == 0){
-                resultado = dao.insertarCotizacionSinIntencion(cotizacion_nuevo);
-            }
-            else{
-                resultado = dao.insertarCotizacion(cotizacion_nuevo);
-            }
+            
+            resultado = dao.insertarCotizacion(cotizacion_nuevo);
+            
             
             String productos_cotizacion = request.getParameter("listaProductos");
         
@@ -197,7 +194,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
             resultado = dao.editarCotizacion(cotizacion_nuevo);
             
             String productos_cotizacion = request.getParameter("listaProductos");
-        
+            //System.out.println("Controlador. listaProductos a parsear = "+productos_cotizacion);
             if (productos_cotizacion != null && !(productos_cotizacion.isEmpty()) ) {
                 List<Producto_Cotizacion> p_i = idao.parsearProductos(productos_cotizacion, Integer.parseInt(request.getParameter("id_cotizacion")));
                 for (Producto_Cotizacion i : p_i) {
@@ -214,7 +211,6 @@ public class ControladorCotizacion extends SIGIPROServlet {
                 idao.asegurarProductos_Cotizacion(p_i, Integer.parseInt(request.getParameter("id_cotizacion")));
             }
             else{
-                idao.eliminarProductos_Cotizacion(Integer.parseInt(request.getParameter("id_cotizacion")));
             }
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -270,14 +266,8 @@ public class ControladorCotizacion extends SIGIPROServlet {
         
         cotizacion.setId_cotizacion(Integer.parseInt(request.getParameter("id_cotizacion")));
         cotizacion.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
-        if (!request.getParameter("id_intencion").equals("")){
-            cotizacion.setIntencion(ivdao.obtenerIntencion_venta(Integer.parseInt(request.getParameter("id_intencion"))));
-        }
-        else{
-            Intencion_venta i = new Intencion_venta();
-            i.setId_intencion(0);
-            cotizacion.setIntencion(i);
-        }
+        cotizacion.setIntencion(ivdao.obtenerIntencion_venta(Integer.parseInt(request.getParameter("id_intencion"))));
+        
         cotizacion.setTotal(Integer.parseInt(request.getParameter("total")));
         cotizacion.setFlete(Integer.parseInt(request.getParameter("flete")));
         

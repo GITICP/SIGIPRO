@@ -65,7 +65,19 @@
                                                 Sin minuta asociada.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}">Descargar Minuta</a>
+                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}&documento=1">Descargar Minuta</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr><td> <strong>Minuta 2: </strong> 
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${reunion.getMinuta2() == ''}">
+                                                Sin minuta asociada.
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}&documento=2">Descargar Minuta</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -75,6 +87,34 @@
                         </div>
                     </div>
                     <!-- END WIDGET TICKET TABLE -->
+                    <div class="col-md-12">
+        
+        <!-- Esta arte es la de los productos de la solicitud -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-th-list"></i> Participantes</h3>
+                    <div class="btn-group widget-header-toolbar">
+                      </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-productos" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${participantes}" var="participante">
+                          <tr id="${participante.getUsuario().getId_usuario()}">
+                            <td>${participante.getUsuario().getNombre_completo()}</td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los productos de la solicitud -->
+            </div>
                 </div>
                 <!-- /main-content -->
             </div>

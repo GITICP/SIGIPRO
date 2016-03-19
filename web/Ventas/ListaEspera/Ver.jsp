@@ -28,7 +28,7 @@
             <li> 
               <a href="/SIGIPRO/Ventas/ListaEspera?">Listas de Espera</a>
             </li>
-            <li class="active">Lista ${lista.getId_lista()}</li>
+            <li class="active">Enlistado ${lista.getId_lista()}</li>
           </ul>
         </div>
       </div>
@@ -38,7 +38,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-file-text-o"></i> Lista ${lista.getId_lista()}  </h3>
+              <h3><i class="fa fa-file-text-o"></i> Enlistado ${lista.getId_lista()}  </h3>
               <div class="btn-group widget-header-toolbar">
                 <c:set var="contienePermisoEditarYBorrar" value="false" />
                 <c:forEach var="permiso" items="${sessionScope.listaPermisos}">
@@ -55,86 +55,14 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>ID:  </strong></td> <center> <td> ${lista.getId_lista()} </td> </center> </tr>
                 <tr><td> <strong>Cliente:  </strong>  </td> <center> <td> ${lista.getCliente().getNombre()}   </td> </center> </tr>
-                <tr><td> <strong>Fecha de Ingreso: </strong>  </td> <center> <td> ${lista.getFecha_ingreso_S()}   </td> </center> </tr>
-                <tr><td> <strong>Prioridad: </strong>  </td> <center> <td> ${lista.getPrioridad()}   </td> </center> </tr>
+                <tr><td> <strong>Fecha de Solicitud: </strong>  </td> <center> <td> ${lista.getFecha_solicitud_S()}   </td> </center> </tr>
+                <tr><td> <strong>Fecha de Atención / Despacho: </strong>  </td> <center> <td> ${lista.getFecha_atencion_S()}   </td> </center> </tr>
               </table>
               <br>
               
             </div>
           <!-- END WIDGET TICKET TABLE -->
-          <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> Productos asociados</h3>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-acciones" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Producto</th>
-                          <th>Cantidad</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${productos_lista}" var="producto">
-                          <tr id="${producto.getProducto().getId_producto()}">
-                            <td>${producto.getProducto().getId_producto()}</td>
-                            <td>${producto.getProducto().getNombre()}</td>
-                            <td>${producto.getCantidad()}</td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-          <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> Historiales asociados</h3>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-acciones" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Historial</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${historiales_lista}" var="historial">
-                          <tr id="${historial.getId_historial()}">
-                            <td>${historial.getId_historial()}</td>
-                            <td>${historial.getHistorial()}</td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-          <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> Observaciones asociadas</h3>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-acciones" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Observación</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${observaciones_lista}" var="observacion">
-                          <tr id="${observacion.getId_observacion()}">
-                            <td>${observacion.getId_observacion()}</td>
-                            <td>${observacion.getObservacion()}</td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
           </div>
         </div>
         <!-- /main-content -->

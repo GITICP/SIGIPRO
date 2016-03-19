@@ -1,54 +1,133 @@
-$( document ).ready(function() {
-    //Revisar la lista de productos_intencion en la tabla y cargarlos codificados en capoOcultoRoles
-  var tabla = document.getElementById("datatable-column-filter-productos");
-  var campoOcultoRoles = $('#listaProductos');
-  campoOcultoRoles.val("");
-  for (var i = 1; i<tabla.rows.length; i++) {
-      var id = tabla.rows[i].getAttribute('id');
-      campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + id + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
-      $("#seleccionProducto option[value='"+id+"']").remove();
-  }
+
+$(function(){ /* DOM ready */ //
+    $("#flete").change(function () {
+        var total_parcial = document.getElementById("total_parcial");
+        var flete = document.getElementById("flete");
+        var total = document.getElementById("total");
+        
+        total.value = parseInt(flete.value) + parseInt(total_parcial.value);
+    });
 });
 
-function eliminarProducto(idRol) {
-  fila = $('#' + idRol);
-  $('#seleccionProducto')
-          .append($("<option></option>")
-                  .attr("value", fila.attr('id'))
-                  .attr("data-stock", fila.children('td').eq(5).text())
-                  .attr("data-precio", fila.children('td').eq(3).text())
-                  .text(fila.children('td').eq(0).text()));
-          
-  var total = document.getElementById("total");
-  var precioI = parseInt(fila.children('td').eq(3).text());
-  var cantidadI = parseInt(fila.children('td').eq(1).text());
-  //alert("Producto a ser eliminado. precio="+precioI+", cantidad="+cantidadI);
-  total.value = parseInt(total.value) - (precioI * cantidadI);
-  fila.remove();
-  var campoOcultoRoles = $('#listaProductos');
-  var tabla = document.getElementById("datatable-column-filter-productos");
-  campoOcultoRoles.val("");
-  for (var i = 1; i<tabla.rows.length; i++) {
-    campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + tabla.rows[i].getAttribute('id') + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
-  }
-  //alert("listaProductos = "+campoOcultoRoles.val());
+$(function(){ /* DOM ready */ 
+    $("#id_intencion").change(function () {
+
+        var select_intencion = document.getElementById("id_intencion");
+        var indice_intencion = select_intencion.selectedIndex;
+        var opcion_intencion = select_intencion.options[indice_intencion].value;
+        
+        campoOcultoRoles = $('#listaProductos');
+        campoOcultoRoles.val("");
+        
+        var total = document.getElementById("total_parcial");
+        var total_final = document.getElementById("total");
+        var flete = document.getElementById("flete");
+        total.value = 0;
+        total_final.value = parseInt(total.value) + parseInt(flete.value);
+        
+        $('#datatable-column-filter-productos').dataTable().fnClearTable();
+        var table = document.getElementById("datatable-column-filter-productos");
+        table.deleteRow(1);
+        
+        var row_adicional = document.getElementById("datatable-column-filter-productos_length");
+        var row_adicional2 = document.getElementById("datatable-column-filter-productos_filter");
+        var row_adicional3 = document.getElementById("datatable-column-filter-productos_info");
+        var row_adicional4 = document.getElementById("datatable-column-filter-productos_paginate");
+        if(row_adicional !== null && row_adicional2 !== null && row_adicional3 !== null && row_adicional4 !== null){
+            row_adicional.parentNode.removeChild(row_adicional);
+            row_adicional2.parentNode.removeChild(row_adicional2);
+            row_adicional3.parentNode.removeChild(row_adicional3);
+            row_adicional4.parentNode.removeChild(row_adicional4);
+        }
+        
+        //ajax call
+        ajax_productos(opcion_intencion);
+        
+    });
+});
+var xhttp;
+var xmlDoc;
+
+function ajax_productos(id_intencion){
+    if (window.XMLHttpRequest) {
+        xhttp = new XMLHttpRequest();
+        } else {
+        // code for IE6, IE5
+        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            xmlDoc = xhttp.responseXML;
+            var producto1 = xmlDoc.getElementsByTagName("producto");
+            var id;
+            var nombre;
+            var lote;
+            var cantidad;
+            var producto;
+            //alert(producto1.length);
+            for (var i = 0; i < producto1.length; i++) {   
+                producto = producto1[i];
+                id = producto.getElementsByTagName('id')[0].firstChild.nodeValue;
+                nombre = producto.getElementsByTagName('nombre')[0].firstChild.nodeValue;
+                cantidad = producto.getElementsByTagName('cantidad')[0].firstChild.nodeValue;
+                lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
+                agregarProducto(id, nombre, cantidad, lote);
+            }
+        }
+    };
+    enviarPeticionXHTTP("productos_intencion_venta?id="+id_intencion);
 }
+
+function enviarPeticionXHTTP(path){
+    var pathArray = window.location.pathname.split( '/' );
+    if (pathArray[pathArray.length-1] === '/'){
+        pathArray.pop();
+    }
+    if (pathArray.length === 3){
+        xhttp.open("GET", path, true);
+        xhttp.send();
+    }
+    if (pathArray.length > 3){
+        var carpetasEnElPath = pathArray.length;
+        var irAtras = "";
+        while(!(carpetasEnElPath < 3)){
+            irAtras += "../";
+            carpetasEnElPath = carpetasEnElPath - 2;
+        }
+        xhttp.open("GET", irAtras + path, true);
+        xhttp.send();
+    }
+}
+
+function agregarProducto(id, producto, cantidad, lote) {
+
+    fila = '<tr ' + 'id=' + id + '>';
+    fila += '<td>' + producto + '</td>';
+    fila += '<td>' + cantidad + '</td>';
+    fila += '<td>' + lote + '</td>';
+    fila += '<td>0</td>';
+    fila += '<td>';
+    fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto(' + id + ')"   style="margin-left:5px;margin-right:7px;">Modificar Precio</button>';
+    fila += '</td>';
+    fila += '</tr>';
+
+    //alert("Producto añadido a la lista: "+producto);
+
+    campoOcultoRoles = $('#listaProductos');
+    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + id + "#c#" + producto + "#c#" + cantidad + "#c#0");
+    //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
+
+    $('#datatable-column-filter-productos > tbody:last').append(fila);
+}
+
 
 function editarProducto(idRol) {
   var x = document.getElementById(idRol);
   document.getElementById("idProductoEditar").value = idRol;
-  var cantidad = document.getElementById("editarCantidad");
-  cantidad.value = x.children[1].innerHTML;
-  var stock = x.children[5].innerHTML;
-  var precio = x.children[3].innerHTML;
-  cantidad.placeholder = "Máximo: "+stock;
-  cantidad.setAttribute("max",stock);
+  var precio = document.getElementById("editarPrecio");
+  precio.value = x.children[3].innerHTML;
   
-  var precioText = document.getElementById("precio_unitario_editar");
-  precioText.innerHTML = "Precio Unitario: "+precio;
-  
-  
-  document.getElementById("editarPosibleFechaDespacho").value = x.children[2].innerHTML;
   $('#modalEditarProducto').modal('show');
   
 }
@@ -58,14 +137,19 @@ function editarProducto(idRol) {
  * 
  */
 function actualizarTotal(){
-    var total = document.getElementById("total");
+    var total = document.getElementById("total_parcial");
     var tabla = document.getElementById("datatable-column-filter-productos");
-    total.value = parseInt("0");
+    total.value = 0;
     for (var i = 1; i<tabla.rows.length; i++) {
       //alert(total.value);
       total.value = parseInt(total.value) + (parseInt(tabla.rows[i].cells[1].firstChild.nodeValue) * parseInt(tabla.rows[i].cells[3].firstChild.nodeValue));
       //alert(total.value);
-  }
+    }
+    
+    var flete = document.getElementById("flete");
+    var total_final = document.getElementById("total");
+        
+    total_final.value = parseInt(flete.value) + parseInt(total.value);
 }
 
 function confirmarEdicionProducto() {
@@ -76,8 +160,7 @@ function confirmarEdicionProducto() {
   else {
     var id = $('#idProductoEditar').val();
     fila = $('#' + id);
-    fila.children('td').eq(1).text($('#editarCantidad').val());
-    fila.children('td').eq(2).text($('#editarPosibleFechaDespacho').val());
+    fila.children('td').eq(3).text($('#editarPrecio').val());
     $('#modalEditarProducto').modal('hide');
 
     //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
@@ -97,140 +180,7 @@ function confirmarEdicionProducto() {
       }
 
     }
-    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarCantidad').val() + "#c#" + $('#editarPosibleFechaDespacho').val());
+    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + fila.children('td').eq(0).text() + "#c#" + fila.children('td').eq(1).text() + "#c#" + $('#editarPrecio').val());
   }
-  var cantidad = document.getElementById("cantidad");
-    cantidad.placeholder = "";
     actualizarTotal();
-}
-
-// Funcion que agrega el rol seleccionado al input escondido de roles
-function agregarProducto() {
-   if (!$('#formAgregarProducto')[0].checkValidity()) {
-    $('<input type="submit">').hide().appendTo($('#formAgregarProducto')).click().remove();
-    $('#formAgregarProducto').find(':submit').click();
-  }
-  else {
-  $('#modalAgregarProducto').modal('hide');
-  //$('#inputGroupSeleccionProducto').find('#select2-chosen-1').text("");
-  
-  rolSeleccionado = $('#seleccionProducto :selected');
-  inputFechaAct = $('#cantidad');
-  inputFechaDesact = $('#posibleFechaEntrega');
-  var select = document.getElementById("seleccionProducto");
-  var indice = select.selectedIndex;
-  var stock = select.options[indice].getAttribute('data-stock');
-  precio = select.options[indice].getAttribute('data-precio');
-  
-  var total = document.getElementById("total");
-  var precioI = parseInt(precio);
-  var cantidadI = parseInt(inputFechaAct.val());
-  if ((total.value === "0") || (total.value === 0)){
-    total.value = precioI * cantidadI;    
-    //alert("= 0 total cambiado a: "+total.value);
-  }
-  else{
-    total.value = parseInt(total.value) + (precioI * cantidadI);
-    //alert("total cambiado a: "+total.value);
-  }
-    fechaAct = inputFechaAct.val();
-    fechaDesact = inputFechaDesact.val();
-    idRol = rolSeleccionado.val();
-
-    textoRol = rolSeleccionado.text();
-
-    rolSeleccionado.remove();
-    inputFechaAct.val("");
-    inputFechaDesact.val("");
-
-    fila = '<tr ' + 'id=' + idRol + '>';
-    fila += '<td>' + textoRol + '</td>';
-    fila += '<td>' + fechaAct + '</td>';
-    fila += '<td>' + fechaDesact + '</td>';
-    fila += '<td>' + precio + '</td>';
-    fila += '<td>';
-    fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto(' + idRol + ')"   style="margin-left:5px;margin-right:7px;">Editar</button>';
-    fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(' + idRol + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
-    fila += '</td>';
-    fila += '<td hidden="true">' + stock + '</td>';
-    fila += '</tr>';
-
-    campoOcultoRoles = $('#listaProductos');
-    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + idRol + "#c#" + fechaAct + "#c#" + fechaDesact);
-    //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
-
-    $('#datatable-column-filter-productos > tbody:last').append(fila);
-
-    $('#inputGroupSeleccionProducto').find('.select2-chosen').each(function(){$(this).prop('id',''); $(this).text('');});
-    var cantidad = document.getElementById("cantidad");
-    cantidad.placeholder = "";
-  }
-}
-
-$(function(){ /* DOM ready */
-    $("#seleccionProducto").change(function () {
-
-        var select = document.getElementById("seleccionProducto");
-        var indice = select.selectedIndex;
-        var stock = select.options[indice].getAttribute('data-stock');
-        var precio = select.options[indice].getAttribute('data-precio');
-
-        var cantidad = document.getElementById("cantidad");
-        cantidad.placeholder = "Máximo: "+stock;
-        cantidad.setAttribute("max",stock);
-
-        var precioText = document.getElementById("precio_unitario");
-        precioText.innerHTML = "Precio Unitario: "+precio;
-    });
-});
-
-function confirmacion() {
-  rolesCodificados = "";
-  $('#datatable-column-filter-productos > tbody > tr').each(function ()
-
-  {
-    fila = $(this);
-    rolesCodificados += fila.attr('id');
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(1).text();
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(2).text();
-    rolesCodificados += "#r#";
-  });
-  $('#listaProductos').val(rolesCodificados.slice(0, -3));
-
-  if (!$('#formularioProducto')[0].checkValidity()) {
-    $('<input type="submit">').hide().appendTo($('#formularioProducto')).click().remove();
-    $('#formularioProducto').find(':submit').click();
-  }
-  else {
-  $('#formEditarProducto').submit();
-  }
-}
-
-function confirmacionAgregar() {
-  rolesCodificados = "";
-  $('#datatable-column-filter-productos > tbody > tr').each(function ()
-
-  {
-    fila = $(this);
-    rolesCodificados += fila.attr('id');
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(1).text();
-    rolesCodificados += "#c#";
-    rolesCodificados += fila.children('td').eq(2).text();
-    rolesCodificados += "#r#";
-  });
-  $('#listaProductos').val(rolesCodificados.slice(0, -3));
-  //alert("el valor de roles Usuario es: "+$('#listaProductos').val() );
-
-  if (!$('#formularioProducto')[0].checkValidity()) {
-    $('<input type="submit">').hide().appendTo($('#formularioProducto')).click().remove();
-    $('#formularioProducto').find(':submit').click();
-  }
-  else {
-    $('#formAgregarProducto').submit();
-    var cantidad = document.getElementById("cantidad");
-    cantidad.placeholder = "";
-  }
 }

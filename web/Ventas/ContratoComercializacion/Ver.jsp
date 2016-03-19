@@ -56,7 +56,9 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre: </strong></td> <center> <td> ${contrato.getNombre()} </td> </center> </tr>
-                <tr><td> <strong>Fecha: </strong>  </td> <center> <td> ${contrato.getFecha_S()}   </td> </center> </tr>
+                <tr><td> <strong>Cliente: </strong></td> <center> <td> ${contrato.getCliente().getNombre()} </td> </center> </tr>
+                <tr><td> <strong>Fecha Inicial: </strong>  </td> <center> <td> ${contrato.getFechaInicial_S()}   </td> </center> </tr>
+                <tr><td> <strong>Fecha de Renovacion: </strong>  </td> <center> <td> ${contrato.getFechaRenovacion_S()}   </td> </center> </tr>
                 <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${contrato.getObservaciones()}   </td> </center> </tr>
               </table>
               <br>

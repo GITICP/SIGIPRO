@@ -21,6 +21,8 @@ public class Contrato_comercializacionDAO extends DAO {
 
     public Contrato_comercializacionDAO() {
     }
+    
+    private ClienteDAO cDAO = new ClienteDAO();
 
     public List<Contrato_comercializacion> obtenerContratos_comercializacion() throws SIGIPROException {
 
@@ -35,8 +37,10 @@ public class Contrato_comercializacionDAO extends DAO {
                 Contrato_comercializacion cliente = new Contrato_comercializacion();
                 
                 cliente.setId_contrato(rs.getInt("id_contrato"));
+                cliente.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
                 cliente.setNombre(rs.getString("nombre"));
-                cliente.setFecha(rs.getDate("fecha"));
+                cliente.setFechaInicial(rs.getDate("fechaInicial"));
+                cliente.setFechaRenovacion(rs.getDate("fechaRenovacion"));
                 cliente.setObservaciones(rs.getString("observaciones"));
                 resultado.add(cliente);
 
@@ -64,7 +68,9 @@ public class Contrato_comercializacionDAO extends DAO {
             while (rs.next()) {
                 resultado.setId_contrato(rs.getInt("id_contrato"));
                 resultado.setNombre(rs.getString("nombre"));
-                resultado.setFecha(rs.getDate("fecha"));
+                resultado.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
+                resultado.setFechaInicial(rs.getDate("fechaInicial"));
+                resultado.setFechaRenovacion(rs.getDate("fechaRenovacion"));
                 resultado.setObservaciones(rs.getString("observaciones"));
             }
             rs.close();
@@ -82,12 +88,14 @@ public class Contrato_comercializacionDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.contrato_comercializacion (nombre, fecha, observaciones)"
-                    + " VALUES (?,?,?) RETURNING id_contrato");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.contrato_comercializacion (nombre, id_cliente, fechaInicial, fechaRenovacion, observaciones)"
+                    + " VALUES (?,?,?,?,?) RETURNING id_contrato");
 
             consulta.setString(1, p.getNombre());
-            consulta.setDate(2, p.getFecha());
-            consulta.setString(3, p.getObservaciones());
+            consulta.setInt(2, p.getCliente().getId_cliente());
+            consulta.setDate(3, p.getFechaInicial());
+            consulta.setDate(4, p.getFechaRenovacion());
+            consulta.setString(5, p.getObservaciones());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -110,14 +118,15 @@ public class Contrato_comercializacionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.contrato_comercializacion"
-                    + " SET nombre=?, fecha=?, observaciones=?"
+                    + " SET nombre=?, fechaInicial=?, fechaRenovacion=?, observaciones=?"
                     + " WHERE id_contrato=?; "
             );
 
             consulta.setString(1, p.getNombre());
-            consulta.setDate(2, p.getFecha());
-            consulta.setString(3, p.getObservaciones());
-            consulta.setInt(4, p.getId_contrato());
+            consulta.setDate(2, p.getFechaInicial());
+            consulta.setDate(3, p.getFechaRenovacion());
+            consulta.setString(4, p.getObservaciones());
+            consulta.setInt(5, p.getId_contrato());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

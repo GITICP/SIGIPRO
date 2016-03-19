@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <label for="id_intencion" class="control-label"> Intención</label>
+            <label for="id_intencion" class="control-label"> *Solicitud o Intención de Venta</label>
             <!-- Intención -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -120,19 +120,17 @@
         <!-- Esta arte es la de los productos de la solicitud -->
                 <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> *Productos a Vender</h3>
+                    <h3><i class="fa fa-th-list"></i> Productos de la Solicitud / Intención de Venta</h3>
                     <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
-                    <table id="datatable-column-filter-productos" class="table table-sorting table-striped table-hover datatable">
+                    <table id="datatable-column-filter-productos" class="table table-striped table-hover datatable">
                       <thead>
                         <tr>
-                          <th>Producto</th>
+                          <th>Nombre del Producto</th>
                           <th>Cantidad</th>
-                          <th>Editar/Eliminar</th>
-                          <th hidden="true">Stock</th>
+                          <th>Lote</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -140,11 +138,7 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
-                            <td>
-                              <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarProducto(${producto.getProducto().getId_producto()})"   >Editar</button>
-                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>
-                            </td>
-                            <td hidden="true">${producto.getProducto().getStock()}</td>
+                            <td>${producto.getProducto().getLote()}</td>
                           </tr>
                         </c:forEach>
                       </tbody>

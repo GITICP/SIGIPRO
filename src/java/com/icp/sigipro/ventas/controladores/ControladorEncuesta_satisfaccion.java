@@ -77,21 +77,9 @@ public class ControladorEncuesta_satisfaccion extends SIGIPROServlet {
         validarPermisosMultiple(permisos, request);
 
         int id_encuesta = Integer.parseInt(request.getParameter("id_encuesta"));
-        int documento = Integer.parseInt(request.getParameter("documento"));
         Encuesta_satisfaccion encuesta = dao.obtenerEncuesta_satisfaccion(id_encuesta);
 
-        String filename = "";
-        switch(documento){
-            case 1:
-                filename = encuesta.getDocumento_1();
-                break;
-            case 2:
-                filename = encuesta.getDocumento_2();
-                break;
-            case 3:
-                filename = encuesta.getDocumento_3();
-                break;
-        }
+        String filename = encuesta.getDocumento();
         
         File file = new File(filename);
 
@@ -210,33 +198,15 @@ public class ControladorEncuesta_satisfaccion extends SIGIPROServlet {
                     this.getAgregar(request, response);
                 }
             } else { //editar
-                String archivoViejo1 = "";
-                String archivoViejo2 = "";
-                String archivoViejo3 = "";
-                if (tr.getDocumento_1().equals("")) {
-                    archivoViejo1 = dao.obtenerEncuesta_satisfaccion(tr.getId_encuesta()).getDocumento_1();
-                }
-                if (tr.getDocumento_2().equals("")) {
-                    archivoViejo2 = dao.obtenerEncuesta_satisfaccion(tr.getId_encuesta()).getDocumento_2();
-                }
-                if (tr.getDocumento_3().equals("")) {
-                    archivoViejo3 = dao.obtenerEncuesta_satisfaccion(tr.getId_encuesta()).getDocumento_3();
+                String archivoViejo = "";
+                if (tr.getDocumento().equals("")) {
+                    archivoViejo = dao.obtenerEncuesta_satisfaccion(tr.getId_encuesta()).getDocumento();
                 }
                 //System.out.println("archivoViejo = "+archivoViejo);
                 //System.out.println("tr.getMinuta() = "+tr.getMinuta());
                 boolean resultado2 = false;
-                if (!archivoViejo1.equals("")) {
-                        tr.setDocumento_1(archivoViejo1);
-                        //File archivo = new File(archivoViejo);
-                        //archivo.delete();
-                    }
-                if (!archivoViejo2.equals("")) {
-                        tr.setDocumento_2(archivoViejo2);
-                        //File archivo = new File(archivoViejo);
-                        //archivo.delete();
-                    }
-                if (!archivoViejo3.equals("")) {
-                        tr.setDocumento_3(archivoViejo3);
+                if (!archivoViejo.equals("")) {
+                        tr.setDocumento(archivoViejo);
                         //File archivo = new File(archivoViejo);
                         //archivo.delete();
                     }
@@ -291,7 +261,6 @@ public class ControladorEncuesta_satisfaccion extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Método del Modelo">
     private Encuesta_satisfaccion construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) throws SIGIPROException, ParseException {
         Encuesta_satisfaccion tr = new Encuesta_satisfaccion();
-        int contador_documento = 1;
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -333,35 +302,10 @@ public class ControladorEncuesta_satisfaccion extends SIGIPROServlet {
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
-                        switch(contador_documento){
-                            case 1:
-                                tr.setDocumento_1(archivo.getAbsolutePath());
-                                contador_documento = 2;
-                                break;
-                            case 2:
-                                tr.setDocumento_2(archivo.getAbsolutePath());
-                                contador_documento = 3;
-                                break;
-                            case 3:
-                                tr.setDocumento_3(archivo.getAbsolutePath());
-                                contador_documento = 1;
-                                break;
-                        }
+                        tr.setDocumento(archivo.getAbsolutePath());
+                        
                     } else {
-                        switch(contador_documento){
-                            case 1:
-                                tr.setDocumento_1("");
-                                contador_documento = 2;
-                                break;
-                            case 2:
-                                tr.setDocumento_2("");
-                                contador_documento = 3;
-                                break;
-                            case 3:
-                                tr.setDocumento_3("");
-                                contador_documento = 1;
-                                break;
-                        }
+                        tr.setDocumento("");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

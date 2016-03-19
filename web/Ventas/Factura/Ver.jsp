@@ -70,14 +70,50 @@
                                 <tr><td> <strong>Fecha: </strong> <td>${factura.getFecha_S()} </td></tr>
                                 <tr><td> <strong>Monto: </strong> <td>${factura.getMonto()} </td></tr>
                                 <tr><td> <strong>Fecha de Vencimiento: </strong> <td>${factura.getFecha_vencimiento_S()} </td></tr>
-                                <tr><td> <strong>Documento: </strong> 
+                                <tr><td> <strong>Documento 1: </strong> 
                                     <td>
                                         <c:choose>
-                                            <c:when test="${factura.getDocumento() == ''}">
+                                            <c:when test="${factura.getDocumento_1() == ''}">
                                                 Sin documento asociado.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/Factura?accion=archivo&id_factura=${factura.getId_factura()}">Descargar Documento</a>
+                                                <a href="/SIGIPRO/Ventas/Factura?accion=archivo&id_factura=${factura.getId_factura()}&documento=1">Descargar Documento</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr><td> <strong>Documento 2: </strong> 
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${factura.getDocumento_2() == ''}">
+                                                Sin documento asociado.
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/SIGIPRO/Ventas/Factura?accion=archivo&id_factura=${factura.getId_factura()}&documento=2">Descargar Documento</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr><td> <strong>Documento 3: </strong> 
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${factura.getDocumento_3() == ''}">
+                                                Sin documento asociado.
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/SIGIPRO/Ventas/Factura?accion=archivo&id_factura=${factura.getId_factura()}&documento=3">Descargar Documento</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr><td> <strong>Documento 4: </strong> 
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${factura.getDocumento_4() == ''}">
+                                                Sin documento asociado.
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/SIGIPRO/Ventas/Factura?accion=archivo&id_factura=${factura.getId_factura()}&documento=4">Descargar Documento</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>

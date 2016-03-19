@@ -13,6 +13,8 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import com.icp.sigipro.ventas.modelos.Producto_venta;
 
+import com.icp.sigipro.produccion.dao.Inventario_PTDAO;
+
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +41,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
     private final int[] permisos = {701, 702, 1};
     private final Producto_ventaDAO dao = new Producto_ventaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
+    private final Inventario_PTDAO dao_inv = new Inventario_PTDAO();
 
     protected final Class clase = ControladorProducto_venta.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -58,7 +61,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
        
@@ -66,6 +69,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         Producto_venta ds = new Producto_venta();
         
         request.setAttribute("producto", ds);
+        request.setAttribute("inventarios", dao_inv.obtenerInventario_PTs());
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
@@ -106,6 +110,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         Producto_venta ds = dao.obtenerProducto_venta(id_producto);
     
         request.setAttribute("producto", ds);
+        request.setAttribute("inventarios", dao_inv.obtenerInventario_PTs());        
         request.setAttribute("accion", "Editar");
         
         redireccionar(request, response, redireccion);
@@ -200,8 +205,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         producto.setId_producto(Integer.parseInt(request.getParameter("id_producto")));
         producto.setNombre(request.getParameter("nombre"));
         producto.setDescripcion(request.getParameter("descripcion"));
-        producto.setStock(Integer.parseInt(request.getParameter("stock")));
-        producto.setPrecio(Integer.parseInt(request.getParameter("precio")));
+        producto.setLote(request.getParameter("lote"));
         return producto;
     }
     

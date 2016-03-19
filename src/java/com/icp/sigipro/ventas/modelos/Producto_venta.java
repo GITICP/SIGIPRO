@@ -16,8 +16,7 @@ public class Producto_venta {
     private int id_producto;
     private String nombre;
     private String descripcion;
-    private int stock;
-    private int precio;
+    private String lote;
 
     public int getId_producto() {
         return id_producto;
@@ -43,22 +42,15 @@ public class Producto_venta {
         this.descripcion = descripcion;
     }
 
-    public int getStock() {
-        return stock;
+    public String getLote() {
+        return lote;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
+    public void setLote(String lote) {
+        this.lote = lote;
     }
 
-    public int getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(int precio) {
-        this.precio = precio;
-    }
-
+    
     
     
     //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases

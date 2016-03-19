@@ -14,11 +14,7 @@ import com.icp.sigipro.ventas.dao.TratamientoDAO;
 import com.icp.sigipro.ventas.modelos.Tratamiento;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
-import com.icp.sigipro.ventas.dao.AccionDAO;
-import com.icp.sigipro.ventas.dao.Accion_tratamientoDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
-import com.icp.sigipro.ventas.modelos.Accion;
-import com.icp.sigipro.ventas.modelos.Accion_tratamiento;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,8 +43,6 @@ public class ControladorTratamiento extends SIGIPROServlet {
     private final TratamientoDAO dao = new TratamientoDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ClienteDAO cdao = new ClienteDAO();
-    private final AccionDAO adao = new AccionDAO();
-    private final Accion_tratamientoDAO atdao = new Accion_tratamientoDAO();
 
     protected final Class clase = ControladorTratamiento.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -74,10 +68,14 @@ public class ControladorTratamiento extends SIGIPROServlet {
        
         String redireccion = "Tratamiento/Agregar.jsp";
         Tratamiento ds = new Tratamiento();
+        List<String> estados = new ArrayList<String>();
+        estados.add("Idóneo");
+        estados.add("Normal");
+        estados.add("Crítico");
         
+        request.setAttribute("estados", estados);
         request.setAttribute("tratamiento", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
-        request.setAttribute("acciones", adao.obtenerAcciones());
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
@@ -103,7 +101,6 @@ public class ControladorTratamiento extends SIGIPROServlet {
         try {
             Tratamiento c = dao.obtenerTratamiento(id_tratamiento);
             request.setAttribute("tratamiento", c);
-            request.setAttribute("acciones_tratamiento", atdao.obtenerAccionesDeTratamiento(id_tratamiento));
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
@@ -117,11 +114,14 @@ public class ControladorTratamiento extends SIGIPROServlet {
         String redireccion = "Tratamiento/Editar.jsp";
         int id_tratamiento = Integer.parseInt(request.getParameter("id_tratamiento"));
         Tratamiento ds = dao.obtenerTratamiento(id_tratamiento);
+        List<String> estados = new ArrayList<String>();
+        estados.add("Idóneo");
+        estados.add("Normal");
+        estados.add("Crítico");
         
+        request.setAttribute("estados", estados);
         request.setAttribute("tratamiento", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
-        request.setAttribute("acciones", adao.obtenerAcciones());
-        request.setAttribute("acciones_tratamiento", atdao.obtenerAccionesDeTratamiento(id_tratamiento));
         request.setAttribute("accion", "Editar");
         
         redireccionar(request, response, redireccion);
@@ -137,17 +137,6 @@ public class ControladorTratamiento extends SIGIPROServlet {
             Tratamiento tratamiento_nuevo = construirObjeto(request);
             resultado = dao.insertarTratamiento(tratamiento_nuevo);
             
-            String acciones_tratamiento = request.getParameter("listaAcciones");
-        
-            if (acciones_tratamiento != null && !(acciones_tratamiento.isEmpty()) ) {
-                List<Accion> p_i = atdao.parsearAcciones(acciones_tratamiento, resultado);
-                for (Accion i : p_i) {
-                    Accion_tratamiento a = new Accion_tratamiento();
-                    a.setId_accion(i.getId_accion());
-                    a.setId_tratamiento(resultado);
-                    atdao.insertarAccionTratamiento(a);
-                }
-            }
             
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -177,20 +166,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
             Tratamiento tratamiento_nuevo = construirObjeto(request);
             
             resultado = dao.editarTratamiento(tratamiento_nuevo);
-            String acciones_tratamiento = request.getParameter("listaAcciones");
-            int id_tratamiento = Integer.parseInt(request.getParameter("id_tratamiento"));
-            if (acciones_tratamiento != null && !(acciones_tratamiento.isEmpty()) ) {
-                List<Accion> p_i = atdao.parsearAcciones(acciones_tratamiento, id_tratamiento);
-                for (Accion i : p_i) {
-                    if (!atdao.esAccionTratamiento(i.getId_accion(), id_tratamiento)){
-                        Accion_tratamiento a = new Accion_tratamiento();
-                        a.setId_accion(i.getId_accion());
-                        a.setId_tratamiento(id_tratamiento);
-                        atdao.insertarAccionTratamiento(a);
-                    }
-                }
-                atdao.asegurarAcciones_Tratamiento(p_i, id_tratamiento);
-            }
+            
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(tratamiento_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TRATAMIENTO, request.getRemoteAddr());
@@ -219,7 +195,6 @@ public class ControladorTratamiento extends SIGIPROServlet {
             Tratamiento tratamiento_a_eliminar = dao.obtenerTratamiento(Integer.parseInt(id_tratamiento));
             
             resultado = dao.eliminarTratamiento(tratamiento_a_eliminar.getId_tratamiento());
-            atdao.eliminarAcciones_Tratamiento(Integer.parseInt(id_tratamiento));
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(tratamiento_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_TRATAMIENTO, request.getRemoteAddr());
@@ -247,6 +222,8 @@ public class ControladorTratamiento extends SIGIPROServlet {
         java.util.Date result = df.parse(request.getParameter("fecha"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         tratamiento.setFecha(fecha_solicitudSQL);
+        tratamiento.setObservaciones(request.getParameter("observaciones"));
+        tratamiento.setEstado(request.getParameter("estado"));
         return tratamiento;
     }
     

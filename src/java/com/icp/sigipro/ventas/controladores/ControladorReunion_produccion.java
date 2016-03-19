@@ -14,6 +14,8 @@ import com.icp.sigipro.ventas.dao.Reunion_produccionDAO;
 import com.icp.sigipro.ventas.modelos.Reunion_produccion;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.ventas.dao.Participantes_reunionDAO;
+import com.icp.sigipro.ventas.modelos.Participantes_reunion;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,6 +54,8 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
     private final int[] permisos = {701, 702, 1};
     private final Reunion_produccionDAO dao = new Reunion_produccionDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
+    private final Participantes_reunionDAO pDAO = new Participantes_reunionDAO();
+    private String listaProductos = "";
 
     protected final Class clase = ControladorReunion_produccion.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -77,7 +81,16 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         int id_reunion = Integer.parseInt(request.getParameter("id_reunion"));
         Reunion_produccion reunion = dao.obtenerReunion_produccion(id_reunion);
 
-        String filename = reunion.getMinuta();
+        int documento = Integer.parseInt(request.getParameter("documento"));
+        String filename = "";
+        switch(documento){
+            case 1:
+                filename = reunion.getMinuta();
+                break;
+            case 2:
+                filename = reunion.getMinuta2();
+                break;
+        }
         File file = new File(filename);
 
         if (file.exists()) {
@@ -113,6 +126,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         String redireccion = "ReunionProduccion/Agregar.jsp";
         Reunion_produccion ds = new Reunion_produccion();
         
+        request.setAttribute("usuarios",dao_us.obtenerUsuarios());
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Agregar");
 
@@ -138,6 +152,8 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         int id_reunion = Integer.parseInt(request.getParameter("id_reunion"));
         try {
             Reunion_produccion c = dao.obtenerReunion_produccion(id_reunion);
+            List<Participantes_reunion> d = pDAO.obtenerParticipantes(id_reunion);
+            request.setAttribute("participantes", d);
             request.setAttribute("reunion", c);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
@@ -152,7 +168,9 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         String redireccion = "ReunionProduccion/Editar.jsp";
         int id_reunion = Integer.parseInt(request.getParameter("id_reunion"));
         Reunion_produccion ds = dao.obtenerReunion_produccion(id_reunion);
-        
+        List<Participantes_reunion> d = pDAO.obtenerParticipantes(id_reunion);
+        request.setAttribute("usuarios",dao_us.obtenerUsuarios());
+        request.setAttribute("participantes", d);
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Editar");
         
@@ -181,6 +199,14 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
 
             if (tr.getId_reunion() == 0) { //agregar
                 resultado = dao.insertarReunion_produccion(tr);
+                
+                //System.out.println("listaProductos = "+listaProductos);
+                if (listaProductos != null && !(listaProductos.isEmpty()) ) {
+                    List<Participantes_reunion> p_i = pDAO.parsearParticipantes(listaProductos, resultado);
+                    for (Participantes_reunion i : p_i) {
+                        pDAO.insertarParticipantes_reunion(i);
+                    }
+                }
                 if (resultado != 0) {
                     request.setAttribute("mensaje", helper.mensajeDeExito("Reunión de Producción agregada correctamente"));
                     //Funcion que genera la bitacora
@@ -205,6 +231,24 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
                         //archivo.delete();
                     }
                 resultado2 = dao.editarReunion_produccion(tr);
+                //System.out.println("listaProductos = "+listaProductos);
+            if (listaProductos != null && !(listaProductos.isEmpty()) ) {
+                List<Participantes_reunion> p_i = pDAO.parsearParticipantes(listaProductos, tr.getId_reunion());
+                for (Participantes_reunion i : p_i) {
+                    if (!pDAO.esParticipanteReunion(i.getReunion().getId_reunion(), i.getUsuario().getId_usuario())){
+                        pDAO.insertarParticipantes_reunion(i);
+                        //System.out.println("Producto ingresado.");
+                        //e = true;
+                    }
+                    else{
+                        //System.out.println("Producto editado.");
+                    }
+                }
+                pDAO.asegurarReunions_Usuario(p_i, tr.getId_reunion());
+            }
+            else{
+                pDAO.eliminarReunions_Usuario(tr.getId_reunion());
+            }
                 if (resultado2) {
                     
                     //Funcion que genera la bitacora
@@ -256,6 +300,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Método del Modelo">
     private Reunion_produccion construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) throws SIGIPROException, ParseException {
         Reunion_produccion tr = new Reunion_produccion();
+        int contador_documento = 1;
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -267,6 +312,9 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
                     fieldValue = item.getString();
                 }
                 switch (fieldName) {
+                    case "listaProductos":
+                        listaProductos = fieldValue;
+                        break;
                     case "id_reunion":
                         int id_reunion = Integer.parseInt(fieldValue);
                         tr.setId_reunion(id_reunion);
@@ -294,9 +342,27 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
-                        tr.setMinuta(archivo.getAbsolutePath());
+                        switch(contador_documento){
+                            case 1:
+                                tr.setMinuta(archivo.getAbsolutePath());
+                                contador_documento += 1;
+                                break;
+                            case 2:
+                                tr.setMinuta2(archivo.getAbsolutePath());
+                                contador_documento += 1;
+                                break;
+                        }
                     } else {
-                        tr.setMinuta("");
+                        switch(contador_documento){
+                            case 1:
+                                tr.setMinuta("");
+                                contador_documento += 1;
+                                break;
+                            case 2:
+                                tr.setMinuta2("");
+                                contador_documento += 1;
+                                break;
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

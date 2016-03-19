@@ -45,6 +45,8 @@
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Fecha</th>
+                    <th>Observaciones</th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -60,6 +62,19 @@
                       </td>
                       <td>${tratamiento.getCliente().getNombre()}</td>
                       <td>${tratamiento.getFecha_S()}</td>
+                      <td>${tratamiento.getObservaciones()}</td>
+                      <c:choose>
+                        <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
+                           <td><font color="green">${tratamiento.getEstado()}</font></td>
+                        </c:when>
+                        <c:when test="${tratamiento.getEstado().equals('Normal')}">
+                            <td><font color="blue">${tratamiento.getEstado()}</font></td>
+                        </c:when>
+                        <c:otherwise>
+                            <td><font color="red">${tratamiento.getEstado()}</font></td>
+                        </c:otherwise>
+                    </c:choose>
+                      
                     </tr>
                   </c:forEach>
                 </tbody>

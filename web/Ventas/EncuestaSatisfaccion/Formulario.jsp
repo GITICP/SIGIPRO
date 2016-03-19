@@ -87,11 +87,11 @@
             <div class="col-md-6">
             <c:choose>
                 <c:when test="${encuesta.getId_encuesta()!=0}">
-                    <label for="documento_1" class="control-label"> Documento (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
+                    <label for="documento" class="control-label"> Documento (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_1" name="documento_1"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                <input type="file" id="documento" name="documento"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -99,38 +99,11 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <label for="documento_1" class="control-label"> Documento</label>
+                    <label for="documento" class="control-label"> *Documento</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_1" name="documento_1"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
-                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                       onchange="setCustomValidity('')"/>
-                            </div>
-                        </div>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-
-            <c:choose>
-                <c:when test="${encuesta.getId_encuesta()!=0}">
-                    <label for="documento_2" class="control-label"> Documento (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="file" id="documento_2" name="documento_2"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
-                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                       onchange="setCustomValidity('')"/>
-                            </div>
-                        </div>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <label for="documento_2" class="control-label"> Documento</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="file" id="documento_2" name="documento_2"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
+                                <input type="file" id="documento" name="documento"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -139,32 +112,6 @@
                 </c:otherwise>
             </c:choose>
                     
-            <c:choose>
-                <c:when test="${encuesta.getId_encuesta()!=0}">
-                    <label for="documento_3" class="control-label"> Documento (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="file" id="documento_3" name="documento_3"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
-                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                       onchange="setCustomValidity('')"/>
-                            </div>
-                        </div>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <label for="documento_3" class="control-label"> Documento</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="file" id="documento_3" name="documento_3"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
-                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
-                                       onchange="setCustomValidity('')"/>
-                            </div>
-                        </div>
-                    </div>
-                </c:otherwise>
-            </c:choose>
         </div>
                                 
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>

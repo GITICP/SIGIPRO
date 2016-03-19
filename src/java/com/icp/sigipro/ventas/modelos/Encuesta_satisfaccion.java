@@ -21,32 +21,14 @@ public class Encuesta_satisfaccion {
     private Date fecha;
     private String observaciones;
     private Cliente cliente;
-    private String documento_1;
-    private String documento_2;
-    private String documento_3;
+    private String documento;
 
-    public String getDocumento_1() {
-        return documento_1;
+    public String getDocumento() {
+        return documento;
     }
 
-    public void setDocumento_1(String documento_1) {
-        this.documento_1 = documento_1;
-    }
-
-    public String getDocumento_2() {
-        return documento_2;
-    }
-
-    public void setDocumento_2(String documento_2) {
-        this.documento_2 = documento_2;
-    }
-
-    public String getDocumento_3() {
-        return documento_3;
-    }
-
-    public void setDocumento_3(String documento_3) {
-        this.documento_3 = documento_3;
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 
     public int getId_encuesta() {

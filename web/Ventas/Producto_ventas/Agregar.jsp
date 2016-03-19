@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-list-alt"></i> Agregar Un Nuevo Contrato </h3>
+              <h3><i class="fa fa-list-alt"></i> Agregar Un Nuevo Producto de Venta </h3>
             </div>
             ${mensaje}
             <div class="widget-content">

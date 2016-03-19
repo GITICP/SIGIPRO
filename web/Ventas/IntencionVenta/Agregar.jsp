@@ -74,7 +74,7 @@
                         onchange="setCustomValidity('')">
                     <option value=''></option>
                   <c:forEach items="${productos}" var="producto">
-                    <option value="${producto.getId_producto()}" data-stock="${producto.getStock()}"> ${producto.getNombre()}</option>
+                    <option value="${producto.getId_producto()}"> ${producto.getNombre()}</option>
                   </c:forEach>
                 </select>
               </div>

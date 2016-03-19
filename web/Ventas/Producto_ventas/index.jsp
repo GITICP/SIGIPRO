@@ -43,9 +43,8 @@
                 <thead> 
                   <tr>
                     <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Cantidad en Stock</th>
-                    <th>Precio Unitario</th>
+                    <th>Descripción</th>
+                    <th>Número de Lote</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -60,8 +59,7 @@
                         </a>
                       </td>
                       <td>${producto.getDescripcion()}</td>
-                      <td>${producto.getStock()}</td>
-                      <td>${producto.getPrecio()}</td>
+                      <td>${producto.getLote()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

@@ -37,27 +37,26 @@
             </div>
     </div>                    
     <div class="col-md-6">
-        <label for="stock" class="control-label"> *Cantidad en Stock</label>
+        <label for="lote" class="control-label"> *Número de Lote</label>
             <div class="form-group">
-              <div class="col-sm-12">
-                <!-- Stock -->
-                <div class="input-group">
-                    <input id="stock" type="number" min="0" class="form-control" name="stock" value="${producto.getStock()}" required
-                        oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
-                        oninput="setCustomValidity('')"> 
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="lote" class="select2" name="lote" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                            <option value=""></option>
+                          <c:forEach items="${inventarios}" var="inventario">
+                            <c:choose>
+                              <c:when test="${inventario.getLote() == producto.getLote()}" >
+                                <option value="${inventario.getLote()}" selected> inventario ${lote.getLote()} </option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${inventario.getLote()}"> Lote: ${inventario.getLote()} </option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                    </div>
                 </div>
-              </div>
-            </div>
-        <label for="precio" class="control-label"> *Precio Unitario</label>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <!-- Precio -->
-                <div class="input-group">
-                    <input id="precio" type="number" min="0" class="form-control" name="precio" value="${producto.getPrecio()}" required
-                        oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
-                        oninput="setCustomValidity('')"> 
-                </div>
-              </div>
             </div>
     </div>
   </div>

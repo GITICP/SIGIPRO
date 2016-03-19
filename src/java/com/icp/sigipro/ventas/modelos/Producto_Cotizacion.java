@@ -19,12 +19,20 @@ public class Producto_Cotizacion {
     private Producto_venta producto;
     private Cotizacion cotizacion;
     private int cantidad;
-    private Date posible_fecha_despacho;
+    private int precio;
     
     public Producto_venta getProducto() {
         return producto;
     }
 
+    public int getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(int precio) {
+        this.precio = precio;
+    }
+    
     public void setProducto(Producto_venta producto) {
         this.producto = producto;
     }
@@ -43,27 +51,6 @@ public class Producto_Cotizacion {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public Date getPosible_fecha_despacho() {
-        return posible_fecha_despacho;
-    }
-
-    public void setPosible_fecha_despacho(Date posible_fecha_despacho) {
-        this.posible_fecha_despacho = posible_fecha_despacho;
-    }
-    
-    private String formatearFecha(Date fecha)
-    {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(fecha);
-    }  
-    
-    public String getFecha_S(){
-        if (this.posible_fecha_despacho != null)
-            {return formatearFecha(this.posible_fecha_despacho);}
-        else
-            {return "";}
     }
     
     public String parseJSON(){

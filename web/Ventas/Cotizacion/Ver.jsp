@@ -67,8 +67,8 @@
                           </c:otherwise>
                       </c:choose>
                 </center> </tr>
-                <tr><td> <strong>Total: </strong>  </td> <center> <td> ${cotizacion.getTotal()}   </td> </center> </tr>
                 <tr><td> <strong>Flete: </strong>  </td> <center> <td> ${cotizacion.getFlete()}   </td> </center> </tr>
+                <tr><td> <strong>Total: </strong>  </td> <center> <td> ${cotizacion.getTotal()}   </td> </center> </tr>
               </table>
               <br>
               
@@ -87,7 +87,7 @@
                         <tr>
                           <th>Producto</th>
                           <th>Cantidad</th>
-                          <th>Posible Fecha de Despacho</th>
+                          <th>Lote</th>
                           <th>Precio Unitario</th>
                         </tr>
                       </thead>
@@ -96,8 +96,8 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
-                            <td>${producto.getFecha_S()}</td>
-                            <td>${producto.getProducto().getPrecio()}</td>
+                            <td>${producto.getProducto().getLote()}</td>
+                            <td>${producto.getPrecio()}</td>
                           </tr>
                         </c:forEach>
                       </tbody>

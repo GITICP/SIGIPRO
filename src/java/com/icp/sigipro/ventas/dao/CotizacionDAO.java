@@ -112,32 +112,6 @@ public class CotizacionDAO extends DAO {
         return resultado;
     }
 
-    public int insertarCotizacionSinIntencion(Cotizacion p) throws SIGIPROException {
-
-        int resultado = 0;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cotizacion (id_cliente, total, flete)"
-                    + " VALUES (?,?,?) RETURNING id_cotizacion");
-
-            consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setInt(2, p.getTotal());
-            consulta.setInt(3, p.getFlete());
-            
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            if (resultadoConsulta.next()) {
-                resultado = resultadoConsulta.getInt("id_cotizacion");
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
-        }
-        return resultado;
-    }
-    
     public boolean editarCotizacion(Cotizacion p) throws SIGIPROException {
 
         boolean resultado = false;
@@ -145,14 +119,15 @@ public class CotizacionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.cotizacion"
-                    + " SET id_cliente=?, total=?, flete=?"
+                    + " SET id_cliente=?, id_intencion=?, total=?, flete=?"
                     + " WHERE id_cotizacion=?; "
             );
 
             consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setInt(2, p.getTotal());
-            consulta.setInt(3, p.getFlete());
-            consulta.setInt(4, p.getId_cotizacion());
+            consulta.setInt(2, p.getIntencion().getId_intencion());
+            consulta.setInt(3, p.getTotal());
+            consulta.setInt(4, p.getFlete());
+            consulta.setInt(5, p.getId_cotizacion());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

@@ -79,21 +79,10 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
         validarPermisosMultiple(permisos, request);
 
         int id_seguimiento = Integer.parseInt(request.getParameter("id_seguimiento"));
-        int documento = Integer.parseInt(request.getParameter("documento"));
         Seguimiento_venta seguimiento = dao.obtenerSeguimiento_venta(id_seguimiento);
 
-        String filename = "";
-        switch(documento){
-            case 1:
-                filename = seguimiento.getDocumento_1();
-                break;
-            case 2:
-                filename = seguimiento.getDocumento_2();
-                break;
-            case 3:
-                filename = seguimiento.getDocumento_3();
-                break;
-        }
+        String filename = seguimiento.getDocumento_1();
+                
         
         File file = new File(filename);
 
@@ -135,6 +124,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
         tipos.add("Llamada");
         tipos.add("Correo");
         tipos.add("Contacto");
+        tipos.add("Encuesta de Satisfacción");
         tipos.add("Otro");
         
         request.setAttribute("tipos", tipos);
@@ -184,6 +174,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
         tipos.add("Llamada");
         tipos.add("Correo");
         tipos.add("Contacto");
+        tipos.add("Encuesta de Satisfacción");
         tipos.add("Otro");
         
         request.setAttribute("tipos", tipos);
@@ -229,32 +220,14 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
                 }
             } else { //editar
                 String archivoViejo1 = "";
-                String archivoViejo2 = "";
-                String archivoViejo3 = "";
                 if (tr.getDocumento_1().equals("")) {
                     archivoViejo1 = dao.obtenerSeguimiento_venta(tr.getId_seguimiento()).getDocumento_1();
-                }
-                if (tr.getDocumento_2().equals("")) {
-                    archivoViejo2 = dao.obtenerSeguimiento_venta(tr.getId_seguimiento()).getDocumento_2();
-                }
-                if (tr.getDocumento_3().equals("")) {
-                    archivoViejo3 = dao.obtenerSeguimiento_venta(tr.getId_seguimiento()).getDocumento_3();
                 }
                 //System.out.println("archivoViejo = "+archivoViejo);
                 //System.out.println("tr.getMinuta() = "+tr.getMinuta());
                 boolean resultado2 = false;
                 if (!archivoViejo1.equals("")) {
                         tr.setDocumento_1(archivoViejo1);
-                        //File archivo = new File(archivoViejo);
-                        //archivo.delete();
-                    }
-                if (!archivoViejo2.equals("")) {
-                        tr.setDocumento_2(archivoViejo2);
-                        //File archivo = new File(archivoViejo);
-                        //archivo.delete();
-                    }
-                if (!archivoViejo3.equals("")) {
-                        tr.setDocumento_3(archivoViejo3);
                         //File archivo = new File(archivoViejo);
                         //archivo.delete();
                     }
@@ -326,6 +299,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
                         tr.setId_seguimiento(id_seguimiento);
                         break;
                     case "id_factura":
+                        //System.out.println("nueva factura: "+fieldValue);
                         tr.setFactura(fdao.obtenerFactura(Integer.parseInt(fieldValue)));
                         break;
                     case "observaciones":
@@ -351,35 +325,10 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
-                        switch(contador_documento){
-                            case 1:
-                                tr.setDocumento_1(archivo.getAbsolutePath());
-                                contador_documento = 2;
-                                break;
-                            case 2:
-                                tr.setDocumento_2(archivo.getAbsolutePath());
-                                contador_documento = 3;
-                                break;
-                            case 3:
-                                tr.setDocumento_3(archivo.getAbsolutePath());
-                                contador_documento = 1;
-                                break;
-                        }
+                        tr.setDocumento_1(archivo.getAbsolutePath());
+                                
                     } else {
-                        switch(contador_documento){
-                            case 1:
-                                tr.setDocumento_1("");
-                                contador_documento = 2;
-                                break;
-                            case 2:
-                                tr.setDocumento_2("");
-                                contador_documento = 3;
-                                break;
-                            case 3:
-                                tr.setDocumento_3("");
-                                contador_documento = 1;
-                                break;
-                        }
+                        tr.setDocumento_1("");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

@@ -36,10 +36,10 @@ public class ListaDAO extends DAO {
             while (rs.next()) {
                 Lista lista = new Lista();
                 
-                lista.setId_lista(rs.getInt("id_lista"));
+                lista.setId_lista(rs.getInt("id_enlistado"));
                 lista.setCliente(cdao.obtenerCliente(rs.getInt("id_cliente")));
-                lista.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                lista.setPrioridad(rs.getInt("prioridad"));
+                lista.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                lista.setFecha_atencion(rs.getDate("fecha_atencion"));
                 resultado.add(lista);
 
             }
@@ -59,15 +59,15 @@ public class ListaDAO extends DAO {
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.lista where id_lista = ?; ");
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.lista where id_enlistado = ?; ");
             consulta.setInt(1, id_lista);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
-                resultado.setId_lista(rs.getInt("id_lista"));
+                resultado.setId_lista(rs.getInt("id_enlistado"));
                 resultado.setCliente(cdao.obtenerCliente(rs.getInt("id_cliente")));
-                resultado.setFecha_ingreso(rs.getDate("fecha_ingreso"));
-                resultado.setPrioridad(rs.getInt("prioridad"));
+                resultado.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                resultado.setFecha_atencion(rs.getDate("fecha_atencion"));
             }
             rs.close();
             consulta.close();
@@ -84,23 +84,23 @@ public class ListaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_ingreso, prioridad)"
-                    + " VALUES (?,?,?) RETURNING id_lista");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_solicitud, fecha_atencion)"
+                    + " VALUES (?,?,?) RETURNING id_enlistado");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setDate(2, p.getFecha_ingreso());
-            consulta.setInt(3, p.getPrioridad());
+            consulta.setDate(2, p.getFecha_solicitud());
+            consulta.setDate(3, p.getFecha_atencion());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
-                resultado = resultadoConsulta.getInt("id_lista");
+                resultado = resultadoConsulta.getInt("id_enlistado");
             }
             resultadoConsulta.close();
             consulta.close();
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+            throw new SIGIPROException("Se produjo un error al procesar el solicitud");
         }
         return resultado;
     }
@@ -112,13 +112,13 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET id_cliente=?, fecha_ingreso=?, prioridad=?"
-                    + " WHERE id_lista=?; "
+                    + " SET id_cliente=?, fecha_solicitud=?, fecha_atencion=?"
+                    + " WHERE id_enlistado=?; "
             );
 
             consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setDate(2, p.getFecha_ingreso());
-            consulta.setInt(3, p.getPrioridad());
+            consulta.setDate(2, p.getFecha_solicitud());
+            consulta.setDate(3, p.getFecha_atencion());
             consulta.setInt(4, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
@@ -140,7 +140,7 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " DELETE FROM ventas.lista "
-                    + " WHERE id_lista=?; "
+                    + " WHERE id_enlistado=?; "
             );
 
             consulta.setInt(1, id_lista);
@@ -155,6 +155,60 @@ public class ListaDAO extends DAO {
             throw new SIGIPROException("Se produjo un error al procesar la eliminación");
         }
         return resultado;
+    }
+
+    public int insertarListaFechaA0(Lista p) throws SIGIPROException {
+
+        int resultado = 0;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_solicitud)"
+                    + " VALUES (?,?) RETURNING id_enlistado");
+
+            consulta.setInt(1, p.getCliente().getId_cliente());
+            consulta.setDate(2, p.getFecha_solicitud());
+
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = resultadoConsulta.getInt("id_enlistado");
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar el solicitud");
+        }
+        return resultado;
+        
+    }
+
+    public boolean editarListaFechaA0(Lista p) throws SIGIPROException {
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE ventas.lista"
+                    + " SET id_cliente=?, fecha_solicitud=?"
+                    + " WHERE id_enlistado=?; "
+            );
+
+            consulta.setInt(1, p.getCliente().getId_cliente());
+            consulta.setDate(2, p.getFecha_solicitud());
+            consulta.setInt(3, p.getId_lista());
+            
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la edición");
+        }
+        return resultado;
+
     }
 
 }

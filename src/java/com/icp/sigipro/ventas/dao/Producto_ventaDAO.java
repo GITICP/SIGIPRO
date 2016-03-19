@@ -37,8 +37,7 @@ public class Producto_ventaDAO extends DAO {
                 producto.setId_producto(rs.getInt("id_producto"));
                 producto.setNombre(rs.getString("nombre"));
                 producto.setDescripcion(rs.getString("descripcion"));
-                producto.setStock(rs.getInt("cantidad_stock"));
-                producto.setPrecio(rs.getInt("precio"));
+                producto.setLote(rs.getString("lote"));
                 resultado.add(producto);
 
             }
@@ -66,8 +65,7 @@ public class Producto_ventaDAO extends DAO {
                 resultado.setId_producto(rs.getInt("id_producto"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
-                resultado.setStock(rs.getInt("cantidad_stock"));
-                resultado.setPrecio(rs.getInt("precio"));
+                resultado.setLote(rs.getString("lote"));
             }
             rs.close();
             consulta.close();
@@ -84,13 +82,12 @@ public class Producto_ventaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_venta (nombre, descripcion, cantidad_stock, precio)"
-                    + " VALUES (?,?,?,?) RETURNING id_producto");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_venta (nombre, descripcion, lote)"
+                    + " VALUES (?,?,?) RETURNING id_producto");
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getDescripcion());
-            consulta.setInt(3, p.getStock());
-            consulta.setInt(4, p.getPrecio());
+            consulta.setString(3, p.getLote());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -113,15 +110,14 @@ public class Producto_ventaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.producto_venta"
-                    + " SET nombre=?, descripcion=?, cantidad_stock=?, precio=?"
+                    + " SET nombre=?, descripcion=?, lote=?"
                     + " WHERE id_producto=?; "
             );
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getDescripcion());
-            consulta.setInt(3, p.getStock());
-            consulta.setInt(4, p.getPrecio());
-            consulta.setInt(5, p.getId_producto());
+            consulta.setString(3, p.getLote());
+            consulta.setInt(4, p.getId_producto());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

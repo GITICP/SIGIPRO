@@ -20,9 +20,11 @@ import com.icp.sigipro.ventas.modelos.Orden_compra;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
 import com.icp.sigipro.ventas.dao.Intencion_ventaDAO;
+import com.icp.sigipro.ventas.dao.Producto_IntencionDAO;
 import com.icp.sigipro.ventas.dao.Producto_OrdenDAO;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import com.icp.sigipro.ventas.modelos.Intencion_venta;
+import com.icp.sigipro.ventas.modelos.Producto_Intencion;
 import com.icp.sigipro.ventas.modelos.Producto_Orden;
 import com.icp.sigipro.ventas.modelos.Producto_venta;
 import java.io.IOException;
@@ -82,19 +84,20 @@ public class ControladorOrden_compra extends SIGIPROServlet {
        
         String redireccion = "OrdenCompra/Agregar.jsp";
         Orden_compra ds = new Orden_compra();
-        
+            
         List<String> estados = new ArrayList<String>();
         estados.add("En proceso");
         estados.add("Entregada");
         estados.add("Cancelada");
         
-        List<Producto_venta> productos = pdao.obtenerProductos_venta();
+        //List<Producto_venta> productos = pdao.obtenerProductos_venta();
         
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("cotizaciones", cotdao.obtenerCotizaciones());
         request.setAttribute("intenciones", idao.obtenerIntenciones_venta());
-        request.setAttribute("productos", productos);
+        
+        //request.setAttribute("productos", productos);
         request.setAttribute("estados", estados);
         request.setAttribute("accion", "Agregar");
 
@@ -146,7 +149,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         request.setAttribute("productos_orden", d);
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
-        request.setAttribute("productos", pdao.obtenerProductos_venta());
+        //request.setAttribute("productos", pdao.obtenerProductos_venta());
         request.setAttribute("cotizaciones", cotdao.obtenerCotizaciones());
         request.setAttribute("intenciones", idao.obtenerIntenciones_venta());
         request.setAttribute("estados", estados);
@@ -284,7 +287,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             Orden_compra orden_a_eliminar = dao.obtenerOrden_compra(Integer.parseInt(id_orden));
             
             resultado = dao.eliminarOrden_compra(orden_a_eliminar.getId_orden());
-            resultado2 = podao.eliminarProductos_Orden(orden_a_eliminar.getId_orden());
+            //resultado2 = podao.eliminarProductos_Orden(orden_a_eliminar.getId_orden());
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(orden_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ORDEN_COMPRA, request.getRemoteAddr());
@@ -306,6 +309,12 @@ public class ControladorOrden_compra extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Método del Modelo">
     private Orden_compra construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Orden_compra orden = new Orden_compra();
+        
+        String id_orden = request.getParameter("id_orden");
+        if (id_orden != "0"){
+            int id = Integer.parseInt(id_orden);
+            orden.setId_orden(id);
+        }
         
         orden.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
         String cotizacion = request.getParameter("id_cotizacion");

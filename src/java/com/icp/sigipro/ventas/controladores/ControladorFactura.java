@@ -83,7 +83,22 @@ public class ControladorFactura extends SIGIPROServlet {
         int id_factura = Integer.parseInt(request.getParameter("id_factura"));
         Factura factura = dao.obtenerFactura(id_factura);
 
-        String filename = factura.getDocumento();
+        int documento = Integer.parseInt(request.getParameter("documento"));
+        String filename = "";
+        switch(documento){
+            case 1:
+                filename = factura.getDocumento_1();
+                break;
+            case 2:
+                filename = factura.getDocumento_2();
+                break;
+            case 3:
+                filename = factura.getDocumento_3();
+                break;
+            case 4:
+                filename = factura.getDocumento_4();
+                break;
+        }
         File file = new File(filename);
 
         if (file.exists()) {
@@ -222,15 +237,42 @@ public class ControladorFactura extends SIGIPROServlet {
                     this.getAgregar(request, response);
                 }
             } else {
-                String archivoViejo = "";
-                if (tr.getDocumento().equals("")) {
-                    archivoViejo = dao.obtenerFactura(tr.getId_factura()).getDocumento();
+                String archivoViejo1 = "";
+                String archivoViejo2 = "";
+                String archivoViejo3 = "";
+                String archivoViejo4 = "";
+                if (tr.getDocumento_1().equals("")) {
+                    archivoViejo1 = dao.obtenerFactura(tr.getId_factura()).getDocumento_1();
+                }
+                if (tr.getDocumento_2().equals("")) {
+                    archivoViejo2 = dao.obtenerFactura(tr.getId_factura()).getDocumento_2();
+                }
+                if (tr.getDocumento_3().equals("")) {
+                    archivoViejo3 = dao.obtenerFactura(tr.getId_factura()).getDocumento_3();
+                }
+                if (tr.getDocumento_4().equals("")) {
+                    archivoViejo4 = dao.obtenerFactura(tr.getId_factura()).getDocumento_4();
                 }
                 //System.out.println("archivoViejo = "+archivoViejo);
                 //System.out.println("tr.getDocumento() = "+tr.getDocumento());
                 boolean resultado2 = false;
-                if (!archivoViejo.equals("")) {
-                        tr.setDocumento(archivoViejo);
+                if (!archivoViejo1.equals("")) {
+                        tr.setDocumento_1(archivoViejo1);
+                        //File archivo = new File(archivoViejo);
+                        //archivo.delete();
+                    }
+                if (!archivoViejo2.equals("")) {
+                        tr.setDocumento_2(archivoViejo2);
+                        //File archivo = new File(archivoViejo);
+                        //archivo.delete();
+                    }
+                if (!archivoViejo3.equals("")) {
+                        tr.setDocumento_3(archivoViejo3);
+                        //File archivo = new File(archivoViejo);
+                        //archivo.delete();
+                    }
+                if (!archivoViejo4.equals("")) {
+                        tr.setDocumento_4(archivoViejo4);
                         //File archivo = new File(archivoViejo);
                         //archivo.delete();
                     }
@@ -291,6 +333,7 @@ public class ControladorFactura extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Método del Modelo">
     private Factura construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) throws SIGIPROException, ParseException {
         Factura tr = new Factura();
+        int contador_documento = 1;
         for (FileItem item : items) {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
@@ -354,9 +397,43 @@ public class ControladorFactura extends SIGIPROServlet {
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
-                        tr.setDocumento(archivo.getAbsolutePath());
+                        switch(contador_documento){
+                            case 1:
+                                tr.setDocumento_1(archivo.getAbsolutePath());
+                                contador_documento += 1;
+                                break;
+                            case 2:
+                                tr.setDocumento_2(archivo.getAbsolutePath());
+                                contador_documento += 1;
+                                break;
+                            case 3:
+                                tr.setDocumento_3(archivo.getAbsolutePath());
+                                contador_documento += 1;
+                                break;
+                            case 4:
+                                tr.setDocumento_4(archivo.getAbsolutePath());
+                                contador_documento += 1;
+                                break;
+                        }
                     } else {
-                        tr.setDocumento("");
+                        switch(contador_documento){
+                            case 1:
+                                tr.setDocumento_1("");
+                                contador_documento += 1;
+                                break;
+                            case 2:
+                                tr.setDocumento_2("");
+                                contador_documento += 1;
+                                break;
+                            case 3:
+                                tr.setDocumento_3("");
+                                contador_documento += 1;
+                                break;
+                            case 4:
+                                tr.setDocumento_4("");
+                                contador_documento += 1;
+                                break;
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

@@ -58,98 +58,28 @@
         <!-- /main -->
       </div>
    
-       <!-- Los modales de Agregar Productos empiezan acá -->      
-    <t:modal idModal="modalAgregarProducto" titulo="Agregar Producto">
-
-      <jsp:attribute name="form">
-
-        <form class="form-horizontal" id="formAgregarProducto">
-          <input type="text" name="producto"  hidden="true">
-          <label for="id_producto" class="control-label">*Producto</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group" id='inputGroupSeleccionProducto'>
-                <select id="seleccionProducto" class="select2" style='background-color: #fff;' name="seleccionProducto" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        onchange="setCustomValidity('')">
-                    <option value=''></option>
-                  <c:forEach items="${productos}" var="producto">
-                    <option value="${producto.getId_producto()}" data-stock="${producto.getStock()}" data-precio="${producto.getPrecio()}"> ${producto.getNombre()}</option>
-                  </c:forEach>
-                </select>
-              </div>
-            </div>
-          </div>
-          <p id="precio_unitario">Precio Unitario: </p>
-          <label for="cantidad" class="control-label">*Cantidad</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group">
-                <input id="cantidad" type="number" min="0" class="form-control" name="editarCantidad" value="" required
-                    oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
-                    oninput="setCustomValidity('')"> 
-              </div>
-            </div>
-          </div>
-            <label for="posibleFechaEntrega" class="control-label">*Posible Fecha de Despacho</label>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <div class="input-group" style="display:table;">
-                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="posibleFechaEntrega" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy" required
-                         oninvalid="setCustomValidity('Este campo es requerido ')"
-                         onchange="setCustomValidity('')">
-                </div>
-                <p id='mensajeFechasModalAgregar' style='color:red;'><p>
-              </div>
-            </div>
-        </form>
-        <div class="form-group">
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-            <button id="btn-agregarProducto" type="button" class="btn btn-primary" data-target="#modalAgregarProducto" onclick="agregarProducto()"><i class="fa fa-check-circle"></i> Agregar Producto</button>
-          </div>
-        </div>
-
-
-      </jsp:attribute>
-
-    </t:modal>
-
+              
     <t:modal idModal="modalEditarProducto" titulo="Editar Producto">
 
       <jsp:attribute name="form">
         <form class="form-horizontal" id="formEditarProducto">
           <input type="text" id="idProductoEditar"     name="idProductoEditar"      hidden="true">
           <input type="text" name="producto"  hidden="true">
-          <p id="precio_unitario_editar">Precio Unitario: </p>
-          <label for="cantidad" class="control-label">*Cantidad</label>
+          <label for="cantidad" class="control-label">*Precio Unitario</label>
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                    <input id="editarCantidad" type="number" min="0" class="form-control" name="editarCantidad" value="" required
+                    <input id="editarPrecio" type="number" min="0" class="form-control" name="editarPrecio" value="" required
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
               </div>
             </div>
           </div>
-            <label for="posibleFechaEntrega" class="control-label">*Posible Fecha de Despacho</label>
-            <div class="form-group">
-              <div class="col-sm-12">
-                <div class="input-group" style="display:table;">
-                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarPosibleFechaDespacho" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy" required
-                         oninvalid="setCustomValidity('Este campo es requerido ')"
-                         onchange="setCustomValidity('')">
-                </div>
-                <p id='mensajeFechasModalAgregar' style='color:red;'><p>
-              </div>
-            </div>
         </form>
         <div class="form-group">
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-            <button id="btn-editarProducto" type="button" class="btn btn-primary" onclick="confirmarEdicionProducto()"><i class="fa fa-check-circle"></i> Editar Producto</button>
+            <button id="btn-editarProducto" type="button" class="btn btn-primary" onclick="confirmarEdicionProducto()"><i class="fa fa-check-circle"></i> Confirmar</button>
           </div>
         </div>
 
@@ -157,22 +87,7 @@
       </jsp:attribute>
 
     </t:modal>
-
-    <!-- Los modales de Editar Roles terminan acá -->
-
-    <t:modal idModal="modalErrorFechaCantidad" titulo="Error">
-
-      <jsp:attribute name="form">
-
-        <h5>La cantidad a vender debe ser menor a la presente en stock. </h5>
-
-        <div class="modal-footer">
-          <button id="exitErrorFechaCantidad" type="button" data-dismiss="modal" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Confirmar</button>
-        </div>
-
-      </jsp:attribute>
-
-    </t:modal>
+              
         <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
         <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Cotizacion.js"></script>
   </jsp:attribute>

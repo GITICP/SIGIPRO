@@ -89,7 +89,6 @@
                           <th>Cantidad</th>
                           <th>Posible Fecha de Despacho</th>
                           <th>Editar/Eliminar</th>
-                          <th hidden="true">Stock</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -102,7 +101,6 @@
                               <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarProducto(${producto.getProducto().getId_producto()})"   >Editar</button>
                               <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>
                             </td>
-                            <td hidden="true">${producto.getProducto().getStock()}</td>
                           </tr>
                         </c:forEach>
                       </tbody>

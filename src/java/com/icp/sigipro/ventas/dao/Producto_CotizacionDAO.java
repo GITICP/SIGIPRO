@@ -68,7 +68,7 @@ public class Producto_CotizacionDAO extends DAO {
                 producto_cotizacion.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
                 producto_cotizacion.setCotizacion(iDAO.obtenerCotizacion(rs.getInt("id_cotizacion")));
                 producto_cotizacion.setCantidad(rs.getInt("cantidad"));
-                producto_cotizacion.setPosible_fecha_despacho(rs.getDate("posible_fecha_despacho"));
+                producto_cotizacion.setPrecio(rs.getInt("precio"));
                 
                 resultado.add(producto_cotizacion);
             }
@@ -97,7 +97,7 @@ public class Producto_CotizacionDAO extends DAO {
                 resultado.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
                 resultado.setCotizacion(iDAO.obtenerCotizacion(rs.getInt("id_cotizacion")));
                 resultado.setCantidad(rs.getInt("cantidad"));
-                resultado.setPosible_fecha_despacho(rs.getDate("posible_fecha_despacho"));
+                resultado.setPrecio(rs.getInt("precio"));
             }
             rs.close();
             consulta.close();
@@ -114,13 +114,13 @@ public class Producto_CotizacionDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_cotizacion (id_producto, id_cotizacion, cantidad, posible_fecha_despacho)"
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_cotizacion (id_producto, id_cotizacion, cantidad, precio)"
                     + " VALUES (?,?,?,?) RETURNING id_producto");
 
             consulta.setInt(1,p.getProducto().getId_producto());
             consulta.setInt(2,p.getCotizacion().getId_cotizacion());
             consulta.setInt(3,p.getCantidad());
-            consulta.setDate(4,p.getPosible_fecha_despacho());
+            consulta.setInt(4,p.getPrecio());
             
             //System.out.println("CONSULTA A EJECUTAR: "+consulta.toString());
 
@@ -146,12 +146,12 @@ public class Producto_CotizacionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.producto_cotizacion"
-                    + " SET cantidad=?, posible_fecha_despacho=?"
+                    + " SET cantidad=?, precio=?"
                     + " WHERE id_producto=? and id_cotizacion=?; "
             );
             
             consulta.setInt(1,p.getCantidad());
-            consulta.setDate(2,p.getPosible_fecha_despacho());
+            consulta.setInt(2,p.getPrecio());
             consulta.setInt(3,p.getProducto().getId_producto());
             consulta.setInt(4,p.getCotizacion().getId_cotizacion());
             
@@ -193,6 +193,7 @@ public class Producto_CotizacionDAO extends DAO {
     }
 
     public List<Producto_Cotizacion> parsearProductos(String productos_cotizacion, int id_cotizacion) {
+        //System.out.println("Parsear, string entrante = "+productos_cotizacion);
         List<Producto_Cotizacion> resultado = null;
         try {
             resultado = new ArrayList<Producto_Cotizacion>();
@@ -200,18 +201,15 @@ public class Producto_CotizacionDAO extends DAO {
             productosParcial.remove("");
             for (String i : productosParcial) {
                 String[] rol = i.split("#c#");
-                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-                java.util.Date fPosibleDespacho = formatoFecha.parse(rol[2]);
-                java.sql.Date fPosibleDespachoSQL = new java.sql.Date(fPosibleDespacho.getTime());
-                
                 int id_producto = Integer.parseInt(rol[0]);
-                int cantidad = Integer.parseInt(rol[1]);
+                int cantidad = Integer.parseInt(rol[2]);
+                int precio = Integer.parseInt(rol[3]);
                 
                 Producto_Cotizacion p = new Producto_Cotizacion();
                 p.setCotizacion(iDAO.obtenerCotizacion(id_cotizacion));
                 p.setProducto(pDAO.obtenerProducto_venta(id_producto));
                 p.setCantidad(cantidad);
-                p.setPosible_fecha_despacho(fPosibleDespachoSQL);
+                p.setPrecio(precio);
                 
                 resultado.add(p);
             }

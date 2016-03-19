@@ -86,7 +86,7 @@
           <!-- END WIDGET TICKET TABLE -->
           <div class="widget widget-table">
                   <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> Productos Asociados</h3>
+                    <h3><i class="fa fa-th-list"></i> Productos de la Solicitud / Intención de Venta Asociada</h3>
                     <div class="btn-group widget-header-toolbar">
                       
                     </div>
@@ -95,8 +95,9 @@
                     <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
                       <thead>
                         <tr>
-                          <th>Producto</th>
+                          <th>Nombre del Producto</th>
                           <th>Cantidad</th>
+                          <th>Lote</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -104,6 +105,7 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
+                            <td>${producto.getProducto().getLote()}</td>
                           </tr>
                         </c:forEach>
                       </tbody>

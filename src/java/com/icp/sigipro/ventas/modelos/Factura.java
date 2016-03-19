@@ -22,7 +22,10 @@ public class Factura {
     private Date fecha;
     private int monto;
     private Date fecha_vencimiento;
-    private String documento;
+    private String documento_1;
+    private String documento_2;
+    private String documento_3;
+    private String documento_4;
     private String tipo;
 
     public int getId_factura() {
@@ -93,12 +96,36 @@ public class Factura {
         this.fecha_vencimiento = fecha_vencimiento;
     }
 
-    public String getDocumento() {
-        return documento;
+    public String getDocumento_1() {
+        return documento_1;
     }
 
-    public void setDocumento(String documento) {
-        this.documento = documento;
+    public void setDocumento_1(String documento_1) {
+        this.documento_1 = documento_1;
+    }
+
+    public String getDocumento_2() {
+        return documento_2;
+    }
+
+    public void setDocumento_2(String documento_2) {
+        this.documento_2 = documento_2;
+    }
+
+    public String getDocumento_3() {
+        return documento_3;
+    }
+
+    public void setDocumento_3(String documento_3) {
+        this.documento_3 = documento_3;
+    }
+
+    public String getDocumento_4() {
+        return documento_4;
+    }
+
+    public void setDocumento_4(String documento_4) {
+        this.documento_4 = documento_4;
     }
 
     public String getTipo() {

@@ -19,8 +19,6 @@ public class Seguimiento_venta {
     private String tipo;
     private String observaciones;
     private String documento_1;
-    private String documento_2;
-    private String documento_3;
 
     public int getId_seguimiento() {
         return id_seguimiento;
@@ -68,22 +66,6 @@ public class Seguimiento_venta {
 
     public void setDocumento_1(String documento_1) {
         this.documento_1 = documento_1;
-    }
-
-    public String getDocumento_2() {
-        return documento_2;
-    }
-
-    public void setDocumento_2(String documento_2) {
-        this.documento_2 = documento_2;
-    }
-
-    public String getDocumento_3() {
-        return documento_3;
-    }
-
-    public void setDocumento_3(String documento_3) {
-        this.documento_3 = documento_3;
     }
     
     //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases

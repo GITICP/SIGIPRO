@@ -39,6 +39,8 @@ public class TratamientoDAO extends DAO {
                 tratamiento.setId_tratamiento(rs.getInt("id_tratamiento"));
                 tratamiento.setCliente(cdao.obtenerCliente(rs.getInt("id_cliente")));
                 tratamiento.setFecha(rs.getDate("fecha"));
+                tratamiento.setObservaciones(rs.getString("observaciones"));
+                tratamiento.setEstado(rs.getString("estado"));
                 resultado.add(tratamiento);
 
             }
@@ -66,6 +68,8 @@ public class TratamientoDAO extends DAO {
                 resultado.setId_tratamiento(rs.getInt("id_tratamiento"));
                 resultado.setCliente(cdao.obtenerCliente(rs.getInt("id_cliente")));
                 resultado.setFecha(rs.getDate("fecha"));
+                resultado.setObservaciones(rs.getString("observaciones"));
+                resultado.setEstado(rs.getString("estado"));
             }
             rs.close();
             consulta.close();
@@ -82,11 +86,13 @@ public class TratamientoDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.tratamiento (id_cliente, fecha)"
-                    + " VALUES (?,?) RETURNING id_tratamiento");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.tratamiento (id_cliente, fecha, observaciones, estado)"
+                    + " VALUES (?,?,?,?) RETURNING id_tratamiento");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha());
+            consulta.setString(3, p.getObservaciones());
+            consulta.setString(4, p.getEstado());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -109,13 +115,15 @@ public class TratamientoDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.tratamiento"
-                    + " SET id_cliente=?, fecha=?"
+                    + " SET id_cliente=?, fecha=?, observaciones=?, estado=?"
                     + " WHERE id_tratamiento=?; "
             );
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha());
-            consulta.setInt(3, p.getId_tratamiento());
+            consulta.setString(3, p.getObservaciones());
+            consulta.setString(4, p.getEstado());
+            consulta.setInt(5, p.getId_tratamiento());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

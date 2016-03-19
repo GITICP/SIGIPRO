@@ -58,35 +58,25 @@
                 <tr><td> <strong>ID:  </strong></td> <center> <td> ${tratamiento.getId_tratamiento()} </td> </center> </tr>
                 <tr><td> <strong>Cliente:  </strong>  </td> <center> <td> ${tratamiento.getCliente().getNombre()}   </td> </center> </tr>
                 <tr><td> <strong>Fecha: </strong>  </td> <center> <td> ${tratamiento.getFecha_S()}   </td> </center> </tr>
+                <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${tratamiento.getObservaciones()}   </td> </center> </tr>
+                <tr><td> <strong>Estado: </strong>  </td> <center> 
+                <c:choose>
+                        <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
+                           <td><font color="green">${tratamiento.getEstado()}</font></td>
+                        </c:when>
+                        <c:when test="${tratamiento.getEstado().equals('Normal')}">
+                            <td><font color="blue">${tratamiento.getEstado()}</font></td>
+                        </c:when>
+                        <c:otherwise>
+                            <td><font color="red">${tratamiento.getEstado()}</font></td>
+                        </c:otherwise>
+                    </c:choose>
+                </center> </tr>
               </table>
               <br>
               
             </div>
           <!-- END WIDGET TICKET TABLE -->
-          
-          <div class="widget widget-table">
-                  <div class="widget-header">
-                    <h3><i class="fa fa-th-list"></i> Acciones aplicadas</h3>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-acciones" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Acción</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${acciones_tratamiento}" var="accion">
-                          <tr id="${accion.getId_accion()}">
-                            <td>${accion.getId_accion()}</td>
-                            <td>${accion.getAccion()}</td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
           </div>
         </div>
         <!-- /main-content -->

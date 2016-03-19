@@ -14,6 +14,7 @@ import com.icp.sigipro.ventas.dao.Contrato_comercializacionDAO;
 import com.icp.sigipro.ventas.modelos.Contrato_comercializacion;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.ventas.dao.ClienteDAO;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,6 +42,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     private final int[] permisos = {701, 702, 1};
     private final Contrato_comercializacionDAO dao = new Contrato_comercializacionDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
+    private final ClienteDAO cDAO = new ClienteDAO();
 
     protected final Class clase = ControladorContrato_comercializacion.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -60,7 +62,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
        
@@ -68,6 +70,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
         Contrato_comercializacion ds = new Contrato_comercializacion();
         
         request.setAttribute("contrato", ds);
+        request.setAttribute("clientes",cDAO.obtenerClientes());
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
@@ -106,6 +109,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
         String redireccion = "ContratoComercializacion/Editar.jsp";
         int id_contrato = Integer.parseInt(request.getParameter("id_contrato"));
         Contrato_comercializacion ds = dao.obtenerContrato_comercializacion(id_contrato);
+        request.setAttribute("clientes",cDAO.obtenerClientes());
         
         request.setAttribute("contrato", ds);
         request.setAttribute("accion", "Editar");
@@ -201,11 +205,15 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     private Contrato_comercializacion construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Contrato_comercializacion contrato = new Contrato_comercializacion();
         contrato.setId_contrato(Integer.parseInt(request.getParameter("id_contrato")));
+        contrato.setCliente(cDAO.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
         contrato.setNombre(request.getParameter("nombre"));
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date result = df.parse(request.getParameter("fecha"));
+        java.util.Date result = df.parse(request.getParameter("fecha_inicial"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
-        contrato.setFecha(fecha_solicitudSQL);
+        contrato.setFechaInicial(fecha_solicitudSQL);
+        java.util.Date result2 = df.parse(request.getParameter("fecha_renovacion"));
+        java.sql.Date fecha_solicitudSQL2 = new java.sql.Date(result2.getTime());
+        contrato.setFechaRenovacion(fecha_solicitudSQL2);
         contrato.setObservaciones(request.getParameter("observaciones"));
         return contrato;
     }

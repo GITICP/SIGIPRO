@@ -68,31 +68,7 @@
                                                 Sin documento asociado.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}&documento=1">Descargar Documento</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                                <tr><td> <strong>Documento 2: </strong> 
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${seguimiento.getDocumento_2() == ''}">
-                                                Sin documento asociado.
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}&documento=2">Descargar Documento</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                                <tr><td> <strong>Documento 3: </strong> 
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${seguimiento.getDocumento_3() == ''}">
-                                                Sin documento asociado.
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}&documento=3">Descargar Documento</a>
+                                                <a href="/SIGIPRO/Ventas/SeguimientoVenta?accion=archivo&id_seguimiento=${seguimiento.getId_seguimiento()}">Descargar Documento</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>

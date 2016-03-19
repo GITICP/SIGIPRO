@@ -13,7 +13,7 @@
     <div class="col-md-6">
       <input hidden="true" name="id_tratamiento" value="${tratamiento.getId_tratamiento()}">
       <input hidden="true" name="accion" value="${accion}">
-      <input id="listaAcciones" hidden="true" name="listaAcciones" value="">
+      
             <label for="id_cliente" class="control-label"> *Cliente</label>
             <!-- Id Cliente -->
             <div class="form-group">
@@ -71,49 +71,42 @@
                     </div>
                 </div>
             </div>
+            <label for="observaciones" class="control-label"> Observaciones</label>
+            <!-- Observaciones -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input id="observaciones" type="text" class="form-control" name="observaciones" value="${tratamiento.getObservaciones()}"
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                oninput="setCustomValidity('')">
+                    </div>
+                </div>
+            </div>
+                                                     <label for="estado" class="control-label"> *Estado</label>
+            <!-- estado -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="estado" class="select2" name="estado" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                          <c:forEach items="${estados}" var="estado">
+                            <c:choose>
+                              <c:when test="${tratamiento.getEstado() == estado}" >
+                                <option value="${estado}" selected> ${estado}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${estado}"> ${estado}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                    </div>
+                </div>
+            </div>
             </div>
       </div>
       <p id="texto"></p>
             
-                    <!-- Esta parte es la de los acciones -->
-                <div class="widget widget-table">
-                  <div class="widget-header">
-                      <c:choose>
-                          <c:when test="${accion.equals('Editar')}" >
-                            <h3><i class="fa fa-th-list"></i> *Acciones a aplicar. Debe haber al menos una acción. De lo contrario, no habrá cambios en las acciones.</h3>
-                          </c:when>
-                          <c:otherwise>
-                            <h3><i class="fa fa-th-list"></i> *Acciones a aplicar</h3>
-                          </c:otherwise>
-                        </c:choose>
-                    <div class="btn-group widget-header-toolbar">
-                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarAccion">Agregar</a>
-                    </div>
-                  </div>
-                  <div class="widget-content">
-                    <table id="datatable-column-filter-acciones" class="table table-sorting table-striped table-hover datatable">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Acción</th>
-                          <th>Eliminar</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <c:forEach items="${acciones_tratamiento}" var="accion">
-                          <tr id="${accion.getId_accion()}">
-                            <td>${accion.getId_accion()}</td>
-                            <td>${accion.getAccion()}</td>
-                            <td>
-                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarAccion(${accion.getId_accion()})" >Eliminar</button>
-                            </td>
-                          </tr>
-                        </c:forEach>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- Esta parte es la de los acciones de la solicitud -->
                         
                             
   

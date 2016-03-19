@@ -57,8 +57,7 @@
               <table>
                 <tr><td> <strong>Nombre: </strong></td> <center> <td> ${producto.getNombre()} </td> </center> </tr>
                 <tr><td> <strong>Descripcion: </strong>  </td> <center> <td> ${producto.getDescripcion()}   </td> </center> </tr>
-                <tr><td> <strong>Cantidad en Stock: </strong>  </td> <center> <td> ${producto.getStock()}   </td> </center> </tr>
-                <tr><td> <strong>Precio Unitario: </strong>  </td> <center> <td> ${producto.getPrecio()}   </td> </center> </tr>
+                <tr><td> <strong>Número de Lote: </strong>  </td> <center> <td> ${producto.getLote()}   </td> </center> </tr>
               </table>
               <br>
               

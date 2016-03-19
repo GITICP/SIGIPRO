@@ -197,7 +197,7 @@ public class Producto_OrdenDAO extends DAO {
                 String[] rol = i.split("#c#");
                 
                 int id_producto = Integer.parseInt(rol[0]);
-                int cantidad = Integer.parseInt(rol[1]);
+                int cantidad = Integer.parseInt(rol[2]);
                 
                 Producto_Orden p = new Producto_Orden();
                 p.setOrden_compra(iDAO.obtenerOrden_compra(id_orden));

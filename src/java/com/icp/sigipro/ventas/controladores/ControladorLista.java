@@ -15,17 +15,7 @@ import com.icp.sigipro.ventas.modelos.Lista;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
-import com.icp.sigipro.ventas.dao.HistorialDAO;
-import com.icp.sigipro.ventas.dao.Historial_listaDAO;
-import com.icp.sigipro.ventas.dao.ObservacionDAO;
-import com.icp.sigipro.ventas.dao.Observacion_listaDAO;
-import com.icp.sigipro.ventas.dao.Producto_listaDAO;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
-import com.icp.sigipro.ventas.modelos.Historial;
-import com.icp.sigipro.ventas.modelos.Historial_lista;
-import com.icp.sigipro.ventas.modelos.Observacion;
-import com.icp.sigipro.ventas.modelos.Observacion_lista;
-import com.icp.sigipro.ventas.modelos.Producto_lista;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,11 +44,6 @@ public class ControladorLista extends SIGIPROServlet {
     private final ListaDAO dao = new ListaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ClienteDAO cdao = new ClienteDAO();
-    private final Historial_listaDAO hdao = new Historial_listaDAO();
-    private final HistorialDAO hisdao = new HistorialDAO();
-    private final Observacion_listaDAO odao = new Observacion_listaDAO();
-    private final ObservacionDAO obsdao = new ObservacionDAO();
-    private final Producto_listaDAO pldao = new Producto_listaDAO();
     private final Producto_ventaDAO pdao = new Producto_ventaDAO();
 
     protected final Class clase = ControladorLista.class;
@@ -114,9 +99,6 @@ public class ControladorLista extends SIGIPROServlet {
         try {
             Lista c = dao.obtenerLista(id_lista);
             request.setAttribute("lista", c);
-            request.setAttribute("productos_lista", pldao.obtenerProductosLista(id_lista));
-            request.setAttribute("historiales_lista", hdao.obtenerHistorialesDeTratamiento(id_lista));
-            request.setAttribute("observaciones_lista", odao.obtenerObservacionesDeTratamiento(id_lista));
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
@@ -134,9 +116,6 @@ public class ControladorLista extends SIGIPROServlet {
         request.setAttribute("lista", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("productos", pdao.obtenerProductos_venta());
-        request.setAttribute("productos_lista", pldao.obtenerProductosLista(id_lista));
-        request.setAttribute("historiales_lista", hdao.obtenerHistorialesDeTratamiento(id_lista));
-        request.setAttribute("observaciones_lista", odao.obtenerObservacionesDeTratamiento(id_lista));
         request.setAttribute("accion", "Editar");
         
         redireccionar(request, response, redireccion);
@@ -150,41 +129,13 @@ public class ControladorLista extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         try {
             Lista lista_nuevo = construirObjeto(request);
-            resultado = dao.insertarLista(lista_nuevo);
             
-            String productos_lista = request.getParameter("listaProductos");
-            //System.out.println("productos_lista = "+productos_lista);
-            if (productos_lista != null && !(productos_lista.isEmpty()) ) {
-                List<Producto_lista> p_i = pldao.parsearProductos(productos_lista, resultado);
-                for (Producto_lista i : p_i) {
-                    pldao.insertarProducto_lista(i);
-                }
+            if (lista_nuevo.getFecha_atencion_S().equals("")){
+                resultado = dao.insertarListaFechaA0(lista_nuevo);
             }
-            
-            String observaciones_lista = request.getParameter("listaObservaciones");
-            //System.out.println("observaciones_lista = "+observaciones_lista);
-            if (observaciones_lista != null && !(observaciones_lista.isEmpty()) ) {
-                List<Observacion> p_i = odao.parsearObservaciones(observaciones_lista, resultado);
-                for (Observacion i : p_i) {
-                    Observacion_lista a = new Observacion_lista();
-                    a.setId_observacion(i.getId_observacion());
-                    a.setId_lista(resultado);
-                    odao.insertarObservacionTratamiento(a);
-                }
+            else{
+                resultado = dao.insertarLista(lista_nuevo);
             }
-            
-            String historiales_lista = request.getParameter("listaHistoriales");
-            //System.out.println("historiales_lista = "+historiales_lista);
-            if (historiales_lista != null && !(historiales_lista.isEmpty()) ) {
-                List<Historial> p_i = hdao.parsearHistoriales(historiales_lista, resultado);
-                for (Historial i : p_i) {
-                    Historial_lista a = new Historial_lista();
-                    a.setId_historial(i.getId_historial());
-                    a.setId_lista(resultado);
-                    hdao.insertarHistorialTratamiento(a);
-                }
-            }
-            
             
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -213,56 +164,14 @@ public class ControladorLista extends SIGIPROServlet {
         try {
             Lista lista_nuevo = construirObjeto(request);
             
-            resultado = dao.editarLista(lista_nuevo);
-            
-            String productos_lista = request.getParameter("listaProductos");
-            
-            int id_lista = Integer.parseInt(request.getParameter("id_lista"));
-            
-            if (productos_lista != null && !(productos_lista.isEmpty()) ) {
-                List<Producto_lista> p_i = pldao.parsearProductos(productos_lista, lista_nuevo.getId_lista());
-                for (Producto_lista i : p_i) {
-                    if(!pldao.esProductoLista(i.getProducto().getId_producto(), id_lista)){
-                        pldao.insertarProducto_lista(i);
-                    }
-                    else{
-                        pldao.editarProducto_lista(i);
-                    }
-                }
-                pldao.asegurarProductos_Lista(p_i, id_lista);
+            if (lista_nuevo.getFecha_atencion_S().equals("")){
+                resultado = dao.editarListaFechaA0(lista_nuevo);
+            }
+            else{
+                resultado = dao.editarLista(lista_nuevo);
             }
             
-            String observaciones_lista = request.getParameter("listaObservaciones");
-        
-            if (observaciones_lista != null && !(observaciones_lista.isEmpty()) ) {
-                List<Observacion> p_i = odao.parsearObservaciones(observaciones_lista, lista_nuevo.getId_lista());
-                for (Observacion i : p_i) {
-                    if(!odao.esObservacionTratamiento(id_lista, id_lista)){
-                        obsdao.insertarObservacion(i);
-                        Observacion_lista a = new Observacion_lista();
-                        a.setId_observacion(i.getId_observacion());
-                        a.setId_lista(lista_nuevo.getId_lista());
-                        odao.insertarObservacionTratamiento(a);
-                    }
-                }
-                odao.asegurarObservaciones_Tratamiento(p_i, id_lista);
-            }
             
-            String historiales_lista = request.getParameter("listaHistoriales");
-        
-            if (historiales_lista != null && !(historiales_lista.isEmpty()) ) {
-                List<Historial> p_i = hdao.parsearHistoriales(historiales_lista, lista_nuevo.getId_lista());
-                for (Historial i : p_i) {
-                    if(!hdao.esHistorialTratamiento(id_lista, id_lista)){
-                        hisdao.insertarHistorial(i);
-                        Historial_lista a = new Historial_lista();
-                        a.setId_historial(i.getId_historial());
-                        a.setId_lista(lista_nuevo.getId_lista());
-                        hdao.insertarHistorialTratamiento(a);
-                    }
-                }
-                hdao.asegurarHistoriales_Tratamiento(p_i, id_lista);
-            }
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(lista_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LISTA, request.getRemoteAddr());
@@ -292,9 +201,6 @@ public class ControladorLista extends SIGIPROServlet {
             Lista lista_a_eliminar = dao.obtenerLista(id_lista);
             
             resultado = dao.eliminarLista(lista_a_eliminar.getId_lista());
-            pldao.eliminarProductos_Lista(id_lista);
-            hdao.eliminarHistoriales_Tratamiento(id_lista);
-            odao.eliminarObservaciones_Tratamiento(id_lista);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(lista_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LISTA, request.getRemoteAddr());
@@ -319,10 +225,14 @@ public class ControladorLista extends SIGIPROServlet {
         lista.setId_lista(Integer.parseInt(request.getParameter("id_lista")));
         lista.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date result = df.parse(request.getParameter("fecha"));
+        java.util.Date result = df.parse(request.getParameter("fecha_solicitud"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
-        lista.setFecha_ingreso(fecha_solicitudSQL);
-        lista.setPrioridad(Integer.parseInt(request.getParameter("prioridad")));
+        lista.setFecha_solicitud(fecha_solicitudSQL);
+        if (!request.getParameter("fecha_atencion").equals("")){
+            java.util.Date result2 = df.parse(request.getParameter("fecha_atencion"));
+            java.sql.Date fecha_solicitudSQL2 = new java.sql.Date(result.getTime());
+            lista.setFecha_atencion(fecha_solicitudSQL2);
+        }
         return lista;
     }
     

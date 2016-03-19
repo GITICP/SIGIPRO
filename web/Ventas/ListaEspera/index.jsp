@@ -33,7 +33,7 @@
             <div class="widget-header">
                 <h3><i class="fa fa-file-text-o"></i> Listas de Espera </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera?accion=agregar">Agregar Lista</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera?accion=agregar">Agregar a Lista</a>
                 </div>  
             </div>
             ${mensaje}
@@ -42,10 +42,9 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>ID</th>
                     <th>Cliente</th>
-                    <th>Fecha de Ingreso</th>
-                    <th>Prioridad</th>
+                    <th>Fecha de Solicitud</th>
+                    <th>Fecha de Atención / Despacho</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -55,13 +54,12 @@
                       <td>
                         <a href="/SIGIPRO/Ventas/ListaEspera?accion=ver&id_lista=${lista.getId_lista()}">
                         <div style="height:100%;width:100%">
-                            ${lista.getId_lista()}
+                            ${lista.getCliente().getNombre()}
                         </div>
                         </a>
                       </td>
-                      <td>${lista.getCliente().getNombre()}</td>
-                      <td>${lista.getFecha_ingreso_S()}</td>
-                      <td>${lista.getPrioridad()}</td>
+                      <td>${lista.getFecha_solicitud_S()}</td>
+                      <td>${lista.getFecha_atencion_S()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

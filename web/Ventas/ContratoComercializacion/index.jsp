@@ -43,7 +43,9 @@
                 <thead> 
                   <tr>
                     <th>Nombre</th>
-                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Fecha Inicial</th>
+                    <th>Fecha de Renovación</th>
                     <th>Observaciones</th>
                   </tr>
                 </thead>
@@ -58,7 +60,9 @@
                         </div>
                         </a>
                       </td>
-                      <td>${contrato.getFecha_S()}</td>
+                      <td>${contrato.getCliente().getNombre()}</td>
+                      <td>${contrato.getFechaInicial_S()}</td>
+                      <td>${contrato.getFechaRenovacion_S()}</td>
                       <td>${contrato.getObservaciones()}</td>
                     </tr>
                   </c:forEach>

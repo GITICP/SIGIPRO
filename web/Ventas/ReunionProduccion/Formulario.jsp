@@ -12,6 +12,7 @@
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_reunion" value="${reunion.getId_reunion()}">
+            <input id="listaProductos" hidden="true" name="listaProductos" value="">
             <input hidden="true" name="accion" value="${accion}">
             
             <label for="fecha" class="control-label"> *Fecha</label>
@@ -87,9 +88,68 @@
                     </div>
                 </c:otherwise>
             </c:choose>
+            <c:choose>
+                <c:when test="${reunion.getId_reunion()!=0}">
+                    <label for="minuta2" class="control-label"> Minuta 2 (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="file" id="minuta2" name="minuta2"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                       onchange="setCustomValidity('')"/>
+                            </div>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <label for="minuta2" class="control-label"> Minuta 2</label>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="file" id="minuta2" name="minuta2"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                       oninvalid="setCustomValidity('No es un archivo permitido. ')"
+                                       onchange="setCustomValidity('')"/>
+                            </div>
+                        </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
             
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
         </div>
+                        <div class="col-md-12">
+        
+        <!-- Esta arte es la de los productos de la solicitud -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-th-list"></i> *Participantes</h3>
+                    <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-productos" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${participantes}" var="participante">
+                          <tr id="${participante.getUsuario().getId_usuario()}">
+                            <td>${participante.getUsuario().getNombre_completo()}</td>
+                            <td>
+                              <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProducto(${participante.getUsuario().getId_usuario()})" >Eliminar</button>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los productos de la solicitud -->
+            </div>
     </div>
 
 
@@ -108,3 +168,5 @@
 
 
 </form>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Participantes_reunion.js"></script>

@@ -58,43 +58,9 @@
         <!-- /main -->
       </div>
 
-    <t:modal idModal="modalAgregarAccion" titulo="Agregar Acción">
-
-      <jsp:attribute name="form">
-
-        <form class="form-horizontal" id="formAgregarAccion">
-          <input type="text" name="accion"  hidden="true">
-          <label for="id_accion" class="control-label">*Acción</label>
-          <div class="form-group">
-            <div class="col-sm-12">
-              <div class="input-group" id='inputGroupSeleccionAccion'>
-                <select id="seleccionAccion" class="select2" style='background-color: #fff;' name="seleccionAccion" required
-                        oninvalid="setCustomValidity('Este campo es requerido')"
-                        onchange="setCustomValidity('')">
-                    <option value=''></option>
-                  <c:forEach items="${acciones}" var="accion">
-                    <option value="${accion.getId_accion()}"> ${accion.getAccion()}</option>
-                  </c:forEach>
-                </select>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div class="form-group">
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-            <button id="btn-agregarAccion" type="button" class="btn btn-primary" data-target="#modalAgregarAccion" onclick="agregarAccion()"><i class="fa fa-check-circle"></i> Agregar Accion</button>
-          </div>
-        </div>
-
-
-      </jsp:attribute>
-
-    </t:modal>
               
 
         <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
-        <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Tratamiento.js"></script>
   </jsp:attribute>
 
 </t:plantilla_general>

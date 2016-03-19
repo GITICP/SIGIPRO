@@ -200,7 +200,7 @@ public class Orden_compraDAO extends DAO {
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (id_cliente, id_intencion, rotulacion, estado)"
-                    + " VALUES (?,?,?,?,?) RETURNING id_orden");
+                    + " VALUES (?,?,?,?) RETURNING id_orden");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setInt(2, p.getIntencion().getId_intencion());

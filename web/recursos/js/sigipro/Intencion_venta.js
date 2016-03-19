@@ -15,7 +15,6 @@ function eliminarProducto(idRol) {
   $('#seleccionProducto')
           .append($("<option></option>")
                   .attr("value", fila.attr('id'))
-                  .attr("data-stock", fila.children('td').eq(4).text())
                   .text(fila.children('td').eq(0).text()));
   fila.remove();
   var campoOcultoRoles = $('#listaProductos');
@@ -32,9 +31,6 @@ function editarProducto(idRol) {
   document.getElementById("idProductoEditar").value = idRol;
   var cantidad = document.getElementById("editarCantidad");
   cantidad.value = x.children[1].innerHTML;
-  var stock = x.children[4].innerHTML;
-  cantidad.placeholder = "Máximo: "+stock;
-  cantidad.setAttribute("max",stock);
   document.getElementById("editarPosibleFechaDespacho").value = x.children[2].innerHTML;
   $('#modalEditarProducto').modal('show');
   
@@ -93,7 +89,6 @@ function agregarProducto() {
   inputFechaDesact = $('#posibleFechaEntrega');
   var select = document.getElementById("seleccionProducto");
   var indice = select.selectedIndex;
-  var stock = select.options[indice].getAttribute('data-stock');
   
     fechaAct = inputFechaAct.val();
     fechaDesact = inputFechaDesact.val();
@@ -113,7 +108,6 @@ function agregarProducto() {
     fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto(' + idRol + ')"   style="margin-left:5px;margin-right:7px;">Editar</button>';
     fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(' + idRol + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
     fila += '</td>';
-    fila += '<td hidden="true">' + stock + '</td>';
     fila += '</tr>';
 
     campoOcultoRoles = $('#listaProductos');
@@ -131,11 +125,8 @@ $(function(){ /* DOM ready */
 
         var select = document.getElementById("seleccionProducto");
         var indice = select.selectedIndex;
-        var stock = select.options[indice].getAttribute('data-stock');
 
         var cantidad = document.getElementById("cantidad");
-        cantidad.placeholder = "Máximo: "+stock;
-        cantidad.setAttribute("max",stock);
 
 
     });

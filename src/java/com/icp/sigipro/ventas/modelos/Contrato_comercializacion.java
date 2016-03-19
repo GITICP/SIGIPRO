@@ -17,8 +17,10 @@ import org.json.JSONObject;
  */
 public class Contrato_comercializacion {
     private int id_contrato;
+    private Cliente cliente;
     private String nombre;
-    private Date fecha;
+    private Date fechaInicial;
+    private Date fechaRenovacion;
     private String observaciones;
 
     public int getId_contrato() {
@@ -37,8 +39,8 @@ public class Contrato_comercializacion {
         this.nombre = nombre;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public Date getFechaInicial() {
+        return fechaInicial;
     }
 
     private String formatearFecha(Date fecha)
@@ -47,15 +49,38 @@ public class Contrato_comercializacion {
         return df.format(fecha);
     }  
     
-    public String getFecha_S(){
-        if (this.fecha != null)
-            {return formatearFecha(this.fecha);}
+    public String getFechaInicial_S(){
+        if (this.fechaInicial != null)
+            {return formatearFecha(this.fechaInicial);}
         else
             {return "";}
     }
     
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFechaInicial(Date fecha) {
+        this.fechaInicial = fecha;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Date getFechaRenovacion() {
+        return fechaRenovacion;
+    }
+
+    public void setFechaRenovacion(Date fechaRenovacion) {
+        this.fechaRenovacion = fechaRenovacion;
+    }
+    
+    public String getFechaRenovacion_S(){
+        if (this.fechaRenovacion != null)
+            {return formatearFecha(this.fechaRenovacion);}
+        else
+            {return "";}
     }
 
     public String getObservaciones() {

@@ -38,6 +38,7 @@ public class Reunion_produccionDAO extends DAO {
                 reunion.setFecha(rs.getDate("fecha"));
                 reunion.setObservaciones(rs.getString("observaciones"));
                 reunion.setMinuta(rs.getString("minuta"));
+                reunion.setMinuta2(rs.getString("minuta2"));
                 resultado.add(reunion);
 
             }
@@ -66,6 +67,7 @@ public class Reunion_produccionDAO extends DAO {
                 resultado.setFecha(rs.getDate("fecha"));
                 resultado.setObservaciones(rs.getString("observaciones"));
                 resultado.setMinuta(rs.getString("minuta"));
+                resultado.setMinuta2(rs.getString("minuta2"));
             }
             rs.close();
             consulta.close();
@@ -82,12 +84,13 @@ public class Reunion_produccionDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.reunion_produccion (fecha, observaciones, minuta)"
-                    + " VALUES (?,?,?) RETURNING id_reunion");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.reunion_produccion (fecha, observaciones, minuta, minuta2)"
+                    + " VALUES (?,?,?,?) RETURNING id_reunion");
 
             consulta.setDate(1, p.getFecha());
             consulta.setString(2, p.getObservaciones());
             consulta.setString(3, p.getMinuta());
+            consulta.setString(4, p.getMinuta2());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -110,14 +113,15 @@ public class Reunion_produccionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.reunion_produccion"
-                    + " SET observaciones=?, fecha=?, minuta=?"
+                    + " SET observaciones=?, fecha=?, minuta=?, minuta2=?"
                     + " WHERE id_reunion=?; "
             );
 
             consulta.setString(1, p.getObservaciones());
             consulta.setDate(2, p.getFecha());
             consulta.setString(3, p.getMinuta());
-            consulta.setInt(4, p.getId_reunion());
+            consulta.setString(4, p.getMinuta2());
+            consulta.setInt(5, p.getId_reunion());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

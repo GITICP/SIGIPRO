@@ -19,15 +19,16 @@ CREATE TABLE ventas.contactos_cliente(
 CREATE TABLE ventas.contrato_comercializacion(
 	id_contrato serial NOT NULL,
 	nombre character varying(100) NOT NULL,
-	fecha date NOT NULL,
+	id_cliente int NOT NULL,
+	fechaInicial date NOT NULL,
+	fechaRenovacion date NOT NULL,
 	observaciones character varying(150)
 );
 CREATE TABLE ventas.producto_venta(
 	id_producto serial NOT NULL,
 	nombre character varying(100) NOT NULL,
 	descripcion character varying(120),
-	cantidad_stock integer NOT NULL,
-	precio integer NOT NULL
+	lote character varying(120)
 );
 CREATE TABLE ventas.intencion_venta(
 	id_intencion serial NOT NULL,
@@ -43,7 +44,7 @@ CREATE TABLE ventas.producto_intencion(
 );
 CREATE TABLE ventas.cotizacion(
 	id_cotizacion serial NOT NULL,
-	id_intencion integer,
+	id_intencion integer NOT NULL,
 	id_cliente integer NOT NULL,
 	total integer NOT NULL,
 	flete integer NOT NULL
@@ -52,7 +53,7 @@ CREATE TABLE ventas.producto_cotizacion(
 	id_producto integer NOT NULL,
 	id_cotizacion integer NOT NULL,
 	cantidad integer NOT NULL,
-	posible_fecha_despacho date NOT NULL
+	precio integer NOT NULL
 );
 CREATE TABLE ventas.orden_compra(
 	id_orden serial NOT NULL,
@@ -74,7 +75,10 @@ CREATE TABLE ventas.factura(
 	fecha date NOT NULL,
 	monto integer NOT NULL,
 	fecha_vencimiento date NOT NULL,
-	documento character varying(500) NOT NULL,
+	documento1 character varying(500),
+	documento2 character varying(500),
+	documento3 character varying(500),
+	documento4 character varying(500),
 	tipo character varying(20)
 );
 CREATE TABLE ventas.pago(
@@ -86,66 +90,40 @@ CREATE TABLE ventas.reunion_produccion(
 	id_reunion serial NOT NULL,
 	fecha date NOT NULL,
 	observaciones character varying(100),
-	minuta character varying(500) NOT NULL
+	minuta character varying(500) NOT NULL,
+	minuta2 character varying(500) 
+);
+CREATE TABLE ventas.participantes_reunion(
+	id_reunion int NOT NULL,
+	id_usuario int NOT NULL
 );
 CREATE TABLE ventas.encuesta_satisfaccion(	
 	id_encuesta serial NOT NULL,
 	id_cliente integer NOT NULL,
 	fecha date NOT NULL,
 	observaciones character varying(100),
-	documento_1 character varying(500),
-	documento_2 character varying(500),
-	documento_3 character varying(500)
+	documento character varying(500)
 );
 CREATE TABLE ventas.seguimiento_venta(	
 	id_seguimiento serial NOT NULL,
 	id_cliente integer NOT NULL,
 	id_factura integer NOT NULL,
 	observaciones character varying(100),
-	tipo character varying(10) NOT NULL,
-	documento_1 character varying(500),
-	documento_2 character varying(500),
-	documento_3 character varying(500)
-);
-CREATE TABLE ventas.accion(
-	id_accion serial NOT NULL,
-	accion character varying(200) NOT NULL
+	tipo character varying(50) NOT NULL,
+	documento character varying(500)
 );
 CREATE TABLE ventas.tratamiento(
 	id_tratamiento serial NOT NULL,
 	id_cliente integer NOT NULL,
-	fecha date NOT NULL
-);
-CREATE TABLE ventas.accion_tratamiento(
-	id_accion integer NOT NULL,
-	id_tratamiento integer NOT NULL
+	fecha date NOT NULL,
+	observaciones character varying(200),
+	estado character varying(40)
 );
 CREATE TABLE ventas.lista(
-	id_lista serial NOT NULL,
+	id_enlistado serial NOT NULL,
 	id_cliente integer NOT NULL,
-	prioridad integer NOT NULL,
-	fecha_ingreso date NOT NULL
-);
-CREATE TABLE ventas.historial(
-	id_historial serial NOT NULL,
-	historial character varying(200) NOT NULL
-);
-CREATE TABLE ventas.observacion(
-	id_observacion serial NOT NULL,
-	observacion character varying(200) NOT NULL
-);
-CREATE TABLE ventas.historial_lista(
-	id_historial integer NOT NULL,
-	id_lista integer NOT NULL
-);
-CREATE TABLE ventas.observacion_lista(
-	id_observacion integer NOT NULL,
-	id_lista integer NOT NULL
-);
-CREATE TABLE ventas.producto_lista(
-	id_producto integer NOT NULL,
-	id_lista integer NOT NULL,
-	cantidad integer NOT NULL
+	fecha_solicitud date NOT NULL,
+	fecha_atencion date 
 );
 
 --Llaves primarias esquema de ventas 
@@ -164,19 +142,13 @@ ALTER TABLE ONLY ventas.pago ADD CONSTRAINT pk_pago PRIMARY KEY (id_pago);
 ALTER TABLE ONLY ventas.reunion_produccion ADD CONSTRAINT pk_reunion_produccion PRIMARY KEY (id_reunion);
 ALTER TABLE ONLY ventas.encuesta_satisfaccion ADD CONSTRAINT pk_encuesta_satisfaccion PRIMARY KEY (id_encuesta);
 ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT pk_seguimiento_venta PRIMARY KEY (id_seguimiento);
-ALTER TABLE ONLY ventas.accion ADD CONSTRAINT pk_accion PRIMARY KEY (id_accion);
 ALTER TABLE ONLY ventas.tratamiento ADD CONSTRAINT pk_tratamiento PRIMARY KEY (id_tratamiento);
-ALTER TABLE ONLY ventas.accion_tratamiento ADD CONSTRAINT pk_accion_tratamiento PRIMARY KEY (id_accion, id_tratamiento);
-ALTER TABLE ONLY ventas.lista ADD CONSTRAINT pk_lista PRIMARY KEY (id_lista);
-ALTER TABLE ONLY ventas.historial ADD CONSTRAINT pk_historial PRIMARY KEY (id_historial);
-ALTER TABLE ONLY ventas.observacion ADD CONSTRAINT pk_observacion PRIMARY KEY (id_observacion);
-ALTER TABLE ONLY ventas.historial_lista ADD CONSTRAINT pk_historial_lista PRIMARY KEY (id_historial, id_lista);
-ALTER TABLE ONLY ventas.observacion_lista ADD CONSTRAINT pk_observacion_lista PRIMARY KEY (id_observacion, id_lista);
-ALTER TABLE ONLY ventas.producto_lista ADD CONSTRAINT pk_producto_lista PRIMARY KEY (id_producto, id_lista);
+ALTER TABLE ONLY ventas.lista ADD CONSTRAINT pk_lista PRIMARY KEY (id_enlistado);
 
 --Llaves foraneas esquema ventas
 
 ALTER TABLE ONLY ventas.contactos_cliente ADD CONSTRAINT fk_contactos_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.contrato_comercializacion ADD CONSTRAINT fk_contrato_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT fk_intenciones_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
@@ -192,19 +164,13 @@ ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_producto FOREIGN KEY
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.pago ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.participantes_reunion ADD CONSTRAINT fk_id_reunion FOREIGN KEY (id_reunion) REFERENCES ventas.reunion_produccion(id_reunion) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.participantes_reunion ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.encuesta_satisfaccion ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.tratamiento ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.accion_tratamiento ADD CONSTRAINT fk_id_tratamiento FOREIGN KEY (id_tratamiento) REFERENCES ventas.tratamiento(id_tratamiento) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.accion_tratamiento ADD CONSTRAINT fk_id_accion FOREIGN KEY (id_accion) REFERENCES ventas.accion(id_accion) ON DELETE CASCADE;
 ALTER TABLE ONLY ventas.lista ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.historial_lista ADD CONSTRAINT fk_id_historial FOREIGN KEY (id_historial) REFERENCES ventas.historial(id_historial) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.historial_lista ADD CONSTRAINT fk_id_lista FOREIGN KEY (id_lista) REFERENCES ventas.lista(id_lista) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.observacion_lista ADD CONSTRAINT fk_id_observacion FOREIGN KEY (id_observacion) REFERENCES ventas.observacion(id_observacion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.observacion_lista ADD CONSTRAINT fk_id_lista FOREIGN KEY (id_lista) REFERENCES ventas.lista(id_lista) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_lista ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_lista ADD CONSTRAINT fk_id_lista FOREIGN KEY (id_lista) REFERENCES ventas.lista(id_lista) ON DELETE CASCADE;
 
 --Permisos asociados a ventas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (701, '[Ventas]AdministrarModuloVentas', 'Permite gestionar el modulo de ventas');
@@ -228,11 +194,9 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (711, 700, 'Encuestas de Satisfacción', '/Ventas/EncuestaSatisfaccion', 6);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (712, 700, 'Seguimientos de Venta', '/Ventas/SeguimientoVenta', 7);
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, orden) VALUES (713, 700, 'Tratamiento de Clientes', 8);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (714, 713, 'Acciones de Venta', '/Ventas/Accion', 1);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (715, 713, 'Tratamientos de Clientes', '/Ventas/Tratamiento', 2);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (713, 700, 'Tratamientos de Clientes', '/Ventas/Tratamiento', 8);
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (716, 700, 'Listas de Espera', '/Ventas/ListaEspera', 9);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (714, 700, 'Listas de Espera', '/Ventas/ListaEspera', 9);
 
 --Permisos del menu principal de ventas
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (701, 701);

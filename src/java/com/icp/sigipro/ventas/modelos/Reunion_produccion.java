@@ -20,7 +20,16 @@ public class Reunion_produccion {
     private Date fecha;
     private String observaciones;
     private String minuta;
+    private String minuta2;
 
+    public String getMinuta2() {
+        return minuta2;
+    }
+
+    public void setMinuta2(String minuta2) {
+        this.minuta2 = minuta2;
+    }
+    
     public int getId_reunion() {
         return id_reunion;
     }
