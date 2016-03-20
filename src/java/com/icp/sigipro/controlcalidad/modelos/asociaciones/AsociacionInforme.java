@@ -5,7 +5,6 @@
  */
 package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
-import com.icp.sigipro.controlcalidad.modelos.Informe;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

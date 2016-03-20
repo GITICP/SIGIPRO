@@ -12,6 +12,7 @@ import com.icp.sigipro.controlcalidad.modelos.Grupo;
 import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.core.DAO;
@@ -57,6 +58,7 @@ public class SolicitudDAO extends DAO {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            ex.getNextException().printStackTrace();
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
@@ -393,7 +395,9 @@ public class SolicitudDAO extends DAO {
     public SolicitudCC obtenerSolicitud(int id_solicitud) {
         SolicitudCC resultado = new SolicitudCC();
         PreparedStatement consulta = null;
+        PreparedStatement consulta_resultados_sp = null;
         ResultSet rs = null;
+        ResultSet rs_sp = null;
         try {
 
             consulta = getConexion().prepareStatement(
@@ -532,10 +536,30 @@ public class SolicitudDAO extends DAO {
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
+                        + "   AND ags.id_analisis <> 2147483647 "
+                        + " ORDER BY ags.id_analisis_grupo_solicitud; "
+                );
+
+                consulta_resultados_sp = getConexion().prepareStatement(
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, "
+                        + " CASE WHEN r.id_resultado_analisis_sp IN (  "
+                        + " 				SELECT r.id_resultado_analisis_sp "
+                        + " 				FROM control_calidad.resultados_informes ri  "
+                        + " 				    INNER JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_resultado_analisis_sp = ri.id_resultado_sp "
+                        + " 				WHERE ri.id_informe = ?  "
+                        + " 				)  "
+                        + "      THEN true "
+                        + "      ELSE false "
+                        + " END AS en_informe "
+                        + " FROM control_calidad.analisis_grupo_solicitud ags "
+                        + "     LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
+                        + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
 
                 consulta.setInt(1, resultado.getInforme().getId_informe());
+                consulta_resultados_sp.setInt(1, resultado.getInforme().getId_informe());
+                
             } else {
                 consulta = getConexion().prepareStatement(
                         " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
@@ -543,6 +567,14 @@ public class SolicitudDAO extends DAO {
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
+                );
+                
+                consulta_resultados_sp = getConexion().prepareStatement( 
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion "
+                        + "  FROM control_calidad.analisis_grupo_solicitud ags "
+                        + "      LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
+                        + "  WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
+                        + "  ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
             }
 
@@ -562,6 +594,28 @@ public class SolicitudDAO extends DAO {
                     if (resultado.getInforme() != null) {
                         if (rs.getBoolean("en_informe")) {
                             resultado.getInforme().agregarResultado(r);
+                        }
+                    }
+                }
+            }
+            
+            rs_sp = consulta_resultados_sp.executeQuery();
+            
+            while (rs_sp.next()) {
+                int id_resultado_sp = rs_sp.getInt("id_resultado_analisis_sp");
+                if (id_resultado_sp != 0) {
+                    ResultadoSangriaPrueba r_sp = new ResultadoSangriaPrueba();
+                    r_sp.setId_resultado_sangria_prueba(rs_sp.getInt("id_resultado_analisis_sp"));
+                    r_sp.setHematocrito(rs_sp.getFloat("hematocrito"));
+                    r_sp.setHemoglobina(rs_sp.getFloat("hemoglobina"));
+                    r_sp.setRepeticion(rs_sp.getInt("repeticion"));
+                    AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
+                    ags_iter.setId_analisis_grupo_solicitud(rs_sp.getInt("id_analisis_grupo_solicitud"));
+                    r_sp.setAgs(ags_iter);
+                    resultado.agregarResultadoAnalisisGrupoSolicitud(r_sp);
+                    if (resultado.getInforme() != null) {
+                        if (rs_sp.getBoolean("en_informe")) {
+                            resultado.getInforme().agregarResultado(r_sp);
                         }
                     }
                 }

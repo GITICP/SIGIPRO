@@ -281,6 +281,8 @@
                     <option class="opcion-escondida" value="${muestra.getId_muestra()}" data-tipo="${muestra.getTipo_muestra().getId_tipo_muestra()}" hidden>${muestra.getIdentificador()}</option>
                 </c:forEach>                
             </select>
+            
+            <button id="btn-agrupar-muestras" class="btn btn-primary btn-md boton-accion" style="margin-top:10px;" disabled="true" type="button">Agrupar Todas</button>
 
             <br/>
 

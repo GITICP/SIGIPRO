@@ -8,7 +8,6 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
-import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;

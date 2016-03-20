@@ -33,7 +33,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Ver Resultado de Solicitud ${solicitud.getNumero_solicitud()} - ${analisis.getNombre()} </h3>
+                            <h3><i class="fa fa-gears"></i> Ver Resultado de Solicitud ${solicitud.getNumero_solicitud()} - ${analisis.getNombre()}</h3>
 
                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                 <div class="btn-group widget-header-toolbar">
@@ -44,8 +44,26 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-
-                            ${cuerpo_datos}
+                            
+                            <c:choose>
+                                <c:when test="${analisis.getId_analisis() != Integer.MAX_VALUE}">
+                                    ${cuerpo_datos}
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="widget-content">
+                                        <table class="tabla-ver">
+                                            <tr><td> <strong>RBC: </strong></td> <td>${resultado.getRbc()} </td></tr>
+                                            <tr><td> <strong>WBC: </strong></td> <td>${resultado.getWbc()} </td></tr>
+                                            <tr><td> <strong>Hematocrito: </strong></td> <td>${resultado.getHematocrito()} </td></tr>
+                                            <tr><td> <strong>Hemoglobina: </strong></td> <td>${resultado.getHemoglobina()} </td></tr>
+                                            <tr><td> <strong>Repetición: </strong></td> <td>${resultado.getRepeticion()} </td></tr>
+                                            <tr><td> <strong>Observaciones:</strong></td> <td>${resultado.getObservaciones()}</td></tr>
+                                        </table>
+                                        <br>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                            
 
                             <div class="row">
                                 <div class="col-md-6">

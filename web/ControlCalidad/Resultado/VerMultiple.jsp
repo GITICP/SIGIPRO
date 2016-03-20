@@ -77,7 +77,7 @@
                                     <c:forEach items="${resultados}" var="resultado">
                                         <tr>
                                             <td>
-                                                <a href="/SIGIPRO/ControlCalidad/Resultado?accion=ver&id_resultado=${resultado.getId_resultado()}">
+                                                <a href="/SIGIPRO/ControlCalidad/Resultado?accion=ver&id_resultado=${resultado.getId_resultado()}&id_analisis=${id_analisis}">
                                                     <div style="height:100%;width:100%">
                                                         ${resultado.getId_resultado()}
                                                     </div>
