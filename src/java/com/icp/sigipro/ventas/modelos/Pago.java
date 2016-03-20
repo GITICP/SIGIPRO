@@ -16,6 +16,15 @@ public class Pago {
     private int id_pago;
     private Factura factura;
     private int pago;
+    private int monto_pendiente;
+
+    public int getMonto_pendiente() {
+        return monto_pendiente;
+    }
+
+    public void setMonto_pendiente(int monto_pendiente) {
+        this.monto_pendiente = monto_pendiente;
+    }
 
     public int getId_pago() {
         return id_pago;

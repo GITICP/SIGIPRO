@@ -153,6 +153,11 @@ public class ControladorPago extends SIGIPROServlet {
             Pago pago_nuevo = construirObjeto(request);
             pago_nuevo.setId_pago(pago_a_editar.getId_pago());
             resultado = dao.editarPago(pago_nuevo);
+            
+            Factura f = pago_nuevo.getFactura();
+            f.setMonto(pago_nuevo.getMonto_pendiente());
+            fdao.editarFactura(f);
+            
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(pago_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PAGO, request.getRemoteAddr());
@@ -179,7 +184,9 @@ public class ControladorPago extends SIGIPROServlet {
         
         try {
             Pago pago_a_eliminar = dao.obtenerPago(Integer.parseInt(request.getParameter("id_pago")));
-            
+            Factura f = pago_a_eliminar.getFactura();
+            f.setMonto(f.getMonto() + pago_a_eliminar.getPago());
+            fdao.editarFactura(f);
             resultado = dao.eliminarPago(pago_a_eliminar.getId_pago());
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -203,8 +210,12 @@ public class ControladorPago extends SIGIPROServlet {
     private Pago construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Pago pago = new Pago();
         //pago.setId_pago(Integer.parseInt(request.getParameter("id_pago")));
-        pago.setFactura(fdao.obtenerFactura(Integer.parseInt(request.getParameter("id_factura"))));
         pago.setPago(Integer.parseInt(request.getParameter("pago")));
+        pago.setMonto_pendiente(Integer.parseInt(request.getParameter("monto_pendiente")));
+        Factura f = fdao.obtenerFactura(Integer.parseInt(request.getParameter("id_factura")));
+        f.setMonto(pago.getMonto_pendiente());
+        fdao.editarFactura(f);
+        pago.setFactura(f);
         
         return pago;
     }

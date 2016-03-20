@@ -5,6 +5,8 @@
  */
 
 $(function(){ /* DOM ready */
+    var pagoActual = document.getElementById("pago").value;
+    
     $("#id_factura").change(function () {
 
         var select = document.getElementById("id_factura");
@@ -22,14 +24,29 @@ $(function(){ /* DOM ready */
     });
     $("#pago").change(function () {
 
-        var select = document.getElementById("id_factura");
-        var indice = select.selectedIndex;
-        var factura = select.options[indice];
-        var monto_factura = factura.getAttribute('data-monto');
-        var pago = document.getElementById("pago");
-        var monto_input = document.getElementById("monto_pendiente");
-        var monto_pendiente = parseInt(monto_factura) - parseInt(pago.value);
-        monto_input.value = monto_pendiente;
+        var accion = document.getElementById("acccion").value;
+        //alert(accion);
+        if (accion === "Agregar"){
+            var select = document.getElementById("id_factura");
+            var indice = select.selectedIndex;
+            var factura = select.options[indice];
+            var monto_factura = factura.getAttribute('data-monto');
+            var pago = document.getElementById("pago");
+            var monto_input = document.getElementById("monto_pendiente");
 
+            var monto_pendiente = parseInt(monto_factura) - parseInt(pago.value);
+            monto_input.value = monto_pendiente;
+        }
+        else{
+            var select = document.getElementById("id_factura");
+            var indice = select.selectedIndex;
+            var factura = select.options[indice];
+            var monto_factura = factura.getAttribute('data-monto');
+            var pago = document.getElementById("pago");
+            var monto_input = document.getElementById("monto_pendiente");
+
+            var monto_pendiente = parseInt(monto_factura) + parseInt(pagoActual) - parseInt(pago.value);
+            monto_input.value = monto_pendiente;
+        }
     });
 });

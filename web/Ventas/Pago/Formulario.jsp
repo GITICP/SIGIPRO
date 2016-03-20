@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_pago" value="${pago.getId_pago()}">
-      <input hidden="true" name="accion" value="${accion}">
+      <input hidden="true" name="accion" id="acccion" value="${accion}">
             <label for="id_factura" class="control-label"> *Factura</label>
             <!-- id_factura -->
             <div class="form-group">
@@ -35,12 +35,12 @@
                     </div>
                 </div>
             </div>
-            <label for="monto_pendiente" class="control-label"> Monto Pendiente (Auto-Calculado) </label>
+            <label for="monto_pendiente" class="control-label"> Monto Pendiente </label>
             <div class="form-group">
               <div class="col-sm-12">
                 <!-- monto_pendiente -->
                 <div class="input-group">
-                    <input id="monto_pendiente" type="number" min="0" class="form-control" name="monto_pendiente" value="${pago.getFactura().getMonto() - pago.getPago()}" disabled
+                    <input id="monto_pendiente" type="number" min="0" class="form-control" name="monto_pendiente" value="${pago.getMonto_pendiente()}" readonly
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
                 </div>
@@ -51,7 +51,7 @@
               <div class="col-sm-12">
                 <!-- pago -->
                 <div class="input-group">
-                    <input id="pago" type="number" min="0" max="${pago.getFactura().getMonto()}" class="form-control" name="pago" value="${pago.getPago()}" required
+                    <input id="pago" type="number" min="0" max="${pago.getMonto_pendiente()}" class="form-control" name="pago" value="${pago.getPago()}" required
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
                 </div>

@@ -40,16 +40,29 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
+                        <select id="id_intencion_completo" name="id_intencion_completo" hidden>
+                          <option value=''></option>
+                          <c:forEach items="${intenciones}" var="intencion">
+                            <c:choose>
+                              <c:when test="${cotizacion.getIntencion().getId_intencion() == intencion.getId_intencion()}" >
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
                         <select id="id_intencion" class="select2" name="id_intencion" 
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')" required>
                           <option value=''></option>
                           <c:forEach items="${intenciones}" var="intencion">
                             <c:choose>
                               <c:when test="${cotizacion.getIntencion().getId_intencion() == intencion.getId_intencion()}" >
-                                <option value=${intencion.getId_intencion()} selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value=${intencion.getId_intencion()}> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -70,12 +83,12 @@
                     </div>
                 </div>
             </div>
-            <label for="flete" class="control-label"> *Flete</label>
+            <label for="flete" class="control-label"> Flete</label>
             <!-- Flete -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="flete" type="number" min="0" class="form-control" name="flete" value="${cotizacion.getFlete()}" required
+                        <input id="flete" type="number" min="0" class="form-control" name="flete" value="${cotizacion.getFlete()}" 
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                     </div>

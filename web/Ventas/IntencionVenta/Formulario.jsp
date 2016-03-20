@@ -13,7 +13,6 @@
     <div class="col-md-6">
       <input hidden="true" name="id_intencion" value="${intencion.getId_intencion()}">
       <input hidden="true" name="accion" value="${accion}">
-      <input id="listaProductos" hidden="true" name="listaProductos" value="">
             <label for="id_cliente" class="control-label"> *Cliente</label>
             <!-- Id Cliente -->
             <div class="form-group">
@@ -63,9 +62,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="observaciones" type="text" class="form-control" name="observaciones" value="${intencion.getObservaciones()}"
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                        <textarea id="observaciones" name="observaciones" class="form-control">${intencion.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>
@@ -79,6 +76,7 @@
                     <h3><i class="fa fa-th-list"></i> *Productos a Vender</h3>
                     <div class="btn-group widget-header-toolbar">
                       <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
+                      <input id="listaProductos" hidden="true" name="listaProductos" value="" required>
                     </div>
                   </div>
                   <div class="widget-content">
@@ -115,10 +113,10 @@
       <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                    <button type="submit" onclick="validarProductosYSubmit()" id="boton_confirmar" data-toggle="confirmar" title="Asegúrese de agregar productos" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Solicitud o Intención de Venta</button>
+                    <button type="submit" onclick="validarProductosYSubmit()" id="boton_confirmar" data-toggle="confirmar" title="Asegúrese de agregar productos" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Solicitud o Intención de Venta</button>
                 </c:otherwise>
             </c:choose>    </div>
   </div>

@@ -204,7 +204,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             redireccion = "OrdenCompra/index.jsp";
             List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
             request.setAttribute("listaOrdenes", ordenes);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud o Intención de Venta agregado correctamente"));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra agregada correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -269,7 +269,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             redireccion = "OrdenCompra/index.jsp";
             List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
             request.setAttribute("listaOrdenes", ordenes);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud o Intención de Venta editado correctamente"));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra editada correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -299,7 +299,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             redireccion = "OrdenCompra/index.jsp";
             List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
             request.setAttribute("listaOrdenes", ordenes);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud o Intención de Venta eliminado correctamente"));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra eliminada correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }

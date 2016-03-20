@@ -55,9 +55,7 @@
               <div class="col-sm-12">
                 <!-- Stock -->
                 <div class="input-group">
-                    <input id="observaciones" type="text" class="form-control" name="observaciones" value="${reunion.getObservaciones()}"
-                        oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
-                        oninput="setCustomValidity('')"> 
+                    <textarea id="observaciones" name="observaciones" class="form-control">${reunion.getObservaciones()}</textarea>
                 </div>
               </div>
             </div>

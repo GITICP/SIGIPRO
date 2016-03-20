@@ -4,30 +4,38 @@
  * and open the template in the editor.
  */
 
-$(function(){ /* DOM ready */
+$(function(){ /* DOM ready */ //
     $("#id_cliente").change(function () {
-        
-        var select = document.getElementById("id_cliente");
-        var indice = select.selectedIndex;
-        var id_cliente = select.options[indice].value;
-        
-        var facturas = document.getElementById("id_factura");
-        //se muestran todas las facturas
-        for (i = 0; i<facturas.length; i++){
-            facturas.options[i].disabled = false;
-            //alert("factura mostrada = "+facturas.options[i].value);
+        //Quitar todas las opciones del select de facturaes
+        var i;
+        var select_factura = document.getElementById("id_factura");
+        for(i=select_factura.options.length-1;i>=0;i--)
+        {
+            select_factura.remove(i);
         }
         
-        //se esconden todas las que no tengan el id_cliente en sus atributos
-        //alert("id_cliente = "+id_cliente);
-        for (i = 0; i<facturas.length; i++){
-            var data_cliente = facturas.options[i].getAttribute('data-cliente');
-            //alert("factura = "+facturas.options[i].value +",data_cliente = "+data_cliente);
-            if (data_cliente !== id_cliente)
-                facturas.options[i].disabled = true;
-                //alert("factura oculta = "+facturas.options[i].value);
+        //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
+        var select_cliente = document.getElementById("id_cliente");
+        var id_cliente = select_cliente[select_cliente.selectedIndex].value;
+        
+        var select_factura_completo = document.getElementById("id_factura_completo");
+        var e;
+        var opt2 = document.createElement('option');
+        opt2.value = "";
+        opt2.innerHTML = "";
+        select_factura.appendChild(opt2);
+        for (e = 0; e < select_factura_completo.length; e++) {
+            if (select_factura_completo[e].getAttribute("data-cliente") === id_cliente){
+                var opt = document.createElement('option');
+                opt.value = select_factura_completo[e].value;
+                opt.setAttribute('data-cliente',select_factura_completo[e].getAttribute("data-cliente"));
+                opt.innerHTML = select_factura_completo[e].innerHTML;
+                select_factura.appendChild(opt);
+            }
         }
         
+        $("#id_factura").val(" ");
 
-    });
+
+    }).change();
 });

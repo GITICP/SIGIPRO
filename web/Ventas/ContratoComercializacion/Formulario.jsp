@@ -51,9 +51,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="observaciones" type="text" class="form-control" name="observaciones" value="${contrato.getObservaciones()}"
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                        <textarea id="observaciones" name="observaciones" class="form-control">${contrato.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>

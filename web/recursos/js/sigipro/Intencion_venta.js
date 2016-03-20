@@ -10,6 +10,17 @@ $( document ).ready(function() {
   }
 });
 
+function validarProductosYSubmit(){
+    alert($('#listaProductos').val());
+    if ($('#listaProductos').val() === ""){
+        $('[data-toggle="confirmar"]').tooltip({title: "Asegúrese de agregar productos", placement: "bottom"});   
+        $('[data-toggle="confirmar"]').tooltip('show');   
+    }
+    else{
+        $('#formularioProducto').submit();
+    }
+}
+
 function eliminarProducto(idRol) {
   fila = $('#' + idRol);
   $('#seleccionProducto')

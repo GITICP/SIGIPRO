@@ -29,9 +29,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="descripcion" type="text" class="form-control" name="descripcion" value="${producto.getDescripcion()}"
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                        <textarea id="descripcion" name="descripcion" class="form-control">${producto.getDescripcion()}</textarea>
                     </div>
                 </div>
             </div>

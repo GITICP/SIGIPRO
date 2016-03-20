@@ -124,7 +124,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input id="correo_electronico" type="text" class="form-control" name="correo_electronico" value="" required
+                                <input id="correo_electronico" type="email" class="form-control" name="correo_electronico" value="" required
                                     oninvalid="setCustomValidity('Debe ingresar un nombre. ')"
                                     oninput="setCustomValidity('')">
                             </div>

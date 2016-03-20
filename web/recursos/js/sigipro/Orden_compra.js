@@ -4,16 +4,73 @@
  * and open the template in the editor.
  */
 
-
-$(function(){ /* DOM ready */ //Filtrar el select de intenciones según el cliente escogido
-    $("#id_cliente").change(function () {
-
-        var select_cliente = document.getElementById("id_cliente");
-        var indice_cliente = select_cliente.selectedIndex;
-        var opcion_cliente = select_cliente[indice_cliente].val;
+function cambiarCotizaciones(){
+            //Quitar todas las opciones del select de intenciones
+        var i;
+        var select_intencion = document.getElementById("id_cotizacion");
+        for(i=select_intencion.options.length-1;i>=0;i--)
+        {
+            select_intencion.remove(i);
+        }
         
+        //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
+        var select_cliente = document.getElementById("id_cliente");
+        var id_cliente = select_cliente[select_cliente.selectedIndex].value;
+        
+        var select_intencion_completo = document.getElementById("id_cotizacion_completo");
+        var e;
+        var opt2 = document.createElement('option');
+        opt2.value = "";
+        opt2.innerHTML = "";
+        select_intencion.appendChild(opt2);
+        for (e = 0; e < select_intencion_completo.length; e++) {
+            if (select_intencion_completo[e].getAttribute("data-cliente") === id_cliente){
+                var opt = document.createElement('option');
+                opt.value = select_intencion_completo[e].value;
+                opt.setAttribute('data-cliente',select_intencion_completo[e].getAttribute("data-cliente"));
+                opt.innerHTML = select_intencion_completo[e].innerHTML;
+                select_intencion.appendChild(opt);
+            }
+        }
+        
+        $("#id_cotizacion").val(" ");
+}
 
-    });
+$(function(){ /* DOM ready */ //
+    $("#id_cliente").change(function () {
+        //Quitar todas las opciones del select de intenciones
+        var i;
+        var select_intencion = document.getElementById("id_intencion");
+        for(i=select_intencion.options.length-1;i>=0;i--)
+        {
+            select_intencion.remove(i);
+        }
+        
+        //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
+        var select_cliente = document.getElementById("id_cliente");
+        var id_cliente = select_cliente[select_cliente.selectedIndex].value;
+        
+        var select_intencion_completo = document.getElementById("id_intencion_completo");
+        var e;
+        var opt2 = document.createElement('option');
+        opt2.value = "";
+        opt2.innerHTML = "";
+        select_intencion.appendChild(opt2);
+        for (e = 0; e < select_intencion_completo.length; e++) {
+            if (select_intencion_completo[e].getAttribute("data-cliente") === id_cliente){
+                var opt = document.createElement('option');
+                opt.value = select_intencion_completo[e].value;
+                opt.setAttribute('data-cliente',select_intencion_completo[e].getAttribute("data-cliente"));
+                opt.innerHTML = select_intencion_completo[e].innerHTML;
+                select_intencion.appendChild(opt);
+            }
+        }
+        
+        $("#id_intencion").val(" ");
+
+        cambiarCotizaciones();
+
+    }).change();
 });
 
 $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el cliente escogido

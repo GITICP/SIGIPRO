@@ -41,16 +41,29 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
+                        <select id="id_orden_completo" name="id_orden_completo" hidden>
+                            <option value=""></option>
+                            <c:forEach items="${ordenes}" var="orden">
+                            <c:choose>
+                              <c:when test="${factura.getOrden().getId_orden() == orden.getId_orden()}" >
+                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}"> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
                         <select id="id_orden" class="select2" name="id_orden"
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                             <option value=""></option>
                             <c:forEach items="${ordenes}" var="orden">
                             <c:choose>
                               <c:when test="${factura.getOrden().getId_orden() == orden.getId_orden()}" >
-                                <option value=${orden.getId_orden()} selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getId_cliente()}</option>
+                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value=${orden.getId_orden()}> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getId_cliente()}</option>
+                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}"> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -291,3 +304,5 @@
 
 
 </form>
+                        <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Factura.js"></script>

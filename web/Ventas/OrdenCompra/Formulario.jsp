@@ -40,16 +40,29 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
+                        <select id="id_cotizacion_completo" name="id_cotizacion_completo" hidden>
+                          <option value=""></option>
+                          <c:forEach items="${cotizaciones}" var="cotizacion">
+                            <c:choose>
+                              <c:when test="${orden.getCotizacion().getId_cotizacion() == cotizacion.getId_cotizacion()}" >
+                                <option value="${cotizacion.getId_cotizacion()}" data-cliente="${cotizacion.getCliente().getId_cliente()}" selected> ID: ${cotizacion.getId_cotizacion()}, Cliente: ${cotizacion.getCliente().getNombre()}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${cotizacion.getId_cotizacion()}" data-cliente="${cotizacion.getCliente().getId_cliente()}"> ID: ${cotizacion.getId_cotizacion()}, Cliente: ${cotizacion.getCliente().getNombre()}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
                         <select id="id_cotizacion" class="select2" name="id_cotizacion"
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                           <option value=""></option>
                           <c:forEach items="${cotizaciones}" var="cotizacion">
                             <c:choose>
                               <c:when test="${orden.getCotizacion().getId_cotizacion() == cotizacion.getId_cotizacion()}" >
-                                <option value="${cotizacion.getId_cotizacion()}" selected> ID: ${cotizacion.getId_cotizacion()} Cliente: ${cotizacion.getCliente().getNombre()}</option>
+                                <option value="${cotizacion.getId_cotizacion()}" data-cliente="${cotizacion.getCliente().getId_cliente()}" selected> ID: ${cotizacion.getId_cotizacion()}, Cliente: ${cotizacion.getCliente().getNombre()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value="${cotizacion.getId_cotizacion()}"> ID: ${cotizacion.getId_cotizacion()} Cliente: ${cotizacion.getCliente().getNombre()}</option>
+                                <option value="${cotizacion.getId_cotizacion()}"data-cliente="${cotizacion.getCliente().getId_cliente()}"> ID: ${cotizacion.getId_cotizacion()}, Cliente: ${cotizacion.getCliente().getNombre()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -62,7 +75,20 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="id_intencion" class="select2" name="id_intencion"
+                        <select id="id_intencion_completo" name="id_intencion_completo" hidden>
+                          <option value=''></option>
+                          <c:forEach items="${intenciones}" var="intencion">
+                            <c:choose>
+                              <c:when test="${orden.getIntencion().getId_intencion() == intencion.getId_intencion()}" >
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                        <select id="id_intencion" class="select2" name="id_intencion" required
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                          <option value=""></option>
                           <c:forEach items="${intenciones}" var="intencion">

@@ -40,6 +40,18 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
+                        <select id="id_factura_completo" name="id_factura" hidden>
+                          <c:forEach items="${facturas}" var="factura">
+                            <c:choose>
+                              <c:when test="${seguimiento.getFactura().getId_factura() == factura.getId_factura()}" >
+                                <option value="${factura.getId_factura()}" data-cliente="${factura.getCliente().getId_cliente()}" selected> ID: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${factura.getId_factura()}" data-cliente="${factura.getCliente().getId_cliente()}"> ID: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
                         <select id="id_factura" class="select2" name="id_factura" required
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                           <c:forEach items="${facturas}" var="factura">
@@ -62,9 +74,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="observaciones" type="text" class="form-control" name="observaciones" value="${seguimiento   .getObservaciones()}"
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                        <textarea id="observaciones" name="observaciones" class="form-control">${seguimiento.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>

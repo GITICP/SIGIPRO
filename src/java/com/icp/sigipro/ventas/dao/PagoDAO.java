@@ -41,6 +41,7 @@ public class PagoDAO extends DAO {
                 pago.setId_pago(rs.getInt("id_pago"));
                 pago.setFactura(fDAO.obtenerFactura(rs.getInt("id_factura")));
                 pago.setPago(rs.getInt("pago"));
+                pago.setMonto_pendiente(rs.getInt("monto_pendiente"));
                 resultado.add(pago);
 
             }
@@ -68,6 +69,7 @@ public class PagoDAO extends DAO {
                 resultado.setId_pago(rs.getInt("id_pago"));
                 resultado.setFactura(fDAO.obtenerFactura(rs.getInt("id_factura")));
                 resultado.setPago(rs.getInt("pago"));
+                resultado.setMonto_pendiente(rs.getInt("monto_pendiente"));
             }
             rs.close();
             consulta.close();
@@ -84,11 +86,12 @@ public class PagoDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.pago (id_factura, pago)"
-                    + " VALUES (?,?) RETURNING id_pago");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.pago (id_factura, pago, monto_pendiente)"
+                    + " VALUES (?,?,?) RETURNING id_pago");
 
             consulta.setInt(1, p.getFactura().getId_factura());
             consulta.setInt(2, p.getPago());
+            consulta.setInt(3, p.getMonto_pendiente());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -110,13 +113,14 @@ public class PagoDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.pago"
-                    + " SET id_factura=?, pago=?"
+                    + " SET id_factura=?, pago=?, monto_pendiente=?"
                     + " WHERE id_pago=?; "
             );
 
             consulta.setInt(1, p.getFactura().getId_factura());
             consulta.setInt(2, p.getPago());
-            consulta.setInt(3, p.getId_pago());
+            consulta.setInt(3, p.getMonto_pendiente());
+            consulta.setInt(4, p.getId_pago());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

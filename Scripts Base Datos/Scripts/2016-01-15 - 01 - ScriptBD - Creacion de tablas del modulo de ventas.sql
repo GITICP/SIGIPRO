@@ -84,7 +84,8 @@ CREATE TABLE ventas.factura(
 CREATE TABLE ventas.pago(
 	id_pago serial NOT NULL,
 	id_factura integer NOT NULL,
-	pago integer NOT NULL
+	pago integer NOT NULL,
+	monto_pendiente integer NOT NULL
 );
 CREATE TABLE ventas.reunion_produccion(
 	id_reunion serial NOT NULL,

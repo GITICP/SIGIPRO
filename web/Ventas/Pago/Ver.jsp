@@ -58,7 +58,7 @@
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${pago.getId_pago()} </td> </center> </tr>
                 <tr><td> <strong>Factura: </strong>  </td> <center> <td> ${pago.getFactura().getId_factura()}   </td> </center> </tr>
                 <tr><td> <strong>Pago: </strong>  </td> <center> <td> ${pago.getPago()}   </td> </center> </tr>
-                <tr><td> <strong>Monto Pendiente: </strong>  </td> <center> <td> ${pago.getFactura().getMonto() - pago.getPago()}   </td> </center> </tr>
+                <tr><td> <strong>Monto Pendiente: </strong>  </td> <center> <td> ${pago.getMonto_pendiente()}   </td> </center> </tr>
               </table>
               <br>
               
