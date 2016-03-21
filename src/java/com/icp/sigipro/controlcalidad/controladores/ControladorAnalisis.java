@@ -5,9 +5,9 @@
  */
 package com.icp.sigipro.controlcalidad.controladores;
 
-import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
+import com.icp.sigipro.controlcalidad.dao.AnalisisGrupoSolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.PatronDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
@@ -90,6 +90,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final int[] permisos = {540, 541, 542, 543, 544, 545, 546};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
+    private final AnalisisGrupoSolicitudDAO ags_dao = new AnalisisGrupoSolicitudDAO();
     private final ResultadoSangriaPruebaDAO resultado_spdao = new ResultadoSangriaPruebaDAO();
     private final UsuarioDAO usuariodao = new UsuarioDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
@@ -312,15 +313,17 @@ public class ControladorAnalisis extends SIGIPROServlet {
         String redireccion = "Analisis/Realizar.jsp";
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        int id_ags = Integer.parseInt(request.getParameter("id_ags"));
         request.setAttribute("id_solicitud", request.getParameter("id_solicitud"));
         request.setAttribute("id_analisis", id_analisis);
-        request.setAttribute("id_ags", request.getParameter("id_ags"));
+        request.setAttribute("id_ags", id_ags);
         request.setAttribute("lista", request.getParameter("lista"));
 
         ControlXSLT xslt;
         Analisis analisis;
 
         try {
+            AnalisisGrupoSolicitud ags = ags_dao.obtenerIdentificadorYTipoMuestra(id_ags);
             analisis = dao.obtenerAnalisis(id_analisis);
             if (id_analisis != 2147483647) {
                 xslt = controlxsltdao.obtenerControlXSLTFormulario();
@@ -339,6 +342,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             request.setAttribute("equipos", equipos);
             request.setAttribute("reactivos", reactivos);
             request.setAttribute("analisis", analisis);
+            request.setAttribute("ags", ags);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
