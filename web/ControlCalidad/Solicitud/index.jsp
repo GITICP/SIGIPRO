@@ -51,6 +51,7 @@
                                 <thead> 
                                     <tr>
                                         <th>Número de Solicitud</th>
+                                        <th>Información</th>
                                         <th>Usuario Solicitante</th>
                                         <th>Fecha de Solicitud</th>
                                         <th>Estado</th>
@@ -70,6 +71,7 @@
                                                     </div>
                                                 </a>
                                             </td>
+                                            <td>${solicitud.getDescripcion()}</td>
                                             <td>${solicitud.getUsuario_solicitante().getNombre_completo()}</td>
                                             <td>${solicitud.getFecha_solicitudAsString()}</td>
                                             <td>${solicitud.getEstado()}</td>

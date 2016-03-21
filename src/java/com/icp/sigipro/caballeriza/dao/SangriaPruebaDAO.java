@@ -6,6 +6,7 @@
 package com.icp.sigipro.caballeriza.dao;
 
 import com.icp.sigipro.caballeriza.modelos.Caballo;
+import com.icp.sigipro.caballeriza.modelos.GrupoDeCaballos;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaAJAX;
 import com.icp.sigipro.caballeriza.modelos.SangriaPruebaCaballo;
@@ -39,11 +40,12 @@ public class SangriaPruebaDAO extends DAO {
         try {
             getConexion().setAutoCommit(false);
             consulta = getConexion().prepareStatement(" INSERT INTO caballeriza.sangrias_pruebas "
-                    + " (fecha, id_usuario) "
-                    + " VALUES (?,?) RETURNING id_sangria_prueba;");
+                    + " (fecha, id_usuario, id_grupo) "
+                    + " VALUES (?,?, ?) RETURNING id_sangria_prueba;");
 
             consulta.setDate(1, sp.getFecha());
             consulta.setInt(2, sp.getUsuario().getID());
+            consulta.setInt(3, sp.getGrupo().getId_grupo_caballo());
 
             resultadoConsulta = consulta.executeQuery();
 
@@ -178,11 +180,12 @@ public class SangriaPruebaDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo, rasp.hematocrito, rasp.hemoglobina, i.id_informe, s.id_solicitud, s.numero_solicitud "
+                    " SELECT sp.*, csp.*, c.numero, c.nombre, u.nombre_completo, rasp.hematocrito, rasp.hemoglobina, i.id_informe, s.id_solicitud, s.numero_solicitud, gc.nombre as nombre_grupo "
                     + " FROM caballeriza.sangrias_pruebas sp "
                     + "     INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario "
                     + "     INNER JOIN caballeriza.sangrias_pruebas_caballos csp ON sp.id_sangria_prueba = csp.id_sangria_prueba "
                     + "     INNER JOIN caballeriza.caballos c ON csp.id_caballo = c.id_caballo "
+                    + "     INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = sp.id_grupo "
                     + "     LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba rasp ON csp.id_resultado = rasp.id_resultado_analisis_sp "
                     + "     LEFT JOIN control_calidad.informes i ON i.id_informe = sp.id_informe "
                     + "     LEFT JOIN control_calidad.solicitudes s ON s.id_solicitud = i.id_solicitud "
@@ -199,6 +202,10 @@ public class SangriaPruebaDAO extends DAO {
                 u.setId_usuario(rs.getInt("id_usuario"));
                 u.setNombreCompleto(rs.getString("nombre_completo"));
                 sp.setUsuario(u);
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setId_grupo_caballo(rs.getInt("id_grupo"));
+                g.setNombre(rs.getString("nombre_grupo"));
+                sp.setGrupo(g);
                 
                 if (rs.getInt("id_informe") != 0) {
                     Informe i = new Informe();

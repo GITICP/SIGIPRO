@@ -39,10 +39,14 @@ public class AsociacionSangria extends AsociacionSolicitud {
 
     @Override
     public void asociar(HttpServletRequest request) {
-        dia = Integer.parseInt(request.getParameter("dia"));
         int id_sangria = Integer.parseInt(request.getParameter("sangria"));
-        sangria = new Sangria();
-        sangria.setId_sangria(id_sangria);
+        try {
+            sangria = sangria_dao.obtenerSangria(id_sangria);
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        dia = Integer.parseInt(request.getParameter("dia"));
+        solicitud.setDescripcion("Sangría grupo " + sangria.getGrupo().getNombre() + ", día " + dia);
     }
 
     @Override

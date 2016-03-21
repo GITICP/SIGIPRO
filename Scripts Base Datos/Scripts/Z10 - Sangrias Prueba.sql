@@ -14,6 +14,7 @@
         id_sangria_prueba serial NOT NULL,
         id_informe integer,
         id_usuario integer NOT NULL,
+        id_grupo integer NOT NULL,
         fecha date NOT NULL
     );
 
@@ -69,6 +70,7 @@
     ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT fk_resultados_sp_usuarios FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios (id_usuario);
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario);
+    ALTER TABLE ONLY caballeriza.sangrias_pruebas ADD CONSTRAINT fk_id_grupo FOREIGN KEY (id_grupo) REFERENCES caballeriza.grupos_de_caballos (id_grupo_de_caballo);
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_sangria_prueba FOREIGN KEY (id_sangria_prueba) REFERENCES caballeriza.sangrias_pruebas(id_sangria_prueba);
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos ADD CONSTRAINT fk_id_caballo FOREIGN KEY (id_caballo) REFERENCES caballeriza.caballos(id_caballo);

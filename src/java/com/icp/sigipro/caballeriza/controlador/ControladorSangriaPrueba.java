@@ -163,11 +163,16 @@ public class ControladorSangriaPrueba extends SIGIPROServlet {
 
     private SangriaPrueba construirObjeto(HttpServletRequest request) throws SIGIPROException {
         SangriaPrueba sp = new SangriaPrueba();
+        GrupoDeCaballos g = new GrupoDeCaballos();
+        int id_grupo;
         
         try {
             Date fecha;
             fecha = helper_fechas.formatearFecha(request.getParameter("fecha_extraccion"));
             sp.setFecha(fecha);
+            id_grupo = Integer.parseInt(request.getParameter("grupo"));
+            g.setId_grupo_caballo(id_grupo);
+            sp.setGrupo(g);
         } catch (ParseException p_ex) {
 
         }

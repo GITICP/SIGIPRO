@@ -25,6 +25,7 @@ public class SangriaPrueba extends IModelo {
     private Date fecha;
     private List<SangriaPruebaCaballo> lista_sangrias_prueba_caballo;
     private Informe informe;
+    private GrupoDeCaballos grupo;
 
     public SangriaPrueba() {
     }
@@ -72,6 +73,14 @@ public class SangriaPrueba extends IModelo {
 
     public void setInforme(Informe informe) {
         this.informe = informe;
+    }
+
+    public GrupoDeCaballos getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(GrupoDeCaballos grupo) {
+        this.grupo = grupo;
     }
 
     public String parseJSON() {

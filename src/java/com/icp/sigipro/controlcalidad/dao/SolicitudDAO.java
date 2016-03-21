@@ -36,12 +36,13 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado) "
-                    + " VALUES (?,?,?,?) RETURNING id_solicitud");
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado,descripcion) "
+                    + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
             consulta.setString(1, solicitud.getNumero_solicitud());
             consulta.setInt(2, solicitud.getUsuario_solicitante().getId_usuario());
             consulta.setTimestamp(3, solicitud.getFecha_solicitud());
             consulta.setString(4, solicitud.getEstado());
+            consulta.setString(5, solicitud.getDescripcion());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
@@ -235,7 +236,7 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
+            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion "
                     + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + "WHERE s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial'; ");
             rs = consulta.executeQuery();
@@ -249,6 +250,7 @@ public class SolicitudDAO extends DAO {
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
                 solicitud.setUsuario_solicitante(usuario);
                 solicitud.setEstado(rs.getString("estado"));
+                solicitud.setDescripcion(rs.getString("descripcion"));
                 resultado.add(solicitud);
             }
         } catch (Exception ex) {
@@ -266,7 +268,7 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion "
+            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion, s.descripcion "
                     + "FROM control_calidad.solicitudes as s "
                     + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
@@ -279,6 +281,7 @@ public class SolicitudDAO extends DAO {
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
                 solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
                 solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                solicitud.setDescripcion(rs.getString("descripcion"));
                 Usuario usuario = new Usuario();
                 usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));

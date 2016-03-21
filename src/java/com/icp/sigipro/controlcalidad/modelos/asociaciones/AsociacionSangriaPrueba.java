@@ -37,7 +37,15 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
     @Override
     public void asociar(HttpServletRequest request) {
         String id_sangria_prueba_str = request.getParameter("sangria_prueba");
-        int id_sangria_prueba = Integer.parseInt(id_sangria_prueba_str);
+        int id_sangria_prueba = Integer.parseInt(id_sangria_prueba_str);        
+        try {
+            sangria_prueba = sangria_prueba_dao.obtenerSangriaPrueba(id_sangria_prueba);
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        solicitud.setDescripcion("Sangría de prueba grupo " + sangria_prueba.getGrupo().getNombre());
+        
+
         sangria_prueba = new SangriaPrueba();
         sangria_prueba.setId_sangria_prueba(id_sangria_prueba);
     }
