@@ -71,6 +71,9 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -80,6 +83,9 @@
                                                                     <option value="text" selected>Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -89,6 +95,9 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea" selected>Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -98,6 +107,45 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha" selected>Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('hora')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="hora" selected>Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('blanco')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco" selected>Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('imagen')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen" selected>Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -107,6 +155,9 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc" selected>Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -116,19 +167,25 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria" selected>Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
-                                                                    <c:if test="${diccionario.get(i).get('tipo').equals('lote')}">
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('lote')}">
                                                                     <option value="number">Número</option>
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote" selected>Referencia a Lote de Producción</option>
-                                                                    </c:if>
+                                                                </c:if>
                                                             </select>
                                                         </div>
                                                     </div>

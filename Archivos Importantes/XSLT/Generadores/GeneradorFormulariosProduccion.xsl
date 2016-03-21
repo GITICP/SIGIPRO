@@ -135,6 +135,84 @@
         
     </xsl:template>
     
+    <!-- Campo de texto fecha -->
+    <xsl:template match="campo[tipo = 'hora']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control sigiproDatePicker" name="{$nombre-campo}" data-date-format="HH:MM" value="{$valor}"></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <!-- Campo de texto fecha -->
+    <xsl:template match="campo[tipo = 'blanco']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-12">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <!-- Campo de texto fecha -->
+    <xsl:template match="campo[tipo = 'imagen']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input class='clearable' type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
+                                   oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
+                                   onchange="previewFile()" /> <button type="button" id='boton_Cancelar' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen()"> Borrar</button>
+                                   <div>
+                                       <img name='{$nombre-campo}' id="{$nombre-campo}" src='' height="200" alt=""/>
+                                   </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    
     <xsl:template match="campo[tipo = 'sangria']">
         
         <!-- Parámetros -->
