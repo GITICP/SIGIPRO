@@ -50,6 +50,7 @@
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
+                                        <th class="columna-escondida">ID</th>
                                         <th>Número de Solicitud</th>
                                         <th>Información</th>
                                         <th>Usuario Solicitante</th>
@@ -64,6 +65,7 @@
                                     <c:forEach items="${listaSolicitudes}" var="solicitud">
 
                                         <tr id ="${solicitud.getId_solicitud()}">
+                                            <td hidden="true">${solicitud.getId_solicitud()}</td>
                                             <td>
                                                 <a href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">
                                                     <div style="height:100%;width:100%">
