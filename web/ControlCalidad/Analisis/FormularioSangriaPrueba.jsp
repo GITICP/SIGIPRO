@@ -179,66 +179,129 @@
                                 </div>
 
                                 <div class="row">
-
                                     <div class="col-md-6">
-                                        <label for="wbc" class="control-label">WBC</label>
+                                        <label for="Glóbulos blancos (WBC)( x 1000/µL)_1" class="control-label">Glóbulos blancos (WBC)( x 1000/µL)</label>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input id="WBC" maxlength="45" placeholder="0.0" class="form-control campo-numero" name="wbc"
-                                                           required
-                                                           oninvalid="setCustomValidity('Este campo es requerido ')"
-                                                           oninput="setCustomValidity('')" ><p id="errorPrecio" class="error-form"></p>
+                                                    <input type="number" name="wbc" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Glóbulos Rojos (RBC)( x 1000000/µL)_2" class="control-label">Glóbulos Rojos (RBC)( x 1000000/µL)</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="rbc" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Hemoglobina (HGB)g/dL_3" class="control-label">Hemoglobina (HGB)g/dL</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="hemoglobina" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Hematocrito (HCT)%_4" class="control-label">Hematocrito (HCT)%</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="hematocrito" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Volumen corpuscular media (MCV )fL_5" class="control-label">Volumen corpuscular media (MCV )fL</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="mcv" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Hemoglobina corpuscular Media (MCH) pg_6" class="control-label">Hemoglobina corpuscular Media (MCH) pg</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="mch" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Conc  HGB Corpuscular Media (MCHC) (g/dL)_7" class="control-label">Conc  HGB Corpuscular Media (MCHC) (g/dL)</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="mchc" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Plaquetas (PLT)( x 1000/µL)_8" class="control-label">Plaquetas (PLT)( x 1000/µL)</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="plt" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Linfocitos LYM%_9" class="control-label">Linfocitos LYM%</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="lym" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Otros %_10" class="control-label">Otros %</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="otros" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Número de Linfocitos( x 1000/µL)_11" class="control-label">Número de Linfocitos( x 1000/µL)</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="linfocitos" class="form-control" value="" step="any">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Número de otros ( x 1000/µL)_12" class="control-label">Número de otros ( x 1000/µL)</label>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="input-group">
+                                                    <input type="number" name="num_otros" class="form-control" value="" step="any">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div class="col-md-6"></div>
                                     <div class="col-md-6">
-                                        <label for="rbc" class="control-label">RBC</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <input id="RBC" maxlength="45" placeholder="0.0" class="form-control campo-numero" name="rbc"
-                                                           required
-                                                           oninvalid="setCustomValidity('Este campo es requerido ')"
-                                                           oninput="setCustomValidity('')" ><p id="errorPrecio" class="error-form"></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-md-6">
-                                        <label for="precio" class="control-label">Hemoglobina</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <input id="hemoglobina" maxlength="45" placeholder="0.0" class="form-control campo-numero" name="hemoglobina"
-                                                           required
-                                                           oninvalid="setCustomValidity('Este campo es requerido ')"
-                                                           oninput="setCustomValidity('')" ><p id="errorPrecio" class="error-form"></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label for="precio" class="control-label">Hematocrito</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <input id="hematocrito" maxlength="45" placeholder="0.0" class="form-control campo-numero" name="hematocrito"
-                                                           required
-                                                           oninvalid="setCustomValidity('Este campo es requerido ')"
-                                                           oninput="setCustomValidity('')" ><p id="errorPrecio" class="error-form"></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
                                         <label for="descripcion" class="control-label">Observaciones</label>
                                         <div class="form-group">
                                             <div class="col-sm-12">
@@ -251,37 +314,39 @@
 
                                 </div>
 
-                                <div class="form-group">
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                                        <c:choose>
-                                            <c:when test= "${accion_especifica.equals('Editar')}">
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Realizar Análisis</button>
-                                            </c:otherwise>
-                                        </c:choose>    
-                                    </div>
-                                </div>
-                            </form>
-
                         </div>
+
+                        <div class="form-group">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                                <c:choose>
+                                    <c:when test= "${accion_especifica.equals('Editar')}">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Realizar Análisis</button>
+                                    </c:otherwise>
+                                </c:choose>    
+                            </div>
+                        </div>
+                        </form>
+
                     </div>
-                    <!-- END WIDGET TICKET TABLE -->
                 </div>
-                <!-- /main-content -->
+                <!-- END WIDGET TICKET TABLE -->
             </div>
-            <!-- /main -->
+            <!-- /main-content -->
         </div>
+        <!-- /main -->
+    </div>
 
-    </jsp:attribute>
+</jsp:attribute>
 
-    <jsp:attribute name="scripts">
+<jsp:attribute name="scripts">
 
-        <script src="/SIGIPRO/recursos/js/sigipro/Analisis.js" type="text/javascript"></script>
+    <script src="/SIGIPRO/recursos/js/sigipro/Analisis.js" type="text/javascript"></script>
 
-    </jsp:attribute>
+</jsp:attribute>
 
 </t:plantilla_general>
 

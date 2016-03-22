@@ -40,17 +40,26 @@ public class ResultadoSangriaPruebaDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " INSERT INTO control_calidad.resultados_analisis_sangrias_prueba "
-                  + " (id_ags,wbc,rbc,hematocrito,hemoglobina,fecha,id_usuario,observaciones) VALUES (?,?,?,?,?,?,?,?) RETURNING id_resultado_analisis_sp;" 
+                  + " (id_ags,wbc,rbc,hematocrito,hemoglobina,fecha,id_usuario,observaciones,mcv,mch,mchc,plt,lym,otros,linfocitos,num_otros) "
+                  + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id_resultado_analisis_sp;" 
             );
             
             consulta.setInt(1, resultado_sp.getAgs().getId_analisis_grupo_solicitud());
-            consulta.setString(2, resultado_sp.getWbc());
-            consulta.setString(3, resultado_sp.getRbc());
+            consulta.setFloat(2, resultado_sp.getWbc());
+            consulta.setFloat(3, resultado_sp.getRbc());
             consulta.setFloat(4, resultado_sp.getHematocrito());
             consulta.setFloat(5, resultado_sp.getHemoglobina());
             consulta.setDate(6, resultado_sp.getFecha());
             consulta.setInt(7, resultado_sp.getUsuario().getId_usuario());
             consulta.setString(8, resultado_sp.getObservaciones());
+            consulta.setFloat(9, resultado_sp.getMcv());
+            consulta.setFloat(10, resultado_sp.getMch());
+            consulta.setFloat(11, resultado_sp.getMchc());
+            consulta.setFloat(12, resultado_sp.getPlt());
+            consulta.setFloat(13, resultado_sp.getLym());
+            consulta.setFloat(14, resultado_sp.getOtros());
+            consulta.setFloat(15, resultado_sp.getLinfocitos());
+            consulta.setFloat(16, resultado_sp.getNum_otros());
             
             rs = consulta.executeQuery();
             
@@ -126,8 +135,16 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                 resultado.setId_resultado(rs.getInt("id_resultado_analisis_sp"));
                 resultado.setHematocrito(rs.getFloat("hematocrito"));
                 resultado.setHemoglobina(rs.getFloat("hemoglobina"));
-                resultado.setRbc(rs.getString("rbc"));
-                resultado.setWbc(rs.getString("wbc"));
+                resultado.setRbc(rs.getFloat("rbc"));
+                resultado.setWbc(rs.getFloat("wbc"));
+                resultado.setMcv(rs.getFloat("mcv"));
+                resultado.setMch(rs.getFloat("mch"));
+                resultado.setMchc(rs.getFloat("mchc"));
+                resultado.setPlt(rs.getFloat("plt"));
+                resultado.setLym(rs.getFloat("lym"));
+                resultado.setOtros(rs.getFloat("otros"));
+                resultado.setLinfocitos(rs.getFloat("linfocitos"));
+                resultado.setNum_otros(rs.getFloat("num_otros"));
                 resultado.setRepeticion(rs.getInt("repeticion"));
                 resultado.setObservaciones(rs.getString("observaciones"));
 

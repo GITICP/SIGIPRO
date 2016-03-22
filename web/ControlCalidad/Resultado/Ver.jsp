@@ -52,10 +52,18 @@
                                 <c:otherwise>
                                     <div class="widget-content">
                                         <table class="tabla-ver">
-                                            <tr><td> <strong>RBC: </strong></td> <td>${resultado.getRbc()} </td></tr>
-                                            <tr><td> <strong>WBC: </strong></td> <td>${resultado.getWbc()} </td></tr>
-                                            <tr><td> <strong>Hematocrito: </strong></td> <td>${resultado.getHematocrito()} </td></tr>
-                                            <tr><td> <strong>Hemoglobina: </strong></td> <td>${resultado.getHemoglobina()} </td></tr>
+                                            <tr><td> <strong>Glóbulos Rojos (RBC)( x 1000000/µL): </strong></td> <td>${resultado.getRbc()} </td></tr>
+                                            <tr><td> <strong>Glóbulos blancos (WBC)( x 1000/µL): </strong></td> <td>${resultado.getWbc()} </td></tr>
+                                            <tr><td> <strong>Hematocrito (HCT)%: </strong></td> <td>${resultado.getHematocrito()} </td></tr>
+                                            <tr><td> <strong>Hemoglobina (HGB)g/dL: </strong></td> <td>${resultado.getHemoglobina()} </td></tr>
+                                            <tr><td> <strong>Volumen corpuscular media (MCV )fL: </strong></td> <td>${resultado.getMcv()} </td></tr>
+                                            <tr><td> <strong>Hemoglobina corpuscular Media (MCH) pg: </strong></td> <td>${resultado.getMch()} </td></tr>
+                                            <tr><td> <strong>Conc  HGB Corpuscular Media (MCHC) (g/dL): </strong></td> <td>${resultado.getMchc()} </td></tr>
+                                            <tr><td> <strong>Otros %: </strong></td> <td>${resultado.getOtros()} </td></tr>
+                                            <tr><td> <strong>Número de Linfocitos( x 1000/µL): </strong></td> <td>${resultado.getLinfocitos()} </td></tr>
+                                            <tr><td> <strong>Linfocitos LYM%: </strong></td> <td>${resultado.getLym()} </td></tr>
+                                            <tr><td> <strong>Número de otros ( x 1000/µL): </strong></td> <td>${resultado.getNum_otros()} </td></tr>
+                                            <tr><td> <strong>Plaquetas (PLT)( x 1000/µL): </strong></td> <td>${resultado.getPlt()} </td></tr>
                                             <tr><td> <strong>Repetición: </strong></td> <td>${resultado.getRepeticion()} </td></tr>
                                             <tr><td> <strong>Observaciones:</strong></td> <td>${resultado.getObservaciones()}</td></tr>
                                         </table>
