@@ -583,8 +583,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
 
             resultado_spdao.insertarResultadoSangriaPrueba(resultado_sp);
-
-            //bitacora.setBitacora(resultado_sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
+            bitacora.setBitacora(resultado_sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO_SP, request.getRemoteAddr());
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
             try {
                 SolicitudCC s = solicituddao.obtenerSolicitud(resultado_sp.getAgs().getGrupo().getSolicitud().getId_solicitud());
@@ -787,6 +786,16 @@ public class ControladorAnalisis extends SIGIPROServlet {
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));
             resultado.setAgs(ags);
+
+            String[] equipos_utilizados = this.obtenerParametros("equipos");
+            String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+            String[] controles_utilizados = this.obtenerParametros("controles");
+            String[] patrones_utilizados = this.obtenerParametros("patrones");
+            
+            resultado.setEquipos(equipos_utilizados);
+            resultado.setReactivos(reactivos_utilizados);
+            resultado.setPatrones(patrones_utilizados);
+            resultado.setControles(controles_utilizados);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

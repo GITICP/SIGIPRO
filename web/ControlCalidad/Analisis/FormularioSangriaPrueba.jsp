@@ -40,9 +40,10 @@
                         ${mensaje}
                         <div class="widget-content">
 
-                            <form method="post" class="form-horizontal" action="Analisis" autocomplete="off" enctype='multipart/form-data'>
-                                <input type="hidden" value="realizar_sp" name="accion" />
+                            <form method="post" class="form-horizontal" action="${(accion == 'Editar' ? 'Resultado' : 'Analisis')}" autocomplete="off" enctype='multipart/form-data'>
+                                <input type="hidden" value="${(accion == 'Editar') ? "editar_sp" : "realizar_sp"}" name="accion" />
                                 <input type="hidden" value="${id_analisis}" name="id_analisis" />
+                                <input type="hidden" value="${resultado.getId_resultado()}" name="id_resultado" />
                                 <input type="hidden" value="${id_ags}" name="id_ags" />
                                 <c:if test="${lista != null}">
                                     <input type="hidden" value="true" name="redirect_lista" />
@@ -184,7 +185,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="wbc" class="form-control" value="" step="any">
+                                                    <input type="number" name="wbc" class="form-control" value="${resultado.getWbc()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -194,7 +195,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="rbc" class="form-control" value="" step="any">
+                                                    <input type="number" name="rbc" class="form-control" value="${resultado.getRbc()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -204,7 +205,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="hemoglobina" class="form-control" value="" step="any">
+                                                    <input type="number" name="hemoglobina" class="form-control" value="${resultado.getHemoglobina()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -214,7 +215,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="hematocrito" class="form-control" value="" step="any">
+                                                    <input type="number" name="hematocrito" class="form-control" value="${resultado.getHematocrito()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -224,7 +225,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="mcv" class="form-control" value="" step="any">
+                                                    <input type="number" name="mcv" class="form-control" value="${resultado.getMcv()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -234,7 +235,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="mch" class="form-control" value="" step="any">
+                                                    <input type="number" name="mch" class="form-control" value="${resultado.getMch()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -244,7 +245,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="mchc" class="form-control" value="" step="any">
+                                                    <input type="number" name="mchc" class="form-control" value="${resultado.getMchc()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -254,7 +255,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="plt" class="form-control" value="" step="any">
+                                                    <input type="number" name="plt" class="form-control" value="${resultado.getPlt()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -264,7 +265,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="lym" class="form-control" value="" step="any">
+                                                    <input type="number" name="lym" class="form-control" value="${resultado.getLym()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +275,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="otros" class="form-control" value="" step="any">
+                                                    <input type="number" name="otros" class="form-control" value="${resultado.getOtros()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -284,7 +285,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="linfocitos" class="form-control" value="" step="any">
+                                                    <input type="number" name="linfocitos" class="form-control" value="${resultado.getLinfocitos()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -294,7 +295,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="num_otros" class="form-control" value="" step="any">
+                                                    <input type="number" name="num_otros" class="form-control" value="${resultado.getNum_otros()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -306,7 +307,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones"></textarea>
+                                                    <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones">${resultado.getObservaciones()}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -320,7 +321,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
                                 <c:choose>
-                                    <c:when test= "${accion_especifica.equals('Editar')}">
+                                    <c:when test= "${accion == 'Editar'}">
                                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                                     </c:when>
                                     <c:otherwise>

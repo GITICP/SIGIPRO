@@ -19,6 +19,7 @@ import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Patron;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -83,6 +84,7 @@ public class ControladorResultado extends SIGIPROServlet {
     private final ReactivoDAO reactivodao = new ReactivoDAO();
     private final SolicitudDAO solicituddao = new SolicitudDAO();
     private final PatronDAO patrondao = new PatronDAO();
+    private final ResultadoSangriaPruebaDAO sangriapruebadao = new ResultadoSangriaPruebaDAO();
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
     private String ubicacion;
 
@@ -99,6 +101,7 @@ public class ControladorResultado extends SIGIPROServlet {
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("editar");
+            add("editar_sp");
         }
     };
 
@@ -183,23 +186,34 @@ public class ControladorResultado extends SIGIPROServlet {
         String redireccion = "Resultado/Editar.jsp";
 
         int id_resultado = Integer.parseInt(request.getParameter("id_resultado"));
+        int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
 
         ControlXSLT xslt;
         Resultado resultado;
         Analisis analisis;
 
         try {
-            xslt = controlxsltdao.obtenerControlXSLTFormulario();
-            resultado = dao.obtenerResultado(id_resultado);
-            analisis = analisisdao.obtenerAnalisis(resultado.getAgs().getAnalisis().getId_analisis());
-
-            SolicitudCC solicitud = resultado.getAgs().getGrupo().getSolicitud();
-
-            String formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
-
-            List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
-            List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
+            List<Equipo> equipos;
+            List<Reactivo> reactivos;
+            String formulario = null;
+            SolicitudCC solicitud = null;
+            
+            if (id_analisis != Integer.MAX_VALUE) {
+                xslt = controlxsltdao.obtenerControlXSLTFormulario();
+                resultado = dao.obtenerResultado(id_resultado);
+                analisis = analisisdao.obtenerAnalisis(resultado.getAgs().getAnalisis().getId_analisis());
+                solicitud = resultado.getAgs().getGrupo().getSolicitud();
+                formulario = helper_transformaciones.transformar(xslt, resultado.getDatos());
+            } else {
+                request.setAttribute("accion", "Editar");
+                resultado = sangriapruebadao.obtenerResultadoSangriaPrueba(id_resultado);
+                analisis = analisisdao.obtenerAnalisis(id_analisis);
+                redireccion = "/ControlCalidad/Analisis/FormularioSangriaPrueba.jsp";
+            }
+            
             List<List<Patron>> patrones_controles = patrondao.obtenerPatronesRealizarAnalisis();
+            equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
+            reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
 
             request.setAttribute("patrones", patrones_controles.get(0));
             request.setAttribute("controles", patrones_controles.get(1));
@@ -362,7 +376,42 @@ public class ControladorResultado extends SIGIPROServlet {
 
         this.redireccionar(request, response, redireccion);
     }
+    
+    protected void postEditar_sp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(547, request);
 
+        String redireccion = "/ControlCalidad/Analisis/FormularioSangriaPrueba.jsp";
+
+        try {
+            ResultadoSangriaPrueba resultado = construirObjectoSangriaPrueba(request);            
+
+            sangriapruebadao.editarResultadoSangriaPrueba(resultado);
+            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO_SP, request.getRemoteAddr());
+
+            redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
+            try {
+                SolicitudCC s = solicituddao.obtenerSolicitud(resultado.getAgs().getGrupo().getSolicitud().getId_solicitud());
+                request.setAttribute("solicitud", s);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
+            }
+
+            request.setAttribute("mensaje", helper.mensajeDeExito("Resultado editado correctamente."));
+
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+        }
+
+        this.redireccionar(request, response, redireccion);
+        
+    }
+   
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private String getFileExtension(String fileName) {
@@ -371,6 +420,50 @@ public class ControladorResultado extends SIGIPROServlet {
         } else {
             return "";
         }
+    }
+    
+    private ResultadoSangriaPrueba construirObjectoSangriaPrueba(HttpServletRequest request) {
+        ResultadoSangriaPrueba resultado = new ResultadoSangriaPrueba();
+
+        try {
+            Usuario u = new Usuario();
+            int id_usuario = (int) request.getSession().getAttribute("idusuario");
+            u.setIdUsuario(id_usuario);
+            
+            resultado.setId_resultado(Integer.parseInt(this.obtenerParametro("id_resultado")));
+            resultado.setUsuario(u);
+            resultado.setHematocrito(Float.parseFloat(this.obtenerParametro("hematocrito")));
+            resultado.setHemoglobina(Float.parseFloat(this.obtenerParametro("hemoglobina")));
+            resultado.setRbc(Float.parseFloat(this.obtenerParametro("rbc")));
+            resultado.setWbc(Float.parseFloat(this.obtenerParametro("wbc")));
+            resultado.setMch(Float.parseFloat(this.obtenerParametro("mch")));
+            resultado.setMchc(Float.parseFloat(this.obtenerParametro("mchc")));
+            resultado.setLym(Float.parseFloat(this.obtenerParametro("lym")));
+            resultado.setLinfocitos(Float.parseFloat(this.obtenerParametro("linfocitos")));
+            resultado.setNum_otros(Float.parseFloat(this.obtenerParametro("num_otros")));
+            resultado.setPlt(Float.parseFloat(this.obtenerParametro("plt")));
+            resultado.setMcv(Float.parseFloat(this.obtenerParametro("mcv")));
+            resultado.setOtros(Float.parseFloat(this.obtenerParametro("otros")));
+            resultado.setFecha(helper_fechas.getFecha_hoy());
+            AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+            ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));
+            resultado.setAgs(ags);
+            resultado.setUsuario(u);
+
+            String[] equipos_utilizados = this.obtenerParametros("equipos");
+            String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+            String[] controles_utilizados = this.obtenerParametros("controles");
+            String[] patrones_utilizados = this.obtenerParametros("patrones");
+            
+            resultado.setEquipos(equipos_utilizados);
+            resultado.setReactivos(reactivos_utilizados);
+            resultado.setPatrones(patrones_utilizados);
+            resultado.setControles(controles_utilizados);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return resultado;
     }
 
     // </editor-fold>
