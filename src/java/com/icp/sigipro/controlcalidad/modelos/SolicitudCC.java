@@ -143,7 +143,7 @@ public class SolicitudCC extends Asociable {
     public String getFecha_recibidoAsString() {
         return formatearFecha(fecha_recibido);
     }
-    
+
     public String getFecha_cierreAsString() {
         return formatearFecha(fecha_cierre);
     }
@@ -225,18 +225,20 @@ public class SolicitudCC extends Asociable {
         if (asociacion != null) {
             asociacion.asociar(request);
         } else {
-            int i = 0;
-            descripcion = "Muestras ";
-            while (i <= 2 && i < this.analisis_solicitud.size()) {
-                AnalisisGrupoSolicitud ags = analisis_solicitud.get(i);
-                List<Muestra> muestras = ags.getGrupo().getGrupos_muestras();
-                descripcion += muestras.get(0).getIdentificador() + ", ";
-                i++;
-            }
-            if (this.analisis_solicitud.size() <= 2) {
-                descripcion = descripcion.substring(0, descripcion.length() - 2);
-            } else {
-                descripcion += "...";
+            if (this.analisis_solicitud != null) {
+                int i = 0;
+                descripcion = "Muestras ";
+                while (i <= 2 && i < this.analisis_solicitud.size()) {
+                    AnalisisGrupoSolicitud ags = analisis_solicitud.get(i);
+                    List<Muestra> muestras = ags.getGrupo().getGrupos_muestras();
+                    descripcion += muestras.get(0).getIdentificador() + ", ";
+                    i++;
+                }
+                if (this.analisis_solicitud.size() <= 2) {
+                    descripcion = descripcion.substring(0, descripcion.length() - 2);
+                } else {
+                    descripcion += "...";
+                }
             }
         }
     }
@@ -246,25 +248,25 @@ public class SolicitudCC extends Asociable {
             asociacion.asociar(rs);
         }
     }
-    
+
     public void prepararEditarSolicitud(HttpServletRequest request) throws SIGIPROException {
         if (asociacion != null) {
             asociacion.prepararEditarSolicitud(request);
         }
     }
-    
+
     public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         if (asociacion != null) {
             asociacion.prepararGenerarInforme(request);
         }
     }
-    
+
     public void prepararEditarInforme(HttpServletRequest request) throws SIGIPROException {
         if (asociacion != null) {
             asociacion.prepararEditarInforme(request);
         }
     }
-    
+
     public List<PreparedStatement> obtenerConsultasEditarInforme(Connection conexion) throws SQLException {
         List<PreparedStatement> resultado = new ArrayList<>();
         if (asociacion != null) {
@@ -289,7 +291,7 @@ public class SolicitudCC extends Asociable {
         }
 
     }
-    
+
     @Override
     public boolean tieneTipoAsociacion() {
         return asociacion != null;
@@ -302,7 +304,7 @@ public class SolicitudCC extends Asociable {
         }
         return resultado;
     }
-    
+
     public List<PreparedStatement> resetear(Connection conexion) throws SQLException {
         List<PreparedStatement> resultado = new ArrayList<>();
         if (asociacion != null) {
