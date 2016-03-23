@@ -160,7 +160,7 @@ function agregarMuestra() {
     $("#identificadores_" + contador).select2({
         minimumResultsForSearch: -1,
         tags: true,
-        tokenSeparators: [',', ' ']
+        tokenSeparators: [',', '+', '.']
     }).on("change", function (e) {
         $(".select2-drop").hide();
     }).on("select2-opening", function () {
@@ -168,7 +168,7 @@ function agregarMuestra() {
     }).on("select2-open", function () {
         $(".select2-drop").hide();
     });
-
+   
     $(".tipomuestra_" + contador).select2();
 
     $('#datepicker_' + contador).datepicker({startDate: '-0d', format: 'dd/mm/yyyy'})
