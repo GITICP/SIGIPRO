@@ -385,14 +385,8 @@ public class ResultadoSangriaPruebaDAO extends DAO {
 
             consulta.executeUpdate();
 
-            consulta_solicitud = getConexion().prepareStatement(
-                    " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
-                    + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
-                    + " WHERE ags.id_analisis_grupo_solicitud = ?; "
-            );
-
             delete_reactivos = getConexion().prepareStatement(
-                    " DELETE FROM control_calidad.reactivos_resultado where id_resultado = ?;"
+                    " DELETE FROM control_calidad.reactivos_resultado_sp where id_resultado_sp = ?;"
             );
             delete_reactivos.setInt(1, resultado_sp.getId_resultado());
             delete_reactivos.execute();
@@ -459,6 +453,12 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                 insert_patrones_controles.executeBatch();
 
             }
+            
+            consulta_solicitud = getConexion().prepareStatement(
+                    " SELECT g.id_solicitud from control_calidad.analisis_grupo_solicitud ags "
+                    + " INNER JOIN control_calidad.grupos g ON ags.id_grupo = g.id_grupo "
+                    + " WHERE ags.id_analisis_grupo_solicitud = ?; "
+            );
 
             consulta_solicitud.setInt(1, resultado_sp.getAgs().getId_analisis_grupo_solicitud());
 
@@ -475,6 +475,7 @@ public class ResultadoSangriaPruebaDAO extends DAO {
 
         } catch (SQLException sql_ex) {
             sql_ex.printStackTrace();
+            sql_ex.getNextException().printStackTrace(); 
         } finally {
             cerrarSilencioso(delete_reactivos);
             cerrarSilencioso(insert_reactivos);

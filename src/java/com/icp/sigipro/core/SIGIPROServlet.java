@@ -10,6 +10,7 @@ import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
 import com.icp.sigipro.utilidades.HelperArchivos;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelperPermisos;
+import com.icp.sigipro.utilidades.HelperVarios;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -41,6 +42,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
     protected final HelperPermisos helper_permisos = HelperPermisos.getSingletonHelperPermisos();
     protected final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     protected final HelperArchivos helper_archivos = HelperArchivos.getSingletonHelperArchivos();
+    protected final HelperVarios helper_varios = HelperVarios.getSingletonHelperVarios();
     protected List<FileItem> parametros;
 
     @Override

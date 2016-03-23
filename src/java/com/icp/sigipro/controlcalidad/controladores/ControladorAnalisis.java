@@ -330,6 +330,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 String formulario = helper_transformaciones.transformar(xslt, analisis.getEstructura());
                 request.setAttribute("cuerpo_formulario", formulario);
             } else {
+                request.setAttribute("resultado", new ResultadoSangriaPrueba());
                 redireccion = "Analisis/FormularioSangriaPrueba.jsp";
             }
  
@@ -770,18 +771,18 @@ public class ControladorAnalisis extends SIGIPROServlet {
             int id_usuario = (int) request.getSession().getAttribute("idusuario");
             u.setIdUsuario(id_usuario);
             resultado.setUsuario(u);
-            resultado.setHematocrito(Float.parseFloat(this.obtenerParametro("hematocrito")));
-            resultado.setHemoglobina(Float.parseFloat(this.obtenerParametro("hemoglobina")));
-            resultado.setRbc(Float.parseFloat(this.obtenerParametro("rbc")));
-            resultado.setWbc(Float.parseFloat(this.obtenerParametro("wbc")));
-            resultado.setMch(Float.parseFloat(this.obtenerParametro("mch")));
-            resultado.setMchc(Float.parseFloat(this.obtenerParametro("mchc")));
-            resultado.setLym(Float.parseFloat(this.obtenerParametro("lym")));
-            resultado.setLinfocitos(Float.parseFloat(this.obtenerParametro("linfocitos")));
-            resultado.setNum_otros(Float.parseFloat(this.obtenerParametro("num_otros")));
-            resultado.setPlt(Float.parseFloat(this.obtenerParametro("plt")));
-            resultado.setMcv(Float.parseFloat(this.obtenerParametro("mcv")));
-            resultado.setOtros(Float.parseFloat(this.obtenerParametro("otros")));
+            resultado.setHematocrito(helper_varios.parsearFloat(this.obtenerParametro("hematocrito")));
+            resultado.setHemoglobina(helper_varios.parsearFloat(this.obtenerParametro("hemoglobina")));
+            resultado.setRbc(helper_varios.parsearFloat(this.obtenerParametro("rbc")));
+            resultado.setWbc(helper_varios.parsearFloat(this.obtenerParametro("wbc")));
+            resultado.setMch(helper_varios.parsearFloat(this.obtenerParametro("mch")));
+            resultado.setMchc(helper_varios.parsearFloat(this.obtenerParametro("mchc")));
+            resultado.setLym(helper_varios.parsearFloat(this.obtenerParametro("lym")));
+            resultado.setLinfocitos(helper_varios.parsearFloat(this.obtenerParametro("linfocitos")));
+            resultado.setNum_otros(helper_varios.parsearFloat(this.obtenerParametro("num_otros")));
+            resultado.setPlt(helper_varios.parsearFloat(this.obtenerParametro("plt")));
+            resultado.setMcv(helper_varios.parsearFloat(this.obtenerParametro("mcv")));
+            resultado.setOtros(helper_varios.parsearFloat(this.obtenerParametro("otros")));
             resultado.setFecha(helper_fechas.getFecha_hoy());
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));

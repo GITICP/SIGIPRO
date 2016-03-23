@@ -67,7 +67,7 @@
                                                                         onchange="setCustomValidity('')">
                                                                     <option value=''></option>
                                                                     <c:forEach items="${reactivos}" var="reactivo">
-                                                                        <option value=${reactivo.getId_reactivo()} data-preparacion="${reactivo.getPreparacion()}">
+                                                                        <option value=${reactivo.getId_reactivo()} data-preparacion="${reactivo.getPreparacion()}" ${(resultado.tieneReactivo(reactivo)) ? "Selected" : ""}>
                                                                             ${reactivo.getNombre()} (${reactivo.getTipo_reactivo().getNombre()})
                                                                         </option>
                                                                     </c:forEach>
@@ -98,7 +98,7 @@
                                                                         onchange="setCustomValidity('')">
                                                                     <option value=''></option>
                                                                     <c:forEach items="${equipos}" var="equipo">
-                                                                        <option value=${equipo.getId_equipo()}>
+                                                                        <option value=${equipo.getId_equipo()} ${(resultado.tieneEquipo(equipo)) ? "Selected" : ""}>
                                                                             ${equipo.getNombre()} (${equipo.getTipo_equipo().getNombre()})
                                                                         </option>
                                                                     </c:forEach>
@@ -121,7 +121,7 @@
                                                                     onchange="setCustomValidity('')">
                                                                 <option value=''></option>
                                                                 <c:forEach items="${patrones}" var="patron">
-                                                                    <option value=${patron.getId_patron()}>
+                                                                    <option value=${patron.getId_patron()} ${(resultado.tienePatron(patron)) ? "Selected" : ""}>
                                                                         ${patron.getNumero_lote()} (${patron.getTipo()})
                                                                     </option>
                                                                 </c:forEach>
@@ -141,7 +141,7 @@
                                                                     onchange="setCustomValidity('')">
                                                                 <option value=''></option>
                                                                 <c:forEach items="${controles}" var="control">
-                                                                    <option value=${control.getId_patron()}>
+                                                                    <option value=${control.getId_patron()} ${(resultado.tieneControl(control)) ? "Selected" : ""}>
                                                                         ${control.getNumero_lote()}
                                                                     </option>
                                                                 </c:forEach>
