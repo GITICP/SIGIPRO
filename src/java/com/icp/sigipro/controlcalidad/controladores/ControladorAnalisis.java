@@ -380,9 +380,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 //Se vacian por si hubo cambios
                 dao.eliminarTiposEquiposAnalisis(a.getId_analisis());
                 dao.eliminarTiposReactivosAnalisis(a.getId_analisis());
+                dao.eliminarTiposMuestrasAnalisis(a.getId_analisis());
                 //------------------------------
                 dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
                 dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
+                dao.insertarTipoMuestra(a.getTipos_muestras_analisis(), a.getId_analisis());
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
@@ -668,6 +670,9 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         break;
                     case "orden":
                         orden = fieldValue;
+                        break;
+                    case "eliminar_machote":
+                        a.setMachote("eliminar");
                         break;
                     default:
                         //Se agarra el valor y se divide, ya que la entrada tiene una estructura t_nombredelvalor_id
