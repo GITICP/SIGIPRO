@@ -411,7 +411,7 @@ public class ResultadoDAO extends DAO {
 
             ags_resultado.setResultados(lista_resultados);
             Grupo g = new Grupo();
-            List<Muestra> muestras = new ArrayList<Muestra>();
+            List<Muestra> muestras = new ArrayList<>();
 
             while (rs_grupo.next()) {
                 TipoMuestra tm = new TipoMuestra();
