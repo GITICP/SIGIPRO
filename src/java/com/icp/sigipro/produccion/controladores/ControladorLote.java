@@ -10,6 +10,7 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
 import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
+import com.icp.sigipro.controlcalidad.modelos.CertificadoEquipo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.core.formulariosdinamicos.ProduccionXSLT;
@@ -23,6 +24,8 @@ import com.icp.sigipro.produccion.modelos.Respuesta_pxp;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -36,7 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +54,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -92,6 +98,7 @@ public class ControladorLote extends SIGIPROServlet {
             add("repetir");
             add("activar");
             add("completar");
+            add("imagen");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -112,6 +119,44 @@ public class ControladorLote extends SIGIPROServlet {
         List<Lote> lotes = dao.obtenerLotes();
         request.setAttribute("listaLotes", lotes);
         redireccionar(request, response, redireccion);
+    }
+    
+    protected void getImagen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermisosMultiple(permisos, request);
+
+        String path = request.getParameter("path");
+
+        String nombre_imagen = request.getParameter("nombre");
+        
+        System.out.println(path);
+        
+        File file = new File(path);
+      
+        System.out.println(file.length());
+        if (file.exists()) {
+            ServletContext ctx = getServletContext();
+            InputStream fis = new FileInputStream(file);
+            String mimeType = ctx.getMimeType(file.getAbsolutePath());
+
+            response.setContentType(mimeType != null ? mimeType : "image/*");
+            response.setContentLength((int) file.length());
+            String nombre = "imagen-"+nombre_imagen+"." + this.getFileExtension(path);
+            
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
+
+            ServletOutputStream os = response.getOutputStream();
+            byte[] bufferData = new byte[1024];
+            int read = 0;
+            while ((read = fis.read(bufferData)) != -1) {
+                os.write(bufferData, 0, read);
+            }
+            os.flush();
+            os.close();
+            fis.close();
+
+        }
+
     }
 
     protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -281,7 +326,7 @@ public class ControladorLote extends SIGIPROServlet {
             this.getIndex(request, response);
         }
     }
-    
+
     protected void getCompletar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         validarPermiso(661, request);
@@ -289,7 +334,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (respuesta.getEstado()==5) {
+        if (respuesta.getEstado() == 5) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
@@ -488,8 +533,9 @@ public class ControladorLote extends SIGIPROServlet {
 
     }
 
-    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, FileUploadException {
         validarPermiso(661, request);
+        
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
 
         Respuesta_pxp resultado = dao.obtenerRespuesta(id_respuesta);
@@ -502,8 +548,22 @@ public class ControladorLote extends SIGIPROServlet {
 
         String redireccion = "Lote/index.jsp";
 
+        //Se crea el Path en la carpeta del Proyecto
+        String fullPath = helper_archivos.obtenerDireccionArchivos();
+        String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+        //-------------------------------------------
+        //Crea los directorios si no estan creados aun
+        this.crearDirectorio(ubicacion);
+        //--------------------------------------------
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setRepository(new File(ubicacion));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        //parametros = upload.parseRequest(request);
+        
         try {
-            String string_xml_resultado = parseXML(resultado);
+            String string_xml_resultado = parseXML(resultado, ubicacion);
+            System.out.println("RESPUESTA XML");
+            System.out.println(string_xml_resultado);
             resultado.setRespuestaString(string_xml_resultado);
             dao.insertarRespuesta(resultado);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
@@ -559,7 +619,7 @@ public class ControladorLote extends SIGIPROServlet {
         return l;
     }
 
-    private String parseXML(Respuesta_pxp resultado) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException {
+    private String parseXML(Respuesta_pxp resultado, String... ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
         String string_xml_resultado = null;
 
         InputStream binary_stream = resultado.getPaso().getEstructura().getBinaryStream();
@@ -668,10 +728,19 @@ public class ControladorLote extends SIGIPROServlet {
                         nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         nodo_valor.setTextContent(valor);
                         break;
+                    case ("imagen"):
+                        System.out.println("Imagen0");
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion[0]);
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        nodo_valor.setTextContent(valor);
+                        break;
                     default:
+                        System.out.println(tipo_campo);
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         valor = this.obtenerParametro(nombre_campo_resultado);
+                        System.out.println(valor);
                         nodo_valor.setTextContent(valor);
                         break;
                 }
@@ -687,6 +756,35 @@ public class ControladorLote extends SIGIPROServlet {
         System.out.println(string_xml_resultado);
 
         return string_xml_resultado;
+    }
+
+    private boolean crearDirectorio(String path) {
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try {
+                directorio.mkdirs();
+                resultado = true;
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
+        }
+        return resultado;
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
     }
 
     // </editor-fold>

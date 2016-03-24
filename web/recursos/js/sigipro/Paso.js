@@ -43,6 +43,9 @@ function agregarCampo() {
     fila += "                           <option value=\"text\">Campo de Texto</option>";
     fila += "                           <option value=\"textarea\">Area de Texto</option>";
     fila += "                           <option value=\"fecha\">Fecha</option>";
+    fila += "                           <option value=\"hora\">Hora</option>";
+    fila += "                           <option value=\"blanco\">Espacio en blanco</option>";
+    fila += "                           <option value=\"imagen\">Imagen</option>";
     fila += "                           <option value=\"cc\">Referencia a Control de Calidad</option>";
     fila += "                           <option value=\"sangria\">Referencia a Sangría</option>";
     fila += "                           <option value=\"lote\">Referencia a Lote de Producción</option>";

@@ -1,3 +1,42 @@
+function previewFile(id) {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+        var preview = document.getElementById(id+"_preview"); //selects the query named img
+        var file = document.querySelector('input[type=file][id="'+id+'"]').files[0]; //sames as here
+        var imagen = document.getElementById(id); //sames as here
+        var size = file.size;
+        alert(size);
+        var reader = new FileReader();
+        if (size > 307200) {
+            document.getElementById(id).setCustomValidity("La imagen debe ser de 300KB o menos. ");
+            document.getElementById(id+"_eliminar").style.visibility = "visible";
+        } else {
+            document.getElementById(id).setCustomValidity("");
+            document.getElementById(id+"_eliminar").style.visibility = "visible";
+        }
+        reader.onload = function (e) {
+            preview.src = reader.result;
+            file.value = reader.toString();
+        };
+        if (file) {
+            reader.readAsDataURL(file); //reads the data as a URL
+        } else {
+            preview.src = "";
+        }
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+}
+
+function eliminarImagen(id) {
+    var preview = document.getElementById(id+"_preview"); //selects the query named img
+    preview.src = "";
+    var imagen = document.getElementById(id);
+    imagen.value = "";
+    document.getElementById(id).setCustomValidity("");
+    document.getElementById(id+"_eliminar").style.visibility = "hidden";
+}
+
 $(function () {
     var sangrias = $(".sangria");
     
