@@ -912,6 +912,21 @@ VALUES (4, 'Generador Ver Paso de Protocolo',
         
     </xsl:template>
     
+    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = 'aa') and not(tipo = 'usuario') and not(tipo = 'subbodega')]">
+        
+        <tr>
+            <td>
+                <xsl:value-of select="etiqueta" />
+            </td>
+            <td>
+                <xsl:call-template name="tipo-dato">
+                    <xsl:with-param name="tipo" select="tipo" />
+                </xsl:call-template>
+            </td>
+        </tr>
+        
+    </xsl:template>
+    
     <xsl:template name="tipo-dato">
         <xsl:param name="tipo" />
         
@@ -936,6 +951,15 @@ VALUES (4, 'Generador Ver Paso de Protocolo',
             </xsl:when>
             <xsl:when test="$tipo = ''lote''">
                 <xsl:value-of select="''Referencia a Lote de Producción''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''hora''">
+                <xsl:value-of select="''Hora''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''imagen''">
+                <xsl:value-of select="''Imagen''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''blanco''">
+                <xsl:value-of select="''Espacio en Blanco''" />
             </xsl:when>
         </xsl:choose>
     </xsl:template>
