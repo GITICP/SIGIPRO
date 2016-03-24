@@ -1,5 +1,27 @@
 <paso>
     <campo>
+        <nombre-campo>Hora_1</nombre-campo>
+        <etiqueta>Hora</etiqueta>
+        <valor/>
+        <tipo>hora</tipo>
+    </campo>
+    <campo>
+        <nombre-campo>Espacio_2</nombre-campo>
+        <etiqueta>Espacio</etiqueta>
+        <valor/>
+        <tipo>blanco</tipo>
+    </campo>
+    <campo>
+        <nombre-campo>Imagen_3</nombre-campo>
+        <etiqueta>Imagen</etiqueta>
+        <valor/>
+        <tipo>imagen</tipo>
+    </campo>
+</paso>
+
+
+<paso>
+    <campo>
         <nombre-campo>Luis_1</nombre-campo>
         <tipo>subbodega</tipo>
         <etiqueta>Luis</etiqueta>

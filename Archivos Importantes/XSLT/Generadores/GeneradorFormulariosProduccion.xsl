@@ -21,7 +21,7 @@
     -->
         
     <!-- Campo de tipo número -->
-    <xsl:template match="campo[tipo = 'number']">
+    <xsl:template match="campo[tipo = ''number'']">
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
         <xsl:param name="etiqueta" select="etiqueta" />
@@ -36,7 +36,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <xsl:call-template name="input">
-                            <xsl:with-param name="tipo" select="'number'" />
+                            <xsl:with-param name="tipo" select="''number''" />
                             <xsl:with-param name="nombre-campo" select="$nombre-campo" />
                             <xsl:with-param name="valor" select="$valor" />
                         </xsl:call-template>
@@ -47,7 +47,7 @@
     </xsl:template>
     
     <!-- Campo de tipo texto -->
-    <xsl:template match="campo[tipo = 'text']">
+    <xsl:template match="campo[tipo = ''text'']">
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
         <xsl:param name="etiqueta" select="etiqueta" />
@@ -62,7 +62,7 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <xsl:call-template name="input">
-                            <xsl:with-param name="tipo" select="'text'" />
+                            <xsl:with-param name="tipo" select="''text''" />
                             <xsl:with-param name="nombre-campo" select="$nombre-campo" />
                             <xsl:with-param name="valor" select="$valor" />
                         </xsl:call-template>
@@ -86,7 +86,7 @@
     </xsl:template>
     
     <!-- Campo de área de texto -->
-    <xsl:template match="campo[tipo = 'textarea']">
+    <xsl:template match="campo[tipo = ''textarea'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -112,7 +112,7 @@
     </xsl:template>
     
     <!-- Campo de texto fecha -->
-    <xsl:template match="campo[tipo = 'fecha']">
+    <xsl:template match="campo[tipo = ''fecha'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -136,7 +136,7 @@
     </xsl:template>
     
     <!-- Campo de texto fecha -->
-    <xsl:template match="campo[tipo = 'hora']">
+    <xsl:template match="campo[tipo = ''hora'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -151,7 +151,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" class="form-control sigiproDatePicker" name="{$nombre-campo}" data-date-format="HH:MM" value="{$valor}"></input>
+                        <input type="time" class="form-control" name="{$nombre-campo}" value="{$valor}"></input>
                     </div>
                 </div>
             </div>
@@ -160,7 +160,7 @@
     </xsl:template>
     
     <!-- Campo de texto fecha -->
-    <xsl:template match="campo[tipo = 'blanco']">
+    <xsl:template match="campo[tipo = ''blanco'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -184,7 +184,7 @@
     </xsl:template>
     
     <!-- Campo de texto fecha -->
-    <xsl:template match="campo[tipo = 'imagen']">
+    <xsl:template match="campo[tipo = ''imagen'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -199,12 +199,10 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input class='clearable' type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
-                                   oninvalid="setCustomValidity('El tamaño debe ser de 100KB o menos. ')" 
-                                   onchange="previewFile()" /> <button type="button" id='boton_Cancelar' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen()"> Borrar</button>
-                                   <div>
-                                       <img name='{$nombre-campo}' id="{$nombre-campo}" src='' height="200" alt=""/>
-                                   </div>
+                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
+                                   oninvalid="setCustomValidity(''El tamaño debe ser de 100KB o menos. '')" 
+                               onchange="previewFile()">
+                        </input> 
                     </div>
                 </div>
             </div>
@@ -213,7 +211,7 @@
     </xsl:template>
     
     
-    <xsl:template match="campo[tipo = 'sangria']">
+    <xsl:template match="campo[tipo = ''sangria'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -228,7 +226,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
+                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <div class="ver">
                             <a>Ver Sangría</a>
                         </div>      
@@ -239,7 +237,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'lote']">
+    <xsl:template match="campo[tipo = ''lote'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -254,7 +252,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="lote" class="select2 lote" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
+                        <select id="lote" class="select2 lote" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <div class="ver">
                             <a>Ver Lote de Producción</a>
                         </div>      
@@ -265,7 +263,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'usuario']">
+    <xsl:template match="campo[tipo = ''usuario'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -282,7 +280,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="usuario_{$seccion}" multiple="multiple" class="select2" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>          
+                        <select id="usuario_{$seccion}" multiple="multiple" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>          
                     </div>
                 </div>
             </div>
@@ -290,7 +288,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'aa']">
+    <xsl:template match="campo[tipo = ''aa'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -307,7 +305,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>
+                        <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
                         <div class="ver">
                             <a>Ver Actividad de Apoyo</a>
                         </div>              
@@ -318,7 +316,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'cc']">
+    <xsl:template match="campo[tipo = ''cc'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -333,7 +331,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select> 
+                        <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select> 
                         <div class="ver">
                             <a>Ver Solicitud</a>
                         </div>         
@@ -344,7 +342,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'subbodega']">
+    <xsl:template match="campo[tipo = ''subbodega'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -364,8 +362,8 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="subbodega_{$subbodega}" multiple="multiple" class="select2 subbodega" name="{$nombre-campo}" value="{$valor}" style='background-color: #fff;' ></select>    
-                        <xsl:if test="$cantidad = 'true'">
+                        <select id="subbodega_{$subbodega}" multiple="multiple" class="select2 subbodega" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <xsl:if test="$cantidad = ''true''">
                             <br>
                                 <div class="{$nombre-campo}_cant">
                                 </div>   
@@ -378,7 +376,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'seleccion']">
+    <xsl:template match="campo[tipo = ''seleccion'']">
         <xsl:param name="nombre-campo" select="nombre-campo" />
         <xsl:param name="etiqueta" select="etiqueta" />
         <div class="col-md-6">

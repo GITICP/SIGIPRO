@@ -165,7 +165,7 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" class="form-control sigiproDatePicker" name="{$nombre-campo}" data-date-format="HH:MM" value="{$valor}"></input>
+                        <input type="time" class="form-control" name="{$nombre-campo}" value="{$valor}"></input>
                     </div>
                 </div>
             </div>
@@ -197,7 +197,6 @@ VALUES (1, 'Generador Formularios Produccion',
         
     </xsl:template>
     
-    <!-- Campo de texto fecha -->
     <xsl:template match="campo[tipo = ''imagen'']">
         
         <!-- Parámetros -->
@@ -213,12 +212,10 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input class=''clearable'' type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
+                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
                                    oninvalid="setCustomValidity(''El tamaño debe ser de 100KB o menos. '')" 
-                                   onchange="previewFile()" /> <button type="button" id=''boton_{$nombre-campo}'' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(''{$nombre-campo}'')"> Borrar</button>
-                                   <div>
-                                       <img name=''{$nombre-campo}'' id="{$nombre-campo}" src='' height="100" alt=""/>
-                                   </div>
+                               onchange="previewFile()">
+                        </input> 
                     </div>
                 </div>
             </div>
