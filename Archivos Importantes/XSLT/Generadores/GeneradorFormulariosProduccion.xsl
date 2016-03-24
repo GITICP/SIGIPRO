@@ -200,9 +200,13 @@
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
-                                   oninvalid="setCustomValidity(''El tamaño debe ser de 100KB o menos. '')" 
-                               onchange="previewFile()">
+                                   oninvalid="setCustomValidity(''El tamaño debe ser de 300KB o menos. '')" 
+                               onchange="previewFile(''{$nombre-campo}'')">
                         </input> 
+                        <button type="button" id='{$nombre-campo}_eliminar' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(''{$nombre-campo}'')"> Borrar</button>
+                        <div>
+                            <img id="{$nombre-campo}_preview" src="" height="100" alt=""></img>
+                        </div>
                     </div>
                 </div>
             </div>
