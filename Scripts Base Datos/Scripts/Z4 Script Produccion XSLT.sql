@@ -465,7 +465,7 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
                         </thead>
                         <tbody>
                             <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'')]"/>
+                            <xsl:apply-templates select="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'') and not(tipo = ''imagen'')]"/>
                         </tbody>
                     </table>
                 </div>
@@ -565,9 +565,32 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
                     </table>
                 </div>
             </div>
-            <xsl:apply-templates select="campo[tipo = ''aa'']"/>
+            <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Imágenes''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Campos diferentes de tablas -->
+                            <xsl:apply-templates select="campo[(tipo = ''imagen'')]"/>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
         </div>
         <div class="widget-content row">
+            <xsl:apply-templates select="campo[tipo = ''aa'']"/>
             <xsl:apply-templates select="campo[tipo = ''seleccion'']"/>
             <xsl:apply-templates select="campo[tipo = ''subbodega'']"/>
         </div>
@@ -579,7 +602,7 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
     -->
         
     <!-- Campo de tipos diferentes de tabla -->
-    <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'')]">
+    <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'') and not(tipo = ''imagen'')]">
         
         <tr>
             <td>
@@ -612,6 +635,12 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
             </xsl:when>
             <xsl:when test="$tipo = ''fecha''">
                 <xsl:value-of select="''Fecha''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''hora''">
+                <xsl:value-of select="''Hora''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''blanco''">
+                <xsl:value-of select="''Espacio en blanco''" />
             </xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -758,6 +787,18 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
         
     </xsl:template>
     
+    <xsl:template match="campo[(tipo = ''imagen'')]">
+        <xsl:param name="valor" select="''valor''"/>
+        <tr>
+            <td>
+                <xsl:value-of select="etiqueta" />
+            </td>
+            <td>
+                <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen </a>
+            </td>
+        </tr>
+        
+    </xsl:template>
     <xsl:template match="campo[(tipo = ''cc'')]">
         <xsl:param name="valor" select="''valor''"/>
         <tr>
@@ -898,21 +939,6 @@ VALUES (4, 'Generador Ver Paso de Protocolo',
         
     <!-- Campo de tipos diferentes de tabla -->
     <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'')]">
-        
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <xsl:call-template name="tipo-dato">
-                    <xsl:with-param name="tipo" select="tipo" />
-                </xsl:call-template>
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = 'aa') and not(tipo = 'usuario') and not(tipo = 'subbodega')]">
         
         <tr>
             <td>
