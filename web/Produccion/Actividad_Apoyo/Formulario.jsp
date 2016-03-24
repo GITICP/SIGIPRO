@@ -19,46 +19,56 @@
         <input hidden="true" name="version" id="version" value="${actividad.getVersion()}">
         <input hidden="true" id='listaSecciones' name='listaSecciones' value='${listaSecciones}'>
         <input hidden="true" id='listaSubbodegas' name='listaSubbodegas' value='${listaSubbodegas}'>
-        <div class="col-md-6">
-            <label for="nombre" class="control-label">*Nombre del Actividad de Apoyo</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Nombre del Actividad de Apoyo" class="form-control" name="nombre" value="${actividad.getNombre()}"
-                               required
-                               oninvalid="setCustomValidity('Este campo es requerido')"
-                               oninput="setCustomValidity('')" > 
+        <div class="col-sm-12">
+            <div class="col-md-5">
+                <label for="nombre" class="control-label">*Nombre del Actividad de Apoyo</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" maxlength="45" placeholder="Nombre del Actividad de Apoyo" class="form-control" name="nombre" value="${actividad.getNombre()}"
+                                   required
+                                   oninvalid="setCustomValidity('Este campo es requerido')"
+                                   oninput="setCustomValidity('')" > 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <label for="categoria" class="control-label">*Categoría de Actividad de Apoyo</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="seleccionFormula" class="select2" name="id_categoria_aa"
-                                style='background-color: #fff;' required
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                onchange="setCustomValidity('')">
-                            <option value=''></option>
-                            <c:forEach items="${categorias}" var="categoria">
-                                <c:choose>
-                                    <c:when test="${categoria.getId_categoria_aa() == actividad.getCategoria().getId_categoria_aa()}" >
-                                        <option value=${categoria.getId_categoria_aa()} selected> ${categoria.getNombre()}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value=${categoria.getId_categoria_aa()}>${categoria.getNombre()}</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
+            <div class="col-md-5">
+                <label for="categoria" class="control-label">*Categoría de Actividad de Apoyo</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <select id="seleccionFormula" class="select2" name="id_categoria_aa"
+                                    style='background-color: #fff;' required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    onchange="setCustomValidity('')">
+                                <option value=''></option>
+                                <c:forEach items="${categorias}" var="categoria">
+                                    <c:choose>
+                                        <c:when test="${categoria.getId_categoria_aa() == actividad.getCategoria().getId_categoria_aa()}" >
+                                            <option value=${categoria.getId_categoria_aa()} selected> ${categoria.getNombre()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value=${categoria.getId_categoria_aa()}>${categoria.getNombre()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </select>
 
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group"> <br>
+                            <input id="requiere_ap" type="checkbox" name="requiere_ap" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobacion</span>
+                        </div>
+                    </div>
+                </div>
+            </div> 
         </div>
-
         <div class="col-md-12">
             <div class="widget widget-table">
                 <div class="widget-header">

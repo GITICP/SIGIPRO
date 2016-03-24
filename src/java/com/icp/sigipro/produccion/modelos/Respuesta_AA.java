@@ -28,10 +28,23 @@ public class Respuesta_AA {
     private Usuario usuario_realizar;
     private String respuestaString;
     private SQLXML respuesta;
+    //1. Pendiente, no revision
+    //2. Pendiente, requiere revision
+    //3. Revisado, requiere aprobacion
+    //4. Finalizado
+    private int estado;
     
     private List<Respuesta_AA> historial;
 
     public Respuesta_AA() {
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public List<Respuesta_AA> getHistorial() {
