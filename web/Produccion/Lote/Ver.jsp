@@ -35,6 +35,19 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> ${lote.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
+                                <c:choose>
+                                    <c:when test="${lote.isEstado()}">
+                                        <c:choose>
+                                            <c:when test="${lote.getFecha_vencimiento()==null}">
+                                                Hola
+                                            </c:when>
+                                            <c:when test="${lote.getUsuario_distribucion().getId_usuario()==0}">
+                                                Hola
+                                            </c:when>
+                                        </c:choose>
+                                        
+                                    </c:when>
+                                </c:choose>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 660)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el lote de producción" data-href="/SIGIPRO/Produccion/Lote?accion=eliminar&id_lote=${lote.getId_lote()}">Eliminar</a>
                                 </c:if>
@@ -55,6 +68,12 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td></tr>
+                                <c:if test="${lote.getUsuario_distribucion().getId_usuario()!=0}">
+                                <tr><td> <strong>Usuario de Distribución:</strong></td> <td>${lote.getUsuario_distribucion().getNombre_completo()} </td></tr>
+                                </c:if>
+                                <c:if test="${lote.getFecha_vencimiento()!=null}">
+                                    <tr><td> <strong>Fecha de Vencimiento:</strong></td> <td>${lote.getFecha_vencimientoAsString()} </td></tr>
+                                </c:if>
                             </table>
                             <br>
                             <div class="col-sm-12">

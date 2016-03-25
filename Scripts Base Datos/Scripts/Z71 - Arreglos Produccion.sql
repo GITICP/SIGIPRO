@@ -2,6 +2,9 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (664, '[p
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (665, '[produccion]VerificarPaso', 'Permite darle el check de verificado a un paso de protocolo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (666, '[produccion]VerEstadoLote', 'Permite ver el estado del lote de producción actual.');
 
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (667, '[produccion]DistribucionLote', 'Permite aprobar la distribución de un lote.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (668, '[produccion]FechaVencimientoLote', 'Permite agregar la fecha de vencimiento de un lote.');
+
 
 ALTER TABLE produccion.historial_respuesta_pxp
 ADD COLUMN id_usuario_revisar int;
@@ -36,3 +39,11 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (666, 651);
 
+ALTER TABLE PRODUCCION.LOTE
+ADD COLUMN id_usuario_distribucion int;
+
+ALTER TABLE ONLY produccion.lote ADD CONSTRAINT fk_lote_usuario_distribucion FOREIGN KEY (id_usuario_distribucion) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
+
+
+ALTER TABLE PRODUCCION.LOTE
+ADD COLUMN fecha_vencimiento date;

@@ -581,7 +581,8 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, l.aprobacion, h.nombre as nombreprotocolo , l.estado, l.posicion_actual, p.id_paso, hp.nombre as nombrepaso, r.id_respuesta "
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, l.aprobacion, h.nombre as nombreprotocolo , l.estado, l.posicion_actual, p.id_paso, hp.nombre as nombrepaso, r.id_respuesta, "
+                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo "
                     + "FROM produccion.lote as l "
                     + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
@@ -589,6 +590,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.paso as p ON (pp.id_paso = p.id_paso) "
                     + "LEFT JOIN produccion.historial_paso as hp ON (hp.id_paso = p.id_paso and hp.version = p.version) "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (r.id_pxp = pp.id_pxp and r.id_lote = l.id_lote) "
+                    + "LEFT JOIN seguridad.usuarios as ul ON (l.id_usuario_distribucion = ul.id_usuario) "
                     + "WHERE (l.estado = false or l.aprobacion = true) ; ");
             System.out.println(consulta);
             rs = consulta.executeQuery();
@@ -611,6 +613,19 @@ public class LoteDAO extends DAO {
                     lote.setId_respuesta_actual(rs.getInt("id_respuesta"));
                 } catch (Exception e) {
                     System.out.println("No tiene respuesta.");
+                }
+                try{
+                    Usuario usuario_distribucion = new Usuario();
+                    usuario_distribucion.setId_usuario(rs.getInt("id_usuario_distribucion"));
+                    usuario_distribucion.setNombre_completo(rs.getString("nombre_completo"));
+                    lote.setUsuario_distribucion(usuario_distribucion);
+                }catch(Exception e){
+                    
+                }
+                try{
+                    lote.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
+                }catch(Exception e){
+                    
                 }
                 resultado.add(lote);
             }
@@ -846,7 +861,8 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote,l.aprobacion, l.id_protocolo, h.nombre as nombreprotocolo,pro.version , l.estado, l.posicion_actual, p.id_paso, pp.id_pxp, hp.estructura, hp.nombre as nombrepaso, r.id_respuesta "
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote,l.aprobacion, l.id_protocolo, h.nombre as nombreprotocolo,pro.version , l.estado, l.posicion_actual, p.id_paso, pp.id_pxp, hp.estructura, hp.nombre as nombrepaso, r.id_respuesta, "
+                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo "
                     + "FROM produccion.lote as l "
                     + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
@@ -854,6 +870,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.paso as p ON (pp.id_paso = p.id_paso) "
                     + "LEFT JOIN produccion.historial_paso as hp ON (hp.id_paso = p.id_paso and hp.version = p.version) "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (r.id_pxp = pp.id_pxp and r.id_lote = l.id_lote) "
+                    + "LEFT JOIN seguridad.usuarios as ul ON (l.id_usuario_distribucion = ul.id_usuario) "
                     + "WHERE l.id_lote = ?; ");
             System.out.println(consulta);
             consulta.setInt(1, id_lote);
@@ -879,6 +896,19 @@ public class LoteDAO extends DAO {
                 p.setId_pxp(rs.getInt("id_pxp"));
                 p.setEstructura(rs.getSQLXML("estructura"));
                 resultado.setPaso_actual(p);
+                try{
+                    Usuario usuario_distribucion = new Usuario();
+                    usuario_distribucion.setId_usuario(rs.getInt("id_usuario_distribucion"));
+                    usuario_distribucion.setNombre_completo(rs.getString("nombre_completo"));
+                    resultado.setUsuario_distribucion(usuario_distribucion);
+                }catch(Exception e){
+                    
+                }
+                try{
+                    resultado.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
+                }catch(Exception e){
+                    
+                }
                 consulta = getConexion().prepareStatement("SELECT pxp.id_pxp, pxp.id_paso, pxp.posicion, pxp.requiere_ap, pxp.version as versionpxp, h.nombre, r.id_respuesta, hr.id_usuario_verificar, hr.id_usuario_revisar, r.estado as estador, uv.nombre_completo as nombre_verificar, ure.nombre_completo as nombre_revisar, hr.id_usuario_realizar, ur.nombre_completo as nombre_realizar, hr.version as versionr "
                         + "FROM produccion.paso_protocolo as pxp "
                         + "LEFT JOIN produccion.protocolo as pro ON (pro.id_protocolo = pxp.id_protocolo and pxp.version = pro.version) "
@@ -964,6 +994,52 @@ public class LoteDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean distribuirLote(int id_lote, int id_usuario) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.lote "
+                    + "SET id_usuario_distribucion=? "
+                    + "WHERE id_lote= ?; ");
+            consulta.setInt(1, id_usuario);
+            consulta.setInt(2, id_lote);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean vencimientoLote(Lote lote) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.lote "
+                    + "SET fecha_vencimiento=? "
+                    + "WHERE id_lote= ?; ");
+            consulta.setDate(1, lote.getFecha_vencimiento());
+            consulta.setInt(2, lote.getId_lote());
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
