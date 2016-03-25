@@ -643,7 +643,34 @@ public class LoteDAO extends DAO {
         }
         return resultado;
     }
-
+    
+    public List<Lote> obtenerUltimosLotes() {
+        List<Lote> resultado = new ArrayList<Lote>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote "
+                    + "FROM produccion.lote as l "
+                    + "ORDER BY l.id_lote DESC "
+                    + "LIMIT 3; ");
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Lote lote = new Lote();
+                lote.setId_lote(rs.getInt("id_lote"));
+                lote.setNombre(rs.getString("nombrelote"));
+                resultado.add(lote);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
     public List<Lote> obtenerLotes(int id_protocolo) {
         List<Lote> resultado = new ArrayList<Lote>();
         PreparedStatement consulta = null;
