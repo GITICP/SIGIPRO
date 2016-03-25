@@ -76,7 +76,7 @@ public class LoteDAO extends DAO {
                             //Ultimo paso pero requiere aprobacion
                             consultaBatch.setInt(3, 9);
                         } else {
-                            //Ultimo paso
+                            //Ultimo paso, sin aprobacion
                             consultaBatch.setInt(3, 8);
                         }
                     }
@@ -343,8 +343,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.paso_protocolo as pxp ON (pxp.id_pxp = r.id_pxp) "
                     + "WHERE r.id_lote=? "
                     + "ORDER BY pxp.posicion;");
-            consulta.setInt(1, lote.getProtocolo().getId_protocolo());
-            consulta.setInt(2, lote.getId_lote());
+            consulta.setInt(1, lote.getId_lote());
             System.out.println(consulta);
             rs = consulta.executeQuery();
             while (rs.next()) {
@@ -642,6 +641,80 @@ public class LoteDAO extends DAO {
             cerrarConexion();
         }
         return resultado;
+    }
+    
+    public List<Lote> obtenerLotesEstado() {
+        List<Lote> resultado = new ArrayList<Lote>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote,l.estado, l.id_protocolo, h.nombre as nombreprotocolo "
+                    + "FROM produccion.lote as l "
+                    + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
+                    + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
+                    + "WHERE estado=false; ");
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Lote lote = new Lote();
+                lote.setId_lote(rs.getInt("id_lote"));
+                lote.setNombre(rs.getString("nombrelote"));
+                Protocolo protocolo = new Protocolo();
+                protocolo.setId_protocolo(rs.getInt("id_protocolo"));
+                protocolo.setNombre(rs.getString("nombreprotocolo"));
+                lote.setProtocolo(protocolo);
+                lote.setEstado(rs.getBoolean("estado"));
+                resultado.add(lote);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public List<Respuesta_pxp> obtenerRespuestasEstado(Lote lote) {
+        List<Respuesta_pxp> resultado = new ArrayList();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement("SELECT r.id_respuesta, r.estado, pxp.id_pxp, pxp.id_paso, pxp.posicion, pxp.requiere_ap, pxp.version as versionpxp, hp.nombre "
+                    + "FROM produccion.respuesta_pxp as r "
+                    + "LEFT JOIN produccion.paso_protocolo as pxp ON (pxp.id_pxp = r.id_pxp) "
+                    + "LEFT JOIN produccion.paso as p ON (pxp.id_paso = p.id_paso) "
+                    + "LEFT JOIN produccion.historial_paso as hp on (hp.id_paso = p.id_paso and hp.version=p.version) "
+                    + "WHERE r.id_lote=? "
+                    + "ORDER BY pxp.posicion;");
+            consulta.setInt(1, lote.getId_lote());
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                Respuesta_pxp respuesta = new Respuesta_pxp();
+                Paso paso = new Paso();
+                paso.setId_paso(rs.getInt("id_paso"));
+                paso.setPosicion(rs.getInt("posicion"));
+                paso.setRequiere_ap(rs.getBoolean("requiere_ap"));
+                paso.setVersion(rs.getInt("versionpxp"));
+                paso.setId_pxp(rs.getInt("id_pxp"));
+                paso.setNombre(rs.getString("nombre"));
+                respuesta.setPaso(paso);
+                respuesta.setId_respuesta(rs.getInt("id_respuesta"));
+                respuesta.setEstado(rs.getInt("estado"));
+                resultado.add(respuesta);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+
     }
     
     public List<Lote> obtenerUltimosLotes() {

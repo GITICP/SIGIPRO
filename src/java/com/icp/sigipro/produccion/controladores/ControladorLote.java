@@ -100,6 +100,7 @@ public class ControladorLote extends SIGIPROServlet {
             add("activar");
             add("completar");
             add("imagen");
+            add("verestado");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -438,6 +439,27 @@ public class ControladorLote extends SIGIPROServlet {
         out.print(resultado);
 
         out.flush();
+    }
+    
+    protected void getVerestado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        validarPermiso(666, request);
+        
+        String redireccion = "Lote/VerEstado.jsp";
+        try {
+            List<Lote> lotes = dao.obtenerLotesEstado();
+            //Se supone que será un solo lote el que va a estar activado, pero en caso de cambios en el modelo de negocio, se consideraran varios lotes al mismo tiempo
+            for(Lote lote : lotes){
+                List <Respuesta_pxp> respuestas = dao.obtenerRespuestasEstado(lote);
+                lote.setRespuestas(respuestas);
+            }
+            
+            request.setAttribute("listaLotes", lotes);
+            redireccionar(request, response, redireccion);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        
     }
 
     // </editor-fold>
