@@ -531,7 +531,7 @@ public class ControladorPaso extends SIGIPROServlet {
         for (Actividad_Apoyo aa : actividades) {
             String actividad = "[";
             actividad += aa.getId_actividad() + ",";
-            actividad += "\"" + aa.getNombre() + "\"]";
+            actividad += "\"["+aa.getCategoria().getNombre()+"] " + aa.getNombre() + "\"]";
             respuesta.add(actividad);
         }
         System.out.println(respuesta.toString());
