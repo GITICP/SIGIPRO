@@ -243,9 +243,8 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
-                        <div class="ver">
-                            <a>Ver Sangría</a>
+                        <select id="sangria" multiple="multiple" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <div class="{$nombre-campo}_ver">
                         </div>      
                     </div>
                 </div>
