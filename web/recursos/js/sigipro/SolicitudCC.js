@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+PARAMETROS_SELECT_IDENTIFICADORES = {
+        minimumResultsForSearch: -1,
+        tags: true,
+        tokenSeparators: [',', '+', '.']
+    };
+
 $(document).on("click", ".anular-Modal", function () {
     var id_solicitud = $(this).data('id');
     $("#id_solicitud_anular").val(id_solicitud);
@@ -23,9 +29,10 @@ Array.prototype.remove = function (x) {
             this.splice(i, 1);
         }
     }
-}
+};
 
 function seleccionTipoMuestra(tipomuestra, id_formulario) {
+    tipomuestra.setCustomValidity('');
     var id = $(tipomuestra).val();
     $("#seleccionAnalisis_" + id_formulario).empty();
     var listaAnalisis = $("#listaAnalisis_" + id).val();
@@ -114,9 +121,10 @@ function agregarMuestra() {
     fila += "<div class=\"form-group\">";
     fila += "<div class=\"col-sm-12\">";
     fila += "<div class=\"input-group\">";
-    fila += "            <input type=\"text\" placeholder=\"Separados, por, comas\" id=\"identificadores_" + contador + "\" class=\"identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
+    fila += "            <input type=\"text\" placeholder=\"Separados, por, comas\" id=\"identificadores_" + contador + "\" class=\"input-identificadores identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
     fila += "          required ";
     fila += "          oninvalid=\"setCustomValidity('Este campo es requerido')\"";
+    fila += "          onchange=\"setCustomValidity('')\"";
     fila += "          oninput=\"setCustomValidity('')\" > ";
     fila += "</div>";
     fila += "    </div>";
@@ -139,7 +147,7 @@ function agregarMuestra() {
     fila += "<div class=\"form-group\">";
     fila += "        <div class=\"col-sm-12\">";
     fila += "   <div class=\"input-group\">";
-    fila += "       <select id=\"seleccionAnalisis_" + contador + "\" class=\"analisis_" + contador + "\" multiple=\"multiple\" name=\"analisis_" + contador + "\"";
+    fila += "       <select id=\"seleccionAnalisis_" + contador + "\" class=\"select-analisis analisis_" + contador + "\" multiple=\"multiple\" name=\"analisis_" + contador + "\"";
     fila += "               style='background-color: #fff;' required";
     fila += "               oninvalid=\"setCustomValidity('Este campo es requerido')\"";
     fila += "               onchange=\"setCustomValidity('')\">";
@@ -157,11 +165,8 @@ function agregarMuestra() {
     $(".muestras").append(fila);
 
     $(".analisis_" + contador).select2();
-    $("#identificadores_" + contador).select2({
-        minimumResultsForSearch: -1,
-        tags: true,
-        tokenSeparators: [',', '+', '.']
-    }).on("change", function (e) {
+    $("#identificadores_" + contador).select2(PARAMETROS_SELECT_IDENTIFICADORES)
+      .on("change", function (e) {
         $(".select2-drop").hide();
     }).on("select2-opening", function () {
         $(".select2-drop").hide();
@@ -278,11 +283,8 @@ $(document).ready(function () {
     $.each(listaIds, function (i, contador) {
         var tipomuestra = $("#editartipomuestra_" + contador).val();
         $(".analisis_" + contador).select2();
-        $("#identificadores_" + contador).select2({
-            minimumResultsForSearch: -1,
-            tags: true,
-            tokenSeparators: [',', ' ']
-        }).on("change", function (e) {
+        $("#identificadores_" + contador).select2(PARAMETROS_SELECT_IDENTIFICADORES)
+          .on("change", function (e) {
             $(".select2-drop").hide();
         }).on("select2-opening", function () {
             $(".select2-drop").hide();
