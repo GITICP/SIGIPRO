@@ -722,6 +722,29 @@ public class ControladorLote extends SIGIPROServlet {
 
                         }
                         break;
+                    case ("sangria"):
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        //Obtengo los productos seleccionados
+                        String[] sangrias = this.obtenerParametros(nombre_campo_resultado);
+                        List<String> lista_sangrias = new ArrayList<String>();
+                        lista_sangrias.addAll(Arrays.asList(sangrias));
+                        //Parseo los id's en String, a Int
+                        List<Integer> lista_id_sangrias = new ArrayList<>();
+                        for (String sangria : lista_sangrias) {
+                            lista_id_sangrias.add(Integer.parseInt(sangria));
+                        }
+                        //Ingreso los valores dentro del XML
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        for (Integer id : lista_id_sangrias) {
+                            Element e = documento_resultado.createElement("sangria");
+
+                            Element id_sangria = documento_resultado.createElement("id");
+                            id_sangria.appendChild(documento_resultado.createTextNode("" + id));
+                            e.appendChild(id_sangria);
+                            
+                            nodo_valor.appendChild(e);
+                        }
+                        break;    
                     case ("aa"):
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         valor = this.obtenerParametro(nombre_campo_resultado);

@@ -1,5 +1,44 @@
 <paso>
     <campo>
+        <nombre-campo>Sangrias_1</nombre-campo>
+        <etiqueta>Sangrias</etiqueta>
+        <valor>
+            <sangria>
+                <id>2</id>
+            </sangria>
+            <sangria>
+                <id>1</id>
+            </sangria>
+        </valor>
+        <tipo>sangria</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>Ejemplo_2</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Ejemplo</etiqueta>
+        <valor>
+            <producto>
+                <id>578</id>
+                <nombre>Biogel P60</nombre>
+                <cantidad>32</cantidad>
+            </producto>
+            <producto>
+                <id>91</id>
+                <nombre>Hisopo palo corto  negro</nombre>
+                <cantidad>12</cantidad>
+            </producto>
+        </valor>
+        <nombre-subbodega>Conejo</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Ejemplo_cantidad</nombre-cantidad>
+        <valor-cantidad/>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
         <nombre-campo>Hora_1</nombre-campo>
         <etiqueta>Hora</etiqueta>
         <valor/>
