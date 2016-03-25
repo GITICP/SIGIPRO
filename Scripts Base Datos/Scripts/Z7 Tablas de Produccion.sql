@@ -302,6 +302,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (661, '[p
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (662, '[produccion]AprobarPaso', 'Permite aprobar los pasos de producción de un lote, cuando se requiera.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (663, '[produccion]ActivarRespuestaPaso', 'Permite activar versiones anteriores de una respuesta de paso de protocolo de un lote.');
 
+
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (670, '[produccion]AdministrarActividadApoyo', 'Permite agregar/editar/eliminar actividades de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (671, '[produccion]ActivarActividadApoyo', 'Permite activar versiones anteriores de una actividad de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (672, '[produccion]AprobarCalidadActividad', 'Permite a control de calidad aprobar o rechazar una actividad de apoyo.');
@@ -350,8 +351,6 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (630, 600, 'Actividad de Apoyo', null, 5);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (632, 630, 'Actividades de Apoyo', '/Produccion/Actividad_Apoyo', 2);
-
-
 
 --Permisos del menu principal de produccion
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (602, 602);
