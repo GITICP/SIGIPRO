@@ -26,6 +26,8 @@ public class Respuesta_AA {
     private int version;
     private Timestamp fecha;
     private Usuario usuario_realizar;
+    private Usuario usuario_revisar;
+    private Usuario usuario_aprobar;
     private String respuestaString;
     private SQLXML respuesta;
     //1. Pendiente, no revision
@@ -37,6 +39,22 @@ public class Respuesta_AA {
     private List<Respuesta_AA> historial;
 
     public Respuesta_AA() {
+    }
+
+    public Usuario getUsuario_revisar() {
+        return usuario_revisar;
+    }
+
+    public void setUsuario_revisar(Usuario usuario_revisar) {
+        this.usuario_revisar = usuario_revisar;
+    }
+
+    public Usuario getUsuario_aprobar() {
+        return usuario_aprobar;
+    }
+
+    public void setUsuario_aprobar(Usuario usuario_aprobar) {
+        this.usuario_aprobar = usuario_aprobar;
     }
 
     public int getEstado() {

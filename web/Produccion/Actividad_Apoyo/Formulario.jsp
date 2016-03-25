@@ -63,7 +63,14 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group"> <br>
-                            <input id="requiere_ap" type="checkbox" name="requiere_ap" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobacion</span>
+                            <c:choose>
+                                <c:when test="${actividad.isRequiere_ap()}">
+                                    <input checked id="requiere_ap" type="checkbox" name="requiere_ap" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobacion</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <input id="requiere_ap" type="checkbox" name="requiere_ap" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobacion</span>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </div>

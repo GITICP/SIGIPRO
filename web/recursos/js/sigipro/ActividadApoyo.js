@@ -5,6 +5,20 @@ $(document).on("click", ".aprobar-Modal", function () {
     $("#class-aprobar-actividad #actor").val(actor);
 });
 
+$(document).on("click", ".revisar-Modal", function () {
+    var id_actividad = $(this).data('id');
+    var version = $(this).data('version');
+    $('#class-revisar-respuesta #id_respuesta').val(id_actividad);
+    $("#class-revisar-respuesta #version").val(version);
+});
+
+$(document).on("click", ".aprobarrespuesta-Modal", function () {
+    var id_actividad = $(this).data('id');
+    var version = $(this).data('version');
+    $('#class-aprobar-respuesta #id_respuesta').val(id_actividad);
+    $("#class-aprobar-respuesta #version").val(version);
+});
+
 $(document).on("click", ".rechazar-Modal", function () {
     var id_actividad = $(this).data('id');
     var actor = $(this).data('actor');
