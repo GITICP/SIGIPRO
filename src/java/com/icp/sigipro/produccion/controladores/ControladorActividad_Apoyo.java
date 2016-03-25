@@ -114,6 +114,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             add("repetir");
             add("rechazar");
             add("aprobar");
+            add("aprobarrespuesta");
+            add("revisarrespuesta");
         }
     };
 
@@ -305,6 +307,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
         try {
             r = dao.obtenerRespuesta(id_respuesta);
+            System.out.println(r.getUsuario_aprobar().getId_usuario());
             r.setActividad(dao.obtenerActividad_Apoyo(r.getActividad().getId_actividad()));
             xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (r.getRespuesta() != null) {
@@ -614,7 +617,59 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             this.getIndex(request, response);
         }
     }
+    
+    protected void postRevisarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(678, request);
+        boolean resultado = false;
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int version = Integer.parseInt(request.getParameter("version"));
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        Respuesta_AA raa = new Respuesta_AA();
+        raa.setId_respuesta(id_respuesta);
+        raa.setVersion(version);
+        Usuario usuario = new Usuario();
+        usuario.setId_usuario(id_usuario);
+        raa.setUsuario_revisar(usuario);
+        resultado = dao.revisarRespuesta(raa);
+        if (resultado) {
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_REVISAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta de Actividad de Apoyo revisada correctamente"));
+            this.getIndex(request, response);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Respuesta de Actividad de Apoyo no pudo ser revisada. Inténtelo de nuevo."));
+            this.getIndex(request, response);
+        }
+    }
+    
+    protected void postAprobarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(679, request);
+        boolean resultado = false;
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int version = Integer.parseInt(request.getParameter("version"));
+        int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        Respuesta_AA raa = new Respuesta_AA();
+        raa.setId_respuesta(id_respuesta);
+        raa.setVersion(version);
+        Usuario usuario = new Usuario();
+        usuario.setId_usuario(id_usuario);
+        raa.setUsuario_aprobar(usuario);
+        resultado = dao.aprobarRespuesta(raa);
+        if (resultado) {
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesata de Actividad de Apoyo aprobada correctamente"));
+            this.getIndex(request, response);
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Respuessta Actividad de Apoyo no pudo ser aprobada. Inténtelo de nuevo."));
+            this.getIndex(request, response);
+        }
+    }
 
+    
+    
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int id_actividad = Integer.parseInt(this.obtenerParametro("id_actividad"));
@@ -897,6 +952,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                         int id_actividad = Integer.parseInt(fieldValue);
                         aa.setId_actividad(id_actividad);
                         break;
+                    case "requiere_ap":
+                        boolean requiere_ap = true;
+                        aa.setRequiere_ap(requiere_ap);
+                        break;
                     case "version":
                         int version = Integer.parseInt(fieldValue);
                         aa.setVersion(version);
@@ -995,7 +1054,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     private void crearCampo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
@@ -1015,7 +1074,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     private void crearSubbodega(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("tipo", "subbodega", campo);
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
@@ -1033,7 +1092,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     private void crearUsuario(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("tipo", "usuario", campo);
@@ -1044,7 +1103,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     private void crearSeleccion(HelperXML xml, HashMap<String, String> hash, Element campo) {
         xml.agregarSubelemento("tipo", "seleccion", campo);
-        xml.agregarSubelemento("nombre-campo", hash.get("snombre").replaceAll(" ","").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("snombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
         xml.agregarSubelemento("etiqueta", hash.get("snombre"), campo);
         this.nombre_campo++;
         Element opciones = xml.agregarElemento("opciones", campo);
@@ -1124,5 +1183,5 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-  // </editor-fold>
+    // </editor-fold>
 }

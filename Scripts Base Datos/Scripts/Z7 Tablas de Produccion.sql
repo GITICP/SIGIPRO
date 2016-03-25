@@ -310,6 +310,10 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (674, '[p
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (675, '[produccion]AprobarDirectorActividad', 'Permite al director aprobar o rechazar una actividad de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (676, '[produccion]ActivarRespuestaActividad', 'Permite activar versiones anteriores de una respuesta de actividad de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (677, '[produccion]RealizarActividadApoyo', 'Permite empezar a realizar una actividad de apoyo.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (678, '[produccion]RevisarActividadApoyo', 'Permite revisar una actividad de apoyo, por parte del regente.');
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (679, '[produccion]AprobarActividadApoyo', 'Permite aprobar una actividad de apoyo, por parte del encargado.');
+
+
 
 
 

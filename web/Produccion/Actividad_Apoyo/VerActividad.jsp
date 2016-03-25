@@ -119,9 +119,28 @@
                                                 ${respuesta.getUsuario_realizar().getNombre_completo()}
                                             </td>
                                             <td>
-                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
-                                                </c:if>
+                                                <c:choose>
+                                                    <c:when test="${respuesta.getEstado()==2}">
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 678)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion revisar-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalRevisarRespuesta">Revisar</a>
+                                                        </c:if>
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:when test="${respuesta.getEstado()==3}">
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 679)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobarrespuesta-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalAprobarRespuesta">Aprobar</a>
+                                                        </c:if>
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:when test="${respuesta.getEstado()==4}">
+                                                        Aprobada
+                                                    </c:when>
+                                                </c:choose>
+
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -155,6 +174,46 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Actividad</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalRevisarRespuesta" titulo="Revisar Respuesta de Actividad de Apoyo">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-revisar-respuesta">
+            <form class="form-horizontal" id="revisarActividad" autocomplete="off" method="post" action="Actividad_Apoyo">
+                <input hidden="true" name="accion" value="revisarrespuesta">
+                <input hidden="true" id='id_respuesta' name='id_respuesta' value="">
+                <input hidden="true" id='version' name='version' value="">
+                <label for="label" class="control-label">¿Está seguro que desea indicar que revisó la Respuesta de la Actividad de Apoyo?</label>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Revisar Respuesta</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalAprobarRespuesta" titulo="Aprobar Respuesta de Actividad de Apoyo">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-aprobar-respuesta">
+            <form class="form-horizontal" id="aprobarRespuesta" autocomplete="off" method="post" action="Actividad_Apoyo">
+                <input hidden="true" name="accion" value="aprobarrespuesta">
+                <input hidden="true" id='id_respuesta' name='id_respuesta' value="">
+                <input hidden="true" id='version' name='version' value="">
+                <label for="label" class="control-label">¿Está seguro que desea indicar que aprobó la Respuesta de la Actividad de Apoyo?</label>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Respuesta</button>            </div>
                 </div>
             </form>
         </div>

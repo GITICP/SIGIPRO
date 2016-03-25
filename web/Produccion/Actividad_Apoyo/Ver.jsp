@@ -93,6 +93,17 @@
                                         </c:choose>
                                     </td>
                                 </tr>
+                                <tr><td> <strong>Requiere aprobación:</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isRequiere_ap()}">
+                                                Sí
+                                            </c:when>
+                                            <c:otherwise>
+                                                No
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                                 <c:if test="${actividad.getObservaciones()!=''}">
                                     <tr><td> <strong>Observaciones de Rechazo:</strong> <td>${actividad.getObservaciones()} </td></tr>
                                 </c:if>
