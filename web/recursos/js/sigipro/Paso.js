@@ -57,7 +57,7 @@ function agregarCampo() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre\" class=\"form-control\" name=\"c_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre\" class=\"form-control\" name=\"c_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -111,7 +111,7 @@ function agregarUsuario() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"u_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"u_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -177,7 +177,7 @@ function agregarActividadApoyo() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"aa_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"aa_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -240,7 +240,7 @@ function agregarSubbodega() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"a_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"a_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -320,7 +320,7 @@ function agregarSeleccion() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre\" class=\"form-control\" name=\"s_snombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre\" class=\"form-control\" name=\"s_snombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -331,7 +331,7 @@ function agregarSeleccion() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group opciones_" + contador + "\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre de la Opción\" class=\"form-control\" name=\"o_opcion_" + contador + "_" + opciones + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre de la Opción\" class=\"form-control\" name=\"o_opcion_" + contador + "_" + opciones + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -360,7 +360,7 @@ function agregarSeleccion() {
 }
 
 function agregarOpcion(id) {
-    fila = "                      <div class='col-md-8 o_opcion" + opciones + "_" + id + "_" + opciones + "'> <br><input type=\"text\" maxlength=\"45\" placeholder=\"Nombre de la Opción\" class=\"form-control\" name=\"o_opcion" + opciones + "_" + id + "_" + opciones + "\"";
+    fila = "                      <div class='col-md-8 o_opcion" + opciones + "_" + id + "_" + opciones + "'> <br><input type=\"text\" maxlength=\"200\" placeholder=\"Nombre de la Opción\" class=\"form-control\" name=\"o_opcion" + opciones + "_" + id + "_" + opciones + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" ></div> ";

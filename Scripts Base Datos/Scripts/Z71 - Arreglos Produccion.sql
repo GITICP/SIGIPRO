@@ -25,4 +25,6 @@ ADD COLUMN id_usuario_aprobar int;
 ALTER TABLE ONLY produccion.historial_respuesta_aa ADD CONSTRAINT fk_historial_usuario_revisar FOREIGN KEY (id_usuario_revisar) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
 ALTER TABLE ONLY produccion.historial_respuesta_aa ADD CONSTRAINT fk_historial_usuario_aprobar FOREIGN KEY (id_usuario_aprobar) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
 
+ALTER TABLE PRODUCCION.HISTORIAL_PASO
+ALTER COLUMN NOMBRE TYPE CHARACTER VARYING (200)
 
