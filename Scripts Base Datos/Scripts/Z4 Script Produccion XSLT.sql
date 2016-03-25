@@ -243,9 +243,8 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
-                        <div class="ver">
-                            <a>Ver Sangría</a>
+                        <select id="sangria" multiple="multiple" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <div class="{$nombre-campo}_ver">
                         </div>      
                     </div>
                 </div>
@@ -523,30 +522,6 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
                 <div class="widget-header">
                     <h3>
                         <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Referencia a Sangrías''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''sangria'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
                         <xsl:value-of select="''Referencia a Lotes de Producción''" /> 
                     </h3>
                 </div>
@@ -565,6 +540,8 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
                     </table>
                 </div>
             </div>
+        </div>
+        <div class="widget-content row">
             <div class="widget widget-table col-sm-6">
                 <div class="widget-header">
                     <h3>
@@ -587,7 +564,7 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
                     </table>
                 </div>
             </div>
-            
+            <xsl:apply-templates select="campo[tipo = ''sangria'']"/>
         </div>
         <div class="widget-content row">
             <xsl:apply-templates select="campo[tipo = ''aa'']"/>
@@ -736,6 +713,39 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
         </div>
     </xsl:template>
 
+    <xsl:template match="campo[tipo = ''sangria'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Sangría</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/sangria">
+                            <xsl:param name="id" select="''id''"/>
+                            <tr>
+                                <td>
+                                    <a target="_blank" href="//SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={id}">
+                                        Ver Sangría (id: <xsl:value-of select="id" />)
+                                    </a>
+                                </td>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+
     <xsl:template match="campo[tipo = ''aa'']">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
@@ -825,19 +835,6 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
         
     </xsl:template>
     
-    <xsl:template match="campo[(tipo = ''sangria'')]">
-        <xsl:param name="cantidad" select="''cantidad''"/>
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={valor}"> Ver Sangría </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
 </xsl:stylesheet>
                 ')
 );
