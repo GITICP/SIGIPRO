@@ -224,6 +224,16 @@ $(document).on("click", ".verificar-Modal", function () {
     $("#class-verificar-paso #posicion_actual").val(posicion_actual);
 });
 
+$(document).on("click", ".vencimiento-Modal", function () {
+    var id_lote = $(this).data('id');
+    $('#class-vencimiento-lote #id_lote').val(id_lote);
+});
+
+$(document).on("click", ".distribucion-Modal", function () {
+    var id_lote = $(this).data('id');
+    $('#class-distribucion-lote #id_lote').val(id_lote);
+});
+
 function generar_select_sangria(datos, element) {
 
     $(element).append("<option value=\"\"></option>");

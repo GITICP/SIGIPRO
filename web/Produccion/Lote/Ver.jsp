@@ -39,13 +39,13 @@
                                     <c:when test="${lote.isEstado()}">
                                         <c:choose>
                                             <c:when test="${lote.getFecha_vencimiento()==null}">
-                                                Hola
+                                                <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
                                             </c:when>
                                             <c:when test="${lote.getUsuario_distribucion().getId_usuario()==0}">
-                                                Hola
+                                                <a class="btn btn-primary btn-sm boton-accion distribucion-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalDistribucionLote">Distribución</a>
                                             </c:when>
                                         </c:choose>
-                                        
+
                                     </c:when>
                                 </c:choose>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 660)}">
@@ -67,13 +67,15 @@
                                                 Pendiente
                                             </c:otherwise>
                                         </c:choose>
-                                    </td></tr>
-                                <c:if test="${lote.getUsuario_distribucion().getId_usuario()!=0}">
-                                <tr><td> <strong>Usuario de Distribución:</strong></td> <td>${lote.getUsuario_distribucion().getNombre_completo()} </td></tr>
-                                </c:if>
+                                    </td>
+                                </tr>
                                 <c:if test="${lote.getFecha_vencimiento()!=null}">
                                     <tr><td> <strong>Fecha de Vencimiento:</strong></td> <td>${lote.getFecha_vencimientoAsString()} </td></tr>
                                 </c:if>
+                                <c:if test="${lote.getUsuario_distribucion().getId_usuario()!=0}">
+                                    <tr><td> <strong>Usuario de Distribución:</strong></td> <td>${lote.getUsuario_distribucion().getNombre_completo()} </td></tr>
+                                </c:if>
+
                             </table>
                             <br>
                             <div class="col-sm-12">
@@ -270,6 +272,51 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
                         <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Verificar Paso</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+</t:modal>
+
+<t:modal idModal="modalDistribucionLote" titulo="Aprobar Distribución del Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-distribucion-lote">
+            <form class="form-horizontal" id="distribuirLote" autocomplete="off" method="post" action="Lote">
+                <input hidden="true" name="accion" value="distribucion">
+                <input hidden="true" id='id_lote' name='id_lote' value="">
+                <label for="label" class="control-label">¿Está seguro que desea aprobar la distribución del Lote de Producción?</label>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Distribución</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+</t:modal>
+
+<t:modal idModal="modalVencimientoLote" titulo="Registrar Fecha de Vencimiento al Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-vencimiento-lote">
+            <form class="form-horizontal" id="registrarVencimiento" autocomplete="off" method="post" action="Lote">
+                <input hidden="true" name="accion" value="vencimiento">
+                <input hidden="true" id='id_lote' name='id_lote' value="">
+                <label for="fecha_vencimiento" class="control-label">*Fecha de Vencimiento</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                                   oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                   onchange="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Fecha de Vencimiento</button>            </div>
                 </div>
             </form>
         </div>

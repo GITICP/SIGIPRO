@@ -644,7 +644,8 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, l.aprobacion, h.nombre as nombreprotocolo , l.estado, l.posicion_actual, p.id_paso, hp.nombre as nombrepaso, r.id_respuesta "
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, l.aprobacion, h.nombre as nombreprotocolo , l.estado, l.posicion_actual, p.id_paso, hp.nombre as nombrepaso, r.id_respuesta, "
+                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo "
                     + "FROM produccion.lote as l "
                     + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
@@ -652,6 +653,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.paso as p ON (pp.id_paso = p.id_paso) "
                     + "LEFT JOIN produccion.historial_paso as hp ON (hp.id_paso = p.id_paso and hp.version = p.version) "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (r.id_pxp = pp.id_pxp and r.id_lote = l.id_lote) "
+                    + "LEFT JOIN seguridad.usuarios as ul ON (l.id_usuario_distribucion = ul.id_usuario) "
                     + "WHERE (l.estado = true and l.aprobacion = false) ; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
@@ -673,6 +675,19 @@ public class LoteDAO extends DAO {
                     lote.setId_respuesta_actual(rs.getInt("id_respuesta"));
                 } catch (Exception e) {
                     System.out.println("No tiene respuesta.");
+                }
+                try{
+                    Usuario usuario_distribucion = new Usuario();
+                    usuario_distribucion.setId_usuario(rs.getInt("id_usuario_distribucion"));
+                    usuario_distribucion.setNombre_completo(rs.getString("nombre_completo"));
+                    lote.setUsuario_distribucion(usuario_distribucion);
+                }catch(Exception e){
+                    
+                }
+                try{
+                    lote.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
+                }catch(Exception e){
+                    
                 }
                 resultado.add(lote);
             }

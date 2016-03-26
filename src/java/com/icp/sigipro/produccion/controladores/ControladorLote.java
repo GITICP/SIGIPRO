@@ -492,7 +492,7 @@ public class ControladorLote extends SIGIPROServlet {
 
     protected void postDistribucion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(667, request);
-        int id_lote = Integer.parseInt(request.getParameter("id_respuesta_actual"));
+        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         boolean resultado = false;
         try {
@@ -516,7 +516,7 @@ public class ControladorLote extends SIGIPROServlet {
     protected void postVencimiento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(668, request);
          boolean resultado = false;
-        int id_lote = Integer.parseInt(request.getParameter("id_respuesta_actual"));
+        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
         
         Lote lote = new Lote();
         lote.setId_lote(id_lote);
