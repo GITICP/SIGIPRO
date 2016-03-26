@@ -5,7 +5,11 @@
  */
 package com.icp.sigipro.produccion.modelos;
 
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -14,6 +18,7 @@ import org.json.JSONObject;
  * @author ld.conejo
  */
 public class Lote {
+
     int id_lote;
     Protocolo protocolo;
     String nombre;
@@ -23,12 +28,34 @@ public class Lote {
     int posicion_actual;
     Paso paso_actual;
     boolean aprobacion;
-    
+    private Date fecha_vencimiento;
+    private Usuario usuario_distribucion;
+
     int id_respuesta_actual;
-    
-    List <Respuesta_pxp> respuestas;
+
+    List<Respuesta_pxp> respuestas;
 
     public Lote() {
+    }
+
+    public Date getFecha_vencimiento() {
+        return fecha_vencimiento;
+    }
+
+    public void setFecha_vencimiento(Date fecha_vencimiento) {
+        this.fecha_vencimiento = fecha_vencimiento;
+    }
+
+    public String getFecha_vencimientoAsString() {
+        return formatearFecha(fecha_vencimiento);
+    }
+
+    public Usuario getUsuario_distribucion() {
+        return usuario_distribucion;
+    }
+
+    public void setUsuario_distribucion(Usuario usuario_distribucion) {
+        this.usuario_distribucion = usuario_distribucion;
     }
 
     public String getNombreProtocolo() {
@@ -62,8 +89,6 @@ public class Lote {
     public void setPaso_actual(Paso paso_actual) {
         this.paso_actual = paso_actual;
     }
-    
-    
 
     public List<Respuesta_pxp> getRespuestas() {
         return respuestas;
@@ -112,7 +137,7 @@ public class Lote {
     public void setPosicion_actual(int posicion_actual) {
         this.posicion_actual = posicion_actual;
     }
-    
+
     public String parseJSON() {
         Class _class = this.getClass();
         JSONObject JSON = new JSONObject();
@@ -125,12 +150,17 @@ public class Lote {
                 } else {
                     JSON.put("id_objeto", field.get(this));
                 }
-            }JSON.put("id_protocolo", protocolo.getId_protocolo());
+            }
+            JSON.put("id_protocolo", protocolo.getId_protocolo());
 
         } catch (Exception e) {
 
         }
         return JSON.toString();
     }
-    
+
+    private String formatearFecha(Date fecha) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }
 }

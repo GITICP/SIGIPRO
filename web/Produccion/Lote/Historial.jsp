@@ -46,6 +46,7 @@
                                     <tr>
                                         <th>Nombre</th>
                                         <th>Protocolo</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,6 +62,19 @@
                                             </td>
                                             <td>
                                                 ${lote.getProtocolo().getNombre()}
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${lote.getFecha_vencimiento()==null}">
+                                                        <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
+                                                    </c:when>
+                                                    <c:when test="${lote.getUsuario_distribucion().getId_usuario()==0}">
+                                                        <a class="btn btn-primary btn-sm boton-accion distribucion-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalDistribucionLote">Distribución</a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a class="btn btn-warning btn-sm boton-accion" disabled>Distribuido</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>
