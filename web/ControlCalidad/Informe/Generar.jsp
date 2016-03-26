@@ -61,7 +61,7 @@
                                 <c:if test="${accion == 'Editar'}">
                                     <input type="hidden" value="${solicitud.getInforme().getId_informe()}" name="id_informe" />
                                     <c:choose>
-                                        <c:when test="${tipo == 'sangria'}">
+                                        <c:when test="${tipo == 'sangria' || tipo == 'sangria_prueba'}">
                                             <c:forEach items="${caballos_resultado}" var="resultado_caballo">
                                                 <input type="hidden" name="caballos_res_${resultado_caballo.getResultado().getId_resultado()}" value="${resultado_caballo.pasarIdsAString()}" />
                                             </c:forEach>

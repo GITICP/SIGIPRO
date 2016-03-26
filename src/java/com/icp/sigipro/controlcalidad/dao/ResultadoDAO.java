@@ -604,8 +604,8 @@ public class ResultadoDAO extends DAO {
             consulta = getConexion().prepareStatement(
                   " SELECT id_caballo, " + campo_resultado
                 + " FROM caballeriza.sangrias_caballos "
-                + " WHERE id_sangria = ? "
-                + " ORDER BY " + campo_resultado + ";"
+                + " WHERE id_sangria = ? AND " + campo_resultado + " is not null "
+                + " ORDER BY " + campo_resultado + ""
             );
             
             consulta.setInt(1, id_sangria);
@@ -618,6 +618,58 @@ public class ResultadoDAO extends DAO {
             
             while(rs.next()) {
                 int id_resultado_temp = rs.getInt(campo_resultado);
+                if (objeto.getResultado().getId_resultado() != id_resultado_temp) {
+                    objeto = new ObjetoAsociacionMultiple();
+                    
+                    Resultado r = new Resultado();
+                    r.setId_resultado(id_resultado_temp);
+                    
+                    objeto.setResultado(r);
+                    
+                    resultado.add(objeto);
+                }
+                objeto.agregarId(rs.getInt("id_caballo"));
+            }
+            
+            
+        } catch(SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener la información. Inténtelo nuevamente y de persistir notifique al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return resultado;
+        
+    }
+    
+    public List<ObjetoAsociacionMultiple> obtenerCaballosResultadoSP(int id_sangria) throws SIGIPROException {
+        
+        List<ObjetoAsociacionMultiple> resultado = new ArrayList<>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            consulta = getConexion().prepareStatement(
+                  " SELECT id_caballo, id_resultado "
+                + " FROM caballeriza.sangrias_pruebas_caballos "
+                + " WHERE id_sangria_prueba = ? AND id_resultado is not null "
+                + " ORDER BY id_resultado;"
+            );
+            
+            consulta.setInt(1, id_sangria);
+            
+            rs = consulta.executeQuery();
+            
+            ObjetoAsociacionMultiple objeto = new ObjetoAsociacionMultiple();
+            Resultado res_temp = new Resultado();
+            objeto.setResultado(res_temp);
+            
+            while(rs.next()) {
+                int id_resultado_temp = rs.getInt("id_resultado");
                 if (objeto.getResultado().getId_resultado() != id_resultado_temp) {
                     objeto = new ObjetoAsociacionMultiple();
                     

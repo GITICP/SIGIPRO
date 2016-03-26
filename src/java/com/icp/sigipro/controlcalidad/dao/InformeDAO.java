@@ -168,9 +168,11 @@ public class InformeDAO extends DAO {
 
             consulta_eliminacion_resultados.setInt(1, informe.getId_informe());
             consulta_eliminacion_resultados.executeUpdate();
+            
+            String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
 
             consulta_resultados = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.resultados_informes(id_informe, id_resultado) VALUES (?,?);"
+                    " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
             );
 
             for (Resultado r : informe.getResultados()) {
