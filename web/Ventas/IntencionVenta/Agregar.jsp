@@ -156,21 +156,6 @@
 
     </t:modal>
 
-    <!-- Los modales de Editar Roles terminan acá -->
-
-    <t:modal idModal="modalErrorFechaCantidad" titulo="Error">
-
-      <jsp:attribute name="form">
-
-        <h5>La posible fecha de despacho debe ser igual o posterior a la de hoy. Además, la cantidad a vender debe ser menor a la presente en stock. </h5>
-
-        <div class="modal-footer">
-          <button id="exitErrorFechaCantidad" type="button" data-dismiss="modal" class="btn btn-primary" ><i class="fa fa-check-circle"></i> Confirmar</button>
-        </div>
-
-      </jsp:attribute>
-
-    </t:modal>
         <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
         <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Intencion_venta.js"></script>
   </jsp:attribute>

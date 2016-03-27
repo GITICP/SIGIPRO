@@ -57,6 +57,30 @@ public class CotizacionDAO extends DAO {
         }
         return resultado;
     }
+    
+    public int CantidadDeCotizacionesConIntencion(int id_intencion) throws SIGIPROException {
+
+        int resultado = 0;
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.cotizacion WHERE id_intencion=?; ");
+            consulta.setInt(1, id_intencion);
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                resultado +=1;
+
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
 
     public Cotizacion obtenerCotizacion(int id_cotizacion) throws SIGIPROException {
 

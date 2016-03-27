@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_orden" value="${orden.getId_orden()}">
-      <input hidden="true" name="accion" value="${accion}">
+      <input hidden="true" name="accion" id="accion" value="${accion}">
       <input id="listaProductos" hidden="true" name="listaProductos" value="">
             <label for="id_cliente" class="control-label"> *Cliente</label>
             <!-- Id Cliente -->

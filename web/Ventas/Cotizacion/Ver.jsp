@@ -57,7 +57,7 @@
               <table>
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${cotizacion.getId_cotizacion()} </td> </center> </tr>
                 <tr><td> <strong>Cliente: </strong>  </td> <center> <td> ${cotizacion.getCliente().getNombre()}   </td> </center> </tr>
-                <tr><td> <strong>Intención: </strong>  </td> <center> 
+                <tr><td> <strong>ID Intención: </strong>  </td> <center> 
                     <c:choose>
                           <c:when test= "${cotizacion.getIntencion().getId_intencion() == 0}">
                               <td></td>

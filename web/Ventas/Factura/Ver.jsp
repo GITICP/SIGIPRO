@@ -57,7 +57,7 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>ID: </strong></td> <td>${factura.getId_factura()} </td></tr>
                                 <tr><td> <strong>Cliente: </strong> <td>${factura.getCliente().getNombre()} </td></tr>
-                                <tr><td> <strong>Orden de Compra: </strong> 
+                                <tr><td> <strong>ID Orden de Compra: </strong> 
                                     <c:choose>
                                             <c:when test="${factura.getOrden().getId_orden() == 0}">
                                                 <td></td>

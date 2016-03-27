@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_cotizacion" value="${cotizacion.getId_cotizacion()}">
-      <input hidden="true" name="accion" value="${accion}">
+      <input hidden="true" name="accion" id="accion" value="${accion}">
       <input id="listaProductos" hidden="true" name="listaProductos" value="">
             <label for="id_cliente" class="control-label"> *Cliente</label>
             <!-- Id Cliente -->
@@ -40,7 +40,9 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="id_intencion_completo" name="id_intencion_completo" hidden>
+                        
+                        <select id="id_intencion" class="select2" name="id_intencion" 
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')" required>
                           <option value=''></option>
                           <c:forEach items="${intenciones}" var="intencion">
                             <c:choose>
@@ -53,8 +55,8 @@
                             </c:choose>
                           </c:forEach>
                         </select>
-                        <select id="id_intencion" class="select2" name="id_intencion" 
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')" required>
+                        
+                        <select id="id_intencion_completo" name="id_intencion_completo" hidden>
                           <option value=''></option>
                           <c:forEach items="${intenciones}" var="intencion">
                             <c:choose>
@@ -77,7 +79,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="total_parcial" type="number" min="0" class="form-control" name="total_parcial" value="${cotizacion.getTotal() - cotizacion.getFlete()}"
+                        <input id="total_parcial" type="number" readonly min="0" class="form-control" name="total_parcial" value="${cotizacion.getTotal() - cotizacion.getFlete()}"
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                     </div>
@@ -99,7 +101,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="total" type="number" min="0" class="form-control" name="total" value="${cotizacion.getTotal()}"
+                        <input id="total" type="number" min="0" readonly class="form-control" name="total" value="${cotizacion.getTotal()}"
                                 oninvalid="setCustomValidity('Este campo es requerido')"
                                 oninput="setCustomValidity('')">
                     </div>

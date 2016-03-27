@@ -181,7 +181,7 @@ DELETE FROM seguridad.entradas_menu_principal WHERE id_menu_principal = 700;
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (700, 0, 'Ventas', null);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (701, 700, 'Clientes', '/Ventas/Clientes', 1);
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (702, 700, 'Contratos de Comercialización', '/Ventas/ContratoComercializacion', 2);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (702, 700, 'Productos de Venta', '/Ventas/Producto_ventas', 2);
 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, orden) VALUES (703, 700, 'Proceso de Venta', 3);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (704, 703, 'Solicitudes o Intenciones de Venta', '/Ventas/IntencionVenta', 1);
@@ -190,7 +190,7 @@ INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, 
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (707, 703, 'Facturas', '/Ventas/Factura', 4);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (708, 703, 'Pagos', '/Ventas/Pago', 5);
 
-INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (709, 700, 'Productos de Venta', '/Ventas/Producto_ventas', 4);
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (709, 700, 'Contratos de Comercialización', '/Ventas/ContratoComercializacion', 4);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (710, 700, 'Reuniones de Producción', '/Ventas/ReunionProduccion', 5);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (711, 700, 'Encuestas de Satisfacción', '/Ventas/EncuestaSatisfaccion', 6);
 INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (712, 700, 'Seguimientos de Venta', '/Ventas/SeguimientoVenta', 7);

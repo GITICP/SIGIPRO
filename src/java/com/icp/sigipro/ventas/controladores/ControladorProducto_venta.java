@@ -194,7 +194,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             request.setAttribute("listaProductos", productos);
             request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta eliminado correctamente"));
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            request.setAttribute("mensaje", helper.mensajeDeError("Imposible eliminar el producto: El producto a eliminar tiene Solicitudes o Intenciones de Venta relacionadas."));
         }
         redireccionar(request, response, redireccion);
     }

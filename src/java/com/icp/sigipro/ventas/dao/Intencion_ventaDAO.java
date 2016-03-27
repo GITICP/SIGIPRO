@@ -82,6 +82,29 @@ public class Intencion_ventaDAO extends DAO {
         return resultado;
     }
     
+    public int CantidadIntencionesConCliente(int id_cliente) throws SIGIPROException {
+
+        int resultado = 0;
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.intencion_venta where id_cliente = ?; ");
+            consulta.setInt(1, id_cliente);
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                resultado += 1;
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
+    
     public int insertarIntencion_venta(Intencion_venta p) throws SIGIPROException {
 
         int resultado = 0;
@@ -139,25 +162,32 @@ public class Intencion_ventaDAO extends DAO {
     public boolean eliminarIntencion_venta(int id_intencion) throws SIGIPROException {
 
         boolean resultado = false;
+        CotizacionDAO cDAO = new CotizacionDAO();
+        Orden_compraDAO oDAO = new Orden_compraDAO();
+        if(cDAO.CantidadDeCotizacionesConIntencion(id_intencion) > 0 || oDAO.CantidadDEOrdenesConIntencion(id_intencion) > 0){
+            throw new SIGIPROException("Imposible de eliminar: Intención o Solicitud de venta relacionada con otras secciones.");
+        }
+        else{
+            try {
+                PreparedStatement consulta = getConexion().prepareStatement(
+                        " DELETE FROM ventas.intencion_venta "
+                        + " WHERE id_intencion=?; "
+                );
 
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM ventas.intencion_venta "
-                    + " WHERE id_intencion=?; "
-            );
+                consulta.setInt(1, id_intencion);
 
-            consulta.setInt(1, id_intencion);
-
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
+                if (consulta.executeUpdate() == 1) {
+                    resultado = true;
+                }
+                consulta.close();
+                cerrarConexion();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new SIGIPROException("Se produjo un error al procesar la eliminación");
             }
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la eliminación");
         }
         return resultado;
     }
+        
 
 }

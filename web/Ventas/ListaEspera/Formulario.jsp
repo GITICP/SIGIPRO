@@ -59,7 +59,7 @@
                                     mm='0'+mm
                                 } 
                                 var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha").value = today;
+                                document.getElementById("fecha_solicitud").value = today;
                             </script>
                           </c:when>
                           <c:otherwise>
@@ -94,7 +94,7 @@
                                     mm='0'+mm
                                 } 
                                 var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha").value = today;
+                                document.getElementById("fecha_atencion").value = today;
                             </script>
                           </c:when>
                           <c:otherwise>

@@ -134,25 +134,31 @@ public class Producto_ventaDAO extends DAO {
     public boolean eliminarProducto_venta(int id_producto) throws SIGIPROException {
 
         boolean resultado = false;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM ventas.producto_venta "
-                    + " WHERE id_producto=?; "
-            );
-
-            consulta.setInt(1, id_producto);
-
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
-            }
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la eliminación");
+        Producto_IntencionDAO piDAO = new Producto_IntencionDAO();
+        
+        if (piDAO.CantidadDeIntencionesConProducto(id_producto) > 0){
+            throw new SIGIPROException("El producto a eliminar tiene Solicitudes o Intenciones de Venta relacionadas.");
         }
-        return resultado;
+        else{
+            try {
+                PreparedStatement consulta = getConexion().prepareStatement(
+                        " DELETE FROM ventas.producto_venta "
+                        + " WHERE id_producto=?; "
+                );
+
+                consulta.setInt(1, id_producto);
+
+                if (consulta.executeUpdate() == 1) {
+                    resultado = true;
+                }
+                consulta.close();
+                cerrarConexion();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new SIGIPROException("Se produjo un error al procesar la eliminación");
+            }
+            return resultado;
+        }
     }
 
 }

@@ -57,7 +57,7 @@
               <table>
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${orden.getId_orden()} </td> </center> </tr>
                 <tr><td> <strong>Cliente: </strong>  </td> <center> <td> ${orden.getCliente().getNombre()}   </td> </center> </tr>
-                <tr><td> <strong>Cotización: </strong>  </td> <center>
+                <tr><td> <strong>ID Cotización: </strong>  </td> <center>
                     <c:choose>
                       <c:when test= "${orden.getCotizacion().getId_cotizacion() == 0}">
                           <td></td>
@@ -67,7 +67,7 @@
                       </c:otherwise>
                   </c:choose>
                 </center> </tr>
-                <tr><td> <strong>Intención: </strong>  </td> <center>
+                <tr><td> <strong>ID Intención: </strong>  </td> <center>
                   <c:choose>
                       <c:when test= "${orden.getIntencion().getId_intencion() == 0}">
                           <td></td>

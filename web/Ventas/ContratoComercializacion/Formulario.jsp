@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form class="form-horizontal" autocomplete="off" method="post" action="ContratoComercializacion">
+<form class="form-horizontal" id="formContrato" autocomplete="off" method="post" action="ContratoComercializacion">
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_contrato" value="${contrato.getId_contrato()}">
@@ -80,7 +80,7 @@
                                     mm='0'+mm
                                 } 
                                 var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha").value = today;
+                                document.getElementById("fecha_inicial").value = today;
                             </script>
                           </c:when>
                           <c:otherwise>
@@ -100,7 +100,7 @@
                         <c:choose>
                           <c:when test="${accion == 'Agregar'}" >
                             <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_renovacion" class="form-control sigiproDatePickerEspecial" name="fecha_renovacion" data-date-format="dd/mm/yyyy" required
-                            oninvalid="setCustomValidity('Este campo es requerido ')"
+                            oninvalid="setCustomValidity('Este campo es requerido y debe ser mayor a la fecha inicial ')"
                             onchange="setCustomValidity('')"> 
                             <script>
                                 var today = new Date();
@@ -108,6 +108,7 @@
                                 var mm = today.getMonth()+1; //January is 0!
 
                                 var yyyy = today.getFullYear();
+                                dd += 1;
                                 if(dd<10){
                                     dd='0'+dd
                                 } 
@@ -115,12 +116,12 @@
                                     mm='0'+mm
                                 } 
                                 var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha").value = today;
+                                document.getElementById("fecha_renovacion").value = today;
                             </script>
                           </c:when>
                           <c:otherwise>
-                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_inicial" value="${contrato.getFechaRenovacion_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_renovacion" data-date-format="dd/mm/yyyy" required
-                            oninvalid="setCustomValidity('Este campo es requerido ')"
+                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_renovacion" value="${contrato.getFechaRenovacion_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_renovacion" data-date-format="dd/mm/yyyy" required
+                            oninvalid="setCustomValidity('Este campo es requerido y debe ser mayor a la fecha inicial ')"
                             onchange="setCustomValidity('')"> 
                           </c:otherwise>
                         </c:choose>
@@ -136,13 +137,15 @@
       <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                    <button type="submit" onclick="comprobarFechas()" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Contrato</button>
+                    <button type="submit" onclick="comprobarFechas()" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Contrato</button>
                 </c:otherwise>
             </c:choose>    </div>
   </div>
 
 
 </form>
+        <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+        <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Contrato_comercializacion.js"></script>

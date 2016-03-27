@@ -133,24 +133,30 @@ public class ClienteDAO extends DAO {
 
     public boolean eliminarCliente(int id_cliente) throws SIGIPROException {
 
+        Contactos_clienteDAO cDAO = new Contactos_clienteDAO();
+        Intencion_ventaDAO iDAO = new Intencion_ventaDAO();
         boolean resultado = false;
+        if (!cDAO.obtenerContactos_Del_Cliente(id_cliente).isEmpty() || iDAO.CantidadIntencionesConCliente(id_cliente) > 0){
+            throw new SIGIPROException("Cliente relacionado con otros elementos.");
+        }
+        else{
+            try {
+                PreparedStatement consulta = getConexion().prepareStatement(
+                        " DELETE FROM ventas.cliente "
+                        + " WHERE id_cliente=?; "
+                );
 
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM ventas.cliente "
-                    + " WHERE id_cliente=?; "
-            );
+                consulta.setInt(1, id_cliente);
 
-            consulta.setInt(1, id_cliente);
-
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
+                if (consulta.executeUpdate() == 1) {
+                    resultado = true;
+                }
+                consulta.close();
+                cerrarConexion();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new SIGIPROException("Se produjo un error al procesar la eliminación");
             }
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la eliminación");
         }
         return resultado;
     }

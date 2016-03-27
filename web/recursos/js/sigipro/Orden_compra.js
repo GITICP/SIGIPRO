@@ -4,6 +4,14 @@
  * and open the template in the editor.
  */
 
+/*function revisarCliente(){
+        var cotizacion = document.getElementById("id_cotizacion");
+        if (cotizacion.value === ""){
+            
+        }
+    
+}*/
+
 function cambiarCotizaciones(){
             //Quitar todas las opciones del select de intenciones
         var i;
@@ -36,40 +44,47 @@ function cambiarCotizaciones(){
         $("#id_cotizacion").val(" ");
 }
 
+var contadorEditar = 0; //Cuando se edita la orden de compra, se ejecuta la función siguiente 1 vez, lo cual afecta la selección de la solicitud/intención de venta
 $(function(){ /* DOM ready */ //
     $("#id_cliente").change(function () {
-        //Quitar todas las opciones del select de intenciones
-        var i;
-        var select_intencion = document.getElementById("id_intencion");
-        for(i=select_intencion.options.length-1;i>=0;i--)
-        {
-            select_intencion.remove(i);
+        var ac = document.getElementById("accion").value;
+        //alert("Cliente cambiado. Accion = "+ac+", Contador = "+contadorEditar);
+        if(ac === "Editar" && contadorEditar < 1){
+            contadorEditar += 1;
         }
-        
-        //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
-        var select_cliente = document.getElementById("id_cliente");
-        var id_cliente = select_cliente[select_cliente.selectedIndex].value;
-        
-        var select_intencion_completo = document.getElementById("id_intencion_completo");
-        var e;
-        var opt2 = document.createElement('option');
-        opt2.value = "";
-        opt2.innerHTML = "";
-        select_intencion.appendChild(opt2);
-        for (e = 0; e < select_intencion_completo.length; e++) {
-            if (select_intencion_completo[e].getAttribute("data-cliente") === id_cliente){
-                var opt = document.createElement('option');
-                opt.value = select_intencion_completo[e].value;
-                opt.setAttribute('data-cliente',select_intencion_completo[e].getAttribute("data-cliente"));
-                opt.innerHTML = select_intencion_completo[e].innerHTML;
-                select_intencion.appendChild(opt);
+        else{
+            //Quitar todas las opciones del select de intenciones
+            var i;
+            var select_intencion = document.getElementById("id_intencion");
+            for(i=select_intencion.options.length-1;i>=0;i--)
+            {
+                select_intencion.remove(i);
             }
+
+            //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
+            var select_cliente = document.getElementById("id_cliente");
+            var id_cliente = select_cliente[select_cliente.selectedIndex].value;
+
+            var select_intencion_completo = document.getElementById("id_intencion_completo");
+            var e;
+            var opt2 = document.createElement('option');
+            opt2.value = "";
+            opt2.innerHTML = "";
+            select_intencion.appendChild(opt2);
+            for (e = 0; e < select_intencion_completo.length; e++) {
+                if (select_intencion_completo[e].getAttribute("data-cliente") === id_cliente){
+                    var opt = document.createElement('option');
+                    opt.value = select_intencion_completo[e].value;
+                    opt.setAttribute('data-cliente',select_intencion_completo[e].getAttribute("data-cliente"));
+                    opt.innerHTML = select_intencion_completo[e].innerHTML;
+                    select_intencion.appendChild(opt);
+                }
+            }
+
+            $("#id_intencion").val(" ");
+
+            cambiarCotizaciones();
         }
-        
-        $("#id_intencion").val(" ");
-
-        cambiarCotizaciones();
-
     }).change();
 });
 

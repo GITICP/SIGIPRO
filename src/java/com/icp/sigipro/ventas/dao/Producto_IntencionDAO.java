@@ -81,6 +81,28 @@ public class Producto_IntencionDAO extends DAO {
         }
         return resultado;
     }
+    
+    public int CantidadDeIntencionesConProducto(int id_producto) throws SIGIPROException {
+        int resultado = 0;
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_intencion WHERE id_producto=?; ");
+            consulta.setInt(1, id_producto);
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                
+                resultado += 1;
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
 
     public Producto_Intencion obtenerProducto_Intencion(int id_producto, int id_intencion) throws SIGIPROException {
 

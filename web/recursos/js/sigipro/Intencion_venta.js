@@ -11,7 +11,7 @@ $( document ).ready(function() {
 });
 
 function validarProductosYSubmit(){
-    alert($('#listaProductos').val());
+    //alert($('#listaProductos').val());
     if ($('#listaProductos').val() === ""){
         $('[data-toggle="confirmar"]').tooltip({title: "Asegúrese de agregar productos", placement: "bottom"});   
         $('[data-toggle="confirmar"]').tooltip('show');   

@@ -276,7 +276,7 @@ public class ControladorFactura extends SIGIPROServlet {
                         //File archivo = new File(archivoViejo);
                         //archivo.delete();
                     }
-                if (tr.getOrden().getId_orden() != 0){
+                if (tr.getOrden() == null || tr.getOrden().getId_orden() != 0){
                     resultado2 = dao.editarFacturaOrden0(tr);
                 }
                 else{

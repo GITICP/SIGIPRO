@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_factura" value="${factura.getId_factura()}">
-            <input hidden="true" name="accion" value="${accion}">
+            <input hidden="true" name="accion" id="accion" value="${accion}">
             
             <label for="id_cliente" class="control-label"> *Cliente</label>
             <!-- Id Cliente -->
@@ -240,7 +240,7 @@
                                     mm='0'+mm
                                 } 
                                 var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha").value = today;
+                                document.getElementById("fecha_vencimiento").value = today;
                             </script>
                           </c:when>
                           <c:otherwise>
@@ -304,5 +304,5 @@
 
 
 </form>
-                        <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
-<script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Factura.js"></script>
+    <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+    <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Factura.js"></script>

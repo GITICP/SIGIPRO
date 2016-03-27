@@ -52,8 +52,8 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input id="correo_electronico" type="text" class="form-control" name="correo_electronico" value="${contacto.getCorreo_electronico()}" required
-                                    oninvalid="setCustomValidity('Debe ingresar un nombre. ')"
+                                <input id="correo_electronico" type="email" class="form-control" name="correo_electronico" value="${contacto.getCorreo_electronico()}" required
+                                    oninvalid="setCustomValidity('Debe ingresar un correo electrónico válido. ')"
                                     oninput="setCustomValidity('')">
                             </div>
                         </div>
@@ -63,8 +63,8 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input id="correo_electronico2" type="text" class="form-control" name="correo_electronico2" value="${contacto.getCorreo_electronico2()}" 
-                                    oninvalid="setCustomValidity('Debe ingresar un nombre. ')"
+                                <input id="correo_electronico2" type="email" class="form-control" name="correo_electronico2" value="${contacto.getCorreo_electronico2()}" 
+                                    oninvalid="setCustomValidity('Debe ingresar un correo electrónico válido. ')"
                                     oninput="setCustomValidity('')">
                             </div>
                         </div>

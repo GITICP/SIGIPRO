@@ -319,7 +319,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         orden.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
         String cotizacion = request.getParameter("id_cotizacion");
         String intencion = request.getParameter("id_intencion");
-        if(!cotizacion.equals("")){
+        if(cotizacion != null && !cotizacion.equals("")){
             orden.setCotizacion(cotdao.obtenerCotizacion(Integer.parseInt(cotizacion)));
         }
         else{

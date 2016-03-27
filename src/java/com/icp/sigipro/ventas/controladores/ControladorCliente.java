@@ -287,6 +287,7 @@ public class ControladorCliente extends SIGIPROServlet {
                 request.setAttribute("listaClientes", clientes);
                 request.setAttribute("mensaje", helper.mensajeDeExito("Cliente eliminado correctamente"));
             } else {
+                redireccion = "Clientes/index.jsp";
                 request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
             }
         }

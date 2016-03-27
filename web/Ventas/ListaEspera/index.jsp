@@ -42,8 +42,8 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Cliente</th>
                     <th>Fecha de Solicitud</th>
+                    <th>Cliente</th>
                     <th>Fecha de Atención / Despacho</th>
                   </tr>
                 </thead>
@@ -51,6 +51,12 @@
                   <c:forEach items="${listaListas}" var="lista">
 
                     <tr id ="${lista.getId_lista()}">
+                      <td><a href="/SIGIPRO/Ventas/ListaEspera?accion=ver&id_lista=${lista.getId_lista()}">
+                        <div style="height:100%;width:100%">
+                            ${lista.getFecha_solicitud_S()}
+                        </div>
+                        </a>
+                      </td>
                       <td>
                         <a href="/SIGIPRO/Ventas/ListaEspera?accion=ver&id_lista=${lista.getId_lista()}">
                         <div style="height:100%;width:100%">
@@ -58,7 +64,6 @@
                         </div>
                         </a>
                       </td>
-                      <td>${lista.getFecha_solicitud_S()}</td>
                       <td>${lista.getFecha_atencion_S()}</td>
                     </tr>
                   </c:forEach>

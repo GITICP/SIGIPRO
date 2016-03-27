@@ -35,7 +35,7 @@
             </div>
     </div>                    
     <div class="col-md-6">
-        <label for="lote" class="control-label"> *Número de Lote</label>
+        <label for="lote" class="control-label"> *Número de Lote (Inventario de Producción)</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -45,7 +45,7 @@
                           <c:forEach items="${inventarios}" var="inventario">
                             <c:choose>
                               <c:when test="${inventario.getLote() == producto.getLote()}" >
-                                <option value="${inventario.getLote()}" selected> inventario ${lote.getLote()} </option>
+                                <option value="${inventario.getLote()}" selected> Lote: ${inventario.getLote()} </option>
                               </c:when>
                               <c:otherwise>
                                 <option value="${inventario.getLote()}"> Lote: ${inventario.getLote()} </option>
