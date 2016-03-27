@@ -586,7 +586,7 @@ public class Actividad_ApoyoDAO extends DAO {
                         + "SET version = ?, estado=? "
                         + "WHERE id_respuesta = ?; ");
                 consulta.setInt(1, version);
-                if (respuesta.getActividad().isRequiere_ap()) {
+                if (!respuesta.getActividad().isRequiere_ap()) {
                     //Terminado
                     consulta.setInt(2, 4);
                 } else {
