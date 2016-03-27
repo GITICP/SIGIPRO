@@ -46,7 +46,7 @@
                                     <tr>
                                         <th>Nombre</th>
                                         <th>Protocolo</th>
-                                        <th>Paso</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,18 +64,7 @@
                                                 ${lote.getProtocolo().getNombre()}
                                             </td>
                                             <td>
-                                                <c:choose>
-                                                    <c:when test="${lote.isAprobacion()}">
-                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 662)}">
-                                                            <div class="btn-group widget-header-toolbar">
-                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${lote.getId_lote()}' data-respuesta='${lote.getId_respuesta_actual()}' data-posicion="${lote.getPosicion_actual()}" data-toggle="modal" data-target="#modalAprobarPaso">Aprobar</a>
-                                                            </div>
-                                                        </c:if>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_lote=${lote.getId_lote()}&id_respuesta=${lote.getId_respuesta_actual()}">${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()}</a>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${lote.getId_lote()}">Pendiente</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -95,24 +84,3 @@
         <script src="/SIGIPRO/recursos/js/sigipro/LoteProduccion.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
-
-<t:modal idModal="modalAprobarPaso" titulo="Aprobar Paso de Protocolo de Producción">
-    <jsp:attribute name="form">
-        <div class="widget-content" id="class-aprobar-paso">
-            <form class="form-horizontal" id="aprobarPaso" autocomplete="off" method="post" action="Lote">
-                <input hidden="true" name="accion" value="Aprobar">
-                <input hidden="true" id='id_lote' name='id_lote' value="">
-                <input hidden="true" id='id_respuesta_actual' name='id_respuesta_actual' value="">
-                <input hidden="true" id='posicion_actual' name='posicion_actual' value="">
-                <label for="label" class="control-label">¿Está seguro que desea aprobar el Paso realizado?</label>
-                <div class="form-group">
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Paso</button>            </div>
-                </div>
-            </form>
-        </div>
-
-    </jsp:attribute>
-
-</t:modal>

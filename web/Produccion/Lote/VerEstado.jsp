@@ -46,7 +46,7 @@
                                     <c:forEach items="${lote.getRespuestas()}" var="respuesta">
                                         <div class="center-block">
                                             <c:choose>
-                                                <c:when test="${respuesta.getEstado()==1|| respuesta.getEstado()==8 || respuesta.getEstado()==9}">
+                                                <c:when test="${respuesta.getEstado()==1|| respuesta.getEstado()==8}">
                                                     <div class="square-deshabilitado center-block">
                                                         ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-lock"></i>
                                                     </div>
@@ -56,12 +56,12 @@
                                                         ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-pause"></i>
                                                     </div>
                                                 </c:when>
-                                                <c:when test="${respuesta.getEstado()==3}">
+                                                <c:when test="${respuesta.getEstado()==3 || respuesta.getEstado()==9}">
                                                     <div class="square-deshabilitado center-block">
-                                                        ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-lock"></i>
+                                                        ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-lock"></i> <i class="fa fa-pause"></i>
                                                     </div>
                                                 </c:when> 
-                                                <c:when test="${respuesta.getEstado()==4 || respuesta.getEstado()==10 || respuesta.getEstado()==11}">
+                                                <c:when test="${respuesta.getEstado()==4 || respuesta.getEstado()==10}">
                                                     <div class="square-habilitado center-block">
                                                         ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-unlock"></i>
                                                     </div>
@@ -81,6 +81,11 @@
                                                         ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-check"></i>
                                                     </div>
                                                 </c:when> 
+                                                <c:when test="${respuesta.getEstado()==11}">
+                                                    <div class="square-habilitado center-block">
+                                                        ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} <i class="fa fa-unlock"></i> <i class="fa fa-pause"></i>
+                                                    </div>
+                                                </c:when> 
                                             </c:choose>
 
                                         </div>
@@ -93,8 +98,8 @@
                                     <tr><td> <strong><i class="fa fa-check"></i></strong></td> <td>Completado</td></tr>
                                     <tr><td> <strong><i class="fa fa-pause"></i></strong></td> <td>Espera de aprobaciones</td></tr>
                                     <tr><td> <strong><i class="fa fa-warning"></i></strong></td> <td>Incompleto</td></tr>
-                                    <tr><td> <strong><i class="fa fa-unlock"></i></strong></td> <td>Deshabilitado</td></tr>
-                                    <tr><td> <strong><i class="fa fa-lock"></i></strong></td> <td>Habilitado</td></tr>
+                                    <tr><td> <strong><i class="fa fa-unlock"></i></strong></td> <td>Habilitado</td></tr>
+                                    <tr><td> <strong><i class="fa fa-lock"></i></strong></td> <td>Deshabilitado</td></tr>
                                 </table>
                             </div>
                         </div>

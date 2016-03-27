@@ -27,8 +27,8 @@ public class Respuesta_pxp {
     private Usuario usuario_realizar;
     private String respuestaString;
     private int version;
-    //1-Deshabilitado,2-Terminado, requiere aprobacion,3-Deshabilitado, aprobacion, 4-Habilitado, 5-Incompleto, 6-Revisado, 7-Verificado, 
-    //8-Ultimo, deshabilitado, 9-Ultimo, habilitado, 10-Ultimo, con aprobacion, habilitado, 11-Habilitado, aprobacion
+    //1-Deshabilitado,2-Terminado requiere aprobacion,3-Deshabilitado requiere aprobacion, 4-Habilitado, 5-Incompleto, 6-Revisado, 7-Verificado, 
+    //8-Ultimo deshabilitado, 9-Ultimo habilitado, 10-Ultimo con aprobacion, habilitado, 11-Habilitado requiere aprobacion
     private int estado;
 
     private List<Respuesta_pxp> historial;

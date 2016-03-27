@@ -467,9 +467,10 @@ public class ControladorLote extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        int version = Integer.parseInt(request.getParameter("version"));
         boolean resultado = false;
         try {
-            resultado = dao.verificarPaso(respuesta, id_usuario);
+            resultado = dao.verificarPaso(respuesta, id_usuario, version);
             if (respuesta.getPaso().isRequiere_ap()) {
                 List<Respuesta_pxp> respuestas = dao.obtenerRespuestas(respuesta.getLote());
                 dao.habilitarPasos(respuestas, respuesta);
@@ -586,9 +587,10 @@ public class ControladorLote extends SIGIPROServlet {
         validarPermiso(664, request);
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        int version = Integer.parseInt(request.getParameter("version"));
         boolean resultado = false;
         try {
-            resultado = dao.revisarPaso(id_respuesta, id_usuario);
+            resultado = dao.revisarPaso(id_respuesta, id_usuario, version);
             if (resultado) {
                 //Funcion que genera la bitacora 
                 bitacora.setBitacora(id_respuesta, Bitacora.ACCION_REVISAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
@@ -659,7 +661,6 @@ public class ControladorLote extends SIGIPROServlet {
 
         try {
             String string_xml_resultado = parseXML(resultado, ubicacion);
-            System.out.println("RESPUESTA XML");
             System.out.println(string_xml_resultado);
             resultado.setRespuestaString(string_xml_resultado);
             dao.insertarRespuesta(resultado);
