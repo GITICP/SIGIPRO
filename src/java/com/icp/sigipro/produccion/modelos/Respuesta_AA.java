@@ -30,9 +30,9 @@ public class Respuesta_AA {
     private Usuario usuario_aprobar;
     private String respuestaString;
     private SQLXML respuesta;
-    //1. Pendiente, no revision
-    //2. Pendiente, requiere revision
-    //3. Revisado, requiere aprobacion
+    //1. Habilitado
+    //2. Habilitado requiere revision
+    //3. Revisado requiere aprobacion
     //4. Finalizado
     private int estado;
     

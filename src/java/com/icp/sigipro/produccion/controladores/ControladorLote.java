@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
 public class ControladorLote extends SIGIPROServlet {
 
     //CRUD, Realizar, Aprobar, Activar Respuesta, Revisar, Verificar, Ver Estado, Aprobar Distribucion, Registro Fecha vencimiento
-    private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667,668};
+    private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667, 668};
     //-----------------
     private final LoteDAO dao = new LoteDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -306,7 +306,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (!respuesta.getLote().isAprobacion()) {
+        if (respuesta.getEstado() == 3 || respuesta.getEstado()==4) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
@@ -323,7 +323,7 @@ public class ControladorLote extends SIGIPROServlet {
 
             redireccionar(request, response, redireccion);
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            request.setAttribute("mensaje", helper.mensajeDeError("El paso no está habilitado."));
             this.getIndex(request, response);
         }
     }
@@ -352,7 +352,7 @@ public class ControladorLote extends SIGIPROServlet {
 
             redireccionar(request, response, redireccion);
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha realizado el paso."));
             this.getIndex(request, response);
         }
     }
@@ -364,7 +364,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (!respuesta.getLote().isAprobacion()) {
+        if (respuesta.getEstado()==5) {
             request.setAttribute("id_respuesta", id_respuesta);
             ProduccionXSLT xslt;
             try {
@@ -379,7 +379,7 @@ public class ControladorLote extends SIGIPROServlet {
             }
             redireccionar(request, response, redireccion);
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha realizado el paso."));
             this.getIndex(request, response);
         }
     }
@@ -516,12 +516,12 @@ public class ControladorLote extends SIGIPROServlet {
 
     protected void postVencimiento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(668, request);
-         boolean resultado = false;
+        boolean resultado = false;
         int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        
+
         Lote lote = new Lote();
         lote.setId_lote(id_lote);
-        
+
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha_vencimiento;
         java.sql.Date fecha_vencimientoSQL;
@@ -567,7 +567,7 @@ public class ControladorLote extends SIGIPROServlet {
             String string_xml_resultado = parseXML(resultado);
             resultado.setRespuestaString(string_xml_resultado);
             int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
-            dao.editarRespuesta(resultado, version+1);
+            dao.editarRespuesta(resultado, version + 1);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_COMPLETAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta completada correctamente."));
@@ -647,34 +647,40 @@ public class ControladorLote extends SIGIPROServlet {
 
         String redireccion = "Lote/index.jsp";
 
-        //Se crea el Path en la carpeta del Proyecto
-        String fullPath = helper_archivos.obtenerDireccionArchivos();
-        String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
-        //-------------------------------------------
-        //Crea los directorios si no estan creados aun
-        this.crearDirectorio(ubicacion);
-        //--------------------------------------------
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        factory.setRepository(new File(ubicacion));
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        //parametros = upload.parseRequest(request);
+        if (resultado.getEstado() == 3 || resultado.getEstado() == 4) {
 
-        try {
-            String string_xml_resultado = parseXML(resultado, ubicacion);
-            System.out.println(string_xml_resultado);
-            resultado.setRespuestaString(string_xml_resultado);
-            dao.insertarRespuesta(resultado);
-            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //parametros = upload.parseRequest(request);
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+            try {
+                String string_xml_resultado = parseXML(resultado, ubicacion);
+                System.out.println(string_xml_resultado);
+                resultado.setRespuestaString(string_xml_resultado);
+                dao.insertarRespuesta(resultado);
+                bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+
+                request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+                this.getIndex(request, response);
+
+            } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeExito("No se puede registrar respuesta ya que no está habilitada."));
             this.getIndex(request, response);
-
-        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
         }
 
     }
@@ -688,25 +694,29 @@ public class ControladorLote extends SIGIPROServlet {
         u.setId_usuario(id_usuario);
         resultado.setUsuario_realizar(u);
         String redireccion = "Lote/index.jsp";
-        try {
-            String string_xml_resultado = parseXML(resultado);
-            resultado.setRespuestaString(string_xml_resultado);
-            int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
-            dao.editarRespuesta(resultado, version+1);
-            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+        if (resultado.getEstado() == 5) {
+            try {
+                String string_xml_resultado = parseXML(resultado);
+                resultado.setRespuestaString(string_xml_resultado);
+                int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+                dao.editarRespuesta(resultado, version + 1);
+                bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
-            request.setAttribute("id_lote", resultado.getLote().getId_lote());
-            this.getVer(request, response, resultado.getLote().getId_lote());
+                request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+                request.setAttribute("id_lote", resultado.getLote().getId_lote());
+                this.getVer(request, response, resultado.getLote().getId_lote());
 
-        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeExito("No se puede repetir respuesta."));
+            this.getIndex(request, response);
         }
-
     }
 
     // </editor-fold>
