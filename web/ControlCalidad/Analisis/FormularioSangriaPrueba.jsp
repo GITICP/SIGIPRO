@@ -86,7 +86,7 @@
 
                                                 </div>
                                             </c:if>
-                                            <c:if test="${!reactivos.isEmpty()}">
+                                            <c:if test="${!equipos.isEmpty()}">
                                                 <div class="col-md-6">
                                                     <label for="equipos" class="control-label"> *Equipos de Medición Utilizados</label>
                                                     <div class="form-group">
