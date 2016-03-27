@@ -64,6 +64,8 @@
         observaciones character varying(500)
     );
 
+    ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT pk_resultados_analisis_sp PRIMARY KEY (id_resultado_analisis_sp);
+
     CREATE TABLE control_calidad.equipos_resultado_sp (
       id_resultado_sp integer NOT NULL,
       id_equipo integer NOT NULL,
@@ -108,8 +110,6 @@
         ALTER COLUMN id_resultado DROP NOT NULL;
 
 -- PKs
-
-    ALTER TABLE ONLY control_calidad.resultados_analisis_sangrias_prueba ADD CONSTRAINT pk_resultados_analisis_sp PRIMARY KEY (id_resultado_analisis_sp);
 
     ALTER TABLE ONLY caballeriza.sangrias_pruebas  ADD CONSTRAINT pk_sangrias_pruebas PRIMARY KEY (id_sangria_prueba);
     ALTER TABLE ONLY caballeriza.sangrias_pruebas_caballos  ADD CONSTRAINT pk_sangrias_pruebas_caballos PRIMARY KEY (id_sangria_prueba,id_caballo); 
