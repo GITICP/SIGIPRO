@@ -565,7 +565,8 @@ public class ControladorLote extends SIGIPROServlet {
         try {
             String string_xml_resultado = parseXML(resultado);
             resultado.setRespuestaString(string_xml_resultado);
-            dao.editarRespuesta(resultado);
+            int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+            dao.editarRespuesta(resultado, version+1);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_COMPLETAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta completada correctamente."));
@@ -689,7 +690,8 @@ public class ControladorLote extends SIGIPROServlet {
         try {
             String string_xml_resultado = parseXML(resultado);
             resultado.setRespuestaString(string_xml_resultado);
-            dao.editarRespuesta(resultado);
+            int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+            dao.editarRespuesta(resultado, version+1);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));

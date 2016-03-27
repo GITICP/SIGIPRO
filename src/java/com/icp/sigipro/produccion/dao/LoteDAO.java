@@ -233,7 +233,7 @@ public class LoteDAO extends DAO {
 
     }
 
-    public boolean editarRespuesta(Respuesta_pxp respuesta) {
+    public boolean editarRespuesta(Respuesta_pxp respuesta, int version) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -246,7 +246,7 @@ public class LoteDAO extends DAO {
             xmlVal.setString(respuesta.getRespuestaString());
             consulta.setSQLXML(2, xmlVal);
             consulta.setInt(3, respuesta.getUsuario_realizar().getId_usuario());
-            consulta.setInt(4, respuesta.getVersion() + 1);
+            consulta.setInt(4, version);
             rs = consulta.executeQuery();
             if (rs.next()) {
                 respuesta.setId_historial(rs.getInt("id_historial"));
@@ -255,7 +255,7 @@ public class LoteDAO extends DAO {
                 consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
                         + "SET version = ? "
                         + "WHERE id_respuesta = ?; ");
-                consulta.setInt(1, respuesta.getVersion() + 1);
+                consulta.setInt(1, version);
                 consulta.setInt(2, respuesta.getId_respuesta());
                 if (consulta.executeUpdate() == 1) {
                     resultado = true;
@@ -1058,6 +1058,27 @@ public class LoteDAO extends DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerUltimaVersionRespuesta(int id_respuesta){
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_respuesta_pxp WHERE id_respuesta=? ORDER BY version DESC LIMIT 1; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

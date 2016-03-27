@@ -275,7 +275,8 @@ public class ControladorPaso extends SIGIPROServlet {
                 this.getAgregar(request, response);
             }
         } else {
-            resultado = dao.editarPaso(p);
+            int version = dao.obtenerUltimaVersion(p.getId_paso());
+            resultado = dao.editarPaso(p,version+1);
             if (resultado) {
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PASO, request.getRemoteAddr());

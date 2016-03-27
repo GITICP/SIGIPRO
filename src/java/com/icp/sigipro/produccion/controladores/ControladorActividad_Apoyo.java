@@ -529,7 +529,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         boolean resultado = false;
 
         Actividad_Apoyo aa = construirObjeto(parametros, request);
-        resultado = dao.editarActividad_Apoyo(aa);
+        int version = dao.obtenerUltimaVersion(aa.getId_actividad());
+        resultado = dao.editarActividad_Apoyo(aa, version+1);
         if (resultado) {
             //Funcion que genera la bitacora
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
@@ -904,7 +905,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             System.out.println(string_xml_resultado);
 
             resultado.setRespuestaString(string_xml_resultado);
-            dao.repetirRespuesta(resultado);
+            int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+            dao.repetirRespuesta(resultado, version+1);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
