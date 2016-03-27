@@ -90,4 +90,52 @@
         </div>
 
     </jsp:attribute>
+    <jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/LoteProduccion.js"></script>
+    </jsp:attribute>
 </t:plantilla_general>
+
+<t:modal idModal="modalDistribucionLote" titulo="Aprobar Distribución del Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-distribucion-lote">
+            <form class="form-horizontal" id="distribuirLote" autocomplete="off" method="post" action="Lote">
+                <input hidden="true" name="accion" value="distribucion">
+                <input hidden="true" id='id_lote' name='id_lote' value="">
+                <label for="label" class="control-label">¿Está seguro que desea aprobar la distribución del Lote de Producción?</label>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Distribución</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+</t:modal>
+
+<t:modal idModal="modalVencimientoLote" titulo="Registrar Fecha de Vencimiento al Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-vencimiento-lote">
+            <form class="form-horizontal" id="registrarVencimiento" autocomplete="off" method="post" action="Lote">
+                <input hidden="true" name="accion" value="vencimiento">
+                <input hidden="true" id='id_lote' name='id_lote' value="">
+                <label for="fecha_vencimiento" class="control-label">*Fecha de Vencimiento</label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                                   oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
+                                   onchange="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Registrar Fecha de Vencimiento</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+</t:modal>
