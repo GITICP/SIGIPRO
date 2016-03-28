@@ -305,7 +305,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (respuesta.getEstado() == 3 || respuesta.getEstado()==4) {
+        if (respuesta.getEstado() == 3 || respuesta.getEstado() == 4) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
@@ -363,7 +363,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (respuesta.getEstado()==5) {
+        if (respuesta.getEstado() == 5) {
             request.setAttribute("id_respuesta", id_respuesta);
             ProduccionXSLT xslt;
             try {
@@ -561,9 +561,19 @@ public class ControladorLote extends SIGIPROServlet {
         resultado.setUsuario_realizar(u);
 
         String redireccion = "Lote/index.jsp";
-
+        //Se crea el Path en la carpeta del Proyecto
+        String fullPath = helper_archivos.obtenerDireccionArchivos();
+        String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+        //-------------------------------------------
+        //Crea los directorios si no estan creados aun
+        this.crearDirectorio(ubicacion);
+        //--------------------------------------------
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setRepository(new File(ubicacion));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        //parametros = upload.parseRequest(request);
         try {
-            String string_xml_resultado = parseXML(resultado);
+            String string_xml_resultado = parseXML(resultado, ubicacion);
             resultado.setRespuestaString(string_xml_resultado);
             int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
             dao.editarRespuesta(resultado, version + 1);
@@ -694,8 +704,19 @@ public class ControladorLote extends SIGIPROServlet {
         resultado.setUsuario_realizar(u);
         String redireccion = "Lote/index.jsp";
         if (resultado.getEstado() == 5) {
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //parametros = upload.parseRequest(request);
             try {
-                String string_xml_resultado = parseXML(resultado);
+                String string_xml_resultado = parseXML(resultado, ubicacion);
                 resultado.setRespuestaString(string_xml_resultado);
                 int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
                 dao.editarRespuesta(resultado, version + 1);
@@ -727,7 +748,7 @@ public class ControladorLote extends SIGIPROServlet {
         return l;
     }
 
-    private String parseXML(Respuesta_pxp resultado, String... ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
+    private String parseXML(Respuesta_pxp resultado, String ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
         String string_xml_resultado = null;
 
         InputStream binary_stream = resultado.getPaso().getEstructura().getBinaryStream();
@@ -766,26 +787,36 @@ public class ControladorLote extends SIGIPROServlet {
                         break;
                     case ("usuario"):
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        //Obtengo los usuarios agregados, y los meto en una lista
                         String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
                         List<String> lista_usuarios = new ArrayList<String>();
                         lista_usuarios.addAll(Arrays.asList(usuarios));
-
+                        //Obtengo la seccion escogida, y cargo una lista de los usuarios de dicha seccion
                         nodo_valor = elemento.getElementsByTagName("seccion").item(0);
                         int seccion = Integer.parseInt(nodo_valor.getTextContent());
                         List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
-                        List<String> nombre_usuarios = new ArrayList<>();
+
                         List<Integer> id_usuarios = new ArrayList<>();
 
                         for (String id : lista_usuarios) {
                             id_usuarios.add(Integer.parseInt(id));
                         }
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         for (Usuario usuario : usuarios_seccion) {
                             if (id_usuarios.contains(usuario.getId_usuario())) {
-                                nombre_usuarios.add(usuario.getNombre_completo());
+                                Element e = documento_resultado.createElement("usuario");
+
+                                Element id_usuario = documento_resultado.createElement("id");
+                                id_usuario.appendChild(documento_resultado.createTextNode("" + usuario.getId_usuario()));
+                                e.appendChild(id_usuario);
+                                
+                                Element nombre = documento_resultado.createElement("nombre");
+                                nombre.appendChild(documento_resultado.createTextNode("" + usuario.getNombre_completo()));
+                                e.appendChild(nombre);
+
+                                nodo_valor.appendChild(e);
                             }
                         }
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        nodo_valor.setTextContent(nombre_usuarios.toString());
                         break;
                     case ("subbodega"):
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
@@ -863,7 +894,7 @@ public class ControladorLote extends SIGIPROServlet {
                     case ("imagen"):
                         System.out.println("Imagen0");
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion[0]);
+                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion);
                         nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         nodo_valor.setTextContent(valor);
                         break;

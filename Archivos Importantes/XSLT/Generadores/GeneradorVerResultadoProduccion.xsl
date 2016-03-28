@@ -8,7 +8,7 @@
     
     <xsl:template match="paso | actividad">
         <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
+            <div class="widget widget-table col-sm-12">
                 <div class="widget-header">
                     <h3>
                         <i class="fa fa-table"></i> 
@@ -31,107 +31,16 @@
                     </table>
                 </div>
             </div>
-            <!-- Campos de selecciones -->
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Grupos de Usuarios''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Sección</th>
-                                <th>Usuarios</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''usuario'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-            
-        <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Referencia a Control de Calidad''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''cc'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Referencia a Lotes de Producción''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''lote'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
         <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Imágenes''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''imagen'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
             <xsl:apply-templates select="campo[tipo = ''sangria'']"/>
-        </div>
-        <div class="widget-content row">
             <xsl:apply-templates select="campo[tipo = ''aa'']"/>
             <xsl:apply-templates select="campo[tipo = ''seleccion'']"/>
             <xsl:apply-templates select="campo[tipo = ''subbodega'']"/>
+            <xsl:apply-templates select="campo[tipo = ''usuario'']"/>
+            <xsl:apply-templates select="campo[tipo = ''imagen'']"/>
+            <xsl:apply-templates select="campo[tipo = ''lote'']"/>
+            <xsl:apply-templates select="campo[tipo = ''cc'']"/>
         </div>
 
     </xsl:template>
@@ -274,6 +183,137 @@
             </div>
         </div>
     </xsl:template>
+    
+    <xsl:template match="campo[tipo = ''cc'']">
+        <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Referencia a Control de Calidad''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
+                                </td>
+                            </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </xsl:template>
+    
+<xsl:template match="campo[tipo = ''lote'']">
+    <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Referencia a Lotes de Producción''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={valor}"> Ver Lote de Producción </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+</xsl:template>
+    <xsl:template match="campo[tipo = ''imagen'']">
+    <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Imágenes''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </xsl:template>
+
+    <xsl:template match="campo[tipo = ''usuario'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/usuario">
+                            <xsl:param name="id" select="''id''"/>
+                            <xsl:param name="nombre" select="''nombre''"/>
+                            <tr>
+                                <td>
+                                   <a target="_blank" href="/SIGIPRO/Seguridad/Usuarios/Ver?id={id}"><xsl:value-of select="nombre" /></a>
+                                </td>
+                            </tr>
+
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
 
     <xsl:template match="campo[tipo = ''sangria'']">
         <div class="widget widget-table col-sm-6">
@@ -341,60 +381,6 @@
                 </table>
             </div>
         </div>
-    </xsl:template>
-  
-    <xsl:template match="campo[(tipo = ''usuario'')]">
-        
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <xsl:value-of select="nombre-seccion" />
-            </td>
-            <td>
-                <xsl:value-of select="valor" />
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = ''imagen'')]">
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
-    <xsl:template match="campo[(tipo = ''cc'')]">
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = ''lote'')]">
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={valor}"> Ver Lote de Producción </a>
-            </td>
-        </tr>
-        
     </xsl:template>
     
 </xsl:stylesheet>

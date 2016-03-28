@@ -103,7 +103,7 @@
                     <div class="input-group">
                         <textarea rows="5" cols="50" maxlength="500" class="form-control" name="{$nombre-campo}" valor="{$valor}">
                             <xsl:value-of select="$valor" />
-                        </textarea>                    
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -199,11 +199,11 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" value='{$valor}' class='imagen'
+                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" value="{$valor}" class="imagen"
                                    oninvalid="setCustomValidity(''El tamaño debe ser de 300KB o menos. '')" 
                                onchange="previewFile(''{$nombre-campo}'')">
                         </input> 
-                        <button type="button" id='{$nombre-campo}_eliminar' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(''{$nombre-campo}'')"> Borrar</button>
+                        <button type="button" id=''{$nombre-campo}_eliminar'' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(''{$nombre-campo}'')"> Borrar</button>
                         <div>
                             <img id="{$nombre-campo}_preview" src="" height="100" alt=""></img>
                         </div>
@@ -213,8 +213,7 @@
         </div>
         
     </xsl:template>
-    
-    
+
     <xsl:template match="campo[tipo = ''sangria'']">
         
         <!-- Parámetros -->
@@ -232,14 +231,16 @@
                     <div class="input-group {$nombre-campo}">
                         <select id="sangria" multiple="multiple" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <div class="{$nombre-campo}_ver">
-                        </div>      
+                        </div>
+                        <xsl:for-each select="valor/sangria">
+                                 
+                        </xsl:for-each> 
                     </div>
                 </div>
             </div>
         </div>
         
     </xsl:template>
-    
     <xsl:template match="campo[tipo = ''lote'']">
         
         <!-- Parámetros -->
@@ -265,7 +266,6 @@
         </div>
         
     </xsl:template>
-    
     <xsl:template match="campo[tipo = ''usuario'']">
         
         <!-- Parámetros -->
@@ -345,7 +345,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = ''subbodega'']">
+   <xsl:template match="campo[tipo = ''subbodega'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -369,7 +369,7 @@
                         <xsl:if test="$cantidad = ''true''">
                             <br>
                                 <div class="{$nombre-campo}_cant">
-                                </div>   
+                                </div>    
                             </br>
                         </xsl:if>      
                     </div>
@@ -386,24 +386,33 @@
             <label for="{$nombre-campo}" class="control-label">
                 <xsl:value-of select="$etiqueta" />
             </label>
-            <div class="form-group">
+        <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <xsl:for-each select="opciones/opcion">
-                            <xsl:param name="etiqueta" select="etiqueta" />
-                            <xsl:param name="valor" select="valor" />
-                            <xsl:param name="check" select="check" />
-                            <div class="col-sm-12">
-                                <input type="checkbox" name="{$nombre-campo}" value="{$valor}"> 
-                                    <xsl:value-of select="$etiqueta"></xsl:value-of>
-                                </input>
-                            </div>
+            <xsl:for-each select="opciones/opcion">
+                <xsl:param name="etiqueta" select="etiqueta" />
+                <xsl:param name="valor" select="valor" />
+                <xsl:param name="check" select="check" />
+                <div class="col-sm-12">
+                <xsl:choose>
+                    <xsl:when test="$check = ''true''">
+                        <input type="checkbox" name="{$nombre-campo}" value="{$valor}" checked="checked">
+                                            <xsl:value-of select="$etiqueta"></xsl:value-of>
+                                        </input>
+                                    </xsl:when>
+                                    <xsl:when test="$check = ''false''">
+                                        <input type="checkbox" name="{$nombre-campo}" value="{$valor}"> 
+                                            <xsl:value-of select="$etiqueta"></xsl:value-of>
+                                        </input>
+                                    </xsl:when>
+                                </xsl:choose>
+                </div>
             
                 
-                        </xsl:for-each>
+            </xsl:for-each>
                     </div>
                 </div>
-            </div>
+        </div>
         </div>
     </xsl:template>
     
