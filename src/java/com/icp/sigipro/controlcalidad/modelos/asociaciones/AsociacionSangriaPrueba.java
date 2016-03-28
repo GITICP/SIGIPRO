@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 
 import com.icp.sigipro.caballeriza.dao.SangriaPruebaDAO;
+import com.icp.sigipro.caballeriza.modelos.Caballo;
 import com.icp.sigipro.caballeriza.modelos.SangriaPrueba;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
@@ -80,7 +81,13 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
         request.setAttribute("tipo", tipo);
         request.setAttribute("sangria_prueba", sangria_prueba_dao.obtenerSangriaPrueba(sangria_prueba.getId_sangria_prueba()));
         request.setAttribute("caballos_sangria", sangria_prueba_dao.obtenerCaballosSangriaP(sangria_prueba.getId_sangria_prueba()));
-        request.setAttribute("caballos_resultado", resultado_dao.obtenerCaballosResultadoSP(sangria_prueba.getId_sangria_prueba()));
+        List<ObjetoAsociacionMultiple> caballos_resultado = resultado_dao.obtenerCaballosResultadoSP(sangria_prueba.getId_sangria_prueba());
+        request.setAttribute("caballos_resultado", caballos_resultado);
+        List<Integer> ids_caballos = new ArrayList<>();
+        for (ObjetoAsociacionMultiple osm : caballos_resultado) {
+            ids_caballos.addAll(osm.getIds());
+        }
+        request.setAttribute("ids_caballos_con_resultado", ids_caballos);
     }
 
     @Override
