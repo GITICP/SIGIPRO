@@ -221,6 +221,17 @@ VALUES (1, 'Generador Formularios Produccion',
                         <div>
                             <img id="{$nombre-campo}_preview" src="" height="100" alt=""></img>
                         </div>
+                        <div>
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen Registrada </a>
+                                    <input type="hidden" value="{valor}" name="{nombre-campo}_actual" /> 
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <input type="hidden" value="" name="{nombre-campo}_actual" /> 
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -280,7 +291,7 @@ VALUES (1, 'Generador Formularios Produccion',
                         <select id="lote" class="select2 lote" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <div class="ver">
                             <xsl:choose>
-                                <xsl:when test="$valor != '' ''">
+                                <xsl:when test="$valor != ''''">
                                     <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={$valor}"> Ver Lote de Producci&#243;n </a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -348,7 +359,7 @@ VALUES (1, 'Generador Formularios Produccion',
                         <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
                         <div class="ver">
                             <xsl:choose>
-                                <xsl:when test="$valor != '' ''">
+                                <xsl:when test="$valor != ''''">
                                     <a target="_blank" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&amp;id_respuesta={$valor}"> Ver Actividad de Apoyo </a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -384,7 +395,7 @@ VALUES (1, 'Generador Formularios Produccion',
                         <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select> 
                         <div class="ver">
                             <xsl:choose>
-                                <xsl:when test="$valor != '' ''">
+                                <xsl:when test="$valor != ''''">
                                     <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={$valor}"> Ver Solicitud de CC </a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -435,7 +446,7 @@ VALUES (1, 'Generador Formularios Produccion',
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="input-group">
-                                                        <input type="number" placeholder="Cantidad" value="{$cantidad}" class="form-control" name="{$nombre-campo}_{$id}"></input>
+                                                        <input type="number" placeholder="Cantidad" value="{$cantidad}" class="form-control" name="{$nombre-campo}_{id}"></input>
                                                      </div>
                                                      </div>
                                                 </div> 
@@ -496,7 +507,6 @@ VALUES (1, 'Generador Formularios Produccion',
     </xsl:template>
     
 </xsl:stylesheet>
-
                 ')
 );
 
