@@ -233,7 +233,6 @@ public class ControladorLote extends SIGIPROServlet {
 
         try {
             r = dao.obtenerRespuesta(id_respuesta);
-            System.out.println(r.getRespuesta().getString());
             xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (r.getRespuesta() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, r.getRespuesta());
@@ -753,6 +752,7 @@ public class ControladorLote extends SIGIPROServlet {
                         String[] opciones = this.obtenerParametros(nombre_campo_resultado);
                         List<String> lista_opciones = new ArrayList<String>();
                         lista_opciones.addAll(Arrays.asList(opciones));
+                        System.out.println(lista_opciones);
                         NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
                         for (int j = 0; j < elemento_opciones.getLength(); j++) {
                             Node opcion = elemento_opciones.item(j);

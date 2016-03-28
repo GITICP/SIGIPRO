@@ -199,7 +199,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
+                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" value='{$valor}' class='imagen'
                                    oninvalid="setCustomValidity(''El tamaño debe ser de 300KB o menos. '')" 
                                onchange="previewFile(''{$nombre-campo}'')">
                         </input> 
