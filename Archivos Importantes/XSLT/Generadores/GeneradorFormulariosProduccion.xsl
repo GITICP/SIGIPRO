@@ -304,7 +304,7 @@
                     <div class="{$nombre-campo}_id">
                         <xsl:for-each select="valor/usuario">
                             <xsl:param name="id" select="id" />
-                            <input type="hidden" value="{$id}" id="{$id}" />   
+                            <input type="hidden" value="{id}" id="{id}" />   
                         </xsl:for-each> 
                         </div>
                     </div>
@@ -334,7 +334,7 @@
                         <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
                         <div class="ver">
                             <xsl:choose>
-                                <xsl:when test="$valor != ''''">
+                                <xsl:when test="$valor != '' ''">
                                     <a target="_blank" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&amp;id_respuesta={$valor}"> Ver Actividad de Apoyo </a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -370,7 +370,7 @@
                         <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select> 
                         <div class="ver">
                             <xsl:choose>
-                                <xsl:when test="$valor != ''''">
+                                <xsl:when test="$valor != '' ''">
                                     <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={$valor}"> Ver Solicitud de CC </a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -416,7 +416,7 @@
                                         <xsl:param name="id" select="id" />
                                         <xsl:param name="nombre" select="nombre" />
                                         <xsl:param name="cantidad" select="cantidad" />
-                                        <div class="{$nombre-campo}_{$id}"> 
+                                        <div class="{$nombre-campo}_{id}"> 
                                         <label for="nombre" class="control-label">Cantidad - <xsl:value-of select="$nombre" /> </label>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
@@ -431,7 +431,7 @@
                                     <div class="{$nombre-campo}_id">
                                         <xsl:for-each select="valor/producto">
                                             <xsl:param name="id" select="id" />
-                                            <input type="hidden" value="{$id}" id="{$id}" />   
+                                            <input type="hidden" value="{id}" id="{id}" />   
                                         </xsl:for-each> 
                                     </div>
                             </br>

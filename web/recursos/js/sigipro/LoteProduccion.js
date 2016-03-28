@@ -5,7 +5,6 @@ function previewFile(id) {
         var file = document.querySelector('input[type=file][id="' + id + '"]').files[0]; //sames as here
         var imagen = document.getElementById(id); //sames as here
         var size = file.size;
-        alert(size);
         var reader = new FileReader();
         if (size > 307200) {
             document.getElementById(id).setCustomValidity("La imagen debe ser de 300KB o menos. ");
@@ -38,7 +37,7 @@ function eliminarImagen(id) {
 }
 
 $(function () {
-    var sangrias = $(".sangria");
+    var sangrias = $(".sangria.select2-offscreen");
 
     $.each(sangrias, function (index, element) {
         $(element).on("select2-selecting", function (e) {
@@ -48,7 +47,6 @@ $(function () {
             remover_link_sangria(e, element);
         });
         var nombre = $(element).attr("name");
-        alert($("."+nombre+"_id"));
         $.ajax({
             url: "/SIGIPRO/Caballeriza/Sangria",
             type: "GET",
@@ -58,12 +56,12 @@ $(function () {
                 generar_select_sangria(datos, element);
             },
             error: function () {
-                alert("Error");
+                alert("Error en Sangrias");
             }
         });
     });
 
-    var lotes = $(".lote");
+    var lotes = $(".lote.select2-offscreen");
     $.each(lotes, function (index, element) {
         $(element).on("change", generar_link_lote);
         $.ajax({
@@ -75,12 +73,12 @@ $(function () {
                 generar_select_lote(datos, element);
             },
             error: function () {
-                alert("Error");
+                alert("Error en Lotes");
             }
         });
     });
 
-    var cc = $(".cc");
+    var cc = $(".cc.select2-offscreen");
 
     $.each(cc, function (index, element) {
         $(element).on("change", generar_link_cc);
@@ -93,7 +91,7 @@ $(function () {
                 generar_select_cc(datos, element);
             },
             error: function () {
-                alert("Error");
+                alert("Error en CC");
             }
         });
 
@@ -113,7 +111,7 @@ $(function () {
                 generar_select_usuarios(datos, element);
             },
             error: function () {
-                alert("Error");
+                alert("Error en Usuarios");
             }
         });
 
@@ -134,7 +132,7 @@ $(function () {
                 generar_select_actividades(datos, element);
             },
             error: function () {
-                alert("Error");
+                alert("Error en AA");
             }
         });
 
@@ -160,7 +158,7 @@ $(function () {
                 generar_select_subbodegas(datos, element);
             },
             error: function () {
-                alert("Error");
+                alert("Error en Subbodegas");
             }
         });
 
@@ -240,7 +238,6 @@ $(document).on("click", ".distribucion-Modal", function () {
 });
 
 function generar_select_sangria(datos, element) {
-
     $(element).append("<option value=\"\"></option>");
     for (var i = 0; i < datos.length; i++) {
         var elemento = datos[i];
@@ -250,13 +247,17 @@ function generar_select_sangria(datos, element) {
 
         $(element).append(opcion);
     }
+    var nombre = $(element).attr("name");
+    var ids = $("." + nombre + "_id > input");
+    var lista = [];
+    $.each(ids, function (datos, elemento) {
+        lista[lista.length] = $(elemento).val();
 
-    $(element).select2();
-
+    });
+    $(element).select2("val", lista);
 }
 
 function generar_select_lote(datos, element) {
-
     $(element).append("<option value=\"\"></option>");
     for (var i = 0; i < datos.length; i++) {
         var elemento = datos[i];
@@ -266,8 +267,14 @@ function generar_select_lote(datos, element) {
 
         $(element).append(opcion);
     }
+    var nombre = $(element).attr("name");
+    var ids = $("." + nombre + "_id > input");
+    var lista = [];
+    $.each(ids, function (datos, elemento) {
+        lista[lista.length] = $(elemento).val();
 
-    $(element).select2();
+    });
+    $(element).select2("val", lista);
 
 }
 
@@ -282,8 +289,14 @@ function generar_select_cc(datos, element) {
 
         $(element).append(opcion);
     }
+    var nombre = $(element).attr("name");
+    var ids = $("." + nombre + "_id > input");
+    var lista = [];
+    $.each(ids, function (datos, elemento) {
+        lista[lista.length] = $(elemento).val();
 
-    $(element).select2();
+    });
+    $(element).select2("val", lista);
 
 }
 
@@ -298,8 +311,14 @@ function generar_select_usuarios(datos, element) {
 
         $(element).append(opcion);
     }
+    var nombre = $(element).attr("name");
+    var ids = $("." + nombre + "_id > input");
+    var lista = [];
+    $.each(ids, function (datos, elemento) {
+        lista[lista.length] = $(elemento).val();
 
-    $(element).select2();
+    });
+    $(element).select2("val", lista);
 
 }
 
@@ -313,13 +332,17 @@ function generar_select_actividades(datos, element) {
 
         $(element).append(opcion);
     }
-
-    $(element).select2();
+    var nombre = $(element).attr("name");
+    var ids = $("." + nombre + "_id > input");
+    var lista = [];
+    $.each(ids, function (datos, elemento) {
+        lista[lista.length] = $(elemento).val();
+    });
+    $(element).select2("val", lista);
 
 }
 
 function generar_select_subbodegas(datos, element) {
-
     $(element).append("<option value=\"\"></option>");
     for (var i = 0; i < datos.length; i++) {
         var elemento = datos[i];
@@ -329,8 +352,13 @@ function generar_select_subbodegas(datos, element) {
 
         $(element).append(opcion);
     }
-
-    $(element).select2();
+    var nombre = $(element).attr("name");
+    var ids = $("." + nombre + "_id > input");
+    var lista = [];
+    $.each(ids, function (datos, elemento) {
+        lista[lista.length] = $(elemento).val();
+    });
+    $(element).select2("val", lista);
 
 }
 
@@ -342,7 +370,7 @@ function generar_link_sangria(e, element) {
     //Nombre del campo
     var id = $(element).attr("name");
 
-    var link = "<div class=\"" + id +"_"+valor+"\"><a target=\"_blank\" href=\"/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=" + valor + "\"> Ver " + nombre + " </a></div>";
+    var link = "<div class=\"" + id + "_" + valor + "\"><a target=\"_blank\" href=\"/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria=" + valor + "\"> Ver " + nombre + " </a></div>";
 
     var ver = $("." + id + "_ver");
 
@@ -354,7 +382,7 @@ function remover_link_sangria(e, element) {
     var valor = e.val;
     var id = $(element).attr("name");
 
-    $("div > ." + id+"_"+valor).remove();
+    $("div > ." + id + "_" + valor).remove();
 
 }
 
