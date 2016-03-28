@@ -12,7 +12,7 @@ INSERT INTO produccion_xslt.produccion_xslt (id_produccion_xslt, nombre, estruct
 VALUES (1, 'Generador Formularios Produccion', 
                 XML(
                 '
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
     
     <xsl:output method="html" indent="yes"/>
     
@@ -213,7 +213,7 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" 
+                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" value="{$valor}" class="imagen"
                                    oninvalid="setCustomValidity(''El tamaño debe ser de 300KB o menos. '')" 
                                onchange="previewFile(''{$nombre-campo}'')">
                         </input> 
@@ -243,9 +243,19 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" multiple="multiple" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <select id="sangria" multiple="multiple" class="select2 sangria" name="{$nombre-campo}" style=''background-color: #fff;'' ></select>    
                         <div class="{$nombre-campo}_ver">
-                        </div>      
+                            <xsl:for-each select="valor/sangria">
+                                <xsl:param name="id" select="id" />
+                                <div class="{$nombre-campo}_{id}"><a target="_blank" href="/SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={id}"> Ver Sangr&#237;a (id: <xsl:value-of select="id" />)  </a></div>
+                            </xsl:for-each>
+                        </div>
+                        <div class="{$nombre-campo}_id">
+                        <xsl:for-each select="valor/sangria">
+                            <xsl:param name="id" select="id" />
+                            <input type="hidden" value="{id}" id="{id}" />   
+                        </xsl:for-each> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -269,7 +279,17 @@ VALUES (1, 'Generador Formularios Produccion',
                     <div class="input-group {$nombre-campo}">
                         <select id="lote" class="select2 lote" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <div class="ver">
-                            <a>Ver Lote de Producción</a>
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={$valor}"> Ver Lote de Producci&#243;n </a>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <a> Ver Lote de Producci&#243;n </a>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </div>
+                        <div class="{$nombre-campo}_id">
+                            <input type="hidden" value="{$valor}" id="{$valor}" />   
                         </div>      
                     </div>
                 </div>
@@ -295,6 +315,12 @@ VALUES (1, 'Generador Formularios Produccion',
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
                         <select id="usuario_{$seccion}" multiple="multiple" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>          
+                    <div class="{$nombre-campo}_id">
+                        <xsl:for-each select="valor/usuario">
+                            <xsl:param name="id" select="id" />
+                            <input type="hidden" value="{$id}" id="{$id}" />   
+                        </xsl:for-each> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,8 +347,18 @@ VALUES (1, 'Generador Formularios Produccion',
                     <div class="input-group {$nombre-campo}">
                         <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
                         <div class="ver">
-                            <a>Ver Actividad de Apoyo</a>
-                        </div>              
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&amp;id_respuesta={$valor}"> Ver Actividad de Apoyo </a>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <a> Ver Actividad de Apoyo </a>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            </div>
+                            <div class="{$nombre-campo}_id">
+                                <input type="hidden" value="{$valor}" id="{$valor}" />
+                            </div>          
                     </div>
                 </div>
             </div>
@@ -347,7 +383,17 @@ VALUES (1, 'Generador Formularios Produccion',
                     <div class="input-group {$nombre-campo}">
                         <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select> 
                         <div class="ver">
-                            <a>Ver Solicitud</a>
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={$valor}"> Ver Solicitud de CC </a>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <a> Ver Solicitud de CC </a>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </div>
+                        <div class="{$nombre-campo}_id">
+                            <input type="hidden" value="{$valor}" id="{$valor}" />
                         </div>         
                     </div>
                 </div>
@@ -380,9 +426,31 @@ VALUES (1, 'Generador Formularios Produccion',
                         <xsl:if test="$cantidad = ''true''">
                             <br>
                                 <div class="{$nombre-campo}_cant">
-                                </div>    
+                                    <xsl:for-each select="valor/producto">
+                                        <xsl:param name="id" select="id" />
+                                        <xsl:param name="nombre" select="nombre" />
+                                        <xsl:param name="cantidad" select="cantidad" />
+                                        <div class="{$nombre-campo}_{$id}"> 
+                                        <label for="nombre" class="control-label">Cantidad - <xsl:value-of select="$nombre" /> </label>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div class="input-group">
+                                                        <input type="number" placeholder="Cantidad" value="{$cantidad}" class="form-control" name="{$nombre-campo}_{$id}"></input>
+                                                     </div>
+                                                     </div>
+                                                </div> 
+                                            </div>
+                                    </xsl:for-each> 
+                                    </div>
+                                    <div class="{$nombre-campo}_id">
+                                        <xsl:for-each select="valor/producto">
+                                            <xsl:param name="id" select="id" />
+                                            <input type="hidden" value="{$id}" id="{$id}" />   
+                                        </xsl:for-each> 
+                                    </div>
                             </br>
-                        </xsl:if>      
+                        </xsl:if>
+                              
                     </div>
                 </div>
             </div>

@@ -47,6 +47,8 @@ $(function () {
         $(element).on("select2-removing", function (e) {
             remover_link_sangria(e, element);
         });
+        var nombre = $(element).attr("name");
+        alert($("."+nombre+"_id"));
         $.ajax({
             url: "/SIGIPRO/Caballeriza/Sangria",
             type: "GET",
@@ -167,8 +169,11 @@ $(function () {
 });
 
 function crear_cantidad(e, element) {
+    //ID del elemento
     var valor = e.val;
+    //Nombre del elemento
     var nombre = e.object.text;
+    //Nombre del campo
     var id = $(element).attr("name");
 
     var fila = "        <div class=\"" + id + "_" + valor + "\"> <label for=\"nombre\" class=\"control-label\">Cantidad - " + nombre + "</label>";
@@ -178,7 +183,7 @@ function crear_cantidad(e, element) {
     fila += "                       <input type=\"number\" placeholder=\"Cantidad\" class=\"form-control\" name=\"" + id + "_" + valor + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
-    fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
+    fila += "                           oninput=\"setCustomValidity(\'\')\" ></input> ";
     fila += "                   </div>";
     fila += "               </div>";
     fila += "           </div> </div>";
@@ -362,7 +367,7 @@ function generar_link_lote() {
 
     $("." + div + " .ver > a").remove();
 
-    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Produccion/Lote?accion=ver&id_lote=" + id + "\"> Ver Lote de Producción </a>");
+    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Produccion/Lote?accion=ver&id_lote=" + id + "\"> Ver Lote de Producci&#243;n </a>");
 }
 
 function generar_link_cc() {
