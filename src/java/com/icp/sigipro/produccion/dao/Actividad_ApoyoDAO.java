@@ -355,6 +355,27 @@ public class Actividad_ApoyoDAO extends DAO {
         return resultado;
     }
 
+    public int obtenerIdActividad(int id_respuesta) {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT id_actividad FROM produccion.respuesta_aa WHERE id_respuesta=?; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("id_actividad");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
     public boolean activarVersion(int version, int id_actividad) {
         boolean resultado = false;
         PreparedStatement consulta = null;

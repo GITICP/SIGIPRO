@@ -145,6 +145,29 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         request.setAttribute("contador", 0);
         redireccionar(request, response, redireccion);
     }
+    
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response, int id_categoria_aa) throws ServletException, IOException, SIGIPROException {
+        validarPermiso(670, request);
+
+        String redireccion = "Actividad_Apoyo/Agregar.jsp";
+        Actividad_Apoyo aa = new Actividad_Apoyo();
+        try {
+            Categoria_AA categoria = new Categoria_AA();
+            categoria.setId_categoria_aa(id_categoria_aa);
+            aa.setCategoria(categoria);
+        } catch (Exception e) {
+
+        }
+        request.setAttribute("actividad", aa);
+        request.setAttribute("accion", "Agregar");
+        request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
+        request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
+        request.setAttribute("categorias", categoriadao.obtenerCategorias_AA());
+        request.setAttribute("orden", "");
+        request.setAttribute("cantidad", 0);
+        request.setAttribute("contador", 0);
+        redireccionar(request, response, redireccion);
+    }
 
     protected void getIndexnormal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
@@ -173,6 +196,16 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
+    protected void getIndexactividades(HttpServletRequest request, HttpServletResponse response, int id_categoria_aa) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/indexBotonesActividad.jsp";
+        Categoria_AA categoria = categoriadao.obtenerCategoria_AA(id_categoria_aa);
+        request.setAttribute("categoria", categoria);
+        List<Actividad_Apoyo> actividades = dao.obtenerActividades_Apoyo(id_categoria_aa);
+        request.setAttribute("listaActividades", actividades);
+        redireccionar(request, response, redireccion);
+    }
+    
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/Ver.jsp";
@@ -520,10 +553,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             //Funcion que genera la bitacora
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
-            this.getIndex(request, response);
+            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser agregado. Inténtelo de nuevo."));
-            this.getAgregar(request, response);
+            this.getAgregar(request, response,aa.getCategoria().getId_categoria_aa());
         }
 
     }
@@ -539,11 +572,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo editada correctamente"));
-            this.getIndex(request, response);
+            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));
             request.setAttribute("id_actividad", aa.getId_actividad());
-            this.getIndex(request, response);
+            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
         }
 
     }
@@ -615,10 +648,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_RECHAZAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo rechazada correctamente"));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, id_actividad);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser rechazada. Inténtelo de nuevo."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, id_actividad);
         }
     }
 
@@ -640,10 +673,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_REVISAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta de Actividad de Apoyo revisada correctamente"));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Respuesta de Actividad de Apoyo no pudo ser revisada. Inténtelo de nuevo."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         }
     }
 
@@ -665,10 +698,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesata de Actividad de Apoyo aprobada correctamente"));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Respuessta Actividad de Apoyo no pudo ser aprobada. Inténtelo de nuevo."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         }
     }
 
@@ -697,7 +730,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         try {
             //Se crea el Path en la carpeta del Proyecto
             String fullPath = helper_archivos.obtenerDireccionArchivos();
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + actividad.getNombre()+"_"+resultado.getFechaAsString();
+            //Creacion del nombre con la fecha y hora actual
+            Date dNow = new Date();
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+            String nombre_fecha = ft.format(dNow);
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + actividad.getNombre() + "_"+nombre_fecha;
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
             this.crearDirectorio(ubicacion);
@@ -706,7 +743,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             //parametros = upload.parseRequest(request);
-            
+
             String string_xml_resultado = this.parseXML(resultado, ubicacion);
 
             resultado.setRespuestaString(string_xml_resultado);
@@ -739,7 +776,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         try {
             //Se crea el Path en la carpeta del Proyecto
             String fullPath = helper_archivos.obtenerDireccionArchivos();
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getActividad().getNombre()+"_"+resultado.getFechaAsString();
+            //Creacion del nombre con la fecha y hora actual
+            Date dNow = new Date();
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+            String nombre_fecha = ft.format(dNow);
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + resultado.getActividad().getNombre() + "_"+nombre_fecha;
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
             this.crearDirectorio(ubicacion);
@@ -748,7 +789,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             //parametros = upload.parseRequest(request);
-            
+
             String string_xml_resultado = parseXML(resultado, ubicacion);
             resultado.setRespuestaString(string_xml_resultado);
             int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
@@ -869,7 +910,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
         return aa;
     }
-    
+
     private String parseXML(Respuesta_AA resultado, String ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
         String string_xml_resultado = null;
 
@@ -1162,7 +1203,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         System.out.println(respuesta.toString());
         return respuesta;
     }
-    
+
     private boolean crearDirectorio(String path) {
         boolean resultado = false;
         File directorio = new File(path);
