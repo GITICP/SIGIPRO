@@ -19,8 +19,8 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
+                        <li class="active"> 
+                            Lotes de Producción
                         </li>
                     </ul>
                 </div>

@@ -505,11 +505,11 @@ public class ControladorLote extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser aprobado para distribución."));
             }
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser aprobado para distribución."));
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         }
     }
 
@@ -542,11 +542,11 @@ public class ControladorLote extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Fecha de Vencimiento del Lote de Producción no pudo ser registrado correctamente."));
             }
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Fecha de Vencimiento del Lote de Producción no pudo ser registrado correctamente."));
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         }
     }
 

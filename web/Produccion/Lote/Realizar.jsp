@@ -22,8 +22,10 @@
                         <li> 
                             <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
                         </li>
-                        <li> Realizar Paso de Protocolo de Producción </li>
-                        <li class="active"> ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
+                        <li>
+                            <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">Lote ${respuesta.getLote().getNombre()}</a>
+                        </li>
+                        <li class="active">Realizar ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
 
                     </ul>
                 </div>

@@ -411,7 +411,7 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT hr.id_respuesta, hr.version, r.id_lote, l.nombre as nombrelote,l.aprobacion, r.id_pxp, pxp.posicion, hp.nombre as nombrepaso,hp.estructura, hr.respuesta "
+            consulta = getConexion().prepareStatement(" SELECT hr.id_respuesta, hr.version, r.id_lote, l.nombre as nombrelote,l.aprobacion, r.id_pxp, pxp.posicion, hp.nombre as nombrepaso,hp.estructura, hr.respuesta, "
                     + "hr.id_usuario_realizar, ur.nombre_completo as nombre_completo_realizar, hr.id_usuario_revisar, ure.nombre_completo as nombre_completo_revisar, hr.id_usuario_verificar, uv.nombre_completo as nombre_completo_verificar "
                     + "FROM produccion.historial_respuesta_pxp as hr "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (hr.id_respuesta = r.id_respuesta) "

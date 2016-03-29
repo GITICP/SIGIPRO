@@ -19,11 +19,30 @@
             <div class="row">
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
-                        <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
-                        </li>
-                        <li class="active"> ${lote.getNombre()} </li>
+                        <c:choose>
+                            <c:when test="${lote.isEstado()}">
+                                <li>Producción</li>
+                                <li> 
+                                    <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
+                                </li>
+                                <li>
+                                    <a href="/SIGIPRO/Produccion/Lote?accion=historial">Historial de Lotes de Producci&#243;n</a>
+                                </li>
+                                <li class="active"> 
+                                    Lote ${lote.getNombre()} 
+                                </li> 
+                            </c:when>
+                            <c:otherwise>
+                                <li>Producción</li>
+                                <li> 
+                                    <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
+                                </li>
+                                <li class="active"> 
+                                    Lote ${lote.getNombre()} 
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+
                     </ul>
                 </div>
             </div>

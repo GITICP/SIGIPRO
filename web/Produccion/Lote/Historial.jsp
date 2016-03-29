@@ -22,6 +22,9 @@
                         <li> 
                             <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
                         </li>
+                        <li class="active">
+                            Historial de Lotes de Producci&#243;n
+                        </li>
                     </ul>
                 </div>
             </div>
