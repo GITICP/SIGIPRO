@@ -20,12 +20,15 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
+                        <li>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Categoria_AA?accion=ver&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">${respuesta.getActividad().getCategoria().getNombre()}</a></li>
-                        <li> <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">${respuesta.getActividad().getNombre()}</a> </li>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
+                        </li>
+                        <li> 
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">Actividades de Apoyo Realizadas</a>
+                        </li>
                         <li class="active"> Respuesta - ${respuesta.getNombre()} </li>
                     </ul>
                 </div>
@@ -36,7 +39,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i>  ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} - ${respuesta.getNombre()} </h3>
+                            <h3><i class="fa fa-flask"></i> Respuesta de  ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} - ${respuesta.getNombre()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

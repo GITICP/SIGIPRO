@@ -112,7 +112,7 @@
                                                         </td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${respuesta.getId_respuesta() != 0}">
+                                                                <c:when test="${respuesta.getVersion() != 0}">
                                                                     <a href="/SIGIPRO/Produccion/Lote?accion=verrespuesta&id_respuesta=${respuesta.getId_respuesta()}">
                                                                         <div style="height:100%;width:100%">
                                                                             Ver Respuesta

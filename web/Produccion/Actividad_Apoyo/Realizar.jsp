@@ -19,11 +19,16 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
+                        <li>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
                         </li>
-                        <li> Realizar Actividad de Apoyo </li>
-                        <li class="active"> ${actividad.getCategoria().getNombre()} - ${actividad.getNombre()} </li>
+                        <li> 
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${actividad.getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
+                        </li>
+                        <li> 
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Actividades de Apoyo Realizadas</a>
+                        </li>
+                        <li class="active"> Realizar Actividad de Apoyo ${actividad.getCategoria().getNombre()} - ${actividad.getNombre()} </li>
 
                     </ul>
                 </div>
