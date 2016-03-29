@@ -71,7 +71,7 @@ public class Actividad_ApoyoDAO extends DAO {
         return resultado;
     }
 
-    public boolean editarActividad_Apoyo(Actividad_Apoyo actividad) {
+    public boolean editarActividad_Apoyo(Actividad_Apoyo actividad, int version) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -81,7 +81,7 @@ public class Actividad_ApoyoDAO extends DAO {
             SQLXML xmlVal = getConexion().createSQLXML();
             xmlVal.setString(actividad.getEstructuraString());
             consulta.setInt(1, actividad.getId_actividad());
-            consulta.setInt(2, actividad.getVersion() + 1);
+            consulta.setInt(2, version);
             consulta.setSQLXML(3, xmlVal);
             consulta.setString(4, actividad.getNombre());
             consulta.setInt(5, actividad.getCategoria().getId_categoria_aa());
@@ -92,7 +92,7 @@ public class Actividad_ApoyoDAO extends DAO {
                 consulta = getConexion().prepareStatement(" UPDATE produccion.actividad_apoyo "
                         + "SET version = ?, aprobacion_calidad = false, aprobacion_regente = false, aprobacion_coordinador = false, aprobacion_direccion=false, requiere_ap = ?  "
                         + "WHERE id_actividad = ?; ");
-                consulta.setInt(1, actividad.getVersion() + 1);
+                consulta.setInt(1, version);
                 consulta.setBoolean(2, actividad.isRequiere_ap());
                 consulta.setInt(3, actividad.getId_actividad());
                 if (consulta.executeUpdate() == 1) {
@@ -355,6 +355,27 @@ public class Actividad_ApoyoDAO extends DAO {
         return resultado;
     }
 
+    public int obtenerIdActividad(int id_respuesta) {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT id_actividad FROM produccion.respuesta_aa WHERE id_respuesta=?; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("id_actividad");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
     public boolean activarVersion(int version, int id_actividad) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -561,7 +582,7 @@ public class Actividad_ApoyoDAO extends DAO {
         return resultado;
     }
 
-    public boolean repetirRespuesta(Respuesta_AA respuesta) {
+    public boolean repetirRespuesta(Respuesta_AA respuesta, int version) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -574,7 +595,7 @@ public class Actividad_ApoyoDAO extends DAO {
             xmlVal.setString(respuesta.getRespuestaString());
             consulta.setSQLXML(2, xmlVal);
             consulta.setInt(3, respuesta.getUsuario_realizar().getId_usuario());
-            consulta.setInt(4, respuesta.getVersion() + 1);
+            consulta.setInt(4, version);
             consulta.setString(5, respuesta.getNombre());
             consulta.setTimestamp(6, respuesta.getFecha());
             rs = consulta.executeQuery();
@@ -585,8 +606,8 @@ public class Actividad_ApoyoDAO extends DAO {
                 consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_aa "
                         + "SET version = ?, estado=? "
                         + "WHERE id_respuesta = ?; ");
-                consulta.setInt(1, respuesta.getVersion() + 1);
-                if (respuesta.getActividad().isRequiere_ap()) {
+                consulta.setInt(1, version);
+                if (!respuesta.getActividad().isRequiere_ap()) {
                     //Terminado
                     consulta.setInt(2, 4);
                 } else {
@@ -802,6 +823,48 @@ public class Actividad_ApoyoDAO extends DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerUltimaVersion(int id_actividad){
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_actividad_apoyo WHERE id_actividad=? ORDER BY version DESC LIMIT 1; ");
+            consulta.setInt(1, id_actividad);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerUltimaVersionRespuesta(int id_respuesta){
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_respuesta_aa WHERE id_respuesta=? ORDER BY version DESC LIMIT 1; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

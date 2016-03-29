@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
 public class ControladorLote extends SIGIPROServlet {
 
     //CRUD, Realizar, Aprobar, Activar Respuesta, Revisar, Verificar, Ver Estado, Aprobar Distribucion, Registro Fecha vencimiento
-    private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667,668};
+    private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667, 668};
     //-----------------
     private final LoteDAO dao = new LoteDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -233,7 +233,6 @@ public class ControladorLote extends SIGIPROServlet {
 
         try {
             r = dao.obtenerRespuesta(id_respuesta);
-            System.out.println(r.getRespuesta().getString());
             xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (r.getRespuesta() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, r.getRespuesta());
@@ -306,7 +305,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (!respuesta.getLote().isAprobacion()) {
+        if (respuesta.getEstado() == 3 || respuesta.getEstado() == 4) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
@@ -323,7 +322,7 @@ public class ControladorLote extends SIGIPROServlet {
 
             redireccionar(request, response, redireccion);
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            request.setAttribute("mensaje", helper.mensajeDeError("El paso no está habilitado."));
             this.getIndex(request, response);
         }
     }
@@ -352,7 +351,7 @@ public class ControladorLote extends SIGIPROServlet {
 
             redireccionar(request, response, redireccion);
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha realizado el paso."));
             this.getIndex(request, response);
         }
     }
@@ -364,7 +363,7 @@ public class ControladorLote extends SIGIPROServlet {
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (!respuesta.getLote().isAprobacion()) {
+        if (respuesta.getEstado() == 5) {
             request.setAttribute("id_respuesta", id_respuesta);
             ProduccionXSLT xslt;
             try {
@@ -379,7 +378,7 @@ public class ControladorLote extends SIGIPROServlet {
             }
             redireccionar(request, response, redireccion);
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("No se ha aprobado el paso."));
+            request.setAttribute("mensaje", helper.mensajeDeError("No se ha realizado el paso."));
             this.getIndex(request, response);
         }
     }
@@ -467,9 +466,10 @@ public class ControladorLote extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        int version = Integer.parseInt(request.getParameter("version"));
         boolean resultado = false;
         try {
-            resultado = dao.verificarPaso(respuesta, id_usuario);
+            resultado = dao.verificarPaso(respuesta, id_usuario, version);
             if (respuesta.getPaso().isRequiere_ap()) {
                 List<Respuesta_pxp> respuestas = dao.obtenerRespuestas(respuesta.getLote());
                 dao.habilitarPasos(respuestas, respuesta);
@@ -505,22 +505,22 @@ public class ControladorLote extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser aprobado para distribución."));
             }
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser aprobado para distribución."));
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         }
     }
 
     protected void postVencimiento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(668, request);
-         boolean resultado = false;
+        boolean resultado = false;
         int id_lote = Integer.parseInt(request.getParameter("id_lote"));
-        
+
         Lote lote = new Lote();
         lote.setId_lote(id_lote);
-        
+
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date fecha_vencimiento;
         java.sql.Date fecha_vencimientoSQL;
@@ -542,11 +542,11 @@ public class ControladorLote extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Fecha de Vencimiento del Lote de Producción no pudo ser registrado correctamente."));
             }
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Fecha de Vencimiento del Lote de Producción no pudo ser registrado correctamente."));
-            this.getIndex(request, response);
+            this.getHistorial(request, response);
         }
     }
 
@@ -561,11 +561,22 @@ public class ControladorLote extends SIGIPROServlet {
         resultado.setUsuario_realizar(u);
 
         String redireccion = "Lote/index.jsp";
-
+        //Se crea el Path en la carpeta del Proyecto
+        String fullPath = helper_archivos.obtenerDireccionArchivos();
+        String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+        //-------------------------------------------
+        //Crea los directorios si no estan creados aun
+        this.crearDirectorio(ubicacion);
+        //--------------------------------------------
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setRepository(new File(ubicacion));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        //parametros = upload.parseRequest(request);
         try {
-            String string_xml_resultado = parseXML(resultado);
+            String string_xml_resultado = parseXML(resultado, ubicacion);
             resultado.setRespuestaString(string_xml_resultado);
-            dao.editarRespuesta(resultado);
+            int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+            dao.editarRespuesta(resultado, version + 1);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_COMPLETAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta completada correctamente."));
@@ -585,9 +596,10 @@ public class ControladorLote extends SIGIPROServlet {
         validarPermiso(664, request);
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta_actual"));
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
+        int version = Integer.parseInt(request.getParameter("version"));
         boolean resultado = false;
         try {
-            resultado = dao.revisarPaso(id_respuesta, id_usuario);
+            resultado = dao.revisarPaso(id_respuesta, id_usuario, version);
             if (resultado) {
                 //Funcion que genera la bitacora 
                 bitacora.setBitacora(id_respuesta, Bitacora.ACCION_REVISAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
@@ -644,35 +656,40 @@ public class ControladorLote extends SIGIPROServlet {
 
         String redireccion = "Lote/index.jsp";
 
-        //Se crea el Path en la carpeta del Proyecto
-        String fullPath = helper_archivos.obtenerDireccionArchivos();
-        String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
-        //-------------------------------------------
-        //Crea los directorios si no estan creados aun
-        this.crearDirectorio(ubicacion);
-        //--------------------------------------------
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        factory.setRepository(new File(ubicacion));
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        //parametros = upload.parseRequest(request);
+        if (resultado.getEstado() == 3 || resultado.getEstado() == 4) {
 
-        try {
-            String string_xml_resultado = parseXML(resultado, ubicacion);
-            System.out.println("RESPUESTA XML");
-            System.out.println(string_xml_resultado);
-            resultado.setRespuestaString(string_xml_resultado);
-            dao.insertarRespuesta(resultado);
-            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //parametros = upload.parseRequest(request);
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+            try {
+                String string_xml_resultado = parseXML(resultado, ubicacion);
+                System.out.println(string_xml_resultado);
+                resultado.setRespuestaString(string_xml_resultado);
+                dao.insertarRespuesta(resultado);
+                bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+
+                request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+                this.getIndex(request, response);
+
+            } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeExito("No se puede registrar respuesta ya que no está habilitada."));
             this.getIndex(request, response);
-
-        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
         }
 
     }
@@ -686,24 +703,40 @@ public class ControladorLote extends SIGIPROServlet {
         u.setId_usuario(id_usuario);
         resultado.setUsuario_realizar(u);
         String redireccion = "Lote/index.jsp";
-        try {
-            String string_xml_resultado = parseXML(resultado);
-            resultado.setRespuestaString(string_xml_resultado);
-            dao.editarRespuesta(resultado);
-            bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+        if (resultado.getEstado() == 5) {
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //parametros = upload.parseRequest(request);
+            try {
+                String string_xml_resultado = parseXML(resultado, ubicacion);
+                resultado.setRespuestaString(string_xml_resultado);
+                int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+                dao.editarRespuesta(resultado, version + 1);
+                bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
-            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
-            request.setAttribute("id_lote", resultado.getLote().getId_lote());
-            this.getVer(request, response, resultado.getLote().getId_lote());
+                request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
+                request.setAttribute("id_lote", resultado.getLote().getId_lote());
+                this.getVer(request, response, resultado.getLote().getId_lote());
 
-        } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Contacte al administrador del sistema."));
+            }
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeExito("No se puede repetir respuesta."));
+            this.getIndex(request, response);
         }
-
     }
 
     // </editor-fold>
@@ -715,7 +748,7 @@ public class ControladorLote extends SIGIPROServlet {
         return l;
     }
 
-    private String parseXML(Respuesta_pxp resultado, String... ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
+    private String parseXML(Respuesta_pxp resultado, String ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
         String string_xml_resultado = null;
 
         InputStream binary_stream = resultado.getPaso().getEstructura().getBinaryStream();
@@ -740,6 +773,7 @@ public class ControladorLote extends SIGIPROServlet {
                         String[] opciones = this.obtenerParametros(nombre_campo_resultado);
                         List<String> lista_opciones = new ArrayList<String>();
                         lista_opciones.addAll(Arrays.asList(opciones));
+                        System.out.println(lista_opciones);
                         NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
                         for (int j = 0; j < elemento_opciones.getLength(); j++) {
                             Node opcion = elemento_opciones.item(j);
@@ -753,26 +787,36 @@ public class ControladorLote extends SIGIPROServlet {
                         break;
                     case ("usuario"):
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        //Obtengo los usuarios agregados, y los meto en una lista
                         String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
                         List<String> lista_usuarios = new ArrayList<String>();
                         lista_usuarios.addAll(Arrays.asList(usuarios));
-
+                        //Obtengo la seccion escogida, y cargo una lista de los usuarios de dicha seccion
                         nodo_valor = elemento.getElementsByTagName("seccion").item(0);
                         int seccion = Integer.parseInt(nodo_valor.getTextContent());
                         List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
-                        List<String> nombre_usuarios = new ArrayList<>();
+
                         List<Integer> id_usuarios = new ArrayList<>();
 
                         for (String id : lista_usuarios) {
                             id_usuarios.add(Integer.parseInt(id));
                         }
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         for (Usuario usuario : usuarios_seccion) {
                             if (id_usuarios.contains(usuario.getId_usuario())) {
-                                nombre_usuarios.add(usuario.getNombre_completo());
+                                Element e = documento_resultado.createElement("usuario");
+
+                                Element id_usuario = documento_resultado.createElement("id");
+                                id_usuario.appendChild(documento_resultado.createTextNode("" + usuario.getId_usuario()));
+                                e.appendChild(id_usuario);
+
+                                Element nombre = documento_resultado.createElement("nombre");
+                                nombre.appendChild(documento_resultado.createTextNode("" + usuario.getNombre_completo()));
+                                e.appendChild(nombre);
+
+                                nodo_valor.appendChild(e);
                             }
                         }
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        nodo_valor.setTextContent(nombre_usuarios.toString());
                         break;
                     case ("subbodega"):
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
@@ -848,18 +892,23 @@ public class ControladorLote extends SIGIPROServlet {
                         nodo_valor.setTextContent(valor);
                         break;
                     case ("imagen"):
-                        System.out.println("Imagen0");
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion[0]);
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        nodo_valor.setTextContent(valor);
+                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion);
+                        if (valor != null) {
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(valor);
+                        } else {
+                            String actual = this.obtenerParametro(nombre_campo_resultado + "_actual");
+                            if (!actual.equals("")) {
+                                nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                                nodo_valor.setTextContent(actual);
+                            }
+                        }
                         break;
                     default:
-                        System.out.println(tipo_campo);
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         valor = this.obtenerParametro(nombre_campo_resultado);
-                        System.out.println(valor);
                         nodo_valor.setTextContent(valor);
                         break;
                 }

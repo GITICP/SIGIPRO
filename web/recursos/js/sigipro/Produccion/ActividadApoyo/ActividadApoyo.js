@@ -71,8 +71,11 @@ function agregarCampo() {
     fila += "                           <option value=\"text\">Campo de Texto</option>";
     fila += "                           <option value=\"textarea\">Area de Texto</option>";
     fila += "                           <option value=\"fecha\">Fecha</option>";
+    fila += "                           <option value=\"hora\">Hora</option>";
+    fila += "                           <option value=\"blanco\">Espacio en blanco</option>";
+    fila += "                           <option value=\"imagen\">Imagen</option>";
     fila += "                           <option value=\"cc\">Referencia a Control de Calidad</option>";
-    fila += "                           <option value=\"sangria\">Referencia a Sangría</option>";
+    fila += "                           <option value=\"sangria\">Referencia a Sangr&#237;a</option>";
     fila += "                       </select>";
     fila += "                   </div>";
     fila += "               </div>";
@@ -81,7 +84,7 @@ function agregarCampo() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre\" class=\"form-control\" name=\"c_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre\" class=\"form-control\" name=\"c_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -118,7 +121,7 @@ function agregarUsuario() {
     fila += "   </div>";
     fila += "   <div class=\"widget-content\">";
     fila += "       <div class=\"col-md-12\">";
-    fila += "           <label for=\"tipo\" class=\"control-label\"> *Sección de Usuarios</label>";
+    fila += "           <label for=\"tipo\" class=\"control-label\"> *Secci&#243;n de Usuarios</label>";
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
@@ -177,7 +180,7 @@ function agregarSubbodega() {
     fila += "<input hidden=\"true\" id=\"elemento_" + contador + "\" value=\"articulo\">";
     fila += "<input hidden=\"true\" id=\"nombresub_" + contador + "\" name=\"a_nombresubbodega_" + contador + "\" value=\"\">";
     fila += "   <div class=\"widget-header\">";
-    fila += "       <h3><i class=\"fa fa-edit\"></i> Artículo de SubBodega #" + contador + "</h3>";
+    fila += "       <h3><i class=\"fa fa-edit\"></i> Art&#237;culo de SubBodega #" + contador + "</h3>";
     fila += "       <div class=\"btn-group widget-header-toolbar\">";
     fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo(\'articulo_' + contador + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
     fila += "       </div>";
@@ -203,7 +206,7 @@ function agregarSubbodega() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"a_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"a_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -264,14 +267,14 @@ function agregarSeleccion() {
     fila = "<div class=\"widget widget-table seleccion_" + contador + "\" id=\"" + contador + "\">";
     fila += "<input hidden=\"true\" id=\"elemento_" + contador + "\" value=\"seleccion\">";
     fila += "   <div class=\"widget-header\">";
-    fila += "       <h3><i class=\"fa fa-edit\"></i> Selección Múltiple #" + contador + "</h3>";
+    fila += "       <h3><i class=\"fa fa-edit\"></i> Selecci&#243;n M&#250;ltiple #" + contador + "</h3>";
     fila += "       <div class=\"btn-group widget-header-toolbar\">";
     fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarCampo(\'seleccion_' + contador + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
     fila += "       </div>";
     fila += "   </div>";
     fila += "   <div class=\"widget-content\">";
     fila += "       <div class=\"col-md-12\">";
-    fila += "           <label for=\"tipo\" class=\"control-label\"> *Nombre de Selección Múltiple</label>";
+    fila += "           <label for=\"tipo\" class=\"control-label\"> *Nombre de Selecci&#243;n M&#250;ltiple</label>";
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
@@ -286,7 +289,7 @@ function agregarSeleccion() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group opciones_" + contador + "\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre de la Opción\" class=\"form-control\" name=\"o_opcion_" + contador + "_" + opciones + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre de la Opci&#243;n\" class=\"form-control\" name=\"o_opcion_" + contador + "_" + opciones + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -294,7 +297,7 @@ function agregarSeleccion() {
     fila += "               </div>";
     fila += "           </div>";
     fila += "            <div class='col-md-12 form-group'>";
-    fila += "                <button type=\"button\" onclick=\"agregarOpcion(" + contador + "); \" class=\"btn btn-primary\"><i class=\"fa fa-plus-circle\"></i> Agregar Opción</button>";
+    fila += "                <button type=\"button\" onclick=\"agregarOpcion(" + contador + "); \" class=\"btn btn-primary\"><i class=\"fa fa-plus-circle\"></i> Agregar Opci&#243;n</button>";
     fila += "                <br>";
     fila += "            </div>";
     fila += "       </div>";
@@ -315,7 +318,7 @@ function agregarSeleccion() {
 }
 
 function agregarOpcion(id) {
-    fila = "                      <div class='col-md-8 o_opcion" + opciones + "_" + id + "_" + opciones + "'> <br><input type=\"text\" maxlength=\"45\" placeholder=\"Nombre de la Opción\" class=\"form-control\" name=\"o_opcion" + opciones + "_" + id + "_" + opciones + "\"";
+    fila = "                      <div class='col-md-8 o_opcion" + opciones + "_" + id + "_" + opciones + "'> <br><input type=\"text\" maxlength=\"45\" placeholder=\"Nombre de la Opci&#243;n\" class=\"form-control\" name=\"o_opcion" + opciones + "_" + id + "_" + opciones + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" ></div> ";
@@ -340,7 +343,7 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
-    if (nombres[0] === "campo" || nombres[0] === "seleccion" ||nombres[0] === "articulo" || nombres[0]==="subbodega" || nombres[0] === "usuario" || nombres[0]==="aa") {
+    if (nombres[0] === "campo" || nombres[0] === "seleccion" || nombres[0] === "articulo" || nombres[0] === "subbodega" || nombres[0] === "usuario" || nombres[0] === "aa") {
         o.remove(nombres[1].toString());
         o = o.join();
         $("#orden").val(o);

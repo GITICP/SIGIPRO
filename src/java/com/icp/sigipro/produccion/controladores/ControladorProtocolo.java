@@ -213,7 +213,8 @@ public class ControladorProtocolo extends SIGIPROServlet {
         Protocolo p = construirObjeto(request);
         int id_protocolo = Integer.parseInt(request.getParameter("id_protocolo"));
         p.setId_protocolo(id_protocolo);
-        resultado = dao.editarProtocolo(p);
+        int version = dao.obtenerUltimaVersion(id_protocolo);
+        resultado = dao.editarProtocolo(p, version+1);
         if (resultado) {
             //Funcion que genera la bitacora
             bitacora.setBitacora(p.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PROTOCOLO, request.getRemoteAddr());

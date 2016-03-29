@@ -221,8 +221,9 @@ public abstract class SIGIPROServlet extends HttpServlet {
                         File archivo = new File(ubicacion, nombre);
                         file_item.write(archivo);
                         return archivo.getAbsolutePath();
+                    }else{
+                        return null;
                     }
-                    break;
                 }
             }
         }

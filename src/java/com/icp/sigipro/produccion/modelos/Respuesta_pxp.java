@@ -27,15 +27,24 @@ public class Respuesta_pxp {
     private Usuario usuario_realizar;
     private String respuestaString;
     private int version;
-    //1-Deshabilitado,2-Terminado, requiere aprobacion,3-Deshabilitado, aprobacion, 4-Habilitado, 5-Incompleto, 6-Revisado, 7-Verificado, 
-    //8-Ultimo, deshabilitado, 9-Ultimo, habilitado, 10-Ultimo, con aprobacion, habilitado, 11-Habilitado, aprobacion
+    //1-Deshabilitado 2-Deshabilitado requiere aprobacion, 3-Habilitado, 4-Habilitado requiere aprobacion, 5-Incompleto, 6-Revisado, 7-Verificado,
     private int estado;
-
+    private boolean ultimo;
+    
     private List<Respuesta_pxp> historial;
 
     public Respuesta_pxp() {
     }
 
+    public boolean isUltimo() {
+        return ultimo;
+    }
+
+    public void setUltimo(boolean ultimo) {
+        this.ultimo = ultimo;
+    }
+
+    
     public int getVersion() {
         return version;
     }

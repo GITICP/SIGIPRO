@@ -19,11 +19,30 @@
             <div class="row">
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
-                        <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
-                        </li>
-                        <li class="active"> ${lote.getNombre()} </li>
+                        <c:choose>
+                            <c:when test="${lote.isEstado()}">
+                                <li>Producción</li>
+                                <li> 
+                                    <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
+                                </li>
+                                <li>
+                                    <a href="/SIGIPRO/Produccion/Lote?accion=historial">Historial de Lotes de Producci&#243;n</a>
+                                </li>
+                                <li class="active"> 
+                                    Lote ${lote.getNombre()} 
+                                </li> 
+                            </c:when>
+                            <c:otherwise>
+                                <li>Producción</li>
+                                <li> 
+                                    <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
+                                </li>
+                                <li class="active"> 
+                                    Lote ${lote.getNombre()} 
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+
                     </ul>
                 </div>
             </div>
@@ -112,7 +131,7 @@
                                                         </td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${respuesta.getId_respuesta() != 0}">
+                                                                <c:when test="${respuesta.getVersion() != 0}">
                                                                     <a href="/SIGIPRO/Produccion/Lote?accion=verrespuesta&id_respuesta=${respuesta.getId_respuesta()}">
                                                                         <div style="height:100%;width:100%">
                                                                             Ver Respuesta
@@ -169,28 +188,22 @@
                                                         </td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${respuesta.getEstado()==1}">
-
+                                                                <c:when test="${respuesta.getEstado()==1 || respuesta.getEstado()==2}">
+                                                                    <a class="btn btn-danger btn-sm boton-accion" disabled>Deshabilitado</a>
                                                                 </c:when>
-                                                                <c:when test="${respuesta.getEstado()==2}">
-                                                                    <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${lote.getId_lote()}' data-respuesta='${lote.getId_respuesta_actual()}' data-posicion="${lote.getPosicion_actual()}" data-toggle="modal" data-target="#modalAprobarPaso">Aprobar</a>
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==3}">
-
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==4}">
+                                                                <c:when test="${respuesta.getEstado()==3 || respuesta.getEstado()==4}">
                                                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_respuesta=${respuesta.getId_respuesta()}">Realizar</a>
                                                                 </c:when>
                                                                 <c:when test="${respuesta.getEstado()==5}">
                                                                     <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
                                                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
-                                                                    <a class="btn btn-primary btn-sm boton-accion revisar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-posicion="${respuesta.getPaso().getPosicion()}" data-toggle="modal" data-target="#modalRevisarPaso">Revisar</a>
+                                                                    <a class="btn btn-danger btn-sm boton-accion revisar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalRevisarPaso">Revisar</a>
                                                                 </c:when>
                                                                 <c:when test="${respuesta.getEstado()==6}">
-                                                                    <a class="btn btn-primary btn-sm boton-accion verificar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-posicion="${respuesta.getPaso().getPosicion()}" data-toggle="modal" data-target="#modalVerificarPaso">Verificar</a>
+                                                                    <a class="btn btn-danger btn-sm boton-accion verificar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalVerificarPaso">Verificar</a>
                                                                 </c:when>
                                                                 <c:when test="${respuesta.getEstado()==7}">
-                                                                    Completado
+                                                                    <a class="btn btn-warning btn-sm boton-accion" disabled>Completado</a>
                                                                 </c:when>
                                                             </c:choose>
                                                         </td>
@@ -219,26 +232,6 @@
 
 </t:plantilla_general>
 
-<t:modal idModal="modalAprobarPaso" titulo="Aprobar Paso de Protocolo de Producción">
-    <jsp:attribute name="form">
-        <div class="widget-content" id="class-aprobar-paso">
-            <form class="form-horizontal" id="aprobarPaso" autocomplete="off" method="post" action="Lote">
-                <input hidden="true" name="accion" value="Aprobar">
-                <input hidden="true" id='id_lote' name='id_lote' value="">
-                <input hidden="true" id='id_respuesta_actual' name='id_respuesta_actual' value="">
-                <input hidden="true" id='posicion_actual' name='posicion_actual' value="">
-                <label for="label" class="control-label">¿Está seguro que desea aprobar el Paso realizado?</label>
-                <div class="form-group">
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Paso</button>            </div>
-                </div>
-            </form>
-        </div>
-
-    </jsp:attribute>
-</t:modal>
-
 <t:modal idModal="modalRevisarPaso" titulo="Revisar Paso de Protocolo de Producción">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-revisar-paso">
@@ -246,7 +239,7 @@
                 <input hidden="true" name="accion" value="Revisar">
                 <input hidden="true" id='id_lote' name='id_lote' value="">
                 <input hidden="true" id='id_respuesta_actual' name='id_respuesta_actual' value="">
-                <input hidden="true" id='posicion_actual' name='posicion_actual' value="">
+                <input hidden="true" id='version' name='version' value="">
                 <label for="label" class="control-label">¿Está seguro que desea aprobar la revisión del paso realizado?</label>
                 <div class="form-group">
                     <div class="modal-footer">
@@ -266,7 +259,7 @@
                 <input hidden="true" name="accion" value="Verificar">
                 <input hidden="true" id='id_lote' name='id_lote' value="">
                 <input hidden="true" id='id_respuesta_actual' name='id_respuesta_actual' value="">
-                <input hidden="true" id='posicion_actual' name='posicion_actual' value="">
+                <input hidden="true" id='version' name='version' value="">
                 <label for="label" class="control-label">¿Está seguro que desea aprobar la verificación del paso realizado?</label>
                 <div class="form-group">
                     <div class="modal-footer">

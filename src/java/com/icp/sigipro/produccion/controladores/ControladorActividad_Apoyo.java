@@ -8,6 +8,7 @@ package com.icp.sigipro.produccion.controladores;
 import com.google.gson.Gson;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.bodegas.dao.SubBodegaDAO;
+import com.icp.sigipro.bodegas.modelos.InventarioSubBodega;
 import com.icp.sigipro.bodegas.modelos.SubBodega;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
@@ -18,12 +19,14 @@ import com.icp.sigipro.produccion.dao.Categoria_AADAO;
 import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
 import com.icp.sigipro.produccion.modelos.Categoria_AA;
 import com.icp.sigipro.produccion.modelos.Respuesta_AA;
+import com.icp.sigipro.produccion.modelos.Respuesta_pxp;
 import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
 import com.icp.sigipro.utilidades.HelperXML;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -142,6 +145,29 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         request.setAttribute("contador", 0);
         redireccionar(request, response, redireccion);
     }
+    
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response, int id_categoria_aa) throws ServletException, IOException, SIGIPROException {
+        validarPermiso(670, request);
+
+        String redireccion = "Actividad_Apoyo/Agregar.jsp";
+        Actividad_Apoyo aa = new Actividad_Apoyo();
+        try {
+            Categoria_AA categoria = new Categoria_AA();
+            categoria.setId_categoria_aa(id_categoria_aa);
+            aa.setCategoria(categoria);
+        } catch (Exception e) {
+
+        }
+        request.setAttribute("actividad", aa);
+        request.setAttribute("accion", "Agregar");
+        request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
+        request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
+        request.setAttribute("categorias", categoriadao.obtenerCategorias_AA());
+        request.setAttribute("orden", "");
+        request.setAttribute("cantidad", 0);
+        request.setAttribute("contador", 0);
+        redireccionar(request, response, redireccion);
+    }
 
     protected void getIndexnormal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
@@ -170,6 +196,16 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
+    protected void getIndexactividades(HttpServletRequest request, HttpServletResponse response, int id_categoria_aa) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/indexBotonesActividad.jsp";
+        Categoria_AA categoria = categoriadao.obtenerCategoria_AA(id_categoria_aa);
+        request.setAttribute("categoria", categoria);
+        List<Actividad_Apoyo> actividades = dao.obtenerActividades_Apoyo(id_categoria_aa);
+        request.setAttribute("listaActividades", actividades);
+        redireccionar(request, response, redireccion);
+    }
+    
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/Ver.jsp";
@@ -517,10 +553,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             //Funcion que genera la bitacora
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
-            this.getIndex(request, response);
+            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser agregado. Inténtelo de nuevo."));
-            this.getAgregar(request, response);
+            this.getAgregar(request, response,aa.getCategoria().getId_categoria_aa());
         }
 
     }
@@ -529,17 +565,18 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         boolean resultado = false;
 
         Actividad_Apoyo aa = construirObjeto(parametros, request);
-        resultado = dao.editarActividad_Apoyo(aa);
+        int version = dao.obtenerUltimaVersion(aa.getId_actividad());
+        resultado = dao.editarActividad_Apoyo(aa, version + 1);
         if (resultado) {
             //Funcion que genera la bitacora
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo editada correctamente"));
-            this.getIndex(request, response);
+            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));
             request.setAttribute("id_actividad", aa.getId_actividad());
-            this.getIndex(request, response);
+            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
         }
 
     }
@@ -611,13 +648,13 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_RECHAZAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo rechazada correctamente"));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, id_actividad);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser rechazada. Inténtelo de nuevo."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, id_actividad);
         }
     }
-    
+
     protected void postRevisarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(678, request);
         boolean resultado = false;
@@ -636,13 +673,13 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_REVISAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta de Actividad de Apoyo revisada correctamente"));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Respuesta de Actividad de Apoyo no pudo ser revisada. Inténtelo de nuevo."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         }
     }
-    
+
     protected void postAprobarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermiso(679, request);
         boolean resultado = false;
@@ -661,19 +698,15 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_APROBAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesata de Actividad de Apoyo aprobada correctamente"));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Respuessta Actividad de Apoyo no pudo ser aprobada. Inténtelo de nuevo."));
-            this.getIndex(request, response);
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
         }
     }
 
-    
-    
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         int id_actividad = Integer.parseInt(this.obtenerParametro("id_actividad"));
-
         Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
 
         Respuesta_AA resultado = new Respuesta_AA();
@@ -695,95 +728,23 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         String redireccion = "Actividad_Apoyo/index.jsp";
 
         try {
-            InputStream binary_stream = resultado.getActividad().getEstructura().getBinaryStream();
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            //Creacion del nombre con la fecha y hora actual
+            Date dNow = new Date();
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+            String nombre_fecha = ft.format(dNow);
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + actividad.getNombre() + "_"+nombre_fecha;
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //parametros = upload.parseRequest(request);
 
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document documento_resultado = parser.parse(binary_stream);
-            Element elemento_resultado = documento_resultado.getDocumentElement();
-
-            NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
-
-            for (int i = 0; i < lista_nodos.getLength(); i++) {
-                Node nodo = lista_nodos.item(i);
-                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elemento = (Element) nodo;
-                    String nombre_campo_resultado;
-                    Node nodo_valor;
-                    String valor;
-                    String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
-                    switch (tipo_campo) {
-                        case ("seleccion"):
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            String[] opciones = this.obtenerParametros(nombre_campo_resultado);
-                            List<String> lista_opciones = new ArrayList<String>();
-                            lista_opciones.addAll(Arrays.asList(opciones));
-                            NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
-                            for (int j = 0; j < elemento_opciones.getLength(); j++) {
-                                Node opcion = elemento_opciones.item(j);
-                                Element elemento_opcion = (Element) opcion;
-                                String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
-                                if (lista_opciones.contains(nombre_opcion)) {
-                                    nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
-                                    nodo_valor.setTextContent("true");
-                                }
-                            }
-                            break;
-                        case ("usuario"):
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
-                            List<String> lista_usuarios = new ArrayList<String>();
-                            lista_usuarios.addAll(Arrays.asList(usuarios));
-
-                            nodo_valor = elemento.getElementsByTagName("seccion").item(0);
-                            int seccion = Integer.parseInt(nodo_valor.getTextContent());
-                            List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
-                            List<String> nombre_usuarios = new ArrayList<>();
-                            List<Integer> id_usuarios = new ArrayList<>();
-
-                            for (String id : lista_usuarios) {
-                                id_usuarios.add(Integer.parseInt(id));
-                            }
-                            for (Usuario usuario : usuarios_seccion) {
-                                if (id_usuarios.contains(usuario.getId_usuario())) {
-                                    nombre_usuarios.add(usuario.getNombre_completo());
-                                }
-                            }
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(nombre_usuarios.toString());
-                            break;
-                        case ("subbodega"):
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            valor = this.obtenerParametro(nombre_campo_resultado);
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(valor);
-                            valor = elemento.getElementsByTagName("cantidad").item(0).getTextContent();
-                            if (valor.equals("true")) {
-                                String nombre_cantidad_resultado = elemento.getElementsByTagName("nombre-cantidad").item(0).getTextContent();
-                                String valor_cantidad = this.obtenerParametro(nombre_cantidad_resultado);
-                                nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
-                                nodo_valor.setTextContent(valor_cantidad);
-                            }
-                            break;
-                        default:
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            valor = this.obtenerParametro(nombre_campo_resultado);
-                            nodo_valor.setTextContent(valor);
-                            break;
-                    }
-
-                }
-            }
-
-            String string_xml_resultado;
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
-            string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
-
-            System.out.println(string_xml_resultado);
+            String string_xml_resultado = this.parseXML(resultado, ubicacion);
 
             resultado.setRespuestaString(string_xml_resultado);
             dao.insertarRespuesta(resultado);
@@ -813,98 +774,26 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         resultado.setUsuario_realizar(u);
         String redireccion = "Actividad_Apoyo/index.jsp";
         try {
-            InputStream binary_stream = resultado.getActividad().getEstructura().getBinaryStream();
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            //Creacion del nombre con la fecha y hora actual
+            Date dNow = new Date();
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+            String nombre_fecha = ft.format(dNow);
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + resultado.getActividad().getNombre() + "_"+nombre_fecha;
+            //-------------------------------------------
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            //parametros = upload.parseRequest(request);
 
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document documento_resultado = parser.parse(binary_stream);
-            Element elemento_resultado = documento_resultado.getDocumentElement();
-
-            NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
-
-            for (int i = 0; i < lista_nodos.getLength(); i++) {
-                Node nodo = lista_nodos.item(i);
-                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elemento = (Element) nodo;
-                    String nombre_campo_resultado;
-                    Node nodo_valor;
-                    String valor;
-                    String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
-                    switch (tipo_campo) {
-                        case ("seleccion"):
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            String[] opciones = this.obtenerParametros(nombre_campo_resultado);
-                            List<String> lista_opciones = new ArrayList<String>();
-                            lista_opciones.addAll(Arrays.asList(opciones));
-                            NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
-                            for (int j = 0; j < elemento_opciones.getLength(); j++) {
-                                Node opcion = elemento_opciones.item(j);
-                                Element elemento_opcion = (Element) opcion;
-                                String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
-                                if (lista_opciones.contains(nombre_opcion)) {
-                                    nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
-                                    nodo_valor.setTextContent("true");
-                                }
-                            }
-                            break;
-                        case ("usuario"):
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
-                            List<String> lista_usuarios = new ArrayList<String>();
-                            lista_usuarios.addAll(Arrays.asList(usuarios));
-
-                            nodo_valor = elemento.getElementsByTagName("seccion").item(0);
-                            int seccion = Integer.parseInt(nodo_valor.getTextContent());
-                            List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
-                            List<String> nombre_usuarios = new ArrayList<>();
-                            List<Integer> id_usuarios = new ArrayList<>();
-
-                            for (String id : lista_usuarios) {
-                                id_usuarios.add(Integer.parseInt(id));
-                            }
-                            for (Usuario usuario : usuarios_seccion) {
-                                if (id_usuarios.contains(usuario.getId_usuario())) {
-                                    nombre_usuarios.add(usuario.getNombre_completo());
-                                }
-                            }
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(nombre_usuarios.toString());
-                            break;
-                        case ("subbodega"):
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            valor = this.obtenerParametro(nombre_campo_resultado);
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(valor);
-                            valor = elemento.getElementsByTagName("cantidad").item(0).getTextContent();
-                            if (valor.equals("true")) {
-                                String nombre_cantidad_resultado = elemento.getElementsByTagName("nombre-cantidad").item(0).getTextContent();
-                                String valor_cantidad = this.obtenerParametro(nombre_cantidad_resultado);
-                                nodo_valor = elemento.getElementsByTagName("valor-cantidad").item(0);
-                                nodo_valor.setTextContent(valor_cantidad);
-                            }
-                            break;
-                        default:
-                            nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            valor = this.obtenerParametro(nombre_campo_resultado);
-                            nodo_valor.setTextContent(valor);
-                            break;
-                    }
-
-                }
-            }
-
-            String string_xml_resultado;
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
-            string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
-
-            System.out.println(string_xml_resultado);
-
+            String string_xml_resultado = parseXML(resultado, ubicacion);
             resultado.setRespuestaString(string_xml_resultado);
-            dao.repetirRespuesta(resultado);
+            int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
+            dao.repetirRespuesta(resultado, version + 1);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
@@ -1020,6 +909,178 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             aa.setEstructuraString(xml);
         }
         return aa;
+    }
+
+    private String parseXML(Respuesta_AA resultado, String ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
+        String string_xml_resultado = null;
+
+        InputStream binary_stream = resultado.getActividad().getEstructura().getBinaryStream();
+
+        DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document documento_resultado = parser.parse(binary_stream);
+        Element elemento_resultado = documento_resultado.getDocumentElement();
+
+        NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
+
+        for (int i = 0; i < lista_nodos.getLength(); i++) {
+            Node nodo = lista_nodos.item(i);
+            if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                Element elemento = (Element) nodo;
+                String nombre_campo_resultado;
+                Node nodo_valor;
+                String valor;
+                String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
+                switch (tipo_campo) {
+                    case ("seleccion"):
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        String[] opciones = this.obtenerParametros(nombre_campo_resultado);
+                        List<String> lista_opciones = new ArrayList<String>();
+                        lista_opciones.addAll(Arrays.asList(opciones));
+                        System.out.println(lista_opciones);
+                        NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
+                        for (int j = 0; j < elemento_opciones.getLength(); j++) {
+                            Node opcion = elemento_opciones.item(j);
+                            Element elemento_opcion = (Element) opcion;
+                            String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
+                            if (lista_opciones.contains(nombre_opcion)) {
+                                nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
+                                nodo_valor.setTextContent("true");
+                            }
+                        }
+                        break;
+                    case ("usuario"):
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        //Obtengo los usuarios agregados, y los meto en una lista
+                        String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
+                        List<String> lista_usuarios = new ArrayList<String>();
+                        lista_usuarios.addAll(Arrays.asList(usuarios));
+                        //Obtengo la seccion escogida, y cargo una lista de los usuarios de dicha seccion
+                        nodo_valor = elemento.getElementsByTagName("seccion").item(0);
+                        int seccion = Integer.parseInt(nodo_valor.getTextContent());
+                        List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
+
+                        List<Integer> id_usuarios = new ArrayList<>();
+
+                        for (String id : lista_usuarios) {
+                            id_usuarios.add(Integer.parseInt(id));
+                        }
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        for (Usuario usuario : usuarios_seccion) {
+                            if (id_usuarios.contains(usuario.getId_usuario())) {
+                                Element e = documento_resultado.createElement("usuario");
+
+                                Element id_usuario = documento_resultado.createElement("id");
+                                id_usuario.appendChild(documento_resultado.createTextNode("" + usuario.getId_usuario()));
+                                e.appendChild(id_usuario);
+
+                                Element nombre = documento_resultado.createElement("nombre");
+                                nombre.appendChild(documento_resultado.createTextNode("" + usuario.getNombre_completo()));
+                                e.appendChild(nombre);
+
+                                nodo_valor.appendChild(e);
+                            }
+                        }
+                        break;
+                    case ("subbodega"):
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        //Obtengo los productos seleccionados
+                        String[] productos = this.obtenerParametros(nombre_campo_resultado);
+                        List<String> lista_productos = new ArrayList<String>();
+                        lista_productos.addAll(Arrays.asList(productos));
+                        //Parseo los id's en String, a Int
+                        List<Integer> lista_id_productos = new ArrayList<>();
+                        for (String producto : lista_productos) {
+                            lista_id_productos.add(Integer.parseInt(producto));
+                        }
+                        //Obtengo los productos para poder almacenar los nombres de los productos
+                        int id_sub_bodega = Integer.parseInt(elemento.getElementsByTagName("subbodega").item(0).getTextContent());
+                        SubBodega subbodega = subbodegadao.buscarSubBodegaEInventariosProduccion(id_sub_bodega);
+                        List<InventarioSubBodega> inventario = subbodega.getInventarios();
+                        HashMap<Integer, String> nombre_productos = new HashMap<>();
+                        for (InventarioSubBodega inv : inventario) {
+                            if (lista_id_productos.contains(inv.getProducto().getId_producto())) {
+                                nombre_productos.put(inv.getProducto().getId_producto(), inv.getProducto().getNombre());
+                            }
+                        }
+                        //Ingreso los valores dentro del XML
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        for (Integer id : lista_id_productos) {
+                            Element e = documento_resultado.createElement("producto");
+
+                            Element id_producto = documento_resultado.createElement("id");
+                            id_producto.appendChild(documento_resultado.createTextNode("" + id));
+                            e.appendChild(id_producto);
+
+                            Element nombre_producto = documento_resultado.createElement("nombre");
+                            String nombre = nombre_productos.get(id);
+                            nombre_producto.appendChild(documento_resultado.createTextNode(nombre));
+                            e.appendChild(nombre_producto);
+
+                            Element cantidad_producto = documento_resultado.createElement("cantidad");
+                            String cantidad = this.obtenerParametro(nombre_campo_resultado + "_" + id);
+                            cantidad_producto.appendChild(documento_resultado.createTextNode(cantidad));
+                            e.appendChild(cantidad_producto);
+
+                            nodo_valor.appendChild(e);
+
+                        }
+                        break;
+                    case ("sangria"):
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        //Obtengo los productos seleccionados
+                        String[] sangrias = this.obtenerParametros(nombre_campo_resultado);
+                        List<String> lista_sangrias = new ArrayList<String>();
+                        lista_sangrias.addAll(Arrays.asList(sangrias));
+                        //Parseo los id's en String, a Int
+                        List<Integer> lista_id_sangrias = new ArrayList<>();
+                        for (String sangria : lista_sangrias) {
+                            lista_id_sangrias.add(Integer.parseInt(sangria));
+                        }
+                        //Ingreso los valores dentro del XML
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        for (Integer id : lista_id_sangrias) {
+                            Element e = documento_resultado.createElement("sangria");
+
+                            Element id_sangria = documento_resultado.createElement("id");
+                            id_sangria.appendChild(documento_resultado.createTextNode("" + id));
+                            e.appendChild(id_sangria);
+
+                            nodo_valor.appendChild(e);
+                        }
+                        break;
+                    case ("imagen"):
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion);
+                        if (valor != null) {
+                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                            nodo_valor.setTextContent(valor);
+                        } else {
+                            String actual = this.obtenerParametro(nombre_campo_resultado + "_actual");
+                            if (!actual.equals("")) {
+                                nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                                nodo_valor.setTextContent(actual);
+                            }
+                        }
+                        break;
+                    default:
+                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
+                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
+                        valor = this.obtenerParametro(nombre_campo_resultado);
+                        nodo_valor.setTextContent(valor);
+                        break;
+                }
+            }
+        }
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
+        string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
+
+        System.out.println(string_xml_resultado);
+
+        return string_xml_resultado;
     }
 
     private String parseDictXML(HashMap<Integer, HashMap> diccionario_formulario, String orden) {
@@ -1141,6 +1202,35 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
         System.out.println(respuesta.toString());
         return respuesta;
+    }
+
+    private boolean crearDirectorio(String path) {
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try {
+                directorio.mkdirs();
+                resultado = true;
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
+        }
+        return resultado;
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
     }
 
     // </editor-fold>

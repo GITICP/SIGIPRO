@@ -24,9 +24,9 @@
                             <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">${respuesta.getLote().getNombre()}</a></li>
-                        <li> <a href="/SIGIPRO/Produccion/Paso?accion=ver&id_paso=${respuesta.getPaso().getId_paso()}">${respuesta.getPaso().getNombre()}</a> </li>
-                        <li class="active"> Respuesta </li>
+                            <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">Lote ${respuesta.getLote().getNombre()}</a>
+                        </li>
+                        <li class="active"> Ver Respuesta de ${respuesta.getPaso().getNombre()} </li>
                     </ul>
                 </div>
             </div>

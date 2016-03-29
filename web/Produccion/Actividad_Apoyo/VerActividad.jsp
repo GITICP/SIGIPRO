@@ -20,13 +20,13 @@
                     <ul class="breadcrumb">
                         <li>Producción</li>
                         <li>
-                            <a href="/SIGIPRO/Produccion/Categoria_AA?accion=ver&id_categoria_aa=${actividad.getCategoria().getId_categoria_aa()}">Categoría ${actividad.getCategoria().getNombre()}</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividad de Apoyo ${actividad.getNombre()}</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${actividad.getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
                         </li>
                         <li class="active">
-                            Actividades de Apoyo Realizadas
+                            Actividades de Apoyo Realizadas de ${actividad.getNombre()}
                         </li>
                     </ul>
                 </div>
@@ -37,7 +37,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Actividades de Apoyo Realizadas </h3>
+                            <h3><i class="fa fa-gears"></i> Actividades de Apoyo Realizadas de ${actividad.getNombre()} </h3>
                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                 <div class="btn-group widget-header-toolbar">
                                     <c:choose>
@@ -157,7 +157,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/ActividadApoyo.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/Produccion/ActividadApoyo/ActividadApoyo.js"></script>    
     </jsp:attribute>
 
 </t:plantilla_general>
