@@ -71,6 +71,9 @@ function agregarCampo() {
     fila += "                           <option value=\"text\">Campo de Texto</option>";
     fila += "                           <option value=\"textarea\">Area de Texto</option>";
     fila += "                           <option value=\"fecha\">Fecha</option>";
+    fila += "                           <option value=\"hora\">Hora</option>";
+    fila += "                           <option value=\"blanco\">Espacio en blanco</option>";
+    fila += "                           <option value=\"imagen\">Imagen</option>";
     fila += "                           <option value=\"cc\">Referencia a Control de Calidad</option>";
     fila += "                           <option value=\"sangria\">Referencia a Sangría</option>";
     fila += "                       </select>";
@@ -81,7 +84,7 @@ function agregarCampo() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre\" class=\"form-control\" name=\"c_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre\" class=\"form-control\" name=\"c_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -203,7 +206,7 @@ function agregarSubbodega() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group\">";
-    fila += "                       <input type=\"text\" maxlength=\"45\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"a_nombre_" + contador + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre del Campo\" class=\"form-control\" name=\"a_nombre_" + contador + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -340,7 +343,7 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
-    if (nombres[0] === "campo" || nombres[0] === "seleccion" ||nombres[0] === "articulo" || nombres[0]==="subbodega" || nombres[0] === "usuario" || nombres[0]==="aa") {
+    if (nombres[0] === "campo" || nombres[0] === "seleccion" || nombres[0] === "articulo" || nombres[0] === "subbodega" || nombres[0] === "usuario" || nombres[0] === "aa") {
         o.remove(nombres[1].toString());
         o = o.join();
         $("#orden").val(o);

@@ -58,7 +58,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/ActividadApoyo.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/ActividadApoyo/ActividadApoyo.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="/resources/demos/style.css">
     </jsp:attribute>

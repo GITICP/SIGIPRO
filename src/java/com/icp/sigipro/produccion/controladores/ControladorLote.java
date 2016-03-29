@@ -892,16 +892,13 @@ public class ControladorLote extends SIGIPROServlet {
                         nodo_valor.setTextContent(valor);
                         break;
                     case ("imagen"):
-                        System.out.println("Imagen0");
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         valor = this.obtenerImagen(nombre_campo_resultado, ubicacion);
-                        System.out.println(valor);
                         if (valor != null) {
                             nodo_valor = elemento.getElementsByTagName("valor").item(0);
                             nodo_valor.setTextContent(valor);
                         } else {
                             String actual = this.obtenerParametro(nombre_campo_resultado + "_actual");
-                            System.out.println(actual);
                             if (!actual.equals("")) {
                                 nodo_valor = elemento.getElementsByTagName("valor").item(0);
                                 nodo_valor.setTextContent(actual);
@@ -909,11 +906,9 @@ public class ControladorLote extends SIGIPROServlet {
                         }
                         break;
                     default:
-                        System.out.println(tipo_campo);
                         nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
                         nodo_valor = elemento.getElementsByTagName("valor").item(0);
                         valor = this.obtenerParametro(nombre_campo_resultado);
-                        System.out.println(valor);
                         nodo_valor.setTextContent(valor);
                         break;
                 }
