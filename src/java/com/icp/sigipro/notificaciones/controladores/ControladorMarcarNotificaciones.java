@@ -79,7 +79,6 @@ public class ControladorMarcarNotificaciones extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sesion = request.getSession();
         String id = request.getParameter("id");
-        //System.out.println("CONTROLADOR id = "+id);
         NotificacionesDAO nDAO = new NotificacionesDAO();
         try {
             nDAO.marcarNotificacionesLeidas(id);

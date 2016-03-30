@@ -13,6 +13,7 @@ import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.Patron;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
@@ -333,10 +334,10 @@ public class ResultadoDAO extends DAO {
         return resultado;
     }
 
-    public AnalisisGrupoSolicitud obtenerAGS(int id_ags) throws SIGIPROException {
+    public AnalisisGrupoSolicitud obtenerAGS(int id_ags, boolean es_analisis_sp) throws SIGIPROException {
 
         AnalisisGrupoSolicitud ags_resultado = new AnalisisGrupoSolicitud();
-        List<Resultado> lista_resultados = new ArrayList<Resultado>();
+        List<Resultado> lista_resultados = new ArrayList<>();
 
         PreparedStatement consulta_grupo = null;
         ResultSet rs_grupo = null;
@@ -344,25 +345,46 @@ public class ResultadoDAO extends DAO {
         ResultSet rs = null;
 
         try {
-            consulta = getConexion().prepareStatement(
+            if (!es_analisis_sp) {
+                consulta = getConexion().prepareStatement(
                     " SELECT r.id_resultado, r.fecha, r.repeticion, r.resultado, u.id_usuario, u.nombre_completo "
                     + " FROM control_calidad.resultados r "
                     + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
                     + " WHERE r.id_analisis_grupo_solicitud = ? "
-                    + " ORDER BY repeticion ASC"
-            );
+                    + " ORDER BY repeticion ASC; "
+                );
+            } else {
+                consulta = getConexion().prepareStatement(
+                    " SELECT r.id_resultado_analisis_sp as id_resultado, r.fecha, r.repeticion, r.hematocrito, r.hemoglobina, u.id_usuario, u.nombre_completo "
+                    + " FROM control_calidad.resultados_analisis_sangrias_prueba r "
+                    + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
+                    + " WHERE r.id_ags = ? "
+                    + " ORDER BY repeticion ASC; "
+                );
+            }
+            
 
             consulta.setInt(1, id_ags);
 
             rs = consulta.executeQuery();
 
             while (rs.next()) {
-                Resultado r = new Resultado();
+                Resultado r;
+                
+                if (!es_analisis_sp) {
+                    r = new Resultado();
+                    r.setResultado(rs.getString("resultado"));
+                } else {
+                    ResultadoSangriaPrueba r_sp = new ResultadoSangriaPrueba();
+                    r_sp.setHematocrito(rs.getFloat("hematocrito"));
+                    r_sp.setHemoglobina(rs.getFloat("hemoglobina"));
+                    r = r_sp;
+                }
 
                 r.setId_resultado(rs.getInt("id_resultado"));
                 r.setFecha(rs.getDate("fecha"));
                 r.setRepeticion(rs.getInt("repeticion"));
-                r.setResultado(rs.getString("resultado"));
+                
 
                 Usuario u = new Usuario();
                 u.setId_usuario(rs.getInt("id_usuario"));

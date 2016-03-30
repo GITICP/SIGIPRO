@@ -8,7 +8,6 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
-import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
@@ -40,10 +39,14 @@ public class AsociacionSangria extends AsociacionSolicitud {
 
     @Override
     public void asociar(HttpServletRequest request) {
-        dia = Integer.parseInt(request.getParameter("dia"));
         int id_sangria = Integer.parseInt(request.getParameter("sangria"));
-        sangria = new Sangria();
-        sangria.setId_sangria(id_sangria);
+        try {
+            sangria = sangria_dao.obtenerSangria(id_sangria);
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        dia = Integer.parseInt(request.getParameter("dia"));
+        solicitud.setDescripcion("Sangría grupo " + sangria.getGrupo().getNombre() + ", día " + dia);
     }
 
     @Override

@@ -1,10 +1,15 @@
 SELECTOR_TABLA_RESULTADOS_OBTENIDOS = "#resultados-obtenidos";
 SELECTOR_TABLA_RESULTADOS_POR_REPORTAR = "#resultados-por-reportar";
+SELECTOR_TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA = "#resultados-por-reportar-hemoglobina";
 
-TABLA_RESULTADOS_POR_REPORTAR = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR);
-TABLA_RESULTADOS_OBTENIDOS = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_OBTENIDOS);
+TABLA_RESULTADOS_POR_REPORTAR = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR, {paging: false, info: false});
+TABLA_RESULTADOS_OBTENIDOS = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_OBTENIDOS, {paging: false, info: false});
+TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA, {paging: false, info: false});
 
 ELEMENTO_CABALLOS = $("#caballos-numeros");
+
+HEMATOCRITO = "Hematocrito";
+HEMOGLOBINA = "Hemoglobina";
 
 FLAG_ELIMINAR = 1;
 FLAG_REPORTAR = 2;
@@ -31,7 +36,7 @@ $(document).ready(function () {
     });
 
     var tipo_asociacion = $("#flag-asociacion").data("tipo");
-    if (tipo_asociacion === "sangria") {
+    if (tipo_asociacion === "sangria" || tipo_asociacion === "sangria_prueba") {
         $("#seleccion-objeto").find("option[value=sangria]").prop("selected", true);
         $("#seleccion-objeto").select2();
 
@@ -89,7 +94,7 @@ funcion_validar_general = function() {
 
 funcion_reportar_sangria = function () {
     var fila = $(this).parents("tr");
-    id_resultado_seleccionado = fila.attr("id");
+    var id_resultado_seleccionado = fila.attr("id");
     
     var columna_caballos = fila.find("td:nth-child(2) > span");
     var ids_caballos = [];
@@ -134,31 +139,6 @@ funcion_validar_sangria = function () {
     return $("#seleccion-caballos").find("option:not(.opcion-escondida)").length === 0;
 };
 
-
-/*
-funcion_asociar_resultado_caballos = function () {
-    var fila = $("tr[id=" + id_resultado_seleccionado + "]");
-
-    var boton = fila.find("button");
-    desasignar_evento_boton(boton, FLAG_ELIMINAR);
-    mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
-
-    var input_caballos = $("<input type='hidden'>");
-    input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
-    input_caballos.prop("value", $("#seleccion-caballos").val());
-
-    $("#modal-asociar-caballo").modal("hide");
-
-    $("#seleccion-caballos :selected").each(function () {
-        $(this).attr("selected", false);
-        $(this).addClass("opcion-escondida");
-    });
-
-    $("#seleccion-caballos").select2();
-
-    var form = $("#form-informe");
-    form.prepend(input_caballos);
-}; */
 
 /*
  * Funciones de eventos
@@ -274,18 +254,26 @@ function obtener_fila(tabla, selector) {
     return tabla.row(selector);
 }
 
-function desasignar_evento_boton(elemento, flag) {
+function desasignar_evento_boton(elemento, flag, texto) {
+    
+    if (texto === undefined) {
+        if (flag === FLAG_ELIMINAR) {
+            texto = "Eliminar de Informe";
+        } else {
+            texto = "Reportar Resultado";
+        }
+    }
 
     if (flag === FLAG_ELIMINAR) {
         elemento.unbind('click');
         elemento.click(funcion_eliminar);
-        elemento.text("Eliminar de Informe");
+        elemento.text(texto);
         elemento.addClass("btn-danger");
         elemento.removeClass("btn-primary");
     } else if (flag === FLAG_REPORTAR) {
         elemento.unbind('click');
         elemento.click(funcion_reportar);
-        elemento.text("Reportar Resultado");
+        elemento.text(texto);
         elemento.addClass("btn-primary");
         elemento.removeClass("btn-danger");
     }
@@ -307,6 +295,10 @@ function asignar_eventos_botones(funcion) {
         funcion_eliminar = funcion_eliminar_sangria;
         funcion_reportar = funcion_reportar_sangria;
         funcion_validar = funcion_validar_sangria;
+    } else if (funcion === "sangria_prueba") {
+        funcion_reportar = funcion_reportar_sangria_prueba;
+        funcion_eliminar = funcion_eliminar_sangria_prueba;
+        funcion_validar = funcion_validar_sangria_prueba;
     } else {
         funcion_eliminar = funcion_eliminar_general;
         funcion_reportar = funcion_reportar_general;

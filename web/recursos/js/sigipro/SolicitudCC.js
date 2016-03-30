@@ -230,6 +230,21 @@ function eliminarMuestra(id) {
  */
 
 $(document).ready(function () {
+    
+    $("#btn-agrupar-muestras").click(function () {
+        
+        var select_tipo = $("#seleccion-tipo-muestra");
+        var select_muestras = $("#seleccion-muestras");
+        var id_tipo_muestra = select_tipo.find("option:selected").data("tipo");
+        
+        select_muestras.find("option").each(function() {
+            if (id_tipo_muestra === $(this).data("tipo")) {
+                $(this).attr("selected", true);
+            }
+            select_muestras.select2();
+        });
+        
+    });
 
     $("#seleccion-tipo-muestra").change(function () {
 
@@ -245,8 +260,8 @@ $(document).ready(function () {
             } else {
                 $(this).addClass("opcion-escondida");
             }
+            $("#btn-agrupar-muestras").attr("disabled", false);
         });
-
         select_muestras.select2();
     });
 

@@ -7,16 +7,15 @@ package com.icp.sigipro.controlcalidad.modelos;
 
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.Asociable;
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionSangria;
+import com.icp.sigipro.controlcalidad.modelos.asociaciones.AsociacionSangriaPrueba;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +38,7 @@ public class SolicitudCC extends Asociable {
     private String observaciones;
     private Informe informe;
     private Timestamp fecha_cierre;
+    private String descripcion;
 
     private List<AnalisisGrupoSolicitud> analisis_solicitud;
     private transient ControlSolicitud control_solicitud;
@@ -174,6 +174,19 @@ public class SolicitudCC extends Asociable {
         this.analisis_solicitud = analisis_solicitud;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = "Sin información adicional.";
+        if (descripcion != null) {
+            if (!descripcion.isEmpty()) {
+                this.descripcion = descripcion;
+            }
+        }
+    }
+
     public ControlSolicitud getControl_solicitud() {
         return control_solicitud;
     }
@@ -211,6 +224,20 @@ public class SolicitudCC extends Asociable {
     public void asociar(HttpServletRequest request) {
         if (asociacion != null) {
             asociacion.asociar(request);
+        } else {
+            int i = 0;
+            descripcion = "Muestras ";
+            while (i <= 2 && i < this.analisis_solicitud.size()) {
+                AnalisisGrupoSolicitud ags = analisis_solicitud.get(i);
+                List<Muestra> muestras = ags.getGrupo().getGrupos_muestras();
+                descripcion += muestras.get(0).getIdentificador() + ", ";
+                i++;
+            }
+            if (this.analisis_solicitud.size() <= 2) {
+                descripcion = descripcion.substring(0, descripcion.length() - 2);
+            } else {
+                descripcion += "...";
+            }
         }
     }
 
@@ -254,6 +281,9 @@ public class SolicitudCC extends Asociable {
                 asociacion = new AsociacionSangria(this);
                 asociacion.setSolicitud(this);
                 break;
+            case SANGRIA_PRUEBA:
+                asociacion = new AsociacionSangriaPrueba(this);
+                asociacion.setSolicitud(this);
             default:
                 break;
         }

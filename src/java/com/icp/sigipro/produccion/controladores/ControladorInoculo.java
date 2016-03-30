@@ -163,7 +163,7 @@ public class ControladorInoculo extends SIGIPROServlet {
             resultado = dao.insertarInoculo(inoculo_nuevo);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
@@ -189,7 +189,7 @@ public class ControladorInoculo extends SIGIPROServlet {
             resultado = dao.editarInoculo(inoculo_nuevo);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
@@ -216,7 +216,7 @@ public class ControladorInoculo extends SIGIPROServlet {
             resultado = dao.eliminarInoculo(inoculo_a_eliminar.getId_inoculo());
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(inoculo_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUD, request.getRemoteAddr());
+            bitacora.setBitacora(inoculo_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());

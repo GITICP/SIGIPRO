@@ -70,24 +70,6 @@
                                 </c:if>
 
                                 <div class="row">
-                                    <%--
-                                    <div class="col-md-6">
-                                        <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="input-group">
-                                                    <select id="seleccion-objeto" class="select2" name="objeto-relacionado"
-                                                            style='background-color: #fff;'>
-                                                        <option value='' selected>Sin selección</option>
-                                                        <option value="sangria">
-                                                            Sangría
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    --%>
                                     <c:if test="${solicitud.getEstado() != 'Completada'}">
                                         <div class="col-md-6">
                                             <label for="cerrar" class="control-label">Estado</label>
@@ -106,7 +88,14 @@
                                 </div>
                                 <c:choose>
                                     <c:when test="${solicitud.tieneTipoAsociacion()}">
-                                        <t:editar_solicitud_sangria derecha="false" />
+                                        <c:choose>
+                                            <c:when test="${solicitud.getTipoAsociacionString() == 'sangria'}">
+                                                <t:agregar_informe_sangria derecha="false" />
+                                            </c:when>
+                                            <c:when test="${solicitud.getTipoAsociacionString() == 'sangria_prueba'}">
+                                                <t:agregar_informe_sangria_prueba derecha="false" />
+                                            </c:when>
+                                        </c:choose>
                                     </c:when >
                                     <c:otherwise>
                                         <input type="hidden" name="objeto-relacionado" value="">

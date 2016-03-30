@@ -95,6 +95,10 @@ public class Bitacora {
     public static final String TABLA_DESPACHOS = "PRODUCCION.DESPACHOS";
     public static final String TABLA_SALIDAS_EXT = "PRODUCCION.SALIDAS_EXT";
     public static final String TABLA_RESERVACIONES = "PRODUCCION.RESERVACIONES";
+    public static final String TABLA_VENENO_PRODUCCION = "PRODUCCION.VENENO_PRODUCCION";
+    public static final String TABLA_INOCULO_PRODUCCION = "PRODUCCION.INOCULO";
+    public static final String TABLA_CRONOGRAMA = "PRODUCCION.CRONOGRAMA";
+    public static final String TABLA_SEMANAS_CRONOGRAMA = "PRODUCCION.SEMANAS_CRONOGRAMA";
     public static final String TABLA_NOTIFICACIONES = "CALENDARIO.NOTIFICACIONES";
     public static final String TABLA_TIPO_NOTIFICACIONES = "CALENDARIO.TIPO_NOTIFICACIONES";
 
