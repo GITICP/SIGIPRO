@@ -23,7 +23,7 @@
                             <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
                         </li>
                         <li> Realizar Paso de Protocolo de Producción </li>
-                        <li class="active"> ${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()} </li>
+                        <li class="active"> ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
 
                     </ul>
                 </div>
@@ -35,7 +35,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Realizar Paso ${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()} de Protocolo de Producción ${lote.getProtocolo().getNombre()} </h3>
+                            <h3><i class="fa fa-gears"></i> Realizar Paso ${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()} de Protocolo de Producción ${respuesta.getLote().getProtocolo().getNombre()} </h3>
                         </div>
                         ${mensaje}
 
@@ -43,7 +43,7 @@
 
                             <form method="post" class="form-horizontal" action="Lote" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="realizar" name="accion" />
-                                <input type="hidden" value="${lote.getId_lote()}" name="id_lote" />
+                                <input type="hidden" value="${respuesta.getId_respuesta()}" name="id_respuesta" />
 
                                 <div class="row">
                                     <div class="col-md-12">

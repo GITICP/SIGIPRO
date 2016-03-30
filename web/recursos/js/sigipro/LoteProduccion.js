@@ -17,6 +17,23 @@ $(function () {
         });
     });
     
+    var lotes = $(".lote");
+    $.each(lotes, function(index, element){
+        $(element).on("change",generar_link_lote);
+        $.ajax({
+            url: "/SIGIPRO/Produccion/Lote",
+            type: "GET",
+            data: {"accion": "lotesajax"},
+            dataType: "json",
+            success: function (datos) {
+                generar_select_lote(datos,element);
+            },
+            error: function(){
+                alert("Error");
+            }
+        });
+    });
+    
     var cc = $(".cc");
     
     $.each(cc, function(index, element){
@@ -81,6 +98,8 @@ $(function () {
     
     $.each(subbodegas, function(index, element){
         var id = $(element).prop("id").split("_")[1];
+        $(element).on("select2-selecting",function(e){ crear_cantidad(e,element);});
+        $(element).on("select2-removing",function(e){ remover_cantidad(e,element);});
         $.ajax({
             url: "/SIGIPRO/Bodegas/SubBodegas",
             type: "GET",
@@ -99,13 +118,62 @@ $(function () {
     
 });
 
+function crear_cantidad(e,element){
+    var valor = e.val;
+    var nombre = e.object.text;
+    var id = $(element).attr("name");
+   
+    var fila = "        <div class=\""+id+"_"+valor+"\"> <label for=\"nombre\" class=\"control-label\">Cantidad - "+nombre+"</label>";
+    fila += "           <div class=\"form-group\">";
+    fila += "               <div class=\"col-sm-12\">";
+    fila += "                   <div class=\"input-group\">";
+    fila += "                       <input type=\"number\" placeholder=\"Cantidad\" class=\"form-control\" name=\"" + id + "_"+valor+"\"";
+    fila += "                           required";
+    fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
+    fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
+    fila += "                   </div>";
+    fila += "               </div>";
+    fila += "           </div> </div>";
+    
+    var cantidad = $("."+id+"_cant");
+    
+    cantidad.append(fila);
+    
+}
+
+function remover_cantidad(e,element){
+    var valor = e.val;
+    var id = $(element).attr("name");
+   
+    $("div > ."+id + "_"+valor).remove();
+    
+}
+
 $(document).on("click", ".aprobar-Modal", function () {
     var id_lote = $(this).data('id');
     var id_respuesta_actual = $(this).data('respuesta'); 
-    var posicion_actual = $(this).data('posicion')
+    var posicion_actual = $(this).data('posicion');
     $('#class-aprobar-paso #id_lote').val(id_lote);
     $("#class-aprobar-paso #id_respuesta_actual").val(id_respuesta_actual);
     $("#class-aprobar-paso #posicion_actual").val(posicion_actual);
+});
+
+$(document).on("click", ".revisar", function () {
+    var id_lote = $(this).data('id');
+    var id_respuesta_actual = $(this).data('respuesta'); 
+    var posicion_actual = $(this).data('posicion');
+    $('#class-revisar-paso #id_lote').val(id_lote);
+    $("#class-revisar-paso #id_respuesta_actual").val(id_respuesta_actual);
+    $("#class-revisar-paso #posicion_actual").val(posicion_actual);
+});
+
+$(document).on("click", ".verificar-Modal", function () {
+    var id_lote = $(this).data('id');
+    var id_respuesta_actual = $(this).data('respuesta'); 
+    var posicion_actual = $(this).data('posicion');
+    $('#class-verificar-paso #id_lote').val(id_lote);
+    $("#class-verificar-paso #id_respuesta_actual").val(id_respuesta_actual);
+    $("#class-verificar-paso #posicion_actual").val(posicion_actual);
 });
 
 function generar_select_sangria(datos,element) {
@@ -116,6 +184,22 @@ function generar_select_sangria(datos,element) {
         var opcion_string = "<option value=\""+ elemento.id_sangria + "\">";
         var opcion = $(opcion_string);
         opcion.text(elemento.identificador);
+
+        $(element).append(opcion);
+    }
+    
+    $(element).select2();
+     
+}
+
+function generar_select_lote(datos,element) {
+    
+    $(element).append("<option value=\"\"></option>");
+    for (var i = 0; i < datos.length; i++) {
+        var elemento = datos[i];
+        var opcion_string = "<option value=\""+ elemento.id_lote + "\">";
+        var opcion = $(opcion_string);
+        opcion.text(elemento.nombre + " [" +elemento.nombreProtocolo + "]");
 
         $(element).append(opcion);
     }
@@ -197,6 +281,18 @@ function generar_link_sangria(){
     $("."+div +" .ver > a").remove();
 
     elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Caballeriza/Sangria?accion=ver&id_sangria="+id+"\"> Ver Sangría </a>");
+}
+
+function generar_link_lote(){
+    var div = ($(this).prop("name"));
+    
+    var elemento = $("."+div +" .ver");
+    
+    var id = ($(this).val());
+    
+    $("."+div +" .ver > a").remove();
+
+    elemento.append("<a target=\"_blank\" href=\"/SIGIPRO/Produccion/Lote?accion=ver&id_lote="+id+"\"> Ver Lote de Producción </a>");
 }
 
 function generar_link_cc(){

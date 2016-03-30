@@ -1,5 +1,35 @@
 <paso>
     <campo>
+        <nombre-campo>Luis_1</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Luis</etiqueta>
+        <valor>
+            <producto>
+                <id>1072</id>
+                <nombre>Saco Abono 10-30-10 40KG</nombre>
+                <cantidad>23</cantidad>
+            </producto>
+            <producto>
+                <id>1075</id>
+                <nombre>Saco electrolitos Pellet 30kG</nombre>
+                <cantidad>3241</cantidad>
+            </producto>
+            <producto>
+                <id>1076</id>
+                <nombre>Saco Semilla Rye-Grass 50libras</nombre>
+                <cantidad>324</cantidad>
+            </producto>
+        </valor>
+        <nombre-subbodega>Sub Bodega Caballeriza</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Luis_cantidad</nombre-cantidad>
+        <valor-cantidad/>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
         <nombre-campo>CC_1</nombre-campo>
         <etiqueta>CC</etiqueta>
         <valor>2</valor>

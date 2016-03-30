@@ -26,7 +26,7 @@
                     <ul class="breadcrumb">
                         <li>Producción</li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividad de Apoyo</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
                         </li>
                         <li class="active"> Agregar Actividad de Apoyo </li>
 

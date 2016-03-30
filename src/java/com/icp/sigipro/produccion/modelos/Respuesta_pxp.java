@@ -26,6 +26,8 @@ public class Respuesta_pxp {
     private Usuario usuario_realizar;
     private String respuestaString;
     private int version;
+    //1-Deshabilitado,2-Requiere Aprobacion,3-Requiere Aprobacion pero esta deshabilitado, 4-Habilitado, 5-Incompleto, 6-Revisado, 7-Verificado 
+    private int estado;
 
     private List<Respuesta_pxp> historial;
 
@@ -34,6 +36,14 @@ public class Respuesta_pxp {
 
     public int getVersion() {
         return version;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public void setVersion(int version) {

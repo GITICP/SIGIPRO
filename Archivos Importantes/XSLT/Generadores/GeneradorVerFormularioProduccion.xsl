@@ -126,6 +126,9 @@
             <xsl:when test="$tipo = 'sangria'">
                 <xsl:value-of select="'Referencia a Sangría'" />
             </xsl:when>
+            <xsl:when test="$tipo = 'lote'">
+                <xsl:value-of select="'Referencia a Lote de Producción'" />
+            </xsl:when>
         </xsl:choose>
     </xsl:template>
     

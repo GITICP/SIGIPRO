@@ -235,6 +235,28 @@ public abstract class SIGIPROServlet extends HttpServlet {
         }
         return resultado.toArray(new String[]{});
     }
+    
+    protected String[] obtenerParametrosCantidades(String nombre_parametro) {
+        List<FileItem> lista_items = new ArrayList<FileItem>();
+        List<String> resultado = new ArrayList<String>();
+        for (FileItem file_item : parametros) {
+            if (file_item.getFieldName().contains(nombre_parametro+"_")) {
+                lista_items.add(file_item);
+                try {
+                    resultado.add(file_item.getString("UTF-8").trim());
+                } catch (UnsupportedEncodingException ex) {
+                    resultado.add(file_item.getString());
+                }
+            }
+        }
+
+        if (!lista_items.isEmpty()) {
+            for (FileItem item : lista_items) {
+                parametros.remove(item);
+            }
+        }
+        return resultado.toArray(new String[]{});
+    }
 
     protected int getIdUsuario(HttpServletRequest request) throws AuthenticationException {
         try {
