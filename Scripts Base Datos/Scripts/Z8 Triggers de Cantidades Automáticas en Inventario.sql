@@ -10,6 +10,8 @@ DROP TRIGGER IF EXISTS Sum_Cant_Disponible_Reservaciones ON produccion.reservaci
 
 DROP FUNCTION IF EXISTS Rest_Cant_Disponible();
 DROP FUNCTION IF EXISTS Sum_Cant_Disponible();
+DROP FUNCTION IF EXISTS Rest_Cant_Reservada();
+DROP FUNCTION IF EXISTS Sum_Cant_Reservada();
 DROP FUNCTION IF EXISTS Sum_total_salida();
 DROP FUNCTION IF EXISTS Sum_total_reservacion();
 DROP FUNCTION IF EXISTS Sum_total_despacho();
@@ -32,6 +34,28 @@ CREATE FUNCTION Sum_Cant_Disponible() RETURNS "trigger" AS
 	BEGIN
 	   UPDATE produccion.inventario_pt 
 	   SET cantidad_disponible = cantidad_disponible + OLD.cantidad
+	   WHERE id_inventario_pt = OLD.id_inventario_pt;
+	   RETURN OLD;
+	END;
+	$BODY$
+	LANGUAGE 'plpgsql';
+
+CREATE FUNCTION Rest_Cant_Reservada() RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+	   UPDATE produccion.inventario_pt 
+	   SET reservado = reservado + NEW.cantidad
+	   WHERE id_inventario_pt = NEW.id_inventario_pt;
+	   RETURN NEW;
+	END;
+	$BODY$
+	LANGUAGE 'plpgsql';
+	
+CREATE FUNCTION Sum_Cant_Reservada() RETURNS "trigger" AS
+	$BODY$
+	BEGIN
+	   UPDATE produccion.inventario_pt 
+	   SET reservado = reservado - OLD.cantidad
 	   WHERE id_inventario_pt = OLD.id_inventario_pt;
 	   RETURN OLD;
 	END;
@@ -81,7 +105,7 @@ CREATE TRIGGER Rest_Cant_Despachos
 CREATE TRIGGER Rest_Cant_Reservaciones
     AFTER INSERT ON produccion.reservaciones_inventario
     FOR EACH ROW
-    EXECUTE PROCEDURE Rest_Cant_Disponible();
+    EXECUTE PROCEDURE Rest_Cant_Reservada();
 
 CREATE TRIGGER Rest_Cant_Salidas
     AFTER INSERT ON produccion.salidas_inventario
@@ -116,4 +140,4 @@ CREATE TRIGGER Sum_Cant_Disponible_Salidas
 CREATE TRIGGER Sum_Cant_Disponible_Reservaciones
     AFTER DELETE ON produccion.reservaciones_inventario
     FOR EACH ROW
-    EXECUTE PROCEDURE Sum_Cant_Disponible();
+    EXECUTE PROCEDURE Sum_Cant_Reservada();
