@@ -108,7 +108,7 @@
                 </div>
             </div>
     </div>                    
-         
+    <div class="col-md-12">     
     <div class="widget widget-table">
                   <div class="widget-header">
                     <h3><i class="fa fa-th-list"></i> Productos de la Solicitud / Intención de Venta</h3>
@@ -142,7 +142,7 @@
                     </table>
                   </div>
                 </div>
-                                
+    </div>                            
         </div>
   <div class="form-group">
     <div class="modal-footer">

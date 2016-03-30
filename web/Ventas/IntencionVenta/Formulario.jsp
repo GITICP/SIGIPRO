@@ -68,7 +68,7 @@
             </div>
     </div>                    
          
-            <div class="col-md-12">
+    <div class="col-md-12">
         
         <!-- Esta arte es la de los productos de la solicitud -->
                 <div class="widget widget-table">
@@ -106,8 +106,8 @@
                   </div>
                 </div>
                 <!-- Esta parte es la de los productos de la solicitud -->
-            </div>
-        </div>
+    </div>
+  </div>
   <div class="form-group">
     <div class="modal-footer">
       <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
