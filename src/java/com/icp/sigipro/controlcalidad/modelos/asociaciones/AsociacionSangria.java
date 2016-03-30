@@ -8,7 +8,6 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
-import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
@@ -40,10 +39,14 @@ public class AsociacionSangria extends AsociacionSolicitud {
 
     @Override
     public void asociar(HttpServletRequest request) {
-        dia = Integer.parseInt(request.getParameter("dia"));
         int id_sangria = Integer.parseInt(request.getParameter("sangria"));
-        sangria = new Sangria();
-        sangria.setId_sangria(id_sangria);
+        try {
+            sangria = sangria_dao.obtenerSangria(id_sangria);
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        dia = Integer.parseInt(request.getParameter("dia"));
+        solicitud.setDescripcion("Sangría grupo " + sangria.getGrupo().getNombre() + ", día " + dia);
     }
 
     @Override
@@ -83,7 +86,13 @@ public class AsociacionSangria extends AsociacionSolicitud {
         request.setAttribute("dia", dia);
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
         request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
-        request.setAttribute("caballos_resultado", resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia));
+        List<ObjetoAsociacionMultiple> caballos_resultado = resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia);
+        request.setAttribute("caballos_resultado", caballos_resultado);
+        List<Integer> ids_caballos = new ArrayList<>();
+        for (ObjetoAsociacionMultiple osm : caballos_resultado) {
+            ids_caballos.addAll(osm.getIds());
+        }
+        request.setAttribute("ids_caballos_con_resultado", ids_caballos);
     }
 
     @Override

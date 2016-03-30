@@ -54,9 +54,11 @@ public class InformeDAO extends DAO {
             } else {
                 throw new SQLException("Informe no se ingresó correctamente.");
             }
+            
+            String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
 
             consulta_resultados = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.resultados_informes(id_informe, id_resultado) VALUES (?,?);"
+                    " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
             );
 
             for (Resultado r : informe.getResultados()) {
@@ -105,7 +107,7 @@ public class InformeDAO extends DAO {
             resultado = resultado_resultados && resultado_informe && resultado_solicitud;
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            ex.getNextException().printStackTrace();
             throw new SIGIPROException("Ha ocurrido un error al registrar el informe. Inténtelo nuevamente.");
         } finally {
             try {
@@ -166,9 +168,11 @@ public class InformeDAO extends DAO {
 
             consulta_eliminacion_resultados.setInt(1, informe.getId_informe());
             consulta_eliminacion_resultados.executeUpdate();
+            
+            String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
 
             consulta_resultados = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.resultados_informes(id_informe, id_resultado) VALUES (?,?);"
+                    " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
             );
 
             for (Resultado r : informe.getResultados()) {

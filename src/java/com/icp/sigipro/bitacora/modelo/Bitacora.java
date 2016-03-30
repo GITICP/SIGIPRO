@@ -78,6 +78,7 @@ public class Bitacora {
     public static final String TABLA_GRUPO = "CONTROL_CALIDAD.GRUPOS";
     public static final String TABLA_MUESTRA = "CONTROL_CALIDAD.MUESTRAS";
     public static final String TABLA_RESULTADO = "CONTROL_CALIDAD.RESULTADOS";
+    public static final String TABLA_RESULTADO_SP = "CONTROL_CALIDAD.RESULTADOS_ANALISIS_SANGRIAS_PRUEBA";
     public static final String TABLA_SOLICITUDCC = "CONTROL_CALIDAD.SOLICITUDES";
     public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
     public static final String TABLA_INFORME = "CONTROL_CALIDAD.INFORMES";
@@ -95,6 +96,12 @@ public class Bitacora {
     public static final String TABLA_DESPACHOS = "PRODUCCION.DESPACHOS";
     public static final String TABLA_SALIDAS_EXT = "PRODUCCION.SALIDAS_EXT";
     public static final String TABLA_RESERVACIONES = "PRODUCCION.RESERVACIONES";
+    public static final String TABLA_VENENO_PRODUCCION = "PRODUCCION.VENENO_PRODUCCION";
+    public static final String TABLA_INOCULO_PRODUCCION = "PRODUCCION.INOCULO";
+    public static final String TABLA_CRONOGRAMA = "PRODUCCION.CRONOGRAMA";
+    public static final String TABLA_SEMANAS_CRONOGRAMA = "PRODUCCION.SEMANAS_CRONOGRAMA";
+    public static final String TABLA_NOTIFICACIONES = "CALENDARIO.NOTIFICACIONES";
+    public static final String TABLA_TIPO_NOTIFICACIONES = "CALENDARIO.TIPO_NOTIFICACIONES";
     
     public static final String TABLA_CLIENTE = "VENTAS.CLIENTE";
     public static final String TABLA_CONTACTOS_CLIENTE = "VENTAS.CONTACTOS_CLIENTE";
@@ -128,6 +135,11 @@ public class Bitacora {
     public static final String ACCION_RETIRAR = "RETIRAR";
     public static final String ACCION_ACTIVAR = "ACTIVAR";
     public static final String ACCION_REPETIR = "REPETIR";
+    public static final String ACCION_VERIFICAR = "VERIFICAR";
+    public static final String ACCION_REVISAR = "REVISAR";
+    public static final String ACCION_COMPLETAR = "COMPLETAR";
+    public static final String ACCION_DISTRIBUIR = "DISTRIBUIR";
+    
 
     public Bitacora() {
 

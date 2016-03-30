@@ -186,6 +186,14 @@
             <form class="form-horizontal" id="loteProtocolo" autocomplete="off" method="post" action="Lote">
                 <input hidden="true" name="accion" value="Agregar">
                 <input hidden="true" id='id_protocolo' name='id_protocolo' value="">
+                <label for="observaciones" class="control-label"> Nombre de últimos 3 Lotes: </label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group ultimos">
+                            
+                        </div>
+                    </div>
+                </div>
                 <label for="observaciones" class="control-label"> *Nombre/Identificador de Lote de Producción</label>
                 <div class="form-group">
                     <div class="col-sm-12">

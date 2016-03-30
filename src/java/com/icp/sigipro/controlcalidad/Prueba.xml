@@ -1,5 +1,225 @@
 <paso>
     <campo>
+        <nombre-campo>Imagen_1</nombre-campo>
+        <etiqueta>Imagen</etiqueta>
+        <valor>C:\SIGIPRO_DEFAULT\Imagenes\Realizar Lote\Lote 8\Imagen_1-201603270914.jpg</valor>
+        <tipo>imagen</tipo>
+    </campo>
+    <campo>
+        <nombre-campo>RefCC_2</nombre-campo>
+        <etiqueta>Ref CC</etiqueta>
+        <valor/>
+        <tipo>cc</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>RefSangria_3</nombre-campo>
+        <etiqueta>Ref Sangria</etiqueta>
+        <valor>
+            <sangria>
+                <id>2</id>
+            </sangria>
+        </valor>
+        <tipo>sangria</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>RefLote_4</nombre-campo>
+        <etiqueta>Ref Lote</etiqueta>
+        <valor>4</valor>
+        <tipo>lote</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>Usuarios_5</nombre-campo>
+        <etiqueta>Usuarios</etiqueta>
+        <tipo>usuario</tipo>
+        <valor>
+            <usuario>
+                <id>2</id>
+                <nombre>Daniel Thiel Jimenez</nombre>
+            </usuario>
+            <usuario>
+                <id>5</id>
+                <nombre>Esteban Aguilar Valverde</nombre>
+            </usuario>
+        </valor>
+        <usuarios/>
+        <nombre-seccion>Produccion</nombre-seccion>
+        <seccion>1</seccion>
+    </campo>
+    <campo>
+        <nombre-campo>Subbodega_6</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Subbodega</etiqueta>
+        <valor>
+            <producto>
+                <id>578</id>
+                <nombre>Biogel P60</nombre>
+                <cantidad>1212</cantidad>
+            </producto>
+        </valor>
+        <nombre-subbodega>Conejo</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Subbodega_cantidad</nombre-cantidad>
+        <valor-cantidad/>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
+        <nombre-campo>Imagen_1</nombre-campo>
+        <etiqueta>Imagen</etiqueta>
+        <valor>C:\SIGIPRO_DEFAULT\Imagenes\Realizar Lote\Lote 8\Imagen_1-201603270853.jpg</valor>
+        <tipo>imagen</tipo>
+    </campo>
+    <campo>
+        <nombre-campo>RefCC_2</nombre-campo>
+        <etiqueta>Ref CC</etiqueta>
+        <valor/>
+        <tipo>cc</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>RefSangria_3</nombre-campo>
+        <etiqueta>Ref Sangria</etiqueta>
+        <valor>
+            <sangria>
+                <id>1</id>
+            </sangria>
+        </valor>
+        <tipo>sangria</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>RefLote_4</nombre-campo>
+        <etiqueta>Ref Lote</etiqueta>
+        <valor>3</valor>
+        <tipo>lote</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>Usuarios_5</nombre-campo>
+        <etiqueta>Usuarios</etiqueta>
+        <tipo>usuario</tipo>
+        <valor>[Walter Cordero Urena, Esteban Aguilar Valverde]</valor>
+        <usuarios>[1, 5]</usuarios>
+        <nombre-seccion>Produccion</nombre-seccion>
+        <seccion>1</seccion>
+    </campo>
+    <campo>
+        <nombre-campo>Subbodega_6</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Subbodega</etiqueta>
+        <valor>
+            <producto>
+                <id>964</id>
+                <nombre>Cloruro de Potasio</nombre>
+                <cantidad>412</cantidad>
+            </producto>
+        </valor>
+        <nombre-subbodega>Conejo</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Subbodega_cantidad</nombre-cantidad>
+        <valor-cantidad/>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
+        <nombre-campo>Sangrias_1</nombre-campo>
+        <etiqueta>Sangrias</etiqueta>
+        <valor>
+            <sangria>
+                <id>2</id>
+            </sangria>
+            <sangria>
+                <id>1</id>
+            </sangria>
+        </valor>
+        <tipo>sangria</tipo>
+        <especial>true</especial>
+    </campo>
+    <campo>
+        <nombre-campo>Ejemplo_2</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Ejemplo</etiqueta>
+        <valor>
+            <producto>
+                <id>578</id>
+                <nombre>Biogel P60</nombre>
+                <cantidad>32</cantidad>
+            </producto>
+            <producto>
+                <id>91</id>
+                <nombre>Hisopo palo corto  negro</nombre>
+                <cantidad>12</cantidad>
+            </producto>
+        </valor>
+        <nombre-subbodega>Conejo</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Ejemplo_cantidad</nombre-cantidad>
+        <valor-cantidad/>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
+        <nombre-campo>Hora_1</nombre-campo>
+        <etiqueta>Hora</etiqueta>
+        <valor/>
+        <tipo>hora</tipo>
+    </campo>
+    <campo>
+        <nombre-campo>Espacio_2</nombre-campo>
+        <etiqueta>Espacio</etiqueta>
+        <valor/>
+        <tipo>blanco</tipo>
+    </campo>
+    <campo>
+        <nombre-campo>Imagen_3</nombre-campo>
+        <etiqueta>Imagen</etiqueta>
+        <valor/>
+        <tipo>imagen</tipo>
+    </campo>
+</paso>
+
+
+<paso>
+    <campo>
+        <nombre-campo>Luis_1</nombre-campo>
+        <tipo>subbodega</tipo>
+        <etiqueta>Luis</etiqueta>
+        <valor>
+            <producto>
+                <id>1072</id>
+                <nombre>Saco Abono 10-30-10 40KG</nombre>
+                <cantidad>23</cantidad>
+            </producto>
+            <producto>
+                <id>1075</id>
+                <nombre>Saco electrolitos Pellet 30kG</nombre>
+                <cantidad>3241</cantidad>
+            </producto>
+            <producto>
+                <id>1076</id>
+                <nombre>Saco Semilla Rye-Grass 50libras</nombre>
+                <cantidad>324</cantidad>
+            </producto>
+        </valor>
+        <nombre-subbodega>Sub Bodega Caballeriza</nombre-subbodega>
+        <subbodega>1</subbodega>
+        <cantidad>true</cantidad>
+        <nombre-cantidad>Luis_cantidad</nombre-cantidad>
+        <valor-cantidad/>
+    </campo>
+</paso>
+
+<paso>
+    <campo>
         <nombre-campo>CC_1</nombre-campo>
         <etiqueta>CC</etiqueta>
         <valor>2</valor>

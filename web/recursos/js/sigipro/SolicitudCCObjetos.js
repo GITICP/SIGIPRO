@@ -13,7 +13,16 @@ $("#seleccion-objeto").change(function () {
                 generar_select_sangria(datos);
             }
         });
-    
+    } else if($(this).find("option:selected").val() === "sangria_prueba") {
+        $.ajax({
+            url: "/SIGIPRO/Caballeriza/SangriaPrueba",
+            type: "GET",
+            data: {"accion": "sangrias_pruebas_ajax"},
+            dataType: "json",
+            success: function (datos) {
+                generar_select_sangria_prueba(datos);
+            }
+        });
     } else {
         // Meter el comportamiento de otros objetos como un else if dejar este else de último
         $("#fila-select-sangria").hide();
@@ -48,6 +57,26 @@ function generar_select_sangria(datos) {
         opcion.text(elemento.identificador);
 
         select_sangria.append(opcion);
+    }
+}
+
+function generar_select_sangria_prueba(datos) {
+
+    $("#fila-select-sangria-prueba").show();
+
+    var select_sangria_prueba = $("#seleccion-sangria-prueba");
+    select_sangria_prueba.select2();
+    
+    select_sangria_prueba.change(evento_seleccionar_sangria_prueba);
+
+    for (var i = 0; i < datos.length; i++) {
+        var elemento = datos[i];
+        var opcion_string = "<option value=\""+ elemento.id_sangria_prueba + "\">";
+        var opcion = $(opcion_string);
+        opcion.data("caballos", JSON.stringify(elemento.caballos));
+        opcion.text(elemento.id_sangria_prueba);
+
+        select_sangria_prueba.append(opcion);
     }
 }
 
@@ -112,6 +141,14 @@ function evento_seleccionar_dia() {
             agregar_muestra_caballos(datos);
         }
     });
+}
+
+function evento_seleccionar_sangria_prueba() {
+    
+    var opcion_sangria_prueba = $("#seleccion-sangria-prueba").find("option:selected");
+    var lista_caballos_string = opcion_sangria_prueba.data("caballos");
+    agregar_muestra_caballos(JSON.parse(lista_caballos_string));
+    
 }
 
 function agregar_muestra_caballos(datos) {

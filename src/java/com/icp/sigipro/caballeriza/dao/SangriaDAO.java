@@ -697,6 +697,49 @@ public class SangriaDAO extends DAO
         
     }
 
+    public List<Sangria> obtenerSangriasProduccion() throws SIGIPROException {
+        List<Sangria> resultado = new ArrayList<Sangria>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(
+                " SELECT distinct s.id_sangria, s.fecha, g.nombre " +
+                " FROM caballeriza.sangrias s " +
+                " INNER JOIN caballeriza.sangrias_caballos sc ON s.id_sangria = sc.id_sangria " +
+                " INNER JOIN caballeriza.grupos_de_caballos g ON s.id_grupo_caballos = g.id_grupo_de_caballo " +
+                " WHERE ( participo_dia1 = true AND id_resultado_lal_dia1 IS null ) OR " +
+                "       ( participo_dia2 = true AND id_resultado_lal_dia2 IS null ) OR " +
+                "       ( participo_dia3 = true AND id_resultado_lal_dia3 IS null );"
+            );
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                Sangria s = new Sangria();
+                
+                s.setId_sangria(rs.getInt("id_sangria"));
+                s.setFecha(rs.getDate("fecha"));
+                
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setNombre(rs.getString("nombre"));
+                
+                s.setGrupo(g);
+                
+                resultado.add(s);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener las sangrías.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return resultado;
+        
+    }
+    
     public List<Caballo> obtenerCaballosSangriaDia(int id_sangria, int dia) throws SIGIPROException {
         
         List<Caballo> caballos_sangria = new ArrayList<Caballo>();

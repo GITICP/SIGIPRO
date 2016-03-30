@@ -7,10 +7,12 @@ package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.AnalisisDAO;
+import com.icp.sigipro.controlcalidad.dao.AnalisisGrupoSolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.EquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.PatronDAO;
 import com.icp.sigipro.controlcalidad.dao.ReactivoDAO;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
+import com.icp.sigipro.controlcalidad.dao.ResultadoSangriaPruebaDAO;
 import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoEquipoDAO;
 import com.icp.sigipro.controlcalidad.dao.TipoMuestraDAO;
@@ -21,6 +23,7 @@ import com.icp.sigipro.controlcalidad.modelos.Equipo;
 import com.icp.sigipro.controlcalidad.modelos.Patron;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
@@ -87,6 +90,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
     private final int[] permisos = {540, 541, 542, 543, 544, 545, 546};
     //-----------------
     private final AnalisisDAO dao = new AnalisisDAO();
+    private final AnalisisGrupoSolicitudDAO ags_dao = new AnalisisGrupoSolicitudDAO();
+    private final ResultadoSangriaPruebaDAO resultado_spdao = new ResultadoSangriaPruebaDAO();
     private final UsuarioDAO usuariodao = new UsuarioDAO();
     private final TipoEquipoDAO tipoequipodao = new TipoEquipoDAO();
     private final TipoReactivoDAO tiporeactivodao = new TipoReactivoDAO();
@@ -120,6 +125,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         {
             add("agregareditar");
             add("realizar");
+            add("realizar_sp");
             add("aprobar");
             add("retirar");
         }
@@ -240,7 +246,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
         Analisis a = dao.obtenerAnalisis(id_analisis);
 
-        HelperXML xml = new HelperXML(a.getEstructura(),"control");
+        HelperXML xml = new HelperXML(a.getEstructura(), "control");
 
         HashMap<Integer, HashMap> diccionario_formulario = xml.getDictionary();
 
@@ -307,20 +313,27 @@ public class ControladorAnalisis extends SIGIPROServlet {
         String redireccion = "Analisis/Realizar.jsp";
 
         int id_analisis = Integer.parseInt(request.getParameter("id_analisis"));
+        int id_ags = Integer.parseInt(request.getParameter("id_ags"));
+        request.setAttribute("id_solicitud", request.getParameter("id_solicitud"));
         request.setAttribute("id_analisis", id_analisis);
-        request.setAttribute("id_ags", request.getParameter("id_ags"));
+        request.setAttribute("id_ags", id_ags);
         request.setAttribute("lista", request.getParameter("lista"));
 
         ControlXSLT xslt;
         Analisis analisis;
 
         try {
-            xslt = controlxsltdao.obtenerControlXSLTFormulario();
+            AnalisisGrupoSolicitud ags = ags_dao.obtenerIdentificadorYTipoMuestra(id_ags);
             analisis = dao.obtenerAnalisis(id_analisis);
-
-            String formulario = helper_transformaciones.transformar(xslt, analisis.getEstructura());
-
-            request.setAttribute("cuerpo_formulario", formulario);
+            if (id_analisis != 2147483647) {
+                xslt = controlxsltdao.obtenerControlXSLTFormulario();
+                String formulario = helper_transformaciones.transformar(xslt, analisis.getEstructura());
+                request.setAttribute("cuerpo_formulario", formulario);
+            } else {
+                request.setAttribute("resultado", new ResultadoSangriaPrueba());
+                redireccion = "Analisis/FormularioSangriaPrueba.jsp";
+            }
+ 
             List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
             List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
             List<List<Patron>> patrones_controles = patrondao.obtenerPatronesRealizarAnalisis();
@@ -330,6 +343,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             request.setAttribute("equipos", equipos);
             request.setAttribute("reactivos", reactivos);
             request.setAttribute("analisis", analisis);
+            request.setAttribute("ags", ags);
         } catch (TransformerException | SIGIPROException | SQLException ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
@@ -340,7 +354,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ParserConfigurationException, SAXException {
         boolean resultado = false;
 
@@ -367,9 +380,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 //Se vacian por si hubo cambios
                 dao.eliminarTiposEquiposAnalisis(a.getId_analisis());
                 dao.eliminarTiposReactivosAnalisis(a.getId_analisis());
+                dao.eliminarTiposMuestrasAnalisis(a.getId_analisis());
                 //------------------------------
                 dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
                 dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
+                dao.insertarTipoMuestra(a.getTipos_muestras_analisis(), a.getId_analisis());
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
@@ -411,7 +426,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             this.getIndex(request, response);
         }
     }
-    
+
     protected void postRetirar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resultado = false;
 
@@ -562,6 +577,44 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
     }
 
+    protected void postRealizar_sp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String redireccion = "Analisis/index.jsp";
+        ResultadoSangriaPrueba resultado_sp = construirObjectoSangriaPrueba(request);
+
+        try {
+            
+            int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
+
+            resultado_spdao.insertarResultadoSangriaPrueba(resultado_sp);
+            bitacora.setBitacora(resultado_sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO_SP, request.getRemoteAddr());
+            redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
+            try {
+                SolicitudCC s = solicituddao.obtenerSolicitud(resultado_sp.getAgs().getGrupo().getSolicitud().getId_solicitud());
+                request.setAttribute("solicitud", s);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Resultado registrado correctamente."));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Resultado registrado, pero no se pudo obtener la solicitud. Notifique al administrador del sistema."));
+            }
+
+            if (!Boolean.parseBoolean(this.obtenerParametro("redirect_lista"))) {
+                this.redireccionar(request, response, redireccion);
+            } else {
+                Analisis a = dao.obtenerAnalisis(id_analisis);
+
+                redireccion = "Analisis/Lista.jsp";
+                List<AnalisisGrupoSolicitud> ags_lista = dao.obtenerSolicitudesAnalisis(id_analisis);
+                request.setAttribute("listaAGS", ags_lista);
+                request.setAttribute("nombreAnalisis", a.getNombre());
+                redireccionar(request, response, redireccion);
+            }
+
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("resultado_sp", resultado_sp);
+            redireccionar(request, response, redireccion);
+        }
+    }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private Analisis construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) {
@@ -617,6 +670,9 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         break;
                     case "orden":
                         orden = fieldValue;
+                        break;
+                    case "eliminar_machote":
+                        a.setMachote("eliminar");
                         break;
                     default:
                         //Se agarra el valor y se divide, ya que la entrada tiene una estructura t_nombredelvalor_id
@@ -689,7 +745,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                         String fecha = ft.format(dNow);
                         String extension = this.getFileExtension(item.getName());
-                        String nombre = a.getNombre() + "-" + fecha + "." + extension;
+                        String nombre_arreglado = a.getNombre().replaceAll("[/\\:*?<>|\"]","_");
+                        String nombre = nombre_arreglado + "-" + fecha + "." + extension;
                         //---------------------
                         File archivo = new File(ubicacion, nombre);
                         item.write(archivo);
@@ -711,6 +768,47 @@ public class ControladorAnalisis extends SIGIPROServlet {
         return a;
     }
 
+    private ResultadoSangriaPrueba construirObjectoSangriaPrueba(HttpServletRequest request) {
+        ResultadoSangriaPrueba resultado = new ResultadoSangriaPrueba();
+
+        try {
+            Usuario u = new Usuario();
+            int id_usuario = (int) request.getSession().getAttribute("idusuario");
+            u.setIdUsuario(id_usuario);
+            resultado.setUsuario(u);
+            resultado.setHematocrito(helper_varios.parsearFloat(this.obtenerParametro("hematocrito")));
+            resultado.setHemoglobina(helper_varios.parsearFloat(this.obtenerParametro("hemoglobina")));
+            resultado.setRbc(helper_varios.parsearFloat(this.obtenerParametro("rbc")));
+            resultado.setWbc(helper_varios.parsearFloat(this.obtenerParametro("wbc")));
+            resultado.setMch(helper_varios.parsearFloat(this.obtenerParametro("mch")));
+            resultado.setMchc(helper_varios.parsearFloat(this.obtenerParametro("mchc")));
+            resultado.setLym(helper_varios.parsearFloat(this.obtenerParametro("lym")));
+            resultado.setLinfocitos(helper_varios.parsearFloat(this.obtenerParametro("linfocitos")));
+            resultado.setNum_otros(helper_varios.parsearFloat(this.obtenerParametro("num_otros")));
+            resultado.setPlt(helper_varios.parsearFloat(this.obtenerParametro("plt")));
+            resultado.setMcv(helper_varios.parsearFloat(this.obtenerParametro("mcv")));
+            resultado.setOtros(helper_varios.parsearFloat(this.obtenerParametro("otros")));
+            resultado.setFecha(helper_fechas.getFecha_hoy());
+            AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+            ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));
+            resultado.setAgs(ags);
+
+            String[] equipos_utilizados = this.obtenerParametros("equipos");
+            String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+            String[] controles_utilizados = this.obtenerParametros("controles");
+            String[] patrones_utilizados = this.obtenerParametros("patrones");
+            
+            resultado.setEquipos(equipos_utilizados);
+            resultado.setReactivos(reactivos_utilizados);
+            resultado.setPatrones(patrones_utilizados);
+            resultado.setControles(controles_utilizados);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return resultado;
+    }
+
     private HelperExcel guardarArchivoResultado(Resultado resultado, Analisis analisis, String ubicacion) {
 
         HelperExcel excel = null;
@@ -726,7 +824,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
                 String fecha = ft.format(dNow);
                 String extension = this.getFileExtension(item.getName());
-                String nombre = analisis.getNombre() + "-" + fecha + "." + extension;
+                String nombre_arreglado = analisis.getNombre().replaceAll("[/\\:*?<>|\"]","_");
+                String nombre = nombre_arreglado + "-" + fecha + "." + extension;
                 //---------------------
                 File archivo = new File(ubicacion, nombre);
                 item.write(archivo);
@@ -945,8 +1044,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
             lista_acciones = accionesPost;
             if (ServletFileUpload.isMultipartContent(request)) {
                 this.obtenerParametros(request);
-                if (this.obtenerParametro("accion").equals("realizar")) {
+                String accion_temp = this.obtenerParametro("accion");
+                if (accion_temp.equals("realizar")) {
                     accion = "realizar";
+                } else if (accion_temp.equals("realizar_sp")) {
+                    accion = "realizar_sp";
                 }
             }
         }

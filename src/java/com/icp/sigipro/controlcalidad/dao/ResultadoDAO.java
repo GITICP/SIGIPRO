@@ -13,6 +13,7 @@ import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.Patron;
 import com.icp.sigipro.controlcalidad.modelos.Reactivo;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
@@ -333,10 +334,10 @@ public class ResultadoDAO extends DAO {
         return resultado;
     }
 
-    public AnalisisGrupoSolicitud obtenerAGS(int id_ags) throws SIGIPROException {
+    public AnalisisGrupoSolicitud obtenerAGS(int id_ags, boolean es_analisis_sp) throws SIGIPROException {
 
         AnalisisGrupoSolicitud ags_resultado = new AnalisisGrupoSolicitud();
-        List<Resultado> lista_resultados = new ArrayList<Resultado>();
+        List<Resultado> lista_resultados = new ArrayList<>();
 
         PreparedStatement consulta_grupo = null;
         ResultSet rs_grupo = null;
@@ -344,25 +345,46 @@ public class ResultadoDAO extends DAO {
         ResultSet rs = null;
 
         try {
-            consulta = getConexion().prepareStatement(
+            if (!es_analisis_sp) {
+                consulta = getConexion().prepareStatement(
                     " SELECT r.id_resultado, r.fecha, r.repeticion, r.resultado, u.id_usuario, u.nombre_completo "
                     + " FROM control_calidad.resultados r "
                     + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
                     + " WHERE r.id_analisis_grupo_solicitud = ? "
-                    + " ORDER BY repeticion ASC"
-            );
+                    + " ORDER BY repeticion ASC; "
+                );
+            } else {
+                consulta = getConexion().prepareStatement(
+                    " SELECT r.id_resultado_analisis_sp as id_resultado, r.fecha, r.repeticion, r.hematocrito, r.hemoglobina, u.id_usuario, u.nombre_completo "
+                    + " FROM control_calidad.resultados_analisis_sangrias_prueba r "
+                    + "     INNER JOIN seguridad.usuarios u ON u.id_usuario = r.id_usuario "
+                    + " WHERE r.id_ags = ? "
+                    + " ORDER BY repeticion ASC; "
+                );
+            }
+            
 
             consulta.setInt(1, id_ags);
 
             rs = consulta.executeQuery();
 
             while (rs.next()) {
-                Resultado r = new Resultado();
+                Resultado r;
+                
+                if (!es_analisis_sp) {
+                    r = new Resultado();
+                    r.setResultado(rs.getString("resultado"));
+                } else {
+                    ResultadoSangriaPrueba r_sp = new ResultadoSangriaPrueba();
+                    r_sp.setHematocrito(rs.getFloat("hematocrito"));
+                    r_sp.setHemoglobina(rs.getFloat("hemoglobina"));
+                    r = r_sp;
+                }
 
                 r.setId_resultado(rs.getInt("id_resultado"));
                 r.setFecha(rs.getDate("fecha"));
                 r.setRepeticion(rs.getInt("repeticion"));
-                r.setResultado(rs.getString("resultado"));
+                
 
                 Usuario u = new Usuario();
                 u.setId_usuario(rs.getInt("id_usuario"));
@@ -389,7 +411,7 @@ public class ResultadoDAO extends DAO {
 
             ags_resultado.setResultados(lista_resultados);
             Grupo g = new Grupo();
-            List<Muestra> muestras = new ArrayList<Muestra>();
+            List<Muestra> muestras = new ArrayList<>();
 
             while (rs_grupo.next()) {
                 TipoMuestra tm = new TipoMuestra();
@@ -582,8 +604,8 @@ public class ResultadoDAO extends DAO {
             consulta = getConexion().prepareStatement(
                   " SELECT id_caballo, " + campo_resultado
                 + " FROM caballeriza.sangrias_caballos "
-                + " WHERE id_sangria = ? "
-                + " ORDER BY " + campo_resultado + ";"
+                + " WHERE id_sangria = ? AND " + campo_resultado + " is not null "
+                + " ORDER BY " + campo_resultado + ""
             );
             
             consulta.setInt(1, id_sangria);
@@ -596,6 +618,58 @@ public class ResultadoDAO extends DAO {
             
             while(rs.next()) {
                 int id_resultado_temp = rs.getInt(campo_resultado);
+                if (objeto.getResultado().getId_resultado() != id_resultado_temp) {
+                    objeto = new ObjetoAsociacionMultiple();
+                    
+                    Resultado r = new Resultado();
+                    r.setId_resultado(id_resultado_temp);
+                    
+                    objeto.setResultado(r);
+                    
+                    resultado.add(objeto);
+                }
+                objeto.agregarId(rs.getInt("id_caballo"));
+            }
+            
+            
+        } catch(SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener la información. Inténtelo nuevamente y de persistir notifique al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        
+        return resultado;
+        
+    }
+    
+    public List<ObjetoAsociacionMultiple> obtenerCaballosResultadoSP(int id_sangria) throws SIGIPROException {
+        
+        List<ObjetoAsociacionMultiple> resultado = new ArrayList<>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            consulta = getConexion().prepareStatement(
+                  " SELECT id_caballo, id_resultado "
+                + " FROM caballeriza.sangrias_pruebas_caballos "
+                + " WHERE id_sangria_prueba = ? AND id_resultado is not null "
+                + " ORDER BY id_resultado;"
+            );
+            
+            consulta.setInt(1, id_sangria);
+            
+            rs = consulta.executeQuery();
+            
+            ObjetoAsociacionMultiple objeto = new ObjetoAsociacionMultiple();
+            Resultado res_temp = new Resultado();
+            objeto.setResultado(res_temp);
+            
+            while(rs.next()) {
+                int id_resultado_temp = rs.getInt("id_resultado");
                 if (objeto.getResultado().getId_resultado() != id_resultado_temp) {
                     objeto = new ObjetoAsociacionMultiple();
                     

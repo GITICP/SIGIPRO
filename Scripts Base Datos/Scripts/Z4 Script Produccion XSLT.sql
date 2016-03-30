@@ -12,7 +12,7 @@ INSERT INTO produccion_xslt.produccion_xslt (id_produccion_xslt, nombre, estruct
 VALUES (1, 'Generador Formularios Produccion', 
                 XML(
                 '
-                <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
     
     <xsl:output method="html" indent="yes"/>
     
@@ -115,7 +115,9 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea rows="5" cols="50" maxlength="500" class="form-control" name="{$nombre-campo}" valor="{$valor}"></textarea>
+                        <textarea rows="5" cols="50" maxlength="500" class="form-control" name="{$nombre-campo}" valor="{$valor}">
+                            <xsl:value-of select="$valor" />
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -147,6 +149,96 @@ VALUES (1, 'Generador Formularios Produccion',
         
     </xsl:template>
     
+    <!-- Campo de texto fecha -->
+    <xsl:template match="campo[tipo = ''hora'']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="time" class="form-control" name="{$nombre-campo}" value="{$valor}"></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <!-- Campo de texto fecha -->
+    <xsl:template match="campo[tipo = ''blanco'']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-12">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    
+    <!-- Campo de texto fecha -->
+    <xsl:template match="campo[tipo = ''imagen'']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="file" id="{$nombre-campo}" name="{$nombre-campo}" accept="image/*" value="{$valor}" class="imagen"
+                                   oninvalid="setCustomValidity(''El tamaño debe ser de 300KB o menos. '')" 
+                               onchange="previewFile(''{$nombre-campo}'')">
+                        </input> 
+                        <button type="button" id=''{$nombre-campo}_eliminar'' style="visibility:hidden;" class="btn btn-danger" onclick="eliminarImagen(''{$nombre-campo}'')"> Borrar</button>
+                        <div>
+                            <img id="{$nombre-campo}_preview" src="" height="100" alt=""></img>
+                        </div>
+                        <div>
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen Registrada </a>
+                                    <input type="hidden" value="{valor}" name="{nombre-campo}_actual" /> 
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <input type="hidden" value="" name="{nombre-campo}_actual" /> 
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+
     <xsl:template match="campo[tipo = ''sangria'']">
         
         <!-- Parámetros -->
@@ -162,9 +254,53 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="sangria" class="select2 sangria" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <select id="sangria" multiple="multiple" class="select2 sangria" name="{$nombre-campo}" style=''background-color: #fff;'' ></select>    
+                        <div class="{$nombre-campo}_ver">
+                            <xsl:for-each select="valor/sangria">
+                                <xsl:param name="id" select="id" />
+                                <div class="{$nombre-campo}_{id}"><a target="_blank" href="/SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={id}"> Ver Sangr&#237;a (id: <xsl:value-of select="id" />)  </a></div>
+                            </xsl:for-each>
+                        </div>
+                        <div class="{$nombre-campo}_id">
+                        <xsl:for-each select="valor/sangria">
+                            <xsl:param name="id" select="id" />
+                            <input type="hidden" value="{id}" id="{id}" />   
+                        </xsl:for-each> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </xsl:template>
+    <xsl:template match="campo[tipo = ''lote'']">
+        
+        <!-- Parámetros -->
+        <xsl:param name="nombre-campo" select="nombre-campo" />
+        <xsl:param name="etiqueta" select="etiqueta" />
+        <xsl:param name="valor" select="valor" />
+        
+        <!-- Plantilla -->
+        <div class="col-md-6">
+            <label for="{$nombre-campo}" class="control-label">
+                <xsl:value-of select="$etiqueta" />
+            </label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group {$nombre-campo}">
+                        <select id="lote" class="select2 lote" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <div class="ver">
-                            <a>Ver Sangría</a>
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={$valor}"> Ver Lote de Producci&#243;n </a>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <a> Ver Lote de Producci&#243;n </a>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </div>
+                        <div class="{$nombre-campo}_id">
+                            <input type="hidden" value="{$valor}" id="{$valor}" />   
                         </div>      
                     </div>
                 </div>
@@ -172,7 +308,6 @@ VALUES (1, 'Generador Formularios Produccion',
         </div>
         
     </xsl:template>
-    
     <xsl:template match="campo[tipo = ''usuario'']">
         
         <!-- Parámetros -->
@@ -191,6 +326,12 @@ VALUES (1, 'Generador Formularios Produccion',
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
                         <select id="usuario_{$seccion}" multiple="multiple" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>          
+                    <div class="{$nombre-campo}_id">
+                        <xsl:for-each select="valor/usuario">
+                            <xsl:param name="id" select="id" />
+                            <input type="hidden" value="{id}" id="{id}" />   
+                        </xsl:for-each> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -217,8 +358,18 @@ VALUES (1, 'Generador Formularios Produccion',
                     <div class="input-group {$nombre-campo}">
                         <select id="aa_{$actividad}" class="select2 aa" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>
                         <div class="ver">
-                            <a>Ver Actividad de Apoyo</a>
-                        </div>              
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&amp;id_respuesta={$valor}"> Ver Actividad de Apoyo </a>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <a> Ver Actividad de Apoyo </a>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            </div>
+                            <div class="{$nombre-campo}_id">
+                                <input type="hidden" value="{$valor}" id="{$valor}" />
+                            </div>          
                     </div>
                 </div>
             </div>
@@ -243,7 +394,17 @@ VALUES (1, 'Generador Formularios Produccion',
                     <div class="input-group {$nombre-campo}">
                         <select id="cc" class="select2 cc" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select> 
                         <div class="ver">
-                            <a>Ver Solicitud</a>
+                            <xsl:choose>
+                                <xsl:when test="$valor != ''''">
+                                    <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={$valor}"> Ver Solicitud de CC </a>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <a> Ver Solicitud de CC </a>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </div>
+                        <div class="{$nombre-campo}_id">
+                            <input type="hidden" value="{$valor}" id="{$valor}" />
                         </div>         
                     </div>
                 </div>
@@ -252,7 +413,7 @@ VALUES (1, 'Generador Formularios Produccion',
         
     </xsl:template>
     
-    <xsl:template match="campo[tipo = ''subbodega'']">
+   <xsl:template match="campo[tipo = ''subbodega'']">
         
         <!-- Parámetros -->
         <xsl:param name="nombre-campo" select="nombre-campo" />
@@ -272,15 +433,35 @@ VALUES (1, 'Generador Formularios Produccion',
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
-                        <select id="subbodega_{$subbodega}" class="select2" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
+                        <select id="subbodega_{$subbodega}" multiple="multiple" class="select2 subbodega" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
                         <xsl:if test="$cantidad = ''true''">
                             <br>
-                                <label for="{$nombre-cantidad}" class="control-label">
-                                    Cantidad
-                                </label>
-                                <input type="number" name="{$nombre-cantidad}" class="form-control" value="{$valor-cantidad}" step="any"></input>
+                                <div class="{$nombre-campo}_cant">
+                                    <xsl:for-each select="valor/producto">
+                                        <xsl:param name="id" select="id" />
+                                        <xsl:param name="nombre" select="nombre" />
+                                        <xsl:param name="cantidad" select="cantidad" />
+                                        <div class="{$nombre-campo}_{id}"> 
+                                        <label for="nombre" class="control-label">Cantidad - <xsl:value-of select="$nombre" /> </label>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div class="input-group">
+                                                        <input type="number" placeholder="Cantidad" value="{$cantidad}" class="form-control" name="{$nombre-campo}_{id}"></input>
+                                                     </div>
+                                                     </div>
+                                                </div> 
+                                            </div>
+                                    </xsl:for-each> 
+                                    </div>
+                                    <div class="{$nombre-campo}_id">
+                                        <xsl:for-each select="valor/producto">
+                                            <xsl:param name="id" select="id" />
+                                            <input type="hidden" value="{id}" id="{id}" />   
+                                        </xsl:for-each> 
+                                    </div>
                             </br>
-                        </xsl:if>      
+                        </xsl:if>
+                              
                     </div>
                 </div>
             </div>
@@ -303,9 +484,18 @@ VALUES (1, 'Generador Formularios Produccion',
                 <xsl:param name="valor" select="valor" />
                 <xsl:param name="check" select="check" />
                 <div class="col-sm-12">
-                <input type="checkbox" name="{$nombre-campo}" value="{$valor}"> 
-                    <xsl:value-of select="$etiqueta"></xsl:value-of>
-                </input>
+                <xsl:choose>
+                    <xsl:when test="$check = ''true''">
+                        <input type="checkbox" name="{$nombre-campo}" value="{$valor}" checked="checked">
+                                            <xsl:value-of select="$etiqueta"></xsl:value-of>
+                                        </input>
+                                    </xsl:when>
+                                    <xsl:when test="$check = ''false''">
+                                        <input type="checkbox" name="{$nombre-campo}" value="{$valor}"> 
+                                            <xsl:value-of select="$etiqueta"></xsl:value-of>
+                                        </input>
+                                    </xsl:when>
+                                </xsl:choose>
                 </div>
             
                 
@@ -317,7 +507,6 @@ VALUES (1, 'Generador Formularios Produccion',
     </xsl:template>
     
 </xsl:stylesheet>
-
                 ')
 );
 
@@ -335,7 +524,7 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
     
     <xsl:template match="paso | actividad">
         <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
+            <div class="widget widget-table col-sm-12">
                 <div class="widget-header">
                     <h3>
                         <i class="fa fa-table"></i> 
@@ -353,115 +542,23 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
                         </thead>
                         <tbody>
                             <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[not(tipo = ''seleccion'') and not(tipo = ''usuario'') and not(tipo = ''aa'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''sangria'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- Campos de selecciones -->
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Grupos de Usuarios''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Sección</th>
-                                <th>Usuarios</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''usuario'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-            
-        <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Artículos de Sub Bodegas''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Sub Bodega</th>
-                                <th>Con cantidades</th>
-                                <th>Producto Interno</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''subbodega'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Referencia a Control de Calidad''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''cc'')]"/>
+                            <xsl:apply-templates select="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'') and not(tipo = ''imagen'')]"/>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
         <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="''Referencia a Sangrías''" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = ''sangria'')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
+            <xsl:apply-templates select="campo[tipo = ''sangria'']"/>
             <xsl:apply-templates select="campo[tipo = ''aa'']"/>
-        </div>
-        <div class="widget-content row">
             <xsl:apply-templates select="campo[tipo = ''seleccion'']"/>
+            <xsl:apply-templates select="campo[tipo = ''subbodega'']"/>
+            <xsl:apply-templates select="campo[tipo = ''usuario'']"/>
+            <xsl:apply-templates select="campo[tipo = ''imagen'']"/>
+            <xsl:apply-templates select="campo[tipo = ''lote'']"/>
+            <xsl:apply-templates select="campo[tipo = ''cc'']"/>
         </div>
+
     </xsl:template>
        
     <!-- 
@@ -469,7 +566,7 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
     -->
         
     <!-- Campo de tipos diferentes de tabla -->
-    <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''sangria'')]">
+    <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'') and not(tipo = ''imagen'')]">
         
         <tr>
             <td>
@@ -502,6 +599,12 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
             </xsl:when>
             <xsl:when test="$tipo = ''fecha''">
                 <xsl:value-of select="''Fecha''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''hora''">
+                <xsl:value-of select="''Hora''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''blanco''">
+                <xsl:value-of select="''Espacio en blanco''" />
             </xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -558,6 +661,209 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
         </xsl:choose>
     </xsl:template>
     
+    <!-- Campo de tipos de tabla -->
+    <xsl:template match="campo[tipo = ''subbodega'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Producto Interno</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/producto">
+                            <xsl:param name="id" select="''id''"/>
+                            <xsl:param name="nombre" select="''nombre''"/>
+                            <xsl:param name="cantidad" select="''cantidad''"/>
+                            <tr>
+                                <td>
+                                   <a target="_blank" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&amp;id_producto={id}"><xsl:value-of select="nombre" /></a>
+                                </td>
+                                <td>
+                                    <xsl:value-of select="cantidad" />
+                                </td>
+                            </tr>
+
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="campo[tipo = ''cc'']">
+        <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Referencia a Control de Calidad''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
+                                </td>
+                            </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </xsl:template>
+    
+<xsl:template match="campo[tipo = ''lote'']">
+    <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Referencia a Lotes de Producción''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={valor}"> Ver Lote de Producción </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+</xsl:template>
+    <xsl:template match="campo[tipo = ''imagen'']">
+    <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Imágenes''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </xsl:template>
+
+    <xsl:template match="campo[tipo = ''usuario'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/usuario">
+                            <xsl:param name="id" select="''id''"/>
+                            <xsl:param name="nombre" select="''nombre''"/>
+                            <tr>
+                                <td>
+                                   <a target="_blank" href="/SIGIPRO/Seguridad/Usuarios/Ver?id={id}"><xsl:value-of select="nombre" /></a>
+                                </td>
+                            </tr>
+
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="campo[tipo = ''sangria'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Sangría</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/sangria">
+                            <xsl:param name="id" select="''id''"/>
+                            <tr>
+                                <td>
+                                    <a target="_blank" href="//SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={id}">
+                                        Ver Sangría (id: <xsl:value-of select="id" />)
+                                    </a>
+                                </td>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+
     <xsl:template match="campo[tipo = ''aa'']">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
@@ -593,78 +899,6 @@ VALUES (2, 'Generador Ver Resultado Producción Completo',
         </div>
     </xsl:template>
     
-    <xsl:template match="campo[(tipo = ''subbodega'')]">
-        <xsl:param name="cantidad" select="''cantidad''"/>
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <xsl:value-of select="nombre-subbodega" />
-            </td>
-            <td>
-                <xsl:choose>
-                    <xsl:when test="cantidad = ''true''">
-                        <xsl:value-of select="''Si''" />
-                    </xsl:when>
-                    <xsl:when test="cantidad = ''false''">
-                        <xsl:value-of select="''No''" />
-                    </xsl:when>
-                </xsl:choose> 
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&amp;id_producto={valor}"> Ver Producto </a>
-            </td>
-            <td>
-                <xsl:value-of select="valor-cantidad" />
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = ''usuario'')]">
-        
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <xsl:value-of select="nombre-seccion" />
-            </td>
-            <td>
-                <xsl:value-of select="valor" />
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = ''cc'')]">
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = ''sangria'')]">
-        <xsl:param name="cantidad" select="''cantidad''"/>
-        <xsl:param name="valor" select="''valor''"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={valor}"> Ver Sangría </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
 </xsl:stylesheet>
                 ')
 );
@@ -801,6 +1035,18 @@ VALUES (4, 'Generador Ver Paso de Protocolo',
             </xsl:when>
             <xsl:when test="$tipo = ''sangria''">
                 <xsl:value-of select="''Referencia a Sangría''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''lote''">
+                <xsl:value-of select="''Referencia a Lote de Producción''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''hora''">
+                <xsl:value-of select="''Hora''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''imagen''">
+                <xsl:value-of select="''Imagen''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''blanco''">
+                <xsl:value-of select="''Espacio en Blanco''" />
             </xsl:when>
         </xsl:choose>
     </xsl:template>

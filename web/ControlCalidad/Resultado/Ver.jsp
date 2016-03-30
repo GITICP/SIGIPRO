@@ -33,19 +33,45 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Ver Resultado de Solicitud ${solicitud.getNumero_solicitud()} - ${analisis.getNombre()} </h3>
+                            <h3><i class="fa fa-gears"></i> Ver Resultado de Solicitud ${solicitud.getNumero_solicitud()} - ${analisis.getNombre()}</h3>
 
                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                 <div class="btn-group widget-header-toolbar">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}">Editar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${analisis.getId_analisis()}">Editar</a>
                                 </div>
                             </c:if>
 
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-
-                            ${cuerpo_datos}
+                            
+                            <c:choose>
+                                <c:when test="${analisis.getId_analisis() != Integer.MAX_VALUE}">
+                                    ${cuerpo_datos}
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="widget-content">
+                                        <table class="tabla-ver">
+                                            <tr><td> <strong>Glóbulos Rojos (RBC)( x 1000000/µL): </strong></td> <td>${resultado.getRbc()} </td></tr>
+                                            <tr><td> <strong>Glóbulos blancos (WBC)( x 1000/µL): </strong></td> <td>${resultado.getWbc()} </td></tr>
+                                            <tr><td> <strong>Hematocrito (HCT)%: </strong></td> <td>${resultado.getHematocrito()} </td></tr>
+                                            <tr><td> <strong>Hemoglobina (HGB)g/dL: </strong></td> <td>${resultado.getHemoglobina()} </td></tr>
+                                            <tr><td> <strong>Volumen corpuscular media (MCV )fL: </strong></td> <td>${resultado.getMcv()} </td></tr>
+                                            <tr><td> <strong>Hemoglobina corpuscular Media (MCH) pg: </strong></td> <td>${resultado.getMch()} </td></tr>
+                                            <tr><td> <strong>Conc  HGB Corpuscular Media (MCHC) (g/dL): </strong></td> <td>${resultado.getMchc()} </td></tr>
+                                            <tr><td> <strong>Otros %: </strong></td> <td>${resultado.getOtros()} </td></tr>
+                                            <tr><td> <strong>Número de Linfocitos( x 1000/µL): </strong></td> <td>${resultado.getLinfocitos()} </td></tr>
+                                            <tr><td> <strong>Linfocitos LYM%: </strong></td> <td>${resultado.getLym()} </td></tr>
+                                            <tr><td> <strong>Número de otros ( x 1000/µL): </strong></td> <td>${resultado.getNum_otros()} </td></tr>
+                                            <tr><td> <strong>Plaquetas (PLT)( x 1000/µL): </strong></td> <td>${resultado.getPlt()} </td></tr>
+                                            <tr><td> <strong>Repetición: </strong></td> <td>${resultado.getRepeticion()} </td></tr>
+                                            <tr><td> <strong>Observaciones:</strong></td> <td>${resultado.getObservaciones()}</td></tr>
+                                        </table>
+                                        <br>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                            
 
                             <div class="row">
                                 <div class="col-md-6">

@@ -91,15 +91,9 @@
         
         <script src="${direccion_contexto}/recursos/js/plugins/moment/moment-2.8.min.js" type="text/javascript"></script>
         <script src="${direccion_contexto}/recursos/js/plugins/datatable/exts/dataTables.dateOrder.js" type="text/javascript"></script>
-        <!-- 
-            Se eliminaron estos scripts ya que no aportaban valor. Si algo no funciona, incluirlos.
-        
-        <script src="${direccion_contexto}/recursos/js/king-table.js"></script>
-        <script src="${direccion_contexto}/recursos/js/king-components.js"></script>
-        <script src="${direccion_contexto}/recursos/js/king-elements.js"></script>
-        -->
 
         <script src="${direccion_contexto}/recursos/js/sigipro/sigipro.js"></script>
+        <script src="${direccion_contexto}/recursos/js/sigipro/funciones-generales.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/tabla-sigipro.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/PermisosRol.js"></script>
         <script src="${direccion_contexto}/recursos/js/sigipro/cambiar-contrasena.js"></script>

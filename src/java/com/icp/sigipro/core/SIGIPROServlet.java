@@ -10,11 +10,15 @@ import com.icp.sigipro.bodegas.controladores.ControladorSubBodegas;
 import com.icp.sigipro.utilidades.HelperArchivos;
 import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelperPermisos;
+import com.icp.sigipro.utilidades.HelperVarios;
 import com.icp.sigipro.utilidades.HelpersHTML;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +45,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
     protected final HelperPermisos helper_permisos = HelperPermisos.getSingletonHelperPermisos();
     protected final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     protected final HelperArchivos helper_archivos = HelperArchivos.getSingletonHelperArchivos();
+    protected final HelperVarios helper_varios = HelperVarios.getSingletonHelperVarios();
     protected List<FileItem> parametros;
 
     @Override
@@ -72,8 +77,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
         } catch (InvocationTargetException ex) {
             try {
                 throw ex.getCause();
-            }
-            catch (AuthenticationException auth) {
+            } catch (AuthenticationException auth) {
                 RequestDispatcher vista = request.getRequestDispatcher("/Inicio");
                 vista.forward(request, response);
             } catch (SIGIPROException sigipro) {
@@ -200,6 +204,74 @@ public abstract class SIGIPROServlet extends HttpServlet {
         return valor;
     }
 
+    protected String obtenerImagen(String nombre_parametro, String ubicacion) throws Exception {
+        FileItem resultado = null;
+        for (FileItem file_item : parametros) {
+            System.out.println(file_item.getFieldName());
+            if (!file_item.isFormField()) {
+                if (file_item.getFieldName().equals(nombre_parametro)) {
+                    if (file_item.getSize() != 0) {
+                        java.sql.Date date = new java.sql.Date(new Date().getTime());
+                        this.crearDirectorio(ubicacion);
+                        //Creacion del nombre
+                        Date dNow = new Date();
+                        SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+                        String fecha = ft.format(dNow);
+                        String extension = this.getFileExtension(file_item.getName());
+                        String nombre = nombre_parametro + "-" + fecha + "." + extension;
+                        //---------------------
+                        File archivo = new File(ubicacion, nombre);
+                        file_item.write(archivo);
+                        return archivo.getAbsolutePath();
+                    }else{
+                        return null;
+                    }
+                }
+            }
+        }
+        String valor;
+        if (resultado != null) {
+            try {
+                valor = resultado.getString("UTF-8").trim();
+            } catch (UnsupportedEncodingException ex) {
+                valor = resultado.getString();
+            }
+            parametros.remove(resultado);
+        } else {
+            valor = "";
+        }
+        return valor;
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
+    }
+    
+    private boolean crearDirectorio(String path) {
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try {
+                directorio.mkdirs();
+                resultado = true;
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
+        }
+        return resultado;
+    }
+    
     protected FileItem obtenerParametroFileItem(String nombre_parametro) {
         FileItem resultado = null;
         for (FileItem file_item : parametros) {
@@ -219,6 +291,28 @@ public abstract class SIGIPROServlet extends HttpServlet {
         List<String> resultado = new ArrayList<String>();
         for (FileItem file_item : parametros) {
             if (file_item.getFieldName().equals(nombre_parametro)) {
+                lista_items.add(file_item);
+                try {
+                    resultado.add(file_item.getString("UTF-8").trim());
+                } catch (UnsupportedEncodingException ex) {
+                    resultado.add(file_item.getString());
+                }
+            }
+        }
+
+        if (!lista_items.isEmpty()) {
+            for (FileItem item : lista_items) {
+                parametros.remove(item);
+            }
+        }
+        return resultado.toArray(new String[]{});
+    }
+
+    protected String[] obtenerParametrosCantidades(String nombre_parametro) {
+        List<FileItem> lista_items = new ArrayList<FileItem>();
+        List<String> resultado = new ArrayList<String>();
+        for (FileItem file_item : parametros) {
+            if (file_item.getFieldName().contains(nombre_parametro + "_")) {
                 lista_items.add(file_item);
                 try {
                     resultado.add(file_item.getString("UTF-8").trim());
