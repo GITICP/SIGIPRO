@@ -43,6 +43,12 @@
                             </div>
                         </div>
                     </div>
+                    <c:if test="${tieneArchivo}">
+                        <label class="fancy-checkbox">
+                            <input type="checkbox" name="eliminar_machote">
+                            <span>Eliminar Machote</span>
+                        </label>    
+                    </c:if>
                 </c:when>
                 <c:otherwise>
                     <label for="nombre" class="control-label"> Machote</label>
@@ -92,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <label for="tipos-muestra" class="control-label"> *Tipos de Muestra Asociados</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -265,7 +271,7 @@
                                                     <div class="columnas_${i}">
                                                         <c:if test="${diccionario.get(i).get('columnas').size()>0}">
                                                             <c:forEach begin="0" end="${diccionario.get(i).get('columnas').size()-1}" var="c">
-                                                                
+
                                                                 <div class='columna col-md-12 columna_${i}_${c}_e' id="columna_${i}_${c}_e" >
                                                                     <div class='col-md-5'>
                                                                         <label for="nombre" class="control-label">*Nombre de Columna</label>

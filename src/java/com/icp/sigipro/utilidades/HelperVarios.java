@@ -42,6 +42,16 @@ public class HelperVarios {
         return bd.floatValue();
     }
     
+    public float parsearFloat(String valor) {
+        float resultado = 0.0f;
+        if (valor != null) {
+            if (!valor.isEmpty()) {
+                resultado = Float.parseFloat(valor);
+            }
+        }
+        return resultado;
+    }
+    
     private String definirFormato(int decimales) {
         String resultado = "#.";
         int i = 0;

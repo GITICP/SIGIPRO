@@ -115,25 +115,29 @@
             </div>
         </div>
 
-        <br>
-        <input hidden="true" name="accion" value="${accion}">
-        <div class="col-md-12">    
-            <div class="row">
-                <div class="form-group">
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
-                        <c:choose>
-                            <c:when test= "${accion.equals('Editar')}">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
-                            </c:when>
-                            <c:otherwise>
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle" onclick="confirmacionAgregarCaballos()"></i> ${accion} Sangría de Prueba</button>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
+    </div>
+
+    <br>
+    <div class="col-md-12">    
+        <p class="campos-requeridos">
+            Los campos marcados con * son requeridos.
+        </p>  
+        <div class="row">
+            <div class="form-group">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <c:choose>
+                        <c:when test= "${accion.equals('Editar')}">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle" onclick="confirmacionAgregarCaballos()"></i> ${accion} Sangría de Prueba</button>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
-
     </div>
+
+
 </form>                        

@@ -86,7 +86,13 @@ public class AsociacionSangria extends AsociacionSolicitud {
         request.setAttribute("dia", dia);
         request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
         request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
-        request.setAttribute("caballos_resultado", resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia));
+        List<ObjetoAsociacionMultiple> caballos_resultado = resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia);
+        request.setAttribute("caballos_resultado", caballos_resultado);
+        List<Integer> ids_caballos = new ArrayList<>();
+        for (ObjetoAsociacionMultiple osm : caballos_resultado) {
+            ids_caballos.addAll(osm.getIds());
+        }
+        request.setAttribute("ids_caballos_con_resultado", ids_caballos);
     }
 
     @Override

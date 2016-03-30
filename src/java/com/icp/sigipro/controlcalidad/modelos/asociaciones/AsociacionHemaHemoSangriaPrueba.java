@@ -92,7 +92,44 @@ public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
 
     @Override
     public List<PreparedStatement> editarSQL(Connection conexion) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        List<PreparedStatement> resultado = new ArrayList<>();
+
+        PreparedStatement consulta_sangria = conexion.prepareStatement(
+                " UPDATE caballeriza.sangrias_pruebas SET id_informe = ? WHERE id_sangria_prueba = ? "
+        );
+
+        consulta_sangria.setInt(1, getInforme().getId_informe());
+        consulta_sangria.setInt(2, sangria_prueba.getId_sangria_prueba());
+        consulta_sangria.addBatch();
+        
+        PreparedStatement update_caballos = conexion.prepareStatement(
+                " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria_prueba = ?; "
+        );
+        
+        update_caballos.setNull(1, java.sql.Types.INTEGER);
+        update_caballos.setInt(2, sangria_prueba.getId_sangria_prueba());
+        update_caballos.addBatch();
+
+        PreparedStatement consulta_caballos = conexion.prepareStatement(
+                " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria_prueba = ? AND id_caballo = ?; "
+        );
+
+        for (ObjetoAsociacionMultiple osm : objetos) {
+            for (int id : osm.getIds()) {
+                consulta_caballos.setInt(1, osm.getResultado().getId_resultado());
+                consulta_caballos.setInt(2, sangria_prueba.getId_sangria_prueba());
+                consulta_caballos.setInt(3, id);
+                consulta_caballos.addBatch();
+            }
+        }
+        
+        resultado.add(consulta_sangria);
+        resultado.add(update_caballos);
+        resultado.add(consulta_caballos);
+
+        return resultado;
+        
     }
     
     private Informe getInforme() {

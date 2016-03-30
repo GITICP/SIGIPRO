@@ -139,6 +139,24 @@ public class AnalisisDAO extends DAO {
         }
         return resultado;
     }
+    
+    public boolean eliminarTiposMuestrasAnalisis(int id_analisis) {
+        PreparedStatement consulta = null;
+        boolean resultado = false;
+        try {
+            consulta = getConexion().prepareStatement(" DELETE FROM control_calidad.tipos_muestras_analisis WHERE id_analisis=?; ");
+            consulta.setInt(1, id_analisis);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
 
     public boolean insertarTipoMuestra(List<TipoMuestra> tipos_muestras_analisis, int id_analisis) {
         boolean resultado = false;
@@ -186,7 +204,7 @@ public class AnalisisDAO extends DAO {
                 xmlVal.setString(analisis.getEstructuraString());
                 consulta.setString(1, analisis.getNombre());
                 consulta.setSQLXML(2, xmlVal);
-                consulta.setString(3, analisis.getMachote());
+                consulta.setString(3, (analisis.getMachote().equals("eliminar")) ? "" : analisis.getMachote());
                 consulta.setInt(4, analisis.getId_analisis());
             }
             if (consulta.executeUpdate() == 1) {

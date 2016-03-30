@@ -78,6 +78,7 @@ public class Bitacora {
     public static final String TABLA_GRUPO = "CONTROL_CALIDAD.GRUPOS";
     public static final String TABLA_MUESTRA = "CONTROL_CALIDAD.MUESTRAS";
     public static final String TABLA_RESULTADO = "CONTROL_CALIDAD.RESULTADOS";
+    public static final String TABLA_RESULTADO_SP = "CONTROL_CALIDAD.RESULTADOS_ANALISIS_SANGRIAS_PRUEBA";
     public static final String TABLA_SOLICITUDCC = "CONTROL_CALIDAD.SOLICITUDES";
     public static final String TABLA_TIPOMUESTRA = "CONTROL_CALIDAD.TIPOS_MUESTRAS";
     public static final String TABLA_INFORME = "CONTROL_CALIDAD.INFORMES";

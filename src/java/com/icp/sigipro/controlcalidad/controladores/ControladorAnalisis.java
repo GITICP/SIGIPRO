@@ -330,6 +330,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 String formulario = helper_transformaciones.transformar(xslt, analisis.getEstructura());
                 request.setAttribute("cuerpo_formulario", formulario);
             } else {
+                request.setAttribute("resultado", new ResultadoSangriaPrueba());
                 redireccion = "Analisis/FormularioSangriaPrueba.jsp";
             }
  
@@ -379,9 +380,11 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 //Se vacian por si hubo cambios
                 dao.eliminarTiposEquiposAnalisis(a.getId_analisis());
                 dao.eliminarTiposReactivosAnalisis(a.getId_analisis());
+                dao.eliminarTiposMuestrasAnalisis(a.getId_analisis());
                 //------------------------------
                 dao.insertarTipoEquipo(a.getTipos_equipos_analisis(), a.getId_analisis());
                 dao.insertarTipoReactivo(a.getTipos_reactivos_analisis(), a.getId_analisis());
+                dao.insertarTipoMuestra(a.getTipos_muestras_analisis(), a.getId_analisis());
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
@@ -583,8 +586,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             int id_analisis = Integer.parseInt(this.obtenerParametro("id_analisis"));
 
             resultado_spdao.insertarResultadoSangriaPrueba(resultado_sp);
-
-            //bitacora.setBitacora(resultado_sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SANGRIA, request.getRemoteAddr());
+            bitacora.setBitacora(resultado_sp.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO_SP, request.getRemoteAddr());
             redireccion = "/ControlCalidad/Solicitud/Ver.jsp";
             try {
                 SolicitudCC s = solicituddao.obtenerSolicitud(resultado_sp.getAgs().getGrupo().getSolicitud().getId_solicitud());
@@ -668,6 +670,9 @@ public class ControladorAnalisis extends SIGIPROServlet {
                         break;
                     case "orden":
                         orden = fieldValue;
+                        break;
+                    case "eliminar_machote":
+                        a.setMachote("eliminar");
                         break;
                     default:
                         //Se agarra el valor y se divide, ya que la entrada tiene una estructura t_nombredelvalor_id
@@ -771,14 +776,32 @@ public class ControladorAnalisis extends SIGIPROServlet {
             int id_usuario = (int) request.getSession().getAttribute("idusuario");
             u.setIdUsuario(id_usuario);
             resultado.setUsuario(u);
-            resultado.setHematocrito(Float.parseFloat(this.obtenerParametro("hematocrito")));
-            resultado.setHemoglobina(Float.parseFloat(this.obtenerParametro("hemoglobina")));
-            resultado.setRbc(this.obtenerParametro("rbc"));
-            resultado.setWbc(this.obtenerParametro("wbc"));
+            resultado.setHematocrito(helper_varios.parsearFloat(this.obtenerParametro("hematocrito")));
+            resultado.setHemoglobina(helper_varios.parsearFloat(this.obtenerParametro("hemoglobina")));
+            resultado.setRbc(helper_varios.parsearFloat(this.obtenerParametro("rbc")));
+            resultado.setWbc(helper_varios.parsearFloat(this.obtenerParametro("wbc")));
+            resultado.setMch(helper_varios.parsearFloat(this.obtenerParametro("mch")));
+            resultado.setMchc(helper_varios.parsearFloat(this.obtenerParametro("mchc")));
+            resultado.setLym(helper_varios.parsearFloat(this.obtenerParametro("lym")));
+            resultado.setLinfocitos(helper_varios.parsearFloat(this.obtenerParametro("linfocitos")));
+            resultado.setNum_otros(helper_varios.parsearFloat(this.obtenerParametro("num_otros")));
+            resultado.setPlt(helper_varios.parsearFloat(this.obtenerParametro("plt")));
+            resultado.setMcv(helper_varios.parsearFloat(this.obtenerParametro("mcv")));
+            resultado.setOtros(helper_varios.parsearFloat(this.obtenerParametro("otros")));
             resultado.setFecha(helper_fechas.getFecha_hoy());
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));
             resultado.setAgs(ags);
+
+            String[] equipos_utilizados = this.obtenerParametros("equipos");
+            String[] reactivos_utilizados = this.obtenerParametros("reactivos");
+            String[] controles_utilizados = this.obtenerParametros("controles");
+            String[] patrones_utilizados = this.obtenerParametros("patrones");
+            
+            resultado.setEquipos(equipos_utilizados);
+            resultado.setReactivos(reactivos_utilizados);
+            resultado.setPatrones(patrones_utilizados);
+            resultado.setControles(controles_utilizados);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

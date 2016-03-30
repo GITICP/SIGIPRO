@@ -61,7 +61,7 @@
                                 <c:if test="${accion == 'Editar'}">
                                     <input type="hidden" value="${solicitud.getInforme().getId_informe()}" name="id_informe" />
                                     <c:choose>
-                                        <c:when test="${tipo == 'sangria'}">
+                                        <c:when test="${tipo == 'sangria' || tipo == 'sangria_prueba'}">
                                             <c:forEach items="${caballos_resultado}" var="resultado_caballo">
                                                 <input type="hidden" name="caballos_res_${resultado_caballo.getResultado().getId_resultado()}" value="${resultado_caballo.pasarIdsAString()}" />
                                             </c:forEach>
@@ -221,7 +221,15 @@
                         <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
                     </c:when>
                     <c:otherwise>
-                        <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="true"></div>
+                        <c:choose>
+                            <c:when test="${ids_caballos_con_resultado.contains(caballo.getId_caballo())}">
+                                <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="true"></div>
+                            </c:when>
+                            <c:otherwise>
+                                <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
+                            </c:otherwise>
+                        </c:choose>
+                        
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
@@ -244,9 +252,16 @@
             </div>
             <br/>
 
-            <div class="form-group">
+            <div class="form-group" id="error">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
+                </div>
+            </div>
+            
+            <div class="form-group" id="advertencia-submit" style="display:none;">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
+                    <button id="generar-de-todas-formas" type="button" class="btn btn-primary"><i class="fa fa-times-circle"></i> Generar Informe de Todas Maneras</button>
                 </div>
             </div>
         </form>
