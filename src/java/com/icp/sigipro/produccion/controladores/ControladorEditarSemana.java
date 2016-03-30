@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.notificaciones.controladores;
-
+package com.icp.sigipro.produccion.controladores;
+import com.icp.sigipro.bitacora.dao.BitacoraDAO;
+import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.notificaciones.controladores.*;
 import com.icp.sigipro.core.SIGIPROException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +17,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.icp.sigipro.notificaciones.dao.NotificacionesDAO;
+import com.icp.sigipro.produccion.dao.Semanas_cronogramaDAO;
+import com.icp.sigipro.produccion.modelos.Semanas_cronograma;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
@@ -24,10 +28,11 @@ import javax.servlet.http.HttpSession;
  *
  * @author Josue
  */
-@WebServlet(name = "ControladorMarcarNotificaciones", urlPatterns = {"/marcarNotificaciones"})
-public class ControladorMarcarNotificaciones extends HttpServlet {
+@WebServlet(name = "ControladorEditarSemana", urlPatterns = {"/editarSemana"})
+public class ControladorEditarSemana extends HttpServlet {
 
     private ServletContext context;
+    private final Semanas_cronogramaDAO sDAO = new Semanas_cronogramaDAO();
     
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -52,10 +57,10 @@ public class ControladorMarcarNotificaciones extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ControladorMarcarNotificaciones</title>");            
+            out.println("<title>Servlet ControladorObtenerSemanasCronograma</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ControladorMarcarNotificaciones at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ControladorObtenerSemanasCronograma at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,17 +78,18 @@ public class ControladorMarcarNotificaciones extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession sesion = request.getSession();
+        StringBuffer sb = new StringBuffer();
         String id = request.getParameter("id");
-        NotificacionesDAO nDAO = new NotificacionesDAO();
+        String columna = request.getParameter("columna");
+        String nuevoValor = request.getParameter("nuevoValor");
         try {
-            nDAO.marcarNotificacionesLeidas(id);
+            sDAO.editarSemana(Integer.parseInt(id),columna,nuevoValor);
+            Semanas_cronograma sc = new Semanas_cronograma();
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(sc.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SEMANAS_CRONOGRAMA, request.getRemoteAddr());
         } catch (SIGIPROException ex) {
-            Logger.getLogger(ControladorObtenerNuevasNotificaciones.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControladorEditarSemana.class.getName()).log(Level.SEVERE, null, ex);
         }
-        response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
-        response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
-        response.getWriter().write("Se marco la notificacion como leida.");
     }
 
     /**

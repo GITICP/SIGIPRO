@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.icp.sigipro.notificaciones.controladores;
-
+package com.icp.sigipro.produccion.controladores;
+import com.icp.sigipro.notificaciones.controladores.*;
 import com.icp.sigipro.core.SIGIPROException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +15,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.icp.sigipro.notificaciones.dao.NotificacionesDAO;
+import com.icp.sigipro.produccion.dao.Semanas_cronogramaDAO;
+import com.icp.sigipro.produccion.modelos.Semanas_cronograma;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
@@ -24,10 +26,11 @@ import javax.servlet.http.HttpSession;
  *
  * @author Josue
  */
-@WebServlet(name = "ControladorMarcarNotificaciones", urlPatterns = {"/marcarNotificaciones"})
-public class ControladorMarcarNotificaciones extends HttpServlet {
+@WebServlet(name = "ControladorObtenerSemanasCronograma", urlPatterns = {"/semanas_cronograma"})
+public class ControladorObtenerSemanasCronograma extends HttpServlet {
 
     private ServletContext context;
+    private final Semanas_cronogramaDAO sDAO = new Semanas_cronogramaDAO();
     
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -52,10 +55,10 @@ public class ControladorMarcarNotificaciones extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ControladorMarcarNotificaciones</title>");            
+            out.println("<title>Servlet ControladorObtenerSemanasCronograma</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ControladorMarcarNotificaciones at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ControladorObtenerSemanasCronograma at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,17 +76,37 @@ public class ControladorMarcarNotificaciones extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession sesion = request.getSession();
-        String id = request.getParameter("id");
-        NotificacionesDAO nDAO = new NotificacionesDAO();
+        StringBuffer sb = new StringBuffer();
+        String id = request.getParameter("id_cronograma");
         try {
-            nDAO.marcarNotificacionesLeidas(id);
-        } catch (SIGIPROException ex) {
+            List<Semanas_cronograma> resultado = sDAO.obtenerSemanas_cronograma(Integer.parseInt(id));
+            sb.append("<semanas>");
+            for (Semanas_cronograma s : resultado){
+                sb.append("<semana>");
+                sb.append("<id_semana>").append(s.getId_semana()).append("</id_semana>");
+                sb.append("<id_cronograma>").append(s.getCronograma().getId_cronograma()).append("</id_cronograma>");
+                sb.append("<fecha>").append(s.getFecha_S()).append("</fecha>");
+                sb.append("<sangria>").append(s.getSangria()).append("</sangria>");
+                sb.append("<plasma_proyectado>").append(s.getPlasma_proyectado()).append("</plasma_proyectado>");
+                sb.append("<plasma_real>").append(s.getPlasma_proyectado()).append("</plasma_real>");
+                sb.append("<antivenenos_lote>").append(s.getAntivenenos_lote()).append("</antivenenos_lote>");
+                sb.append("<antivenenos_proyectada>").append(s.getAntivenenos_proyectada()).append("</antivenenos_proyectada>");
+                sb.append("<antivenenos_bruta>").append(s.getAntivenenos_bruta()).append("</antivenenos_bruta>");
+                sb.append("<antivenenos_neta>").append(s.getAntivenenos_neta()).append("</antivenenos_neta>");
+                sb.append("<entregas_cantidad>").append(s.getEntregas_cantidad()).append("</entregas_cantidad>");
+                sb.append("<entregas_destino>").append(s.getEntregar_destino()).append("</entregas_destino>");
+                sb.append("<entregas_lote>").append(s.getEntregas_lote()).append("</entregas_lote>");
+                sb.append("<observaciones>").append(s.getObservaciones()).append("</observaciones>");
+                sb.append("</semana>");
+            }
+            sb.append("</semanas>");
+            response.setContentType("text/xml");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().write(sb.toString());
+        }
+        catch (SIGIPROException ex) {
             Logger.getLogger(ControladorObtenerNuevasNotificaciones.class.getName()).log(Level.SEVERE, null, ex);
         }
-        response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
-        response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
-        response.getWriter().write("Se marco la notificacion como leida.");
     }
 
     /**

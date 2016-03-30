@@ -7,14 +7,13 @@ package com.icp.sigipro.produccion.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
-import com.icp.sigipro.produccion.modelos.Inoculo;
-import com.icp.sigipro.produccion.dao.InoculoDAO;
-import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
-import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.produccion.dao.CronogramaDAO;
+import com.icp.sigipro.produccion.dao.Semanas_cronogramaDAO;
+import com.icp.sigipro.produccion.modelos.Cronograma;
+import com.icp.sigipro.produccion.modelos.Semanas_cronograma;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
-import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,22 +26,20 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Josue
+ * @author Amed
  */
-@WebServlet(name = "ControladorInoculo_Bueno", urlPatterns = {"/Produccion/Inoculo"})
-public class ControladorInoculo extends SIGIPROServlet {
+@WebServlet(name = "ControladorCronograma", urlPatterns = {"/Produccion/Cronograma"})
+public class ControladorCronograma extends SIGIPROServlet {
 
-    
-    private final int[] permisos = {604, 1, 1};
-    private final InoculoDAO dao = new InoculoDAO();
+    private final int[] permisos = {601, 1, 1};
+    private final CronogramaDAO dao = new CronogramaDAO();
+    private final Semanas_cronogramaDAO sDAO = new Semanas_cronogramaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
-    private final Veneno_ProduccionDAO dao_vp = new Veneno_ProduccionDAO();
-    
-    protected final Class clase = ControladorInoculo.class;
+
+    protected final Class clase = ControladorCronograma.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
@@ -60,40 +57,26 @@ public class ControladorInoculo extends SIGIPROServlet {
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        
-        HttpSession sesion = request.getSession();
-        String nombre_usr = (String) sesion.getAttribute("usuario");
-        int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-        Usuario us = dao_us.obtenerUsuario(id_usuario);
-        List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
-
-        List<Veneno_Produccion> venenos = dao_vp.obtenerVenenos_Produccion();
-        
-        request.setAttribute("usuarios", usuarios);
-        request.setAttribute("venenos", venenos);
-        
-        String redireccion = "Inoculo/Agregar.jsp";
-        Inoculo ds = new Inoculo();
-        request.setAttribute("inoculo", ds);
+        validarPermiso(601, listaPermisos);
+       
+        String redireccion = "Cronograma/Agregar.jsp";
+        Cronograma ds = new Cronograma();
+        request.setAttribute("cronograma", ds);
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        String redireccion = "Inoculo/index.jsp";
-        List<Inoculo> inoculos;
-        try {
-            inoculos = dao.obtenerInoculos();
-            request.setAttribute("listaInoculos", inoculos);
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
-        }
+
+        List<Cronograma> cronogramas = new CronogramaDAO().obtenerCronogramas();
+        request.setAttribute("listaCronogramas", cronogramas);
+        String redireccion = "Cronograma/index.jsp";
+        
         redireccionar(request, response, redireccion);
     }
 
@@ -101,11 +84,13 @@ public class ControladorInoculo extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
-        String redireccion = "Inoculo/Ver.jsp";
-        int id_inoculo = Integer.parseInt(request.getParameter("id_inoculo"));
+        String redireccion = "Cronograma/Ver.jsp";
+        int id_cronograma = Integer.parseInt(request.getParameter("id_cronograma"));
+        
         try {
-            Inoculo i = dao.obtenerInoculo(id_inoculo);
-            request.setAttribute("inoculo", i);
+            Cronograma c = dao.obtenerCronograma(id_cronograma);
+            request.setAttribute("cronograma", c);
+
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
@@ -116,46 +101,45 @@ public class ControladorInoculo extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
-        HttpSession sesion = request.getSession();
-        String nombre_usr = (String) sesion.getAttribute("usuario");
-        int id_usuario = dao_us.obtenerIDUsuario(nombre_usr);
-        Usuario us = dao_us.obtenerUsuario(id_usuario);
-        List<Usuario> usuarios = dao_us.obtenerUsuarios(us);
-
-        List<Veneno_Produccion> venenos = dao_vp.obtenerVenenos_Produccion();
-        
-        request.setAttribute("usuarios", usuarios);
-        request.setAttribute("venenos", venenos);
-        
-        String redireccion = "Inoculo/Editar.jsp";
-        Inoculo ds = dao.obtenerInoculo(Integer.parseInt(request.getParameter("id_inoculo")));
-        request.setAttribute("inoculo", ds);
+        String redireccion = "Cronograma/Editar.jsp";
+        int id_cronograma = Integer.parseInt(request.getParameter("id_cronograma"));
+        Cronograma ds = dao.obtenerCronograma(id_cronograma);
+        request.setAttribute("cronograma", ds);
         request.setAttribute("accion", "Editar");
-
+        
         redireccionar(request, response, redireccion);
     }
+
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         boolean resultado = false;
-        String redireccion = "Inoculo/Agregar.jsp";
+        String redireccion = "Cronograma/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         try {
-            Inoculo inoculo_nuevo = construirObjeto(request);
+            Cronograma cronograma_nuevo = construirObjeto(request);
             
-            resultado = dao.insertarInoculo(inoculo_nuevo);
+            int id_cronograma_nuevo = dao.insertarCronograma(cronograma_nuevo);
+            if (id_cronograma_nuevo != 0) resultado = true;
+            //Crear semanas automáticamente. crearSemanas_cronograma(startdate)
+            sDAO.crearSemanas_cronograma(cronograma_nuevo.getValido_desde(),id_cronograma_nuevo);
+            //Semanas Bitácora****
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
+            for (Semanas_cronograma semana : sDAO.obtenerSemanas_cronograma(id_cronograma_nuevo)){
+                bitacora.setBitacora(semana.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SEMANAS_CRONOGRAMA, request.getRemoteAddr());
+            }
+            bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CRONOGRAMA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
-            redireccion = "Inoculo/index.jsp";
-            List<Inoculo> inoculos = dao.obtenerInoculos();
-            request.setAttribute("listaInoculos", inoculos);
+            redireccion = "Cronograma/index.jsp";
+            List<Cronograma> cronogramas = new CronogramaDAO().obtenerCronogramas();
+            request.setAttribute("listaCronogramas", cronogramas);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -164,24 +148,25 @@ public class ControladorInoculo extends SIGIPROServlet {
 
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
-        String redireccion = "Inoculo/Editar.jsp";
+        String redireccion = "Cronograma/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
+        
         try {
-            Inoculo inoculo_nuevo = construirObjetoEditar(request);
+            Cronograma cronograma_nuevo = construirObjeto(request);
             
-            resultado = dao.editarInoculo(inoculo_nuevo);
+            resultado = dao.editarCronograma(cronograma_nuevo);
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
+            bitacora.setBitacora(cronograma_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CRONOGRAMA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
-            redireccion = "Inoculo/index.jsp";
-            List<Inoculo> inoculos = dao.obtenerInoculos();
-            request.setAttribute("listaInoculos", inoculos);
+            redireccion = "Cronograma/index.jsp";
+            List<Cronograma> cronogramas = new CronogramaDAO().obtenerCronogramas();
+            request.setAttribute("listaCronogramas", cronogramas);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -190,25 +175,31 @@ public class ControladorInoculo extends SIGIPROServlet {
     
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
-        String redireccion = "Inoculo/index.jsp";
+        String redireccion = "Cronograma/index.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
         try {
-            Inoculo inoculo_a_eliminar = dao.obtenerInoculo(Integer.parseInt(request.getParameter("id_inoculo")));
+            Cronograma cronograma_a_eliminar = dao.obtenerCronograma(Integer.parseInt(request.getParameter("id_cronograma")));
             
-            resultado = dao.eliminarInoculo(inoculo_a_eliminar.getId_inoculo());
-            //Funcion que genera la bitacora
+            resultado = dao.eliminarCronograma(cronograma_a_eliminar.getId_cronograma());
             BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(inoculo_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
+            //Borrar semanas automáticamente
+            for (Semanas_cronograma semana : sDAO.obtenerSemanas_cronograma(cronograma_a_eliminar.getId_cronograma())){
+                bitacora.setBitacora(semana.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SEMANAS_CRONOGRAMA, request.getRemoteAddr());
+            }
+            sDAO.eliminarSemanas_del_Cronograma(cronograma_a_eliminar.getId_cronograma());
+            //Semanas Bitácora****
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(cronograma_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CRONOGRAMA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
         if (resultado) {
-            redireccion = "Inoculo/index.jsp";
-            List<Inoculo> inoculos = dao.obtenerInoculos();
-            request.setAttribute("listaInoculos", inoculos);
+            redireccion = "Cronograma/index.jsp";
+            List<Cronograma> cronogramas = new CronogramaDAO().obtenerCronogramas();
+            request.setAttribute("listaCronogramas", cronogramas);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -216,33 +207,20 @@ public class ControladorInoculo extends SIGIPROServlet {
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos del Modelo">
-    private Inoculo construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
-        Inoculo inoculo = new Inoculo();
-        inoculo.setIdentificador(request.getParameter("identificador"));
-        inoculo.setPeso(Integer.parseInt(request.getParameter("peso")));
-        inoculo.setVeneno(dao_vp.obtenerVeneno_Produccion(Integer.parseInt(request.getParameter("id_veneno"))));
+    private Cronograma construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
+        Cronograma cronograma = new Cronograma();
+        
+        cronograma.setId_cronograma(Integer.parseInt(request.getParameter("id_cronograma")));
+        cronograma.setNombre(request.getParameter("nombre"));
+        
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date result = df.parse(request.getParameter("fecha_preparacion"));
-        java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
-        inoculo.setFecha_preparacion(fecha_solicitudSQL);
-        inoculo.setEncargado_preparacion(dao_us.obtenerUsuario(Integer.parseInt(request.getParameter("encargado_preparacion"))));
+        java.util.Date result = df.parse(request.getParameter("valido_desde"));
+        java.sql.Date valido_desdeSQL = new java.sql.Date(result.getTime());
+        cronograma.setValido_desde(valido_desdeSQL);
+        
+        cronograma.setObservaciones(request.getParameter("observaciones"));
 
-        return inoculo;
-    }
-    
-    private Inoculo construirObjetoEditar(HttpServletRequest request) throws SIGIPROException, ParseException {
-        Inoculo inoculo = new Inoculo();
-        inoculo.setId_inoculo(Integer.parseInt(request.getParameter("id_inoculo")));
-        inoculo.setIdentificador(request.getParameter("identificador"));
-        inoculo.setPeso(Integer.parseInt(request.getParameter("peso")));
-        inoculo.setVeneno(dao_vp.obtenerVeneno_Produccion(Integer.parseInt(request.getParameter("id_veneno"))));
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date result = df.parse(request.getParameter("fecha_preparacion"));
-        java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
-        inoculo.setFecha_preparacion(fecha_solicitudSQL);
-        inoculo.setEncargado_preparacion(dao_us.obtenerUsuario(Integer.parseInt(request.getParameter("encargado_preparacion"))));
-
-        return inoculo;
+        return cronograma;
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
