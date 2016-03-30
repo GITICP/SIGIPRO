@@ -7,6 +7,7 @@ package com.icp.sigipro.produccion.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.notificaciones.dao.Tipo_NotificacionesDAO;
 import com.icp.sigipro.produccion.modelos.Inoculo;
 import com.icp.sigipro.produccion.dao.InoculoDAO;
 import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
@@ -91,6 +92,21 @@ public class ControladorInoculo extends SIGIPROServlet {
         try {
             inoculos = dao.obtenerInoculos();
             request.setAttribute("listaInoculos", inoculos);
+            
+            /*Tipo_NotificacionesDAO tDAO = new Tipo_NotificacionesDAO(); 
+            redireccion = "/Produccion/Inoculo";
+            String esquema = "produccion";
+            String tablaBase = "inoculo";
+            String descripcion = "Nuevo inoculo";
+            String icono = "fa fa-gears";
+            int id_tipo_notificacion = 4;
+            Integer[] id_permisos = new Integer[]{1,25};
+            Integer[] id_usuarios_bloqueados = new Integer[]{1,25};
+            tDAO.insertarTipo_Notificacion(id_tipo_notificacion, descripcion, icono, id_permisos, id_usuarios_bloqueados);
+            
+            tDAO.crearStoreProcedure(esquema, tablaBase, id_tipo_notificacion, redireccion);
+            tDAO.crearTrigger(esquema, tablaBase, id_tipo_notificacion);*/
+            
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
