@@ -29,8 +29,17 @@ public class Actividad_Apoyo {
     private int id_historial;
     private String observaciones;
     private List<Actividad_Apoyo> historial;
+    private boolean requiere_ap;
 
     public Actividad_Apoyo() {
+    }
+
+    public boolean isRequiere_ap() {
+        return requiere_ap;
+    }
+
+    public void setRequiere_ap(boolean requiere_ap) {
+        this.requiere_ap = requiere_ap;
     }
 
     public String getObservaciones() {

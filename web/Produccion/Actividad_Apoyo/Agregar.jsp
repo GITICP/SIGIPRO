@@ -25,8 +25,11 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
+                        <li>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
+                        </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${actividad.getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
                         </li>
                         <li class="active"> Agregar Actividad de Apoyo </li>
 
@@ -58,7 +61,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/ActividadApoyo.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/Produccion/ActividadApoyo/ActividadApoyo.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="/resources/demos/style.css">
     </jsp:attribute>

@@ -8,11 +8,11 @@
     
     <xsl:template match="paso | actividad">
         <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
+            <div class="widget widget-table col-sm-12">
                 <div class="widget-header">
                     <h3>
                         <i class="fa fa-table"></i> 
-                        <xsl:value-of select="'Campos'" /> 
+                        <xsl:value-of select="''Campos''" /> 
                     </h3>
                 </div>
                 <div class="widget-content">
@@ -26,111 +26,21 @@
                         </thead>
                         <tbody>
                             <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[not(tipo = 'seleccion') and not(tipo = ''aa'') and not(tipo = 'usuario') and not(tipo = 'subbodega') and not(tipo = 'cc') and not(tipo = 'lote') and not(tipo = 'sangria')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- Campos de selecciones -->
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="'Grupos de Usuarios'" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Sección</th>
-                                <th>Usuarios</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = 'usuario')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-            
-        <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="'Referencia a Control de Calidad'" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = 'cc')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="'Referencia a Sangrías'" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = 'sangria')]"/>
+                            <xsl:apply-templates select="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'') and not(tipo = ''imagen'')]"/>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
         <div class="widget-content row">
-            <div class="widget widget-table col-sm-6">
-                <div class="widget-header">
-                    <h3>
-                        <i class="fa fa-table"></i> 
-                        <xsl:value-of select="'Referencia a Lotes de Producción'" /> 
-                    </h3>
-                </div>
-                <div class="widget-content">
-                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
-                        <thead>
-                            <tr>
-                                <th>Nombre de Campo</th>
-                                <th>Referencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Campos diferentes de tablas -->
-                            <xsl:apply-templates select="campo[(tipo = 'lote')]"/>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <xsl:apply-templates select="campo[tipo = 'aa']"/>
-        </div>
-        <div class="widget-content row">
-            <xsl:apply-templates select="campo[tipo = 'seleccion']"/>
-            <xsl:apply-templates select="campo[tipo = 'subbodega']"/>
+            <xsl:apply-templates select="campo[tipo = ''sangria'']"/>
+            <xsl:apply-templates select="campo[tipo = ''aa'']"/>
+            <xsl:apply-templates select="campo[tipo = ''seleccion'']"/>
+            <xsl:apply-templates select="campo[tipo = ''subbodega'']"/>
+            <xsl:apply-templates select="campo[tipo = ''usuario'']"/>
+            <xsl:apply-templates select="campo[tipo = ''imagen'']"/>
+            <xsl:apply-templates select="campo[tipo = ''lote'']"/>
+            <xsl:apply-templates select="campo[tipo = ''cc'']"/>
         </div>
 
     </xsl:template>
@@ -140,7 +50,7 @@
     -->
         
     <!-- Campo de tipos diferentes de tabla -->
-    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = ''aa'') and not(tipo = 'usuario') and not(tipo = 'subbodega') and not(tipo = 'cc') and not(tipo = 'lote') and not(tipo = 'sangria')]">
+    <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'') and not(tipo = ''cc'') and not(tipo = ''lote'') and not(tipo = ''sangria'') and not(tipo = ''imagen'')]">
         
         <tr>
             <td>
@@ -162,29 +72,35 @@
         <xsl:param name="tipo" />
         
         <xsl:choose>
-            <xsl:when test="$tipo = 'number'">
-                <xsl:value-of select="'Número'" />
+            <xsl:when test="$tipo = ''number''">
+                <xsl:value-of select="''Número''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'text'">
-                <xsl:value-of select="'Texto'" />
+            <xsl:when test="$tipo = ''text''">
+                <xsl:value-of select="''Texto''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'textarea'">
-                <xsl:value-of select="'Área de Texto'" />
+            <xsl:when test="$tipo = ''textarea''">
+                <xsl:value-of select="''Área de Texto''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'fecha'">
-                <xsl:value-of select="'Fecha'" />
+            <xsl:when test="$tipo = ''fecha''">
+                <xsl:value-of select="''Fecha''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''hora''">
+                <xsl:value-of select="''Hora''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''blanco''">
+                <xsl:value-of select="''Espacio en blanco''" />
             </xsl:when>
         </xsl:choose>
     </xsl:template>
     
     
     <!-- Campo de tipos de tabla -->
-    <xsl:template match="campo[tipo = 'seleccion']">
+    <xsl:template match="campo[tipo = ''seleccion'']">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-check"></i> 
-                    <xsl:value-of select='etiqueta' /> 
+                    <xsl:value-of select=''etiqueta'' /> 
                 </h3>
             </div>
             
@@ -198,7 +114,7 @@
                     </thead>
                     <tbody>
                         <xsl:for-each select="opciones/opcion">
-                            <xsl:param name="check" select="'check'"/>
+                            <xsl:param name="check" select="''check''"/>
                             <tr>
                                 <td>
                                     <xsl:value-of select="etiqueta" />
@@ -220,7 +136,7 @@
     <xsl:template name="resultado-opcion">
         <xsl:param name="check" />
         <xsl:choose>
-            <xsl:when test="$check = 'true'">
+            <xsl:when test="$check = ''true''">
                 Sí
             </xsl:when>
             <xsl:otherwise>
@@ -230,12 +146,12 @@
     </xsl:template>
     
     <!-- Campo de tipos de tabla -->
-    <xsl:template match="campo[tipo = 'subbodega']">
+    <xsl:template match="campo[tipo = ''subbodega'']">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-check"></i> 
-                    <xsl:value-of select='etiqueta' /> 
+                    <xsl:value-of select=''etiqueta'' /> 
                 </h3>
             </div>
             <div class="widget-content">
@@ -249,9 +165,9 @@
                     <tbody>
                         <!-- Campos diferentes de tablas -->
                         <xsl:for-each select="valor/producto">
-                            <xsl:param name="id" select="'id'"/>
-                            <xsl:param name="nombre" select="'nombre'"/>
-                            <xsl:param name="cantidad" select="'cantidad'"/>
+                            <xsl:param name="id" select="''id''"/>
+                            <xsl:param name="nombre" select="''nombre''"/>
+                            <xsl:param name="cantidad" select="''cantidad''"/>
                             <tr>
                                 <td>
                                    <a target="_blank" href="/SIGIPRO/Bodegas/CatalogoInterno?accion=ver&amp;id_producto={id}"><xsl:value-of select="nombre" /></a>
@@ -267,13 +183,177 @@
             </div>
         </div>
     </xsl:template>
+    
+    <xsl:template match="campo[tipo = ''cc'']">
+        <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Referencia a Control de Calidad''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
+                                </td>
+                            </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </xsl:template>
+    
+<xsl:template match="campo[tipo = ''lote'']">
+    <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Referencia a Lotes de Producción''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={valor}"> Ver Lote de Producción </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+</xsl:template>
+    <xsl:template match="campo[tipo = ''imagen'']">
+    <div class="widget widget-table col-sm-6">
+                <div class="widget-header">
+                    <h3>
+                        <i class="fa fa-table"></i> 
+                        <xsl:value-of select="''Imágenes''" /> 
+                    </h3>
+                </div>
+                <div class="widget-content">
+                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                        <thead>
+                            <tr>
+                                <th>Nombre de Campo</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:param name="valor" select="''valor''"/>
+                            <tr>
+                                <td>
+                                    <xsl:value-of select="etiqueta" />
+                                </td>
+                                <td>
+                                    <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=imagen&amp;path={valor}&amp;nombre={etiqueta}"> Ver Imagen </a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </xsl:template>
 
-    <xsl:template match="campo[tipo = 'aa']">
+    <xsl:template match="campo[tipo = ''usuario'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/usuario">
+                            <xsl:param name="id" select="''id''"/>
+                            <xsl:param name="nombre" select="''nombre''"/>
+                            <tr>
+                                <td>
+                                   <a target="_blank" href="/SIGIPRO/Seguridad/Usuarios/Ver?id={id}"><xsl:value-of select="nombre" /></a>
+                                </td>
+                            </tr>
+
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="campo[tipo = ''sangria'']">
+        <div class="widget widget-table col-sm-6">
+            <div class="widget-header">
+                <h3>
+                    <i class="fa fa-check"></i> 
+                    <xsl:value-of select=''etiqueta'' /> 
+                </h3>
+            </div>
+            <div class="widget-content">
+                <table class="table table-sorting table-striped table-hover datatable tablaSigipro">
+                    <thead>
+                        <tr>
+                            <th>Sangría</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Campos diferentes de tablas -->
+                        <xsl:for-each select="valor/sangria">
+                            <xsl:param name="id" select="''id''"/>
+                            <tr>
+                                <td>
+                                    <a target="_blank" href="//SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={id}">
+                                        Ver Sangría (id: <xsl:value-of select="id" />)
+                                    </a>
+                                </td>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="campo[tipo = ''aa'']">
         <div class="widget widget-table col-sm-6">
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-table"></i> 
-                    <xsl:value-of select="'Referencia a Actividades de Apoyo'" /> 
+                    <xsl:value-of select="''Referencia a Actividades de Apoyo''" /> 
                 </h3>
             </div>
             <div class="widget-content">
@@ -286,7 +366,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <xsl:param name="valor" select="'valor'"/>
+                        <xsl:param name="valor" select="''valor''"/>
                         <!-- Campos diferentes de tablas -->
                         <td>
                             <xsl:value-of select="etiqueta" />
@@ -302,60 +382,5 @@
             </div>
         </div>
     </xsl:template>
-  
-    <xsl:template match="campo[(tipo = 'usuario')]">
-        
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <xsl:value-of select="nombre-seccion" />
-            </td>
-            <td>
-                <xsl:value-of select="valor" />
-            </td>
-        </tr>
-        
-    </xsl:template>
     
-    <xsl:template match="campo[(tipo = 'cc')]">
-        <xsl:param name="valor" select="'valor'"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&amp;id_solicitud={valor}"> Ver Solicitud </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = 'lote')]">
-        <xsl:param name="valor" select="'valor'"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Produccion/Lote?accion=ver&amp;id_lote={valor}"> Ver Lote de Producción </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
-    
-    <xsl:template match="campo[(tipo = 'sangria')]">
-        <xsl:param name="cantidad" select="'cantidad'"/>
-        <xsl:param name="valor" select="'valor'"/>
-        <tr>
-            <td>
-                <xsl:value-of select="etiqueta" />
-            </td>
-            <td>
-                <a target="_blank" href="/SIGIPRO/Caballeriza/Sangria?accion=ver&amp;id_sangria={valor}"> Ver Sangría </a>
-            </td>
-        </tr>
-        
-    </xsl:template>
 </xsl:stylesheet>

@@ -25,7 +25,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" maxlength="45" placeholder="Nombre del Paso de Protocolo" class="form-control" name="nombre" value="${paso.getNombre()}"
+                        <input type="text" maxlength="200" placeholder="Nombre del Paso de Protocolo" class="form-control" name="nombre" value="${paso.getNombre()}"
                                required
                                oninvalid="setCustomValidity('Este campo es requerido')"
                                oninput="setCustomValidity('')" > 
@@ -71,6 +71,9 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -80,6 +83,9 @@
                                                                     <option value="text" selected>Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -89,6 +95,9 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea" selected>Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -98,6 +107,45 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha" selected>Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('hora')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="hora" selected>Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('blanco')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco" selected>Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
+                                                                    <option value="cc">Referencia a Control de Calidad</option>
+                                                                    <option value="sangria">Referencia a Sangría</option>
+                                                                    <option value="lote">Referencia a Lote de Producción</option>
+                                                                </c:if>
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('imagen')}">
+                                                                    <option value="number">Número</option>
+                                                                    <option value="text">Campo de Texto</option>
+                                                                    <option value="textarea">Area de Texto</option>
+                                                                    <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen" selected>Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -107,6 +155,9 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc" selected>Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
@@ -116,19 +167,25 @@
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria" selected>Referencia a Sangría</option>
                                                                     <option value="lote">Referencia a Lote de Producción</option>
                                                                 </c:if>
-                                                                    <c:if test="${diccionario.get(i).get('tipo').equals('lote')}">
+                                                                <c:if test="${diccionario.get(i).get('tipo').equals('lote')}">
                                                                     <option value="number">Número</option>
                                                                     <option value="text">Campo de Texto</option>
                                                                     <option value="textarea">Area de Texto</option>
                                                                     <option value="fecha">Fecha</option>
+                                                                    <option value="hora">Hora</option>
+                                                                    <option value="blanco">Espacio en blanco</option>
+                                                                    <option value="imagen">Imagen</option>
                                                                     <option value="cc">Referencia a Control de Calidad</option>
                                                                     <option value="sangria">Referencia a Sangría</option>
                                                                     <option value="lote" selected>Referencia a Lote de Producción</option>
-                                                                    </c:if>
+                                                                </c:if>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -137,7 +194,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
-                                                            <input type="text" maxlength="45" placeholder="Nombre" class="form-control" name="c_nombre_${i}" value="${diccionario.get(i).get('etiqueta')}"
+                                                            <input type="text" maxlength="200" placeholder="Nombre" class="form-control" name="c_nombre_${i}" value="${diccionario.get(i).get('etiqueta')}"
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" > 
@@ -163,7 +220,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
-                                                            <input type="text" maxlength="45" placeholder="Nombre" class="form-control" name="s_snombre_${i}" value="${diccionario.get(i).get('nombre')}"
+                                                            <input type="text" maxlength="200" placeholder="Nombre" class="form-control" name="s_snombre_${i}" value="${diccionario.get(i).get('nombre')}"
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" > 
@@ -174,14 +231,14 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group opciones_${i}">
-                                                            <input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
+                                                            <input type="text" maxlength="200" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" >
                                                             <c:forEach var="id" begin="2" end="${diccionario.get(i).get('cantidad')}">
                                                                 <c:set var="idstring">${id}</c:set>
                                                                 <div class='col-md-8 o_opcion${id}_${i}_${id}'> 
-                                                                    <br><input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion${id}_${i}_${id}" value="${diccionario.get(i).get('opcion'.concat(idstring))}"
+                                                                    <br><input type="text" maxlength="200" placeholder="Nombre de la Opción" class="form-control" name="o_opcion${id}_${i}_${id}" value="${diccionario.get(i).get('opcion'.concat(idstring))}"
                                                                                required
                                                                                oninvalid="setCustomValidity('Este campo es requerido')"
                                                                                oninput="setCustomValidity('')" ></div> 
@@ -240,7 +297,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
-                                                            <input type="text" maxlength="45" placeholder="Nombre del Campo" class="form-control" name="a_nombre_${i}" value="${diccionario.get(i).get('nombre')}" 
+                                                            <input type="text" maxlength="200" placeholder="Nombre del Campo" class="form-control" name="a_nombre_${i}" value="${diccionario.get(i).get('nombre')}" 
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" > 
@@ -306,7 +363,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
-                                                            <input type="text" maxlength="45" placeholder="Nombre del Campo" class="form-control" name="u_nombre_${i}" value="${diccionario.get(i).get("nombre")}"
+                                                            <input type="text" maxlength="200" placeholder="Nombre del Campo" class="form-control" name="u_nombre_${i}" value="${diccionario.get(i).get("nombre")}"
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" > 
@@ -356,7 +413,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
-                                                            <input type="text" maxlength="45" placeholder="Nombre del Campo" class="form-control" name="aa_nombre_${i}" value="${diccionario.get(i).get("nombre")}"
+                                                            <input type="text" maxlength="200" placeholder="Nombre del Campo" class="form-control" name="aa_nombre_${i}" value="${diccionario.get(i).get("nombre")}"
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" > 

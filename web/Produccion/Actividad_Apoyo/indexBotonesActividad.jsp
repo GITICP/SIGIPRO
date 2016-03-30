@@ -25,7 +25,7 @@
                         <li>Producción</li>
                         <li><a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Categorías de Actividad de Apoyo</a></li>
                         <li class="active"> 
-                            ${categoria.getNombre()}
+                            Actividades de Apoyo de ${categoria.getNombre()}
                         </li>
                     </ul>
                 </div>

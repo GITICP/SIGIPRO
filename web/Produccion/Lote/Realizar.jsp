@@ -22,8 +22,10 @@
                         <li> 
                             <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
                         </li>
-                        <li> Realizar Paso de Protocolo de Producción </li>
-                        <li class="active"> ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
+                        <li>
+                            <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">Lote ${respuesta.getLote().getNombre()}</a>
+                        </li>
+                        <li class="active">Realizar ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
 
                     </ul>
                 </div>
@@ -35,7 +37,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Realizar Paso ${lote.getPosicion_actual()} - ${lote.getPaso_actual().getNombre()} de Protocolo de Producción ${respuesta.getLote().getProtocolo().getNombre()} </h3>
+                            <h3><i class="fa fa-gears"></i> Realizar Paso ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} de Protocolo de Producción ${respuesta.getLote().getProtocolo().getNombre()} </h3>
                         </div>
                         ${mensaje}
 

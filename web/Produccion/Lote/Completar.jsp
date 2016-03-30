@@ -1,8 +1,4 @@
-<%-- 
-    Document   : Agregar
-    Created on : Jun 29, 2015, 4:46:37 PM
-    Author     : ld.conejo
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -25,7 +21,7 @@
                         <li>
                             <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">Lote ${respuesta.getLote().getNombre()}</a>
                         </li>
-                        <li class="active"> Repetir ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
+                        <li class="active"> Completar ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </li>
 
                     </ul>
                 </div>
@@ -37,14 +33,14 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Repetir Paso ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} </h3>
+                            <h3><i class="fa fa-gears"></i> Completar Paso ${respuesta.getPaso().getPosicion()} - ${respuesta.getPaso().getNombre()} de Protocolo de Producción ${respuesta.getLote().getProtocolo().getNombre()} </h3>
                         </div>
                         ${mensaje}
 
                         <div class="widget-content">
 
                             <form method="post" class="form-horizontal" action="Lote" autocomplete="off" enctype='multipart/form-data'>
-                                <input type="hidden" value="repetir" name="accion" />
+                                <input type="hidden" value="completar" name="accion" />
                                 <input type="hidden" value="${respuesta.getId_respuesta()}" name="id_respuesta" />
 
                                 <div class="row">
@@ -60,7 +56,7 @@
                                                 <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                                             </c:when>
                                             <c:otherwise>
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Repetir Paso de Protocolo</button>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Completar Paso de Protocolo</button>
                                             </c:otherwise>
                                         </c:choose>    
                                     </div>

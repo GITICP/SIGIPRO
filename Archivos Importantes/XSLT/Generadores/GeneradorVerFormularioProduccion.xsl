@@ -11,7 +11,7 @@
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-table"></i> 
-                    <xsl:value-of select="'Campos'" /> 
+                    <xsl:value-of select="''Campos''" /> 
                 </h3>
             </div>
             <div class="widget-content">
@@ -24,21 +24,21 @@
                     </thead>
                     <tbody>
                         <!-- Campos diferentes de tablas -->
-                        <xsl:apply-templates select="campo[not(tipo = 'seleccion') and not(tipo = 'aa') and not(tipo = 'usuario') and not(tipo = 'subbodega')]"/>
+                        <xsl:apply-templates select="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'')]"/>
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- Campos de selecciones -->
-        <xsl:apply-templates select="campo[tipo = 'seleccion']"/>
+        <xsl:apply-templates select="campo[tipo = ''seleccion'']"/>
         
-        <xsl:apply-templates select="campo[tipo = 'aa']"/>
+        <xsl:apply-templates select="campo[tipo = ''aa'']"/>
         
         <div class="widget widget-table">
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-table"></i> 
-                    <xsl:value-of select="'Grupos de Usuarios'" /> 
+                    <xsl:value-of select="''Grupos de Usuarios''" /> 
                 </h3>
             </div>
             <div class="widget-content">
@@ -51,7 +51,7 @@
                     </thead>
                     <tbody>
                         <!-- Campos diferentes de tablas -->
-                        <xsl:apply-templates select="campo[(tipo = 'usuario')]"/>
+                        <xsl:apply-templates select="campo[(tipo = ''usuario'')]"/>
                     </tbody>
                 </table>
             </div>
@@ -61,7 +61,7 @@
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-table"></i> 
-                    <xsl:value-of select="'Artículos de Sub Bodegas'" /> 
+                    <xsl:value-of select="''Artículos de Sub Bodegas''" /> 
                 </h3>
             </div>
             <div class="widget-content">
@@ -75,7 +75,7 @@
                     </thead>
                     <tbody>
                         <!-- Campos diferentes de tablas -->
-                        <xsl:apply-templates select="campo[(tipo = 'subbodega')]"/>
+                        <xsl:apply-templates select="campo[(tipo = ''subbodega'')]"/>
                     </tbody>
                 </table>
             </div>
@@ -89,7 +89,7 @@
     -->
         
     <!-- Campo de tipos diferentes de tabla -->
-    <xsl:template match="campo[not(tipo = 'seleccion') and not(tipo = 'aa') and not(tipo = 'usuario') and not(tipo = 'subbodega')]">
+    <xsl:template match="campo[not(tipo = ''seleccion'') and not(tipo = ''aa'') and not(tipo = ''usuario'') and not(tipo = ''subbodega'')]">
         
         <tr>
             <td>
@@ -108,38 +108,47 @@
         <xsl:param name="tipo" />
         
         <xsl:choose>
-            <xsl:when test="$tipo = 'number'">
-                <xsl:value-of select="'Número'" />
+            <xsl:when test="$tipo = ''number''">
+                <xsl:value-of select="''Número''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'text'">
-                <xsl:value-of select="'Texto'" />
+            <xsl:when test="$tipo = ''text''">
+                <xsl:value-of select="''Texto''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'textarea'">
-                <xsl:value-of select="'Área de Texto'" />
+            <xsl:when test="$tipo = ''textarea''">
+                <xsl:value-of select="''Área de Texto''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'fecha'">
-                <xsl:value-of select="'Fecha'" />
+            <xsl:when test="$tipo = ''fecha''">
+                <xsl:value-of select="''Fecha''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'cc'">
-                <xsl:value-of select="'Referencia a Control de Calidad'" />
+            <xsl:when test="$tipo = ''cc''">
+                <xsl:value-of select="''Referencia a Control de Calidad''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'sangria'">
-                <xsl:value-of select="'Referencia a Sangría'" />
+            <xsl:when test="$tipo = ''sangria''">
+                <xsl:value-of select="''Referencia a Sangría''" />
             </xsl:when>
-            <xsl:when test="$tipo = 'lote'">
-                <xsl:value-of select="'Referencia a Lote de Producción'" />
+            <xsl:when test="$tipo = ''lote''">
+                <xsl:value-of select="''Referencia a Lote de Producción''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''hora''">
+                <xsl:value-of select="''Hora''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''imagen''">
+                <xsl:value-of select="''Imagen''" />
+            </xsl:when>
+            <xsl:when test="$tipo = ''blanco''">
+                <xsl:value-of select="''Espacio en Blanco''" />
             </xsl:when>
         </xsl:choose>
     </xsl:template>
     
     
     <!-- Campo de tipos de tabla -->
-    <xsl:template match="campo[tipo = 'seleccion']">
+    <xsl:template match="campo[tipo = ''seleccion'']">
         <div class="widget widget-table">
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-check"></i> 
-                    <xsl:value-of select='etiqueta' /> 
+                    <xsl:value-of select=''etiqueta'' /> 
                 </h3>
             </div>
             
@@ -165,12 +174,12 @@
         </div>
     </xsl:template>
     
-    <xsl:template match="campo[tipo = 'aa']">
+    <xsl:template match="campo[tipo = ''aa'']">
         <div class="widget widget-table">
             <div class="widget-header">
                 <h3>
                     <i class="fa fa-table"></i> 
-                    <xsl:value-of select="'Referencia a Actividad de Apoyo'" /> 
+                    <xsl:value-of select="''Referencia a Actividad de Apoyo''" /> 
                 </h3>
             </div>
             <div class="widget-content">
@@ -200,7 +209,7 @@
     <xsl:template match="opciones">
         
         <xsl:for-each select="opciones/opcion">
-            <xsl:param name="nombre" select="'etiqueta'"/>
+            <xsl:param name="nombre" select="''etiqueta''"/>
             <tr>
                 <td>
                     <xsl:value-of select="$nombre" />
@@ -210,8 +219,8 @@
         </xsl:for-each>
     </xsl:template>
     
-    <xsl:template match="campo[(tipo = 'subbodega')]">
-        <xsl:param name="cantidad" select="'cantidad'"/>
+    <xsl:template match="campo[(tipo = ''subbodega'')]">
+        <xsl:param name="cantidad" select="''cantidad''"/>
         <tr>
             <td>
                 <xsl:value-of select="etiqueta" />
@@ -221,11 +230,11 @@
             </td>
             <td>
                 <xsl:choose>
-                    <xsl:when test="cantidad = 'true'">
-                        <xsl:value-of select="'Si'" />
+                    <xsl:when test="cantidad = ''true''">
+                        <xsl:value-of select="''Si''" />
                     </xsl:when>
-                    <xsl:when test="cantidad = 'false'">
-                        <xsl:value-of select="'No'" />
+                    <xsl:when test="cantidad = ''false''">
+                        <xsl:value-of select="''No''" />
                     </xsl:when>
                 </xsl:choose> 
             </td>
@@ -233,7 +242,7 @@
         
     </xsl:template>
     
-    <xsl:template match="campo[(tipo = 'usuario')]">
+    <xsl:template match="campo[(tipo = ''usuario'')]">
         
         <tr>
             <td>
