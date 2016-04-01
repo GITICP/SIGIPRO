@@ -5,7 +5,7 @@
 $("#seleccion-objeto").change(function () {
     if ($(this).find("option:selected").val() === "sangria") {
         $.ajax({
-            url: "/SIGIPRO/Caballeriza/Sangria",
+            url: "/SIGIPRO/Caballeriza/Sangria?tipo=solicitud_cc",
             type: "GET",
             data: {"accion": "sangriasajax"},
             dataType: "json",
