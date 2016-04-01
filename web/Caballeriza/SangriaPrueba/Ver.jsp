@@ -24,7 +24,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/SangriaPrueba?">Sangría de Prueba</a>
                         </li>
-                        <li class="active"> Sangría de Prueba ${sangriap.getId_sangria_prueba()} </li>
+                        <li class="active"> Sangría de Prueba ${sangriap.getId_sangria_prueba_especial()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,13 +34,13 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> Sangría de Prueba ${sangriap.getId_sangria_prueba()} </h3>
+                            <h3><i class="fa fa-book"></i> Sangría de Prueba ${sangriap.getId_sangria_prueba_especial()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>Fecha:</strong></td><td>${sangriap.getFechaAsString()}</td></tr>
-                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getUsuario().getId_usuario()} </td></tr>
+                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getUsuario().getNombre_completo()} </td></tr>
                                 <tr><td> <strong>Número de Informe de CC:</strong></td>
                                     <td>
                                         <c:choose>

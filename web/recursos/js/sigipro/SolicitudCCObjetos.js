@@ -74,7 +74,7 @@ function generar_select_sangria_prueba(datos) {
         var opcion_string = "<option value=\""+ elemento.id_sangria_prueba + "\">";
         var opcion = $(opcion_string);
         opcion.data("caballos", JSON.stringify(elemento.caballos));
-        opcion.text(elemento.id_sangria_prueba);
+        opcion.text(elemento.identificador);
 
         select_sangria_prueba.append(opcion);
     }

@@ -37,6 +37,10 @@ public class SangriaPrueba extends IModelo {
     public void setId_sangria_prueba(int id_sangria_prueba) {
         this.id_sangria_prueba = id_sangria_prueba;
     }
+    
+    public String getId_sangria_prueba_especial() {
+        return helper_fechas.formatearFecha(fecha).replaceAll("/", "-") + "-" + grupo.getNombre() + " (id: " + id_sangria_prueba + ")";
+    }
 
     public Usuario getUsuario() {
         return usuario;

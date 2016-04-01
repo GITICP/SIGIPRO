@@ -72,7 +72,7 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
     public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria_prueba");
         request.setAttribute("id_sangria_prueba", sangria_prueba.getId_sangria_prueba());
-        request.setAttribute("sangria_prueba", sangria_prueba);
+        request.setAttribute("sangria_prueba", sangria_prueba_dao.obtenerSangriaPrueba(sangria_prueba.getId_sangria_prueba()));
         request.setAttribute("caballos_sangria", sangria_prueba_dao.obtenerCaballosSangriaP(sangria_prueba.getId_sangria_prueba()));
     }
 

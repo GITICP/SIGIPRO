@@ -5,6 +5,8 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
+import com.icp.sigipro.utilidades.HelperFechas;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +18,13 @@ public class SangriaPruebaAJAX {
     
     private int id_sangria_prueba;
     private List<CaballoAJAX> caballos;
+    private String nombre_grupo;
+    private Date fecha;
+    private String identificador;
     
     public SangriaPruebaAJAX(SangriaPrueba sp) {
         id_sangria_prueba = sp.getId_sangria_prueba();
-        caballos = new ArrayList<CaballoAJAX>();
+        caballos = new ArrayList<>();
         for (SangriaPruebaCaballo spc : sp.getLista_sangrias_prueba_caballo()) {
            CaballoAJAX c_ax = new CaballoAJAX(spc.getCaballo());
         }
@@ -47,10 +52,32 @@ public class SangriaPruebaAJAX {
     
     public void agregarCaballo(Caballo c) {
         if (caballos == null) {
-            caballos = new ArrayList<CaballoAJAX>();
+            caballos = new ArrayList<>();
         }
         CaballoAJAX c_ax = new CaballoAJAX(c);
         caballos.add(c_ax);
+    }
+
+    public String getNombre_grupo() {
+        return nombre_grupo;
+    }
+
+    public void setNombre_grupo(String nombre_grupo) {
+        this.nombre_grupo = nombre_grupo;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+    
+    public String getId_sangria_especial() {
+        HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+        identificador = helper_fechas.formatearFecha(fecha).replaceAll("/", "-") + "-" + nombre_grupo + " (id: " + id_sangria_prueba + ")";
+        return identificador;
     }
     
     public class CaballoAJAX {
