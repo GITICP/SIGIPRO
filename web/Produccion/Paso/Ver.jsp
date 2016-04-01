@@ -89,7 +89,7 @@
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${historial.getVersion()!= paso.getVersion()}">
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 650)}">
+                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 651)}">
                                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Paso?accion=activar&id_historial=${historial.getId_historial()}&id_paso=${paso.getId_paso()}">Activar</a>
                                                                     </c:if>
                                                                 </c:when>
