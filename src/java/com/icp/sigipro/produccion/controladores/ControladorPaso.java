@@ -156,7 +156,7 @@ public class ControladorPaso extends SIGIPROServlet {
     }
 
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(650, request);
+        validarPermiso(651, request);
         int id_historial = Integer.parseInt(request.getParameter("id_historial"));
         int id_paso = Integer.parseInt(request.getParameter("id_paso"));
         int version = dao.obtenerVersion(id_historial);

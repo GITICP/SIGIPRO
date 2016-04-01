@@ -311,11 +311,6 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (674, '[p
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (675, '[produccion]AprobarDirectorActividad', 'Permite al director aprobar o rechazar una actividad de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (676, '[produccion]ActivarRespuestaActividad', 'Permite activar versiones anteriores de una respuesta de actividad de apoyo.');
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (677, '[produccion]RealizarActividadApoyo', 'Permite empezar a realizar una actividad de apoyo.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (678, '[produccion]RevisarActividadApoyo', 'Permite revisar una actividad de apoyo, por parte del regente.');
-INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (679, '[produccion]AprobarActividadApoyo', 'Permite aprobar una actividad de apoyo, por parte del encargado.');
-
-
-
 
 
 --Entradas del Menu de produccion
@@ -362,12 +357,14 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 
 
 --Permisos del menu de la parte de Protocolo
+--Formula Maestra
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (635, 621);
 
-
+--Paso
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (650, 611);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (651, 611);
 
+--Protocolo
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (640, 612);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (641, 612);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (642, 612);
@@ -375,11 +372,13 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (644, 612);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (645, 612);
 
+--Lotes
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (660, 613);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (661, 613);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (662, 613);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (663, 613);
 
+--Actividad de Apoyo
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (630, 632);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (670, 632);
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (671, 632);

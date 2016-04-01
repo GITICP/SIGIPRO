@@ -123,7 +123,6 @@ public class ControladorLote extends SIGIPROServlet {
     }
 
     protected void getImagen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         validarPermisosMultiple(permisos, request);
 
         String path = request.getParameter("path");

@@ -183,7 +183,7 @@
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${historial.getVersion()!= protocolo.getVersion()}">
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 640)}">
+                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 645)}">
                                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Protocolo?accion=activar&id_historial=${historial.getId_historial()}&id_protocolo=${protocolo.getId_protocolo()}">Activar</a>
                                                                     </c:if>
                                                                 </c:when>
