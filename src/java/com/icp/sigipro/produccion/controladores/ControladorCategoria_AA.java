@@ -41,6 +41,8 @@ public class ControladorCategoria_AA extends SIGIPROServlet {
             add("agregar");
             add("eliminar");
             add("editar");
+            add("indexbotones");
+            
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>()
@@ -70,6 +72,14 @@ public class ControladorCategoria_AA extends SIGIPROServlet {
         String redireccion = "Categoria_AA/index.jsp";
         List<Categoria_AA> categorias_aa = dao.obtenerCategorias_AA();
         request.setAttribute("listaCategorias", categorias_aa);
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getIndexbotones(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/indexBotonesCategoria.jsp";
+        List<Categoria_AA> categorias = dao.obtenerCategorias_AA();
+        request.setAttribute("listaCategorias", categorias);
         redireccionar(request, response, redireccion);
     }
 
@@ -141,7 +151,7 @@ public class ControladorCategoria_AA extends SIGIPROServlet {
             //Funcion que genera la bitacora
             bitacora.setBitacora(c_aa.parseJSON(),Bitacora.ACCION_AGREGAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATEGORIA_AA,request.getRemoteAddr());
             //*----------------------------*
-            this.getIndex(request, response);
+            this.getIndexbotones(request, response);
         }else{
             request.setAttribute("mensaje", helper.mensajeDeError("Categoría de Actividad de Apoyo no pudo ser agregada. Inténtelo de nuevo."));        
             this.getAgregar(request, response);
@@ -162,7 +172,7 @@ public class ControladorCategoria_AA extends SIGIPROServlet {
             bitacora.setBitacora(c_aa.parseJSON(),Bitacora.ACCION_EDITAR,request.getSession().getAttribute("usuario"),Bitacora.TABLA_CATEGORIA_AA,request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Categoría de Actividad de Apoyo editada correctamente"));
-            this.getIndex(request, response);
+            this.getIndexbotones(request, response);
         }
         else{
             request.setAttribute("mensaje", helper.mensajeDeError("Categoría de Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));

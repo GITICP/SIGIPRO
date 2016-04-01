@@ -21,7 +21,17 @@ public class Inventario_PT {
   private Protocolo protocolo;
   private int cantidad_disponible;
   private Catalogo_PT producto;
+  private int reservado;
 
+  public int getReservado() {
+    return reservado;
+  }
+
+  public void setReservado(int reservado) {
+    this.reservado = reservado;
+  }
+
+  
    //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
         Class _class = this.getClass();

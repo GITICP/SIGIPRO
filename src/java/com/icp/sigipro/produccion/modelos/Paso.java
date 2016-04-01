@@ -27,6 +27,8 @@ public class Paso {
     private int posicion;
     private int contador;
     private List<Paso> historial;
+    
+    
 
     public int getId_pxp() {
         return id_pxp;

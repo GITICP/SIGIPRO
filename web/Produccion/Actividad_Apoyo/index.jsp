@@ -19,8 +19,8 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
+                        <li class="active"> 
+                            Actividades de Apoyo
                         </li>
                     </ul>
                 </div>
@@ -124,7 +124,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/ActividadApoyo.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/Produccion/ActividadApoyo/ActividadApoyo.js"></script>    
     </jsp:attribute>
 
 </t:plantilla_general>

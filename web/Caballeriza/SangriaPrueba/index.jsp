@@ -52,10 +52,8 @@
                                 <thead> 
                                     <tr>
                                         <th>Identificador</th>
-                                        <th>Muestra</th>
+                                        <th>Fecha</th>
                                         <th>Responsable</th>
-                                        <th>Inóculo</th>
-                                        <th>Fecha De Recepción De La Muestra</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -69,16 +67,8 @@
                                                     </div>
                                                 </a>
                                             </td>
-                                            <td>${sangriap.getMuestra()}</td>
-                                            <td>${sangriap.getResponsable()}</td>
-                                            <td>
-                                                <a href="/SIGIPRO/Caballeriza/Inoculo?accion=ver&id_inoculo=${sangriap.getInoculo().getId_inoculo()}">
-                                                    <div style="height:100%;width:100%">
-                                                        ${sangriap.getInoculo().getId_inoculo()}
-                                                    </div>
-                                                </a>
-                                            </td>                                            
-                                        <td>${sangriap.getFecha_recepcion_muestraAsString()}</td>
+                                            <td>${sangriap.getFechaAsString()}</td>
+                                            <td>${sangriap.getUsuario().getId_usuario()}</td>
                                     </tr>
 
                                 </c:forEach>

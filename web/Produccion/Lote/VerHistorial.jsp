@@ -24,9 +24,12 @@
                             <a href="/SIGIPRO/Produccion/Lote?">Lotes de Producción</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">${respuesta.getLote().getNombre()}</a></li>
-                        <li> <a href="/SIGIPRO/Produccion/Paso?accion=ver&id_paso=${respuesta.getPaso().getId_paso()}">${respuesta.getPaso().getNombre()}</a> </li>
-                        <li class="active"> Historial - Respuesta Version ${respuesta.getVersion()} </li>
+                            <a href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${respuesta.getLote().getId_lote()}">Lote ${respuesta.getLote().getNombre()}</a>
+                        </li>
+                        <li> 
+                            <a href="/SIGIPRO/Produccion/Lote?accion=verrespuesta&id_respuesta=${respuesta.getId_respuesta()}"> Ver Respuesta de ${respuesta.getPaso().getNombre()} </a> 
+                        </li>
+                        <li class="active"> Historial Respuesta - Version ${respuesta.getVersion()} </li>
                     </ul>
                 </div>
             </div>
@@ -43,6 +46,13 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Lote:</strong></td> <td>${respuesta.getLote().getNombre()} </td></tr>
                                 <tr><td> <strong>Paso:</strong></td> <td>${respuesta.getPaso().getNombre()} </td></tr>
+                                <tr><td> <strong>Usuario realizar:</strong></td> <td>${respuesta.getUsuario_realizar().getNombre_completo()} </td></tr>
+                                <c:if test="${respuesta.getUsuario_revisar().getId_usuario()!=0}">
+                                    <tr><td> <strong>Usuario revisar:</strong></td> <td>${respuesta.getUsuario_revisar().getNombre_completo()} </td></tr>
+                                </c:if>
+                                <c:if test="${respuesta.getUsuario_verificar().getId_usuario()!=0}">
+                                    <tr><td> <strong>Usuario verificar:</strong></td> <td>${respuesta.getUsuario_verificar().getNombre_completo()} </td></tr>
+                                </c:if>
                             </table>
                             <br>
                             <div class="col-md-12">

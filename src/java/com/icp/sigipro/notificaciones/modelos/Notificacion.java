@@ -76,6 +76,11 @@ public class Notificacion {
         return resultado;
     }
     
+    public String getDateTimeISO (){
+        String resultado = new SimpleDateFormat("yyyyMMddHHmm").format(this.getTs());
+        return resultado;
+    }
+    
     //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){
         Class _class = this.getClass();

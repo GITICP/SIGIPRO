@@ -138,6 +138,8 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     try {
       List<Inventario_PT> inventario = dao.obtenerInventario_PTs();
       request.setAttribute("inventario", inventario);
+      List<Inventario_PT> inventario_h = dao.obtenerInventario_PTs_H();
+      request.setAttribute("inventario_h", inventario_h);
       List<Despacho> despachos = despacho_dao.obtenerDespachos();
       request.setAttribute("despachos", despachos);
       List<Reservacion> reservaciones = reservacion_dao.obtenerReservaciones();

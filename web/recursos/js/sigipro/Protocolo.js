@@ -17,7 +17,25 @@ $(document).on("click", ".rechazar-Modal", function () {
 
 $(document).on("click", ".lote-Modal", function () {
     var id_protocolo = $(this).data('id');
+    
     $('#class-lote-protocolo #id_protocolo').val(id_protocolo);
+    $.ajax({
+            url: "/SIGIPRO/Produccion/Lote",
+            type: "GET",
+            data: {"accion": "ultimoslotesajax"},
+            dataType: "json",
+            success: function (datos) {
+                var div = $(".ultimos");
+                for (var i = 0; i < datos.length; i++) {
+                    var elemento = datos[i];
+                    var nombre = "<div> <strong> "+elemento.nombre+"</strong></div>";
+                    div.append(nombre);
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
 });
 
 $(function () {

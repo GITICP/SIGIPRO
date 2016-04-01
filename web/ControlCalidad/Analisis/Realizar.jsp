@@ -35,7 +35,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> Realizar Nuevo Análisis ${analisis.getNombre()} </h3>
+                            <h3><i class="fa fa-flask"></i> Realizar Nuevo Análisis ${analisis.getNombre()} para ${(ags.getGrupo().getGrupos_muestras().size() == 1) ? "la muestra" : "las muestras"} ${ags.getListadoIdentificadores(true)}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
@@ -85,7 +85,7 @@
 
                                                 </div>
                                             </c:if>
-                                            <c:if test="${!reactivos.isEmpty()}">
+                                            <c:if test="${!equipos.isEmpty()}">
                                                 <div class="col-md-6">
                                                     <label for="equipos" class="control-label"> *Equipos de Medición Utilizados</label>
                                                     <div class="form-group">

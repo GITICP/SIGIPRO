@@ -11,6 +11,7 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.notificaciones.modelos.Notificacion;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,35 @@ public class NotificacionesDAO extends DAO {
         }
         return resultado;
     }
-    
+    public Notificacion obtenerNotificacion(int id_notificacion) throws SIGIPROException, SQLException
+    {
+        Notificacion resultado = new Notificacion();
+        PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM calendario.notificaciones WHERE id_notificacion = " + id_notificacion); // limit 10");
+            ResultSet rs = consulta.executeQuery();
+        while (rs.next()) {
+                resultado.setTs(rs.getTimestamp("time_stamp"));
+                resultado.setLeida(rs.getBoolean("leida"));
+                resultado.setRedirect(rs.getString("redirect"));
+                resultado.setId(rs.getInt("id_notificacion"));
+                
+                //Los siguientes atributos se obtienen de calendario.tipo_notificaciones
+                int id_tipo_notificacion = rs.getInt("id_tipo_notificacion");
+                PreparedStatement consulta2;
+                consulta2 = getConexion().prepareStatement(" SELECT * FROM calendario.tipo_notificaciones WHERE id_tipo_notificacion = " + id_tipo_notificacion); 
+                ResultSet rs2 = consulta2.executeQuery();
+                rs2.next();
+                resultado.setDescripcion(rs2.getString("descripcion"));
+                resultado.setIcono(rs2.getString("icono"));
+                
+                rs2.close();
+                consulta2.close();
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+            return resultado;
+    }
     public List<Notificacion> obtenerNotificaciones(String nombre_usr) throws SIGIPROException
     {
         List<Notificacion> resultado = new ArrayList<Notificacion>();

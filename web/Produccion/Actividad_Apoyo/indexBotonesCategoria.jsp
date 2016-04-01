@@ -19,8 +19,8 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
+                        <li class="active"> 
+                            Categorías de Actividades de Apoyo
                         </li>
                     </ul>
                 </div>

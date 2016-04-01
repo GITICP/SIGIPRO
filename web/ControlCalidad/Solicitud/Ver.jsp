@@ -212,6 +212,9 @@
                                                             <th>Identificadores de Muestras (Tipo)</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
+                                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
+                                                                <th>Acción</th>
+                                                                </c:if>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -228,6 +231,11 @@
                                                                 <td>
                                                                     ${resultado.getResultado()}
                                                                 </td>
+                                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
+                                                                    <td>
+                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${resultado.getAgs().getAnalisis().getId_analisis()}">Editar</a>
+                                                                    </td>
+                                                                </c:if>
                                                             </tr>
                                                         </c:forEach>
                                                     </tbody>
@@ -281,6 +289,8 @@
                     <option class="opcion-escondida" value="${muestra.getId_muestra()}" data-tipo="${muestra.getTipo_muestra().getId_tipo_muestra()}" hidden>${muestra.getIdentificador()}</option>
                 </c:forEach>                
             </select>
+
+            <button id="btn-agrupar-muestras" class="btn btn-primary btn-md boton-accion" style="margin-top:10px;" disabled="true" type="button">Agrupar Todas</button>
 
             <br/>
 

@@ -131,3 +131,130 @@
     width: 90%;
     height: 10%;
 }
+
+div.square-habilitado {
+    position: relative;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 30%;
+    overflow: hidden;
+    background: #ccff5c;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:black;
+}
+
+div.square-deshabilitado {
+    position: relative;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 30%;
+    overflow: hidden;
+    background: #7d9c38;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:white;
+}
+
+div.square-incompleto {
+    position: relative;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 30%;
+    overflow: hidden;
+    background: #a5ce4a;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:white;
+}
+
+div.square-aprobacion {
+    position: relative;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 30%;
+    overflow: hidden;
+    background: #67812e;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:white;
+}
+
+div.square-ultimo {
+    position: relative;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 30%;
+    overflow: hidden;
+    background: #a5ce4a;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:white;
+}
+
+div.square-completo {
+    position: relative;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 30%;
+    overflow: hidden;
+    background: #a5ce4a;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:white;
+}
+
+div.square-lote {
+    position: relative;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 40%;
+    overflow: hidden;
+    background: #fff;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    vertical-align:bottom;
+    font-size: 16px;
+    font-weight: bold;
+    color:black;
+}
+
