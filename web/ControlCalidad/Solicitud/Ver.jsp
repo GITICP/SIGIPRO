@@ -136,7 +136,8 @@
                                             <!-- Columnas -->
                                             <thead> 
                                                 <tr>
-                                                    <th>Identificadores de Muestras (Tipo)</th>
+                                                    <th>Identificador(es) de Muestra(s)</th>
+                                                    <th>Tipo de Muestra</th>
                                                     <th>Análisis Solicitado</th>
                                                     <th>Acción</th>
                                                 </tr>
@@ -146,8 +147,11 @@
                                                     <tr id='${ags.getId_analisis_grupo_solicitud()}'>
                                                         <td>
                                                             <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                ${muestra.getIdentificador()}<br>
                                                             </c:forEach>
+                                                        </td>
+                                                        <td>
+                                                            ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
                                                         </td>
                                                         <td>
                                                             ${ags.getAnalisis().getNombre()}
@@ -209,7 +213,8 @@
                                                     <!-- Columnas -->
                                                     <thead> 
                                                         <tr>
-                                                            <th>Identificadores de Muestras (Tipo)</th>
+                                                            <th>Identificador(es) de Muestra(s)</th>
+                                                            <th>Tipo de Muestra</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
@@ -222,8 +227,11 @@
                                                             <tr id='${resultado.getId_resultado()}'>
                                                                 <td>
                                                                     <c:forEach items="${resultado.getAgs().getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                        ${muestra.getIdentificador()} (${muestra.getTipo_muestra().getNombre()})<br>
+                                                                        ${muestra.getIdentificador()}<br>
                                                                     </c:forEach>
+                                                                </td>
+                                                                <td>
+                                                                    ${resultado.getAgs().getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
                                                                 </td>
                                                                 <td>
                                                                     ${resultado.getAgs().getAnalisis().getNombre()}
