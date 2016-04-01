@@ -13,7 +13,7 @@
 }*/
 
 function cambiarCotizaciones(){
-            //Quitar todas las opciones del select de intenciones
+        //Quitar todas las opciones del select de cotizaciones
         var i;
         var select_intencion = document.getElementById("id_cotizacion");
         for(i=select_intencion.options.length-1;i>=0;i--)
@@ -51,6 +51,9 @@ $(function(){ /* DOM ready */ //
         //alert("Cliente cambiado. Accion = "+ac+", Contador = "+contadorEditar);
         if(ac === "Editar" && contadorEditar < 1){
             contadorEditar += 1;
+            document.getElementById("id_cliente").readOnly = true;
+            //alert("Cliente cambiado a readOnly, value = "+document.getElementById("id_cliente").value);
+            updateSolicitudesYCotizacionesIncialEnEditar();
         }
         else{
             //Quitar todas las opciones del select de intenciones
@@ -87,6 +90,44 @@ $(function(){ /* DOM ready */ //
         }
     }).change();
 });
+
+function updateSolicitudesYCotizacionesIncialEnEditar(){
+    //Cargar las opciones del input oculto correspondientes al id_cliente de intenciones al normal para que tengan el atributo data-cliente
+    var select_intencion = document.getElementById("id_intencion");
+    var select_intencion_completo = document.getElementById("id_intencion_completo");
+    var e;
+    var opt2 = document.createElement('option');
+    var id_cliente = document.getElementById("id_cliente").value;
+    opt2.value = "";
+    opt2.innerHTML = "";
+    select_intencion.appendChild(opt2);
+    for (e = 0; e < select_intencion_completo.length; e++) {
+        if (select_intencion_completo[e].getAttribute("data-cliente") === id_cliente){
+            var opt = document.createElement('option');
+            opt.value = select_intencion_completo[e].value;
+            opt.setAttribute('data-cliente',select_intencion_completo[e].getAttribute("data-cliente"));
+            opt.innerHTML = select_intencion_completo[e].innerHTML;
+            select_intencion.appendChild(opt);
+        }
+    }
+    //Quitar todas las opciones del select de intenciones que no le pertenezcan al cliente seleccionado
+    var i;
+    for(i=select_intencion.options.length-1;i>=0;i--)
+    {
+        if (select_intencion[i].getAttribute("data-cliente") !== id_cliente){
+            select_intencion.remove(i);
+        }
+    }
+    //Quitar todas las opciones del select de cotizaciones que no le pertenezcan al cliente seleccionado
+    var e;
+    var select_cotizacion = document.getElementById("id_cotizacion");
+    for(e=select_cotizacion.options.length-1;e>=0;e--)
+    {
+        if (select_cotizacion[e].getAttribute("data-cliente") !== id_cliente){
+            select_cotizacion.remove(e);
+        }
+    }
+}
 
 $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el cliente escogido
     $("#id_intencion").change(function () {

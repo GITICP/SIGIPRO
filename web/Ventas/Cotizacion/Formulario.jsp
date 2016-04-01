@@ -14,7 +14,7 @@
       <input hidden="true" name="id_cotizacion" value="${cotizacion.getId_cotizacion()}">
       <input hidden="true" name="accion" id="accion" value="${accion}">
       <input id="listaProductos" hidden="true" name="listaProductos" value="">
-            <label for="id_cliente" class="control-label"> *Cliente</label>
+            <label for="id_cliente" class="control-label"> *Cliente (Este campo no podrá ser editado)</label>
             <!-- Id Cliente -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -108,7 +108,7 @@
                 </div>
             </div>
     </div>                    
-         
+    <div class="col-md-12">     
     <div class="widget widget-table">
                   <div class="widget-header">
                     <h3><i class="fa fa-th-list"></i> Productos de la Solicitud / Intención de Venta</h3>
@@ -142,7 +142,7 @@
                     </table>
                   </div>
                 </div>
-                                
+    </div>                            
         </div>
   <div class="form-group">
     <div class="modal-footer">

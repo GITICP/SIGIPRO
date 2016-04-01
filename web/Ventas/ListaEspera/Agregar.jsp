@@ -59,7 +59,7 @@
       </div>
 
               
-        <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+        
   </jsp:attribute>
 
 </t:plantilla_general>

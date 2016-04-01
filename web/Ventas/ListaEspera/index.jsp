@@ -38,7 +38,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                <table id="tabla_lista_espera">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -77,6 +77,10 @@
       </div>
       <!-- /main -->
       </div>
+    
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/ListaEspera.js"></script>
+            
     </jsp:attribute>
 
   </t:plantilla_general>

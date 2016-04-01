@@ -11,12 +11,16 @@ $(function(){ /* DOM ready */ //
 
 var contadorEditar = 0; //Cuando se edita la cotización, se ejecuta la función siguiente 3 veces, lo cual afecta la selección de la solicitud/intención de venta
 $(function(){ /* DOM ready */ //
+    
     $("#id_cliente").change(function () {
         var ac = document.getElementById("accion").value;
         //alert("Cliente cambiado. Accion = "+ac+", Contador = "+contadorEditar);
         
         if(ac === "Editar" && contadorEditar < 3){
             contadorEditar += 1;
+            document.getElementById("id_cliente").readOnly = true;
+            //alert("Cliente cambiado a readOnly, value = "+document.getElementById("id_cliente").value);
+            updateSolicitudesIncialEnEditar();
         }
         else{
             //Quitar todas las opciones del select de intenciones
@@ -53,6 +57,19 @@ $(function(){ /* DOM ready */ //
     }
     }).change();
 });
+
+function updateSolicitudesIncialEnEditar(){
+    //Quitar todas las opciones del select de intenciones que no le pertenezcan al cliente seleccionado
+    var i;
+    var select_intencion = document.getElementById("id_intencion");
+    var id_cliente = document.getElementById("id_cliente").value;
+    for(i=select_intencion.options.length-1;i>=0;i--)
+    {
+        if (select_intencion[i].getAttribute("data-cliente") !== id_cliente){
+            select_intencion.remove(i);
+        }
+    }
+}
 
 $(function(){ /* DOM ready */ 
     $("#id_intencion").change(function () {
