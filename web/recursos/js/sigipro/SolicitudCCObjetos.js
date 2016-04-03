@@ -3,6 +3,9 @@
  */
 
 $("#seleccion-objeto").change(function () {
+    $("#fila-select-sangria").hide();
+    $("#fila-select-dia").hide();
+    $("#fila-select-sangria-prueba").hide();
     if ($(this).find("option:selected").val() === "sangria") {
         $.ajax({
             url: "/SIGIPRO/Caballeriza/Sangria?tipo=solicitud_cc",
@@ -25,8 +28,6 @@ $("#seleccion-objeto").change(function () {
         });
     } else {
         // Meter el comportamiento de otros objetos como un else if dejar este else de último
-        $("#fila-select-sangria").hide();
-        $("#fila-select-dia").hide();
         $("#boton-muestra").prop("disabled", false);
     }
 });
@@ -37,7 +38,8 @@ function generar_select_sangria(datos) {
 
     var select_sangria = $("#seleccion-sangria");
     select_sangria.select2();
-
+    
+    select_sangria.unbind("change");
     select_sangria.change(evento_seleccionar_sangria);
 
     for (var i = 0; i < datos.length; i++) {
@@ -67,6 +69,7 @@ function generar_select_sangria_prueba(datos) {
     var select_sangria_prueba = $("#seleccion-sangria-prueba");
     select_sangria_prueba.select2();
     
+    select_sangria_prueba.unbind("change");
     select_sangria_prueba.change(evento_seleccionar_sangria_prueba);
 
     for (var i = 0; i < datos.length; i++) {
@@ -101,6 +104,7 @@ function evento_seleccionar_sangria() {
     var select_dia = $("#seleccion-dia");
     select_dia.find("option").remove();
     select_dia.append($("<option>"));
+    select_dia.unbind("change");
     select_dia.change(evento_seleccionar_dia);
 
     var opcion_seleccionada = $(this).find("option:selected");
