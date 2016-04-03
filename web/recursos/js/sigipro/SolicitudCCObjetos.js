@@ -166,7 +166,8 @@ function agregar_muestra_caballos(datos) {
         var elemento = datos[i];
         lista_caballos.push(elemento.numero);
     }
-
+    
+    $(".muestras").children().remove();
     agregarMuestra();
     
     var parametros = jQuery.extend(true, {}, PARAMETROS_SELECT_IDENTIFICADORES);
@@ -180,7 +181,6 @@ function agregar_muestra_caballos(datos) {
     elemento_select_identificadores.select2("destroy");
     elemento_select_identificadores.select2(parametros);
     elemento_select_identificadores.select2("val", lista_caballos);
-    //elemento_select_identificadores.prop("readonly", true);
     $("#boton-muestra").prop("disabled", true);
 }
 
