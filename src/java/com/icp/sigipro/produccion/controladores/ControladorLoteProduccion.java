@@ -66,8 +66,8 @@ import org.xml.sax.SAXException;
  *
  * @author ld.conejo
  */
-@WebServlet(name = "ControladorLote", urlPatterns = {"/Produccion/Lote"})
-public class ControladorLote extends SIGIPROServlet {
+@WebServlet(name = "ControladorLoteProduccion", urlPatterns = {"/Produccion/Lote"})
+public class ControladorLoteProduccion extends SIGIPROServlet {
 
     //CRUD, Realizar, Aprobar, Activar Respuesta, Revisar, Verificar, Ver Estado, Aprobar Distribucion, Registro Fecha vencimiento
     private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667, 668};
@@ -80,7 +80,7 @@ public class ControladorLote extends SIGIPROServlet {
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
 
-    protected final Class clase = ControladorLote.class;
+    protected final Class clase = ControladorLoteProduccion.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
