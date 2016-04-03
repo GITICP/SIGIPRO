@@ -9,13 +9,17 @@
 <%@ attribute name="derecha" type="java.lang.Boolean" required="true" description="Define si los select van del lado izquierdo o derecho"%>
 
 <div id="fila-select-sangria" class="row">
-    
+
     <div class="col-md-6">
         <label for="objeto-relacionado" class="control-label"> Objecto asociado</label>
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <c:forEach items="${sangrias}" var="sangria">
+                    <p><strong>Sangría</strong> ${sangria.getId_sangria_especial()}, día ${dia}</p>
+                    <input type="hidden" name="objeto-relacionado" value="sangria">
+                    <input type="hidden" name="dia" value="${dia}">
+                    <input type="hidden" name="sangria" value="${sangria.getId_sangria()}">
+                    <%--<c:forEach items="${sangrias}" var="sangria">
                         <c:if test="${sangria.getId_sangria() == id_sangria}">
                             <c:choose>
                                 <c:when test="${sangria.getFecha_dia1() != null}">
@@ -28,12 +32,9 @@
                                     <c:set var="dia" value="3"></c:set>
                                 </c:when>    
                             </c:choose>
-                            <p><strong>Sangría</strong> ${sangria.getId_sangria_especial()}, día ${dia}</p>
-                            <input type="hidden" name="objeto-relacionado" value="sangria">
-                            <input type="hidden" name="dia" value="${dia}">
-                            <input type="hidden" name="sangria" value="${sangria.getId_sangria()}">
+
                         </c:if>
-                    </c:forEach>
+                    </c:forEach>--%>
                 </div>
             </div>
         </div>
