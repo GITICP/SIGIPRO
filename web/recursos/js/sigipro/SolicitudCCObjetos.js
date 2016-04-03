@@ -151,7 +151,11 @@ function evento_seleccionar_sangria_prueba() {
     
     var opcion_sangria_prueba = $("#seleccion-sangria-prueba").find("option:selected");
     var lista_caballos_string = opcion_sangria_prueba.data("caballos");
-    agregar_muestra_caballos(JSON.parse(lista_caballos_string));
+    if(typeof lista_caballos_string === "string") {
+        agregar_muestra_caballos(JSON.parse(lista_caballos_string));
+    } else {
+        agregar_muestra_caballos(lista_caballos_string);
+    }
     
 }
 
@@ -182,5 +186,12 @@ $(document).ready(function () {
         var select_dia = $("#seleccion-dia");
         select_dia.select2();
         select_dia.change(evento_seleccionar_dia);
+    } else if (tipo === "sangria_prueba") {
+        $("#seleccion-objeto").find("option[value=sangria_prueba]").prop("selected", true);
+        $("seleccion-objeto").select2();
+        
+        var select_sangria_prueba = $("#seleccion-sangria-prueba");
+        select_sangria_prueba.select2();
+        select_sangria_prueba.change(evento_seleccionar_sangria_prueba);
     }
 });

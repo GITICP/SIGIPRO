@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.caballeriza.modelos;
 
+import com.google.gson.Gson;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -44,6 +45,11 @@ public class SangriaPruebaAJAX {
 
     public List<CaballoAJAX> getCaballos() {
         return caballos;
+    }
+    
+    public String getCaballos_json() {
+        Gson g = new Gson();
+        return g.toJson(caballos);
     }
 
     public void setCaballos(List<CaballoAJAX> caballos) {

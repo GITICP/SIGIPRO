@@ -32,7 +32,6 @@ Array.prototype.remove = function (x) {
 };
 
 function seleccionTipoMuestra(tipomuestra, id_formulario) {
-    tipomuestra.setCustomValidity('');
     var id = $(tipomuestra).val();
     $("#seleccionAnalisis_" + id_formulario).empty();
     var listaAnalisis = $("#listaAnalisis_" + id).val();
