@@ -115,6 +115,7 @@ public class AsociacionLALSangria extends AsociacionInforme {
             }
         }
         
+        resultado.add(consulta_sangria);
         resultado.add(consulta_caballos);
 
         return resultado;
