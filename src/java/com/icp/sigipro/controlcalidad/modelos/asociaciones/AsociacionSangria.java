@@ -142,26 +142,24 @@ public class AsociacionSangria extends AsociacionSolicitud {
     public List<PreparedStatement> resetear(Connection conexion) throws SQLException {
         List<PreparedStatement> resultado = new ArrayList<>(); 
         
-        PreparedStatement consulta_sangria = conexion.prepareStatement(
-                  " UPDATE caballeriza.sangrias SET "
-                + " id_informe_dia" + dia + " = ? "
-                + " WHERE id_sangria = ?; "
-        );
-
-        consulta_sangria.setNull(1, java.sql.Types.INTEGER);
-        consulta_sangria.setInt(2, sangria.getId_sangria());
-        consulta_sangria.addBatch();
-
-        resultado.add(consulta_sangria);
-        
         PreparedStatement consulta_sangrias_caballos = conexion.prepareStatement(
                   " UPDATE caballeriza.sangrias_caballos SET "
                 + " id_resultado_lal_dia" + dia + " = ? "
-                + " WHERE id_sangria = ?;"
+                + " WHERE id_sangria = ? AND id_caballo IN ( "
+                + "                                 SELECT DISTINCT(c.id_caballo) "
+                + "                                 FROM (  SELECT * "
+                + "                                         FROM control_calidad.grupos g "
+                + "                                             INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                + "                                             INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                + "                                         WHERE g.id_solicitud = ? "
+                + "                                      ) AS muestras_caballos "
+                + "                                 INNER JOIN caballeriza.caballos c ON c.numero = CAST(muestras_caballos.identificador AS int)"
+                + "                                        ); "
         );
         
         consulta_sangrias_caballos.setNull(1, java.sql.Types.INTEGER);
         consulta_sangrias_caballos.setInt(2, sangria.getId_sangria());
+        consulta_sangrias_caballos.setInt(3, solicitud.getId_solicitud());
         consulta_sangrias_caballos.addBatch();
         
         resultado.add(consulta_sangrias_caballos);

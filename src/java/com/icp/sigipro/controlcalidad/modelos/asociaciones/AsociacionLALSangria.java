@@ -101,14 +101,6 @@ public class AsociacionLALSangria extends AsociacionInforme {
         consulta_sangria.setInt(1, getInforme().getId_informe());
         consulta_sangria.setInt(2, sangria.getId_sangria());
         consulta_sangria.addBatch();
-        
-        PreparedStatement update_caballos = conexion.prepareStatement(
-                " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria = ?; "
-        );
-        
-        update_caballos.setNull(1, java.sql.Types.INTEGER);
-        update_caballos.setInt(2, sangria.getId_sangria());
-        update_caballos.addBatch();
 
         PreparedStatement consulta_caballos = conexion.prepareStatement(
                 " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria = ? AND id_caballo = ?; "
@@ -123,8 +115,6 @@ public class AsociacionLALSangria extends AsociacionInforme {
             }
         }
         
-        resultado.add(consulta_sangria);
-        resultado.add(update_caballos);
         resultado.add(consulta_caballos);
 
         return resultado;

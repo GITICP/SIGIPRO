@@ -168,8 +168,19 @@ function agregar_muestra_caballos(datos) {
     }
 
     agregarMuestra();
-    $("#identificadores_" + (contador - 1)).select2("val", lista_caballos);
-    $("#identificadores_" + (contador - 1)).prop("readonly", true);
+    
+    var parametros = jQuery.extend(true, {}, PARAMETROS_SELECT_IDENTIFICADORES);
+    parametros.createTag = function(params){return undefined;};
+    parametros.tokenSeparators = [];
+    
+    PARAMETROS_VER = parametros;
+    
+    var elemento_select_identificadores = $("#identificadores_" + (contador - 1));
+    
+    elemento_select_identificadores.select2("destroy");
+    elemento_select_identificadores.select2(parametros);
+    elemento_select_identificadores.select2("val", lista_caballos);
+    //elemento_select_identificadores.prop("readonly", true);
     $("#boton-muestra").prop("disabled", true);
 }
 
