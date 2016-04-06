@@ -37,7 +37,7 @@ public class Inventario_PTDAO extends DAO {
       consulta.setInt(4, p.getProtocolo().getId_protocolo());
       consulta.setInt(5, p.getProducto().getId_catalogo_pt());
       consulta.setInt(6, p.getCantidad());
-      consulta.setInt(6, 0);
+      consulta.setInt(7, 0);
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
