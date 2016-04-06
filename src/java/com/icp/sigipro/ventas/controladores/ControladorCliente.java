@@ -288,7 +288,9 @@ public class ControladorCliente extends SIGIPROServlet {
                 request.setAttribute("mensaje", helper.mensajeDeExito("Cliente eliminado correctamente"));
             } else {
                 redireccion = "Clientes/index.jsp";
-                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+                List<Cliente> clientes = dao.obtenerClientes();
+                request.setAttribute("listaClientes", clientes);
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al borrar el cliente. Puede que contenga contactos asociados. Estos deben ser eliminados antes que el cliente."));
             }
         }
         else{
@@ -403,7 +405,7 @@ public class ControladorCliente extends SIGIPROServlet {
         contacto.setCorreo_electronico2(request.getParameter("correo_electronico2"));
         contacto.setCliente(dao.obtenerCliente(id_cliente));
         
-        System.out.println("Datos del nuevo contacto: Nombre="+contacto.getNombre() +", Telefono="+ contacto.getTelefono() + ", idCliente="+contacto.getCliente().getId_cliente());
+        //System.out.println("Datos del nuevo contacto: Nombre="+contacto.getNombre() +", Telefono="+ contacto.getTelefono() + ", idCliente="+contacto.getCliente().getId_cliente());
         return contacto;
     }
     

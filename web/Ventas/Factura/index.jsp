@@ -62,7 +62,7 @@
                           </div>
                         </a>
                       </td>
-                      <td>${factura.getCliente().getId_cliente()}</td>
+                      <td>${factura.getCliente().getNombre()}</td>
                       <c:choose>
                                             <c:when test="${factura.getOrden().getId_orden() == 0}">
                                                 <td></td>
