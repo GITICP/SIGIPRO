@@ -434,34 +434,43 @@ VALUES (1, 'Generador Formularios Produccion',
                 <div class="col-sm-12">
                     <div class="input-group {$nombre-campo}">
                         <select id="subbodega_{$subbodega}" multiple="multiple" class="select2 subbodega" name="{$nombre-campo}" value="{$valor}" style=''background-color: #fff;'' ></select>    
-                        <xsl:if test="$cantidad = ''true''">
-                            <br>
-                                <div class="{$nombre-campo}_cant">
-                                    <xsl:for-each select="valor/producto">
-                                        <xsl:param name="id" select="id" />
-                                        <xsl:param name="nombre" select="nombre" />
-                                        <xsl:param name="cantidad" select="cantidad" />
-                                        <div class="{$nombre-campo}_{id}"> 
-                                        <label for="nombre" class="control-label">Cantidad - <xsl:value-of select="$nombre" /> </label>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div class="input-group">
-                                                        <input type="number" placeholder="Cantidad" value="{$cantidad}" class="form-control" name="{$nombre-campo}_{id}"></input>
-                                                     </div>
-                                                     </div>
-                                                </div> 
-                                            </div>
-                                    </xsl:for-each> 
-                                    </div>
-                                    <div class="{$nombre-campo}_id">
+                        <xsl:choose>                 
+                            <xsl:when test="$cantidad = ''true''">
+                                <br>
+                                    <div class="{$nombre-campo}_cant">
                                         <xsl:for-each select="valor/producto">
                                             <xsl:param name="id" select="id" />
-                                            <input type="hidden" value="{id}" id="{id}" />   
+                                            <xsl:param name="nombre" select="nombre" />
+                                            <xsl:param name="cantidad" select="cantidad" />
+                                            <div class="{$nombre-campo}_{id}"> 
+                                            <label for="nombre" class="control-label">Cantidad - <xsl:value-of select="$nombre" /> </label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group">
+                                                            <input type="number" placeholder="Cantidad" value="{$cantidad}" class="form-control" name="{$nombre-campo}_{id}"></input>
+                                                         </div>
+                                                         </div>
+                                                    </div> 
+                                                </div>
                                         </xsl:for-each> 
-                                    </div>
-                            </br>
-                        </xsl:if>
-                              
+                                        </div>
+                                        <div class="{$nombre-campo}_id">
+                                            <xsl:for-each select="valor/producto">
+                                                <xsl:param name="id" select="id" />
+                                                <input type="hidden" value="{id}" id="{id}" />   
+                                            </xsl:for-each> 
+                                        </div>
+                                </br>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <div class="{$nombre-campo}_id">
+                                    <xsl:for-each select="valor/producto">
+                                        <xsl:param name="id" select="id" />
+                                        <input type="hidden" value="{id}" id="{id}" />   
+                                    </xsl:for-each> 
+                                </div>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
             </div>

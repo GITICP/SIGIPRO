@@ -102,14 +102,6 @@ public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
         consulta_sangria.setInt(1, getInforme().getId_informe());
         consulta_sangria.setInt(2, sangria_prueba.getId_sangria_prueba());
         consulta_sangria.addBatch();
-        
-        PreparedStatement update_caballos = conexion.prepareStatement(
-                " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria_prueba = ?; "
-        );
-        
-        update_caballos.setNull(1, java.sql.Types.INTEGER);
-        update_caballos.setInt(2, sangria_prueba.getId_sangria_prueba());
-        update_caballos.addBatch();
 
         PreparedStatement consulta_caballos = conexion.prepareStatement(
                 " UPDATE  " + tabla + " SET " + campo + " = ? WHERE id_sangria_prueba = ? AND id_caballo = ?; "
@@ -125,7 +117,6 @@ public class AsociacionHemaHemoSangriaPrueba extends AsociacionInforme {
         }
         
         resultado.add(consulta_sangria);
-        resultado.add(update_caballos);
         resultado.add(consulta_caballos);
 
         return resultado;

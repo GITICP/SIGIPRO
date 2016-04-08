@@ -72,7 +72,7 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
     public void prepararGenerarInforme(HttpServletRequest request) throws SIGIPROException {
         request.setAttribute("tipo", "sangria_prueba");
         request.setAttribute("id_sangria_prueba", sangria_prueba.getId_sangria_prueba());
-        request.setAttribute("sangria_prueba", sangria_prueba);
+        request.setAttribute("sangria_prueba", sangria_prueba_dao.obtenerSangriaPrueba(sangria_prueba.getId_sangria_prueba()));
         request.setAttribute("caballos_sangria", sangria_prueba_dao.obtenerCaballosSangriaP(sangria_prueba.getId_sangria_prueba()));
     }
 
@@ -134,7 +134,16 @@ public class AsociacionSangriaPrueba extends AsociacionSolicitud {
         PreparedStatement consulta_sangrias_caballos = conexion.prepareStatement(
                   " UPDATE caballeriza.sangrias_pruebas_caballos SET "
                 + " id_resultado = ? "
-                + " WHERE id_sangria_prueba = ?;"
+                + " WHERE id_sangria_prueba = ? AND id_caballo IN ( "
+                + "                                 SELECT DISTINCT(c.id_caballo) "
+                + "                                 FROM (  SELECT * "
+                + "                                         FROM control_calidad.grupos g "
+                + "                                             INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                + "                                             INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                + "                                         WHERE g.id_solicitud = ? "
+                + "                                      ) AS muestras_caballos "
+                + "                                 INNER JOIN caballeriza.caballos c ON c.numero = CAST(muestras_caballos.identificador AS int)"
+                + "                                        ); "
         );
         
         consulta_sangrias_caballos.setNull(1, java.sql.Types.INTEGER);

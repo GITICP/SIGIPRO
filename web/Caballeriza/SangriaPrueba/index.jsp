@@ -63,12 +63,12 @@
                                             <td>
                                                 <a href="/SIGIPRO/Caballeriza/SangriaPrueba?accion=ver&id_sangria_prueba=${sangriap.getId_sangria_prueba()}">
                                                     <div style="height:100%;width:100%">
-                                                        ${sangriap.getId_sangria_prueba()}
+                                                        ${sangriap.getId_sangria_prueba_especial()}
                                                     </div>
                                                 </a>
                                             </td>
                                             <td>${sangriap.getFechaAsString()}</td>
-                                            <td>${sangriap.getUsuario().getId_usuario()}</td>
+                                            <td>${sangriap.getUsuario().getNombre_completo()}</td>
                                     </tr>
 
                                 </c:forEach>

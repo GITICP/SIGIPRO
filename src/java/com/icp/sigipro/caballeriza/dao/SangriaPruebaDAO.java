@@ -114,9 +114,10 @@ public class SangriaPruebaDAO extends DAO {
         List<SangriaPrueba> resultado = new ArrayList<SangriaPrueba>();
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " SELECT sp.*, u.nombre_completo "
+                    " SELECT sp.*, u.nombre_completo, gc.id_grupo_de_caballo, gc.nombre AS nombre_grupo "
                     + " FROM caballeriza.sangrias_pruebas sp "
-                    + "     INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario ");
+                    + "     INNER JOIN seguridad.usuarios u ON sp.id_usuario = u.id_usuario "
+                    + "     INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = sp.id_grupo;");
             ResultSet rs = consulta.executeQuery();
             while (rs.next()) {
                 SangriaPrueba sangriap = new SangriaPrueba();
@@ -125,6 +126,10 @@ public class SangriaPruebaDAO extends DAO {
                 Usuario u = new Usuario();
                 u.setId_usuario(rs.getInt("id_usuario"));
                 u.setNombreCompleto(rs.getString("nombre_completo"));
+                GrupoDeCaballos g = new GrupoDeCaballos();
+                g.setId_grupo_caballo(rs.getInt("id_grupo_de_caballo"));
+                g.setNombre(rs.getString("nombre_grupo"));
+                sangriap.setGrupo(g);
                 sangriap.setUsuario(u);
                 resultado.add(sangriap);
             }
@@ -346,17 +351,18 @@ public class SangriaPruebaDAO extends DAO {
     }
 
     public List<SangriaPruebaAJAX> obtenerSangriasPruebaPendiente() throws SIGIPROException {
-        List<SangriaPruebaAJAX> resultado = new ArrayList<SangriaPruebaAJAX>();
+        List<SangriaPruebaAJAX> resultado = new ArrayList<>();
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT sp.id_sangria_prueba, c.id_caballo, c.numero "
+                    " SELECT sp.id_sangria_prueba, c.id_caballo, c.numero, sp.fecha, gc.nombre AS nombre_grupo "
                     + " FROM caballeriza.sangrias_pruebas sp "
                     + "       INNER JOIN caballeriza.sangrias_pruebas_caballos spc ON sp.id_sangria_prueba = spc.id_sangria_prueba "
                     + "       INNER JOIN caballeriza.caballos c ON c.id_caballo = spc.id_caballo "
+                    + "       INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = sp.id_grupo "
                     + " WHERE sp.id_informe is null; "
             );
 
@@ -369,7 +375,10 @@ public class SangriaPruebaDAO extends DAO {
                 if (s_ax.getId_sangria_prueba() != rs.getInt("id_sangria_prueba")) {
                     s_ax = new SangriaPruebaAJAX();
                     s_ax.setId_sangria_prueba(rs.getInt("id_sangria_prueba"));
+                    s_ax.setFecha(rs.getDate("fecha"));
+                    s_ax.setNombre_grupo(rs.getString("nombre_grupo"));
                     resultado.add(s_ax);
+                    s_ax.getId_sangria_especial();
                 }
 
                 Caballo c = new Caballo();

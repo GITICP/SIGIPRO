@@ -15,7 +15,7 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <p><strong>Sangría de Prueba</strong> ${sangria_prueba.getId_sangria_prueba()}</p>
+                    <p><strong>Sangría de Prueba</strong> ${sangria_prueba.getId_sangria_prueba_especial()}</p>
                     <input type="hidden" name="objeto-relacionado" value="sangria_prueba">
                     <input type="hidden" name="sangria_prueba" value="${sangria_prueba.getId_sangria_prueba()}">
                 </div>

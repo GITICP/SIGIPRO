@@ -32,7 +32,7 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> Protocolo de Producción </h3>
-                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 635)}">
+                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 640)}">
                                 <div class="btn-group widget-header-toolbar">
                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Protocolo?accion=agregar">Agregar Protocolo de Producción</a>
                                 </div>

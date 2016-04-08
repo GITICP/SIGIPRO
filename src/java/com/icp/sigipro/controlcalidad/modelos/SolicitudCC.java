@@ -350,4 +350,17 @@ public class SolicitudCC extends Asociable {
         }
         return resultado;
     }
+    
+    public boolean muestraEnSolicitud(String identificador) {
+        boolean resultado = false;
+        for (AnalisisGrupoSolicitud ags : analisis_solicitud) {
+            for(Muestra m : ags.getGrupo().getGrupos_muestras()) {
+                if(m.getIdentificador().equalsIgnoreCase(identificador)) {
+                    resultado = true;
+                    break;
+                }
+            }
+        }
+        return resultado;
+    }
 }

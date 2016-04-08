@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.core;
 
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -18,9 +19,12 @@ import java.util.List;
  */
 public abstract class IModelo 
 {
+    
+  protected HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
+    
   public List<PropiedadModelo> getMetodos(String tipo) throws NoSuchMethodException
   {
-    List<PropiedadModelo> resultado = new ArrayList<PropiedadModelo>();
+    List<PropiedadModelo> resultado = new ArrayList<>();
 
     List<Field> campos = getCampos();
 

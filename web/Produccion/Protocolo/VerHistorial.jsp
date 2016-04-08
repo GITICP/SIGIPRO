@@ -36,7 +36,7 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> Historial de ${protocolo.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
-                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 640)}">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 645)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Protocolo?accion=activar&id_historial=${protocolo.getId_historial()}&id_protocolo=${protocolo.getId_protocolo()}">Activar</a>
                                 </c:if>
                             </div>

@@ -19,7 +19,6 @@ import com.icp.sigipro.produccion.dao.Categoria_AADAO;
 import com.icp.sigipro.produccion.modelos.Actividad_Apoyo;
 import com.icp.sigipro.produccion.modelos.Categoria_AA;
 import com.icp.sigipro.produccion.modelos.Respuesta_AA;
-import com.icp.sigipro.produccion.modelos.Respuesta_pxp;
 import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Seccion;
@@ -74,8 +73,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorActividad_Apoyo", urlPatterns = {"/Produccion/Actividad_Apoyo"})
 public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
-    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad
-    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677};
+    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad
+    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679};
     //-----------------
     private final Actividad_ApoyoDAO dao = new Actividad_ApoyoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -145,7 +144,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         request.setAttribute("contador", 0);
         redireccionar(request, response, redireccion);
     }
-    
+
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response, int id_categoria_aa) throws ServletException, IOException, SIGIPROException {
         validarPermiso(670, request);
 
@@ -205,7 +204,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         request.setAttribute("listaActividades", actividades);
         redireccionar(request, response, redireccion);
     }
-    
+
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/Ver.jsp";
@@ -514,7 +513,6 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     protected void getRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         validarPermiso(677, request);
         String redireccion = "Actividad_Apoyo/Repetir.jsp";
 
@@ -553,10 +551,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             //Funcion que genera la bitacora
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
-            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
+            this.getIndexactividades(request, response, aa.getCategoria().getId_categoria_aa());
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser agregado. Inténtelo de nuevo."));
-            this.getAgregar(request, response,aa.getCategoria().getId_categoria_aa());
+            this.getAgregar(request, response, aa.getCategoria().getId_categoria_aa());
         }
 
     }
@@ -572,11 +570,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo editada correctamente"));
-            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
+            this.getIndexactividades(request, response, aa.getCategoria().getId_categoria_aa());
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser editada. Inténtelo de nuevo."));
             request.setAttribute("id_actividad", aa.getId_actividad());
-            this.getIndexactividades(request, response,aa.getCategoria().getId_categoria_aa());
+            this.getIndexactividades(request, response, aa.getCategoria().getId_categoria_aa());
         }
 
     }
@@ -734,7 +732,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             Date dNow = new Date();
             SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
             String nombre_fecha = ft.format(dNow);
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + actividad.getNombre() + "_"+nombre_fecha;
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + actividad.getNombre() + "_" + nombre_fecha;
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
             this.crearDirectorio(ubicacion);
@@ -764,7 +762,6 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
     }
 
     protected void postRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
         Respuesta_AA resultado = dao.obtenerRespuesta(id_respuesta);
         resultado.setActividad(dao.obtenerActividad_Apoyo(resultado.getActividad().getId_actividad()));
@@ -780,7 +777,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             Date dNow = new Date();
             SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
             String nombre_fecha = ft.format(dNow);
-            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + resultado.getActividad().getNombre() + "_"+nombre_fecha;
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Actividad de Apoyo" + File.separatorChar + resultado.getActividad().getNombre() + "_" + nombre_fecha;
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
             this.crearDirectorio(ubicacion);

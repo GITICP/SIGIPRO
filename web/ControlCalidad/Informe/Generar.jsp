@@ -216,22 +216,24 @@
 
         <div id="caballos-numeros">
             <c:forEach items="${caballos_sangria}" var="caballo">
-                <c:choose>
-                    <c:when test="${accion == 'Generar'}">
-                        <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
-                    </c:when>
-                    <c:otherwise>
-                        <c:choose>
-                            <c:when test="${ids_caballos_con_resultado.contains(caballo.getId_caballo())}">
-                                <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="true"></div>
-                            </c:when>
-                            <c:otherwise>
-                                <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
-                            </c:otherwise>
-                        </c:choose>
-                        
-                    </c:otherwise>
-                </c:choose>
+                <c:if test="${solicitud.muestraEnSolicitud(String.valueOf(caballo.getNumero()))}">
+                    <c:choose>
+                        <c:when test="${accion == 'Generar'}">
+                            <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${ids_caballos_con_resultado.contains(caballo.getId_caballo())}">
+                                    <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="true"></div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div id="${caballo.getId_caballo()}" data-numero="${caballo.getNumero()}" data-selected="false"></div>
+                                </c:otherwise>
+                            </c:choose>
+
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
             </c:forEach>
         </div>
 
@@ -257,7 +259,7 @@
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
                 </div>
             </div>
-            
+
             <div class="form-group" id="advertencia-submit" style="display:none;">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cerrar</button>
