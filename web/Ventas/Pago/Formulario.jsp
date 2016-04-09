@@ -24,10 +24,10 @@
                           <c:forEach items="${facturas}" var="factura">
                             <c:choose>
                               <c:when test="${pago.getFactura().getId_factura() == factura.getId_factura()}" >
-                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}" selected> ID: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
+                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}" selected> FAC: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}"> ID: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
+                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}"> FAC: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>

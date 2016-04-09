@@ -79,7 +79,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         estados.add("En proceso");
         estados.add("Aprobado");
         estados.add("Anulado");
-        estados.add("Terminado");
+        estados.add("Completado");
         
         List<Producto_venta> productos = pdao.obtenerProductos_venta();
         
@@ -133,7 +133,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         estados.add("En proceso");
         estados.add("Aprobado");
         estados.add("Anulado");
-        estados.add("Terminado");
+        estados.add("Completado");
         
         request.setAttribute("productos_intencion", d);
         request.setAttribute("intencion", ds);

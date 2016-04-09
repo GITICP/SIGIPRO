@@ -58,7 +58,7 @@
                         </div>
                         </a>
                       </td>
-                      <td>ID: ${Pago.getFactura().getId_factura()} - Cliente: ${Pago.getFactura().getCliente().getNombre()}</td>
+                      <td>FAC: ${Pago.getFactura().getId_factura()} - Cliente: ${Pago.getFactura().getCliente().getNombre()}</td>
                       <td>${Pago.getPago()}</td>
                     </tr>
                   </c:forEach>
