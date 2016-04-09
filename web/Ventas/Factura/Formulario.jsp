@@ -263,6 +263,27 @@
                 </div>
               </div>
             </div>
+            <label for="moneda" class="control-label"> *Moneda</label>
+            <!-- moneda -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="moneda" class="select2" name="moneda" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                          <c:forEach items="${monedas}" var="moneda">
+                            <c:choose>
+                              <c:when test="${factura.getMoneda() == moneda}" >
+                                <option value="${moneda}" selected> ${moneda}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${moneda}"> ${moneda}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <label for="tipo" class="control-label"> *Tipo</label>
             <!-- Tipo -->
             <div class="form-group">

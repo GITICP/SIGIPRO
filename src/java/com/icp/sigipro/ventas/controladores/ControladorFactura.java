@@ -143,7 +143,13 @@ public class ControladorFactura extends SIGIPROServlet {
         tipos.add("UCR");
         
         List<Orden_compra> ordenes = odao.obtenerOrdenes_compra();
+        List<String> monedas = new ArrayList<String>();
+        monedas.add("Colones");
+        monedas.add("Dólares");
+        monedas.add("Euros");
+        monedas.add("Otra Moneda");
         
+        request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("ordenes", ordenes);
@@ -192,7 +198,13 @@ public class ControladorFactura extends SIGIPROServlet {
         tipos.add("UCR");
         
         List<Orden_compra> ordenes = odao.obtenerOrdenes_compra();
+        List<String> monedas = new ArrayList<String>();
+        monedas.add("Colones");
+        monedas.add("Dólares");
+        monedas.add("Euros");
+        monedas.add("Otra Moneda");
         
+        request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("ordenes", ordenes);
@@ -392,6 +404,9 @@ public class ControladorFactura extends SIGIPROServlet {
                         break;
                     case "tipo":
                         tr.setTipo(fieldValue);
+                        break;
+                    case "moneda":
+                        tr.setMoneda(fieldValue);
                         break;
                 }
             } else {

@@ -44,6 +44,7 @@
                   <tr>
                     <th>ID</th>
                     <th>Factura</th>
+                    <th>Moneda</th>
                     <th>Pago</th>
                   </tr>
                 </thead>
@@ -59,7 +60,8 @@
                         </a>
                       </td>
                       <td>FAC: ${Pago.getFactura().getId_factura()} - Cliente: ${Pago.getFactura().getCliente().getNombre()}</td>
-                      <td>${Pago.getPago()}</td>
+                      <td>${Pago.getFactura().getMoneda()}</td>
+                      <td>${Pago.getPago()} ${Pago.getFactura().getMoneda()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

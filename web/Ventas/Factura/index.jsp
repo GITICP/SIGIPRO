@@ -47,6 +47,7 @@
                     <th>Orden de Compra</th>
                     <th>Fecha</th>
                     <th>Monto</th>
+                    <th>Moneda</th>
                     <th>Fecha de Vencimiento</th>
                     <th>Tipo</th>
                   </tr>
@@ -72,7 +73,8 @@
                                             </c:otherwise>
                                         </c:choose>
                       <td>${factura.getFecha_S()}</td>
-                      <td>${factura.getMonto()}</td>
+                      <td>${factura.getMonto()} ${factura.getMoneda()}</td>
+                      <td>${factura.getMoneda()}</td>
                       <td>${factura.getFecha_vencimiento_S()}</td>
                       <td>${factura.getTipo()}</td>
                     </tr>
