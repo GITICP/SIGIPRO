@@ -45,6 +45,7 @@
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Intención</th>
+                    <th>Moneda</th>
                     <th>Total</th>
                     <th>Flete</th>
                   </tr>
@@ -69,8 +70,9 @@
                               <td>${cotizacion.getIntencion().getId_intencion()}</td>
                           </c:otherwise>
                       </c:choose>
-                      <td>${cotizacion.getTotal()}</td>
-                      <td>${cotizacion.getFlete()}</td>
+                      <td>${cotizacion.getMoneda()}</td>
+                      <td>${cotizacion.getTotal()} ${cotizacion.getMoneda()}</td>
+                      <td>${cotizacion.getFlete()} ${cotizacion.getMoneda()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

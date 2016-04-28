@@ -18,6 +18,15 @@ public class Cotizacion {
     private Intencion_venta intencion;
     private int total;
     private int flete;
+    private String moneda;
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
 
     public int getId_cotizacion() {
         return id_cotizacion;

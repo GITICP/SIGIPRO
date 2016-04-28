@@ -67,8 +67,9 @@
                           </c:otherwise>
                       </c:choose>
                 </center> </tr>
-                <tr><td> <strong>Flete: </strong>  </td> <center> <td> ${cotizacion.getFlete()}   </td> </center> </tr>
-                <tr><td> <strong>Total: </strong>  </td> <center> <td> ${cotizacion.getTotal()}   </td> </center> </tr>
+                <tr><td> <strong>Moneda: </strong>  </td> <center> <td> ${cotizacion.getMoneda()}   </td> </center> </tr>
+                <tr><td> <strong>Flete: </strong>  </td> <center> <td> ${cotizacion.getFlete()} ${cotizacion.getMoneda()}   </td> </center> </tr>
+                <tr><td> <strong>Total: </strong>  </td> <center> <td> ${cotizacion.getTotal()} ${cotizacion.getMoneda()}   </td> </center> </tr>
               </table>
               <br>
               
