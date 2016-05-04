@@ -148,30 +148,30 @@ ALTER TABLE ONLY ventas.lista ADD CONSTRAINT pk_lista PRIMARY KEY (id_enlistado)
 
 --Llaves foraneas esquema ventas
 
-ALTER TABLE ONLY ventas.contactos_cliente ADD CONSTRAINT fk_contactos_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.contrato_comercializacion ADD CONSTRAINT fk_contrato_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT fk_intenciones_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT fk_cotizacion_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT fk_cotizacion_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT fk_id_cotizacion FOREIGN KEY (id_cotizacion) REFERENCES ventas.cotizacion(id_cotizacion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT fk_id_cotizacion FOREIGN KEY (id_cotizacion) REFERENCES ventas.cotizacion(id_cotizacion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.pago ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.participantes_reunion ADD CONSTRAINT fk_id_reunion FOREIGN KEY (id_reunion) REFERENCES ventas.reunion_produccion(id_reunion) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.participantes_reunion ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.encuesta_satisfaccion ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.tratamiento ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
-ALTER TABLE ONLY ventas.lista ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE CASCADE;
+ALTER TABLE ONLY ventas.contactos_cliente ADD CONSTRAINT fk_contactos_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.contrato_comercializacion ADD CONSTRAINT fk_contrato_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.intencion_venta ADD CONSTRAINT fk_intenciones_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.producto_intencion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT fk_cotizacion_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.cotizacion ADD CONSTRAINT fk_cotizacion_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT fk_id_cotizacion FOREIGN KEY (id_cotizacion) REFERENCES ventas.cotizacion(id_cotizacion) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.producto_cotizacion ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT fk_id_intencion FOREIGN KEY (id_intencion) REFERENCES ventas.intencion_venta(id_intencion) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.orden_compra ADD CONSTRAINT fk_id_cotizacion FOREIGN KEY (id_cotizacion) REFERENCES ventas.cotizacion(id_cotizacion) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.producto_orden ADD CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES ventas.producto_venta(id_producto) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.factura ADD CONSTRAINT fk_id_orden FOREIGN KEY (id_orden) REFERENCES ventas.orden_compra(id_orden) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.pago ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.participantes_reunion ADD CONSTRAINT fk_id_reunion FOREIGN KEY (id_reunion) REFERENCES ventas.reunion_produccion(id_reunion) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.participantes_reunion ADD CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.encuesta_satisfaccion ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.seguimiento_venta ADD CONSTRAINT fk_id_factura FOREIGN KEY (id_factura) REFERENCES ventas.factura(id_factura) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.tratamiento ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
+ALTER TABLE ONLY ventas.lista ADD CONSTRAINT fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES ventas.cliente(id_cliente) ON DELETE SET NULL;
 
 --Permisos asociados a ventas
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (701, '[Ventas]AdministrarModuloVentas', 'Permite gestionar el modulo de ventas');

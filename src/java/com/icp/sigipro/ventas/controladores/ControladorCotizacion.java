@@ -82,6 +82,13 @@ public class ControladorCotizacion extends SIGIPROServlet {
         List<Producto_venta> productos = pdao.obtenerProductos_venta();
         List<Intencion_venta> intenciones = ivdao.obtenerIntenciones_venta();
         
+        List<String> monedas = new ArrayList<String>();
+        monedas.add("Colones");
+        monedas.add("Dólares");
+        monedas.add("Euros");
+        monedas.add("Otra Moneda");
+        
+        request.setAttribute("monedas", monedas);
         request.setAttribute("intenciones", intenciones);
         request.setAttribute("cotizacion", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
@@ -132,6 +139,13 @@ public class ControladorCotizacion extends SIGIPROServlet {
         List<Producto_Cotizacion> d = idao.obtenerProductosCotizacion(id_cotizacion);
         List<Intencion_venta> intenciones = ivdao.obtenerIntenciones_venta();
         
+        List<String> monedas = new ArrayList<String>();
+        monedas.add("Colones");
+        monedas.add("Dólares");
+        monedas.add("Euros");
+        monedas.add("Otra Moneda");
+        
+        request.setAttribute("monedas", monedas);
         request.setAttribute("intenciones", intenciones);
         request.setAttribute("productos_cotizacion", d);
         request.setAttribute("cotizacion", ds);
@@ -268,6 +282,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
         cotizacion.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
         cotizacion.setIntencion(ivdao.obtenerIntencion_venta(Integer.parseInt(request.getParameter("id_intencion"))));
         
+        cotizacion.setMoneda(request.getParameter("moneda"));
         cotizacion.setTotal(Integer.parseInt(request.getParameter("total")));
         cotizacion.setFlete(Integer.parseInt(request.getParameter("flete")));
         

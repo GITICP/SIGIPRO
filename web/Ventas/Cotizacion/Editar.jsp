@@ -65,7 +65,7 @@
         <form class="form-horizontal" id="formEditarProducto">
           <input type="text" id="idProductoEditar"     name="idProductoEditar"      hidden="true">
           <input type="text" name="producto"  hidden="true">
-          <label for="cantidad" class="control-label">*Precio Unitario</label>
+          <label for="cantidad" class="control-label">*Precio Unitario (en la moneda de la cotización)</label>
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">

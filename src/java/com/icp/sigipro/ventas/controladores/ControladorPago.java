@@ -214,7 +214,12 @@ public class ControladorPago extends SIGIPROServlet {
         pago.setMonto_pendiente(Integer.parseInt(request.getParameter("monto_pendiente")));
         Factura f = fdao.obtenerFactura(Integer.parseInt(request.getParameter("id_factura")));
         f.setMonto(pago.getMonto_pendiente());
-        fdao.editarFactura(f);
+        if (f.getOrden() != null && f.getOrden().getId_orden() != 0){
+            fdao.editarFactura(f);
+        }
+        else{
+            fdao.editarFacturaOrden0(f);
+        }
         pago.setFactura(f);
         
         return pago;

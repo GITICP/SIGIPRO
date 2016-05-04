@@ -43,6 +43,7 @@ public class CotizacionDAO extends DAO {
                 cotizacion.setId_cotizacion(rs.getInt("id_cotizacion"));
                 cotizacion.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
                 cotizacion.setIntencion(iDAO.obtenerIntencion_venta(rs.getInt("id_intencion")));
+                cotizacion.setMoneda(rs.getString("moneda"));
                 cotizacion.setTotal(rs.getInt("total"));
                 cotizacion.setFlete(rs.getInt("flete"));
                 resultado.add(cotizacion);
@@ -96,6 +97,7 @@ public class CotizacionDAO extends DAO {
                 resultado.setId_cotizacion(rs.getInt("id_cotizacion"));
                 resultado.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
                 resultado.setIntencion(iDAO.obtenerIntencion_venta(rs.getInt("id_intencion")));
+                resultado.setMoneda(rs.getString("moneda"));
                 resultado.setTotal(rs.getInt("total"));
                 resultado.setFlete(rs.getInt("flete"));
             }
@@ -114,13 +116,14 @@ public class CotizacionDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cotizacion (id_intencion, id_cliente, total, flete)"
-                    + " VALUES (?,?,?,?) RETURNING id_cotizacion");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cotizacion (id_intencion, id_cliente, total, flete, moneda)"
+                    + " VALUES (?,?,?,?,?) RETURNING id_cotizacion");
 
             consulta.setInt(1, p.getIntencion().getId_intencion());
             consulta.setInt(2, p.getCliente().getId_cliente());
             consulta.setInt(3, p.getTotal());
             consulta.setInt(4, p.getFlete());
+            consulta.setString(5, p.getMoneda());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -143,7 +146,7 @@ public class CotizacionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.cotizacion"
-                    + " SET id_cliente=?, id_intencion=?, total=?, flete=?"
+                    + " SET id_cliente=?, id_intencion=?, total=?, flete=?, moneda=?"
                     + " WHERE id_cotizacion=?; "
             );
 
@@ -151,7 +154,8 @@ public class CotizacionDAO extends DAO {
             consulta.setInt(2, p.getIntencion().getId_intencion());
             consulta.setInt(3, p.getTotal());
             consulta.setInt(4, p.getFlete());
-            consulta.setInt(5, p.getId_cotizacion());
+            consulta.setString(5, p.getMoneda());
+            consulta.setInt(6, p.getId_cotizacion());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
