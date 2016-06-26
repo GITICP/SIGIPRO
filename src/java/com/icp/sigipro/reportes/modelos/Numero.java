@@ -24,7 +24,7 @@ public class Numero extends Parametro {
 
     @Override
     public void setValor(String valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.valor = Integer.parseInt(valor);
     }
     
 }

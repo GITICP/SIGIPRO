@@ -13,25 +13,28 @@ import javax.servlet.http.HttpServletRequest;
  * @author Boga
  */
 public class BuilderParametro {
-    
+
     public Parametro crearParametro(HttpServletRequest request, int num_parametro) {
         String tipo_param = request.getParameter("tipo_param_" + num_parametro);
-        Parametro p = crearParametroEspecifico(tipo_param);
-        if (tipo_param.equals("objeto_multiple")) {
-            ObjetoMultiple p_ob = (ObjetoMultiple) p;
-            p_ob.setTipo_objeto(request.getParameter("tipo_param_objeto_" + num_parametro));
-            String[] valores = request.getParameterValues("val_param_" + num_parametro + "[]");
-            p_ob.setValores(valores);
-        } else {
-            String valor = request.getParameter("val_param_" + num_parametro);
-            p.setValor(valor);
+        Parametro p = null;
+        if (tipo_param != null) {
+            p = crearParametroEspecifico(tipo_param);
+            if (tipo_param.equals("objeto_multiple")) {
+                ObjetoMultiple p_ob = (ObjetoMultiple) p;
+                p_ob.setTipo_objeto(request.getParameter("tipo_param_objeto_" + num_parametro));
+                String[] valores = request.getParameterValues("val_param_" + num_parametro + "[]");
+                p_ob.setValores(valores);
+            } else {
+                String valor = request.getParameter("val_param_" + num_parametro);
+                p.setValor(valor);
+            }
         }
         return p;
     }
-    
+
     private Parametro crearParametroEspecifico(String tipo) {
         Parametro p = null;
-        switch(tipo) {
+        switch (tipo) {
             case "numero":
                 p = new Numero();
                 break;
@@ -45,8 +48,8 @@ public class BuilderParametro {
                 p = new ObjetoMultiple();
                 break;
         }
-        
+
         return p;
     }
-    
+
 }

@@ -5,8 +5,10 @@
  */
 package com.icp.sigipro.reportes.modelos;
 
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.text.ParseException;
 
 /**
  *
@@ -15,6 +17,7 @@ import java.sql.PreparedStatement;
 public class Fecha extends Parametro {
     
     Date valor;
+    HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     
     public Fecha(){}
     
@@ -30,7 +33,11 @@ public class Fecha extends Parametro {
 
     @Override
     public void setValor(String valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            this.valor = helper_fechas.formatearFecha(valor);
+        } catch (ParseException p) {
+            
+        }
     }
     
 }
