@@ -2,24 +2,38 @@ ARREGLO_PARAMETROS = [];
 CONTADOR_PARAM = 1;
 
 $(document).ready(function () {
-
     var area_texto = document.getElementById("text-codigo");
-
     var text_codigo = CodeMirror.fromTextArea(area_texto, {
         mode: "text/x-pgsql",
         theme: "neat",
         lineNumbers: true
     });
-
     text_codigo.on("change", function (cm, change) {
         if (change.text[0] === "?") {
             ARREGLO_PARAMETROS.push({ch: change.from.ch, line: change.from.line});
             formarNuevoParametro();
             CONTADOR_PARAM++;
         }
-    });
-
+    });    
+    $("#probar-reporte").on("click", probarReporte);
 });
+
+function probarReporte(event) {
+    event.preventDefault();
+    var jsonData = {};
+    $(".fila-param").each(function() {
+        $(this).find(":input").each(function() {
+            var nombre = $(this).attr("name");
+            var valor = $(this).val();
+            jsonData[nombre] = valor;
+        });
+    });
+    
+    $.get("/SIGIPRO/Reportes/Reportes?accion=ajaxdatos", jsonData)
+    .done(function( data ) {
+          alert( "Data Loaded: " + data );
+    });
+}
 
 function crearEspacioCampo(texto_label, input) {
 
@@ -168,7 +182,7 @@ crearCampoPrueba = function () {
     var fila = $(this).parents(".row.fila-param");
     var num_param = fila.data("num_param");
 
-    var nombre_input = "val_prueba_param_" + num_param;
+    var nombre_input = "val_param_" + num_param;
     var texto_label = "Valor de prueba parámetro " + num_param;
 
     if (val === "numero") {
@@ -185,7 +199,7 @@ crearCampoPrueba = function () {
             $(this).datepicker('hide');
         });
     } else if (val === "objeto" || val === "objeto_multiple") {
-        var opciones = [{val: "cat_interno", texto: "Producto Catálogo Interno"}];
+        var opciones = [{val: "cat_interno", texto: "Producto Catálogo Interno"}, {val: "secciones", texto: "Sección"}];
         var select_objeto = crearSelect("tipo_param_objeto_" + num_param, opciones);
         $(this).parent().append(select_objeto);
         select_objeto.select2();
@@ -203,18 +217,18 @@ escogenciaObjeto = function () {
     var fila = $(this).parents(".row.fila-param");
     var num_param = fila.data("num_param");
 
-    var nombre_input = "val_prueba_param_" + num_param;
+    var nombre_input = "val_param_" + num_param;
     var texto_label = "Valor de prueba parámetro " + num_param;
 
     if (val !== "") {
-        inicializarSelect(fila, nombre_input, texto_label, $(this).data("multiple"));
+        inicializarSelect(fila, nombre_input, texto_label, $(this).data("multiple"), val);
     }
 
 };
 
-function inicializarSelect(fila, nombre_input, texto_label, multiple) {
+function inicializarSelect(fila, nombre_input, texto_label, multiple, tabla) {
 
-    $.get("/SIGIPRO/Reportes/Reportes?accion=ajaxobjetos").done(function (data) {
+    $.get("/SIGIPRO/Reportes/Reportes?accion=ajaxobjetos&tabla=" + tabla).done(function (data) {
         var select_objeto = crearSelect(nombre_input, data);
         var input_valor_prueba = crearEspacioCampo(texto_label, select_objeto);
         fila.append(input_valor_prueba);

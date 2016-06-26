@@ -11,15 +11,15 @@ package com.icp.sigipro.reportes.modelos;
  */
 public class ObjetoAjaxReporte {
     
-    private int id;
+    private int val;
     private String texto;
 
-    public int getId() {
-        return id;
+    public int getVal() {
+        return val;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setVal(int val) {
+        this.val = val;
     }
 
     public String getTexto() {

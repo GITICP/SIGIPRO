@@ -9,7 +9,9 @@ import com.google.gson.Gson;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.reportes.dao.ReporteDAO;
+import com.icp.sigipro.reportes.modelos.BuilderParametro;
 import com.icp.sigipro.reportes.modelos.ObjetoAjaxReporte;
+import com.icp.sigipro.reportes.modelos.Parametro;
 import com.icp.sigipro.reportes.modelos.Reporte;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +41,7 @@ public class ControladorReporte extends SIGIPROServlet {
             add("index");
             add("agregar");
             add("ajaxobjetos");
+            add("ajaxdatos");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -81,7 +85,7 @@ public class ControladorReporte extends SIGIPROServlet {
         String resultado = "";
         
         try {
-            List<ObjetoAjaxReporte> lista = dao.obtenerObjetos("tabla");
+            List<ObjetoAjaxReporte> lista = dao.obtenerObjetos(tabla);
             Gson gson = new Gson();
             resultado = gson.toJson(lista);
         } catch (SIGIPROException sig_ex) {
@@ -92,6 +96,43 @@ public class ControladorReporte extends SIGIPROServlet {
         out.print(resultado);
         out.flush();
 
+    }
+    
+    protected void getAjaxdatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        validarPermiso(0, request);
+        
+        response.setContentType("application/json");
+        String resultado = "";
+        
+        Reporte reporte = new Reporte();
+        
+        Map<String, String[]> mapa = request.getParameterMap();
+        
+        int contador = 1;
+        BuilderParametro builder_param = new BuilderParametro();
+        
+        while(contador != mapa.size()) {
+            Parametro p = builder_param.crearParametro(request, contador); 
+            if (p != null) {
+                reporte.agregarParametro(p);
+            } else {
+                break;
+            }
+            contador++;
+        }
+        
+        /*
+        try {
+            List<Resultado> resultado_consulta = dao.obtenerDatos();
+            Gson gson = new Gson();
+            resultado = gson.toJson(lista);
+        } catch (SIGIPROException sig_ex) {    
+        }*/
+        
+        PrintWriter out = response.getWriter();
+        out.print(resultado);
+        out.flush();
     }
 
     // </editor-fold>

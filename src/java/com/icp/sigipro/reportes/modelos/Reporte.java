@@ -6,6 +6,7 @@
 package com.icp.sigipro.reportes.modelos;
 
 import com.icp.sigipro.core.IModelo;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +62,13 @@ public class Reporte extends IModelo {
 
     public void setParametros(List<Parametro> parametros) {
         this.parametros = parametros;
+    }
+    
+    public void agregarParametro(Parametro parametro) {
+        if (parametros == null) {
+            this.parametros = new ArrayList<>();
+        }
+        this.parametros.add(parametro);
     }
 
     public String getScript() {

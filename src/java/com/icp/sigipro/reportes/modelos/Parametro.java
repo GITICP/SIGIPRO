@@ -5,13 +5,36 @@
  */
 package com.icp.sigipro.reportes.modelos;
 
+import java.sql.PreparedStatement;
+
 /**
  *
  * @author Boga
  */
 public abstract class Parametro {
     
-    Class clase;
-    Object valor;
+    int numero;
+    String tipo;
+    
+    public abstract void agregarAConsulta(PreparedStatement consulta);
+    public abstract void setValor(String valor);
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    
+    
             
 }

@@ -89,7 +89,8 @@ FROM control_calidad.usuarios u
                     <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Reporte</button>
+                    <button id="probar-reporte" class="btn btn-primary"><i class="fa fa-check-circle"></i> Probar Reporte</button>
+                    <button type="submit" class="btn btn-primary" disabled><i class="fa fa-check-circle"></i> ${accion} Reporte</button>
                 </c:otherwise>
             </c:choose>   
         </div>

@@ -13,7 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -21,6 +23,13 @@ import java.util.List;
  */
 public class ReporteDAO extends DAO {
     
+    private final Map<String, String> tablas_consultas = new HashMap<String, String>() {
+        {
+            put("cat_interno", " SELECT id_producto as VAL, nombre || '(' || codigo_icp || ')' AS TEXTO FROM bodega.catalogo_interno ");
+            put("secciones", " SELECT id_seccion as VAL, nombre_seccion AS TEXTO FROM seguridad.secciones");
+        }
+    };
+        
     public List<Reporte> obtenerReportes() throws SIGIPROException {
         List<Reporte> resultado = new ArrayList<>();
         
@@ -62,17 +71,14 @@ public class ReporteDAO extends DAO {
         
         try {
             consulta = getConexion().prepareStatement(
-            
-                    " SELECT id_producto as ID, nombre || '(' || codigo_icp || ')' AS TEXTO"
-                  + " FROM bodega.catalogo_interno "
-                    
+                tablas_consultas.get(tabla)
             );
             
             rs = consulta.executeQuery();
             
             while(rs.next()) {
                 ObjetoAjaxReporte r = new ObjetoAjaxReporte();
-                r.setId(rs.getInt("ID"));
+                r.setVal(rs.getInt("VAL"));
                 r.setTexto(rs.getString("TEXTO"));
                 resultado.add(r);
             }
