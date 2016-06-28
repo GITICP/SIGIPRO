@@ -8,6 +8,7 @@ package com.icp.sigipro.reportes.modelos;
 import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 /**
@@ -19,7 +20,9 @@ public class Fecha extends Parametro {
     Date valor;
     HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
     
-    public Fecha(){}
+    public Fecha() {
+        this.tipo = "fecha";
+    }
     
     public Fecha(Date valor) {
         this.tipo = "fecha";
@@ -27,8 +30,8 @@ public class Fecha extends Parametro {
     }
 
     @Override
-    public void agregarAConsulta(PreparedStatement consulta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void agregarAConsulta(PreparedStatement consulta) throws SQLException {
+        consulta.setDate(numero, valor);
     }
 
     @Override

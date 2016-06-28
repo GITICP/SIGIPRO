@@ -19,6 +19,7 @@ public class BuilderParametro {
         Parametro p = null;
         if (tipo_param != null) {
             p = crearParametroEspecifico(tipo_param);
+            p.setNumero(num_parametro);
             if (tipo_param.equals("objeto_multiple")) {
                 ObjetoMultiple p_ob = (ObjetoMultiple) p;
                 p_ob.setTipo_objeto(request.getParameter("tipo_param_objeto_" + num_parametro));

@@ -6,6 +6,7 @@
 package com.icp.sigipro.reportes.modelos;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  *
@@ -13,10 +14,17 @@ import java.sql.PreparedStatement;
  */
 public abstract class Parametro {
     
-    int numero;
-    String tipo;
+    protected int numero;
+    protected String tipo;
     
-    public abstract void agregarAConsulta(PreparedStatement consulta);
+    public abstract void agregarAConsulta(PreparedStatement consulta) throws SQLException;
+    
+    public void agregarAInsert(PreparedStatement consulta) throws SQLException {
+        consulta.setInt(2, numero);
+        consulta.setString(3, this.tipo);
+        consulta.setNull(4, java.sql.Types.VARCHAR);
+    };
+    
     public abstract void setValor(String valor);
 
     public int getNumero() {

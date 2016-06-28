@@ -7,6 +7,7 @@ package com.icp.sigipro.utilidades;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  *
@@ -59,6 +60,39 @@ public class HelperVarios {
             resultado += "#";
             i++;
         }
+        return resultado;
+    }
+    
+    public String ids_string(String[] ids)
+    {
+        String resultado = "(";
+        for (String s : ids) {
+            resultado = resultado + s;
+            resultado = resultado + ",";
+        }
+        resultado = resultado.substring(0, resultado.length() - 1);
+        return resultado;
+    }
+    
+    public String ids_string(int[] ids)
+    {
+        String resultado = "";
+        for (int i : ids) {
+            resultado = resultado + i;
+            resultado = resultado + ",";
+        }
+        resultado = resultado.substring(0, resultado.length() - 1);
+        return resultado;
+    }
+    
+    public String ids_string(List<Integer> ids)
+    {
+        String resultado = "";
+        for (int i : ids) {
+            resultado = resultado + i;
+            resultado = resultado + ",";
+        }
+        resultado = resultado.substring(0, resultado.length() - 1);
         return resultado;
     }
 }

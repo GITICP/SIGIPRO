@@ -17,7 +17,9 @@ public class Objeto extends Parametro {
     String tipo_objeto;
     int id_objetos;
     
-    public Objeto(){}
+    public Objeto() {
+        this.tipo = "objeto";
+    }
     
     public Objeto(String tipo_objeto, int id_objetos) {
         this.tipo = "objeto";

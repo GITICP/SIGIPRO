@@ -6,6 +6,7 @@
 package com.icp.sigipro.reportes.controladores;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonWriter;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.reportes.dao.ReporteDAO;
@@ -14,6 +15,7 @@ import com.icp.sigipro.reportes.modelos.ObjetoAjaxReporte;
 import com.icp.sigipro.reportes.modelos.Parametro;
 import com.icp.sigipro.reportes.modelos.Reporte;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,6 +44,7 @@ public class ControladorReporte extends SIGIPROServlet {
             add("agregar");
             add("ajaxobjetos");
             add("ajaxdatos");
+            add("ver");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -61,6 +64,14 @@ public class ControladorReporte extends SIGIPROServlet {
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
+        redireccionar(request, response, redireccion);
+
+    }
+    
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Reportes/Ver.jsp";
         redireccionar(request, response, redireccion);
 
     }
@@ -103,14 +114,17 @@ public class ControladorReporte extends SIGIPROServlet {
         validarPermiso(0, request);
         
         response.setContentType("application/json");
-        String resultado = "";
+        response.setCharacterEncoding("UTF-8");
+        JsonWriter writer = new JsonWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
         
         Reporte reporte = new Reporte();
-        
         Map<String, String[]> mapa = request.getParameterMap();
-        
         int contador = 1;
         BuilderParametro builder_param = new BuilderParametro();
+        
+        reporte.setConsulta(request.getParameter("codigo"));
+        reporte.setNombre(request.getParameter("nombre"));
+        reporte.setDescripcion(request.getParameter("descripcion"));
         
         while(contador != mapa.size()) {
             Parametro p = builder_param.crearParametro(request, contador); 
@@ -122,17 +136,14 @@ public class ControladorReporte extends SIGIPROServlet {
             contador++;
         }
         
-        /*
         try {
-            List<Resultado> resultado_consulta = dao.obtenerDatos();
-            Gson gson = new Gson();
-            resultado = gson.toJson(lista);
-        } catch (SIGIPROException sig_ex) {    
-        }*/
+            dao.probarEInsertarReporte(reporte, writer);
+        } catch (SIGIPROException sig_ex) {
+            
+        }
         
-        PrintWriter out = response.getWriter();
-        out.print(resultado);
-        out.flush();
+        writer.close();
+        response.getOutputStream().flush();
     }
 
     // </editor-fold>

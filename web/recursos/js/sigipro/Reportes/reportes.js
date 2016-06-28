@@ -1,26 +1,32 @@
 ARREGLO_PARAMETROS = [];
 CONTADOR_PARAM = 1;
+DATOS = {};
 
 $(document).ready(function () {
     var area_texto = document.getElementById("text-codigo");
-    var text_codigo = CodeMirror.fromTextArea(area_texto, {
+    TEXT_CODIGO = CodeMirror.fromTextArea(area_texto, {
         mode: "text/x-pgsql",
         theme: "neat",
         lineNumbers: true
     });
-    text_codigo.on("change", function (cm, change) {
+    TEXT_CODIGO.on("change", function (cm, change) {
         if (change.text[0] === "?") {
             ARREGLO_PARAMETROS.push({ch: change.from.ch, line: change.from.line});
             formarNuevoParametro();
             CONTADOR_PARAM++;
         }
     });    
-    $("#probar-reporte").on("click", probarReporte);
+    $("#guardar-reporte").on("click", guardarReporte);
 });
 
-function probarReporte(event) {
+function guardarReporte(event) {
     event.preventDefault();
     var jsonData = {};
+    
+    jsonData["nombre"] = $("#input-nombre").val();
+    jsonData["descripcion"] = $("#text-descripcion").val();
+    jsonData["codigo"] = TEXT_CODIGO.getValue();
+    
     $(".fila-param").each(function() {
         $(this).find(":input").each(function() {
             var nombre = $(this).attr("name");
@@ -31,7 +37,12 @@ function probarReporte(event) {
     
     $.get("/SIGIPRO/Reportes/Reportes?accion=ajaxdatos", jsonData)
     .done(function( data ) {
-          alert( "Data Loaded: " + data );
+        DATOS = data;
+        if(DATOS.message === "Éxito") {
+            alert("Reporte guardado con éxito.");
+        } else {
+            alert("Reporte no guardado debido a un fallo en la consulta.\nEl mensaje de error es el siguiente: " + DATOS.message);
+        }
     });
 }
 
