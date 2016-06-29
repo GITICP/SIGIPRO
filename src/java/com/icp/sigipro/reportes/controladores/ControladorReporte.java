@@ -72,6 +72,17 @@ public class ControladorReporte extends SIGIPROServlet {
 
         validarPermisosMultiple(permisos, request);
         String redireccion = "Reportes/Ver.jsp";
+        
+        Reporte reporte = new Reporte();
+        int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
+        
+        try {
+            reporte = dao.obtenerReporte(id_reporte);
+            request.setAttribute("reporte", reporte);
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", sig_ex.getMessage());
+        }
+        
         redireccionar(request, response, redireccion);
 
     }
@@ -129,7 +140,7 @@ public class ControladorReporte extends SIGIPROServlet {
         while(contador != mapa.size()) {
             Parametro p = builder_param.crearParametro(request, contador); 
             if (p != null) {
-                reporte.agregarParametro(p);
+                reporte.agregarParametro(p, true);
             } else {
                 break;
             }

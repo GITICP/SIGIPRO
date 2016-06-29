@@ -16,13 +16,15 @@ public abstract class Parametro {
     
     protected int numero;
     protected String tipo;
+    protected String nombre;
     
     public abstract void agregarAConsulta(PreparedStatement consulta) throws SQLException;
     
     public void agregarAInsert(PreparedStatement consulta) throws SQLException {
-        consulta.setInt(2, numero);
+        consulta.setInt(2, this.numero);
         consulta.setString(3, this.tipo);
         consulta.setNull(4, java.sql.Types.VARCHAR);
+        consulta.setString(5, this.nombre);
     };
     
     public abstract void setValor(String valor);
@@ -42,7 +44,13 @@ public abstract class Parametro {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
     
-    
-            
 }

@@ -71,10 +71,22 @@ public class Reporte extends IModelo {
         this.parametros = parametros;
     }
 
-    public void agregarParametro(Parametro parametro) {
+    public void agregarParametro(Parametro parametro, boolean primera_vez) {
         if (parametros == null) {
             this.parametros = new ArrayList<>();
         }
+        if (primera_vez) {
+            modificarParametroPrimeraVez(parametro);
+        } else {
+            if (parametro.getTipo().equals("objeto_multiple")) {
+                this.objetos_multiples++;
+            }
+        }
+        this.parametros.add(parametro);
+    }
+    
+
+    private void modificarParametroPrimeraVez(Parametro parametro) {
         if (parametro.getTipo().equals("objeto_multiple")) {
             this.objetos_multiples++;
             int nuevo_id_param = parametro.getNumero() + 100;
@@ -83,7 +95,6 @@ public class Reporte extends IModelo {
         } else {
             parametro.setNumero(parametro.getNumero() - this.objetos_multiples);
         }
-        this.parametros.add(parametro);
     }
 
     public String getScript() {
@@ -93,7 +104,7 @@ public class Reporte extends IModelo {
     public void setScript(String script) {
         this.script = script;
     }
-    
+
     public void modificarStringConsulta(int numero_reemplazo, int num_parametro) {
         StringBuffer sb = new StringBuffer();
         Pattern p = Pattern.compile("\\?");
@@ -109,20 +120,20 @@ public class Reporte extends IModelo {
         m.appendTail(sb);
         this.consulta = sb.toString();
     }
-    
+
     public String getStringConsulta() {
         String resultado = this.consulta;
-        if(this.objetos_multiples > 0) {
-            for(Parametro p : this.parametros) {
+        if (this.objetos_multiples > 0) {
+            for (Parametro p : this.parametros) {
                 if (p.getTipo().equals("objeto_multiple")) {
                     ObjetoMultiple ob_m = (ObjetoMultiple) p;
-                    resultado = this.consulta.replace("_"+p.getNumero()+"_", ob_m.getIdsString());
+                    resultado = this.consulta.replace("_" + p.getNumero() + "_", ob_m.getIdsString());
                 }
             }
         }
         return resultado;
     }
-    
+
     public void prepararConsulta(PreparedStatement consulta) throws SQLException {
         for (Parametro p : this.parametros) {
             p.agregarAConsulta(consulta);

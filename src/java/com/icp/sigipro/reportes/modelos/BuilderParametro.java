@@ -5,7 +5,8 @@
  */
 package com.icp.sigipro.reportes.modelos;
 
-import java.util.Map;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -16,9 +17,11 @@ public class BuilderParametro {
 
     public Parametro crearParametro(HttpServletRequest request, int num_parametro) {
         String tipo_param = request.getParameter("tipo_param_" + num_parametro);
+        String nombre_param = request.getParameter("nombre_param_" + num_parametro);
         Parametro p = null;
         if (tipo_param != null) {
             p = crearParametroEspecifico(tipo_param);
+            p.setNombre(nombre_param);
             p.setNumero(num_parametro);
             if (tipo_param.equals("objeto_multiple")) {
                 ObjetoMultiple p_ob = (ObjetoMultiple) p;
@@ -28,6 +31,22 @@ public class BuilderParametro {
             } else {
                 String valor = request.getParameter("val_param_" + num_parametro);
                 p.setValor(valor);
+            }
+        }
+        return p;
+    }
+    
+    public Parametro crearParametro(ResultSet rs) throws SQLException {
+        String tipo_param = rs.getString("tipo_parametro");
+        String nombre_param = rs.getString("nombre_param");
+        Parametro p = null;
+        if (tipo_param != null) {
+            p = crearParametroEspecifico(tipo_param);
+            p.setNumero(rs.getInt("num_parametro"));
+            p.setNombre(nombre_param);
+            if(tipo_param.equals("objeto_multiple")) {
+                ObjetoMultiple p_ob = (ObjetoMultiple) p;
+                p_ob.setTipo_objeto(rs.getString("info_adicional"));
             }
         }
         return p;
@@ -49,7 +68,6 @@ public class BuilderParametro {
                 p = new ObjetoMultiple();
                 break;
         }
-
         return p;
     }
 

@@ -8,6 +8,7 @@ package com.icp.sigipro.reportes.dao;
 import com.google.gson.stream.JsonWriter;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.reportes.modelos.BuilderParametro;
 import com.icp.sigipro.reportes.modelos.ObjetoAjaxReporte;
 import com.icp.sigipro.reportes.modelos.Parametro;
 import com.icp.sigipro.reportes.modelos.Reporte;
@@ -61,6 +62,49 @@ public class ReporteDAO extends DAO {
         } finally {
             cerrarSilencioso(consulta);
             cerrarSilencioso(rs);
+            cerrarConexion();
+        }
+
+        return resultado;
+    }
+    
+    public Reporte obtenerReporte(int id_reporte) throws SIGIPROException {
+        Reporte resultado = new Reporte();
+
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT r.nombre, r.descripcion, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
+                  + " FROM reportes.reportes r "
+                  + "   INNER JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
+                  + " WHERE r.id_reporte = ?; "
+            );
+            
+            consulta.setInt(1, id_reporte);
+
+            rs = consulta.executeQuery();
+
+            if (rs.next()) {
+                BuilderParametro builder = new BuilderParametro();
+                
+                resultado.setNombre(rs.getString("nombre"));
+                resultado.setDescripcion(rs.getString("descripcion"));
+                
+                do {
+                    Parametro p = builder.crearParametro(rs);
+                    resultado.agregarParametro(p, false);
+                } while(rs.next());
+                
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener los datos. Notifique al administrador del sistema");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
             cerrarConexion();
         }
 
@@ -140,7 +184,7 @@ public class ReporteDAO extends DAO {
             }
 
             insert_parametros = getConexion().prepareStatement(
-                    "INSERT INTO reportes.parametros (id_reporte, num_parametro, tipo_parametro, info_adicional) VALUES (?,?,?,?);"
+                    "INSERT INTO reportes.parametros (id_reporte, num_parametro, tipo_parametro, info_adicional, nombre) VALUES (?,?,?,?,?);"
             );
 
             for (Parametro p : r.getParametros()) {
@@ -190,7 +234,6 @@ public class ReporteDAO extends DAO {
             cerrarSilencioso(rs);
             cerrarConexion();
         }
-
     }
 
     private void construirJsonDesdeResultSet(ResultSet rs, JsonWriter w) throws SQLException, IOException, SIGIPROException {
