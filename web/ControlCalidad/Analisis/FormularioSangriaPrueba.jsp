@@ -23,7 +23,7 @@
                         <li> 
                             <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
                         </li>
-                        <li class="active"> Realizar Nuevo Análisis ${analisis.getNombre()} </li>
+                        <li class="active"> ${(accion == 'Editar') ? 'Editar resultado de' : 'Realizar Nuevo'} ${analisis.getNombre()} </li>
 
                     </ul>
                 </div>
@@ -35,7 +35,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> Realizar Nuevo Análisis ${analisis.getNombre()} </h3>
+                            <h3><i class="fa fa-flask"></i> ${(accion == 'Editar') ? 'Editar resultado de' : 'Realizar Nuevo'} ${analisis.getNombre()} para ${(param.identificadores.contains(",")) ? "los caballos número " : "el caballo número "} ${param.identificadores}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">

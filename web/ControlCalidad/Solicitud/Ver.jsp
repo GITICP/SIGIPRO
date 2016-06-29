@@ -162,13 +162,13 @@
                                                                     <c:choose>
                                                                         <c:when test="${ags.getResultados() == null}">
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
-                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
                                                                                 Realizar
                                                                             </a>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
-                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
                                                                                 Repetir
                                                                             </a>
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
