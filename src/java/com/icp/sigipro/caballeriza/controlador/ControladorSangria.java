@@ -384,6 +384,8 @@ public class ControladorSangria extends SIGIPROServlet {
         if (!volumen_plasma_total.isEmpty()) {
             sangria.setVolumen_plasma_total(Float.parseFloat(volumen_plasma_total));
         }
+        
+        sangria.setObservaciones(request.getParameter("observaciones"));
 
         String[] ids_caballos = request.getParameterValues("caballos");
 
