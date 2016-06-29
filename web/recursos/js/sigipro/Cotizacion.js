@@ -87,10 +87,11 @@ $(function(){ /* DOM ready */
         total.value = 0;
         total_final.value = parseInt(total.value) + parseInt(flete.value);
         
-        $('#datatable-column-filter-productos').dataTable().fnClearTable();
-        var table = document.getElementById("datatable-column-filter-productos");
-        table.deleteRow(1);
-        
+        //$('#datatable-column-filter-productos').dataTable().fnClearTable();
+        $('#datatable-column-filter-productos tbody tr').remove();
+        //var table = document.getElementById("datatable-column-filter-productos");
+        //table.deleteRow(1);
+        /*
         var row_adicional = document.getElementById("datatable-column-filter-productos_length");
         var row_adicional2 = document.getElementById("datatable-column-filter-productos_filter");
         var row_adicional3 = document.getElementById("datatable-column-filter-productos_info");
@@ -101,7 +102,7 @@ $(function(){ /* DOM ready */
             row_adicional3.parentNode.removeChild(row_adicional3);
             row_adicional4.parentNode.removeChild(row_adicional4);
         }
-        
+        */
         //ajax call
         ajax_productos(opcion_intencion);
         

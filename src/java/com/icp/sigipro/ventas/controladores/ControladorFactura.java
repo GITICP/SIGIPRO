@@ -15,7 +15,9 @@ import com.icp.sigipro.ventas.modelos.Factura;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
+import com.icp.sigipro.ventas.dao.ListaDAO;
 import com.icp.sigipro.ventas.dao.Orden_compraDAO;
+import com.icp.sigipro.ventas.modelos.Lista;
 import com.icp.sigipro.ventas.modelos.Orden_compra;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,6 +59,7 @@ public class ControladorFactura extends SIGIPROServlet {
     private final Orden_compraDAO odao = new Orden_compraDAO();
     private final ClienteDAO cdao = new ClienteDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
+    private final ListaDAO ldao = new ListaDAO();
 
     protected final Class clase = ControladorFactura.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -140,7 +143,13 @@ public class ControladorFactura extends SIGIPROServlet {
         tipos.add("UCR");
         
         List<Orden_compra> ordenes = odao.obtenerOrdenes_compra();
+        List<String> monedas = new ArrayList<String>();
+        monedas.add("Colones");
+        monedas.add("Dólares");
+        monedas.add("Euros");
+        monedas.add("Otra Moneda");
         
+        request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("ordenes", ordenes);
@@ -189,7 +198,13 @@ public class ControladorFactura extends SIGIPROServlet {
         tipos.add("UCR");
         
         List<Orden_compra> ordenes = odao.obtenerOrdenes_compra();
+        List<String> monedas = new ArrayList<String>();
+        monedas.add("Colones");
+        monedas.add("Dólares");
+        monedas.add("Euros");
+        monedas.add("Otra Moneda");
         
+        request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("ordenes", ordenes);
@@ -220,7 +235,7 @@ public class ControladorFactura extends SIGIPROServlet {
             Factura tr = construirObjeto(items, request, ubicacion);
 
             if (tr.getId_factura() == 0) {
-                if (tr.getOrden().getId_orden() != 0){
+                if (tr.getOrden() != null && tr.getOrden().getId_orden() != 0){
                     resultado = dao.insertarFactura(tr);
                 }
                 else{
@@ -228,6 +243,13 @@ public class ControladorFactura extends SIGIPROServlet {
                 }
                 if (resultado != 0) {
                     request.setAttribute("mensaje", helper.mensajeDeExito("Factura agregada correctamente"));
+                    //Eliminar cliente de lista de espera
+                    if (ldao.clienteEnLista(tr.getCliente().getId_cliente())){
+                        List<Lista> ClientesASacarDeListaDeEspera = ldao.obtenerListasPorCliente(tr.getCliente().getId_cliente());
+                        for (Lista l : ClientesASacarDeListaDeEspera){
+                            ldao.eliminarLista(l.getId_lista());
+                        }
+                    }
                     //Funcion que genera la bitacora
                     bitacora.setBitacora(tr.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_FACTURA, request.getRemoteAddr());
                     //*----------------------------*
@@ -382,6 +404,9 @@ public class ControladorFactura extends SIGIPROServlet {
                         break;
                     case "tipo":
                         tr.setTipo(fieldValue);
+                        break;
+                    case "moneda":
+                        tr.setMoneda(fieldValue);
                         break;
                 }
             } else {

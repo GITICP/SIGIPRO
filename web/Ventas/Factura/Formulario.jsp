@@ -78,7 +78,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_1" name="documento_1"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                <input type="file" id="documento_1" name="documento_1"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -90,7 +90,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_1" name="documento_1"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
+                                <input type="file" id="documento_1" name="documento_1"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -105,7 +105,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_2" name="documento_2"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                <input type="file" id="documento_2" name="documento_2"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -117,7 +117,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_2" name="documento_2"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
+                                <input type="file" id="documento_2" name="documento_2"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -132,7 +132,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_3" name="documento_3"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                <input type="file" id="documento_3" name="documento_3"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -144,7 +144,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_3" name="documento_3"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
+                                <input type="file" id="documento_3" name="documento_3"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -158,7 +158,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_4" name="documento_4"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
+                                <input type="file" id="documento_4" name="documento_4"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png" 
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -170,7 +170,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="file" id="documento_4" name="documento_4"  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
+                                <input type="file" id="documento_4" name="documento_4"  accept="video/3gpp,audio/mpeg,audio/x-wav,audio/mp4,audio/x-ms-wma,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/jpeg,image/gif,image/png"
                                        oninvalid="setCustomValidity('No es un archivo permitido. ')"
                                        onchange="setCustomValidity('')"/>
                             </div>
@@ -262,6 +262,27 @@
                         oninput="setCustomValidity('')"> 
                 </div>
               </div>
+            </div>
+            <label for="moneda" class="control-label"> *Moneda</label>
+            <!-- moneda -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="moneda" class="select2" name="moneda" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                          <c:forEach items="${monedas}" var="moneda">
+                            <c:choose>
+                              <c:when test="${factura.getMoneda() == moneda}" >
+                                <option value="${moneda}" selected> ${moneda}</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${moneda}"> ${moneda}</option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                    </div>
+                </div>
             </div>
             <label for="tipo" class="control-label"> *Tipo</label>
             <!-- Tipo -->

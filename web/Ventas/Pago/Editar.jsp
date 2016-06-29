@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Ventas/Pago?">Pagos</a>
             </li>
-            <li class="active">Pago ${Pago.getId_pago()}</li>
+            <li class="active">Pago ${pago.getId_pago()}</li>
 
           </ul>
         </div>

@@ -13,6 +13,13 @@ $(function(){ /* DOM ready */
         var indice = select.selectedIndex;
         var factura = select.options[indice];
         var monto_factura = factura.getAttribute('data-monto');
+        
+        var moneda_factura = factura.getAttribute('data-moneda');
+        var texto_monto_moneda = document.getElementById("monto_moneda");
+        var texto_pago_moneda = document.getElementById("pago_moneda");
+        texto_monto_moneda.innerHTML = "El monto pendiente se encuentra dado en la moneda: "+moneda_factura;
+        texto_pago_moneda.innerHTML = "El pago se dará en la moneda: "+moneda_factura;
+
         var pago = document.getElementById("pago");
         var monto_pendiente = parseInt(monto_factura) - parseInt(pago.value);
         var monto_input = document.getElementById("monto_pendiente");

@@ -79,7 +79,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         estados.add("En proceso");
         estados.add("Aprobado");
         estados.add("Anulado");
-        estados.add("Terminado");
+        estados.add("Completado");
         
         List<Producto_venta> productos = pdao.obtenerProductos_venta();
         
@@ -133,7 +133,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         estados.add("En proceso");
         estados.add("Aprobado");
         estados.add("Anulado");
-        estados.add("Terminado");
+        estados.add("Completado");
         
         request.setAttribute("productos_intencion", d);
         request.setAttribute("intencion", ds);
@@ -258,6 +258,8 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
             request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud o Intención de Venta eliminada correctamente"));
         } else {
             redireccion = "IntencionVenta/index.jsp";
+            List<Intencion_venta> intenciones = dao.obtenerIntenciones_venta();
+            request.setAttribute("listaIntenciones", intenciones);
             request.setAttribute("mensaje", helper.mensajeDeError("Imposible eliminar la Solicitud o Intención de Venta debido a que tiene relaciones con otras secciones."));
         }
         redireccionar(request, response, redireccion);

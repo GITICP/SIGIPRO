@@ -68,7 +68,8 @@
                                         </c:choose>
                                 </tr>
                                 <tr><td> <strong>Fecha: </strong> <td>${factura.getFecha_S()} </td></tr>
-                                <tr><td> <strong>Monto: </strong> <td>${factura.getMonto()} </td></tr>
+                                <tr><td> <strong>Monto: </strong> <td>${factura.getMonto()} ${factura.getMoneda()} </td></tr>
+                                <tr><td> <strong>Moneda: </strong> <td>${factura.getMoneda()} </td></tr>
                                 <tr><td> <strong>Fecha de Vencimiento: </strong> <td>${factura.getFecha_vencimiento_S()} </td></tr>
                                 <tr><td> <strong>Documento 1: </strong> 
                                     <td>

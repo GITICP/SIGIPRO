@@ -139,7 +139,9 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
         campoOcultoRoles = $('#listaProductos');
         campoOcultoRoles.val("");
         
-        $('#datatable-column-filter-productos').dataTable().fnClearTable();
+        $('#datatable-column-filter-productos tbody tr').remove();
+        
+        /*$('#datatable-column-filter-productos').dataTable().fnClearTable();
         var table = document.getElementById("datatable-column-filter-productos");
         table.deleteRow(1);
         
@@ -153,7 +155,7 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
             row_adicional3.parentNode.removeChild(row_adicional3);
             row_adicional4.parentNode.removeChild(row_adicional4);
         }
-        
+        */
         //ajax call
         ajax_productos(opcion_intencion);
         

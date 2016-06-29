@@ -50,6 +50,7 @@ public class FacturaDAO extends DAO {
                 factura.setDocumento_3(rs.getString("documento3"));
                 factura.setDocumento_4(rs.getString("documento4"));
                 factura.setTipo(rs.getString("tipo"));
+                factura.setMoneda(rs.getString("moneda"));
                 resultado.add(factura);
 
             }
@@ -85,6 +86,7 @@ public class FacturaDAO extends DAO {
                 resultado.setDocumento_3(rs.getString("documento3"));
                 resultado.setDocumento_4(rs.getString("documento4"));
                 resultado.setTipo(rs.getString("tipo"));
+                resultado.setMoneda(rs.getString("moneda"));
             }
             rs.close();
             consulta.close();
@@ -101,8 +103,8 @@ public class FacturaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.factura (id_cliente, id_orden, fecha, monto, fecha_vencimiento, documento1, documento2, documento3, documento4, tipo)"
-                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_factura");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.factura (id_cliente, id_orden, fecha, monto, fecha_vencimiento, documento1, documento2, documento3, documento4, tipo, moneda)"
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING id_factura");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setInt(2, p.getOrden().getId_orden());
@@ -114,6 +116,7 @@ public class FacturaDAO extends DAO {
             consulta.setString(8, p.getDocumento_3());
             consulta.setString(9, p.getDocumento_4());
             consulta.setString(10, p.getTipo());
+            consulta.setString(11, p.getMoneda());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -134,8 +137,8 @@ public class FacturaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.factura (id_cliente, fecha, monto, fecha_vencimiento, documento1, documento2, documento3, documento4, tipo)"
-                    + " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_factura");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.factura (id_cliente, fecha, monto, fecha_vencimiento, documento1, documento2, documento3, documento4, tipo, moneda)"
+                    + " VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id_factura");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha());
@@ -146,6 +149,7 @@ public class FacturaDAO extends DAO {
             consulta.setString(7, p.getDocumento_3());
             consulta.setString(8, p.getDocumento_4());
             consulta.setString(9, p.getTipo());
+            consulta.setString(10, p.getMoneda());
             
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -168,7 +172,7 @@ public class FacturaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.factura"
-                    + " SET id_cliente=?, id_orden=?, fecha=?, monto=?, fecha_vencimiento=?, documento1=?, documento2=?, documento3=?, documento4=?, tipo=?"
+                    + " SET id_cliente=?, id_orden=?, fecha=?, monto=?, fecha_vencimiento=?, documento1=?, documento2=?, documento3=?, documento4=?, tipo=?, moneda=?"
                     + " WHERE id_factura=?; "
             );
 
@@ -182,7 +186,8 @@ public class FacturaDAO extends DAO {
             consulta.setString(8, p.getDocumento_3());
             consulta.setString(9, p.getDocumento_4());
             consulta.setString(10, p.getTipo());
-            consulta.setInt(11, p.getId_factura());
+            consulta.setString(11, p.getMoneda());
+            consulta.setInt(12, p.getId_factura());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -203,7 +208,7 @@ public class FacturaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.factura"
-                    + " SET id_cliente=?, fecha=?, monto=?, fecha_vencimiento=?, documento1=?, documento2=?, documento3=?, documento4=?, tipo=?"
+                    + " SET id_cliente=?, fecha=?, monto=?, fecha_vencimiento=?, documento1=?, documento2=?, documento3=?, documento4=?, tipo=?, moneda=?"
                     + " WHERE id_factura=?; "
             );
 
@@ -216,7 +221,8 @@ public class FacturaDAO extends DAO {
             consulta.setString(7, p.getDocumento_3());
             consulta.setString(8, p.getDocumento_4());
             consulta.setString(9, p.getTipo());
-            consulta.setInt(10, p.getId_factura());
+            consulta.setString(10, p.getMoneda());
+            consulta.setInt(11, p.getId_factura());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

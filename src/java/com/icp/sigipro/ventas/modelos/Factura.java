@@ -27,7 +27,16 @@ public class Factura {
     private String documento_3;
     private String documento_4;
     private String tipo;
+    private String moneda;
 
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+    
     public int getId_factura() {
         return id_factura;
     }

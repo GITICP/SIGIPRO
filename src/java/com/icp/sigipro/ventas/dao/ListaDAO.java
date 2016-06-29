@@ -53,6 +53,36 @@ public class ListaDAO extends DAO {
         return resultado;
     }
 
+    public List<Lista> obtenerListasPorCliente(int id_cliente) throws SIGIPROException {
+
+        List<Lista> resultado = new ArrayList<Lista>();
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.lista WHERE id_cliente = ?; ");
+            consulta.setInt(1, id_cliente);
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                Lista lista = new Lista();
+                
+                lista.setId_lista(rs.getInt("id_enlistado"));
+                lista.setCliente(cdao.obtenerCliente(rs.getInt("id_cliente")));
+                lista.setFecha_solicitud(rs.getDate("fecha_solicitud"));
+                lista.setFecha_atencion(rs.getDate("fecha_atencion"));
+                resultado.add(lista);
+
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
+
     public Lista obtenerLista(int id_lista) throws SIGIPROException {
 
         Lista resultado = new Lista();
@@ -209,6 +239,28 @@ public class ListaDAO extends DAO {
         }
         return resultado;
 
+    }
+
+    public boolean clienteEnLista(int id_cliente) throws SIGIPROException {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.lista where id_cliente = ?; ");
+            consulta.setInt(1, id_cliente);
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                resultado = true;
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
     }
 
 }

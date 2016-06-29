@@ -64,10 +64,10 @@
                       <td>${tratamiento.getFecha_S()}</td>
                       <td>${tratamiento.getObservaciones()}</td>
                       <c:choose>
-                        <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
+                        <c:when test="${tratamiento.getEstado().equals('A')}">
                            <td><font color="green">${tratamiento.getEstado()}</font></td>
                         </c:when>
-                        <c:when test="${tratamiento.getEstado().equals('Normal')}">
+                        <c:when test="${tratamiento.getEstado().equals('B')}">
                             <td><font color="blue">${tratamiento.getEstado()}</font></td>
                         </c:when>
                         <c:otherwise>

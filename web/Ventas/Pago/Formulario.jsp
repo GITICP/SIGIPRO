@@ -24,10 +24,10 @@
                           <c:forEach items="${facturas}" var="factura">
                             <c:choose>
                               <c:when test="${pago.getFactura().getId_factura() == factura.getId_factura()}" >
-                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}" selected> ID: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
+                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}" data-moneda="${factura.getMoneda()}" selected> FAC: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}"> ID: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
+                                <option value="${factura.getId_factura()}" data-monto="${factura.getMonto()}" data-moneda="${factura.getMoneda()}"> FAC: ${factura.getId_factura()} Cliente: ${factura.getCliente().getNombre()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -40,6 +40,7 @@
               <div class="col-sm-12">
                 <!-- monto_pendiente -->
                 <div class="input-group">
+                    <p id="monto_moneda">El monto pendiente se encuentra dado en la moneda: ${pago.getFactura().getMoneda()}</p>
                     <input id="monto_pendiente" type="number" min="0" class="form-control" name="monto_pendiente" value="${pago.getMonto_pendiente()}" readonly
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
@@ -51,6 +52,7 @@
               <div class="col-sm-12">
                 <!-- pago -->
                 <div class="input-group">
+                    <p id="pago_moneda">El pago se dará en la moneda: ${pago.getFactura().getMoneda()}</p>
                     <input id="pago" type="number" min="0" max="${pago.getMonto_pendiente()}" class="form-control" name="pago" value="${pago.getPago()}" required
                         oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                         oninput="setCustomValidity('')"> 
