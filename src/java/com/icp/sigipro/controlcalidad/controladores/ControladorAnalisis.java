@@ -388,7 +388,8 @@ public class ControladorAnalisis extends SIGIPROServlet {
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
-                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis editado correctamente"));
+                String mensaje = (a.getMachote().equals("eliminar")) ? "Análisis editado y archivo de Excel eliminado correctamente." : "Análisis editado correctamente.";
+                request.setAttribute("mensaje", helper.mensajeDeExito(mensaje));
                 this.getIndex(request, response);
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Análisis no pudo ser editado. Inténtelo de nuevo."));
@@ -440,13 +441,13 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultado = dao.retirarAnalisis(id_analisis);
             if (resultado) {
                 Analisis a = dao.obtenerAnalisis(id_analisis);
-                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis retirado correctamente"));
+                request.setAttribute("mensaje", helper.mensajeDeExito("Análisis archivado correctamente"));
                 //Funcion que genera la bitacora
                 bitacora.setBitacora(a.parseJSON(), Bitacora.ACCION_RETIRAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISIS, request.getRemoteAddr());
                 //*----------------------------*
                 this.getIndex(request, response);
             } else {
-                request.setAttribute("mensaje", helper.mensajeDeError("Análisis no pudo ser retirado. Inténtelo de nuevo."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Análisis no pudo ser archivado. Inténtelo de nuevo."));
                 this.getIndex(request, response);
             }
         } else {
