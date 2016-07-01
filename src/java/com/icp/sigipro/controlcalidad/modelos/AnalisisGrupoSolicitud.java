@@ -51,6 +51,29 @@ public class AnalisisGrupoSolicitud {
         }
         return resultado;
     }
+    
+    public String getListadoIdentificadoresCompleto(boolean con_tipo) {
+        String resultado = "";
+        if (grupo != null) {
+            List<Muestra> grupos = grupo.getGrupos_muestras();
+            if (grupos != null) {
+                String tipo = grupo.getGrupos_muestras().get(0).getTipo_muestra().getNombre();
+                
+                int i = 0;
+                
+                while(i < grupos.size()) {
+                    resultado += grupos.get(i).getIdentificador() + ", ";
+                    i++;
+                }
+                    
+                resultado = resultado.substring(0, resultado.length() - 2);
+                if (con_tipo) {
+                    resultado += " del tipo " + tipo;
+                }
+            }
+        }
+        return resultado;
+    }
 
     public int getId_analisis_grupo_solicitud() {
         return id_analisis_grupo_solicitud;

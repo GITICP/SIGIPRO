@@ -789,6 +789,7 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultado.setPlt(helper_varios.parsearFloat(this.obtenerParametro("plt")));
             resultado.setMcv(helper_varios.parsearFloat(this.obtenerParametro("mcv")));
             resultado.setOtros(helper_varios.parsearFloat(this.obtenerParametro("otros")));
+            resultado.setObservaciones(this.obtenerParametro("observaciones"));
             resultado.setFecha(helper_fechas.getFecha_hoy());
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));

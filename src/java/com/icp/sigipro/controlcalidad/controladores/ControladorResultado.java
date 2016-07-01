@@ -444,6 +444,7 @@ public class ControladorResultado extends SIGIPROServlet {
             resultado.setPlt(Float.parseFloat(this.obtenerParametro("plt")));
             resultado.setMcv(Float.parseFloat(this.obtenerParametro("mcv")));
             resultado.setOtros(Float.parseFloat(this.obtenerParametro("otros")));
+            resultado.setObservaciones(this.obtenerParametro("observaciones"));
             resultado.setFecha(helper_fechas.getFecha_hoy());
             AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
             ags.setId_analisis_grupo_solicitud(Integer.parseInt(this.obtenerParametro("id_ags")));

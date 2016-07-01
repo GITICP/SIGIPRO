@@ -35,10 +35,21 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> ${(accion == 'Editar') ? 'Editar resultado de' : 'Realizar Nuevo'} ${analisis.getNombre()} para ${(param.identificadores.contains(",")) ? "los caballos número " : "el caballo número "} ${param.identificadores}</h3>
+                            <h3><i class="fa fa-flask"></i> ${(accion == 'Editar') ? 'Editar resultado de' : 'Realizar Nuevo'} ${analisis.getNombre()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
+                            
+                            <table class="tabla-ver">
+                                <tr><td><strong>Análisis:</strong></td><td>${analisis.getNombre()}</td></tr>
+                                <tr><td><strong>${(ags.getGrupo().getGrupos_muestras().size() == 1) ? "Número de caballo:" : "Números de caballos:"}</strong></td>
+                                    <td>
+                                        ${(accion == 'Editar') ? param.identificadores : ags.getListadoIdentificadoresCompleto(false)}
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br>
 
                             <form method="post" class="form-horizontal" action="${(accion == 'Editar' ? 'Resultado' : 'Analisis')}" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="${(accion == 'Editar') ? "editar_sp" : "realizar_sp"}" name="accion" />

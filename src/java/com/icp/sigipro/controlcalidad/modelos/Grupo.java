@@ -47,9 +47,9 @@ public class Grupo {
     public String getGrupos_muestras_Sring() {
         String temp = "";
         for(Muestra m : grupos_muestras) {
-            temp = temp +  m.getIdentificador() + ",";
+            temp = temp +  m.getIdentificador() + ", ";
         }
-        String res_final = temp.substring(0, temp.length() - 1);
+        String res_final = temp.substring(0, temp.length() - 2);
         return res_final;
     }
 
