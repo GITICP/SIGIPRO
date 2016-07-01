@@ -241,7 +241,7 @@
                                                                 </td>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                                                     <td>
-                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${resultado.getAgs().getAnalisis().getId_analisis()}">Editar</a>
+                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${resultado.getAgs().getAnalisis().getId_analisis()}${(resultado.getAgs().getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += resultado.getAgs().getGrupo().getGrupos_muestras_Sring() : "" }">Editar</a>
                                                                     </td>
                                                                 </c:if>
                                                             </tr>
