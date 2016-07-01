@@ -6,7 +6,7 @@
 package com.icp.sigipro.reportes.modelos;
 
 import java.sql.PreparedStatement;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -34,6 +34,11 @@ public class Objeto extends Parametro {
 
     @Override
     public void setValor(String valor) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setValorRequest(HttpServletRequest request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

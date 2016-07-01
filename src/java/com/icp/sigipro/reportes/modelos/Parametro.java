@@ -7,6 +7,7 @@ package com.icp.sigipro.reportes.modelos;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -28,6 +29,7 @@ public abstract class Parametro {
     };
     
     public abstract void setValor(String valor);
+    public abstract void setValorRequest(HttpServletRequest request);
 
     public int getNumero() {
         return numero;

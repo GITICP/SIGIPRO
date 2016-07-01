@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -75,6 +76,12 @@ public class ObjetoMultiple extends Parametro {
         for (String s : valores) {
             ids_objetos.add(Integer.parseInt(s));
         }
+    }
+    
+    @Override
+    public void setValorRequest(HttpServletRequest request) {
+        String[] array_request = request.getParameterValues("valor_param_" + this.numero + "[]");
+        setValores(array_request);
     }
 
     public String getIdsString() {

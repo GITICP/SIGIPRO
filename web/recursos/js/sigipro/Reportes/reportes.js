@@ -35,7 +35,7 @@ function guardarReporte(event) {
         });
     });
     
-    $.get("/SIGIPRO/Reportes/Reportes?accion=ajaxdatos", jsonData)
+    $.post("/SIGIPRO/Reportes/Reportes?accion=ajaxagregar", jsonData)
     .done(function( data ) {
         DATOS = data;
         if(DATOS.message === "Éxito") {

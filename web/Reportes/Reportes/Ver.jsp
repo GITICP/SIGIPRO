@@ -50,7 +50,8 @@
                                     <h3><i class="fa fa-th-list"></i> Parámetros</h3>
                                 </div>
                                 <div class="widget-content">
-                                    <div class="row">
+                                    <div id="fila-parametros" class="row">
+                                        <input type="hidden" name="id_reporte" value="${reporte.getId_reporte()}">
                                         <c:forEach items="${reporte.getParametros()}" var="parametro">
                                             <t:parametro parametro="${parametro}" />
                                         </c:forEach>
@@ -62,11 +63,11 @@
                                 <div class="widget-header">
                                     <h3><i class="fa fa-table"></i> Resultados</h3>
                                     <div class="btn-group widget-header-toolbar">
-                                        <a class="btn btn-primary btn-sm boton-accion">Actualizar Datos</a>
+                                        <a id="actualizar-datos" class="btn btn-primary btn-sm boton-accion">Actualizar Datos</a>
                                     </div>
                                 </div>
                                 <div class="widget-content">
-
+                                    <table id="tabla-resultados" class="table table-sorting table-striped table-hover datatable"></table>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +81,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/Reportes/reportes.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/Reportes/reporte-prueba.js"></script>
     </jsp:attribute>
 
 </t:plantilla_general>

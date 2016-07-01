@@ -70,13 +70,14 @@ public class ReporteDAO extends DAO {
     
     public Reporte obtenerReporte(int id_reporte) throws SIGIPROException {
         Reporte resultado = new Reporte();
+        resultado.setId_reporte(id_reporte);
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.nombre, r.descripcion, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
+                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
                   + " FROM reportes.reportes r "
                   + "   INNER JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
                   + " WHERE r.id_reporte = ?; "
@@ -91,6 +92,8 @@ public class ReporteDAO extends DAO {
                 
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
+                resultado.setConsulta(rs.getString("consulta"));
+                resultado.setUrl_js(rs.getString("url_js"));
                 
                 do {
                     Parametro p = builder.crearParametro(rs);
@@ -168,12 +171,13 @@ public class ReporteDAO extends DAO {
             getConexion().setAutoCommit(false);
 
             insert_reporte = getConexion().prepareStatement(
-                    "INSERT INTO reportes.reportes(nombre, consulta, descripcion) VALUES (?,?,?) RETURNING id_reporte;"
+                    "INSERT INTO reportes.reportes(nombre, consulta, descripcion, url_js) VALUES (?,?,?,?) RETURNING id_reporte;"
             );
 
             insert_reporte.setString(1, r.getNombre());
             insert_reporte.setString(2, r.getConsulta());
             insert_reporte.setString(3, r.getDescripcion());
+            insert_reporte.setString(4, r.getUrl_js());
 
             rs_id_reporte = insert_reporte.executeQuery();
 
@@ -204,7 +208,7 @@ public class ReporteDAO extends DAO {
         } catch (IOException io) {
             resultado = false;
             io.printStackTrace();
-            throw new SIGIPROException("Error insesperado. Contact al administrador del sistema.");
+            throw new SIGIPROException("Error insesperado. Contacte al administrador del sistema.");
         } catch (SQLException ex) {
             resultado = false;
             ex.printStackTrace();
@@ -234,6 +238,51 @@ public class ReporteDAO extends DAO {
             cerrarSilencioso(rs);
             cerrarConexion();
         }
+    }
+    
+    public void obtenerDatos(Reporte r, JsonWriter w) throws SIGIPROException {
+        
+        PreparedStatement consulta_datos = null;
+        ResultSet rs_datos = null;
+        
+        try {
+            
+            String string_consulta = r.getStringConsulta();
+            consulta_datos = getConexion().prepareStatement(string_consulta);
+            r.prepararConsulta(consulta_datos);
+
+            w.beginObject();
+            w.name("data");
+            w.beginArray();
+
+            rs_datos = consulta_datos.executeQuery();
+            construirJsonDesdeResultSet(rs_datos, w);
+            
+            w.endArray();
+            w.name("message");
+            w.value("Éxito");
+            w.endObject();
+            
+        } catch (SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            try {
+                w.endArray();
+                w.name("message");
+                w.value("Error al obtener la información de los datos. Verifique que los parámetros estén correctos y de persistir el problema, contacte al administrador del sistema.");
+                w.endObject();
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
+            throw new SIGIPROException("Error al obtener la información de los datos. Verifique que los parámetros estén correctos y de persistir el problema, contacte al administrador del sistema.");
+        } catch (IOException io) {
+            io.printStackTrace();
+            throw new SIGIPROException("Error insesperado. Contacte al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs_datos);
+            cerrarSilencioso(consulta_datos);
+            cerrarConexion();
+        }
+        
     }
 
     private void construirJsonDesdeResultSet(ResultSet rs, JsonWriter w) throws SQLException, IOException, SIGIPROException {

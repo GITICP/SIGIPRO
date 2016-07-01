@@ -49,7 +49,7 @@ public class ControladorReporte extends SIGIPROServlet {
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
-            add("agregar");
+            add("ajaxagregar");
         }
     };
 
@@ -78,10 +78,11 @@ public class ControladorReporte extends SIGIPROServlet {
         
         try {
             reporte = dao.obtenerReporte(id_reporte);
-            request.setAttribute("reporte", reporte);
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", sig_ex.getMessage());
         }
+        
+        request.setAttribute("reporte", reporte);
         
         redireccionar(request, response, redireccion);
 
@@ -122,6 +123,31 @@ public class ControladorReporte extends SIGIPROServlet {
     
     protected void getAjaxdatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
+        validarPermiso(0, request); 
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JsonWriter writer = new JsonWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
+        
+        Reporte reporte = new Reporte();
+        
+        try {
+            
+            int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
+            reporte = dao.obtenerReporte(id_reporte);
+            obtenerValoresParametros(reporte, request);
+            dao.obtenerDatos(reporte, writer);
+        } catch (SIGIPROException sig_ex) {
+            
+        }
+        
+        writer.close();
+        response.getOutputStream().flush();
+    }
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    protected void postAjaxagregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
         validarPermiso(0, request);
         
         response.setContentType("application/json");
@@ -129,23 +155,12 @@ public class ControladorReporte extends SIGIPROServlet {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
         
         Reporte reporte = new Reporte();
-        Map<String, String[]> mapa = request.getParameterMap();
-        int contador = 1;
-        BuilderParametro builder_param = new BuilderParametro();
         
         reporte.setConsulta(request.getParameter("codigo"));
         reporte.setNombre(request.getParameter("nombre"));
         reporte.setDescripcion(request.getParameter("descripcion"));
         
-        while(contador != mapa.size()) {
-            Parametro p = builder_param.crearParametro(request, contador); 
-            if (p != null) {
-                reporte.agregarParametro(p, true);
-            } else {
-                break;
-            }
-            contador++;
-        }
+        construirParametros(request, reporte, true);
         
         try {
             dao.probarEInsertarReporte(reporte, writer);
@@ -156,10 +171,27 @@ public class ControladorReporte extends SIGIPROServlet {
         writer.close();
         response.getOutputStream().flush();
     }
-
+    
     // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
+    
+    private void construirParametros(HttpServletRequest request, Reporte reporte, boolean primera_vez) {
+        Map<String, String[]> mapa = request.getParameterMap();
+        int contador = 1;
+        BuilderParametro builder_param = new BuilderParametro();
+        
+        while(contador != mapa.size()) {
+            Parametro p = builder_param.crearParametro(request, contador); 
+            if (p != null) {
+                reporte.agregarParametro(p, primera_vez);
+            } else {
+                break;
+            }
+            contador++;
+        }
+    }
+    
+    //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
     protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -184,5 +216,13 @@ public class ControladorReporte extends SIGIPROServlet {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     // </editor-fold>
+
+    private void obtenerValoresParametros(Reporte reporte, HttpServletRequest request) {
+        
+        for (Parametro p : reporte.getParametros()) {
+            p.setValorRequest(request);
+        }
+        
+    }
 
 }

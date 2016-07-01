@@ -5,7 +5,8 @@ CREATE TABLE reportes.reportes
    id_reporte serial NOT NULL PRIMARY KEY, 
    nombre character varying(200) NOT NULL,
    consulta character varying(5000) NOT NULL,
-   descripcion character varying(500)
+   descripcion character varying(500),
+   url_js character varying(200) NOT NULL
 );
 
 CREATE TABLE reportes.parametros

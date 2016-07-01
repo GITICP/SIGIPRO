@@ -2,6 +2,7 @@ package com.icp.sigipro.reportes.modelos;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -28,6 +29,11 @@ public class Numero extends Parametro {
     @Override
     public void setValor(String valor) {
         this.valor = Integer.parseInt(valor);
+    }
+
+    @Override
+    public void setValorRequest(HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

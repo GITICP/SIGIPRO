@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -41,6 +42,12 @@ public class Fecha extends Parametro {
         } catch (ParseException p) {
             
         }
+    }
+    
+    @Override
+    public void setValorRequest(HttpServletRequest request) {
+        String valor_request = request.getParameter("valor_param_" + this.numero);
+        this.setValor(valor_request);
     }
     
 }

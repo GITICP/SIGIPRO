@@ -24,7 +24,7 @@ public class Reporte extends IModelo {
     private String descripcion;
     private String consulta;
     private List<Parametro> parametros;
-    private String script;
+    private String url_js;
 
     private int objetos_multiples = 0;
 
@@ -84,7 +84,6 @@ public class Reporte extends IModelo {
         }
         this.parametros.add(parametro);
     }
-    
 
     private void modificarParametroPrimeraVez(Parametro parametro) {
         if (parametro.getTipo().equals("objeto_multiple")) {
@@ -97,12 +96,12 @@ public class Reporte extends IModelo {
         }
     }
 
-    public String getScript() {
-        return script;
+    public String getUrl_js() {
+        return url_js = "";
     }
 
-    public void setScript(String script) {
-        this.script = script;
+    public void setUrl_js(String url_js) {
+        this.url_js = "";
     }
 
     public void modificarStringConsulta(int numero_reemplazo, int num_parametro) {
