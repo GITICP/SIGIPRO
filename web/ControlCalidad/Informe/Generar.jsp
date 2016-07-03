@@ -89,6 +89,9 @@
                                         <div class="widget widget-table">
                                             <div class="widget-header">
                                                 <h3><i class="fa fa-calendar"></i> Resultados Obtenidos</h3>
+                                                <div class="btn-group widget-header-toolbar">
+                                                    <a id="reportar-todos" class="btn btn-primary btn-sm boton-accion">Reportar Todos</a>
+                                                </div>
                                             </div>
 
                                             <div class="widget-content">
@@ -131,6 +134,9 @@
                                         <div class="widget widget-table">
                                             <div class="widget-header">
                                                 <h3><i class="fa fa-calendar"></i> Resultados por Reportar</h3>
+                                                <div class="btn-group widget-header-toolbar">
+                                                    <a id="eliminar-todos" class="btn btn-primary btn-sm boton-accion">Eliminar Todos</a>
+                                                </div>
                                             </div>
                                             <div class="widget-content">
                                                 <table id="resultados-por-reportar" class="table table-sorting table-striped table-hover datatable tablaSigipro">

@@ -104,6 +104,18 @@ $(document).ready(function () {
         boton.text(texto_final);
         
     });
+    
+    $("#reportar-todos").click(function() {
+        $(".reportar-resultado").each(function() {
+            $(this).trigger("click");
+        });
+    });
+    
+    $("#eliminar-todos").click(function() {
+        $(".eliminar-resultado").each(function() {
+            $(this).trigger("click");
+        });
+    });
 
 });
 
@@ -362,12 +374,16 @@ function desasignar_evento_boton(elemento, flag, texto) {
         elemento.text(texto);
         elemento.addClass("btn-danger");
         elemento.removeClass("btn-primary");
+        elemento.addClass("eliminar-resultado");
+        elemento.removeClass("reportar-resultado");
     } else if (flag === FLAG_REPORTAR) {
         elemento.unbind('click');
         elemento.click(funcion_reportar);
         elemento.text(texto);
         elemento.addClass("btn-primary");
         elemento.removeClass("btn-danger");
+        elemento.addClass("reportar-resultado");
+        elemento.removeClass("eliminar-resultado");
     }
 }
 
