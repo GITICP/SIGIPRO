@@ -69,23 +69,6 @@
                                     </c:choose>
                                 </c:if>
 
-                                <div class="row">
-                                    <c:if test="${solicitud.getEstado() != 'Completada'}">
-                                        <div class="col-md-6">
-                                            <label for="cerrar" class="control-label">Estado</label>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div class="input-group">
-                                                        <label class="fancy-checkbox">
-                                                            <input type="checkbox" value="true" name="cerrar">
-                                                            <span>Cerrar Solicitud</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:if>
-                                </div>
                                 <c:choose>
                                     <c:when test="${solicitud.tieneTipoAsociacion()}">
                                         <c:choose>
@@ -189,6 +172,25 @@
                                     </div>
 
                                 </div>
+
+                                <div class="row">
+                                    <c:if test="${solicitud.getEstado() != 'Completada'}">
+                                        <div class="col-md-6 cuadro-estado">
+                                            <label for="cerrar" class="control-label">Estado</label>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div class="input-group">
+                                                        <label class="fancy-checkbox">
+                                                            <input id="chk-cerrar" type="checkbox" value="true" name="cerrar">
+                                                            <span>Cerrar Solicitud - Informe Final</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </div>
+
                                 <!-- END WIDGET TICKET TABLE -->
                                 <div class="form-group">
                                     <div class="modal-footer">
@@ -198,9 +200,16 @@
                                                 <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                                             </c:when>
                                             <c:otherwise>
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Informe</button>
+                                                <c:choose>
+                                                    <c:when test="${solicitud.getEstado() != 'Completada'}">
+                                                        <button id="btn-submit-informe" type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> <span>${accion} Informe Parcial</span></button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <button id="btn-submit-informe" type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> <span>${accion} Informe Final</span></button>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:otherwise>
-                                        </c:choose>    
+                                        </c:choose>
                                     </div>
                                 </div>
                             </form>

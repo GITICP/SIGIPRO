@@ -82,6 +82,28 @@ $(document).ready(function () {
         $("#form-informe").unbind("submit");
         $("#form-informe").submit();
     });
+    
+    $("#chk-cerrar").change(function(){
+        var por_agregar;
+        if ($(this).prop("checked")) {
+            por_agregar = "Final";
+        } else {
+            por_agregar = "Parcial";
+        }
+        
+        var boton = $("#btn-submit-informe span");
+        var accion = boton.text().split(" ")[0];
+        var texto_final;
+        
+        if (accion === "Generar") {
+            texto_final = "Generar Informe " + por_agregar;
+        } else {
+            texto_final = "Editar Informe " + por_agregar;
+        }
+        
+        boton.text(texto_final);
+        
+    });
 
 });
 

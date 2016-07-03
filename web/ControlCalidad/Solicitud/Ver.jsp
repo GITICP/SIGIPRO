@@ -55,10 +55,17 @@
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
-                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe Parcial</a>
                                             </c:when>
                                             <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 558)}">
-                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe</a>
+                                                <c:choose>
+                                                    <c:when test="${solicitud.getEstado().equals('Resultado Parcial')}">
+                                                        <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Parcial</a>
+                                                    </c:when>
+                                                        <c:when test="${solicitud.getEstado().equals('Completada')}">
+                                                        <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Final</a>
+                                                    </c:when>
+                                                </c:choose>
                                             </c:when>
                                         </c:choose>
                                     </c:otherwise>
