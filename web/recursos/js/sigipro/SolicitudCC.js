@@ -115,12 +115,12 @@ function agregarMuestra() {
     fila += "    </div>";
     fila += "</div>";
     fila += "</div>";
-    fila += "<div class=\"col-sm-2\">";
-    fila += "<label for=\"nombre\" class=\"control-label\">*Identificadores</label>";
+    fila += "<div class=\"col-sm-3\">";
+    fila += "<label for=\"nombre\" class=\"control-label\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Separar con coma, punto o '+'\">*Identificadores <i class=\"fa fa-question-circle\"></i></label>";
     fila += "<div class=\"form-group\">";
     fila += "<div class=\"col-sm-12\">";
     fila += "<div class=\"input-group\">";
-    fila += "            <input type=\"text\" placeholder=\"Separados, por, comas\" id=\"identificadores_" + contador + "\" class=\"input-identificadores identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
+    fila += "            <input type=\"text\" placeholder=\"Separar con coma, punto o '+' \" id=\"identificadores_" + contador + "\" class=\"input-identificadores identificadores_" + contador + " \" name=\"identificadores_" + contador + "\" ";
     fila += "          required ";
     fila += "          oninvalid=\"setCustomValidity('Este campo es requerido')\"";
     fila += "          onchange=\"setCustomValidity('')\"";
@@ -156,7 +156,7 @@ function agregarMuestra() {
     fila += "        </div>";
     fila += "    </div>";
     fila += "</div>";
-    fila += "<div class=\"col-sm-2\"> <br>";
+    fila += "<div class=\"col-sm-1\"> <br>";
     fila += '           <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarMuestra(\'' + contador + '\')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
     fila += "</div>";
     fila += "</div>";
@@ -200,6 +200,8 @@ function agregarMuestra() {
     } else {
         $("#listaMuestras").val(muestras + ',' + contador);
     }
+    
+    $('[data-toggle="tooltip"]').tooltip(); 
 
     contador++;
 }
