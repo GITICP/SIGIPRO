@@ -69,7 +69,7 @@ public class ControladorReporte extends SIGIPROServlet {
     }
     
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+       
         validarPermisosMultiple(permisos, request);
         String redireccion = "Reportes/Ver.jsp";
         

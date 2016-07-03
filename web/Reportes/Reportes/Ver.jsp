@@ -66,9 +66,7 @@
                                         <a id="actualizar-datos" class="btn btn-primary btn-sm boton-accion">Actualizar Datos</a>
                                     </div>
                                 </div>
-                                <div class="widget-content">
-                                    <table id="tabla-resultados" class="table table-sorting table-striped table-hover datatable"></table>
-                                </div>
+                                <div id="panel-contenido-resultados" class="widget-content"></div>
                             </div>
                         </div>
                     </div>
@@ -81,7 +79,15 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/Reportes/reporte-prueba.js"></script>
+        <c:choose>
+            <c:when test="${!reporte.tieneJS()}">
+                <script src="/SIGIPRO/recursos/js/sigipro/Reportes/reporte-default.js"></script>
+            </c:when>
+            <c:otherwise>
+                <script src="/Reportes-SIGIPRO/${reporte.getUrl_js()}.js"></script>
+            </c:otherwise>
+        </c:choose>
+
     </jsp:attribute>
 
 </t:plantilla_general>

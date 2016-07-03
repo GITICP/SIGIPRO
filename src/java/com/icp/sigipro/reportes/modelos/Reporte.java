@@ -97,11 +97,21 @@ public class Reporte extends IModelo {
     }
 
     public String getUrl_js() {
-        return url_js = "";
+        return this.url_js;
     }
 
     public void setUrl_js(String url_js) {
-        this.url_js = "";
+        this.url_js = url_js;
+    }
+    
+    public boolean tieneJS() {
+        boolean resultado = false;
+        if (this.url_js != null) {
+            if (!this.url_js.isEmpty()) {
+                resultado = true;
+            }
+        }
+        return resultado;
     }
 
     public void modificarStringConsulta(int numero_reemplazo, int num_parametro) {

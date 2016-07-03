@@ -67,7 +67,7 @@ public class ReporteDAO extends DAO {
 
         return resultado;
     }
-    
+
     public Reporte obtenerReporte(int id_reporte) throws SIGIPROException {
         Reporte resultado = new Reporte();
         resultado.setId_reporte(id_reporte);
@@ -78,28 +78,28 @@ public class ReporteDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
-                  + " FROM reportes.reportes r "
-                  + "   INNER JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
-                  + " WHERE r.id_reporte = ?; "
+                    + " FROM reportes.reportes r "
+                    + "   INNER JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
+                    + " WHERE r.id_reporte = ?; "
             );
-            
+
             consulta.setInt(1, id_reporte);
 
             rs = consulta.executeQuery();
 
             if (rs.next()) {
                 BuilderParametro builder = new BuilderParametro();
-                
+
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
                 resultado.setConsulta(rs.getString("consulta"));
                 resultado.setUrl_js(rs.getString("url_js"));
-                
+
                 do {
                     Parametro p = builder.crearParametro(rs);
                     resultado.agregarParametro(p, false);
-                } while(rs.next());
-                
+                } while (rs.next());
+
             }
 
         } catch (SQLException ex) {
@@ -228,7 +228,7 @@ public class ReporteDAO extends DAO {
                 } else {
                     getConexion().rollback();
                 }
-            } catch(SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
                 throw new SIGIPROException("Error de conexión con la base de datos.");
             }
             cerrarSilencioso(consulta);
@@ -239,30 +239,27 @@ public class ReporteDAO extends DAO {
             cerrarConexion();
         }
     }
-    
+
     public void obtenerDatos(Reporte r, JsonWriter w) throws SIGIPROException {
-        
+
         PreparedStatement consulta_datos = null;
         ResultSet rs_datos = null;
-        
+
         try {
-            
             String string_consulta = r.getStringConsulta();
             consulta_datos = getConexion().prepareStatement(string_consulta);
             r.prepararConsulta(consulta_datos);
 
-            w.beginObject();
-            w.name("data");
-            w.beginArray();
-
             rs_datos = consulta_datos.executeQuery();
-            construirJsonDesdeResultSet(rs_datos, w);
             
-            w.endArray();
+            w.beginObject();
+            
+            String mensaje = construirJsonDesdeResultSet(rs_datos, w);
+
             w.name("message");
-            w.value("Éxito");
+            w.value(mensaje);
             w.endObject();
-            
+
         } catch (SQLException sql_ex) {
             sql_ex.printStackTrace();
             try {
@@ -282,40 +279,71 @@ public class ReporteDAO extends DAO {
             cerrarSilencioso(consulta_datos);
             cerrarConexion();
         }
-        
+
     }
 
-    private void construirJsonDesdeResultSet(ResultSet rs, JsonWriter w) throws SQLException, IOException, SIGIPROException {
+    private String construirJsonDesdeResultSet(ResultSet rs, JsonWriter w) throws SQLException, IOException, SIGIPROException {
         ResultSetMetaData rsmd = rs.getMetaData();
-        while (rs.next()) {
-            w.beginObject();
+        String resultado = "";
+
+        if (rs.next()) {
+
+            w.name("columnas");
+            w.beginArray();
 
             for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
+                w.beginObject();
+                w.name("title");
                 String nombre_col = rsmd.getColumnLabel(cont_col);
-                w.name(nombre_col);
-                int tipo_columna = rsmd.getColumnType(cont_col);
-
-                switch (tipo_columna) {
-                    case 4:
-                        w.value(rs.getInt(cont_col));
-                        break;
-                    case 12:
-                        w.value(rs.getString(cont_col));
-                        break;
-                    case 92:
-                        String fecha = helper_fechas.formatearFecha(rs.getDate(cont_col));
-                        w.value(fecha);
-                        break;
-                    case -5:
-                        w.value(rs.getInt(cont_col));
-                        break;
-                    default:
-                        throw new SIGIPROException("Tipo de dato no soportado.");
-                }
+                w.value(nombre_col);
+                w.endObject();
             }
 
-            w.endObject();
+            w.endArray();
+
+            w.name("data");
+            w.beginArray();
+
+            do {
+                w.beginArray();
+                
+                for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
+
+                    int tipo_columna = rsmd.getColumnType(cont_col);
+
+                    switch (tipo_columna) {
+                        case 4:
+                            w.value(rs.getInt(cont_col));
+                            break;
+                        case 12:
+                            w.value(rs.getString(cont_col));
+                            break;
+                        case 92:
+                            String fecha = helper_fechas.formatearFecha(rs.getDate(cont_col));
+                            w.value(fecha);
+                            break;
+                        case -5:
+                            w.value(rs.getInt(cont_col));
+                            break;
+                        default:
+                            throw new SIGIPROException("Tipo de dato no soportado.");
+                    }
+                }
+                
+                w.endArray();
+
+            } while (rs.next());
+
+            w.endArray();
+            
+            resultado = "Éxito";
+
+        } else {
+            resultado = "Su consulta no produjo ningún resultado. Intente modificar los valores de los parámetros.";
         }
+        
+        return resultado;
+
     }
 
 }
