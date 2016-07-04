@@ -8,7 +8,6 @@ package com.icp.sigipro.reportes.controladores;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 import com.icp.sigipro.configuracion.dao.SeccionDAO;
-import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.reportes.dao.ReporteDAO;
@@ -16,6 +15,7 @@ import com.icp.sigipro.reportes.modelos.BuilderParametro;
 import com.icp.sigipro.reportes.modelos.ObjetoAjaxReporte;
 import com.icp.sigipro.reportes.modelos.Parametro;
 import com.icp.sigipro.reportes.modelos.Reporte;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -48,11 +48,13 @@ public class ControladorReporte extends SIGIPROServlet {
             add("ajaxobjetos");
             add("ajaxdatos");
             add("ver");
+            add("permisos");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("ajaxagregar");
+            add("permisos");
         }
     };
 
@@ -70,23 +72,45 @@ public class ControladorReporte extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
 
     }
-    
+
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       
+
         validarPermisosMultiple(permisos, request);
         String redireccion = "Reportes/Ver.jsp";
-        
+
         Reporte reporte = new Reporte();
         int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
-        
+
         try {
             reporte = dao.obtenerReporte(id_reporte);
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
-        
+
         request.setAttribute("reporte", reporte);
-        
+
+        redireccionar(request, response, redireccion);
+
+    }
+
+    protected void getPermisos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Reportes/FormularioPermisos.jsp";
+
+        Reporte reporte;
+        int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
+
+        try {
+            List<Seccion> secciones = seccion_dao.obtenerSeccionesConUsuarios();
+            reporte = dao.obtenerReporte(id_reporte);
+            request.setAttribute("secciones", secciones);
+            request.setAttribute("reporte", reporte);
+            request.setAttribute("accion", "permisos");
+        } catch (SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        }
+
         redireccionar(request, response, redireccion);
 
     }
@@ -95,10 +119,10 @@ public class ControladorReporte extends SIGIPROServlet {
 
         validarPermiso(0, request);
         String redireccion = "Reportes/Agregar.jsp";
-        
+
         Reporte r = new Reporte();
-        List<Seccion> secciones = seccion_dao.obtenerSecciones();
-        
+        List<com.icp.sigipro.configuracion.modelos.Seccion> secciones = seccion_dao.obtenerSecciones();
+
         request.setAttribute("reporte", r);
         request.setAttribute("secciones", secciones);
         request.setAttribute("accion", "Agregar");
@@ -109,90 +133,113 @@ public class ControladorReporte extends SIGIPROServlet {
     protected void getAjaxobjetos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         validarPermiso(0, request);
-        
+
         response.setContentType("application/json");
         String tabla = request.getParameter("tabla");
         String resultado = "";
-        
+
         try {
             List<ObjetoAjaxReporte> lista = dao.obtenerObjetos(tabla);
             Gson gson = new Gson();
             resultado = gson.toJson(lista);
         } catch (SIGIPROException sig_ex) {
-            
+
         }
-        
+
         PrintWriter out = response.getWriter();
         out.print(resultado);
         out.flush();
 
     }
-    
+
     protected void getAjaxdatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        validarPermiso(0, request); 
-        
+
+        validarPermiso(0, request);
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
-        
+
         Reporte reporte = new Reporte();
-        
+
         try {
-            
+
             int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
             reporte = dao.obtenerReporte(id_reporte);
             obtenerValoresParametros(reporte, request);
             dao.obtenerDatos(reporte, writer);
         } catch (SIGIPROException sig_ex) {
-            
+
         }
-        
+
         writer.close();
         response.getOutputStream().flush();
     }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAjaxagregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         validarPermiso(0, request);
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
-        
+
         Reporte reporte = new Reporte();
-        
+
         reporte.setConsulta(request.getParameter("codigo"));
         reporte.setNombre(request.getParameter("nombre"));
         reporte.setDescripcion(request.getParameter("descripcion"));
-        
+
         Seccion s = new Seccion();
         s.setId_seccion(Integer.parseInt(request.getParameter("id_seccion")));
         reporte.setSeccion(s);
-        
+
         construirParametros(request, reporte, true);
-        
+
         try {
             dao.probarEInsertarReporte(reporte, writer);
         } catch (SIGIPROException sig_ex) {
-            
+
         }
-        
+
         writer.close();
         response.getOutputStream().flush();
     }
-    
+
+    protected void postPermisos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        validarPermiso(0, request);
+        String redireccion = "Reportes/index.jsp";
+
+        Reporte reporte = new Reporte();
+        reporte.setId_reporte(Integer.parseInt(request.getParameter("id_reporte")));
+
+        String[] ids = request.getParameterValues("usuarios");
+
+        try {
+            dao.insertarPermisos(reporte, ids);
+            List<Reporte> reportes = dao.obtenerReportes();
+            request.setAttribute("reportes", reportes);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Permisos actualizados correctamente"));
+        } catch(SIGIPROException sig_ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
+        }
+        
+        redireccionar(request, response, redireccion);
+
+    }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
-    
     private void construirParametros(HttpServletRequest request, Reporte reporte, boolean primera_vez) {
         Map<String, String[]> mapa = request.getParameterMap();
         int contador = 1;
         BuilderParametro builder_param = new BuilderParametro();
-        
-        while(contador != mapa.size()) {
-            Parametro p = builder_param.crearParametro(request, contador); 
+
+        while (contador != mapa.size()) {
+            Parametro p = builder_param.crearParametro(request, contador);
             if (p != null) {
                 reporte.agregarParametro(p, primera_vez);
             } else {
@@ -201,7 +248,15 @@ public class ControladorReporte extends SIGIPROServlet {
             contador++;
         }
     }
-    
+
+    private void obtenerValoresParametros(Reporte reporte, HttpServletRequest request) {
+
+        for (Parametro p : reporte.getParametros()) {
+            p.setValorRequest(request);
+        }
+
+    }
+
     //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
@@ -227,13 +282,5 @@ public class ControladorReporte extends SIGIPROServlet {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     // </editor-fold>
-
-    private void obtenerValoresParametros(Reporte reporte, HttpServletRequest request) {
-        
-        for (Parametro p : reporte.getParametros()) {
-            p.setValorRequest(request);
-        }
-        
-    }
 
 }

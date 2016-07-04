@@ -6,7 +6,7 @@
 package com.icp.sigipro.reportes.dao;
 
 import com.google.gson.stream.JsonWriter;
-import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.reportes.modelos.BuilderParametro;
@@ -45,8 +45,8 @@ public class ReporteDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " SELECT r.id_reporte, r.nombre, r.descripcion, s.id_seccion, s.nombre_seccion "
-                  + " FROM reportes.reportes r "
-                  + " INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion; "
+                    + " FROM reportes.reportes r "
+                    + " INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion; "
             );
 
             rs = consulta.executeQuery();
@@ -57,11 +57,11 @@ public class ReporteDAO extends DAO {
                 r.setId_reporte(rs.getInt("id_reporte"));
                 r.setNombre(rs.getString("nombre"));
                 r.setDescripcion(rs.getString("descripcion"));
-                
+
                 Seccion s = new Seccion();
                 s.setId_seccion(rs.getInt("id_seccion"));
                 s.setNombre_seccion(rs.getString("nombre_seccion"));
-                
+
                 r.setSeccion(s);
 
                 resultado.add(r);
@@ -106,7 +106,7 @@ public class ReporteDAO extends DAO {
                 resultado.setDescripcion(rs.getString("descripcion"));
                 resultado.setConsulta(rs.getString("consulta"));
                 resultado.setUrl_js(rs.getString("url_js"));
-                
+
                 Seccion s = new Seccion();
                 s.setId_seccion(rs.getInt("id_seccion"));
                 s.setNombre_seccion(rs.getString("nombre_seccion"));
@@ -177,7 +177,7 @@ public class ReporteDAO extends DAO {
             r.prepararConsulta(consulta);
 
             rs = consulta.executeQuery();
-            
+
             w.beginObject();
 
             construirJsonDesdeResultSet(rs, w);
@@ -265,9 +265,9 @@ public class ReporteDAO extends DAO {
             r.prepararConsulta(consulta_datos);
 
             rs_datos = consulta_datos.executeQuery();
-            
+
             w.beginObject();
-            
+
             String mensaje = construirJsonDesdeResultSet(rs_datos, w);
 
             w.name("message");
@@ -320,7 +320,7 @@ public class ReporteDAO extends DAO {
 
             do {
                 w.beginArray();
-                
+
                 for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
 
                     int tipo_columna = rsmd.getColumnType(cont_col);
@@ -343,20 +343,74 @@ public class ReporteDAO extends DAO {
                             throw new SIGIPROException("Tipo de dato no soportado.");
                     }
                 }
-                
+
                 w.endArray();
 
             } while (rs.next());
 
             w.endArray();
-            
+
             resultado = "Éxito";
 
         } else {
             resultado = "Su consulta no produjo ningún resultado. Intente modificar los valores de los parámetros.";
         }
-        
+
         return resultado;
+
+    }
+
+    public void insertarPermisos(Reporte reporte, String[] ids) throws SIGIPROException {
+
+        PreparedStatement insert_permisos = null;
+        PreparedStatement delete_permisos = null;
+        boolean resultado_transaccion = false;
+
+        try {
+            getConexion().setAutoCommit(false);
+
+            delete_permisos = getConexion().prepareStatement(
+                    " DELETE FROM reportes.permisos_reportes WHERE id_reporte = ? "
+            );
+
+            delete_permisos.setInt(1, reporte.getId_reporte());
+
+            delete_permisos.execute();
+
+            insert_permisos = getConexion().prepareStatement(
+                    " INSERT INTO reportes.permisos_reportes(id_reporte, id_usuario) VALUES (?,?);"
+            );
+
+            for (String id_s : ids) {
+                insert_permisos.setInt(1, reporte.getId_reporte());
+                insert_permisos.setInt(2, Integer.parseInt(id_s));
+                insert_permisos.addBatch();
+            }
+
+            insert_permisos.executeBatch();
+
+            resultado_transaccion = true;
+
+        } catch (SQLException sql_ex) {
+
+            resultado_transaccion = false;
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error de comunicación con la base de datos. Comunique al administrador del sistema.");
+        } finally {
+            try {
+                if (resultado_transaccion) {
+                    getConexion().commit();
+                } else {
+                    getConexion().rollback();
+                }
+            }catch(SQLException sql_ex) {
+                throw new SIGIPROException("Error de comunicación con la base de datos. Comunique al administrador del sistema.");
+            }
+            
+            cerrarSilencioso(insert_permisos);
+            cerrarSilencioso(delete_permisos);
+            cerrarConexion();
+        }
 
     }
 

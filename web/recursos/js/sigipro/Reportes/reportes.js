@@ -4,47 +4,62 @@ DATOS = {};
 
 $(document).ready(function () {
     var area_texto = document.getElementById("text-codigo");
-    TEXT_CODIGO = CodeMirror.fromTextArea(area_texto, {
-        mode: "text/x-pgsql",
-        theme: "neat",
-        lineNumbers: true
-    });
-    TEXT_CODIGO.on("change", function (cm, change) {
-        if (change.text[0] === "?") {
-            ARREGLO_PARAMETROS.push({ch: change.from.ch, line: change.from.line});
-            formarNuevoParametro();
-            CONTADOR_PARAM++;
-        }
-    });    
-    $("#guardar-reporte").on("click", guardarReporte);
+    if (area_texto) {
+        TEXT_CODIGO = CodeMirror.fromTextArea(area_texto, {
+            mode: "text/x-pgsql",
+            theme: "neat",
+            lineNumbers: true
+        });
+        TEXT_CODIGO.on("change", function (cm, change) {
+            if (change.text[0] === "?") {
+                ARREGLO_PARAMETROS.push({ch: change.from.ch, line: change.from.line});
+                formarNuevoParametro();
+                CONTADOR_PARAM++;
+            }
+        });
+        $("#guardar-reporte").on("click", guardarReporte);
+    } else {
+        $(".seleccionar-todo").click(function () {
+            var elemento = $(this);
+            var inputs = elemento.eq(0).parents(".widget-header").siblings(".widget-content").find("input");
+            if (elemento.text() === "Marcar Todos") {
+                inputs.prop("checked", true);
+                elemento.text("Desmarcar todos");
+            } else {
+                inputs.prop("checked", false);
+                elemento.text("Marcar Todos");
+            }
+
+        });
+    }
 });
 
 function guardarReporte(event) {
     event.preventDefault();
     var jsonData = {};
-    
+
     jsonData["nombre"] = $("#input-nombre").val();
     jsonData["descripcion"] = $("#text-descripcion").val();
     jsonData["codigo"] = TEXT_CODIGO.getValue();
     jsonData["id_seccion"] = $("#seleccion-seccion").val();
-    
-    $(".fila-param").each(function() {
-        $(this).find(":input").each(function() {
+
+    $(".fila-param").each(function () {
+        $(this).find(":input").each(function () {
             var nombre = $(this).attr("name");
             var valor = $(this).val();
             jsonData[nombre] = valor;
         });
     });
-    
+
     $.post("/SIGIPRO/Reportes/Reportes?accion=ajaxagregar", jsonData)
-    .done(function( data ) {
-        DATOS = data;
-        if(DATOS.message === "Éxito") {
-            alert("Reporte guardado con éxito.");
-        } else {
-            alert("Reporte no guardado debido a un fallo en la consulta.\nEl mensaje de error es el siguiente: " + DATOS.message);
-        }
-    });
+            .done(function (data) {
+                DATOS = data;
+                if (DATOS.message === "Éxito") {
+                    alert("Reporte guardado con éxito.");
+                } else {
+                    alert("Reporte no guardado debido a un fallo en la consulta.\nEl mensaje de error es el siguiente: " + DATOS.message);
+                }
+            });
 }
 
 function crearEspacioCampo(texto_label, input) {
@@ -251,7 +266,7 @@ function inicializarSelect(fila, nombre_input, texto_label, multiple, tabla) {
         } else {
             select_objeto.select2();
         }
-        
+
     });
-    
+
 }

@@ -5,7 +5,7 @@
  */
 package com.icp.sigipro.reportes.modelos;
 
-import com.icp.sigipro.configuracion.modelos.Seccion;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.core.IModelo;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

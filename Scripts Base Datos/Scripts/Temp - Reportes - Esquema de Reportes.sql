@@ -21,5 +21,14 @@ CREATE TABLE reportes.parametros
    CONSTRAINT fk_parametros_reportes FOREIGN KEY (id_reporte) REFERENCES reportes.reportes (id_reporte) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
+CREATE TABLE reportes.permisos_reportes
+(
+   id_reporte integer NOT NULL, 
+   id_usuario integer NOT NULL, 
+   CONSTRAINT pk_permisos_reportes PRIMARY KEY (id_reporte, id_usuario), 
+   CONSTRAINT fk_permisos_reportes_reporte FOREIGN KEY (id_reporte) REFERENCES reportes.reportes (id_reporte) ON UPDATE NO ACTION ON DELETE CASCADE, 
+   CONSTRAINT fk_permisos_reportes_usuario FOREIGN KEY (id_usuario) REFERENCES seguridad.usuarios (id_usuario) ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
 ALTER TABLE reportes.reportes
   ADD CONSTRAINT fk_reportes_secciones FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones (id_seccion) ON UPDATE NO ACTION ON DELETE NO ACTION;
