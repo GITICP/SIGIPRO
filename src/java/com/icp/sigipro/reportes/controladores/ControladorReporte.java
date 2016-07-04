@@ -7,6 +7,8 @@ package com.icp.sigipro.reportes.controladores;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.reportes.dao.ReporteDAO;
@@ -36,6 +38,7 @@ public class ControladorReporte extends SIGIPROServlet {
 
     private final int[] permisos = {1, 61, 62};
     private final ReporteDAO dao = new ReporteDAO();
+    private final SeccionDAO seccion_dao = new SeccionDAO();
 
     protected final Class clase = ControladorReporte.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -79,7 +82,7 @@ public class ControladorReporte extends SIGIPROServlet {
         try {
             reporte = dao.obtenerReporte(id_reporte);
         } catch (SIGIPROException sig_ex) {
-            request.setAttribute("mensaje", sig_ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
         
         request.setAttribute("reporte", reporte);
@@ -92,8 +95,12 @@ public class ControladorReporte extends SIGIPROServlet {
 
         validarPermiso(0, request);
         String redireccion = "Reportes/Agregar.jsp";
+        
         Reporte r = new Reporte();
+        List<Seccion> secciones = seccion_dao.obtenerSecciones();
+        
         request.setAttribute("reporte", r);
+        request.setAttribute("secciones", secciones);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
 
@@ -159,6 +166,10 @@ public class ControladorReporte extends SIGIPROServlet {
         reporte.setConsulta(request.getParameter("codigo"));
         reporte.setNombre(request.getParameter("nombre"));
         reporte.setDescripcion(request.getParameter("descripcion"));
+        
+        Seccion s = new Seccion();
+        s.setId_seccion(Integer.parseInt(request.getParameter("id_seccion")));
+        reporte.setSeccion(s);
         
         construirParametros(request, reporte, true);
         

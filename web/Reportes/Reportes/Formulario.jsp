@@ -9,11 +9,10 @@
 
 
 <form class="form-horizontal" autocomplete="off" method="post" action="Reportes">
+    <input hidden="true" name="id_tipo_equipo" value="${reporte.getId_reporte()}">
+    <input hidden="true" name="accion" value="${accion}">
     <div class="row">
         <div class="col-md-6">
-            <input hidden="true" name="id_tipo_equipo" value="${reporte.getId_reporte()}">
-            <input hidden="true" name="accion" value="${accion}">
-
             <label for="nombre" class="control-label">* Nombre</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -25,13 +24,36 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
             <label for="descripcion" class="control-label">Descripción</label>
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <textarea id="text-descripcion" rows="5" cols="50" maxlength="500" placeholder="Descripción" class="form-control" name="descripcion" >${reporte.getDescripcion()}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label for="seccion" class="control-label">Sección</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="seleccion-seccion" class="select2" name="id_seccion" 
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Por favor seleccione una seccion.')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${secciones}" var="seccion">
+                                <c:choose>
+                                    <c:when test="${reporte.getSeccion().getId_seccion() == seccion.getId_seccion()}">
+                                        <option value="${seccion.getId_seccion()}" selected> ${seccion.getNombre_seccion()}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${seccion.getId_seccion()}"> ${seccion.getNombre_seccion()}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -79,7 +101,7 @@ ORDER BY s_s.nombre_seccion;
             </div>
         </div>
         <div class="widget-content" id="componente-parametros">
-            
+
         </div>
     </div>
 

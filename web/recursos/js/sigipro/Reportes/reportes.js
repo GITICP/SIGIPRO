@@ -26,6 +26,7 @@ function guardarReporte(event) {
     jsonData["nombre"] = $("#input-nombre").val();
     jsonData["descripcion"] = $("#text-descripcion").val();
     jsonData["codigo"] = TEXT_CODIGO.getValue();
+    jsonData["id_seccion"] = $("#seleccion-seccion").val();
     
     $(".fila-param").each(function() {
         $(this).find(":input").each(function() {

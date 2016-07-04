@@ -51,12 +51,13 @@
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
-                                        <th>Nombre</th>                                        
+                                        <th>Nombre</th>
+                                        <th>Sección</th>
                                         <th>Descripción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${lista_reportes}" var="reporte">
+                                    <c:forEach items="${reportes}" var="reporte">
 
                                         <tr id ="${reporte.getId_reporte()}">
                                             <td>
@@ -66,6 +67,7 @@
                                                     </div>
                                                 </a>
                                             </td>
+                                            <td>${reporte.getSeccion().getNombre_seccion()}</td>
                                             <td>${reporte.getDescripcion()}</td>
                                         </tr>
                                     </c:forEach>

@@ -6,6 +6,7 @@
 package com.icp.sigipro.reportes.dao;
 
 import com.google.gson.stream.JsonWriter;
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.reportes.modelos.BuilderParametro;
@@ -42,7 +43,11 @@ public class ReporteDAO extends DAO {
         ResultSet rs = null;
 
         try {
-            consulta = getConexion().prepareStatement("SELECT * FROM reportes.reportes");
+            consulta = getConexion().prepareStatement(
+                    " SELECT r.id_reporte, r.nombre, r.descripcion, s.id_seccion, s.nombre_seccion "
+                  + " FROM reportes.reportes r "
+                  + " INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion; "
+            );
 
             rs = consulta.executeQuery();
 
@@ -52,6 +57,12 @@ public class ReporteDAO extends DAO {
                 r.setId_reporte(rs.getInt("id_reporte"));
                 r.setNombre(rs.getString("nombre"));
                 r.setDescripcion(rs.getString("descripcion"));
+                
+                Seccion s = new Seccion();
+                s.setId_seccion(rs.getInt("id_seccion"));
+                s.setNombre_seccion(rs.getString("nombre_seccion"));
+                
+                r.setSeccion(s);
 
                 resultado.add(r);
             }
@@ -77,9 +88,10 @@ public class ReporteDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
+                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, r.id_seccion, s.nombre_seccion, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
                     + " FROM reportes.reportes r "
                     + "   INNER JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
+                    + "   INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion "
                     + " WHERE r.id_reporte = ?; "
             );
 
@@ -94,6 +106,10 @@ public class ReporteDAO extends DAO {
                 resultado.setDescripcion(rs.getString("descripcion"));
                 resultado.setConsulta(rs.getString("consulta"));
                 resultado.setUrl_js(rs.getString("url_js"));
+                
+                Seccion s = new Seccion();
+                s.setId_seccion(rs.getInt("id_seccion"));
+                s.setNombre_seccion(rs.getString("nombre_seccion"));
 
                 do {
                     Parametro p = builder.crearParametro(rs);
@@ -160,24 +176,23 @@ public class ReporteDAO extends DAO {
             consulta = getConexion().prepareStatement(string_consulta);
             r.prepararConsulta(consulta);
 
-            w.beginObject();
-            w.name("data");
-            w.beginArray();
-
             rs = consulta.executeQuery();
+            
+            w.beginObject();
 
             construirJsonDesdeResultSet(rs, w);
 
             getConexion().setAutoCommit(false);
 
             insert_reporte = getConexion().prepareStatement(
-                    "INSERT INTO reportes.reportes(nombre, consulta, descripcion, url_js) VALUES (?,?,?,?) RETURNING id_reporte;"
+                    "INSERT INTO reportes.reportes(nombre, consulta, descripcion, url_js, id_seccion) VALUES (?,?,?,?,?) RETURNING id_reporte;"
             );
 
             insert_reporte.setString(1, r.getNombre());
             insert_reporte.setString(2, r.getConsulta());
             insert_reporte.setString(3, r.getDescripcion());
             insert_reporte.setString(4, r.getUrl_js());
+            insert_reporte.setInt(5, r.getSeccion().getId_seccion());
 
             rs_id_reporte = insert_reporte.executeQuery();
 
@@ -201,7 +216,6 @@ public class ReporteDAO extends DAO {
 
             resultado = true;
 
-            w.endArray();
             w.name("message");
             w.value("Éxito");
             w.endObject();

@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.reportes.modelos;
 
+import com.icp.sigipro.configuracion.modelos.Seccion;
 import com.icp.sigipro.core.IModelo;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -25,6 +26,8 @@ public class Reporte extends IModelo {
     private String consulta;
     private List<Parametro> parametros;
     private String url_js;
+    
+    private Seccion seccion;
 
     private int objetos_multiples = 0;
 
@@ -112,6 +115,14 @@ public class Reporte extends IModelo {
             }
         }
         return resultado;
+    }
+
+    public Seccion getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(Seccion seccion) {
+        this.seccion = seccion;
     }
 
     public void modificarStringConsulta(int numero_reemplazo, int num_parametro) {

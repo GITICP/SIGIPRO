@@ -6,7 +6,8 @@ CREATE TABLE reportes.reportes
    nombre character varying(200) NOT NULL,
    consulta character varying(5000) NOT NULL,
    descripcion character varying(500),
-   url_js character varying(200) NOT NULL
+   url_js character varying(200) NOT NULL,
+   id_seccion integer NOT NULL
 );
 
 CREATE TABLE reportes.parametros
@@ -19,3 +20,6 @@ CREATE TABLE reportes.parametros
    CONSTRAINT pk_parametros PRIMARY KEY (num_parametro, id_reporte), 
    CONSTRAINT fk_parametros_reportes FOREIGN KEY (id_reporte) REFERENCES reportes.reportes (id_reporte) ON UPDATE NO ACTION ON DELETE CASCADE
 );
+
+ALTER TABLE reportes.reportes
+  ADD CONSTRAINT fk_reportes_secciones FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones (id_seccion) ON UPDATE NO ACTION ON DELETE NO ACTION;
