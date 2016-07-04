@@ -413,5 +413,35 @@ public class ReporteDAO extends DAO {
         }
 
     }
+    
+    public List<Integer> obtenerIdsUsuariosConPermiso(int id_reporte) throws SIGIPROException {
+        
+        List<Integer> resultado = new ArrayList<>();
+        
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        
+        try {
+            
+            consulta = getConexion().prepareStatement(" SELECT id_usuario FROM reportes.permisos_reportes where id_reporte = ? ");
+            
+            consulta.setInt(1, id_reporte);
+            
+            rs = consulta.executeQuery();
+            
+            while(rs.next()) {
+                resultado.add(rs.getInt("id_usuario"));
+            }    
+            
+        } catch(SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");           
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+        }
+        
+        return resultado;
+    }
 
 }

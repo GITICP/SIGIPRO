@@ -61,7 +61,7 @@
                                                     <c:forEach items="${seccion.getUsuarios_seccion()}" var="usuario">
                                                         <div class="col-md-6">
                                                             <label class="fancy-checkbox">
-                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios">
+                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios" ${(usuarios.contains(usuario.getId_usuario())) ? "checked" : ""}>
                                                                 <span>${usuario.getNombre_completo()}</span>
                                                             </label>
                                                         </div>
@@ -85,7 +85,7 @@
                                                     <c:forEach items="${seccion.getUsuarios_seccion()}" var="usuario">
                                                         <div class="col-md-6">
                                                             <label class="fancy-checkbox">
-                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios">
+                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios" ${(usuarios.contains(usuario.getId_usuario())) ? "checked" : ""}>
                                                                 <span>${usuario.getNombre_completo()}</span>
                                                             </label>
                                                         </div>
@@ -109,7 +109,7 @@
                                                     <c:forEach items="${seccion.getUsuarios_seccion()}" var="usuario">
                                                         <div class="col-md-6">
                                                             <label class="fancy-checkbox">
-                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios">
+                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios" ${(usuarios.contains(usuario.getId_usuario())) ? "checked" : ""}>
                                                                 <span>${usuario.getNombre_completo()}</span>
                                                             </label>
                                                         </div>
@@ -133,7 +133,7 @@
                                                     <c:forEach items="${seccion.getUsuarios_seccion()}" var="usuario">
                                                         <div class="col-md-6">
                                                             <label class="fancy-checkbox">
-                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios">
+                                                                <input type="checkbox" value="${usuario.getId_usuario()}" name="usuarios" ${(usuarios.contains(usuario.getId_usuario())) ? "checked" : ""}>
                                                                 <span>${usuario.getNombre_completo()}</span>
                                                             </label>
                                                         </div>

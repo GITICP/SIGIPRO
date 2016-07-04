@@ -100,12 +100,15 @@ public class ControladorReporte extends SIGIPROServlet {
 
         Reporte reporte;
         int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
+        List<Integer> usuarios = new ArrayList<>();
 
         try {
             List<Seccion> secciones = seccion_dao.obtenerSeccionesConUsuarios();
             reporte = dao.obtenerReporte(id_reporte);
+            usuarios = dao.obtenerIdsUsuariosConPermiso(id_reporte);
             request.setAttribute("secciones", secciones);
             request.setAttribute("reporte", reporte);
+            request.setAttribute("usuarios", usuarios);
             request.setAttribute("accion", "permisos");
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
