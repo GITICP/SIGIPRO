@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.security.sasl.AuthenticationException;
 
 /**
  *
@@ -441,6 +442,40 @@ public class ReporteDAO extends DAO {
             cerrarSilencioso(consulta);
         }
         
+        return resultado;
+    }
+    
+    public boolean validarAcceso(int id_usuario, int id_reporte) throws AuthenticationException, SIGIPROException {
+        boolean resultado = false;
+
+        PreparedStatement consulta = null;
+        ResultSet resultado_consulta = null;
+
+        try {
+            consulta = getConexion().prepareStatement(      
+                    " SELECT 1 "
+                    + " FROM reportes.permisos_reportes "
+                    + " WHERE id_usuario = ? AND id_reporte = ?; "
+            );
+
+            consulta.setInt(1, id_usuario);
+            consulta.setInt(2, id_reporte);
+
+            resultado_consulta = consulta.executeQuery();
+
+            if (resultado_consulta.next()) {
+                resultado = true;
+            } else {
+                throw new AuthenticationException();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al comunicarse con la base de datos. Notifique al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(resultado_consulta);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
         return resultado;
     }
 

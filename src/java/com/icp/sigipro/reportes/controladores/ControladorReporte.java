@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -73,13 +74,18 @@ public class ControladorReporte extends SIGIPROServlet {
 
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        validarPermisosMultiple(permisos, request);
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        
         String redireccion = "Reportes/Ver.jsp";
 
         Reporte reporte = new Reporte();
         int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
+        
+        try {
+            this.validarAcceso(this.getIdUsuario(request), id_reporte, getPermisosUsuario(request));
+        } catch(SIGIPROException sig_ex) {
+            throw new SIGIPROException(sig_ex.getMessage(), "/index.jsp");
+        }
 
         try {
             reporte = dao.obtenerReporte(id_reporte);
@@ -258,6 +264,12 @@ public class ControladorReporte extends SIGIPROServlet {
             p.setValorRequest(request);
         }
 
+    }
+    
+    protected void validarAcceso(int id_usuario, int id_reporte, List<Integer> listaPermisos) throws AuthenticationException, SIGIPROException {
+        if (!listaPermisos.contains(1)) {
+            dao.validarAcceso(id_usuario, id_reporte);
+        }
     }
 
     //</editor-fold>
