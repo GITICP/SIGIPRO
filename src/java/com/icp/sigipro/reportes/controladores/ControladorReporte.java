@@ -44,7 +44,7 @@ public class ControladorReporte extends SIGIPROServlet {
     protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
-            add("agregar");
+            add("configurarreporte");
             add("ajaxobjetos");
             add("ajaxdatos");
             add("ver");
@@ -118,9 +118,8 @@ public class ControladorReporte extends SIGIPROServlet {
 
     }
 
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getConfigurarreporte(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(0, request);
         String redireccion = "Reportes/Agregar.jsp";
 
         Reporte r = new Reporte();
@@ -128,7 +127,8 @@ public class ControladorReporte extends SIGIPROServlet {
 
         request.setAttribute("reporte", r);
         request.setAttribute("secciones", secciones);
-        request.setAttribute("accion", "Agregar");
+        request.setAttribute("accion", "Agregar");  
+
         redireccionar(request, response, redireccion);
 
     }
@@ -226,10 +226,10 @@ public class ControladorReporte extends SIGIPROServlet {
             List<Reporte> reportes = dao.obtenerReportes();
             request.setAttribute("reportes", reportes);
             request.setAttribute("mensaje", helper.mensajeDeExito("Permisos actualizados correctamente"));
-        } catch(SIGIPROException sig_ex) {
+        } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
-        
+
         redireccionar(request, response, redireccion);
 
     }
