@@ -64,9 +64,9 @@
                       <td>${veneno.getCantidad()}</td>
                       <td>${veneno.getObservaciones()}</td>
                       <td>
-                        <a href="/SIGIPRO/Serpentario/Veneno?accion=ver&id_veneno=${veneno.getVeneno_serpentario().getId_veneno()}">
+                        <a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${veneno.getVeneno_serpentario().getId_lote()}">
                         <div style="height:100%;width:100%">
-                            ${veneno.getVeneno_serpentario().getId_veneno()}
+                            Lote: ${veneno.getVeneno_serpentario().getNumero_lote()}, Especie: ${veneno.getVeneno_serpentario().getEspecie().getGenero_especie()}
                         </div>
                         </a>
                       </td>

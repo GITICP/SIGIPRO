@@ -12,8 +12,8 @@ import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
-import com.icp.sigipro.serpentario.dao.VenenoDAO;
-import com.icp.sigipro.serpentario.modelos.Veneno;
+import com.icp.sigipro.serpentario.dao.LoteDAO;
+import com.icp.sigipro.serpentario.modelos.Lote;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,7 +62,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
        
         String redireccion = "Veneno_Produccion/Agregar.jsp";
         Veneno_Produccion ds = new Veneno_Produccion();
-        List<Veneno> listaVenenos = new VenenoDAO().obtenerVenenos();
+        List<Lote> listaVenenos = new LoteDAO().obtenerLotes();
         request.setAttribute("veneno", ds);
         request.setAttribute("listaVenenos", listaVenenos);
         request.setAttribute("accion", "Agregar");
@@ -103,7 +103,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         String redireccion = "Veneno_Produccion/Editar.jsp";
         int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
         Veneno_Produccion ds = dao.obtenerVeneno_Produccion(id_veneno);
-        List<Veneno> listaVenenos = new VenenoDAO().obtenerVenenos();
+        List<Lote> listaVenenos = new LoteDAO().obtenerLotes();
         request.setAttribute("veneno", ds);
         request.setAttribute("listaVenenos", listaVenenos);
         request.setAttribute("accion", "Editar");
@@ -202,8 +202,8 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         java.util.Date result = df.parse(request.getParameter("fecha_ingreso"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         veneno.setFecha_ingreso(fecha_solicitudSQL);
-        VenenoDAO vDAO = new VenenoDAO();
-        veneno.setVeneno_serpentario(vDAO.obtenerVeneno(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
+        LoteDAO vDAO = new LoteDAO();
+        veneno.setVeneno_serpentario(vDAO.obtenerLote(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
         veneno.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
         veneno.setObservaciones(request.getParameter("observaciones"));
 
@@ -218,8 +218,8 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         java.util.Date result = df.parse(request.getParameter("fecha_ingreso"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         veneno.setFecha_ingreso(fecha_solicitudSQL);
-        VenenoDAO vDAO = new VenenoDAO();
-        veneno.setVeneno_serpentario(vDAO.obtenerVeneno(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
+        LoteDAO vDAO = new LoteDAO();
+        veneno.setVeneno_serpentario(vDAO.obtenerLote(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
         veneno.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
         veneno.setObservaciones(request.getParameter("observaciones"));
 

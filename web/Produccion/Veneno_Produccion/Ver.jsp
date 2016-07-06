@@ -64,19 +64,21 @@
               
               <div class="widget widget-table">
                 <div class="widget-header">
-                  <h3><i class="fa fa-check"></i> Veneno del Serpentario Asociado</h3>
+                  <h3><i class="fa fa-check"></i> Veneno del Serpentario Asociado (Lote)</h3>
                 </div>
                 <div class="widget-content">
                   <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
                     <thead>
                       <tr>
+                        <th>Lote</th>
                         <th>Especie del Veneno</th>
                       </tr>
                     </thead>
                     <tbody>
                       
-                        <tr id="${veneno.getVeneno_serpentario().getId_veneno()}">
-                          <td>${veneno.getVeneno_serpentario().getEspecie().getEspecie()}</td>
+                        <tr id="${veneno.getVeneno_serpentario().getId_lote()}">
+                          <td>${veneno.getVeneno_serpentario().getNumero_lote()}</td>
+                          <td>${veneno.getVeneno_serpentario().getEspecie().getGenero_especie()}</td>
                         </tr>
                       
                     </tbody>

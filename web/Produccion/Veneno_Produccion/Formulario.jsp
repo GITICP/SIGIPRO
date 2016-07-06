@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <label for="id_veneno" class="control-label"> *Veneno del Serpentario Asociado</label>
+        <label for="id_veneno" class="control-label"> *Veneno del Serpentario Asociado (Lote)</label>
             <!-- Id Veneno Serpentario-->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -68,11 +68,11 @@
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
                           <c:forEach items="${listaVenenos}" var="veneno_serpentario">
                             <c:choose>
-                              <c:when test="${veneno.getVeneno_serpentario().getId_veneno() == veneno_serpentario.getId_veneno()}" >
-                                <option value=${veneno_serpentario.getId_veneno()} selected> Especie ${veneno_serpentario.getEspecie().getEspecie()}</option>
+                              <c:when test="${veneno.getVeneno_serpentario().getId_lote() == veneno_serpentario.getId_lote()}" >
+                                <option value=${veneno_serpentario.getId_lote()} selected> Lote: ${veneno_serpentario.getNumero_lote()}, Especie: ${veneno_serpentario.getEspecie().getGenero_especie()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value=${veneno_serpentario.getId_veneno()}> Especie ${veneno_serpentario.getEspecie().getEspecie()}</option>
+                                <option value=${veneno_serpentario.getId_lote()}> Lote: ${veneno_serpentario.getNumero_lote()}, Especie: ${veneno_serpentario.getEspecie().getGenero_especie()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
