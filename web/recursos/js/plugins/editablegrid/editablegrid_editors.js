@@ -35,13 +35,14 @@ CellEditor.prototype.edit = function(rowIndex, columnIndex, element, value)
 
 		event = event || window.event;
 
-		// ENTER or TAB: apply value
-		if (event.keyCode == 13 || event.keyCode == 9) {
+		// Enter or TAB: apply value
+		if (event.keyCode == 9) {
 
 			// backup onblur then remove it: it will be restored if editing could not be applied
 			this.onblur_backup = this.onblur; 
 			this.onblur = null;
 			if (this.celleditor.applyEditing(this.element, this.celleditor.getEditorValue(this)) === false) this.onblur = this.onblur_backup;
+			
 
 			// TAB: move to next cell
 			if (event.keyCode == 9) {
@@ -72,6 +73,12 @@ CellEditor.prototype.edit = function(rowIndex, columnIndex, element, value)
 			return false;
 		}
 
+                 // Enter: new line in textarea
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    var s = $(this).val();
+                    $(this).val(s+"\n");
+                }
 		// ESC: cancel editing
 		if (event.keyCode == 27) { 
 			this.onblur = null; 
@@ -232,8 +239,8 @@ function TextCellEditor(size, maxlen, config) {
 };
 
 TextCellEditor.prototype = new CellEditor();
-TextCellEditor.prototype.fieldSize = -1;
-TextCellEditor.prototype.maxLength = -1;
+TextCellEditor.prototype.fieldSize = 100;
+TextCellEditor.prototype.maxLength = 100;
 TextCellEditor.prototype.autoHeight = true;
 
 TextCellEditor.prototype.editorValue = function(value) {
@@ -250,8 +257,8 @@ TextCellEditor.prototype.updateStyle = function(htmlInput)
 TextCellEditor.prototype.getEditor = function(element, value)
 {
 	// create and initialize text field
-	var htmlInput = document.createElement("input"); 
-	htmlInput.setAttribute("type", "text");
+	var htmlInput = document.createElement("textarea"); 
+	//htmlInput.setAttribute("type", "text");
 	if (this.maxLength > 0) htmlInput.setAttribute("maxlength", this.maxLength);
 
 	if (this.fieldSize > 0) htmlInput.setAttribute("size", this.fieldSize);
