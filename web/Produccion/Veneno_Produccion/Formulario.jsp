@@ -83,7 +83,7 @@
     </div>    
     <div class="col-md-6">
 <!-- Cantidad -->
-        <label for="cantidad" class="control-label"> *Cantidad</label>
+        <label for="cantidad" class="control-label"> *Cantidad (mg)</label>
             <div class="form-group">
               <div class="col-sm-12">
                 <!-- Peso -->

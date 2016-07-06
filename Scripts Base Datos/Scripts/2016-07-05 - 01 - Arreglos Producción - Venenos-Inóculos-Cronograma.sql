@@ -13,3 +13,18 @@ ALTER TABLE produccion.semanas_cronograma ALTER COLUMN entregas_cantidad TYPE ch
 ALTER TABLE produccion.semanas_cronograma ALTER COLUMN entregas_destino TYPE character varying(500);
 ALTER TABLE produccion.semanas_cronograma ALTER COLUMN entregas_lote TYPE character varying(500);
 ALTER TABLE produccion.semanas_cronograma ALTER COLUMN observaciones TYPE character varying(500);
+
+-- Agregar Historial de Consumo Directo de Venenos de Producción
+create table produccion.historial_consumos
+(
+id_historial_consumo serial NOT NULL,
+id_veneno integer NOT NULL,
+fecha date NOT NULL,
+cantidad integer NOT NULL,
+id_usuario integer NOT NULL,
+CONSTRAINT pk_historial_consumos PRIMARY KEY (id_historial_consumo),
+CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno)
+      REFERENCES produccion.veneno_produccion (id_veneno) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE SET NULL
+);
+

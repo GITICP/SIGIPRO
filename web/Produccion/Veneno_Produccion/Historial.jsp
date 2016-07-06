@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Producción</li>
             <li> 
-              <a href="/SIGIPRO/Produccion/Veneno_Produccion?">Catálogo de Venenos de Producción</a>
+              <a href="/SIGIPRO/Produccion/Veneno_Produccion?">Historial de Consumo de Venenos de Producción</a>
             </li>
           </ul>
         </div>
@@ -31,10 +31,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-flask"></i> Catálogo de Venenos de Producción </h3>
+                <h3><i class="fa fa-flask"></i> Historial de Consumo de Venenos de Producción </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion?accion=historial">Historial de Consumo Directo</a>
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion?accion=agregar">Agregar Veneno de Producción</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion">Catálogo de Venenos de Producción</a>
                 </div>  
             </div>
             ${mensaje}
@@ -44,33 +43,25 @@
                 <thead> 
                   <tr>
                     <th>Veneno</th>
-                    <th>Fecha de Ingreso</th>
+                    <th>Usuario</th>
+                    <th>Fecha de Consumo</th>
                     <th>Cantidad</th>
-                    <th>Observaciones</th>
-                    <th>Veneno Asociado</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaVenenos}" var="veneno">
+                  <c:forEach items="${historiales}" var="historial">
 
-                    <tr id ="${veneno.getId_veneno()}">
+                    <tr id ="${historial.getId_veneno()}">
                       <td>
-                        <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${veneno.getId_veneno()}">
+                        <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${historial.getId_veneno()}">
                         <div style="height:100%;width:100%">
-                            ${veneno.getVeneno()}
+                            ${historial.getVeneno().getVeneno()}
                         </div>
                         </a>
                       </td>
-                      <td>${veneno.getFecha_ingreso_S()}</td>
-                      <td>${veneno.getCantidad()}</td>
-                      <td>${veneno.getObservaciones()}</td>
-                      <td>
-                        <a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${veneno.getVeneno_serpentario().getId_lote()}">
-                        <div style="height:100%;width:100%">
-                            Lote: ${veneno.getVeneno_serpentario().getNumero_lote()}, Especie: ${veneno.getVeneno_serpentario().getEspecie().getGenero_especie()}
-                        </div>
-                        </a>
-                      </td>
+                      <td>${historial.getUsuario().getNombreUsuario()}</td>
+                      <td>${historial.getFecha_S()}</td>
+                      <td>${historial.getCantidad()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
