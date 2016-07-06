@@ -234,7 +234,6 @@ function enviarPeticionXHTTP(path){
 }
 
 function editarSemana(id, columna, nuevoValor){
-    
     if (window.XMLHttpRequest) {
         xhttp = new XMLHttpRequest();
         } else {
@@ -247,7 +246,7 @@ function editarSemana(id, columna, nuevoValor){
             //worked
         }
     };
-    enviarPeticionXHTTP("editarSemana?id="+id+"&columna="+columna+"&nuevoValor="+nuevoValor);
+    enviarPeticionXHTTP("editarSemana?id="+id+"&columna="+columna+"&nuevoValor="+nuevoValor.toString().replace("\n","//n"));
 }
     
 /**

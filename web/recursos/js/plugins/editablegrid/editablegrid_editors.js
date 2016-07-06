@@ -239,8 +239,8 @@ function TextCellEditor(size, maxlen, config) {
 };
 
 TextCellEditor.prototype = new CellEditor();
-TextCellEditor.prototype.fieldSize = 100;
-TextCellEditor.prototype.maxLength = 100;
+TextCellEditor.prototype.fieldSize = 90;
+TextCellEditor.prototype.maxLength = 90;
 TextCellEditor.prototype.autoHeight = true;
 
 TextCellEditor.prototype.editorValue = function(value) {
