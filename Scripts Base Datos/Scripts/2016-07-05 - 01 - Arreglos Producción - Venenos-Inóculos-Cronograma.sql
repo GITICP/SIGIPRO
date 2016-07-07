@@ -28,3 +28,21 @@ CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno)
       ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
+-- Agregar Venenos por Inóculo
+create table produccion.venenos_inoculo
+(
+id_inoculo integer NOT NULL,
+id_veneno integer NOT NULL,
+cantidad integer NOT NULL,
+CONSTRAINT fk_id_inoculo FOREIGN KEY (id_inoculo)
+      REFERENCES produccion.inoculo (id_inoculo) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE SET NULL,
+CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno)
+      REFERENCES produccion.veneno_produccion (id_veneno) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE SET NULL
+);
+
+-- Modificaciones en la tabla inóculo
+﻿ALTER TABLE produccion.inoculo DROP CONSTRAINT fk_id_veneno;
+AlTER TABLE produccion.inoculo DROP COLUMN peso;
+AlTER TABLE produccion.inoculo DROP COLUMN id_veneno;

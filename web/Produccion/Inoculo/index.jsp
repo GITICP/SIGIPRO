@@ -45,8 +45,6 @@
                     <th>Identificador</th>
                     <th>Fecha de Preparación</th>
                     <th>Encargado de Preparación</th>
-                    <th>Veneno asociado</th>
-                    <th>Peso (miligramos)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -62,12 +60,6 @@
                       </td>
                       <td>${inoculo.getFecha_preparacion_S()}</td>
                       <td>${inoculo.getEncargado_preparacion().getNombreCompleto()}</td>
-                      <td>
-                            <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${inoculo.getVeneno().getId_veneno()}">
-                                ${inoculo.getVeneno().getVeneno()}
-                            </a>
-                      </td>
-                      <td>${inoculo.getPeso()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

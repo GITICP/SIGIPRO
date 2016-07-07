@@ -40,8 +40,6 @@ public class InoculoDAO extends DAO {
                 inoculo.setFecha_preparacion(rs.getDate("fecha_preparacion"));
                 inoculo.setIdentificador(rs.getString("identificador"));
                 inoculo.setEncargado_preparacion(uDAO.obtenerUsuario(rs.getInt("encargado_preparacion")));
-                inoculo.setVeneno(vDAO.obtenerVeneno_Produccion(rs.getInt("id_veneno")));
-                inoculo.setPeso(rs.getInt("peso"));
                 resultado.add(inoculo);
             }
             rs.close();
@@ -70,8 +68,6 @@ public class InoculoDAO extends DAO {
                 inoculo.setFecha_preparacion(rs.getDate("fecha_preparacion"));
                 inoculo.setIdentificador(rs.getString("identificador"));
                 inoculo.setEncargado_preparacion(uDAO.obtenerUsuario(rs.getInt("encargado_preparacion")));
-                inoculo.setVeneno(vDAO.obtenerVeneno_Produccion(rs.getInt("id_veneno")));
-                inoculo.setPeso(rs.getInt("peso"));
                 resultado = inoculo;
             }
             rs.close();
@@ -84,24 +80,22 @@ public class InoculoDAO extends DAO {
         return resultado;
     }
     
-    public boolean insertarInoculo(Inoculo p) throws SIGIPROException {
+    public int insertarInoculo(Inoculo p) throws SIGIPROException {
 
-        boolean resultado = false;
+        int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.inoculo (fecha_preparacion, identificador, encargado_preparacion, "
-                    + "id_veneno, peso)"
-                    + " VALUES (?,?,?,?,?) RETURNING id_inoculo");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.inoculo (fecha_preparacion, identificador, encargado_preparacion "
+                    + ")"
+                    + " VALUES (?,?,?) RETURNING id_inoculo");
 
             consulta.setDate(1, p.getFecha_preparacion());
             consulta.setString(2, p.getIdentificador());
             consulta.setInt(3, p.getEncargado_preparacion().getID());
-            consulta.setInt(4, p.getVeneno().getId_veneno());
-            consulta.setInt(5, p.getPeso());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
-                resultado = true;
+                resultado = resultadoConsulta.getInt("id_inoculo");
             }
             resultadoConsulta.close();
             consulta.close();
@@ -120,16 +114,14 @@ public class InoculoDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE produccion.inoculo"
-                    + " SET fecha_preparacion=?, identificador=?, encargado_preparacion=?, id_veneno=?, peso=?"
+                    + " SET fecha_preparacion=?, identificador=?, encargado_preparacion=?"
                     + " WHERE id_inoculo=?; "
             );
 
             consulta.setDate(1, p.getFecha_preparacion());
             consulta.setString(2, p.getIdentificador());
             consulta.setInt(3, p.getEncargado_preparacion().getID());
-            consulta.setInt(4, p.getVeneno().getId_veneno());
-            consulta.setInt(5, p.getPeso());
-            consulta.setInt(6, p.getId_inoculo());
+            consulta.setInt(4, p.getId_inoculo());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
