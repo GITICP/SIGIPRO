@@ -99,6 +99,17 @@
                                         </c:choose>
                                     </td>
                                 </tr>
+                                <tr><td> <strong>Aprobación de Gestión de Calidad:</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isAprobacion_gestion()}">
+                                                Aprobado
+                                            </c:when>
+                                            <c:otherwise>
+                                                Pendiente
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                                 <tr><td> <strong>Requiere aprobación:</strong> <td>
                                         <c:choose>
                                             <c:when test="${actividad.isRequiere_ap()}">

@@ -66,7 +66,7 @@
                                        display:table-cell;
                                        vertical-align:middle;
                                        color:#fff;
-                                       background-color:#3071a9;
+                                       background-color:#6e9bc2;
                                        border-color:#285e8e;" href="/SIGIPRO/Produccion/Categoria_AA?accion=agregar">
                                         Agregar Nueva Categoría
                                     </a>

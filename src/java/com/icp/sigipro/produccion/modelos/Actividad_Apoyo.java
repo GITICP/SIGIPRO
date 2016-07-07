@@ -25,6 +25,7 @@ public class Actividad_Apoyo {
     private boolean aprobacion_direccion;
     private boolean aprobacion_regente;
     private boolean aprobacion_coordinador;
+    private boolean aprobacion_gestion;
     private int version;
     private int id_historial;
     private String observaciones;
@@ -40,6 +41,14 @@ public class Actividad_Apoyo {
 
     public void setRequiere_ap(boolean requiere_ap) {
         this.requiere_ap = requiere_ap;
+    }
+
+    public boolean isAprobacion_gestion() {
+        return aprobacion_gestion;
+    }
+
+    public void setAprobacion_gestion(boolean aprobacion_gestion) {
+        this.aprobacion_gestion = aprobacion_gestion;
     }
 
     public String getObservaciones() {

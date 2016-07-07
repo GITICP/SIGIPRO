@@ -73,8 +73,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorActividad_Apoyo", urlPatterns = {"/Produccion/Actividad_Apoyo"})
 public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
-    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad
-    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679};
+    //CRUD, Activar Actividad, iones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad, Aprobaciones Gestion
+    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680};
     //-----------------
     private final Actividad_ApoyoDAO dao = new Actividad_ApoyoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -488,7 +488,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
-        if (actividad.isAprobacion_direccion()) {
+        if (actividad.isAprobacion_gestion()) {
             request.setAttribute("actividad", actividad);
             ProduccionXSLT xslt;
             try {
@@ -519,7 +519,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
         respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
-        if (respuesta.getActividad().isAprobacion_direccion()) {
+        if (respuesta.getActividad().isAprobacion_gestion()) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
@@ -581,7 +581,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
-        //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director
+        //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director, 5 - Gestion
         int actor = Integer.parseInt(request.getParameter("actor"));
         Actividad_Apoyo aa = dao.obtenerAprobaciones(id_actividad);
         boolean resultado = false;
@@ -611,6 +611,13 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                     if (aa.isAprobacion_calidad() && aa.isAprobacion_coordinador() && aa.isAprobacion_regente()) {
                         resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
                         aa.setAprobacion_direccion(true);
+                    }
+                    break;
+                case 5:
+                    validarPermiso(680, request);
+                    if (aa.isAprobacion_calidad() && aa.isAprobacion_coordinador() && aa.isAprobacion_regente() && aa.isAprobacion_direccion()) {
+                        resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
+                        aa.setAprobacion_gestion(true);
                     }
                     break;
             }
