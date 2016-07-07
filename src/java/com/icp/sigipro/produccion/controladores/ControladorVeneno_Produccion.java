@@ -9,6 +9,7 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.produccion.dao.Historial_ConsumoDAO;
 import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
 import com.icp.sigipro.produccion.modelos.Historial_Consumo;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
@@ -88,7 +89,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
 
-        List<Historial_Consumo> historiales = new Veneno_ProduccionDAO().obtenerHistoriales();
+        List<Historial_Consumo> historiales = new Historial_ConsumoDAO().obtenerHistoriales();
         request.setAttribute("historiales", historiales);
         String redireccion = "Veneno_Produccion/Historial.jsp";
         
@@ -195,7 +196,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             java.util.Date result = df.parse(request.getParameter("fecha_consumo"));
             java.sql.Date fecha_consumo = new java.sql.Date(result.getTime());           
-            dao.insertarHistorial(veneno.getId_veneno(), fecha_consumo, cantidad_consumir, this.getIdUsuario(request));
+            new Historial_ConsumoDAO().insertarHistorial(veneno.getId_veneno(), fecha_consumo, cantidad_consumir, this.getIdUsuario(request));
             
             veneno.setCantidad(veneno.getCantidad()-cantidad_consumir);
             resultado = dao.editarVeneno_Produccion(veneno);

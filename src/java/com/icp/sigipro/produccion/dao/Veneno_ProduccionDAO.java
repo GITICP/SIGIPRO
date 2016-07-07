@@ -65,39 +65,6 @@ public class Veneno_ProduccionDAO extends DAO {
         return resultado;
     }
 
-    public List<Historial_Consumo> obtenerHistoriales() throws SIGIPROException {
-
-        List<Historial_Consumo> resultado = new ArrayList<Historial_Consumo>();
-
-        try {
-            PreparedStatement consulta2;
-            consulta2 = getConexion().prepareStatement(" SELECT * FROM produccion.historial_consumos; ");
-            ResultSet rs2 = consulta2.executeQuery();
-            while (!rs2.isClosed() && rs2.next()) {
-                System.out.println("---------Entró al while");
-                
-                Historial_Consumo historial = new Historial_Consumo();
-                
-                historial.setId_historial(rs2.getInt("id_historial_consumo"));
-                int id_veneno = rs2.getInt("id_veneno");
-                historial.setFecha(rs2.getDate("fecha"));
-                historial.setCantidad(rs2.getInt("cantidad"));
-                historial.setId_usuario(rs2.getInt("id_usuario"));
-                historial.setVeneno(this.obtenerVeneno_Produccion(id_veneno));
-                historial.setId_veneno(id_veneno);
-                historial.setUsuario(new UsuarioDAO().obtenerUsuario(historial.getId_usuario()));
-                resultado.add(historial);
-            }
-            rs2.close();
-            consulta2.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
-        }
-        return resultado;
-    }
-    
     public Veneno_Produccion obtenerVeneno_Produccion(int id_veneno) throws SIGIPROException {
 
         Veneno_Produccion resultado = new Veneno_Produccion();
@@ -127,7 +94,7 @@ public class Veneno_ProduccionDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean insertarVeneno_Produccion(Veneno_Produccion p) throws SIGIPROException {
 
         boolean resultado = false;
@@ -142,33 +109,6 @@ public class Veneno_ProduccionDAO extends DAO {
             consulta.setInt(3, p.getCantidad());
             consulta.setString(4, p.getObservaciones());
             consulta.setInt(5, p.getVeneno_serpentario().getId_lote());
-
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            if (resultadoConsulta.next()) {
-                resultado = true;
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
-        }
-        return resultado;
-    }
-    
-    public boolean insertarHistorial(int id_veneno, java.sql.Date fecha ,int cantidad, int id_usuario) throws SIGIPROException {
-
-        boolean resultado = false;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_consumos (id_veneno, fecha, cantidad, id_usuario)"
-                    + " VALUES (?,?,?,?) RETURNING id_historial_consumo");
-            
-            consulta.setInt(1, id_veneno);
-            consulta.setDate(2, fecha);
-            consulta.setInt(3, cantidad);
-            consulta.setInt(4, id_usuario);
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
