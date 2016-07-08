@@ -7,6 +7,7 @@ $(document).ready(function () {
                 var i = elementos.index(document.activeElement) + 1;
                 if (i >= elementos.length) i = 0;
                 elementos.eq(i).focus();
+                elementos.eq(i).select();
                 return true;
             } else {
                 return false;
