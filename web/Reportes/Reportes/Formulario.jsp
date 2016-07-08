@@ -57,6 +57,16 @@
                     </div>
                 </div>
             </div>
+            <label for="nombre" class="control-label">Nombre de archivo de Javascript (dejar en blanco si no se desea modificar)</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input id="input-nombre-js" type="text" maxlength="100" placeholder="Nombre del JS (sin .js)" class="form-control" name="url_js" value="${reporte.getUrl_js()}"
+                               oninvalid="setCustomValidity('Este campo es requerido')"
+                               oninput="setCustomValidity('')">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="widget widget-table">

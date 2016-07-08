@@ -201,6 +201,7 @@ public class ControladorReporte extends SIGIPROServlet {
         reporte.setConsulta(request.getParameter("codigo"));
         reporte.setNombre(request.getParameter("nombre"));
         reporte.setDescripcion(request.getParameter("descripcion"));
+        reporte.setUrl_js(request.getParameter("url_js"));
 
         Seccion s = new Seccion();
         s.setId_seccion(Integer.parseInt(request.getParameter("id_seccion")));
