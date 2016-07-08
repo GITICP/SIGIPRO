@@ -83,9 +83,20 @@ public class ControladorSolicitud extends SIGIPROServlet {
         int id = dao.obtenerProximoId();
 
         Date fechaActual = new Date();
-        DateFormat formatoFecha = new SimpleDateFormat("yyyy");
+        DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+        DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
+        int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+        int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
+        
+        String numeroAnno = "";
+        
+        if (mes >= 10) {
+            numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
+        } else {
+            numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
+        }
 
-        String numero_solicitud = id + "-" + formatoFecha.format(fechaActual);
+        String numero_solicitud = id + "-" + numeroAnno;
 
         List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
         request.setAttribute("tipomuestras", tipomuestras);

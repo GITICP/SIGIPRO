@@ -20,13 +20,19 @@
                 <div class="col-md-12 ">
                     <ul class="breadcrumb">
                         <li>Producción</li>
-                        <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?">Actividades de Apoyo</a>
+                        <li>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Categoria_AA?accion=ver&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">${respuesta.getActividad().getCategoria().getNombre()}</a></li>
-                        <li> <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">${respuesta.getActividad().getNombre()}</a> </li>
-                        <li class="active"> Historial - Respuesta Version ${respuesta.getVersion()} </li>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
+                        </li>
+                        <li> 
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">Actividades de Apoyo Realizadas</a>
+                        </li>
+                        <li> 
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&id_respuesta=${respuesta.getId_respuesta()}">Respuesta - ${respuesta.getNombre()} </a>
+                        </li>
+                        <li class="active"> Historial de ${respuesta.getNombre()} - Version ${respuesta.getVersion()} </li>
                     </ul>
                 </div>
             </div>
@@ -48,6 +54,7 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre:</strong></td> <td>${respuesta.getNombre()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong></td> <td>${respuesta.getFechaAsString()} </td></tr>
+                                <tr><td> <strong>Usuario realizar:</strong></td> <td>${respuesta.getUsuario_realizar().getNombre_completo()} </td></tr>
                             </table>
                             <br>
                             <div class="col-md-12">

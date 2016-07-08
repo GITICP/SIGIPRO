@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-6">
-                    <label for="objeto-relacionado" class="control-label"> Asociar a otro objeto</label>
+                    <label for="objeto-relacionado" class="control-label"> Asociar a Sangría o Sangría de Prueba</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
@@ -47,6 +47,9 @@
                                     <option value="sangria" ${(tipo == 'sangria') ? "selected" : ""}>
                                         Sangría
                                     </option>
+                                    <option value="sangria_prueba" ${(tipo == 'sangria_prueba') ? "selected" : ""}>
+                                        Sangría de Prueba
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -55,77 +58,22 @@
             </div>
             <c:choose>
                 <c:when test="${accion == 'Agregar'}">
-                    <div class="col-md-6"></div>
-                    <div id="fila-select-sangria" class="row" hidden="true">
-                        <div class="col-md-6">
-                            <label for="sangria" class="control-label"> Sangría por asociar</label>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <select id="seleccion-sangria" name="sangria"
-                                                style='background-color: #fff;'>
-                                            <option value=''></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6"></div>
-                    <div id="fila-select-dia" class="row" hidden="true">
-                        <div class="col-md-6">
-                            <label for="sangria" class="control-label"> Día por asignar</label>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <select id="seleccion-dia" name="dia"
-                                                style='background-color: #fff;'>
-                                            <option value=''></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <t:agregar_solicitud_sangria />
+                    <t:agregar_solicitud_sangria_prueba />
                 </c:when>
                 <c:otherwise>
                     <c:choose>
                         <c:when test="${tipo == 'sangria'}">
                             <t:editar_solicitud_sangria derecha="true" />
+                            <t:agregar_solicitud_sangria_prueba />
+                        </c:when>
+                        <c:when test="${tipo == 'sangria_prueba'}">
+                            <t:agregar_solicitud_sangria />
+                            <t:editar_solicitud_sangria_prueba />
                         </c:when>
                         <c:otherwise>
-                            <div class="col-md-6"></div>
-                            <div id="fila-select-sangria" class="row" hidden="true">
-                                <div class="col-md-6">
-                                    <label for="sangria" class="control-label"> Sangría por asociar</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="input-group">
-                                                <select id="seleccion-sangria" name="sangria"
-                                                        style='background-color: #fff;'>
-                                                    <option value=''></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6"></div>
-                            <div id="fila-select-dia" class="row" hidden="true">
-                                <div class="col-md-6">
-                                    <label for="sangria" class="control-label"> Día por asignar</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="input-group">
-                                                <select id="seleccion-dia" name="dia"
-                                                        style='background-color: #fff;'>
-                                                    <option value=''></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <t:agregar_solicitud_sangria />
+                            <t:agregar_solicitud_sangria_prueba />
                         </c:otherwise>
                     </c:choose>
                 </c:otherwise>

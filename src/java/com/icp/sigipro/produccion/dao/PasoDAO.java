@@ -9,6 +9,7 @@ import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.produccion.modelos.Paso;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,9 @@ public class PasoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
+            getConexion().setAutoCommit(false);
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.paso (version) "
                     + " VALUES (1) RETURNING id_paso");
-
             rs = consulta.executeQuery();
             if (rs.next()) {
                 paso.setId_paso(rs.getInt("id_paso"));
@@ -41,7 +42,19 @@ public class PasoDAO extends DAO {
                 if (rs.next()) {
                     resultado = true;
                     paso.setId_historial(rs.getInt("id_historial"));
+                    getConexion().commit();
+                    getConexion().setAutoCommit(true);
                 }
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            try {
+                if (getConexion() != null) {
+                    getConexion().rollback();
+                    getConexion().setAutoCommit(true);
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -53,7 +66,7 @@ public class PasoDAO extends DAO {
         return resultado;
     }
 
-    public boolean editarPaso(Paso paso) {
+    public boolean editarPaso(Paso paso, int version) {
         boolean resultado = false;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -63,7 +76,7 @@ public class PasoDAO extends DAO {
             SQLXML xmlVal = getConexion().createSQLXML();
             xmlVal.setString(paso.getEstructuraString());
             consulta.setInt(1, paso.getId_paso());
-            consulta.setInt(2, paso.getVersion() + 1);
+            consulta.setInt(2, version);
             consulta.setSQLXML(3, xmlVal);
             consulta.setString(4, paso.getNombre());
             rs = consulta.executeQuery();
@@ -73,7 +86,7 @@ public class PasoDAO extends DAO {
                 consulta = getConexion().prepareStatement(" UPDATE produccion.paso "
                         + "SET version = ? "
                         + "WHERE id_paso = ?; ");
-                consulta.setInt(1, paso.getVersion() + 1);
+                consulta.setInt(1, version);
                 consulta.setInt(2, paso.getId_paso());
                 if (consulta.executeUpdate() == 1) {
                     resultado = true;
@@ -169,7 +182,6 @@ public class PasoDAO extends DAO {
                 resultado.setVersion(rs.getInt("version"));
                 resultado.setEstructura(rs.getSQLXML("estructura"));
 
-                
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -180,9 +192,8 @@ public class PasoDAO extends DAO {
         }
         return resultado;
     }
-    
-    public int obtenerVersion(int id_historial)
-    {
+
+    public int obtenerVersion(int id_historial) {
         int resultado = 0;
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -193,17 +204,16 @@ public class PasoDAO extends DAO {
             if (rs.next()) {
                 resultado = rs.getInt("version");
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }
         return resultado;
     }
-    
+
     public boolean activarVersion(int version, int id_paso) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -226,7 +236,7 @@ public class PasoDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean eliminarPaso(int id_paso) {
         boolean resultado = false;
         PreparedStatement consulta = null;
@@ -239,6 +249,27 @@ public class PasoDAO extends DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerUltimaVersion(int id_paso){
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT version FROM produccion.historial_paso WHERE id_paso=? ORDER BY version DESC LIMIT 1; ");
+            consulta.setInt(1, id_paso);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("version");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
             cerrarConexion();
         }

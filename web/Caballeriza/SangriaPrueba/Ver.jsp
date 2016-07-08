@@ -24,7 +24,7 @@
                         <li> 
                             <a href="/SIGIPRO/Caballeriza/SangriaPrueba?">Sangría de Prueba</a>
                         </li>
-                        <li class="active"> ${sangriap.getId_sangria_prueba()} </li>
+                        <li class="active"> Sangría de Prueba ${sangriap.getId_sangria_prueba_especial()} </li>
                     </ul>
                 </div>
             </div>
@@ -34,18 +34,25 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-book"></i> ${sangriap.getId_sangria_prueba()} </h3>
+                            <h3><i class="fa fa-book"></i> Sangría de Prueba ${sangriap.getId_sangria_prueba_especial()} </h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table>
-                                <tr><td> <strong>Muestra:</strong></td> <td>${sangriap.getMuestra()} </td></tr>
-                                <tr><td> <strong>Solicitud N°:</strong></td> <td>${sangriap.getNum_solicitud()} </td></tr>
-                                <tr><td> <strong>Informe N°:</strong></td> <td>${sangriap.getNum_informe()} </td></tr>
-                                <tr><td> <strong>Fecha de recepción de la muestra:</strong></td> <td>${sangriap.getFecha_recepcion_muestraAsString()} </td></tr>
-                                <tr><td> <strong>Fecha del informe:</strong></td> <td>${sangriap.getFecha_informeAsString()} </td></tr>
-                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getResponsable()} </td></tr>
-                                <tr><td> <strong>Inóculo:</strong></td> <td>${sangriap.getInoculo().getId_inoculo()} </td></tr>                                
+                            <table class="tabla-ver">
+                                <tr><td> <strong>Fecha:</strong></td><td>${sangriap.getFechaAsString()}</td></tr>
+                                <tr><td> <strong>Responsable:</strong></td> <td>${sangriap.getUsuario().getNombre_completo()} </td></tr>
+                                <tr><td> <strong>Número de Informe de CC:</strong></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${sangriap.getInforme() == null}">
+                                                Sin informe.
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/SIGIPRO/ControlCalidad/Informe?accion=ver&id_solicitud=${sangriap.getInforme().getSolicitud().getId_solicitud()}">${sangriap.getInforme().getSolicitud().getNumero_solicitud()}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                             </table>
                             <br>
                             <div class="widget widget-table">
@@ -53,22 +60,20 @@
                                     <h3><i class="fa fa-check"></i> Caballos de la Sangría de Prueba </h3>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                                    <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter" data-filas-defecto="50">
                                         <thead>
                                             <tr>
-                                                <th>Nombre</th>
-                                                <th>Número de Caballo</th>
-                                                <th>Hematrocito</th>
+                                                <th>Nombre (Número) de Caballo</th>
+                                                <th>Hematocrito</th>
                                                 <th>Hemoglobina</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${caballos}" var="caballo">
-                                                <tr id="${caballo.getId_caballo()}">
-                                                    <td>${caballo.getNombre()}</td> 
-                                                    <td>${caballo.getNumero()}</td>
-                                                    <td>${caballo.getHematrocito()}</td>
-                                                    <td>${caballo.getHemoglibina()}</td>
+                                            <c:forEach items="${sangriap.getLista_sangrias_prueba_caballo()}" var="sangria_prueba_caballo">
+                                                <tr id="${sangria_prueba_caballo.getCaballo().getId_caballo()}">
+                                                    <td>${sangria_prueba_caballo.getCaballo().getNombre()} (${sangria_prueba_caballo.getCaballo().getNumero()})</td>
+                                                    <td>${(sangria_prueba_caballo.getHematocrito() == 0.0) ? "Sin resultado registrado." : sangria_prueba_caballo.getHematocrito()}</td>
+                                                    <td>${(sangria_prueba_caballo.getHemoglobina() == 0.0) ? "Sin resultado registrado." : sangria_prueba_caballo.getHemoglobina()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

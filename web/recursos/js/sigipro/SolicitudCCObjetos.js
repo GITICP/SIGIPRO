@@ -3,9 +3,12 @@
  */
 
 $("#seleccion-objeto").change(function () {
+    $("#fila-select-sangria").hide();
+    $("#fila-select-dia").hide();
+    $("#fila-select-sangria-prueba").hide();
     if ($(this).find("option:selected").val() === "sangria") {
         $.ajax({
-            url: "/SIGIPRO/Caballeriza/Sangria",
+            url: "/SIGIPRO/Caballeriza/Sangria?tipo=solicitud_cc",
             type: "GET",
             data: {"accion": "sangriasajax"},
             dataType: "json",
@@ -13,11 +16,18 @@ $("#seleccion-objeto").change(function () {
                 generar_select_sangria(datos);
             }
         });
-    
+    } else if($(this).find("option:selected").val() === "sangria_prueba") {
+        $.ajax({
+            url: "/SIGIPRO/Caballeriza/SangriaPrueba",
+            type: "GET",
+            data: {"accion": "sangrias_pruebas_ajax"},
+            dataType: "json",
+            success: function (datos) {
+                generar_select_sangria_prueba(datos);
+            }
+        });
     } else {
         // Meter el comportamiento de otros objetos como un else if dejar este else de último
-        $("#fila-select-sangria").hide();
-        $("#fila-select-dia").hide();
         $("#boton-muestra").prop("disabled", false);
     }
 });
@@ -28,7 +38,8 @@ function generar_select_sangria(datos) {
 
     var select_sangria = $("#seleccion-sangria");
     select_sangria.select2();
-
+    
+    select_sangria.unbind("change");
     select_sangria.change(evento_seleccionar_sangria);
 
     for (var i = 0; i < datos.length; i++) {
@@ -48,6 +59,27 @@ function generar_select_sangria(datos) {
         opcion.text(elemento.identificador);
 
         select_sangria.append(opcion);
+    }
+}
+
+function generar_select_sangria_prueba(datos) {
+
+    $("#fila-select-sangria-prueba").show();
+
+    var select_sangria_prueba = $("#seleccion-sangria-prueba");
+    select_sangria_prueba.select2();
+    
+    select_sangria_prueba.unbind("change");
+    select_sangria_prueba.change(evento_seleccionar_sangria_prueba);
+
+    for (var i = 0; i < datos.length; i++) {
+        var elemento = datos[i];
+        var opcion_string = "<option value=\""+ elemento.id_sangria_prueba + "\">";
+        var opcion = $(opcion_string);
+        opcion.data("caballos", JSON.stringify(elemento.caballos));
+        opcion.text(elemento.identificador);
+
+        select_sangria_prueba.append(opcion);
     }
 }
 
@@ -72,6 +104,7 @@ function evento_seleccionar_sangria() {
     var select_dia = $("#seleccion-dia");
     select_dia.find("option").remove();
     select_dia.append($("<option>"));
+    select_dia.unbind("change");
     select_dia.change(evento_seleccionar_dia);
 
     var opcion_seleccionada = $(this).find("option:selected");
@@ -114,6 +147,18 @@ function evento_seleccionar_dia() {
     });
 }
 
+function evento_seleccionar_sangria_prueba() {
+    
+    var opcion_sangria_prueba = $("#seleccion-sangria-prueba").find("option:selected");
+    var lista_caballos_string = opcion_sangria_prueba.data("caballos");
+    if(typeof lista_caballos_string === "string") {
+        agregar_muestra_caballos(JSON.parse(lista_caballos_string));
+    } else {
+        agregar_muestra_caballos(lista_caballos_string);
+    }
+    
+}
+
 function agregar_muestra_caballos(datos) {
     var lista_caballos = [];
 
@@ -121,10 +166,21 @@ function agregar_muestra_caballos(datos) {
         var elemento = datos[i];
         lista_caballos.push(elemento.numero);
     }
-
+    
+    $(".muestras").children().remove();
     agregarMuestra();
-    $("#identificadores_" + (contador - 1)).select2("val", lista_caballos);
-    $("#identificadores_" + (contador - 1)).prop("readonly", true);
+    
+    var parametros = jQuery.extend(true, {}, PARAMETROS_SELECT_IDENTIFICADORES);
+    parametros.createTag = function(params){return undefined;};
+    parametros.tokenSeparators = [];
+    
+    PARAMETROS_VER = parametros;
+    
+    var elemento_select_identificadores = $("#identificadores_" + (contador - 1));
+    
+    elemento_select_identificadores.select2("destroy");
+    elemento_select_identificadores.select2(parametros);
+    elemento_select_identificadores.select2("val", lista_caballos);
     $("#boton-muestra").prop("disabled", true);
 }
 
@@ -141,5 +197,12 @@ $(document).ready(function () {
         var select_dia = $("#seleccion-dia");
         select_dia.select2();
         select_dia.change(evento_seleccionar_dia);
+    } else if (tipo === "sangria_prueba") {
+        $("#seleccion-objeto").find("option[value=sangria_prueba]").prop("selected", true);
+        $("seleccion-objeto").select2();
+        
+        var select_sangria_prueba = $("#seleccion-sangria-prueba");
+        select_sangria_prueba.select2();
+        select_sangria_prueba.change(evento_seleccionar_sangria_prueba);
     }
 });

@@ -32,7 +32,7 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> Protocolo de Producción </h3>
-                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 635)}">
+                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 640)}">
                                 <div class="btn-group widget-header-toolbar">
                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Protocolo?accion=agregar">Agregar Protocolo de Producción</a>
                                 </div>
@@ -186,6 +186,14 @@
             <form class="form-horizontal" id="loteProtocolo" autocomplete="off" method="post" action="Lote">
                 <input hidden="true" name="accion" value="Agregar">
                 <input hidden="true" id='id_protocolo' name='id_protocolo' value="">
+                <label for="observaciones" class="control-label"> Nombre de últimos 3 Lotes: </label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group ultimos">
+                            
+                        </div>
+                    </div>
+                </div>
                 <label for="observaciones" class="control-label"> *Nombre/Identificador de Lote de Producción</label>
                 <div class="form-group">
                     <div class="col-sm-12">

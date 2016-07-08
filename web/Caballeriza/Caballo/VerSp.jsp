@@ -54,9 +54,8 @@
                                     <thead> 
                                         <tr>
                                             <th>Identificador</th>
-                                            <th>Muestra </th>
-                                            <th>Fecha de Recepción </th>
-                                            <th>Hematrocito</th>
+                                            <th>Fecha</th>
+                                            <th>Hematocrito</th>
                                             <th>Hemoglobina</th>
                                         </tr>
                                     </thead>
@@ -70,10 +69,9 @@
                                                         </div>
                                                     </a>
                                                 </td>
-                                                <td>${sangriap.getSangria_prueba().getMuestra()}</td>
-                                                <td>${sangriap.getSangria_prueba().getFecha_recepcion_muestraAsString()}</td>
-                                                <td>${sangriap.getHematrocito()}</td>
-                                                <td>${sangriap.getHemoglobina()}</td>
+                                                <td>${sangriap.getSangria_prueba().getFechaAsString()}</td>
+                                                <td>${(sangriap.getHematocrito() == 0.0) ? "Sin resultado registrado." : sangriap.getHematocrito() }</td>
+                                                <td>${(sangriap.getHemoglobina() == 0.0) ? "Sin resultado registrado." : sangriap.getHemoglobina()}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

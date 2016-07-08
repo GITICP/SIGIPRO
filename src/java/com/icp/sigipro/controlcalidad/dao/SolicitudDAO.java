@@ -12,6 +12,7 @@ import com.icp.sigipro.controlcalidad.modelos.Grupo;
 import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Muestra;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
 import com.icp.sigipro.core.DAO;
@@ -35,12 +36,13 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado) "
-                    + " VALUES (?,?,?,?) RETURNING id_solicitud");
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado,descripcion) "
+                    + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
             consulta.setString(1, solicitud.getNumero_solicitud());
             consulta.setInt(2, solicitud.getUsuario_solicitante().getId_usuario());
             consulta.setTimestamp(3, solicitud.getFecha_solicitud());
             consulta.setString(4, solicitud.getEstado());
+            consulta.setString(5, solicitud.getDescripcion());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
@@ -57,6 +59,7 @@ public class SolicitudDAO extends DAO {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            ex.getNextException().printStackTrace();
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
@@ -233,7 +236,7 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
+            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion "
                     + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + "WHERE s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial'; ");
             rs = consulta.executeQuery();
@@ -247,6 +250,7 @@ public class SolicitudDAO extends DAO {
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
                 solicitud.setUsuario_solicitante(usuario);
                 solicitud.setEstado(rs.getString("estado"));
+                solicitud.setDescripcion(rs.getString("descripcion"));
                 resultado.add(solicitud);
             }
         } catch (Exception ex) {
@@ -264,7 +268,7 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion "
+            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion, s.descripcion "
                     + "FROM control_calidad.solicitudes as s "
                     + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
@@ -277,6 +281,7 @@ public class SolicitudDAO extends DAO {
                 solicitud.setId_solicitud(rs.getInt("id_solicitud"));
                 solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
                 solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                solicitud.setDescripcion(rs.getString("descripcion"));
                 Usuario usuario = new Usuario();
                 usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
                 usuario.setNombre_completo(rs.getString("nombre_completo"));
@@ -393,7 +398,9 @@ public class SolicitudDAO extends DAO {
     public SolicitudCC obtenerSolicitud(int id_solicitud) {
         SolicitudCC resultado = new SolicitudCC();
         PreparedStatement consulta = null;
+        PreparedStatement consulta_resultados_sp = null;
         ResultSet rs = null;
+        ResultSet rs_sp = null;
         try {
 
             consulta = getConexion().prepareStatement(
@@ -532,10 +539,30 @@ public class SolicitudDAO extends DAO {
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
+                        + "   AND ags.id_analisis <> 2147483647 "
+                        + " ORDER BY ags.id_analisis_grupo_solicitud; "
+                );
+
+                consulta_resultados_sp = getConexion().prepareStatement(
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, "
+                        + " CASE WHEN r.id_resultado_analisis_sp IN (  "
+                        + " 				SELECT r.id_resultado_analisis_sp "
+                        + " 				FROM control_calidad.resultados_informes ri  "
+                        + " 				    INNER JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_resultado_analisis_sp = ri.id_resultado_sp "
+                        + " 				WHERE ri.id_informe = ?  "
+                        + " 				)  "
+                        + "      THEN true "
+                        + "      ELSE false "
+                        + " END AS en_informe "
+                        + " FROM control_calidad.analisis_grupo_solicitud ags "
+                        + "     LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
+                        + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
 
                 consulta.setInt(1, resultado.getInforme().getId_informe());
+                consulta_resultados_sp.setInt(1, resultado.getInforme().getId_informe());
+                
             } else {
                 consulta = getConexion().prepareStatement(
                         " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
@@ -543,6 +570,14 @@ public class SolicitudDAO extends DAO {
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
+                );
+                
+                consulta_resultados_sp = getConexion().prepareStatement( 
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion "
+                        + "  FROM control_calidad.analisis_grupo_solicitud ags "
+                        + "      LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
+                        + "  WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
+                        + "  ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
             }
 
@@ -562,6 +597,28 @@ public class SolicitudDAO extends DAO {
                     if (resultado.getInforme() != null) {
                         if (rs.getBoolean("en_informe")) {
                             resultado.getInforme().agregarResultado(r);
+                        }
+                    }
+                }
+            }
+            
+            rs_sp = consulta_resultados_sp.executeQuery();
+            
+            while (rs_sp.next()) {
+                int id_resultado_sp = rs_sp.getInt("id_resultado_analisis_sp");
+                if (id_resultado_sp != 0) {
+                    ResultadoSangriaPrueba r_sp = new ResultadoSangriaPrueba();
+                    r_sp.setId_resultado_sangria_prueba(rs_sp.getInt("id_resultado_analisis_sp"));
+                    r_sp.setHematocrito(rs_sp.getFloat("hematocrito"));
+                    r_sp.setHemoglobina(rs_sp.getFloat("hemoglobina"));
+                    r_sp.setRepeticion(rs_sp.getInt("repeticion"));
+                    AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
+                    ags_iter.setId_analisis_grupo_solicitud(rs_sp.getInt("id_analisis_grupo_solicitud"));
+                    r_sp.setAgs(ags_iter);
+                    resultado.agregarResultadoAnalisisGrupoSolicitud(r_sp);
+                    if (resultado.getInforme() != null) {
+                        if (rs_sp.getBoolean("en_informe")) {
+                            resultado.getInforme().agregarResultado(r_sp);
                         }
                     }
                 }

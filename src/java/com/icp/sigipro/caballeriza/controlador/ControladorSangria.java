@@ -19,8 +19,6 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.utilidades.HelperFechas;
-import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -38,17 +36,13 @@ import javax.servlet.http.HttpServletResponse;
  * @author Walter
  */
 @WebServlet(name = "ControladorSangria", urlPatterns = {"/Caballeriza/Sangria"})
-public class ControladorSangria extends SIGIPROServlet
-{
+public class ControladorSangria extends SIGIPROServlet {
 
     private final int[] permisos = {1, 61, 62};
     private final SangriaDAO dao = new SangriaDAO();
-    private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
-    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
 
     protected final Class clase = ControladorSangria.class;
-    protected final List<String> accionesGet = new ArrayList<String>()
-    {
+    protected final List<String> accionesGet = new ArrayList<String>() {
         {
             add("index");
             add("ver");
@@ -60,24 +54,21 @@ public class ControladorSangria extends SIGIPROServlet
             add("caballossangriaajax");
         }
     };
-    protected final List<String> accionesPost = new ArrayList<String>()
-    {
+    protected final List<String> accionesPost = new ArrayList<String>() {
         {
             add("agregar");
             add("editar");
             add("extraccion");
         }
     };
-    
-    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
 
-    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
-    {
+    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Agregar.jsp";
 
-        GrupoDeCaballosDAO gruposdao= new GrupoDeCaballosDAO();
+        GrupoDeCaballosDAO gruposdao = new GrupoDeCaballosDAO();
         UsuarioDAO usr_dao = new UsuarioDAO();
         List<GrupoDeCaballos> lista_grupos = gruposdao.obtenerGruposDeCaballosConCaballos();
         List<Usuario> lista_usuarios = usr_dao.obtenerUsuariosSeccion(6);
@@ -89,8 +80,7 @@ public class ControladorSangria extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
-    {
+    protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Sangria/index.jsp";
@@ -101,8 +91,7 @@ public class ControladorSangria extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String redireccion = "Sangria/Ver.jsp";
@@ -110,15 +99,13 @@ public class ControladorSangria extends SIGIPROServlet
         try {
             Sangria sangria = dao.obtenerSangria(id_sangria);
             request.setAttribute("sangria", sangria);
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Extraccion.jsp";
@@ -132,8 +119,7 @@ public class ControladorSangria extends SIGIPROServlet
             request.setAttribute("sangria", sangria);
             request.setAttribute("dia", dia);
             request.setAttribute("accion", "Extraccion");
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             redireccion = "Sangria/index.jsp";
         }
@@ -141,8 +127,7 @@ public class ControladorSangria extends SIGIPROServlet
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEditarextraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void getEditarextraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(61, listaPermisos);
         String redireccion = "Sangria/Extraccion.jsp";
@@ -160,20 +145,17 @@ public class ControladorSangria extends SIGIPROServlet
             request.setAttribute("fecha_sangria", get_fecha.invoke(sangria, (Object[]) null));
             request.setAttribute("dia", dia);
             request.setAttribute("accion", "Extraccion");
-        }
-        catch (SIGIPROException ex) {
+        } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
             redireccion = "Sangria/index.jsp";
-        }
-        catch (Exception ex_inesperada) {
+        } catch (Exception ex_inesperada) {
             request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Inténtelo nuevamente y de persistir, favor notificar al administrador del sistema."));
             redireccion = "Sangria/index.jsp";
         }
         redireccionar(request, response, redireccion);
     }
 
-    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
-    {
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermiso(62, listaPermisos);
         String redireccion = "Sangria/Editar.jsp";
@@ -188,68 +170,72 @@ public class ControladorSangria extends SIGIPROServlet
         request.setAttribute("accion", "Editar");
         redireccionar(request, response, redireccion);
     }
-    
-    protected void getSangriasajax (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
+    protected void getSangriasajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         response.setContentType("application/json");
-        
+
         PrintWriter out = response.getWriter();
         String resultado = "";
-        
+
+        String tipo = request.getParameter("tipo");
+
         try {
-            List<Sangria> sangrias = dao.obtenerSangriasLALPendiente();
-            
+            List<Sangria> sangrias;
+            if (tipo != null) {
+                sangrias = dao.obtenerSangriasLALPendiente();
+            } else {
+                sangrias = dao.obtenerSangriasProduccion();
+            }
+
             List<SangriaAJAX> sangrias_ajax = new ArrayList<SangriaAJAX>();
-            
+
             for (Sangria s : sangrias) {
                 SangriaAJAX s_ajax = new SangriaAJAX(s);
                 sangrias_ajax.add(s_ajax);
             }
-            
+
             Gson gson = new Gson();
             resultado = gson.toJson(sangrias_ajax);
-            
-        } catch(SIGIPROException sig_ex) {
+
+        } catch (SIGIPROException sig_ex) {
             // Enviar error al AJAX
         }
-        
+
         out.print(resultado);
-        
+
         out.flush();
     }
-    
-    protected void getCaballossangriaajax (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
+    protected void getCaballossangriaajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         response.setContentType("application/json");
-        
+
         int id_sangria = Integer.parseInt(request.getParameter("id_sangria"));
         int dia = Integer.parseInt(request.getParameter("dia"));
-        
+
         PrintWriter out = response.getWriter();
         String resultado = "";
-        
+
         try {
             List<Caballo> caballos = dao.obtenerCaballosSangriaDia(id_sangria, dia);
-            
+
             Gson gson = new Gson();
             resultado = gson.toJson(caballos);
-            
-        } catch(SIGIPROException sig_ex) {
+
+        } catch (SIGIPROException sig_ex) {
             // Enviar error al AJAX
         }
-        
-        out.print(resultado);
-        
-        out.flush();
-        
-    }
-    
-    // </editor-fold>
 
+        out.print(resultado);
+
+        out.flush();
+
+    }
+
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException
-    {
+    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         String redireccion = "Sangria/Agregar.jsp";
         Sangria sangria = construirObjeto(request);
 
@@ -264,15 +250,13 @@ public class ControladorSangria extends SIGIPROServlet
 
             request.setAttribute("lista_sangrias", dao.obtenerSangrias());
             redireccionar(request, response, redireccion);
-        }
-        catch (SIGIPROException sig_ex) {
+        } catch (SIGIPROException sig_ex) {
             request.setAttribute("sangria", sangria);
             redireccionar(request, response, redireccion);
         }
     }
 
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String redireccion = "Sangria/index.jsp";
 
         try {
@@ -287,16 +271,14 @@ public class ControladorSangria extends SIGIPROServlet
             request.setAttribute("mensaje", helper.mensajeDeExito("Sangría editada correctamente."));
             List<Sangria> lista = dao.obtenerSangrias();
             request.setAttribute("lista_sangrias", lista);
-        }
-        catch (SIGIPROException sig_ex) {
+        } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
 
         redireccionar(request, response, redireccion);
     }
 
-    protected void postExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void postExtraccion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int dia = Integer.parseInt(request.getParameter("dia"));
         Sangria sangria = new Sangria();
         sangria.setId_sangria(Integer.parseInt(request.getParameter("id_sangria")));
@@ -331,11 +313,10 @@ public class ControladorSangria extends SIGIPROServlet
                 sangria_caballo.setSangre(dia, sangre);
                 sangria_caballo.setObservaciones(dia, observaciones); // Esta línea se cambió
 
-                
                 sangria.agregarSangriaCaballo(sangria_caballo);
-                
+
             }
-            
+
             // Se agregó todo este bloque.
             for (String id_caballo : ids_caballos_false) {
 
@@ -349,12 +330,11 @@ public class ControladorSangria extends SIGIPROServlet
                 String observaciones = request.getParameter("observaciones_" + id_caballo);
 
                 sangria_caballo.setObservaciones(dia, observaciones);
-                
+
                 sangria.agregarSangriaCaballoSinParticipacion(sangria_caballo);
-                
+
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
 
         }
 
@@ -367,7 +347,7 @@ public class ControladorSangria extends SIGIPROServlet
 
             // Código nuevo
             boolean volver = Boolean.parseBoolean(request.getParameter("volver"));
-            
+
             if (volver) {
                 this.getEditarextraccion(request, response);
             } else {
@@ -376,19 +356,15 @@ public class ControladorSangria extends SIGIPROServlet
                 redireccionar(request, response, redireccion);
             }
             // Código nuevo
-        }
-        catch (SIGIPROException sig_ex) {
+        } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError("Extracción no se registró correctamente."));
         }
         // Aquí se borró algo
     }
-    
-    // </editor-fold>
 
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos modelo">
-    
-    private Sangria construirObjeto(HttpServletRequest request)
-    {
+    private Sangria construirObjeto(HttpServletRequest request) {
         Sangria sangria = new Sangria();
 
         Usuario u = new Usuario();
@@ -398,8 +374,7 @@ public class ControladorSangria extends SIGIPROServlet
         GrupoDeCaballos g = new GrupoDeCaballos();
         g.setId_grupo_caballo(Integer.parseInt(request.getParameter("grupo")));
         sangria.setGrupo(g);
-        
-        String numero_informe_calidad = request.getParameter("num_inf_cc");
+
         String potencia = request.getParameter("potencia");
         String volumen_plasma_total = request.getParameter("volumen_plasma");
 
@@ -426,38 +401,31 @@ public class ControladorSangria extends SIGIPROServlet
 
         return sangria;
     }
-    
-    // </editor-fold>
 
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
-    
     @Override
-    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
-    {
+    protected void ejecutarAccion(HttpServletRequest request, HttpServletResponse response, String accion, String accionHTTP) throws ServletException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<String> lista_acciones;
         if (accionHTTP.equals("get")) {
             lista_acciones = accionesGet;
-        }
-        else {
+        } else {
             lista_acciones = accionesPost;
         }
         if (lista_acciones.contains(accion.toLowerCase())) {
             String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
             Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
-        }
-        else {
+        } else {
             Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
         }
     }
 
     @Override
-    protected int getPermiso()
-    {
+    protected int getPermiso() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    // </editor-fold>
 
+    // </editor-fold>
 }

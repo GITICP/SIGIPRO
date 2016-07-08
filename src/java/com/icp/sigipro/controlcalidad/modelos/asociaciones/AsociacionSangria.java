@@ -8,7 +8,6 @@ package com.icp.sigipro.controlcalidad.modelos.asociaciones;
 import com.icp.sigipro.caballeriza.dao.SangriaDAO;
 import com.icp.sigipro.caballeriza.modelos.Sangria;
 import com.icp.sigipro.controlcalidad.dao.ResultadoDAO;
-import com.icp.sigipro.controlcalidad.dao.SolicitudDAO;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
@@ -40,10 +39,14 @@ public class AsociacionSangria extends AsociacionSolicitud {
 
     @Override
     public void asociar(HttpServletRequest request) {
-        dia = Integer.parseInt(request.getParameter("dia"));
         int id_sangria = Integer.parseInt(request.getParameter("sangria"));
-        sangria = new Sangria();
-        sangria.setId_sangria(id_sangria);
+        try {
+            sangria = sangria_dao.obtenerSangria(id_sangria);
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        dia = Integer.parseInt(request.getParameter("dia"));
+        solicitud.setDescripcion("Sangría grupo " + sangria.getGrupo().getNombre() + ", día " + dia);
     }
 
     @Override
@@ -72,7 +75,7 @@ public class AsociacionSangria extends AsociacionSolicitud {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
         request.setAttribute("dia", dia);
-        request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
+        request.setAttribute("sangria", sangria_dao.obtenerSangria(sangria.getId_sangria()));
         request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
     }
 
@@ -81,9 +84,15 @@ public class AsociacionSangria extends AsociacionSolicitud {
         request.setAttribute("tipo", "sangria");
         request.setAttribute("id_sangria", sangria.getId_sangria());
         request.setAttribute("dia", dia);
-        request.setAttribute("sangrias", sangria_dao.obtenerSangriasLALPendiente());
+        request.setAttribute("sangria", sangria_dao.obtenerSangria(sangria.getId_sangria()));
         request.setAttribute("caballos_sangria", sangria_dao.obtenerCaballosSangriaDia(sangria.getId_sangria(), dia));
-        request.setAttribute("caballos_resultado", resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia));
+        List<ObjetoAsociacionMultiple> caballos_resultado = resultado_dao.obtenerCaballosResultado(sangria.getId_sangria(), dia);
+        request.setAttribute("caballos_resultado", caballos_resultado);
+        List<Integer> ids_caballos = new ArrayList<>();
+        for (ObjetoAsociacionMultiple osm : caballos_resultado) {
+            ids_caballos.addAll(osm.getIds());
+        }
+        request.setAttribute("ids_caballos_con_resultado", ids_caballos);
     }
 
     @Override
@@ -133,26 +142,24 @@ public class AsociacionSangria extends AsociacionSolicitud {
     public List<PreparedStatement> resetear(Connection conexion) throws SQLException {
         List<PreparedStatement> resultado = new ArrayList<>(); 
         
-        PreparedStatement consulta_sangria = conexion.prepareStatement(
-                  " UPDATE caballeriza.sangrias SET "
-                + " id_informe_dia" + dia + " = ? "
-                + " WHERE id_sangria = ?; "
-        );
-
-        consulta_sangria.setNull(1, java.sql.Types.INTEGER);
-        consulta_sangria.setInt(2, sangria.getId_sangria());
-        consulta_sangria.addBatch();
-
-        resultado.add(consulta_sangria);
-        
         PreparedStatement consulta_sangrias_caballos = conexion.prepareStatement(
                   " UPDATE caballeriza.sangrias_caballos SET "
                 + " id_resultado_lal_dia" + dia + " = ? "
-                + " WHERE id_sangria = ?;"
+                + " WHERE id_sangria = ? AND id_caballo IN ( "
+                + "                                 SELECT DISTINCT(c.id_caballo) "
+                + "                                 FROM (  SELECT * "
+                + "                                         FROM control_calidad.grupos g "
+                + "                                             INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                + "                                             INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                + "                                         WHERE g.id_solicitud = ? "
+                + "                                      ) AS muestras_caballos "
+                + "                                 INNER JOIN caballeriza.caballos c ON c.numero = CAST(muestras_caballos.identificador AS int)"
+                + "                                        ); "
         );
         
         consulta_sangrias_caballos.setNull(1, java.sql.Types.INTEGER);
         consulta_sangrias_caballos.setInt(2, sangria.getId_sangria());
+        consulta_sangrias_caballos.setInt(3, solicitud.getId_solicitud());
         consulta_sangrias_caballos.addBatch();
         
         resultado.add(consulta_sangrias_caballos);

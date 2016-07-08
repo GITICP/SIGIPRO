@@ -35,10 +35,11 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-gears"></i> ${analisis.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
+                                <%--
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 543)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el equipo" data-href="/SIGIPRO/ControlCalidad/Analisis?accion=eliminar&id_analisis=${analisis.getId_analisis()}">Eliminar</a>
                                 </c:if>
-
+                                --%>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 542)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Analisis?accion=editar&id_analisis=${analisis.getId_analisis()}">Editar</a>
                                 </c:if>

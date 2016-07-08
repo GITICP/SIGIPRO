@@ -1,13 +1,22 @@
 SELECTOR_TABLA_RESULTADOS_OBTENIDOS = "#resultados-obtenidos";
 SELECTOR_TABLA_RESULTADOS_POR_REPORTAR = "#resultados-por-reportar";
+SELECTOR_TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA = "#resultados-por-reportar-hemoglobina";
+SELECTOR_VALIDADOR_CABALLOS = "#caballos-numeros";
 
-TABLA_RESULTADOS_POR_REPORTAR = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR);
-TABLA_RESULTADOS_OBTENIDOS = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_OBTENIDOS);
+SELECTOR_MODAL = "#modal-error";
 
-ELEMENTO_CABALLOS = $("#caballos-numeros");
+TABLA_RESULTADOS_POR_REPORTAR = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR, {paging: false, info: false});
+TABLA_RESULTADOS_OBTENIDOS = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_OBTENIDOS, {paging: false, info: false});
+TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA = inicializar_tabla(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR_HEMOGLOBINA, {paging: false, info: false});
+
+HEMATOCRITO = "Hematocrito";
+HEMOGLOBINA = "Hemoglobina";
 
 FLAG_ELIMINAR = 1;
 FLAG_REPORTAR = 2;
+
+FLAG_ERROR = 1;
+FLAG_ADVERTENCIA = 2;
 
 $(document).ready(function () {
 
@@ -31,7 +40,7 @@ $(document).ready(function () {
     });
 
     var tipo_asociacion = $("#flag-asociacion").data("tipo");
-    if (tipo_asociacion === "sangria") {
+    if (tipo_asociacion === "sangria" || tipo_asociacion === "sangria_prueba") {
         $("#seleccion-objeto").find("option[value=sangria]").prop("selected", true);
         $("#seleccion-objeto").select2();
 
@@ -49,21 +58,29 @@ $(document).ready(function () {
     }
 
     $(".reportar-resultado").each(function () {
+        $(this).unbind("click");
         $(this).click(funcion_reportar);
     });
 
     $(".eliminar-resultado").each(function () {
+        $(this).unbind("click");
         $(this).click(funcion_eliminar);
     });
     
     $("#form-informe").submit(function () {
         var resultado = false;
-        if(funcion_validar()) {
+        var resultado_validacion = funcion_validar();
+        if(resultado_validacion.resultado) {
             resultado = true;
         } else {
-            $("#modal-error").modal("show");
+            abrir_modal(resultado_validacion.tipo);
         }
-        return resultado;
+           return resultado;
+    });
+    
+    $("#generar-de-todas-formas").click(function(){
+        $("#form-informe").unbind("submit");
+        $("#form-informe").submit();
     });
 
 });
@@ -83,13 +100,17 @@ funcion_eliminar_general = function () {
 };
 
 funcion_validar_general = function() {
-    $("#label-error").text("Debe elegir al menos un resultado para generar el informe.");
-    return $(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR).find("tbody > tr.fila-resultado").length !== 0;
+    if($(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR).find("tbody > tr.fila-resultado").length !== 0){
+        return {resultado: true};
+    } else {
+        $("#label-error").text("Debe elegir al menos un resultado para generar el informe.");
+        return {resultado: false, tipo: FLAG_ERROR};
+    }
 };
 
 funcion_reportar_sangria = function () {
     var fila = $(this).parents("tr");
-    id_resultado_seleccionado = fila.attr("id");
+    var id_resultado_seleccionado = fila.attr("id");
     
     var columna_caballos = fila.find("td:nth-child(2) > span");
     var ids_caballos = [];
@@ -100,16 +121,47 @@ funcion_reportar_sangria = function () {
         ids_caballos.push( id_caballo );
     });
     
-    var boton = fila.find("button");
-    desasignar_evento_boton(boton, FLAG_ELIMINAR);
-    mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
+    var resultado_valido = true;
+    var ids_caballos_invalidos = [];
+    
+    $.each(ids_caballos, function(i, id) {
+        if (validar_caballo_activo(id)) {
+            resultado_valido = false;
+            ids_caballos_invalidos.push(id);
+        }
+    });
+    
+    if (resultado_valido) {
+        
+        $.each(ids_caballos, function(i, id) {
+            seleccionar_caballo(id);
+        });
+        
+        var boton = fila.find("button");
+        desasignar_evento_boton(boton, FLAG_ELIMINAR);
+        mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
 
-    var input_caballos = $("<input type='hidden'>");
-    input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
-    input_caballos.prop("value", ids_caballos.toString());
+        var input_caballos = $("<input type='hidden'>");
+        input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
+        input_caballos.prop("value", ids_caballos.toString());
 
-    var form = $("#form-informe");
-    form.prepend(input_caballos);
+        var form = $("#form-informe");
+        form.prepend(input_caballos);
+    } else {
+        var numeros_invalidos = [];
+        $.each(ids_caballos_invalidos, function(i, id) {
+            numeros_invalidos.push(obtener_numero_caballo(id));
+        });
+        var texto;
+        if (numeros_invalidos.length === 1) {
+            texto = "Resultado no se puede registrar porque el caballo con el número " + numeros_invalidos[0] + " ya tiene un resultado asignado.";
+        } else {
+            texto = "Resultado no se puede registrar porque los caballos con los números " + numeros_invalidos.toString() + " ya tienen un resultado asignado.";
+        }
+        $("#label-error").text(texto);
+        $(SELECTOR_MODAL).modal();
+    }
+    
 };
 
 funcion_eliminar_sangria = function () {
@@ -124,41 +176,39 @@ funcion_eliminar_sangria = function () {
 
     for (var i = 0; i < caballos.length; i++) {
         $("option[value=" + caballos[i] + "]").removeClass("opcion-escondida");
+        desseleccionar_caballo(caballos[i]);
     }
 
     $("input[name=caballos_res_" + id + "]").remove();
 };
 
 funcion_validar_sangria = function () {
-    $("#label-error").text("Debe asignar un resultado a todos los caballos de la sangría.");
-    return $("#seleccion-caballos").find("option:not(.opcion-escondida)").length === 0;
+    
+    if($(SELECTOR_TABLA_RESULTADOS_POR_REPORTAR).find("tbody > tr.fila-resultado").length !== 0){
+        var elemento_caballos = $(SELECTOR_VALIDADOR_CABALLOS).find("div");
+        var caballos_invalidos = [];
+        elemento_caballos.each(function() {
+            if(!$(this).data("selected")) {
+                caballos_invalidos.push($(this).data("numero"));
+            }
+        });
+        
+        var texto;
+        if (caballos_invalidos.length === 0) {
+            return {resultado: true};
+        } else if (caballos_invalidos.length === 1) {
+            texto = "El caballo con el número " + caballos_invalidos[0] + " aún no tiene un resultado asignado.";
+        } else {
+            texto = "Los caballos con los números " + caballos_invalidos.toString() + " aún no tienen un resultado asignado.";
+        }
+        $("#label-error").text(texto);
+        return {resultado: false, tipo: FLAG_ADVERTENCIA};
+    } else {
+        $("#label-error").text("Debe elegir al menos un resultado para generar el informe.");
+        return {resultado: false, tipo: FLAG_ERROR};
+    }
 };
 
-
-/*
-funcion_asociar_resultado_caballos = function () {
-    var fila = $("tr[id=" + id_resultado_seleccionado + "]");
-
-    var boton = fila.find("button");
-    desasignar_evento_boton(boton, FLAG_ELIMINAR);
-    mover_de_tabla(boton, TABLA_RESULTADOS_OBTENIDOS, TABLA_RESULTADOS_POR_REPORTAR, true);
-
-    var input_caballos = $("<input type='hidden'>");
-    input_caballos.prop("name", "caballos_res_" + id_resultado_seleccionado);
-    input_caballos.prop("value", $("#seleccion-caballos").val());
-
-    $("#modal-asociar-caballo").modal("hide");
-
-    $("#seleccion-caballos :selected").each(function () {
-        $(this).attr("selected", false);
-        $(this).addClass("opcion-escondida");
-    });
-
-    $("#seleccion-caballos").select2();
-
-    var form = $("#form-informe");
-    form.prepend(input_caballos);
-}; */
 
 /*
  * Funciones de eventos
@@ -274,18 +324,26 @@ function obtener_fila(tabla, selector) {
     return tabla.row(selector);
 }
 
-function desasignar_evento_boton(elemento, flag) {
+function desasignar_evento_boton(elemento, flag, texto) {
+    
+    if (texto === undefined) {
+        if (flag === FLAG_ELIMINAR) {
+            texto = "Eliminar de Informe";
+        } else {
+            texto = "Reportar Resultado";
+        }
+    }
 
     if (flag === FLAG_ELIMINAR) {
         elemento.unbind('click');
         elemento.click(funcion_eliminar);
-        elemento.text("Eliminar de Informe");
+        elemento.text(texto);
         elemento.addClass("btn-danger");
         elemento.removeClass("btn-primary");
     } else if (flag === FLAG_REPORTAR) {
         elemento.unbind('click');
         elemento.click(funcion_reportar);
-        elemento.text("Reportar Resultado");
+        elemento.text(texto);
         elemento.addClass("btn-primary");
         elemento.removeClass("btn-danger");
     }
@@ -307,6 +365,10 @@ function asignar_eventos_botones(funcion) {
         funcion_eliminar = funcion_eliminar_sangria;
         funcion_reportar = funcion_reportar_sangria;
         funcion_validar = funcion_validar_sangria;
+    } else if (funcion === "sangria_prueba") {
+        funcion_reportar = funcion_reportar_sangria_prueba;
+        funcion_eliminar = funcion_eliminar_sangria_prueba;
+        funcion_validar = funcion_validar_sangria_prueba;
     } else {
         funcion_eliminar = funcion_eliminar_general;
         funcion_reportar = funcion_reportar_general;
@@ -324,14 +386,63 @@ function asignar_eventos_botones(funcion) {
     });
 }
 
+function obtener_numero_caballo(id) {
+    var consulta = "#" + id;
+    var elemento_caballo = $(SELECTOR_VALIDADOR_CABALLOS).find(consulta);
+    if (elemento_caballo) {
+        return elemento_caballo.data("numero");
+    } else {
+        alert("Error grave. Refresque la página.");
+    }
+}
+
 function obtener_id_caballo(numero) {
     var consulta = "div[data-numero=" + numero + "]";
-    var elemento_caballo = ELEMENTO_CABALLOS.find(consulta);
+    var elemento_caballo = $(SELECTOR_VALIDADOR_CABALLOS).find(consulta);
     if (elemento_caballo) {
         return elemento_caballo.attr("id");
     } else {
         alert("Error grave. Refresque la página.");
     }
+}
+
+function validar_caballo_activo(id) {
+    var consulta = "#" + id;
+    var elemento_caballo = $(SELECTOR_VALIDADOR_CABALLOS).find(consulta);
+    if (elemento_caballo.data("selected")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function seleccionar_caballo(id) {
+    return toggle_caballo(id, true);
+}
+
+function desseleccionar_caballo(id) {
+    return toggle_caballo(id, false);
+}
+
+function toggle_caballo(id, valor) {
+    var consulta = "#" + id;
+    var elemento_caballo = $(SELECTOR_VALIDADOR_CABALLOS).find(consulta);
+    if (elemento_caballo) {
+        elemento_caballo.data("selected", valor);
+    } else {
+        alert("Error grave. Refresque la página.");
+    }
+}
+
+function abrir_modal(flag) {
+    if (flag === FLAG_ERROR) {
+        $("#advertencia-submit").hide();
+        $("#error").show();
+    } else if (flag === FLAG_ADVERTENCIA) {
+        $("#error").hide();
+        $("#advertencia-submit").show();
+    }
+    $("#modal-error").modal("show");
 }
 
 funcion_eliminar = funcion_eliminar_general;

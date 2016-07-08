@@ -52,10 +52,8 @@
                                 <thead> 
                                     <tr>
                                         <th>Identificador</th>
-                                        <th>Muestra</th>
+                                        <th>Fecha</th>
                                         <th>Responsable</th>
-                                        <th>Inóculo</th>
-                                        <th>Fecha De Recepción De La Muestra</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,20 +63,12 @@
                                             <td>
                                                 <a href="/SIGIPRO/Caballeriza/SangriaPrueba?accion=ver&id_sangria_prueba=${sangriap.getId_sangria_prueba()}">
                                                     <div style="height:100%;width:100%">
-                                                        ${sangriap.getId_sangria_prueba()}
+                                                        ${sangriap.getId_sangria_prueba_especial()}
                                                     </div>
                                                 </a>
                                             </td>
-                                            <td>${sangriap.getMuestra()}</td>
-                                            <td>${sangriap.getResponsable()}</td>
-                                            <td>
-                                                <a href="/SIGIPRO/Caballeriza/Inoculo?accion=ver&id_inoculo=${sangriap.getInoculo().getId_inoculo()}">
-                                                    <div style="height:100%;width:100%">
-                                                        ${sangriap.getInoculo().getId_inoculo()}
-                                                    </div>
-                                                </a>
-                                            </td>                                            
-                                        <td>${sangriap.getFecha_recepcion_muestraAsString()}</td>
+                                            <td>${sangriap.getFechaAsString()}</td>
+                                            <td>${sangriap.getUsuario().getNombre_completo()}</td>
                                     </tr>
 
                                 </c:forEach>
