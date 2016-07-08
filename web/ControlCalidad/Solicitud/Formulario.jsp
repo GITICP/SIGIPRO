@@ -105,12 +105,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="nombre" class="control-label">*Identificadores</label>
+                                <div class="col-sm-3">
+                                    <label for="nombre" class="control-label"data-toggle="tooltip" data-placement="right" title="Separar con coma, punto o '+'">*Identificadores <i class="fa fa-question-circle"></i></label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <div class="input-group">
-                                                <input type="text" placeholder="Separados, por, comas" id="identificadores_${muestra.get(0)}" class="identificadores_${muestra.get(0)}" name="identificadores_${muestra.get(0)}" value="${muestra.get(2)}"
+                                                <input type="text" placeholder="Separar con coma, punto o '+'" id="identificadores_${muestra.get(0)}" class="identificadores_${muestra.get(0)}" name="identificadores_${muestra.get(0)}" value="${muestra.get(2)}"
                                                        required 
                                                        oninvalid="setCustomValidity('Este campo es requerido')"
                                                        oninput="setCustomValidity('')" onfocus="eliminarBusqueda()" > 
@@ -146,7 +146,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2"> <br>
+                                <div class="col-sm-1"> <br>
                                     <button type="button" id="boton_eliminar" class="btn btn-danger btn-sm eliminar" onclick="eliminarMuestra('${muestra.get(0)}')" style="margin-left:7px;margin-right:5px;">Eliminar</button>
                                 </div>
                             </div>

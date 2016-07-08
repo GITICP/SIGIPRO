@@ -55,6 +55,14 @@
                 </div>
             </div>
         </div>
+        <label for="observaciones" class="control-label">Observaciones</label>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones de la sangría." class="form-control" name="observaciones" id="observaciones" oninvalid="setCustomValidity('Este campo es requerido ')" oninput="setCustomValidity('')">${sangria.getObservaciones()}</textarea>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
         <label for="grupo" class="control-label">*Grupo de Caballos</label>

@@ -22,6 +22,7 @@ import org.json.JSONObject;
  */
 public class Sangria {
     private int id_sangria;
+    private String observaciones;
     private Date fecha;
     private Date fecha_dia1;
     private Date fecha_dia2;
@@ -372,5 +373,21 @@ public class Sangria {
             resultado[i] =  sangrias_caballos.get(i).getCaballo().getId_caballo();
         }
         return resultado;
+    }
+    
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        if (observaciones == null) {
+            this.observaciones = "Sin observaciones.";
+        } else {
+            if (observaciones.isEmpty()) {
+                this.observaciones = "Sin observaciones.";
+            } else {
+                this.observaciones = observaciones;
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@
                     <div class="input-group">
                         <input type="text" value="${sub_bodega.getNombre()}" class="form-control" name="nombre" required
                                oninvalid="setCustomValidity('Este campo es requerido ')" placeholder="Nombre de Sub Bodega"
-                               onchange="setCustomValidity('')">
+                               onchange="setCustomValidity('')" maxlength="45">
                     </div>
                 </div>
             </div>

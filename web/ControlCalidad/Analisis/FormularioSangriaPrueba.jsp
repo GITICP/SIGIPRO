@@ -23,7 +23,7 @@
                         <li> 
                             <a href="/SIGIPRO/ControlCalidad/Analisis?">Análisis</a>
                         </li>
-                        <li class="active"> Realizar Nuevo Análisis ${analisis.getNombre()} </li>
+                        <li class="active"> ${(accion == 'Editar') ? 'Editar resultado de' : 'Realizar Nuevo'} ${analisis.getNombre()} </li>
 
                     </ul>
                 </div>
@@ -35,12 +35,23 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> Realizar Nuevo Análisis ${analisis.getNombre()} </h3>
+                            <h3><i class="fa fa-flask"></i> ${(accion == 'Editar') ? 'Editar resultado de' : 'Realizar Nuevo'} ${analisis.getNombre()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
+                            
+                            <table class="tabla-ver">
+                                <tr><td><strong>Análisis:</strong></td><td>${analisis.getNombre()}</td></tr>
+                                <tr><td><strong>${(ags.getGrupo().getGrupos_muestras().size() == 1) ? "Número de caballo:" : "Números de caballos:"}</strong></td>
+                                    <td>
+                                        ${(accion == 'Editar') ? param.identificadores : ags.getListadoIdentificadoresCompleto(false)}
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br>
 
-                            <form method="post" class="form-horizontal" action="${(accion == 'Editar' ? 'Resultado' : 'Analisis')}" autocomplete="off" enctype='multipart/form-data'>
+                            <form id="form-resultado-sangria-prueba" method="post" class="form-horizontal" action="${(accion == 'Editar' ? 'Resultado' : 'Analisis')}" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="${(accion == 'Editar') ? "editar_sp" : "realizar_sp"}" name="accion" />
                                 <input type="hidden" value="${id_analisis}" name="id_analisis" />
                                 <input type="hidden" value="${resultado.getId_resultado()}" name="id_resultado" />
@@ -185,7 +196,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="wbc" class="form-control" value="${resultado.getWbc()}" step="any">
+                                                    <input type="number" name="wbc" class="form-control navegable-enter" value="${resultado.getWbc()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -195,7 +206,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="rbc" class="form-control" value="${resultado.getRbc()}" step="any">
+                                                    <input type="number" name="rbc" class="form-control navegable-enter" value="${resultado.getRbc()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -205,7 +216,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="hemoglobina" class="form-control" value="${resultado.getHemoglobina()}" step="any">
+                                                    <input type="number" name="hemoglobina" class="form-control navegable-enter" value="${resultado.getHemoglobina()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -215,7 +226,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="hematocrito" class="form-control" value="${resultado.getHematocrito()}" step="any">
+                                                    <input type="number" name="hematocrito" class="form-control navegable-enter" value="${resultado.getHematocrito()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -225,7 +236,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="mcv" class="form-control" value="${resultado.getMcv()}" step="any">
+                                                    <input type="number" name="mcv" class="form-control navegable-enter" value="${resultado.getMcv()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -235,7 +246,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="mch" class="form-control" value="${resultado.getMch()}" step="any">
+                                                    <input type="number" name="mch" class="form-control navegable-enter" value="${resultado.getMch()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -245,7 +256,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="mchc" class="form-control" value="${resultado.getMchc()}" step="any">
+                                                    <input type="number" name="mchc" class="form-control navegable-enter" value="${resultado.getMchc()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -255,7 +266,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="plt" class="form-control" value="${resultado.getPlt()}" step="any">
+                                                    <input type="number" name="plt" class="form-control navegable-enter" value="${resultado.getPlt()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -265,7 +276,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="lym" class="form-control" value="${resultado.getLym()}" step="any">
+                                                    <input type="number" name="lym" class="form-control navegable-enter" value="${resultado.getLym()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -275,7 +286,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="otros" class="form-control" value="${resultado.getOtros()}" step="any">
+                                                    <input type="number" name="otros" class="form-control navegable-enter" value="${resultado.getOtros()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -285,7 +296,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="linfocitos" class="form-control" value="${resultado.getLinfocitos()}" step="any">
+                                                    <input type="number" name="linfocitos" class="form-control navegable-enter" value="${resultado.getLinfocitos()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -295,7 +306,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="number" name="num_otros" class="form-control" value="${resultado.getNum_otros()}" step="any">
+                                                    <input type="number" name="num_otros" class="form-control navegable-enter" value="${resultado.getNum_otros()}" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -307,7 +318,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones">${resultado.getObservaciones()}</textarea>
+                                                    <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control navegable-enter" name="observaciones">${resultado.getObservaciones()}</textarea>
                                                 </div>
                                             </div>
                                         </div>

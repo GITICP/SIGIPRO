@@ -92,6 +92,7 @@
                                 <tr><td> <strong>Volumen de Plasma Total:</strong></td> <td>${sangria.getVolumen_plasma_total()} </td></tr>
                                 <tr><td> <strong>Plasma por Caballo:</strong></td> <td>${sangria.getPlasma_por_caballo()} </td></tr>
                                 <tr><td> <strong>Potencia:</strong></td> <td>${sangria.getPotencia()} </td></tr>
+                                <tr><td> <strong>Observaciones:</strong></td> <td>${sangria.getObservaciones()} </td></tr>
                             </table>
                             <br>
                             <div class="widget widget-table">
