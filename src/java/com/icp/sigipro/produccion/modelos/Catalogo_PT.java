@@ -16,6 +16,15 @@ public class Catalogo_PT {
   private int id_catalogo_pt;
   private String nombre;
   private String descripcion;
+  private int vida_util;
+
+  public int getVida_util() {
+    return vida_util;
+  }
+
+  public void setVida_util(int vida_util) {
+    this.vida_util = vida_util;
+  }
 
   public int getId_catalogo_pt() {
     return id_catalogo_pt;
