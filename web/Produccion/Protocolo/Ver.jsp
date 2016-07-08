@@ -96,7 +96,7 @@
                                 </tr>
                                 <tr><td> <strong>Aprobación de Gestión de Calidad:</strong> <td>
                                         <c:choose>
-                                            <c:when test="${protocolo.getAprobacion_gestion()}">
+                                            <c:when test="${protocolo.isAprobacion_gestion()}">
                                                 Aprobado
                                             </c:when>
                                             <c:otherwise>

@@ -11,3 +11,7 @@ INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (680, '[p
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (646, 612);
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (680, 632);
+
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (669, '[produccion]CerrarPaso', 'Permite darle el check de cerrado a un paso de protocolo y devolverse.');
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (669, 613);

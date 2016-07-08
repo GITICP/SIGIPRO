@@ -504,6 +504,50 @@ public class LoteDAO extends DAO {
         }
         return resultado;
     }
+    
+    public boolean cerrarPaso(int id_respuesta) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
+                    + "SET estado=8 "
+                    + "WHERE id_respuesta= ?; ");
+            consulta.setInt(1, id_respuesta);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean devolverPaso(int id_respuesta) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.respuesta_pxp "
+                    + "SET estado=5 "
+                    + "WHERE id_respuesta= ?; ");
+            consulta.setInt(1, id_respuesta);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+                
+                consulta = getConexion().prepareStatement(" UPDATE produccion.historial_respuesta_pxp "
+                    + "SET id_usuario_revisar=null, id_usuario_verificar=null "
+                    + "WHERE id_respuesta= ?; ");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
 
     public boolean activarVersion(int version, int id_respuesta) {
         boolean resultado = false;
@@ -586,6 +630,52 @@ public class LoteDAO extends DAO {
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = rs.getInt("count");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerEstado(int id_respuesta) {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT r.estado  "
+                    + "FROM produccion.respuesta_pxp as r "
+                    + "WHERE r.id_respuesta = ?; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("estado");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public int obtenerIdLote(int id_respuesta) {
+        int resultado = 0;
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT r.id_lote  "
+                    + "FROM produccion.respuesta_pxp as r "
+                    + "WHERE r.id_respuesta = ?; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado = rs.getInt("id_lote");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

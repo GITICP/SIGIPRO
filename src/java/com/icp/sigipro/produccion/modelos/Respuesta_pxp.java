@@ -27,7 +27,7 @@ public class Respuesta_pxp {
     private Usuario usuario_realizar;
     private String respuestaString;
     private int version;
-    //1-Deshabilitado 2-Deshabilitado requiere aprobacion, 3-Habilitado, 4-Habilitado requiere aprobacion, 5-Incompleto, 6-Revisado, 7-Verificado,
+    //1-Deshabilitado 2-Deshabilitado requiere aprobacion, 3-Habilitado, 4-Habilitado requiere aprobacion, 5-Incompleto, 8-Cerrado, 6-Revisado, 7-Verificado, 
     private int estado;
     private boolean ultimo;
     

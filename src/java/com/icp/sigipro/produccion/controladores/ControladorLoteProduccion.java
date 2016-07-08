@@ -69,8 +69,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorLoteProduccion", urlPatterns = {"/Produccion/Lote"})
 public class ControladorLoteProduccion extends SIGIPROServlet {
 
-    //CRUD, Realizar, Aprobar, Activar Respuesta, Revisar, Verificar, Ver Estado, Aprobar Distribucion, Registro Fecha vencimiento
-    private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667, 668};
+    //CRUD, Realizar, Aprobar, Activar Respuesta, Revisar, Verificar, Ver Estado, Aprobar Distribucion, Registro Fecha vencimiento, Cerrar y devolverse 
+    private final int[] permisos = {660, 661, 662, 663, 664, 665, 666, 667, 668, 669};
     //-----------------
     private final LoteDAO dao = new LoteDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -98,6 +98,8 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             add("completar");
             add("imagen");
             add("verestado");
+            add("cerrar");
+            add("devolver");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -162,6 +164,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
     protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Lote/Historial.jsp";
+        //SE DEBE METER LA CANTIDAD DE MESES DE VIDA UTIL EN LA BUSQUEDA
         List<Lote> lotes = dao.obtenerLotesHistorial();
         request.setAttribute("listaLotes", lotes);
         redireccionar(request, response, redireccion);
@@ -174,6 +177,8 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         try {
             Lote l = dao.obtenerLote(id_lote);
             request.setAttribute("lote", l);
+            //ACÁ SE DEBE AGREGAR LOS MESES DE VIDA UTIL DEL PRODUCTO TEERMINADO
+            request.setAttribute("meses",14);
             redireccionar(request, response, redireccion);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -297,6 +302,61 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
 
     }
 
+    protected void getCerrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(669, request);
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int estado = dao.obtenerEstado(id_respuesta);
+        //Si el estado es incompleto
+        if (estado == 5) {
+            boolean resultado = false;
+            try {
+                resultado = dao.cerrarPaso(id_respuesta);
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_respuesta, Bitacora.ACCION_CERRAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Lote de Producción cerrado correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Paso de Lote de Producción no pudo ser cerrado."));
+                }
+                int id_lote = dao.obtenerIdLote(id_respuesta);
+                this.getVer(request, response,id_lote);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Lote de Producción no pudo ser cerrado."));
+                this.getIndex(request, response);
+            }
+        }
+
+    }
+
+    protected void getDevolver(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(669, request);
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int estado = dao.obtenerEstado(id_respuesta);
+        //Si el estado es de cerrado o revisado
+        if (estado == 8 || estado == 6) {
+            boolean resultado = false;
+            try {
+                resultado = dao.devolverPaso(id_respuesta);
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_respuesta, Bitacora.ACCION_DEVOLVER, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Lote de Producción devuelto correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Paso de Lote de Producción no pudo ser devuelto."));
+                }
+                int id_lote = dao.obtenerIdLote(id_respuesta);
+                this.getVer(request, response,id_lote);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Lote de Producción no pudo ser devuelto."));
+                this.getIndex(request, response);
+            }
+        }
+    }
+
     protected void getRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         validarPermiso(661, request);
@@ -356,13 +416,12 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
     }
 
     protected void getRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         validarPermiso(661, request);
         String redireccion = "Lote/Repetir.jsp";
 
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_pxp respuesta = dao.obtenerRespuesta(id_respuesta);
-        if (respuesta.getEstado() == 5) {
+        if (respuesta.getEstado() == 5 || respuesta.getEstado()== 7) {
             request.setAttribute("id_respuesta", id_respuesta);
             ProduccionXSLT xslt;
             try {
@@ -481,7 +540,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser verificado."));
             }
-            this.getIndex(request, response);
+            this.getVer(request, response,respuesta.getLote().getId_lote());
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser verificado."));
@@ -579,7 +638,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_COMPLETAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta completada correctamente."));
-            this.getIndex(request, response);
+            this.getVer(request, response,resultado.getLote().getId_lote());
 
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
@@ -607,7 +666,8 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser revisado."));
             }
-            this.getIndex(request, response);
+            int id_lote = dao.obtenerIdLote(id_respuesta);
+            this.getVer(request, response,id_lote);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Paso de Protocolo no pudo ser verificado."));
@@ -677,7 +737,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
                 bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
                 request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
-                this.getIndex(request, response);
+                this.getVer(request, response,resultado.getLote().getId_lote());
 
             } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
                 ex.printStackTrace();
@@ -702,7 +762,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         u.setId_usuario(id_usuario);
         resultado.setUsuario_realizar(u);
         String redireccion = "Lote/index.jsp";
-        if (resultado.getEstado() == 5) {
+        if (resultado.getEstado() == 5 || resultado.getEstado()==7) {
             //Se crea el Path en la carpeta del Proyecto
             String fullPath = helper_archivos.obtenerDireccionArchivos();
             String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
@@ -719,6 +779,9 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
                 resultado.setRespuestaString(string_xml_resultado);
                 int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
                 dao.editarRespuesta(resultado, version + 1);
+                //Devuelve el estado de la respuesta al estado 5, sin usuarios de revision y verificacion
+                dao.devolverPaso(id_respuesta);
+                
                 bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
 
                 request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
