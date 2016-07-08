@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorReporte", urlPatterns = {"/Reportes/Reportes"})
 public class ControladorReporte extends SIGIPROServlet {
 
-    private final int[] permisos = {1, 61, 62};
+    private final int[] permisos = {1501, 0, 0};
     private final ReporteDAO dao = new ReporteDAO();
     private final SeccionDAO seccion_dao = new SeccionDAO();
 
@@ -61,11 +61,12 @@ public class ControladorReporte extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        validarPermisosMultiple(permisos, request);
+        
+        List<Integer> permisos_usuario = getPermisosUsuario(request);
+        
         String redireccion = "Reportes/index.jsp";
         try {
-            List<Reporte> reportes = dao.obtenerReportes();
+            List<Reporte> reportes = dao.obtenerReportes( esAdminOTienePermiso(permisos_usuario), this.getIdUsuario(request) );
             request.setAttribute("reportes", reportes);
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
@@ -219,7 +220,7 @@ public class ControladorReporte extends SIGIPROServlet {
 
     protected void postPermisos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(0, request);
+        validarPermiso(1501, request);
         String redireccion = "Reportes/index.jsp";
 
         Reporte reporte = new Reporte();
@@ -229,7 +230,7 @@ public class ControladorReporte extends SIGIPROServlet {
 
         try {
             dao.insertarPermisos(reporte, ids);
-            List<Reporte> reportes = dao.obtenerReportes();
+            List<Reporte> reportes = dao.obtenerReportes(false, 0);
             request.setAttribute("reportes", reportes);
             request.setAttribute("mensaje", helper.mensajeDeExito("Permisos actualizados correctamente"));
         } catch (SIGIPROException sig_ex) {
@@ -267,9 +268,13 @@ public class ControladorReporte extends SIGIPROServlet {
     }
     
     protected void validarAcceso(int id_usuario, int id_reporte, List<Integer> listaPermisos) throws AuthenticationException, SIGIPROException {
-        if (!listaPermisos.contains(1)) {
+        if ( esAdminOTienePermiso(listaPermisos) ) {
             dao.validarAcceso(id_usuario, id_reporte);
         }
+    }
+    
+    private boolean esAdminOTienePermiso(List<Integer> listaPermisos) {
+        return !(listaPermisos.contains(1) || listaPermisos.contains(1501));
     }
 
     //</editor-fold>

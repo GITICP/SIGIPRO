@@ -32,3 +32,13 @@ CREATE TABLE reportes.permisos_reportes
 
 ALTER TABLE reportes.reportes
   ADD CONSTRAINT fk_reportes_secciones FOREIGN KEY (id_seccion) REFERENCES seguridad.secciones (id_seccion) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+--Permisos asociados
+INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (1501, '[Reportes]GestionarPermisos', 'Permite gestionar los accesos a los reportes');
+
+--Entradas en el menú
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect) VALUES (1500, 0, 'Reportes', null);
+
+INSERT INTO seguridad.entradas_menu_principal(id_menu_principal, id_padre, tag, redirect, orden) VALUES (1501, 1500, 'Reportes', '/Reportes/Reportes', 1);
+
+INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (1501, 1501);

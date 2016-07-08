@@ -20,7 +20,7 @@
                 <div class="col-md-8 ">
                     <ul class="breadcrumb">
                         <li>Reportes</li>
-                        <li> 
+                        <li>
                             <a href="/SIGIPRO/Reportes/Reportes?">Reportes</a>
                         </li>
                         <li class="active"> Ver Reporte</li>
@@ -48,6 +48,13 @@
                             <div class="widget widget-table">
                                 <div class="widget-header">
                                     <h3><i class="fa fa-th-list"></i> Parámetros</h3>
+                                    <div class="btn-group widget-header-toolbar">
+                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 1501)}">
+                                            <a class="btn btn-warning btn-sm boton-accion" href="Reportes/Reportes?accion=permisos&id_reporte=${reporte.getId_reporte()}">Modificar Permisos</a>
+                                        </c:if>
+                                        <a class="btn btn-primary btn-sm boton-accion" onclick="history.back();">Volver</a>
+                                    </div>
+
                                 </div>
                                 <div class="widget-content">
                                     <div id="fila-parametros" class="row">

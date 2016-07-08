@@ -37,22 +37,35 @@ public class ReporteDAO extends DAO {
         }
     };
 
-    public List<Reporte> obtenerReportes() throws SIGIPROException {
+    public List<Reporte> obtenerReportes(boolean por_usuario, int id_usuario) throws SIGIPROException, AuthenticationException {
         List<Reporte> resultado = new ArrayList<>();
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
 
         try {
-            consulta = getConexion().prepareStatement(
-                    " SELECT r.id_reporte, r.nombre, r.descripcion, s.id_seccion, s.nombre_seccion "
+            
+            String s_consulta = " SELECT r.id_reporte, r.nombre, r.descripcion, s.id_seccion, s.nombre_seccion "
                     + " FROM reportes.reportes r "
-                    + " INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion; "
-            );
+                    + " INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion ";
+            
+            if (por_usuario) {
+                s_consulta += " WHERE r.id_reporte IN (SELECT id_reporte FROM reportes.permisos_reportes WHERE id_usuario = ?); ";
+            }
+            
+            consulta = getConexion().prepareStatement(s_consulta);
+            
+            if (por_usuario) {
+                consulta.setInt(1, id_usuario);
+            }
 
             rs = consulta.executeQuery();
+            
+            int contador = 0;
 
             while (rs.next()) {
+                contador++;
+                
                 Reporte r = new Reporte();
 
                 r.setId_reporte(rs.getInt("id_reporte"));
@@ -66,6 +79,10 @@ public class ReporteDAO extends DAO {
                 r.setSeccion(s);
 
                 resultado.add(r);
+            }
+            
+            if(contador == 0) {
+                throw new AuthenticationException();
             }
 
         } catch (SQLException ex) {
