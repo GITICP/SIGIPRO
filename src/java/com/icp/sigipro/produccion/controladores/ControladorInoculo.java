@@ -127,6 +127,9 @@ public class ControladorInoculo extends SIGIPROServlet {
         try {
             Inoculo i = dao.obtenerInoculo(id_inoculo);
             request.setAttribute("inoculo", i);
+            List<Venenos_Inoculo> vi = new ArrayList<Venenos_Inoculo>();
+            vi = dao_vi.obtenerVenenosInoculo(id_inoculo);
+            request.setAttribute("venenos", vi);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
@@ -155,6 +158,32 @@ public class ControladorInoculo extends SIGIPROServlet {
         request.setAttribute("tipomuestras", venenos);
         request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(venenos));
 
+        List<Venenos_Inoculo> vi = dao_vi.obtenerVenenosInoculo(ds.getId_inoculo());
+        List<List<String>> listaVenenos_Inoculo = new ArrayList<List<String>>();
+        int contador = 0;
+        while (contador < vi.size()){
+            // 0 = contador
+            // 1 = veneno
+            // 2 = peso/cantidad
+            List<String> filaVenenos = new ArrayList<String>();
+            filaVenenos.add(contador+"");
+            filaVenenos.add(vi.get(contador).getVeneno().getId_veneno()+"");
+            filaVenenos.add(vi.get(contador).getCantidad()+"");
+            listaVenenos_Inoculo.add(filaVenenos);
+            contador++;
+        }
+        //Lista los ids de los tipos de muestras ya solicitadas
+        String idTipoMuestras = "";
+        for (List<String> s : listaVenenos_Inoculo) {
+            idTipoMuestras += s.get(0);
+            idTipoMuestras += ",";
+        }
+        if (!idTipoMuestras.equals("")) {
+            idTipoMuestras = idTipoMuestras.substring(0, idTipoMuestras.length() - 1);
+        }
+        
+        request.setAttribute("listaSolicitud", listaVenenos_Inoculo);
+        request.setAttribute("listaTM", idTipoMuestras);
 
         redireccionar(request, response, redireccion);
     }
@@ -206,7 +235,6 @@ public class ControladorInoculo extends SIGIPROServlet {
             Inoculo inoculo_nuevo = construirObjetoEditar(request);
             
             resultado = dao.editarInoculo(inoculo_nuevo);
-            //elimino todos los venenos_inoculo y los creo de nuevo
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
             bitacora.setBitacora(inoculo_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_VENENO_PRODUCCION, request.getRemoteAddr());
@@ -279,6 +307,10 @@ public class ControladorInoculo extends SIGIPROServlet {
         String lista = request.getParameter("listaMuestras");
         String[] listaMuestras = lista.split(",");
         
+        //Borrar los venenos_inoculo asociados al inóculo
+        dao_vi.eliminarVenenos(inoculo.getId_inoculo());
+        
+        //Insertar los registros nuevos. Por lo tanto, no es un editar. Es un borrar todos los venenos asociados al inóculo y crear nuevos.
         if (listaMuestras.length > 0 && !listaMuestras[0].equals("")) {
             for (String i : listaMuestras) {
                 int id_veneno = Integer.parseInt(request.getParameter("veneno_" + i));

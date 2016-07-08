@@ -73,9 +73,9 @@ function agregarMuestra() {
 }
 
 function eliminarMuestra(id) {
-    var valor = $("#seleccionVeneno_" + id).val();
-    var texto = $("#seleccionVeneno_" + id + " :selected").text();
-    var nuevo_tipo = [valor, texto];
+    //var valor = $("#seleccionVeneno_" + id).val();
+    //var texto = $("#seleccionVeneno_" + id + " :selected").text();
+    //var nuevo_tipo = [valor, texto];
     var lista = $("#listaMuestras").val().split(",");
     $("div > #" + id).remove();
     lista.remove(id.toString());
