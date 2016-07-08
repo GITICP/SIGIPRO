@@ -44,28 +44,28 @@ public class ReporteDAO extends DAO {
         ResultSet rs = null;
 
         try {
-            
+
             String s_consulta = " SELECT r.id_reporte, r.nombre, r.descripcion, s.id_seccion, s.nombre_seccion "
                     + " FROM reportes.reportes r "
                     + " INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion ";
-            
+
             if (por_usuario) {
                 s_consulta += " WHERE r.id_reporte IN (SELECT id_reporte FROM reportes.permisos_reportes WHERE id_usuario = ?); ";
             }
-            
+
             consulta = getConexion().prepareStatement(s_consulta);
-            
+
             if (por_usuario) {
                 consulta.setInt(1, id_usuario);
             }
 
             rs = consulta.executeQuery();
-            
+
             int contador = 0;
 
             while (rs.next()) {
                 contador++;
-                
+
                 Reporte r = new Reporte();
 
                 r.setId_reporte(rs.getInt("id_reporte"));
@@ -80,8 +80,8 @@ public class ReporteDAO extends DAO {
 
                 resultado.add(r);
             }
-            
-            if(contador == 0) {
+
+            if (contador == 0) {
                 throw new AuthenticationException();
             }
 
@@ -198,7 +198,7 @@ public class ReporteDAO extends DAO {
 
             w.beginObject();
 
-            construirJsonDesdeResultSet(rs, w);
+            construirJsonDesdeResultSet(rs, w, false);
 
             getConexion().setAutoCommit(false);
 
@@ -235,7 +235,7 @@ public class ReporteDAO extends DAO {
             resultado = true;
 
             w.name("message");
-            w.value("Éxito");
+            w.value("Exito");
             w.endObject();
         } catch (IOException io) {
             resultado = false;
@@ -272,7 +272,7 @@ public class ReporteDAO extends DAO {
         }
     }
 
-    public void obtenerDatos(Reporte r, JsonWriter w) throws SIGIPROException {
+    public void obtenerDatos(Reporte r, JsonWriter w, boolean para_grafico) throws SIGIPROException {
 
         PreparedStatement consulta_datos = null;
         ResultSet rs_datos = null;
@@ -286,7 +286,7 @@ public class ReporteDAO extends DAO {
 
             w.beginObject();
 
-            String mensaje = construirJsonDesdeResultSet(rs_datos, w);
+            String mensaje = construirJsonDesdeResultSet(rs_datos, w, para_grafico);
 
             w.name("message");
             w.value(mensaje);
@@ -314,7 +314,7 @@ public class ReporteDAO extends DAO {
 
     }
 
-    private String construirJsonDesdeResultSet(ResultSet rs, JsonWriter w) throws SQLException, IOException, SIGIPROException {
+    private String construirJsonDesdeResultSet(ResultSet rs, JsonWriter w, boolean para_grafico) throws SQLException, IOException, SIGIPROException {
         ResultSetMetaData rsmd = rs.getMetaData();
         String resultado = "";
 
@@ -323,12 +323,10 @@ public class ReporteDAO extends DAO {
             w.name("columnas");
             w.beginArray();
 
-            for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
-                w.beginObject();
-                w.name("title");
-                String nombre_col = rsmd.getColumnLabel(cont_col);
-                w.value(nombre_col);
-                w.endObject();
+            if (para_grafico) {
+                crearArrayColumnasParaGrafico(rsmd, w);
+            } else {
+                crearArrayColumnasParaTabla(rsmd, w);
             }
 
             w.endArray();
@@ -368,7 +366,7 @@ public class ReporteDAO extends DAO {
 
             w.endArray();
 
-            resultado = "Éxito";
+            resultado = "Exito";
 
         } else {
             resultado = "Su consulta no produjo ningún resultado. Intente modificar los valores de los parámetros.";
@@ -421,47 +419,47 @@ public class ReporteDAO extends DAO {
                 } else {
                     getConexion().rollback();
                 }
-            }catch(SQLException sql_ex) {
+            } catch (SQLException sql_ex) {
                 throw new SIGIPROException("Error de comunicación con la base de datos. Comunique al administrador del sistema.");
             }
-            
+
             cerrarSilencioso(insert_permisos);
             cerrarSilencioso(delete_permisos);
             cerrarConexion();
         }
 
     }
-    
+
     public List<Integer> obtenerIdsUsuariosConPermiso(int id_reporte) throws SIGIPROException {
-        
+
         List<Integer> resultado = new ArrayList<>();
-        
+
         PreparedStatement consulta = null;
         ResultSet rs = null;
-        
+
         try {
-            
+
             consulta = getConexion().prepareStatement(" SELECT id_usuario FROM reportes.permisos_reportes where id_reporte = ? ");
-            
+
             consulta.setInt(1, id_reporte);
-            
+
             rs = consulta.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 resultado.add(rs.getInt("id_usuario"));
-            }    
-            
-        } catch(SQLException sql_ex) {
+            }
+
+        } catch (SQLException sql_ex) {
             sql_ex.printStackTrace();
-            throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");           
+            throw new SIGIPROException("Error de comunicación con la base de datos. Notifique al administrador del sistema.");
         } finally {
             cerrarSilencioso(rs);
             cerrarSilencioso(consulta);
         }
-        
+
         return resultado;
     }
-    
+
     public boolean validarAcceso(int id_usuario, int id_reporte) throws AuthenticationException, SIGIPROException {
         boolean resultado = false;
 
@@ -469,7 +467,7 @@ public class ReporteDAO extends DAO {
         ResultSet resultado_consulta = null;
 
         try {
-            consulta = getConexion().prepareStatement(      
+            consulta = getConexion().prepareStatement(
                     " SELECT 1 "
                     + " FROM reportes.permisos_reportes "
                     + " WHERE id_usuario = ? AND id_reporte = ?; "
@@ -494,6 +492,23 @@ public class ReporteDAO extends DAO {
             cerrarConexion();
         }
         return resultado;
+    }
+    
+    private void crearArrayColumnasParaTabla(ResultSetMetaData rsmd, JsonWriter w) throws IOException, SQLException {
+        for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
+            w.beginObject();
+            w.name("title");
+            String nombre_col = rsmd.getColumnLabel(cont_col);
+            w.value(nombre_col);
+            w.endObject();
+        }
+    }
+
+    private void crearArrayColumnasParaGrafico(ResultSetMetaData rsmd, JsonWriter w) throws IOException, SQLException {
+        for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
+            String nombre_col = rsmd.getColumnLabel(cont_col);
+            w.value(nombre_col);
+        }
     }
 
 }

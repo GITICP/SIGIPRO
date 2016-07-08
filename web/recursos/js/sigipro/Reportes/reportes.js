@@ -55,7 +55,7 @@ function guardarReporte(event) {
     $.post("/SIGIPRO/Reportes/Reportes?accion=ajaxagregar", jsonData)
             .done(function (data) {
                 DATOS = data;
-                if (DATOS.message === "Éxito") {
+                if (DATOS.message === "Exito") {
                     alert("Reporte guardado con éxito.");
                 } else {
                     alert("Reporte no guardado debido a un fallo en la consulta.\nEl mensaje de error es el siguiente: " + DATOS.message);

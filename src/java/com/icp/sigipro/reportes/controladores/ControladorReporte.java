@@ -173,11 +173,11 @@ public class ControladorReporte extends SIGIPROServlet {
         Reporte reporte = new Reporte();
 
         try {
-
             int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
             reporte = dao.obtenerReporte(id_reporte);
             obtenerValoresParametros(reporte, request);
-            dao.obtenerDatos(reporte, writer);
+            boolean para_grafico = Boolean.parseBoolean(request.getParameter("para-grafico"));
+            dao.obtenerDatos(reporte, writer, para_grafico);
         } catch (SIGIPROException sig_ex) {
 
         }
