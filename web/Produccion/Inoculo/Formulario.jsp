@@ -117,7 +117,7 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <div class="input-group">
-                                                <input type="number" min="0" id="peso_${muestra.get(0)}" class="identificadores_${muestra.get(0)}" name="peso_${muestra.get(0)}" value="${muestra.get(2)} required"
+                                                <input type="number" min="0" id="peso_${muestra.get(0)}" class="identificadores_${muestra.get(0)}" name="peso_${muestra.get(0)}" value="${muestra.get(2)}" required
                                                        required 
                                                        oninvalid="setCustomValidity('Este campo es requerido')"
                                                        oninput="setCustomValidity('')" onchange="setCustomValidity('')" > 

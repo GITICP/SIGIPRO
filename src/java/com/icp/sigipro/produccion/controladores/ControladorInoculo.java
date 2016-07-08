@@ -315,7 +315,7 @@ public class ControladorInoculo extends SIGIPROServlet {
             for (String i : listaMuestras) {
                 int id_veneno = Integer.parseInt(request.getParameter("veneno_" + i));
                 int peso = Integer.parseInt(request.getParameter("peso_" + i));
-                dao_vi.insertarVenenosInoculo(inoculo.getId_inoculo(), id_veneno, peso);
+                dao_vi.insertarVenenosInoculo(id_veneno, inoculo.getId_inoculo(), peso);
             }
         }    
         
