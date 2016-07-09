@@ -24,7 +24,6 @@
                             <a href="/SIGIPRO/Reportes/Reportes?">Reportes</a>
                         </li>
                         <li class="active"> Ver Reporte</li>
-
                     </ul>
                 </div>
                 <div class="col-md-4 ">
@@ -70,6 +69,7 @@
                                 <div class="widget-header">
                                     <h3><i class="fa fa-table"></i> Resultados</h3>
                                     <div class="btn-group widget-header-toolbar">
+                                        <a id="exportar-excel" class="btn btn-primary btn-sm boton-accion" disabled>Exportar a Excel</a>
                                         <a id="actualizar-datos" class="btn btn-primary btn-sm boton-accion">Actualizar Datos</a>
                                     </div>
                                 </div>

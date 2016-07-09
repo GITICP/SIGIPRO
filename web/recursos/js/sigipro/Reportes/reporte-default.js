@@ -2,6 +2,22 @@ SELECTOR_PANEL_RESULTADOS = "#panel-contenido-resultados";
 DATOS = {};
 
 $(document).ready(function () {
+    
+    $("#exportar-excel").click(function() {
+        
+        var url = "?accion=ajaxexcel";
+        var fila_parametros = $("#fila-parametros");
+        
+        fila_parametros.find(":input").each(function () {
+            var nombre = $(this).attr("name");
+            var valor = $(this).val();
+            var string_param = "&" + nombre + "=" + valor;
+            url += string_param;
+        });
+        
+        window.location.href = "/SIGIPRO/Reportes/Reportes" + url;
+        
+    });
 
     $("#actualizar-datos").click(function () {
 
@@ -31,8 +47,10 @@ $(document).ready(function () {
                     panel_resultados.append(tabla);
                     
                     if (DATOS.message === "Exito") {
+                        $("#exportar-excel").attr("disabled", false);
                         crear_data_table(tabla, configuracion_final);
                     } else {
+                        $("#exportar-excel").attr("disabled", true);
                         alert(DATOS.message);
                     }
                 });

@@ -13,6 +13,7 @@ import com.icp.sigipro.reportes.modelos.BuilderParametro;
 import com.icp.sigipro.reportes.modelos.ObjetoAjaxReporte;
 import com.icp.sigipro.reportes.modelos.Parametro;
 import com.icp.sigipro.reportes.modelos.Reporte;
+import com.icp.sigipro.utilidades.ExcelWriter;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -375,6 +376,83 @@ public class ReporteDAO extends DAO {
         return resultado;
 
     }
+    
+        
+    public ExcelWriter obtenerDatosExcel(Reporte r) throws SIGIPROException {
+
+        PreparedStatement consulta_datos = null;
+        ResultSet rs_datos = null;
+        ExcelWriter w = null;
+
+        try {
+            String string_consulta = r.getStringConsulta();
+            consulta_datos = getConexion().prepareStatement(string_consulta);
+            r.prepararConsulta(consulta_datos);
+
+            rs_datos = consulta_datos.executeQuery();
+
+            w = construirExcelDesdeResultSet(rs_datos);
+
+        } catch (SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener la información de los datos. Verifique que los parámetros estén correctos y de persistir el problema, contacte al administrador del sistema.");
+        } finally {
+            cerrarSilencioso(rs_datos);
+            cerrarSilencioso(consulta_datos);
+            cerrarConexion();
+        }
+        
+        return w;
+
+    }
+    
+    private ExcelWriter construirExcelDesdeResultSet(ResultSet rs) throws SQLException, SIGIPROException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        ExcelWriter w = new ExcelWriter();
+
+        if (rs.next()) {
+            
+            crearArrayColumnasParaExcel(rsmd, w);
+
+            do {
+                
+                w.comenzarFila();
+
+                for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {
+
+                    int tipo_columna = rsmd.getColumnType(cont_col);
+
+                    switch (tipo_columna) {
+                        case 4:
+                            w.agregarEntero(rs.getInt(cont_col));
+                            break;
+                        case 12:
+                            w.agregarString(rs.getString(cont_col));
+                            break;
+                        case 92:
+                            w.agregarFecha(rs.getDate(cont_col));
+                            break;
+                        case -5:
+                            w.agregarEntero(rs.getInt(cont_col));
+                            break;
+                        default:
+                            throw new SIGIPROException("Tipo de dato no soportado.");
+                    }
+                }
+                
+                w.terminarFila();
+
+            } while (rs.next());
+
+        } else {
+            w.comenzarFila();
+            w.agregarString("Su consulta no produjo ningún resultado. Intente modificar los valores de los parámetros.");
+            w.terminarFila();
+        }
+        
+        return w;
+
+    }
 
     public void insertarPermisos(Reporte reporte, String[] ids) throws SIGIPROException {
 
@@ -509,6 +587,18 @@ public class ReporteDAO extends DAO {
             String nombre_col = rsmd.getColumnLabel(cont_col);
             w.value(nombre_col);
         }
+    }
+    
+    private void crearArrayColumnasParaExcel(ResultSetMetaData rsmd, ExcelWriter exc_writer) throws SQLException {
+        
+        exc_writer.comenzarFila();
+        
+        for (int cont_col = 1; cont_col <= rsmd.getColumnCount(); cont_col++) {    
+            String nombre_col = rsmd.getColumnLabel(cont_col);
+            exc_writer.agregarString(nombre_col);
+        }
+        
+        exc_writer.terminarFila();
     }
 
 }

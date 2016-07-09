@@ -81,6 +81,9 @@ public class ObjetoMultiple extends Parametro {
     @Override
     public void setValorRequest(HttpServletRequest request) {
         String[] array_request = request.getParameterValues("valor_param_" + this.numero + "[]");
+        if(array_request == null) {
+            array_request = request.getParameter("valor_param_" + this.numero).split(",");
+        }
         setValores(array_request);
     }
 

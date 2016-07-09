@@ -16,6 +16,7 @@ import com.icp.sigipro.reportes.modelos.ObjetoAjaxReporte;
 import com.icp.sigipro.reportes.modelos.Parametro;
 import com.icp.sigipro.reportes.modelos.Reporte;
 import com.icp.sigipro.seguridad.modelos.Seccion;
+import com.icp.sigipro.utilidades.ExcelWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -48,6 +49,7 @@ public class ControladorReporte extends SIGIPROServlet {
             add("configurarreporte");
             add("ajaxobjetos");
             add("ajaxdatos");
+            add("ajaxexcel");
             add("ver");
             add("permisos");
         }
@@ -142,8 +144,6 @@ public class ControladorReporte extends SIGIPROServlet {
 
     protected void getAjaxobjetos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(0, request);
-
         response.setContentType("application/json");
         String tabla = request.getParameter("tabla");
         String resultado = "";
@@ -164,8 +164,6 @@ public class ControladorReporte extends SIGIPROServlet {
 
     protected void getAjaxdatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        validarPermiso(0, request);
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
@@ -184,6 +182,26 @@ public class ControladorReporte extends SIGIPROServlet {
 
         writer.close();
         response.getOutputStream().flush();
+    }
+    
+    protected void getAjaxexcel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("UTF-8");       
+
+        Reporte reporte;
+
+        try {
+            int id_reporte = Integer.parseInt(request.getParameter("id_reporte"));
+            reporte = dao.obtenerReporte(id_reporte);
+            response.setHeader("Content-Disposition", "attachment; filename=Reporte de " + reporte.getNombre() + " " + helper_fechas.getFecha_hoyAsString().replaceAll("/", "-") + ".xlsx");
+            obtenerValoresParametros(reporte, request);
+            ExcelWriter w = dao.obtenerDatosExcel(reporte);
+            w.getArchivo().write(response.getOutputStream());
+            w.cerrarArchivo();
+        } catch (SIGIPROException sig_ex) {
+
+        }
     }
 
     // </editor-fold>
