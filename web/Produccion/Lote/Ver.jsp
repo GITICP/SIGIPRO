@@ -116,6 +116,7 @@
                                                     <th>Respuesta</th>
                                                     <th>Versión</th>
                                                     <th>Usuario Realizar</th>
+                                                    <th>Fecha</th>
                                                     <th>Aprobación</th>
                                                     <th>Usuario Aprobar</th>
                                                     <th>Acción</th>
@@ -160,7 +161,16 @@
                                                                     Pendiente
                                                                 </c:otherwise>
                                                             </c:choose>
-
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${respuesta.getUsuario_realizar().getId_usuario() != null}">
+                                                                    ${respuesta.getFechaAsString()}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    Pendiente
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </td>
                                                         <td>
                                                             <c:choose>

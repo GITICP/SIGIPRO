@@ -828,13 +828,23 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     protected void postRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
+        
         Respuesta_AA resultado = dao.obtenerRespuesta(id_respuesta);
         resultado.setActividad(dao.obtenerActividad_Apoyo(resultado.getActividad().getId_actividad()));
         Usuario u = new Usuario();
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         u.setId_usuario(id_usuario);
         resultado.setUsuario_realizar(u);
+        
         String redireccion = "Actividad_Apoyo/index.jsp";
+
+        resultado.setNombre(this.obtenerParametro("nombre"));
+
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        Timestamp fecha = new java.sql.Timestamp(new Date().getTime());
+        resultado.setFecha(fecha);
+        
         try {
             //Se crea el Path en la carpeta del Proyecto
             String fullPath = helper_archivos.obtenerDireccionArchivos();

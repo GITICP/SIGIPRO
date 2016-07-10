@@ -31,10 +31,12 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContext;
@@ -713,6 +715,11 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
 
         resultado.setUsuario_realizar(u);
 
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        Timestamp fecha = new java.sql.Timestamp(new Date().getTime());
+        resultado.setFecha(fecha);
+        System.out.println(resultado.getFecha());
         String redireccion = "Lote/index.jsp";
 
         if (resultado.getEstado() == 3 || resultado.getEstado() == 4) {
@@ -761,6 +768,12 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         u.setId_usuario(id_usuario);
         resultado.setUsuario_realizar(u);
+        
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        Timestamp fecha = new java.sql.Timestamp(new Date().getTime());
+        resultado.setFecha(fecha);
+        System.out.println(resultado.getFecha());
         String redireccion = "Lote/index.jsp";
         if (resultado.getEstado() == 5 || resultado.getEstado()==7) {
             //Se crea el Path en la carpeta del Proyecto

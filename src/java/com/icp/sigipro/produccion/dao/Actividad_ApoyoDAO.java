@@ -726,8 +726,8 @@ public class Actividad_ApoyoDAO extends DAO {
                         + "WHERE id_respuesta = ?; ");
                 consulta.setInt(1, version);
                 if (!respuesta.getActividad().isRequiere_ap()) {
-                    //Terminado
-                    consulta.setInt(2, 4);
+                    //Realizado, requiere aprobación
+                    consulta.setInt(2, 3);
                 } else {
                     //Realizado, requiere revision
                     consulta.setInt(2, 2);

@@ -8,6 +8,8 @@ package com.icp.sigipro.produccion.modelos;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.lang.reflect.Field;
 import java.sql.SQLXML;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -27,10 +29,11 @@ public class Respuesta_pxp {
     private Usuario usuario_realizar;
     private String respuestaString;
     private int version;
+    private Timestamp fecha;
     //1-Deshabilitado 2-Deshabilitado requiere aprobacion, 3-Habilitado, 4-Habilitado requiere aprobacion, 5-Incompleto, 8-Cerrado, 6-Revisado, 7-Verificado, 
     private int estado;
     private boolean ultimo;
-    
+
     private List<Respuesta_pxp> historial;
 
     public Respuesta_pxp() {
@@ -40,11 +43,18 @@ public class Respuesta_pxp {
         return ultimo;
     }
 
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
+
     public void setUltimo(boolean ultimo) {
         this.ultimo = ultimo;
     }
 
-    
     public int getVersion() {
         return version;
     }
@@ -139,6 +149,20 @@ public class Respuesta_pxp {
 
     public void setHistorial(List<Respuesta_pxp> historial) {
         this.historial = historial;
+    }
+
+    public String getFechaAsString() {
+        if (fecha!= null){
+        return formatearFecha(fecha);
+        }else{
+            return "";
+        }
+        
+    }
+
+    private String formatearFecha(Timestamp fecha) {
+        String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(fecha);
+        return date;
     }
 
     public String parseJSON() {
