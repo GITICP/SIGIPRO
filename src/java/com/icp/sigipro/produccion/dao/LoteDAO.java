@@ -414,7 +414,7 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT hr.id_respuesta, hr.version, r.id_lote, l.nombre as nombrelote,l.aprobacion, r.id_pxp, pxp.posicion, hp.nombre as nombrepaso,hp.estructura, hr.respuesta, "
+            consulta = getConexion().prepareStatement(" SELECT hr.id_respuesta, hr.version, r.id_lote, l.nombre as nombrelote,l.aprobacion, r.id_pxp, pxp.posicion, hp.nombre as nombrepaso,hp.estructura, hr.respuesta,hr.fecha, "
                     + "hr.id_usuario_realizar, ur.nombre_completo as nombre_completo_realizar, hr.id_usuario_revisar, ure.nombre_completo as nombre_completo_revisar, hr.id_usuario_verificar, uv.nombre_completo as nombre_completo_verificar "
                     + "FROM produccion.historial_respuesta_pxp as hr "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (hr.id_respuesta = r.id_respuesta) "
@@ -437,6 +437,7 @@ public class LoteDAO extends DAO {
                 lote.setNombre(rs.getString("nombrelote"));
                 lote.setAprobacion(rs.getBoolean("aprobacion"));
                 resultado.setLote(lote);
+                resultado.setFecha(rs.getTimestamp("fecha"));
                 resultado.setRespuesta(rs.getSQLXML("respuesta"));
                 Paso paso = new Paso();
                 paso.setId_pxp(rs.getInt("id_pxp"));

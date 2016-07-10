@@ -46,6 +46,7 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Lote:</strong></td> <td>${respuesta.getLote().getNombre()} </td></tr>
                                 <tr><td> <strong>Paso:</strong></td> <td>${respuesta.getPaso().getNombre()} </td></tr>
+                                <tr><td> <strong>Fecha:</strong></td> <td>${respuesta.getFechaAsString()} </td></tr>
                                 <tr><td> <strong>Usuario realizar:</strong></td> <td>${respuesta.getUsuario_realizar().getNombre_completo()} </td></tr>
                                 <c:if test="${respuesta.getUsuario_revisar().getId_usuario()!=0}">
                                     <tr><td> <strong>Usuario revisar:</strong></td> <td>${respuesta.getUsuario_revisar().getNombre_completo()} </td></tr>
