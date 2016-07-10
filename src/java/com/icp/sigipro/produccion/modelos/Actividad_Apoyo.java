@@ -31,8 +31,17 @@ public class Actividad_Apoyo {
     private String observaciones;
     private List<Actividad_Apoyo> historial;
     private boolean requiere_ap;
+    private boolean estado;
 
     public Actividad_Apoyo() {
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public boolean isRequiere_ap() {

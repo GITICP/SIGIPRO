@@ -73,8 +73,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorActividad_Apoyo", urlPatterns = {"/Produccion/Actividad_Apoyo"})
 public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
-    //CRUD, Activar Actividad, iones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad, Aprobaciones Gestion
-    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680};
+    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad, Aprobaciones Gestion, activar y retirar
+    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681};
     //-----------------
     private final Actividad_ApoyoDAO dao = new Actividad_ApoyoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -106,6 +106,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             add("activarrespuesta");
             add("repetir");
             add("actividadesajax");
+            add("retirar");
+            add("incluir");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -456,6 +458,62 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             this.getIndex(request, response);
         }
 
+    }
+
+    protected void getRetirar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(681, request);
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        boolean estado = dao.obtenerEstado(id_actividad);
+        if (estado) {
+            boolean resultado = false;
+            try {
+                resultado = dao.retirarActividad_Apoyo(id_actividad);
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_actividad, Bitacora.ACCION_RETIRAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo retirada correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser retirada ya que tiene referencias asociados."));
+                }
+                this.getIndexnormal(request, response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser retirada ya que tiene referencias asociados."));
+                this.getIndexnormal(request, response);
+            }
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser retirada ya que ya se encuentra retirada."));
+            this.getIndexnormal(request, response);
+        }
+    }
+
+    protected void getIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(681, request);
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        boolean estado = dao.obtenerEstado(id_actividad);
+        if (!estado) {
+            boolean resultado = false;
+            try {
+                resultado = dao.incluirActividad_Apoyo(id_actividad);
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_actividad, Bitacora.ACCION_INCLUIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo inlcuida correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser incluida ya que tiene referencias asociados."));
+                }
+                this.getIndexnormal(request, response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser incluida ya que tiene referencias asociados."));
+                this.getIndexnormal(request, response);
+            }
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser incluida ya que ya se encuentra incluida."));
+            this.getIndexnormal(request, response);
+        }
     }
 
     protected void getActividadesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

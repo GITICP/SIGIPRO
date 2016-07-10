@@ -81,6 +81,20 @@
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                     <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=ver&id_actividad=${actividad.getId_actividad()}">Ver Actividad de Apoyo</a>            
                                 </c:if>
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 681)}">
+                                    <c:choose>
+                                        <c:when test="${actividad.isEstado()}">
+                                            <div class="btn-group widget-header-toolbar">
+                                                <a class="btn btn-danger btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=retirar&id_actividad=${actividad.getId_actividad()}">Retirar</a>
+                                            </div>
+                                        </c:when>                                                            
+                                        <c:otherwise>
+                                            <div class="btn-group widget-header-toolbar">
+                                                <a class="btn btn-danger btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=incluir&id_actividad=${actividad.getId_actividad()}">Incluir</a>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
                             </div>
                         </div>
                         ${mensaje}
