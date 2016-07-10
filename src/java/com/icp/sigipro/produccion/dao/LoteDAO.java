@@ -6,6 +6,7 @@
 package com.icp.sigipro.produccion.dao;
 
 import com.icp.sigipro.core.DAO;
+import com.icp.sigipro.produccion.modelos.Catalogo_PT;
 import com.icp.sigipro.produccion.modelos.Lote;
 import com.icp.sigipro.produccion.modelos.Paso;
 import com.icp.sigipro.produccion.modelos.Protocolo;
@@ -730,7 +731,7 @@ public class LoteDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, l.aprobacion, h.nombre as nombreprotocolo , l.estado, l.posicion_actual, p.id_paso, hp.nombre as nombrepaso, r.id_respuesta, "
-                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo "
+                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo,pt.vida_util "
                     + "FROM produccion.lote as l "
                     + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
@@ -739,6 +740,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.historial_paso as hp ON (hp.id_paso = p.id_paso and hp.version = p.version) "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (r.id_pxp = pp.id_pxp and r.id_lote = l.id_lote) "
                     + "LEFT JOIN seguridad.usuarios as ul ON (l.id_usuario_distribucion = ul.id_usuario) "
+                    + "LEFT JOIN produccion.catalogo_pt as pt ON (h.id_catalogo_pt = pt.id_catalogo_pt) "
                     + "WHERE (l.estado = true and l.aprobacion = false) ; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
@@ -751,6 +753,9 @@ public class LoteDAO extends DAO {
                 Protocolo protocolo = new Protocolo();
                 protocolo.setId_protocolo(rs.getInt("id_protocolo"));
                 protocolo.setNombre(rs.getString("nombreprotocolo"));
+                Catalogo_PT pt = new Catalogo_PT();
+                pt.setVida_util(rs.getInt("vida_util"));
+                protocolo.setProducto(pt);
                 lote.setProtocolo(protocolo);
                 Paso paso = new Paso();
                 paso.setId_paso(rs.getInt("id_paso"));
@@ -962,7 +967,7 @@ public class LoteDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote,l.aprobacion, l.id_protocolo, h.nombre as nombreprotocolo,pro.version , l.estado, l.posicion_actual, p.id_paso, pp.id_pxp, hp.estructura, hp.nombre as nombrepaso, r.id_respuesta, "
-                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo "
+                    + "l.fecha_vencimiento, l.id_usuario_distribucion, ul.nombre_completo,pt.vida_util "
                     + "FROM produccion.lote as l "
                     + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
@@ -971,6 +976,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.historial_paso as hp ON (hp.id_paso = p.id_paso and hp.version = p.version) "
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (r.id_pxp = pp.id_pxp and r.id_lote = l.id_lote) "
                     + "LEFT JOIN seguridad.usuarios as ul ON (l.id_usuario_distribucion = ul.id_usuario) "
+                    + "LEFT JOIN produccion.catalogo_pt as pt ON (h.id_catalogo_pt = pt.id_catalogo_pt) "
                     + "WHERE l.id_lote = ?; ");
             System.out.println(consulta);
             consulta.setInt(1, id_lote);
@@ -990,6 +996,9 @@ public class LoteDAO extends DAO {
                 protocolo.setId_protocolo(rs.getInt("id_protocolo"));
                 protocolo.setNombre(rs.getString("nombreprotocolo"));
                 protocolo.setVersion(rs.getInt("version"));
+                Catalogo_PT pt = new Catalogo_PT();
+                pt.setVida_util(rs.getInt("vida_util"));
+                protocolo.setProducto(pt);
                 Paso p = new Paso();
                 p.setId_paso(rs.getInt("id_paso"));
                 p.setNombre(rs.getString("nombrepaso"));

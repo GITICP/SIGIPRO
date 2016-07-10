@@ -69,7 +69,7 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${lote.getFecha_vencimiento()==null}">
-                                                        <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-meses="${meses}" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
+                                                        <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-meses="${lote.getProtocolo().getProducto().getVida_util()}" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
                                                     </c:when>
                                                     <c:when test="${lote.getUsuario_distribucion().getId_usuario()==0}">
                                                         <a class="btn btn-primary btn-sm boton-accion distribucion-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalDistribucionLote">Liberación de Lote</a>

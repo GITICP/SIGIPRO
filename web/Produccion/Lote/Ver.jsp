@@ -59,7 +59,7 @@
                                         <c:choose>
                                             <c:when test="${lote.getFecha_vencimiento()==null}">
                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 668)}">
-                                                    <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-meses="${meses}" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
+                                                    <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-meses="${lote.getProtocolo().getProducto().getVida_util()}" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
                                                 </c:if>
                                             </c:when>
                                             <c:when test="${lote.getUsuario_distribucion().getId_usuario()==0}">
