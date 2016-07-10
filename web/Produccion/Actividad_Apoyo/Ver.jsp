@@ -42,7 +42,7 @@
                             <h3><i class="fa fa-flask"></i> ${actividad.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Realizar</a>
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Ver Realizar</a>
                                 </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el actividad de actividad" data-href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=eliminar&id_actividad=${actividad.getId_actividad()}">Eliminar</a>

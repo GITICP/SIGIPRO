@@ -25,3 +25,6 @@ INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VAL
 
 ALTER TABLE PRODUCCION.HISTORIAL_RESPUESTA_PXP
 ADD COLUMN fecha timestamp without time zone;
+
+ALTER TABLE PRODUCCION.HISTORIAL_RESPUESTA_AA
+ALTER COLUMN NOMBRE type CHARACTER VARYING (200);

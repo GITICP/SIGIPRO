@@ -57,7 +57,7 @@
 
                                         <tr id ="${actividad.getId_actividad()}">
                                             <td>
-                                                <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=ver&id_actividad=${actividad.getId_actividad()}">
+                                                <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">
                                                     <div style="height:100%;width:100%">
                                                         ${actividad.getNombre()}
                                                     </div>
