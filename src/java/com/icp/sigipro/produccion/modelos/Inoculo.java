@@ -19,8 +19,6 @@ public class Inoculo {
   private String identificador;
   private Date fecha_preparacion;
   private Usuario encargado_preparacion;
-  private Veneno_Produccion veneno;
-  private int peso;
 
     public String parseJSON(){
         Class _class = this.getClass();
@@ -36,7 +34,6 @@ public class Inoculo {
                 }
             }
             JSON.put("id_encargado_preparacion",this.encargado_preparacion.getId_usuario());
-            JSON.put("id_veneno",this.veneno.getId_veneno());
         }catch (Exception e){
             
         }
@@ -88,21 +85,7 @@ public class Inoculo {
         this.encargado_preparacion = encargado_preparacion;
     }
 
-    public Veneno_Produccion getVeneno() {
-        return veneno;
-    }
-
-    public void setVeneno(Veneno_Produccion veneno) {
-        this.veneno = veneno;
-    }
-
-    public int getPeso() {
-        return peso;
-    }
-
-    public void setPeso(int peso) {
-        this.peso = peso;
-    }
+  
   
  
 }

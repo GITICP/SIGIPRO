@@ -98,9 +98,9 @@ function obtenerSemanas(){
                 }
                 var m = moment(fechaf,"YYYY MM DD","es");
                 
-                data1.push({id: id_semana, values: {"fecha":m.format('ll'),"sangria":sangria,"plasma_proyectado":plasma_proyectado,"plasma_real":plasma_real,"antivenenos_lote":antivenenos_lote
-                             ,"antivenenos_proyectada":antivenenos_proyectada,"antivenenos_bruta":antivenenos_bruta,"antivenenos_neta":antivenenos_neta,"entregas_cantidad":entregas_cantidad,
-                             "entregas_destino":entregas_destino,"entregas_lote":entregas_lote}});
+                data1.push({id: id_semana, values: {"fecha":m.format('ll'),"sangria":sangria.toString().replace("//n","\n"),"plasma_proyectado":plasma_proyectado.toString().replace("//n","\n"),"plasma_real":plasma_real.toString().replace("//n","\n"),"antivenenos_lote":antivenenos_lote.toString().replace("//n","\n")
+                             ,"antivenenos_proyectada":antivenenos_proyectada.toString().replace("//n","\n"),"antivenenos_bruta":antivenenos_bruta.toString().replace("//n","\n"),"antivenenos_neta":antivenenos_neta.toString().replace("//n","\n"),"entregas_cantidad":entregas_cantidad.toString().replace("//n","\n"),
+                             "entregas_destino":entregas_destino.toString().replace("//n","\n"),"entregas_lote":entregas_lote.toString().replace("//n","\n")}});
             }
         }
         if (data1.length > 0){

@@ -88,7 +88,7 @@ public class ControladorObtenerSemanasCronograma extends HttpServlet {
                 sb.append("<fecha>").append(s.getFecha_S()).append("</fecha>");
                 sb.append("<sangria>").append(s.getSangria()).append("</sangria>");
                 sb.append("<plasma_proyectado>").append(s.getPlasma_proyectado()).append("</plasma_proyectado>");
-                sb.append("<plasma_real>").append(s.getPlasma_proyectado()).append("</plasma_real>");
+                sb.append("<plasma_real>").append(s.getPlasma_real()).append("</plasma_real>");
                 sb.append("<antivenenos_lote>").append(s.getAntivenenos_lote()).append("</antivenenos_lote>");
                 sb.append("<antivenenos_proyectada>").append(s.getAntivenenos_proyectada()).append("</antivenenos_proyectada>");
                 sb.append("<antivenenos_bruta>").append(s.getAntivenenos_bruta()).append("</antivenenos_bruta>");
