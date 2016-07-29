@@ -23,12 +23,12 @@
                             <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${actividad.getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Actividades de Apoyo Realizadas</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">Actividades de Apoyo Realizadas</a>
                         </li>
-                        <li class="active"> Repetir Actividad de Apoyo ${actividad.getCategoria().getNombre()} - ${actividad.getNombre()} </li>
+                        <li class="active"> Repetir Actividad de Apoyo ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} </li>
                     </ul>
                 </div>
             </div>

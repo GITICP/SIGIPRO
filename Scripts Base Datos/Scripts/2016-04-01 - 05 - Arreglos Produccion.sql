@@ -26,7 +26,7 @@ ALTER TABLE ONLY produccion.historial_respuesta_aa ADD CONSTRAINT fk_historial_u
 ALTER TABLE ONLY produccion.historial_respuesta_aa ADD CONSTRAINT fk_historial_usuario_aprobar FOREIGN KEY (id_usuario_aprobar) REFERENCES seguridad.usuarios(id_usuario) ON DELETE SET NULL;
 
 ALTER TABLE PRODUCCION.HISTORIAL_PASO
-ALTER COLUMN NOMBRE TYPE CHARACTER VARYING (200)
+ALTER COLUMN NOMBRE TYPE CHARACTER VARYING (200);
 
 ALTER TABLE PRODUCCION.LOTE
 ADD COLUMN id_usuario_distribucion int;
