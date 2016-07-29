@@ -1,5 +1,5 @@
 ﻿-- Cambiar la relación de veneno de producción -> veneno serpentario a producción -> lote serpentario
-﻿ALTER TABLE produccion.veneno_produccion DROP CONSTRAINT fk_id_veneno_serpentario;
+ALTER TABLE produccion.veneno_produccion DROP CONSTRAINT fk_id_veneno_serpentario;
 ALTER TABLE ONLY produccion.veneno_produccion ADD CONSTRAINT fk_id_veneno_lote_serpentario FOREIGN KEY (id_veneno_serpentario) REFERENCES serpentario.lote (id_lote) ON DELETE SET NULL;
 
 -- Ajustar las columnas de las semanas de cronograma para que se puedan instertar hasta 500 caracteresALTER TABLE produccion.semanas_cronograma ALTER COLUMN sangria TYPE character varying(500);
@@ -43,6 +43,6 @@ CONSTRAINT fk_id_veneno FOREIGN KEY (id_veneno)
 );
 
 -- Modificaciones en la tabla inóculo
-﻿ALTER TABLE produccion.inoculo DROP CONSTRAINT fk_id_veneno;
+ALTER TABLE produccion.inoculo DROP CONSTRAINT fk_id_veneno;
 AlTER TABLE produccion.inoculo DROP COLUMN peso;
 AlTER TABLE produccion.inoculo DROP COLUMN id_veneno;
