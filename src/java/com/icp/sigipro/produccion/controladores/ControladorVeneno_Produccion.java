@@ -9,11 +9,13 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.produccion.dao.Historial_ConsumoDAO;
 import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
+import com.icp.sigipro.produccion.modelos.Historial_Consumo;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
-import com.icp.sigipro.serpentario.dao.VenenoDAO;
-import com.icp.sigipro.serpentario.modelos.Veneno;
+import com.icp.sigipro.serpentario.dao.LoteDAO;
+import com.icp.sigipro.serpentario.modelos.Lote;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,6 +47,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
+            add("historial");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -52,6 +55,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
             add("agregar");
             add("editar");
             add("eliminar");
+            add("consumir");
         }
     };
 
@@ -62,7 +66,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
        
         String redireccion = "Veneno_Produccion/Agregar.jsp";
         Veneno_Produccion ds = new Veneno_Produccion();
-        List<Veneno> listaVenenos = new VenenoDAO().obtenerVenenos();
+        List<Lote> listaVenenos = new LoteDAO().obtenerLotes();
         request.setAttribute("veneno", ds);
         request.setAttribute("listaVenenos", listaVenenos);
         request.setAttribute("accion", "Agregar");
@@ -77,6 +81,17 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         List<Veneno_Produccion> venenos = new Veneno_ProduccionDAO().obtenerVenenos_Produccion();
         request.setAttribute("listaVenenos", venenos);
         String redireccion = "Veneno_Produccion/index.jsp";
+        
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+
+        List<Historial_Consumo> historiales = new Historial_ConsumoDAO().obtenerHistoriales();
+        request.setAttribute("historiales", historiales);
+        String redireccion = "Veneno_Produccion/Historial.jsp";
         
         redireccionar(request, response, redireccion);
     }
@@ -103,7 +118,7 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         String redireccion = "Veneno_Produccion/Editar.jsp";
         int id_veneno = Integer.parseInt(request.getParameter("id_veneno"));
         Veneno_Produccion ds = dao.obtenerVeneno_Produccion(id_veneno);
-        List<Veneno> listaVenenos = new VenenoDAO().obtenerVenenos();
+        List<Lote> listaVenenos = new LoteDAO().obtenerLotes();
         request.setAttribute("veneno", ds);
         request.setAttribute("listaVenenos", listaVenenos);
         request.setAttribute("accion", "Editar");
@@ -167,6 +182,41 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
     
+    protected void postConsumir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
+        boolean resultado = false;
+        String redireccion = "Veneno_Produccion/Ver.jsp";
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        Veneno_Produccion veneno = null;
+        int cantidad_consumir = 0;
+        try {
+            veneno = dao.obtenerVeneno_Produccion(Integer.parseInt(request.getParameter("id_veneno")));
+            cantidad_consumir = Integer.parseInt(request.getParameter("cantidad_consumir"));
+            
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date result = df.parse(request.getParameter("fecha_consumo"));
+            java.sql.Date fecha_consumo = new java.sql.Date(result.getTime());           
+            new Historial_ConsumoDAO().insertarHistorial(veneno.getId_veneno(), fecha_consumo, cantidad_consumir, this.getIdUsuario(request));
+            
+            veneno.setCantidad(veneno.getCantidad()-cantidad_consumir);
+            resultado = dao.editarVeneno_Produccion(veneno);
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(veneno.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INOCULO_PRODUCCION, request.getRemoteAddr());
+            //*----------------------------*
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        if (resultado) {
+            
+            request.setAttribute("veneno", veneno);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Consumo realizado exitosamente"));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        }
+        redireccionar(request, response, redireccion);
+    }
+    
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Veneno_Produccion/index.jsp";
@@ -202,8 +252,8 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         java.util.Date result = df.parse(request.getParameter("fecha_ingreso"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         veneno.setFecha_ingreso(fecha_solicitudSQL);
-        VenenoDAO vDAO = new VenenoDAO();
-        veneno.setVeneno_serpentario(vDAO.obtenerVeneno(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
+        LoteDAO vDAO = new LoteDAO();
+        veneno.setVeneno_serpentario(vDAO.obtenerLote(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
         veneno.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
         veneno.setObservaciones(request.getParameter("observaciones"));
 
@@ -218,8 +268,8 @@ public class ControladorVeneno_Produccion extends SIGIPROServlet {
         java.util.Date result = df.parse(request.getParameter("fecha_ingreso"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         veneno.setFecha_ingreso(fecha_solicitudSQL);
-        VenenoDAO vDAO = new VenenoDAO();
-        veneno.setVeneno_serpentario(vDAO.obtenerVeneno(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
+        LoteDAO vDAO = new LoteDAO();
+        veneno.setVeneno_serpentario(vDAO.obtenerLote(Integer.parseInt(request.getParameter("id_veneno_serpentario"))));
         veneno.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
         veneno.setObservaciones(request.getParameter("observaciones"));
 

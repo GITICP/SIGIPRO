@@ -229,7 +229,13 @@ $(document).on("click", ".verificar-Modal", function () {
 
 $(document).on("click", ".vencimiento-Modal", function () {
     var id_lote = $(this).data('id');
+    var meses = $(this).data('meses');
+    var date = new Date();
+    date.setMonth(date.getMonth()+meses);
     $('#class-vencimiento-lote #id_lote').val(id_lote);
+    $('#datepickerVencimiento').datepicker({
+        autoclose: true
+    }).datepicker("setDate",date);
 });
 
 $(document).on("click", ".distribucion-Modal", function () {

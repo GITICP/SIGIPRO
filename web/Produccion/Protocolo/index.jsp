@@ -73,43 +73,40 @@
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${protocolo.getAprobacion_calidad()}">
-                                                        <c:choose>
-                                                            <c:when test="${protocolo.getAprobacion_regente() && protocolo.getAprobacion_coordinador()}">
-                                                                <c:choose>
-                                                                    <c:when test="${!protocolo.getAprobacion_direccion()}">
-                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 644)}">
-                                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='4' data-toggle="modal" data-target="#modalAprobarProtocolo">[Director] Aprobar</a>
-                                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Director' data-toggle="modal" data-target="#modalRechazarProtocolo">[Director] Rechazar</a>
-                                                                        </c:if>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <a class="btn btn-primary btn-sm boton-accion lote-Modal" data-id='${protocolo.getId_protocolo()}' data-toggle="modal" data-target="#modalComenzarLote">Iniciar Nuevo Lote</a>
-
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 642)}">
-                                                                    <c:if test="${!protocolo.getAprobacion_regente()}">
-                                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='2' data-toggle="modal" data-target="#modalAprobarProtocolo">[Regente] Aprobar</a>
-                                                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Regente' data-toggle="modal" data-target="#modalRechazarProtocolo">[Regente] Rechazar</a>
-                                                                    </c:if>
-                                                                </c:if>
-                                                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 643)}">
-                                                                    <c:if test="${!protocolo.getAprobacion_coordinador()}">
-                                                                        <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='3' data-toggle="modal" data-target="#modalAprobarProtocolo">[Coordinador] Aprobar</a>
-                                                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Coordinador' data-toggle="modal" data-target="#modalRechazarProtocolo">[Coordinador] Rechazar</a>
-                                                                    </c:if>
-                                                                </c:if>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </c:when>
-                                                    <c:otherwise>
+                                                    <c:when test="${!protocolo.getAprobacion_calidad() && !protocolo.getAprobacion_regente() && !protocolo.getAprobacion_coordinador()}">
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 641)}">
                                                             <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='1' data-toggle="modal" data-target="#modalAprobarProtocolo">[Calidad] Aprobar</a>
-                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Calidad' data-toggle="modal" data-target="#modalRechazarProtocolo">[Calidad] Rechazar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Control de Calidad' data-toggle="modal" data-target="#modalRechazarProtocolo">[Calidad] Rechazar</a>
                                                         </c:if>
+                                                    </c:when>
+                                                    <c:when test="${protocolo.getAprobacion_calidad() && (!protocolo.getAprobacion_regente() || !protocolo.getAprobacion_coordinador()) && !protocolo.getAprobacion_direccion()}">
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 642)}">
+                                                            <c:if test="${!protocolo.getAprobacion_regente()}">
+                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='2' data-toggle="modal" data-target="#modalAprobarProtocolo">[Regente] Aprobar</a>
+                                                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Regente' data-toggle="modal" data-target="#modalRechazarProtocolo">[Regente] Rechazar</a>
+                                                            </c:if>
+                                                        </c:if>
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 643)}">
+                                                            <c:if test="${!protocolo.getAprobacion_coordinador()}">
+                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='3' data-toggle="modal" data-target="#modalAprobarProtocolo">[Coordinador] Aprobar</a>
+                                                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Coordinador' data-toggle="modal" data-target="#modalRechazarProtocolo">[Coordinador] Rechazar</a>
+                                                            </c:if>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:when test="${protocolo.getAprobacion_regente() && protocolo.getAprobacion_coordinador() && !protocolo.getAprobacion_direccion()}">
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 644)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='4' data-toggle="modal" data-target="#modalAprobarProtocolo">[Director] Aprobar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Director' data-toggle="modal" data-target="#modalRechazarProtocolo">[Director] Rechazar</a>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:when test="${protocolo.getAprobacion_direccion() && !protocolo.isAprobacion_gestion()}">
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 646)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='5' data-toggle="modal" data-target="#modalAprobarProtocolo">[Gestión] Aprobar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${protocolo.getId_protocolo()}' data-actor='Gestión de Calidad' data-toggle="modal" data-target="#modalRechazarProtocolo">[Gestión] Rechazar</a>
+                                                        </c:if>
+                                                    </c:when>                                                            
+                                                    <c:otherwise>
+                                                        <a class="btn btn-primary btn-sm boton-accion lote-Modal" data-id='${protocolo.getId_protocolo()}' data-toggle="modal" data-target="#modalComenzarLote">Iniciar Nuevo Lote</a>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
@@ -190,7 +187,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group ultimos">
-                            
+
                         </div>
                     </div>
                 </div>

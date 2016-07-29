@@ -124,7 +124,6 @@ public class ControladorCalendario extends SIGIPROServlet {
     List<Seccion> secciones = dao_sec.obtenerSecciones();
     List<Usuario> usuarios = dao_us.obtenerUsuarios();
     List<Rol> roles = dao_rol.obtenerRoles();
-
    //index
     boolean resultado = false;
     try {
@@ -145,7 +144,8 @@ public class ControladorCalendario extends SIGIPROServlet {
       else {
         type="na";
         ids=null;
-      }      
+      }
+      
       resultado = dao.insertarEvento(evento, us.getID(), shared, type, ids);
       //Funcion que genera la bitacora
       BitacoraDAO bitacora = new BitacoraDAO();

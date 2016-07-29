@@ -25,7 +25,7 @@ public class Catalogo_PT {
   public void setVida_util(int vida_util) {
     this.vida_util = vida_util;
   }
-
+  
   public int getId_catalogo_pt() {
     return id_catalogo_pt;
   }

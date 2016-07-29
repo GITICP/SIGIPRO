@@ -11,13 +11,17 @@ import com.icp.sigipro.bioterio.modelos.EntregaRatonera;
 import com.icp.sigipro.bioterio.modelos.SolicitudRatonera;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.produccion.modelos.Historial_Consumo;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.serpentario.dao.VenenoDAO;
+import com.icp.sigipro.serpentario.dao.LoteDAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,14 +44,14 @@ public class Veneno_ProduccionDAO extends DAO {
 
             while (rs.next()) {
                 Veneno_Produccion veneno_produccion = new Veneno_Produccion();
-                VenenoDAO vDAO = new VenenoDAO();
+                LoteDAO vDAO = new LoteDAO();
                 
                 veneno_produccion.setId_veneno(rs.getInt("id_veneno"));
                 veneno_produccion.setVeneno(rs.getString("veneno"));
                 veneno_produccion.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 veneno_produccion.setCantidad(rs.getInt("cantidad"));
                 veneno_produccion.setObservaciones(rs.getString("observaciones"));
-                veneno_produccion.setVeneno_serpentario(vDAO.obtenerVeneno(rs.getInt("id_veneno_serpentario")));
+                veneno_produccion.setVeneno_serpentario(vDAO.obtenerLote(rs.getInt("id_veneno_serpentario")));
                 resultado.add(veneno_produccion);
 
             }
@@ -72,14 +76,14 @@ public class Veneno_ProduccionDAO extends DAO {
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
-                VenenoDAO vDAO = new VenenoDAO();
+                LoteDAO vDAO = new LoteDAO();
                 
                 resultado.setId_veneno(rs.getInt("id_veneno"));
                 resultado.setVeneno(rs.getString("veneno"));
                 resultado.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 resultado.setCantidad(rs.getInt("cantidad"));
                 resultado.setObservaciones(rs.getString("observaciones"));
-                resultado.setVeneno_serpentario(vDAO.obtenerVeneno(rs.getInt("id_veneno_serpentario")));
+                resultado.setVeneno_serpentario(vDAO.obtenerLote(rs.getInt("id_veneno_serpentario")));
             }
             rs.close();
             consulta.close();
@@ -90,7 +94,7 @@ public class Veneno_ProduccionDAO extends DAO {
         }
         return resultado;
     }
-    
+
     public boolean insertarVeneno_Produccion(Veneno_Produccion p) throws SIGIPROException {
 
         boolean resultado = false;
@@ -104,7 +108,7 @@ public class Veneno_ProduccionDAO extends DAO {
             consulta.setDate(2, p.getFecha_ingreso());
             consulta.setInt(3, p.getCantidad());
             consulta.setString(4, p.getObservaciones());
-            consulta.setInt(5, p.getVeneno_serpentario().getId_veneno());
+            consulta.setInt(5, p.getVeneno_serpentario().getId_lote());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -135,7 +139,7 @@ public class Veneno_ProduccionDAO extends DAO {
             consulta.setDate(2, p.getFecha_ingreso());
             consulta.setInt(3, p.getCantidad());
             consulta.setString(4, p.getObservaciones());
-            consulta.setInt(5, p.getVeneno_serpentario().getId_veneno());
+            consulta.setInt(5, p.getVeneno_serpentario().getId_lote());
             consulta.setInt(6, p.getId_veneno());
             
             if (consulta.executeUpdate() == 1) {

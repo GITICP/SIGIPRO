@@ -77,7 +77,7 @@
                                     <c:forEach items="${resultados}" var="resultado">
                                         <tr>
                                             <td>
-                                                <a href="/SIGIPRO/ControlCalidad/Resultado?accion=ver&id_resultado=${resultado.getId_resultado()}&id_analisis=${id_analisis}">
+                                                <a href="/SIGIPRO/ControlCalidad/Resultado?accion=ver&id_resultado=${resultado.getId_resultado()}&id_analisis=${id_analisis}${(id_analisis == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }"">
                                                     <div style="height:100%;width:100%">
                                                         ${numero_solicitud}-R${resultado.getId_resultado()}
                                                     </div>

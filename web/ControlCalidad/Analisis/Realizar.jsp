@@ -35,10 +35,23 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-flask"></i> Realizar Nuevo Análisis ${analisis.getNombre()} para ${(ags.getGrupo().getGrupos_muestras().size() == 1) ? "la muestra" : "las muestras"} ${ags.getListadoIdentificadores(true)}</h3>
+                            <h3><i class="fa fa-flask"></i> Realizar Nuevo Análisis ${analisis.getNombre()}</h3>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
+                            
+                            <table class="tabla-ver">
+                                <tr><td><strong>Número de Solicitud:</strong></td><td>${ags.getGrupo().getSolicitud().getNumero_solicitud()}</td></tr>
+                                <tr><td><strong>Análisis:</strong></td><td>${analisis.getNombre()}</td></tr>
+                                <tr><td><strong>Tipo de muestra: </strong></td><td>${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}</td></tr>
+                                <tr><td><strong>${(ags.getGrupo().getGrupos_muestras().size() == 1) ? "Identificador de Muestra:" : "Identificadores de muestras:"}</strong></td>
+                                    <td>
+                                        ${ags.getGrupo().getGrupos_muestras_Sring()}
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br>
 
                             <form method="post" class="form-horizontal" action="Analisis" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="realizar" name="accion" />

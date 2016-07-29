@@ -24,6 +24,7 @@ public class Protocolo {
   private boolean aprobacion_direccion;
   private boolean aprobacion_regente;
   private boolean aprobacion_coordinador;
+  private boolean aprobacion_gestion;
   private String observaciones;
   private int version;
   private List<Paso> pasos;
@@ -43,6 +44,14 @@ public class Protocolo {
 
     public void setHistorial(List<Protocolo> historial) {
         this.historial = historial;
+    }
+
+    public boolean isAprobacion_gestion() {
+        return aprobacion_gestion;
+    }
+
+    public void setAprobacion_gestion(boolean aprobacion_gestion) {
+        this.aprobacion_gestion = aprobacion_gestion;
     }
   
   

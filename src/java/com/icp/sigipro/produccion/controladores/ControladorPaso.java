@@ -90,7 +90,7 @@ public class ControladorPaso extends SIGIPROServlet {
         request.setAttribute("accion", "Agregar");
         request.setAttribute("listaSubbodegas", this.parseListaSubbodegas(subbodegadao.obtenerSubBodegas()));
         request.setAttribute("listaSecciones", this.parseListaSecciones(secciondao.obtenerSecciones()));
-        request.setAttribute("listaActividades", this.parseListaActividades(actividaddao.obtenerActividades_Apoyo()));
+        request.setAttribute("listaActividades", this.parseListaActividades(actividaddao.obtenerActividades_Apoyo_Activas()));
         request.setAttribute("orden", "");
         request.setAttribute("cantidad", 0);
         request.setAttribute("contador", 0);
@@ -215,7 +215,7 @@ public class ControladorPaso extends SIGIPROServlet {
 
         List<SubBodega> subbodegas = subbodegadao.obtenerSubBodegas();
         List<Seccion> secciones = secciondao.obtenerSecciones();
-        List<Actividad_Apoyo> actividades = actividaddao.obtenerActividades_Apoyo();
+        List<Actividad_Apoyo> actividades = actividaddao.obtenerActividades_Apoyo_Activas();
 
         request.setAttribute("paso", p);
         request.setAttribute("lista", lista);

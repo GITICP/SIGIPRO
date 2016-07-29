@@ -33,6 +33,7 @@
             <div class="widget-header">
                 <h3><i class="fa fa-flask"></i> Catálogo de Venenos de Producción </h3>
                 <div class="btn-group widget-header-toolbar">
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion?accion=historial">Historial de Consumo Directo</a>
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion?accion=agregar">Agregar Veneno de Producción</a>
                 </div>  
             </div>
@@ -64,9 +65,9 @@
                       <td>${veneno.getCantidad()}</td>
                       <td>${veneno.getObservaciones()}</td>
                       <td>
-                        <a href="/SIGIPRO/Serpentario/Veneno?accion=ver&id_veneno=${veneno.getVeneno_serpentario().getId_veneno()}">
+                        <a href="/SIGIPRO/Serpentario/Lote?accion=ver&id_lote=${veneno.getVeneno_serpentario().getId_lote()}">
                         <div style="height:100%;width:100%">
-                            ${veneno.getVeneno_serpentario().getId_veneno()}
+                            Lote: ${veneno.getVeneno_serpentario().getNumero_lote()}, Especie: ${veneno.getVeneno_serpentario().getEspecie().getGenero_especie()}
                         </div>
                         </a>
                       </td>

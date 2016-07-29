@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorProtocolo", urlPatterns = {"/Produccion/Protocolo"})
 public class ControladorProtocolo extends SIGIPROServlet {
 
-    //CRUD, Aprobaciones (4), Activar
-    private final int[] permisos = {640, 641, 642, 643, 644, 645};
+    //CRUD, Aprobaciones (4), Activar, Aprobacion Gestion
+    private final int[] permisos = {640, 641, 642, 643, 644, 645,646};
     //-----------------
     private final ProtocoloDAO dao = new ProtocoloDAO();
     private final Formula_MaestraDAO formuladao = new Formula_MaestraDAO();
@@ -261,6 +261,13 @@ public class ControladorProtocolo extends SIGIPROServlet {
                     if (p.getAprobacion_calidad() && p.getAprobacion_coordinador() && p.getAprobacion_regente()) {
                         resultado = dao.aprobarProtocolo(id_protocolo, actor);
                         p.setAprobacion_direccion(true);
+                    }
+                    break;
+                case 5:
+                    validarPermiso(646, request);
+                    if (p.getAprobacion_calidad() && p.getAprobacion_coordinador() && p.getAprobacion_regente() && p.getAprobacion_direccion()) {
+                        resultado = dao.aprobarProtocolo(id_protocolo, actor);
+                        p.setAprobacion_gestion(true);
                     }
                     break;
             }
