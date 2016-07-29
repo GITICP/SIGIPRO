@@ -53,6 +53,7 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre:</strong> <td>${catalogo_pt.getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${catalogo_pt.getDescripcion()} </td></tr>
+                                <tr><td> <strong>Vida útil (meses):</strong> <td>${catalogo_pt.getVida_util()} </td></tr>
                             </table>
                         </div>
                     </div>
