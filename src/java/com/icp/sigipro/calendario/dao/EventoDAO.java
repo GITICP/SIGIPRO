@@ -286,7 +286,7 @@ public class EventoDAO {
     List<Evento> eventos = new ArrayList<Evento>();
     try {
       PreparedStatement preparedStatement = getConexion().
-              prepareStatement("SELECT *\n"
+              prepareStatement("SELECT DISTINCT ON (id) *\n"
                       + "FROM calendario.eventos e\n"
                       + "     FULL OUTER JOIN calendario.eventos_usuarios eu\n"
                       + "        ON e.id = eu.id_evento\n"
@@ -294,7 +294,7 @@ public class EventoDAO {
                       + "        ON e.id = es.id_evento\n"
                       + "WHERE (eu.id_usuario =? or es.id_seccion=?) AND e.start_date >= current_date AND start_date < current_date + 1");
       PreparedStatement preparedStatement2 = getConexion().
-              prepareStatement("SELECT * FROM calendario.eventos WHERE id IN "
+              prepareStatement("SELECT DISTINCT ON (id) * FROM calendario.eventos WHERE id IN "
                       + "(SELECT e.id_evento FROM calendario.eventos_roles e where e.id_rol IN "
                       + "(SELECT id_rol FROM seguridad.roles_usuarios WHERE id_usuario=? )) AND start_date >= current_date AND start_date < current_date + 1 ");
       preparedStatement.setInt(1, u.getID());
@@ -341,7 +341,7 @@ public class EventoDAO {
     List<Evento> eventos = new ArrayList<Evento>();
     try {
       PreparedStatement preparedStatement = getConexion().
-              prepareStatement("SELECT *\n"
+              prepareStatement("SELECT DISTINCT ON (id) *\n"
                       + "FROM calendario.eventos e\n"
                       + "     FULL OUTER JOIN calendario.eventos_usuarios eu\n"
                       + "        ON e.id = eu.id_evento\n"
@@ -349,7 +349,7 @@ public class EventoDAO {
                       + "        ON e.id = es.id_evento\n"
                       + "WHERE (eu.id_usuario =? or es.id_seccion=?) AND e.start_date >= now()");
       PreparedStatement preparedStatement2 = getConexion().
-              prepareStatement("SELECT * FROM calendario.eventos WHERE id IN "
+              prepareStatement("SELECT DISTINCT ON (id) * FROM calendario.eventos WHERE id IN "
                       + "(SELECT e.id_evento FROM calendario.eventos_roles e where e.id_rol IN "
                       + "(SELECT id_rol FROM seguridad.roles_usuarios WHERE id_usuario=? )) AND start_date >= now() ");
       preparedStatement.setInt(1, u.getID());
@@ -396,7 +396,7 @@ public class EventoDAO {
     List<Evento> eventos = new ArrayList<Evento>();
     try {
       PreparedStatement preparedStatement = getConexion().
-              prepareStatement("SELECT *\n"
+              prepareStatement("SELECT DISTINCT ON (id) *\n"
                       + "FROM calendario.eventos e\n"
                       + "     FULL OUTER JOIN calendario.eventos_usuarios eu\n"
                       + "        ON e.id = eu.id_evento\n"
@@ -404,7 +404,7 @@ public class EventoDAO {
                       + "        ON e.id = es.id_evento\n"
                       + "WHERE eu.id_usuario =? or es.id_seccion=?");
       PreparedStatement preparedStatement2 = getConexion().
-              prepareStatement("SELECT * FROM calendario.eventos WHERE id IN "
+              prepareStatement("SELECT DISTINCT ON (id) * FROM calendario.eventos WHERE id IN "
                       + "(SELECT e.id_evento FROM calendario.eventos_roles e where e.id_rol IN "
                       + "(SELECT id_rol FROM seguridad.roles_usuarios WHERE id_usuario=?)) ");
       preparedStatement.setInt(1, u.getID());

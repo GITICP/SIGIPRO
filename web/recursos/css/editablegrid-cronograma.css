@@ -43,6 +43,11 @@ table.testgrid {
                     padding: 5px;
                     text-align: center;
                     border: 1px solid #E0E0E0;
+                    word-wrap: break-word;
+                    overflow: hidden; 
+                    max-width: 100px; 
+                    max-height: 100px;
+                    white-space: pre-wrap;
             }
 
             #filter { 

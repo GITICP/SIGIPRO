@@ -23,11 +23,12 @@ public class Catalogo_PTDAO extends DAO{
         boolean resultado = false;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.catalogo_pt (nombre, descripcion)"
-                                                                        + " VALUES (?,?) RETURNING id_catalogo_pt");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.catalogo_pt (nombre, descripcion, vida_util)"
+                                                                        + " VALUES (?,?,?) RETURNING id_catalogo_pt");
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getDescripcion());
+            consulta.setInt(3, p.getVida_util());
 
 
             ResultSet resultadoConsulta = consulta.executeQuery();
@@ -51,12 +52,13 @@ public class Catalogo_PTDAO extends DAO{
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE produccion.catalogo_pt "
-                    + " SET  nombre=?, descripcion=?"
+                    + " SET  nombre=?, descripcion=?, vida_util=?"
                     + " WHERE id_catalogo_pt=?; "
             );
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getDescripcion());
-            consulta.setInt(3, p.getId_catalogo_pt());
+            consulta.setInt(3, p.getVida_util());
+            consulta.setInt(4, p.getId_catalogo_pt());
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -111,6 +113,7 @@ public class Catalogo_PTDAO extends DAO{
                 catalogo_pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
                 catalogo_pt.setNombre(rs.getString("nombre"));
                 catalogo_pt.setDescripcion(rs.getString("descripcion"));
+                catalogo_pt.setVida_util(rs.getInt("vida_util"));
 
             }
             rs.close();
@@ -129,13 +132,14 @@ public class Catalogo_PTDAO extends DAO{
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT id_catalogo_pt, nombre, descripcion FROM produccion.catalogo_pt;");
+            consulta = getConexion().prepareStatement(" SELECT id_catalogo_pt, nombre, descripcion, vida_util FROM produccion.catalogo_pt;");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 Catalogo_PT catalogo_pt = new Catalogo_PT();
                 catalogo_pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
                 catalogo_pt.setNombre(rs.getString("nombre"));
                 catalogo_pt.setDescripcion(rs.getString("descripcion"));
+                catalogo_pt.setVida_util(rs.getInt("vida_util"));
                 resultado.add(catalogo_pt);
             }
         }

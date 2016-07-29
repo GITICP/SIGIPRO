@@ -84,7 +84,7 @@
                                                                 </c:otherwise>
                                                             </c:choose>
                                                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 544)}">
-                                                                <a class="btn btn-danger btn-sm boton-accion retirar-Modal" data-id='${analisis.getId_analisis()}' data-toggle="modal" data-target="#modalRetirarAnalisis">Retirar</a>
+                                                                <a class="btn btn-danger btn-sm boton-accion retirar-Modal" data-id='${analisis.getId_analisis()}' data-toggle="modal" data-target="#modalRetirarAnalisis">Archivar</a>
                                                             </c:if>
                                                         </c:when>
                                                         <c:otherwise>
@@ -169,14 +169,14 @@
 
 </t:modal>
 
-<t:modal idModal="modalRetirarAnalisis" titulo="Retirar Análisis">
+<t:modal idModal="modalRetirarAnalisis" titulo="Archivar Análisis">
 
     <jsp:attribute name="form">
         <form class="form-horizontal" id="form_modalautorizar" method="post" data-show-auth="${show_modal_auth}" action="Analisis">
             ${mensaje_auth}
             <h4> Información sobre el análisis </h4>
 
-            <h5>Para validar el retiro, el usuario que recibe la solicitud debe iniciar sesión. </h5>
+            <h5>Para validar el retiro, se debe iniciar sesión. </h5>
 
             <input hidden="true" name="id_analisis_aprobar" id="id_analisis_retirar">
             <input hidden="true" name="accion" id="accion" value="Retirar">
@@ -206,7 +206,7 @@
             <div class="form-group">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Retirar Análisis</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Archivar Análisis</button>
                 </div>
             </div>
         </form>

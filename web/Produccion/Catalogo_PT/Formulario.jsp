@@ -34,6 +34,14 @@
           </div>
         </div>
       </div>
+      <label for="vida_util" class="control-label">Vida útil en meses</label>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input  type="number" id="vida_util" min="0" value="${catalogo_pt.getVida_util()}"  name="vida_util" class="form-control" >      
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="col-md-12">

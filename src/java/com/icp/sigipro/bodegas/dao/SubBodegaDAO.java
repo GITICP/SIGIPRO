@@ -428,6 +428,59 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega> {
         }
         return sub_bodega;
     }
+    
+    public SubBodega obtenerSubbodegaAjax(int id_subbodega) throws SIGIPROException {
+        SubBodega resultado = new SubBodega();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+
+        try {
+            consulta = getConexion().prepareStatement(" SELECT sb.id_sub_bodega, isb.id_inventario_sub_bodega, isb.cantidad, ci.id_producto, ci.nombre as nombre_producto "
+                    + " FROM bodega.sub_bodegas sb "
+                    + "  INNER JOIN seguridad.usuarios u on sb.id_usuario = u.id_usuario "
+                    + "  INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
+                    + "  LEFT JOIN bodega.inventarios_sub_bodegas isb on isb.id_sub_bodega = sb.id_sub_bodega "
+                    + "  LEFT JOIN bodega.catalogo_interno ci on ci.id_producto = isb.id_producto "
+                    + " WHERE sb.id_sub_bodega = ? ;");
+
+            consulta.setInt(1, id_subbodega);
+            System.out.println(consulta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setId_sub_bodega(id_subbodega);
+                List<InventarioSubBodega> inventarios = new ArrayList<InventarioSubBodega>();
+                do {
+                    InventarioSubBodega inventario_sb = new InventarioSubBodega();
+                    int id_inventario_sub_bodega = rs.getInt("id_inventario_sub_bodega");
+                    if (id_inventario_sub_bodega != 0) {
+                        inventario_sb.setId_inventario_sub_bodega(id_inventario_sub_bodega);
+                        inventario_sb.setCantidad(rs.getInt("cantidad"));
+                        ProductoInterno p = new ProductoInterno();
+
+                        p.setId_producto(rs.getInt("id_producto"));
+                        p.setNombre(rs.getString("nombre_producto"));
+
+                        inventario_sb.setProducto(p);
+                        inventario_sb.setSub_bodega(resultado);
+
+                        inventarios.add(inventario_sb);
+                    }
+                } while (rs.next());
+
+                resultado.setInventarios(inventarios);
+            } else {
+                throw new SIGIPROException("No se encontraron registros de inventario para esta sub bodega");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener sub bodega");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
 
     public boolean insertar(SubBodega param, String[] idsIngresos, String[] idsEgresos, String[] idsVer) throws SIGIPROException {
 

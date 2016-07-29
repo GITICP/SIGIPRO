@@ -43,6 +43,15 @@ public class Grupo {
     public List<Muestra> getGrupos_muestras() {
         return grupos_muestras;
     }
+    
+    public String getGrupos_muestras_Sring() {
+        String temp = "";
+        for(Muestra m : grupos_muestras) {
+            temp = temp +  m.getIdentificador() + ", ";
+        }
+        String res_final = temp.substring(0, temp.length() - 2);
+        return res_final;
+    }
 
     public void setGrupos_muestras(List<Muestra> grupos_muestras) {
         this.grupos_muestras = grupos_muestras;

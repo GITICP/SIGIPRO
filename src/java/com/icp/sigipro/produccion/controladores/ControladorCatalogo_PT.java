@@ -12,13 +12,10 @@ import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
-import com.icp.sigipro.utilidades.HelperFechas;
 import com.icp.sigipro.utilidades.HelpersHTML;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -188,7 +185,11 @@ public class ControladorCatalogo_PT extends SIGIPROServlet {
     catalogo_pt.setId_catalogo_pt(id_catalogo_pt);
     catalogo_pt.setNombre(request.getParameter("nombre"));
     catalogo_pt.setDescripcion(request.getParameter("descripcion"));
-
+    try {
+    catalogo_pt.setVida_util(Integer.parseInt(request.getParameter("vida_util")));
+    }
+    catch (NumberFormatException e){
+    }
     return catalogo_pt;
   }
 

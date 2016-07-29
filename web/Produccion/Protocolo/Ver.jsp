@@ -94,6 +94,17 @@
                                         </c:choose>
                                     </td>
                                 </tr>
+                                <tr><td> <strong>Aprobación de Gestión de Calidad:</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${protocolo.isAprobacion_gestion()}">
+                                                Aprobado
+                                            </c:when>
+                                            <c:otherwise>
+                                                Pendiente
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                                 <c:if test="${protocolo.getObservaciones()!=''}">
                                     <tr><td> <strong>Observaciones de Rechazo:</strong> <td>${protocolo.getObservaciones()} </td></tr>
                                 </c:if>

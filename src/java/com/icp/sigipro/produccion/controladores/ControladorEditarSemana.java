@@ -83,6 +83,7 @@ public class ControladorEditarSemana extends HttpServlet {
         String columna = request.getParameter("columna");
         String nuevoValor = request.getParameter("nuevoValor");
         try {
+            //System.out.println("nuevoValor = "+nuevoValor);
             sDAO.editarSemana(Integer.parseInt(id),columna,nuevoValor);
             Semanas_cronograma sc = new Semanas_cronograma();
             BitacoraDAO bitacora = new BitacoraDAO();

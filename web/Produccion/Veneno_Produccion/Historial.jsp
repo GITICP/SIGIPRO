@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Producción</li>
             <li> 
-              <a href="/SIGIPRO/Produccion/Inoculo?">Catálogo de Inóculos</a>
+              <a href="/SIGIPRO/Produccion/Veneno_Produccion?">Historial de Consumo de Venenos de Producción</a>
             </li>
           </ul>
         </div>
@@ -31,9 +31,9 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-flask"></i> Catálogo de Inóculos </h3>
+                <h3><i class="fa fa-flask"></i> Historial de Consumo de Venenos de Producción </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Inoculo?accion=agregar">Agregar Inóculo</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Veneno_Produccion">Catálogo de Venenos de Producción</a>
                 </div>  
             </div>
             ${mensaje}
@@ -42,24 +42,26 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Identificador</th>
-                    <th>Fecha de Preparación</th>
-                    <th>Encargado de Preparación</th>
+                    <th>Veneno</th>
+                    <th>Usuario</th>
+                    <th>Fecha de Consumo</th>
+                    <th>Cantidad</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${listaInoculos}" var="inoculo">
+                  <c:forEach items="${historiales}" var="historial">
 
-                    <tr id ="${inoculo.getId_inoculo()}">
+                    <tr id ="${historial.getId_veneno()}">
                       <td>
-                        <a href="/SIGIPRO/Produccion/Inoculo?accion=ver&id_inoculo=${inoculo.getId_inoculo()}">
+                        <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${historial.getId_veneno()}">
                         <div style="height:100%;width:100%">
-                            ${inoculo.getIdentificador()}
+                            ${historial.getVeneno().getVeneno()}
                         </div>
                         </a>
                       </td>
-                      <td>${inoculo.getFecha_preparacion_S()}</td>
-                      <td>${inoculo.getEncargado_preparacion().getNombreCompleto()}</td>
+                      <td>${historial.getUsuario().getNombreUsuario()}</td>
+                      <td>${historial.getFecha_S()}</td>
+                      <td>${historial.getCantidad()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

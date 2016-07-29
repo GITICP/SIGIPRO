@@ -73,8 +73,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ControladorActividad_Apoyo", urlPatterns = {"/Produccion/Actividad_Apoyo"})
 public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
-    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad
-    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679};
+    //CRUD, Activar Actividad, Aprobaciones (4), Activar Respuesta, Realizar Actividad, Revisar y Aprobar actividad, Aprobaciones Gestion, activar y retirar
+    private final int[] permisos = {670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681};
     //-----------------
     private final Actividad_ApoyoDAO dao = new Actividad_ApoyoDAO();
     private final ProduccionXSLTDAO produccionxsltdao = new ProduccionXSLTDAO();
@@ -106,6 +106,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             add("activarrespuesta");
             add("repetir");
             add("actividadesajax");
+            add("retirar");
+            add("incluir");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -458,6 +460,62 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     }
 
+    protected void getRetirar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(681, request);
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        boolean estado = dao.obtenerEstado(id_actividad);
+        if (estado) {
+            boolean resultado = false;
+            try {
+                resultado = dao.retirarActividad_Apoyo(id_actividad);
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_actividad, Bitacora.ACCION_RETIRAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo retirada correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser retirada ya que tiene referencias asociados."));
+                }
+                this.getIndexnormal(request, response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser retirada ya que tiene referencias asociados."));
+                this.getIndexnormal(request, response);
+            }
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser retirada ya que ya se encuentra retirada."));
+            this.getIndexnormal(request, response);
+        }
+    }
+
+    protected void getIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(681, request);
+        int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        boolean estado = dao.obtenerEstado(id_actividad);
+        if (!estado) {
+            boolean resultado = false;
+            try {
+                resultado = dao.incluirActividad_Apoyo(id_actividad);
+                if (resultado) {
+                    //Funcion que genera la bitacora 
+                    bitacora.setBitacora(id_actividad, Bitacora.ACCION_INCLUIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
+                    //----------------------------
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo inlcuida correctamente"));
+                } else {
+                    request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser incluida ya que tiene referencias asociados."));
+                }
+                this.getIndexnormal(request, response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser incluida ya que tiene referencias asociados."));
+                this.getIndexnormal(request, response);
+            }
+        }else{
+            request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser incluida ya que ya se encuentra incluida."));
+            this.getIndexnormal(request, response);
+        }
+    }
+
     protected void getActividadesajax(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("application/json");
@@ -488,7 +546,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
-        if (actividad.isAprobacion_direccion()) {
+        if (actividad.isAprobacion_gestion()) {
             request.setAttribute("actividad", actividad);
             ProduccionXSLT xslt;
             try {
@@ -519,7 +577,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
         respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
-        if (respuesta.getActividad().isAprobacion_direccion()) {
+        if (respuesta.getActividad().isAprobacion_gestion()) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
             try {
@@ -581,7 +639,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     protected void postAprobar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
-        //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director
+        //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director, 5 - Gestion
         int actor = Integer.parseInt(request.getParameter("actor"));
         Actividad_Apoyo aa = dao.obtenerAprobaciones(id_actividad);
         boolean resultado = false;
@@ -611,6 +669,13 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                     if (aa.isAprobacion_calidad() && aa.isAprobacion_coordinador() && aa.isAprobacion_regente()) {
                         resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
                         aa.setAprobacion_direccion(true);
+                    }
+                    break;
+                case 5:
+                    validarPermiso(680, request);
+                    if (aa.isAprobacion_calidad() && aa.isAprobacion_coordinador() && aa.isAprobacion_regente() && aa.isAprobacion_direccion()) {
+                        resultado = dao.aprobarActividad_Apoyo(id_actividad, actor);
+                        aa.setAprobacion_gestion(true);
                     }
                     break;
             }
@@ -763,13 +828,23 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
 
     protected void postRepetir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
+        
         Respuesta_AA resultado = dao.obtenerRespuesta(id_respuesta);
         resultado.setActividad(dao.obtenerActividad_Apoyo(resultado.getActividad().getId_actividad()));
         Usuario u = new Usuario();
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         u.setId_usuario(id_usuario);
         resultado.setUsuario_realizar(u);
+        
         String redireccion = "Actividad_Apoyo/index.jsp";
+
+        resultado.setNombre(this.obtenerParametro("nombre"));
+
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        Timestamp fecha = new java.sql.Timestamp(new Date().getTime());
+        resultado.setFecha(fecha);
+        
         try {
             //Se crea el Path en la carpeta del Proyecto
             String fullPath = helper_archivos.obtenerDireccionArchivos();

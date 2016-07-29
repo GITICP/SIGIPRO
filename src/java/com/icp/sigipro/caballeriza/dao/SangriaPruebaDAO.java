@@ -363,7 +363,8 @@ public class SangriaPruebaDAO extends DAO {
                     + "       INNER JOIN caballeriza.sangrias_pruebas_caballos spc ON sp.id_sangria_prueba = spc.id_sangria_prueba "
                     + "       INNER JOIN caballeriza.caballos c ON c.id_caballo = spc.id_caballo "
                     + "       INNER JOIN caballeriza.grupos_de_caballos gc ON gc.id_grupo_de_caballo = sp.id_grupo "
-                    + " WHERE sp.id_informe is null; "
+                    + " WHERE sp.id_informe is null "
+                    + " ORDER BY sp.id_sangria_prueba; "
             );
 
             rs = consulta.executeQuery();

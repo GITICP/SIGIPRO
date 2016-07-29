@@ -50,6 +50,7 @@
                   <tr>
                     <th>Nombre</th>
                     <th>Descripcion</th>
+                    <th>Vida útil (meses)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -64,6 +65,16 @@
                         </a>
                       </td>
                       <td>${producto.getDescripcion()}</td>
+                      <td>
+                      <c:choose>
+                        <c:when test="${producto.getVida_util()==0}" >
+                          Sin especificar
+                        </c:when>
+                        <c:otherwise>
+                          ${producto.getVida_util()}
+                        </c:otherwise>
+                      </c:choose>
+                      </td>
                     </tr>
 
                   </c:forEach>
