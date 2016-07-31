@@ -37,7 +37,7 @@
 
                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                 <div class="btn-group widget-header-toolbar">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${analisis.getId_analisis()}">Editar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${analisis.getId_analisis()}${(analisis.getId_analisis() == 2147483647) ? "&identificadores=" += param.identificadores : "" }">Editar</a>
                                 </div>
                             </c:if>
 

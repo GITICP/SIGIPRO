@@ -70,7 +70,7 @@
                                        display:table-cell;
                                        vertical-align:middle;
                                        color:#fff;
-                                       background-color:#3071a9;
+                                       background-color:#6e9bc2;
                                        border-color:#285e8e;" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=agregar&id_categoria_aa=${categoria.getId_categoria_aa()}">
                                         Agregar Nueva Actividad
                                     </a>

@@ -14,6 +14,8 @@ import com.icp.sigipro.produccion.dao.Veneno_ProduccionDAO;
 import com.icp.sigipro.produccion.modelos.Veneno_Produccion;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
+import com.icp.sigipro.produccion.dao.Venenos_InoculoDAO;
+import com.icp.sigipro.produccion.modelos.Venenos_Inoculo;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
@@ -42,6 +44,7 @@ public class ControladorInoculo extends SIGIPROServlet {
     private final InoculoDAO dao = new InoculoDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final Veneno_ProduccionDAO dao_vp = new Veneno_ProduccionDAO();
+    private final Venenos_InoculoDAO dao_vi = new Venenos_InoculoDAO();
     
     protected final Class clase = ControladorInoculo.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -80,6 +83,8 @@ public class ControladorInoculo extends SIGIPROServlet {
         Inoculo ds = new Inoculo();
         request.setAttribute("inoculo", ds);
         request.setAttribute("accion", "Agregar");
+        request.setAttribute("tipomuestras", venenos);
+        request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(venenos));
 
         redireccionar(request, response, redireccion);
     }
@@ -122,6 +127,9 @@ public class ControladorInoculo extends SIGIPROServlet {
         try {
             Inoculo i = dao.obtenerInoculo(id_inoculo);
             request.setAttribute("inoculo", i);
+            List<Venenos_Inoculo> vi = new ArrayList<Venenos_Inoculo>();
+            vi = dao_vi.obtenerVenenosInoculo(id_inoculo);
+            request.setAttribute("venenos", vi);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
@@ -147,13 +155,42 @@ public class ControladorInoculo extends SIGIPROServlet {
         Inoculo ds = dao.obtenerInoculo(Integer.parseInt(request.getParameter("id_inoculo")));
         request.setAttribute("inoculo", ds);
         request.setAttribute("accion", "Editar");
+        request.setAttribute("tipomuestras", venenos);
+        request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(venenos));
+
+        List<Venenos_Inoculo> vi = dao_vi.obtenerVenenosInoculo(ds.getId_inoculo());
+        List<List<String>> listaVenenos_Inoculo = new ArrayList<List<String>>();
+        int contador = 0;
+        while (contador < vi.size()){
+            // 0 = contador
+            // 1 = veneno
+            // 2 = peso/cantidad
+            List<String> filaVenenos = new ArrayList<String>();
+            filaVenenos.add(contador+"");
+            filaVenenos.add(vi.get(contador).getVeneno().getId_veneno()+"");
+            filaVenenos.add(vi.get(contador).getCantidad()+"");
+            listaVenenos_Inoculo.add(filaVenenos);
+            contador++;
+        }
+        //Lista los ids de los tipos de muestras ya solicitadas
+        String idTipoMuestras = "";
+        for (List<String> s : listaVenenos_Inoculo) {
+            idTipoMuestras += s.get(0);
+            idTipoMuestras += ",";
+        }
+        if (!idTipoMuestras.equals("")) {
+            idTipoMuestras = idTipoMuestras.substring(0, idTipoMuestras.length() - 1);
+        }
+        
+        request.setAttribute("listaSolicitud", listaVenenos_Inoculo);
+        request.setAttribute("listaTM", idTipoMuestras);
 
         redireccionar(request, response, redireccion);
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
-        boolean resultado = false;
+        int resultado = 0;
         String redireccion = "Inoculo/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
@@ -168,10 +205,21 @@ public class ControladorInoculo extends SIGIPROServlet {
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
-        if (resultado) {
+        if (resultado!=0) {
+            String lista = request.getParameter("listaMuestras");
+            String[] listaMuestras = lista.split(",");
+
+            if (listaMuestras.length > 0 && !listaMuestras[0].equals("")) {
+                for (String i : listaMuestras) {
+                    int id_veneno = Integer.parseInt(request.getParameter("veneno_" + i));
+                    int peso = Integer.parseInt(request.getParameter("peso_" + i));
+                    dao_vi.insertarVenenosInoculo(id_veneno, resultado, peso);
+                }
+            }    
             redireccion = "Inoculo/index.jsp";
             List<Inoculo> inoculos = dao.obtenerInoculos();
             request.setAttribute("listaInoculos", inoculos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Inóculo agregado exitosamente."));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
@@ -213,6 +261,7 @@ public class ControladorInoculo extends SIGIPROServlet {
         try {
             Inoculo inoculo_a_eliminar = dao.obtenerInoculo(Integer.parseInt(request.getParameter("id_inoculo")));
             
+            dao_vi.eliminarVenenos(inoculo_a_eliminar.getId_inoculo());
             resultado = dao.eliminarInoculo(inoculo_a_eliminar.getId_inoculo());
             //Funcion que genera la bitacora
             BitacoraDAO bitacora = new BitacoraDAO();
@@ -235,14 +284,13 @@ public class ControladorInoculo extends SIGIPROServlet {
     private Inoculo construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Inoculo inoculo = new Inoculo();
         inoculo.setIdentificador(request.getParameter("identificador"));
-        inoculo.setPeso(Integer.parseInt(request.getParameter("peso")));
-        inoculo.setVeneno(dao_vp.obtenerVeneno_Produccion(Integer.parseInt(request.getParameter("id_veneno"))));
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date result = df.parse(request.getParameter("fecha_preparacion"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         inoculo.setFecha_preparacion(fecha_solicitudSQL);
         inoculo.setEncargado_preparacion(dao_us.obtenerUsuario(Integer.parseInt(request.getParameter("encargado_preparacion"))));
 
+        
         return inoculo;
     }
     
@@ -250,15 +298,38 @@ public class ControladorInoculo extends SIGIPROServlet {
         Inoculo inoculo = new Inoculo();
         inoculo.setId_inoculo(Integer.parseInt(request.getParameter("id_inoculo")));
         inoculo.setIdentificador(request.getParameter("identificador"));
-        inoculo.setPeso(Integer.parseInt(request.getParameter("peso")));
-        inoculo.setVeneno(dao_vp.obtenerVeneno_Produccion(Integer.parseInt(request.getParameter("id_veneno"))));
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date result = df.parse(request.getParameter("fecha_preparacion"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         inoculo.setFecha_preparacion(fecha_solicitudSQL);
         inoculo.setEncargado_preparacion(dao_us.obtenerUsuario(Integer.parseInt(request.getParameter("encargado_preparacion"))));
 
+        String lista = request.getParameter("listaMuestras");
+        String[] listaMuestras = lista.split(",");
+        
+        //Borrar los venenos_inoculo asociados al inóculo
+        dao_vi.eliminarVenenos(inoculo.getId_inoculo());
+        
+        //Insertar los registros nuevos. Por lo tanto, no es un editar. Es un borrar todos los venenos asociados al inóculo y crear nuevos.
+        if (listaMuestras.length > 0 && !listaMuestras[0].equals("")) {
+            for (String i : listaMuestras) {
+                int id_veneno = Integer.parseInt(request.getParameter("veneno_" + i));
+                int peso = Integer.parseInt(request.getParameter("peso_" + i));
+                dao_vi.insertarVenenosInoculo(id_veneno, inoculo.getId_inoculo(), peso);
+            }
+        }    
+        
         return inoculo;
+    }
+    public List<String> parseListaTipoMuestra(List<Veneno_Produccion> tipomuestra) {
+        List<String> respuesta = new ArrayList<String>();
+        for (Veneno_Produccion tm : tipomuestra) {
+            String tipo = "[";
+            tipo += tm.getId_veneno()+ ",";
+            tipo += "\"" + tm.getVeneno() + "\"]";
+            respuesta.add(tipo);
+        }
+        return respuesta;
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">

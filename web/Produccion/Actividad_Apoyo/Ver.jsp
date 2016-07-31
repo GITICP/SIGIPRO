@@ -41,12 +41,28 @@
                         <div class="widget-header">
                             <h3><i class="fa fa-flask"></i> ${actividad.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Ver Realizar</a>
+                                </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el actividad de actividad" data-href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=eliminar&id_actividad=${actividad.getId_actividad()}">Eliminar</a>
                                 </c:if>
-
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                     <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=editar&id_actividad=${actividad.getId_actividad()}">Editar</a>
+                                </c:if>
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 681)}">
+                                    <c:choose>
+                                        <c:when test="${actividad.isEstado()}">
+                                            <div class="btn-group widget-header-toolbar">
+                                                <a class="btn btn-danger btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=retirar&id_actividad=${actividad.getId_actividad()}">Retirar</a>
+                                            </div>
+                                        </c:when>                                                            
+                                        <c:otherwise>
+                                            <div class="btn-group widget-header-toolbar">
+                                                <a class="btn btn-danger btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=incluir&id_actividad=${actividad.getId_actividad()}">Incluir</a>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:if>
                             </div>
                         </div>
@@ -55,6 +71,17 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre:</strong></td> <td>${actividad.getNombre()} </td></tr>
                                 <tr><td> <strong>Categoría de Actividad de Apoyo</strong></td> <td>${actividad.getCategoria().getNombre()} </td></tr>
+                                <tr><td> <strong>Estado:</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isEstado()}">
+                                                Incluida
+                                            </c:when>
+                                            <c:otherwise>
+                                                Retirada
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                                 <tr><td> <strong>Aprobación de Control de Calidad:</strong> <td>
                                         <c:choose>
                                             <c:when test="${actividad.isAprobacion_calidad()}">
@@ -99,6 +126,17 @@
                                         </c:choose>
                                     </td>
                                 </tr>
+                                <tr><td> <strong>Aprobación de Gestión de Calidad:</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isAprobacion_gestion()}">
+                                                Aprobado
+                                            </c:when>
+                                            <c:otherwise>
+                                                Pendiente
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                                 <tr><td> <strong>Requiere aprobación:</strong> <td>
                                         <c:choose>
                                             <c:when test="${actividad.isRequiere_ap()}">
@@ -116,8 +154,8 @@
                             </table>
                             <br>
                             ${cuerpo_datos}
-                            
-                            
+
+
                             <div class="col-sm-12">
                                 <div class="widget widget-table">
                                     <div class="widget-header">

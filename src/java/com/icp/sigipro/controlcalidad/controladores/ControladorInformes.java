@@ -165,7 +165,8 @@ public class ControladorInformes extends SIGIPROServlet
             informe = dao.ingresarInforme(informe, cerrar);
             bitacora.setBitacora(informe.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INFORME, request.getRemoteAddr());
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
-            request.setAttribute("mensaje", helper.mensajeDeExito("Informe generado correctamente."));
+            String mensaje_exito = ((cerrar) ? "Informe final generado correctamente y solicitud cerrada con éxito." : "Informe parcial generado correctamente.");
+            request.setAttribute("mensaje", helper.mensajeDeExito(mensaje_exito));
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }
@@ -207,7 +208,8 @@ public class ControladorInformes extends SIGIPROServlet
             informe = dao.editarInforme(informe, cerrar);
             bitacora.setBitacora(informe.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_INFORME, request.getRemoteAddr());
             request.setAttribute("solicitud", daosolicitud.obtenerSolicitud(s.getId_solicitud()));
-            request.setAttribute("mensaje", helper.mensajeDeExito("Informe editado correctamente."));
+            String mensaje_exito = ((cerrar) ? "Informe editado y cerrado correctamente." : "Informe parcial editado correctamente.");
+            request.setAttribute("mensaje", helper.mensajeDeExito(mensaje_exito));
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
         }

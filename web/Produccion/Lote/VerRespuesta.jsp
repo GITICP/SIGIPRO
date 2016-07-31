@@ -50,7 +50,7 @@
                                 <c:if test="${respuesta.getUsuario_verificar().getId_usuario()!=0}">
                                     <tr><td> <strong>Usuario verificar:</strong></td> <td>${respuesta.getUsuario_verificar().getNombre_completo()} </td></tr>
                                 </c:if>
-
+                                <tr><td> <strong>Fecha:</strong></td> <td>${respuesta.getFechaAsString()} </td></tr>
                             </table>
                             <br>
                             <div class="col-md-12">

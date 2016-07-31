@@ -42,6 +42,19 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
+                            
+                            <table class="tabla-ver">
+                                <tr><td><strong>Número de Solicitud:</strong></td><td>${resultado.getAgs().getGrupo().getSolicitud().getNumero_solicitud()}</td></tr>
+                                <tr><td><strong>Análisis:</strong></td><td>${analisis.getNombre()}</td></tr>
+                                <tr><td><strong>Tipo de muestra: </strong></td><td>${resultado.getAgs().getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}</td></tr>
+                                <tr><td><strong>${(resultado.getAgs().getGrupo().getGrupos_muestras().size() == 1) ? "Identificador de Muestra:" : "Identificadores de muestras:"}</strong></td>
+                                    <td>
+                                        ${resultado.getAgs().getGrupo().getGrupos_muestras_Sring()}
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br>
 
                             <form method="post" class="form-horizontal" action="Resultado" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="editar" name="accion" />
@@ -86,7 +99,7 @@
 
                                                 </div>
                                             </c:if>
-                                            <c:if test="${!reactivos.isEmpty()}">
+                                            <c:if test="${!equipos.isEmpty()}">
                                                 <div class="col-md-6">
                                                     <label for="especie" class="control-label"> *Equipos de Medición Utilizados</label>
                                                     <div class="form-group">

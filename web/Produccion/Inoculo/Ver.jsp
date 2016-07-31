@@ -58,26 +58,34 @@
                 <tr><td> <strong>Identificador:</strong></td> <td>${inoculo.getIdentificador()} </td></tr>
                 <tr><td> <strong>Fecha de Preparación:</strong> <td>${inoculo.getFecha_preparacion_S()} </td></tr>
                 <tr><td> <strong>Encargado de Preparación:</strong> <td>${inoculo.getEncargado_preparacion().getNombreCompleto()} </td></tr>
-                <tr><td> <strong>Peso:</strong> <td>${inoculo.getPeso()} gramos </td></tr>
               </table>
               <br>
               
               <div class="widget widget-table">
                 <div class="widget-header">
-                  <h3><i class="fa fa-check"></i> Veneno Asociado</h3>
+                  <h3><i class="fa fa-check"></i> Venenos Asociados</h3>
                 </div>
                 <div class="widget-content">
-                  <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable">
+                  <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
                     <thead>
                       <tr>
                         <th>Nombre del Veneno</th>
+                        <th>Peso (mg)</th>
                       </tr>
                     </thead>
                     <tbody>
-                      
-                        <tr id="${inoculo.getVeneno().getId_veneno()}">
-                          <td>${inoculo.getVeneno().getVeneno()}</td>
-                        </tr>
+                        <c:forEach items="${venenos}" var="veneno">
+                            <tr>
+                                <td>
+                                <a href="/SIGIPRO/Produccion/Veneno_Produccion?accion=ver&id_veneno=${veneno.getVeneno().getId_veneno()}">
+                                <div style="height:100%;width:100%">
+                                        ${veneno.getVeneno().getVeneno()}
+                                </div>
+                                </a>
+                                </td>
+                                    <td>${veneno.getCantidad()}</td>
+                            </tr>
+                        </c:forEach>
                       
                     </tbody>
                   </table>

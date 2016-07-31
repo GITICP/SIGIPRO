@@ -5,7 +5,8 @@ var CONFIGURACION_TABLAS = {
             "t" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
     lengthMenu: [10, 25, 50, 75, 100],
-    oLanguage: {"sLengthMenu": "Registros por p&aacute;gina:  _MENU_"}
+    oLanguage: {"sLengthMenu": "Registros por p&aacute;gina:  _MENU_"},
+    pageLength: 50
 };
 
 $(document).ready(function () {

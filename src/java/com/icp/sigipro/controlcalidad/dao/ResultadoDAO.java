@@ -182,12 +182,15 @@ public class ResultadoDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.*, ags.id_analisis, a.nombre, s.id_solicitud, s.numero_solicitud "
+                    " SELECT r.*, ags.id_analisis, a.nombre, s.id_solicitud, s.numero_solicitud, m.identificador, tm.nombre AS nombre_tipo_muestra "
                     + " FROM control_calidad.resultados r "
                     + "     INNER JOIN control_calidad.analisis_grupo_solicitud ags ON ags.id_analisis_grupo_solicitud = r.id_analisis_grupo_solicitud "
                     + "     INNER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
                     + "     LEFT JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
                     + "     LEFT JOIN control_calidad.solicitudes as s ON s.id_solicitud = g.id_solicitud "
+                    + "     LEFT JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
+                    + "     LEFT JOIN control_calidad.muestras as m ON m.id_muestra = gm.id_muestra "
+                    + "     LEFT JOIN control_calidad.tipos_muestras as tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
                     + " WHERE r.id_resultado = ? "
             );
 
@@ -217,6 +220,17 @@ public class ResultadoDAO extends DAO {
                 ags.setGrupo(g);
 
                 resultado.setAgs(ags);
+                
+                do {
+                    TipoMuestra tm = new TipoMuestra();
+                    Muestra m = new Muestra();
+                    m.setIdentificador(rs.getString("identificador"));
+                    
+                    tm.setNombre(rs.getString("nombre_tipo_muestra"));
+                    m.setTipo_muestra(tm);
+                    
+                    g.agregarMuestra(m);
+                } while(rs.next());
 
             } else {
                 throw new SIGIPROException("El resultado que está intentando buscar no existe.");

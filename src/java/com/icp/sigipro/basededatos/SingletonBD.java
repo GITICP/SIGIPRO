@@ -29,9 +29,9 @@ public class SingletonBD
 
             // Configuración de Base de Datos
             cpds.setDriverClass("org.postgresql.Driver");
-            cpds.setJdbcUrl("jdbc:postgresql://localhost/sigipro");
+            cpds.setJdbcUrl("jdbc:postgresql://localhost/sigipro_cc_bug");
             cpds.setUser("postgres");
-            cpds.setPassword("Solaris2014");
+            cpds.setPassword("Solaris2015");
 
             // Configuración de máximos y mínimos de conexiones
             cpds.setMinPoolSize(10);

@@ -55,10 +55,17 @@
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
-                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe</a>
+                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe Parcial</a>
                                             </c:when>
                                             <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 558)}">
-                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe</a>
+                                                <c:choose>
+                                                    <c:when test="${solicitud.getEstado().equals('Resultado Parcial')}">
+                                                        <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Parcial</a>
+                                                    </c:when>
+                                                        <c:when test="${solicitud.getEstado().equals('Completada')}">
+                                                        <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Final</a>
+                                                    </c:when>
+                                                </c:choose>
                                             </c:when>
                                         </c:choose>
                                     </c:otherwise>
@@ -162,13 +169,13 @@
                                                                     <c:choose>
                                                                         <c:when test="${ags.getResultados() == null}">
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
-                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
                                                                                 Realizar
                                                                             </a>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
-                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}">
+                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
                                                                                 Repetir
                                                                             </a>
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
@@ -241,7 +248,7 @@
                                                                 </td>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                                                     <td>
-                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${resultado.getAgs().getAnalisis().getId_analisis()}">Editar</a>
+                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${resultado.getAgs().getAnalisis().getId_analisis()}${(resultado.getAgs().getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += resultado.getAgs().getGrupo().getGrupos_muestras_Sring() : "" }">Editar</a>
                                                                     </td>
                                                                 </c:if>
                                                             </tr>

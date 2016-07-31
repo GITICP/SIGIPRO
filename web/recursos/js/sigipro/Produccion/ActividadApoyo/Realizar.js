@@ -49,6 +49,7 @@ $(function () {
         var nombre = $(element).attr("name");
         $.ajax({
             url: "/SIGIPRO/Caballeriza/Sangria",
+            async: false,
             type: "GET",
             data: {"accion": "sangriasajax"},
             dataType: "json",
@@ -66,6 +67,7 @@ $(function () {
         $(element).on("change", generar_link_lote);
         $.ajax({
             url: "/SIGIPRO/Produccion/Lote",
+            async: false,
             type: "GET",
             data: {"accion": "lotesajax"},
             dataType: "json",
@@ -84,6 +86,7 @@ $(function () {
         $(element).on("change", generar_link_cc);
         $.ajax({
             url: "/SIGIPRO/ControlCalidad/Solicitud",
+            async: false,
             type: "GET",
             data: {"accion": "solicitudesajax"},
             dataType: "json",
@@ -103,6 +106,7 @@ $(function () {
         var id = $(element).prop("id").split("_")[1];
         $.ajax({
             url: "/SIGIPRO/Produccion/Lote",
+            async: false,
             type: "GET",
             data: {"accion": "usuariosajax",
                 "id_seccion": id},
@@ -124,6 +128,7 @@ $(function () {
         var id = $(element).prop("id").split("_")[1];
         $.ajax({
             url: "/SIGIPRO/Produccion/Actividad_Apoyo",
+            async: false,
             type: "GET",
             data: {"accion": "actividadesajax",
                 "id_actividad": id},
@@ -150,6 +155,7 @@ $(function () {
         });
         $.ajax({
             url: "/SIGIPRO/Bodegas/SubBodegas",
+            async: false,
             type: "GET",
             data: {"accion": "subbodegasajax",
                 "id_subbodega": id},
@@ -157,8 +163,9 @@ $(function () {
             success: function (datos) {
                 generar_select_subbodegas(datos, element);
             },
-            error: function () {
+            error: function (datos) {
                 alert("Error en Subbodegas");
+                alert(datos);
             }
         });
 

@@ -139,6 +139,9 @@ public class Bitacora {
     public static final String ACCION_REVISAR = "REVISAR";
     public static final String ACCION_COMPLETAR = "COMPLETAR";
     public static final String ACCION_DISTRIBUIR = "DISTRIBUIR";
+    public static final String ACCION_CERRAR = "CERRAR";
+    public static final String ACCION_DEVOLVER = "DEVOLVER";
+    public static final String ACCION_INCLUIR = "INCLUIR";
     
 
     public Bitacora() {

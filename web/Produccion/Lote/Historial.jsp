@@ -69,13 +69,13 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${lote.getFecha_vencimiento()==null}">
-                                                        <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
+                                                        <a class="btn btn-primary btn-sm boton-accion vencimiento-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-meses="${lote.getProtocolo().getProducto().getVida_util()}" data-target="#modalVencimientoLote">Fecha de Vencimiento</a>
                                                     </c:when>
                                                     <c:when test="${lote.getUsuario_distribucion().getId_usuario()==0}">
-                                                        <a class="btn btn-primary btn-sm boton-accion distribucion-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalDistribucionLote">Distribución</a>
+                                                        <a class="btn btn-primary btn-sm boton-accion distribucion-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalDistribucionLote">Liberación de Lote</a>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <a class="btn btn-warning btn-sm boton-accion" disabled>Distribuido</a>
+                                                        <a class="btn btn-warning btn-sm boton-accion" disabled>Liberado</a>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
@@ -98,17 +98,17 @@
     </jsp:attribute>
 </t:plantilla_general>
 
-<t:modal idModal="modalDistribucionLote" titulo="Aprobar Distribución del Lote de Producción">
+<t:modal idModal="modalDistribucionLote" titulo="Aprobar Liberación del Lote de Producción">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-distribucion-lote">
             <form class="form-horizontal" id="distribuirLote" autocomplete="off" method="post" action="Lote">
                 <input hidden="true" name="accion" value="distribucion">
                 <input hidden="true" id='id_lote' name='id_lote' value="">
-                <label for="label" class="control-label">¿Está seguro que desea aprobar la distribución del Lote de Producción?</label>
+                <label for="label" class="control-label">¿Está seguro que desea aprobar la liberación del Lote de Producción?</label>
                 <div class="form-group">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Distribución</button>            </div>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Aprobar Liberación</button>            </div>
                 </div>
             </form>
         </div>
@@ -126,7 +126,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                            <input id="datepickerVencimiento" type="text" value="${helper.getFecha_hoy()}" pattern="\d{1,2}/\d{1,2}/\d{4}" class="form-control sigiproDatePicker" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
                                    oninvalid="setCustomValidity('Este campo es requerido y no pueden ser fechas futuras. ')"
                                    onchange="setCustomValidity('')">
                         </div>
