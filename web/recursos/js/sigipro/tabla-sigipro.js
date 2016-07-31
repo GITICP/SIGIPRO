@@ -1,5 +1,5 @@
 
-var CONFIGURACION_TABLAS = {
+CONFIGURACION_TABLAS = {
     sDom:
             "<'row'<'col-xs-6'><'col-xs-6'l>>" +
             "t" +
