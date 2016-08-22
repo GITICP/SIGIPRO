@@ -236,22 +236,42 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion "
-                    + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
-                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial'; ");
+            consulta = getConexion().prepareStatement(
+                    " SELECT DISTINCT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion, tm.nombre AS nombre_muestra, tm.id_tipo_muestra AS id_tipo_muestra "
+                    + " FROM control_calidad.solicitudes s "
+                    + "     INNER JOIN control_calidad.grupos g ON g.id_solicitud = s.id_solicitud "
+                    + "     INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                    + "     INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                    + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + " WHERE s.estado ='Solicitado' OR s.estado='Recibido' OR s.estado='Resultado Parcial' "
+                    + " ORDER BY s.id_solicitud; ");
             rs = consulta.executeQuery();
+
+            SolicitudCC solicitud = new SolicitudCC();
+
             while (rs.next()) {
-                SolicitudCC solicitud = new SolicitudCC();
-                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
-                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
-                Usuario usuario = new Usuario();
-                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
-                usuario.setNombre_completo(rs.getString("nombre_completo"));
-                solicitud.setUsuario_solicitante(usuario);
-                solicitud.setEstado(rs.getString("estado"));
-                solicitud.setDescripcion(rs.getString("descripcion"));
-                resultado.add(solicitud);
+
+                int id_solicitud = rs.getInt("id_solicitud");
+
+                if (id_solicitud != solicitud.getId_solicitud()) {
+                    solicitud = new SolicitudCC();
+                    solicitud.setId_solicitud(id_solicitud);
+                    solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                    solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                    Usuario usuario = new Usuario();
+                    usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                    usuario.setNombre_completo(rs.getString("nombre_completo"));
+                    solicitud.setUsuario_solicitante(usuario);
+                    solicitud.setEstado(rs.getString("estado"));
+                    solicitud.setDescripcion(rs.getString("descripcion"));
+                    resultado.add(solicitud);
+                }
+                TipoMuestra tm = new TipoMuestra();
+                tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                tm.setNombre(rs.getString("nombre_muestra"));
+                solicitud.agregarMuestra(tm);
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -268,26 +288,42 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion, s.descripcion "
+
+            consulta = getConexion().prepareStatement(
+                    "SELECT DISTINCT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion, s.descripcion, tm.nombre AS nombre_muestra, tm.id_tipo_muestra AS id_tipo_muestra "
                     + "FROM control_calidad.solicitudes as s "
-                    + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
-                    + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
-                    + "WHERE s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial' "
-                    + "AND u.id_seccion=u2.id_seccion");
+                    + "     INNER JOIN control_calidad.grupos g ON g.id_solicitud = s.id_solicitud "
+                    + "     INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                    + "     INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                    + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + "     INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
+                    + "WHERE (s.estado ='Solicitado' or s.estado='Recibido' or s.estado='Resultado Parcial') "
+                    + "AND u.id_seccion=u2.id_seccion"
+                    + " ORDER BY s.id_solicitud;");
             consulta.setInt(1, id_usuario);
             rs = consulta.executeQuery();
+            SolicitudCC solicitud = new SolicitudCC();
             while (rs.next()) {
-                SolicitudCC solicitud = new SolicitudCC();
-                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
-                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
-                solicitud.setDescripcion(rs.getString("descripcion"));
-                Usuario usuario = new Usuario();
-                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
-                usuario.setNombre_completo(rs.getString("nombre_completo"));
-                solicitud.setUsuario_solicitante(usuario);
-                solicitud.setEstado(rs.getString("estado"));
-                resultado.add(solicitud);
+                int id_solicitud = rs.getInt("id_solicitud");
+
+                if (id_solicitud != solicitud.getId_solicitud()) {
+                    solicitud = new SolicitudCC();
+                    solicitud.setId_solicitud(id_solicitud);
+                    solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                    solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                    solicitud.setDescripcion(rs.getString("descripcion"));
+                    Usuario usuario = new Usuario();
+                    usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                    usuario.setNombre_completo(rs.getString("nombre_completo"));
+                    solicitud.setUsuario_solicitante(usuario);
+                    solicitud.setEstado(rs.getString("estado"));
+                    resultado.add(solicitud);
+                }
+                TipoMuestra tm = new TipoMuestra();
+                tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                tm.setNombre(rs.getString("nombre_muestra"));
+                solicitud.agregarMuestra(tm);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -304,25 +340,41 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement("SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion "
+            consulta = getConexion().prepareStatement(
+                    "SELECT DISTINCT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, u.id_seccion, s.estado, u2.nombre_completo, u2.id_seccion, s.descripcion, tm.nombre AS nombre_muestra, tm.id_tipo_muestra AS id_tipo_muestra "
                     + "FROM control_calidad.solicitudes as s "
-                    + "INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
-                    + "INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
-                    + "WHERE s.estado ='Anulada' or s.estado='Completada' "
-                    + "AND u.id_seccion=u2.id_seccion");
+                    + "     INNER JOIN control_calidad.grupos g ON g.id_solicitud = s.id_solicitud "
+                    + "     INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                    + "     INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                    + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + "     INNER JOIN seguridad.usuarios as u2 ON u2.id_usuario = ? "
+                    + "WHERE (s.estado ='Anulada' or s.estado='Completada') "
+                    + "AND u.id_seccion=u2.id_seccion "
+                    + "ORDER BY s.id_solicitud;");
             consulta.setInt(1, id_usuario);
             rs = consulta.executeQuery();
+            SolicitudCC solicitud = new SolicitudCC();
             while (rs.next()) {
-                SolicitudCC solicitud = new SolicitudCC();
-                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
-                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
-                Usuario usuario = new Usuario();
-                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
-                usuario.setNombre_completo(rs.getString("nombre_completo"));
-                solicitud.setUsuario_solicitante(usuario);
-                solicitud.setEstado(rs.getString("estado"));
-                resultado.add(solicitud);
+                int id_solicitud = rs.getInt("id_solicitud");
+
+                if (id_solicitud != solicitud.getId_solicitud()) {
+                    solicitud = new SolicitudCC();
+                    solicitud.setId_solicitud(id_solicitud);
+                    solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                    solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                    solicitud.setDescripcion(rs.getString("descripcion"));
+                    Usuario usuario = new Usuario();
+                    usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                    usuario.setNombre_completo(rs.getString("nombre_completo"));
+                    solicitud.setUsuario_solicitante(usuario);
+                    solicitud.setEstado(rs.getString("estado"));
+                    resultado.add(solicitud);
+                }
+                TipoMuestra tm = new TipoMuestra();
+                tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                tm.setNombre(rs.getString("nombre_muestra"));
+                solicitud.agregarMuestra(tm);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -339,21 +391,40 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado "
-                    + "FROM control_calidad.solicitudes as s INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
-                    + "WHERE s.estado ='Anulada' or s.estado='Completada'; ");
+            consulta = getConexion().prepareStatement(
+                    " SELECT DISTINCT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion, tm.nombre AS nombre_muestra, tm.id_tipo_muestra AS id_tipo_muestra "
+                    + " FROM control_calidad.solicitudes s "
+                    + "     INNER JOIN control_calidad.grupos g ON g.id_solicitud = s.id_solicitud "
+                    + "     INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                    + "     INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                    + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + " WHERE s.estado ='Anulada' or s.estado='Completada' "
+                    + " ORDER BY s.id_solicitud; ");
+
             rs = consulta.executeQuery();
+            SolicitudCC solicitud = new SolicitudCC();
             while (rs.next()) {
-                SolicitudCC solicitud = new SolicitudCC();
-                solicitud.setId_solicitud(rs.getInt("id_solicitud"));
-                solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
-                Usuario usuario = new Usuario();
-                usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
-                usuario.setNombre_completo(rs.getString("nombre_completo"));
-                solicitud.setUsuario_solicitante(usuario);
-                solicitud.setEstado(rs.getString("estado"));
-                resultado.add(solicitud);
+                int id_solicitud = rs.getInt("id_solicitud");
+
+                if (id_solicitud != solicitud.getId_solicitud()) {
+                    solicitud = new SolicitudCC();
+                    solicitud.setId_solicitud(id_solicitud);
+                    solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                    solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                    solicitud.setDescripcion(rs.getString("descripcion"));
+                    Usuario usuario = new Usuario();
+                    usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                    usuario.setNombre_completo(rs.getString("nombre_completo"));
+                    solicitud.setUsuario_solicitante(usuario);
+                    solicitud.setEstado(rs.getString("estado"));
+                    resultado.add(solicitud);
+                }
+                TipoMuestra tm = new TipoMuestra();
+                tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                tm.setNombre(rs.getString("nombre_muestra"));
+                solicitud.agregarMuestra(tm);
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -562,7 +633,7 @@ public class SolicitudDAO extends DAO {
 
                 consulta.setInt(1, resultado.getInforme().getId_informe());
                 consulta_resultados_sp.setInt(1, resultado.getInforme().getId_informe());
-                
+
             } else {
                 consulta = getConexion().prepareStatement(
                         " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
@@ -571,8 +642,8 @@ public class SolicitudDAO extends DAO {
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
-                
-                consulta_resultados_sp = getConexion().prepareStatement( 
+
+                consulta_resultados_sp = getConexion().prepareStatement(
                         "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion "
                         + "  FROM control_calidad.analisis_grupo_solicitud ags "
                         + "      LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
@@ -601,9 +672,9 @@ public class SolicitudDAO extends DAO {
                     }
                 }
             }
-            
+
             rs_sp = consulta_resultados_sp.executeQuery();
-            
+
             while (rs_sp.next()) {
                 int id_resultado_sp = rs_sp.getInt("id_resultado_analisis_sp");
                 if (id_resultado_sp != 0) {

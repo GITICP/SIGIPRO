@@ -363,4 +363,11 @@ public class SolicitudCC extends Asociable {
         }
         return resultado;
     }
+    
+    public void agregarMuestra(TipoMuestra tm) {
+        if(control_solicitud == null) {
+            control_solicitud = new ControlSolicitud();
+        }
+        control_solicitud.agregarCombinacion(null, tm, null);
+    }
 }
