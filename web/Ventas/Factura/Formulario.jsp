@@ -152,6 +152,7 @@
                     </div>
                 </c:otherwise>
             </c:choose>
+                    
             <c:choose>
                 <c:when test="${factura.getId_factura()!=0}">
                     <label for="documento_4" class="control-label"> Documento (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
@@ -306,6 +307,59 @@
                 </div>
             </div>
         </div>
+                        
+                        <div class="col-md-12" id="Info_Fundevi">
+                            <div class="widget widget-table">
+                                <div class="widget-header">
+                                    <h3><i class="fa fa-th-list"></i> Información para FUNDEVI</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <div class="col-md-6"> 
+                                    <label for="plazo" class="control-label"> *Plazo (días)</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <select id="plazo" class="select2" name="plazo" required
+                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                    <option value="0"> 0 (Pendiente)</option>
+                                                    <option value="30"> 30 (Crédito)</option>
+                                                    <option value="60"> 60 (Crédito)</option>
+                                                    <option value="90"> 90 (Crédito)</option>
+                                                    <option value="120"> 120 (Crédito)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label for="proyecto" class="control-label"> *Proyecto</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <select id="proyecto" class="select2" name="proyecto" required
+                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                    <option value="404"> 404 (Cuenta 0418-00)</option>
+                                                    <option value="1965"> 1965 (Cuenta 1770-00)</option>
+                                                    <option value="2815"> 2815 (Cuenta 2541-00)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6"> 
+                                    <label for="proyecto" class="control-label"> Correo a Enviar</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input id="correo" type="email" class="form-control" name="correo" value="" placeholder=""
+                                                    oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
+                                                    oninput="setCustomValidity('')"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
 

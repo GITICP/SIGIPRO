@@ -44,4 +44,22 @@ $(function(){ /* DOM ready */ //
             $("#id_orden").val(" ");
         }
     }).change();
+    
+    $("#tipo").change(function () {
+        //si es FUNDEVI, mostrar la pestaña de información de FUNDEVI, sino esconderla y cambiar inputs a no requeridos
+        var select_tipo = document.getElementById("tipo");
+        var tipo = select_tipo[select_tipo.selectedIndex].value;
+        
+        var Info_Fundevi = document.getElementById("Info_Fundevi");
+        if (tipo === "FUNDEVI"){
+            Info_Fundevi.style.display = 'block';
+            document.getElementById("proyecto").required = true;
+            document.getElementById("plazo").required = true;
+        }
+        else{
+            Info_Fundevi.style.display = 'none';
+            document.getElementById("proyecto").required = false;
+            document.getElementById("plazo").required = false;
+        }
+    }).change();
 });
