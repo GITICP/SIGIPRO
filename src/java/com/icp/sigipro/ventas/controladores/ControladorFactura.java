@@ -232,13 +232,24 @@ public class ControladorFactura extends SIGIPROServlet {
             for (Factura f:facturas){
                 //actualizar estado por cada factura una por una
                 if (f.getNumero()!=0 && f.getProyecto()!=0){
-                    nuevoEstado = estadoFactura(f.getNumero(),f.getProyecto()).getEstadoFactura();
-                    resultado = dao.actualizarEstado(f, nuevoEstado);
+                    FacturasPagosWs estadofactura = estadoFactura(f.getNumero(),f.getProyecto());
+                    if (estadofactura != null) {
+                        resultado = dao.actualizarEstado(f, nuevoEstado);
+                        nuevoEstado = estadofactura.getEstadoFactura();
+                    }
+                    else{
+                        request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
+                        List<Factura> facturas1 = dao.obtenerFacturas();
+                        request.setAttribute("listaFacturas", facturas1);
+                        redireccionar(request, response, redireccion);
+                        return;
+                    }
                 }
             }
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
             redireccionar(request, response, redireccion);
+            return;
         }
         if (resultado) {
             List<Factura> facturas = dao.obtenerFacturas();
@@ -314,7 +325,10 @@ public class ControladorFactura extends SIGIPROServlet {
                         FacturasWs fWS = detalleServicio(resultado,request.getSession().getAttribute("usuario").toString(),tr.getNombre(),tr.getProyecto(),
                                 moneda,tr.getPlazo(),new BigDecimal(tr.getMonto()),tr.getCorreo_enviar(),tr.getDetalle(),generarLlave(resultado,tr.getProyecto(),tr.getMonto(),tr.getFecha_S()));
                         //Obtener los valores de respuesta del WS y asignarlos a la factura
-                        if (fWS.getNumeroFactura()!=-1){
+                        if (fWS == null){
+                            request.setAttribute("mensaje", helper.mensajeDeAdvertencia(mensaje + "Error al enviar Factura a FUNDEVI."));
+                        }
+                        else if (fWS.getNumeroFactura()!=-1){
                             tr.setId_factura(resultado);
                             tr.setNumero(fWS.getNumeroFactura());
                             dao.agregarNumeroFactura(tr);
@@ -326,6 +340,7 @@ public class ControladorFactura extends SIGIPROServlet {
                             request.setAttribute("mensaje", helper.mensajeDeError("Factura no pudo ser agregada. "+mensaje));
                         }
                     }
+                    //En este else, puede venir la parte del WS de OAF UCR
                     else{
                         request.setAttribute("mensaje", helper.mensajeDeExito(mensaje));
                     }
@@ -624,15 +639,49 @@ public class ControladorFactura extends SIGIPROServlet {
   // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos WebService">
     private static FacturasPagosWs estadoFactura(int numeroFactura, int proyecto) {
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
-        return port.estadoFactura(numeroFactura, proyecto);
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = null;
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = null;
+        try{
+            service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
+            port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
+        }
+        catch(Exception e){
+            if (port!=null){
+                return port.estadoFactura(numeroFactura, proyecto);
+            }
+            else{
+                return null;
+            }
+        }
+        if (port!=null){
+            return port.estadoFactura(numeroFactura, proyecto);
+        }
+        else{
+            return null;
+        }
     }
 
     private static FacturasWs detalleServicio(int codigoOrden, java.lang.String usuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal montoFactura, java.lang.String correoEnviar, java.lang.String detalle, java.lang.String llave) {
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
-        return port.detalleServicio(codigoOrden, usuarioEjecuta, nombreFactura, proyecto, moneda, plazo, montoFactura, correoEnviar, detalle, llave);
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = null;
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = null;
+        try{
+            service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
+            port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
+        }
+        catch(Exception e){
+            if (port!=null){
+                return port.detalleServicio(codigoOrden, usuarioEjecuta, nombreFactura, proyecto, moneda, plazo, montoFactura, correoEnviar, detalle, llave);
+            }
+            else{
+                return null;
+            }
+        }
+        if (port!=null){
+            return port.detalleServicio(codigoOrden, usuarioEjecuta, nombreFactura, proyecto, moneda, plazo, montoFactura, correoEnviar, detalle, llave);
+        }
+        else{
+            return null;
+        }
     }
     
     private static String generarLlave(int codigoOrden, int proyecto, int montoFactura, String fecha) throws NoSuchAlgorithmException{
