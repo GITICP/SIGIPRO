@@ -39,10 +39,6 @@ $(document).ready(function () {
     if (cantidadTablas > 0) {
         var selectorTabla = '.sigipro-no-filter';
         $(selectorTabla).each(function () {
-            var columna_filtro = 0;
-            if ($(this).data("columna-filtro")) {
-                columna_filtro = $(this).data("columna-filtro");
-            }
 
             var configuracion_especifica = {"order": []};
             var configuracion_final = $.extend({}, configuracion_especifica, configuracion_tablas);
@@ -87,10 +83,19 @@ function crear_data_table(elemento, configuracion) {
     
     var dtTable = elemento.DataTable(configuracion);
     var ths = '';
-    var cantidadColumnas = elemento.find('thead th').not('.columna-escondida').length;
+    var columnas = elemento.find('thead th');
+    var cantidadColumnas = columnas.length;
+    
+    var columnaEscondida = columnas.find(".columna-escondida");
 
     for (i = 0; i < cantidadColumnas; i++) {
-        ths += '<th></th>';
+        if (i===0 && columnaEscondida) {
+            ths += '<th class="columna-escondida"></th>';
+        }
+        else {
+            ths += '<th></th>';
+        }
+        
     }
 
     elemento.find('thead').append('<tr class="row-filter">' + ths + '</tr>');
