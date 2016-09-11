@@ -128,7 +128,7 @@ function agregarMuestra() {
     fila += "</div>";
     fila += "</div>";
     fila += "<div class=\"col-sm-3\">";
-    fila += "<label for=\"nombre\" class=\"control-label\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Separar con coma, punto o '+'\">*Identificadores <i class=\"fa fa-question-circle\"></i></label>";
+    fila += "<label for=\"nombre\" class=\"control-label\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Separar con coma, punto o '+'\">*Identificadores Ejemplo: 579011516POLQ, 579051516POLQ <i class=\"fa fa-question-circle\"></i></label>";
     fila += "<div class=\"form-group\">";
     fila += "<div class=\"col-sm-12\">";
     fila += "<div class=\"input-group\">";
