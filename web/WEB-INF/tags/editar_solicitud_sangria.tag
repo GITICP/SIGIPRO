@@ -8,9 +8,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="derecha" type="java.lang.Boolean" required="true" description="Define si los select van del lado izquierdo o derecho"%>
 
-<c:if test="${derecha}">
-    <div class="col-md-6"></div>
-</c:if>
 <div id="fila-select-sangria" class="row">
     <div class="col-md-6">
         <label for="sangria" class="control-label"> Sangría por asociar</label>
@@ -39,9 +36,6 @@
         </div>
     </div>
 </div>
-<c:if test="${derecha}">
-    <div class="col-md-6"></div>
-</c:if>
 <div id="fila-select-dia" class="row">
     <div class="col-md-6">
         <label for="sangria" class="control-label"> Día por asignar</label>

@@ -21,6 +21,7 @@ public class Equipo {
     private String nombre;
     private String descripcion;
     private TipoEquipo tipo_equipo;
+    private Boolean editable;
     
     private List<CertificadoEquipo> certificados;
 
@@ -43,12 +44,20 @@ public class Equipo {
         this.nombre = nombre;
     }
 
+    public Boolean getEditable() {
+        return editable;
+    }
+
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = "Sin descripcion";
+        this.descripcion = "Sin descripción.";
         if (descripcion != null) {
             if (!descripcion.isEmpty()) {
                 this.descripcion = descripcion;

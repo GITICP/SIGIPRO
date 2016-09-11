@@ -143,6 +143,25 @@
             <form class="form-horizontal" id="anularSolicitud" autocomplete="off" method="post" action="Solicitud">
                 <input hidden="true" name="accion" value="Anular">
                 <input hidden="true" id='id_solicitud_anular' name='id_solicitud_anular' value="">
+
+                <h4> Información sobre la solicitud </h4>
+                <table class="tabla-modal">
+                    <tr>
+                        <td><strong>Número. Solicitud</strong></td><td id="modal_anular_num_solicitud"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Usuario Solicitante</strong></td><td id="modal_anular_solicitante"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tipos de Muestras</strong></td><td id="modal_anular_tipos_muestras"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Información</strong></td><td id="modal_anular_informacion"></td>
+                    </tr>
+                </table>
+                
+                <br>
+
                 <label for="observaciones" class="control-label">¿Razones por las cuales anula la solicitud?</label>
                 <div class="form-group">
                     <div class="col-sm-12">
@@ -171,7 +190,22 @@
         <form class="form-horizontal" id="form_modalautorizar" method="post" data-show-auth="${show_modal_auth}" action="Solicitud">
             ${mensaje_auth}
             <h4> Información sobre la solicitud </h4>
+            <table class="tabla-modal">
+                <tr>
+                    <td><strong>Número. Solicitud</strong></td><td id="modal_num_solicitud"></td>
+                </tr>
+                <tr>
+                    <td><strong>Usuario Solicitante</strong></td><td id="modal_solicitante"></td>
+                </tr>
+                <tr>
+                    <td><strong>Tipos de Muestras</strong></td><td id="modal_tipos_muestras"></td>
+                </tr>
+                <tr>
+                    <td><strong>Información</strong></td><td id="modal_informacion"></td>
+                </tr>
+            </table>
 
+            <br><br>
             <h5>Para validar la recepción, el usuario que recibe la solicitud debe iniciar sesión. </h5>
 
             <input hidden="true" name="id_solicitud_recibir" id="id_solicitud_recibir">

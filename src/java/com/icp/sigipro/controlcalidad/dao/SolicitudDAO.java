@@ -22,7 +22,10 @@ import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +39,26 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
+
+            int id = obtenerProximoId();
+
+            Date fechaActual = new Date();
+            DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+            DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
+            int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+            int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
+
+            String numeroAnno = "";
+
+            if (mes >= 10) {
+                numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
+            } else {
+                numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
+            }
+
+            String numero_solicitud = id + "-" + numeroAnno;
+            solicitud.setNumero_solicitud(numero_solicitud);
+
             consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.solicitudes (numero_solicitud,id_usuario_solicitante,fecha_solicitud,estado,descripcion) "
                     + " VALUES (?,?,?,?,?) RETURNING id_solicitud");
             consulta.setString(1, solicitud.getNumero_solicitud());
@@ -610,7 +633,6 @@ public class SolicitudDAO extends DAO {
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
-                        + "   AND ags.id_analisis <> 2147483647 "
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
 
