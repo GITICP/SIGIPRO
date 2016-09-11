@@ -7,7 +7,6 @@
 <%@ tag description="plantilla para la creación del código de agregar una solicitud para una sangría" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="col-md-6"></div>
 <div id="fila-select-sangria" class="row" hidden="true">
     <div class="col-md-6">
         <label for="sangria" class="control-label"> Sangría por asociar</label>
@@ -23,7 +22,6 @@
         </div>
     </div>
 </div>
-<div class="col-md-6"></div>
 <div id="fila-select-dia" class="row" hidden="true">
     <div class="col-md-6">
         <label for="sangria" class="control-label"> Día por asignar</label>

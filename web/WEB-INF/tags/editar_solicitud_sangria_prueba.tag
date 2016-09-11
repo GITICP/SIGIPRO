@@ -7,7 +7,6 @@
 <%@tag description="plantilla para la creación del código de editar una solicitud asociada a una sangría de prueba" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="col-md-6"></div>
 <div id="fila-select-sangria-prueba" class="row">
     <div class="col-md-6">
         <label for="sangria_prueba" class="control-label"> Sangría de Prueba por asociar</label>
