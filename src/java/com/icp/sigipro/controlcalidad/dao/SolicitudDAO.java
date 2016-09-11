@@ -609,8 +609,7 @@ public class SolicitudDAO extends DAO {
                         + " END AS en_informe "
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
-                        + " WHERE ags.id_analisis_grupo_solicitud IN " + ids
-                        + "   AND ags.id_analisis <> 2147483647 "
+                        + " WHERE ags.id_analisis_grupo_solicitud IN " + ids 
                         + " ORDER BY ags.id_analisis_grupo_solicitud; "
                 );
 
