@@ -107,6 +107,7 @@ public class ControladorEquipo extends SIGIPROServlet {
 
         String redireccion = "Equipo/Agregar.jsp";
         Equipo e = new Equipo();
+        e.setEditable(true);
         List<TipoEquipo> tipoequipos = tipoequipodao.obtenerTipoEquipos();
         request.setAttribute("equipo", e);
         request.setAttribute("tipoequipos", tipoequipos);
