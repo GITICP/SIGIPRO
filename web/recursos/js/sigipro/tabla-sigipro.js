@@ -81,14 +81,12 @@ function crear_data_table(elemento, configuracion) {
         configuracion = $.extend({}, configuracion, {pageLength: elemento.data("filas-defecto")});
     }
     
-    ELEMENTO = elemento;
     var dtTable = elemento.DataTable(configuracion);
     var ths = '';
     var columnas = elemento.find('thead th');
     var cantidadColumnas = columnas.length;
     
     var columnaEscondida = elemento.find("thead tr .columna-escondida").length;
-    COLUMNAS = columnaEscondida;
 
     for (i = 0; i < cantidadColumnas; i++) {
         if (i===0 && columnaEscondida !== 0) {
