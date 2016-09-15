@@ -25,10 +25,10 @@
                     </div>
                 </div>
             </div>
-                        <label for="tipo_equipo" class="control-label">*Tipo de Equipo <c:if test="${!equipo.getEditable()}">(No editable ya que se encuentra referenciado a muestras o resultados)</c:if></label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
+            <label for="tipo_equipo" class="control-label">*Tipo de Equipo <c:if test="${!equipo.getEditable()}">(No editable ya que se encuentra referenciado a muestras o resultados)</c:if></label>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
                         <c:choose>
                             <c:when test="${equipo.getEditable()}">
                                 <select id="seleccionTipo" class="select2" name="tipo_equipo"
@@ -51,8 +51,7 @@
                             <c:otherwise>
                                 <input type="text" maxlength="45" class="form-control" value="${equipo.getTipo_equipo().getNombre()}"
                                        disabled > 
-                                <input type="hidden" maxlength="45" class="form-control" name="tipo_equipo" value="${equipo.getTipo_equipo().getId_tipo_equipo()}"
-                                       >
+                                <input type="hidden" maxlength="45" class="form-control" name="tipo_equipo" value="${equipo.getTipo_equipo().getId_tipo_equipo()}">
                             </c:otherwise>
                         </c:choose>
                     </div>
