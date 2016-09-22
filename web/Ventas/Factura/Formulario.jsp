@@ -218,8 +218,31 @@
                     </div>
                 </div>
             </div>
+            <label for="plazo" class="control-label"> *Plazo (días)</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <c:choose>
+                                                    <c:when test="${accion == 'Agregar'}">
+                                                    <select id="plazo" class="select2" name="plazo" required
+                                                        oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                        <option value="0" selected> 0 (Pendiente)</option>
+                                                        <option value="30"> 30 (Crédito)</option>
+                                                        <option value="60"> 60 (Crédito)</option>
+                                                        <option value="90"> 90 (Crédito)</option>
+                                                        <option value="120"> 120 (Crédito)</option>
+                                                    </select>
+                                                    </c:when>
+                                                    <c:otherwise> <!-- Aquí falta la parte de Editar, trayendo el plazo de la factura --> 
+                                                        
+                                                    </c:otherwise>
+                                                </c:choose> 
+                                            </div>
+                                        </div>
+                                    </div>
             <label for="fecha_vencimiento" class="control-label"> *Fecha de Vencimiento</label>
             <!-- Fecha -->
+            <!-- Aquí falta actualizar la fecha de vencimiento según el plazo descrito. Además, la fecha es solo de visualización, es decir no editable -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -315,21 +338,7 @@
                                 </div>
                                 <div class="widget-content">
                                     <div class="col-md-6"> 
-                                    <label for="plazo" class="control-label"> *Plazo (días)</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="input-group">
-                                                <select id="plazo" class="select2" name="plazo" required
-                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                    <option value="0"> 0 (Pendiente)</option>
-                                                    <option value="30"> 30 (Crédito)</option>
-                                                    <option value="60"> 60 (Crédito)</option>
-                                                    <option value="90"> 90 (Crédito)</option>
-                                                    <option value="120"> 120 (Crédito)</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     <label for="proyecto" class="control-label"> *Proyecto</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">

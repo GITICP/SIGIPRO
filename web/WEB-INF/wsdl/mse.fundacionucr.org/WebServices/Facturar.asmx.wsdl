@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="https://fundacionucr.ac.cr/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="https://fundacionucr.ac.cr/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="https://fundacionucr.ac.cr/">
+      <s:element name="PagoLinea">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="tarjeta" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ccv" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fechaExp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="codigoOrden" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="usuarioEjecuta" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="codUsuarioEjecuta" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="nombreFactura" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="proyecto" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="moneda" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="plazo" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="porcentajeDescuento" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="subtotalFactura" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="totalFactura" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="correoEnviar" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="notas" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="productosJson" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="llave" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PagoLineaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PagoLineaResult" type="tns:FacturasWs" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FacturasWs">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="numeroFactura" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="mensaje" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="LineasProductos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="codigoOrden" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="usuarioEjecuta" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="codUsuarioEjecuta" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="nombreFactura" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="proyecto" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="moneda" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="plazo" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="porcentajeDescuento" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="subtotalFactura" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="totalFactura" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="correoEnviar" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="notas" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="productosJson" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="llave" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LineasProductosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LineasProductosResult" type="tns:FacturasWs" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DetalleServicio">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="codigoOrden" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="usuarioEjecuta" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="codUsuarioEjecuta" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="nombreFactura" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="proyecto" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="moneda" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="plazo" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="porcentajeDescuento" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="subtotalFactura" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="totalFactura" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="correoEnviar" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="notas" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="detalle" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="llave" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DetalleServicioResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DetalleServicioResult" type="tns:FacturasWs" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EstadoFactura">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="numeroFactura" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="proyecto" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EstadoFacturaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EstadoFacturaResult" type="tns:FacturasPagosWs" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FacturasPagosWs">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="numeroFactura" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="estadoFactura" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="listPagos" type="tns:ArrayOfPagosWs" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPagosWs">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PagosWs" nillable="true" type="tns:PagosWs" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PagosWs">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="codigo" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="monto" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="nota" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="fecha" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="consecutive" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="moneda" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="codigoRemision" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="consecutiveRemision" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="fechaRemision" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FacturasWs" nillable="true" type="tns:FacturasWs" />
+      <s:element name="FacturasPagosWs" nillable="true" type="tns:FacturasPagosWs" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="PagoLineaSoapIn">
+    <wsdl:part name="parameters" element="tns:PagoLinea" />
+  </wsdl:message>
+  <wsdl:message name="PagoLineaSoapOut">
+    <wsdl:part name="parameters" element="tns:PagoLineaResponse" />
+  </wsdl:message>
+  <wsdl:message name="LineasProductosSoapIn">
+    <wsdl:part name="parameters" element="tns:LineasProductos" />
+  </wsdl:message>
+  <wsdl:message name="LineasProductosSoapOut">
+    <wsdl:part name="parameters" element="tns:LineasProductosResponse" />
+  </wsdl:message>
+  <wsdl:message name="DetalleServicioSoapIn">
+    <wsdl:part name="parameters" element="tns:DetalleServicio" />
+  </wsdl:message>
+  <wsdl:message name="DetalleServicioSoapOut">
+    <wsdl:part name="parameters" element="tns:DetalleServicioResponse" />
+  </wsdl:message>
+  <wsdl:message name="EstadoFacturaSoapIn">
+    <wsdl:part name="parameters" element="tns:EstadoFactura" />
+  </wsdl:message>
+  <wsdl:message name="EstadoFacturaSoapOut">
+    <wsdl:part name="parameters" element="tns:EstadoFacturaResponse" />
+  </wsdl:message>
+  <wsdl:message name="PagoLineaHttpGetIn">
+    <wsdl:part name="tarjeta" type="s:string" />
+    <wsdl:part name="ccv" type="s:string" />
+    <wsdl:part name="fechaExp" type="s:string" />
+    <wsdl:part name="codigoOrden" type="s:string" />
+    <wsdl:part name="usuarioEjecuta" type="s:string" />
+    <wsdl:part name="codUsuarioEjecuta" type="s:string" />
+    <wsdl:part name="nombreFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+    <wsdl:part name="moneda" type="s:string" />
+    <wsdl:part name="plazo" type="s:string" />
+    <wsdl:part name="porcentajeDescuento" type="s:string" />
+    <wsdl:part name="subtotalFactura" type="s:string" />
+    <wsdl:part name="totalFactura" type="s:string" />
+    <wsdl:part name="correoEnviar" type="s:string" />
+    <wsdl:part name="notas" type="s:string" />
+    <wsdl:part name="productosJson" type="s:string" />
+    <wsdl:part name="llave" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PagoLineaHttpGetOut">
+    <wsdl:part name="Body" element="tns:FacturasWs" />
+  </wsdl:message>
+  <wsdl:message name="LineasProductosHttpGetIn">
+    <wsdl:part name="codigoOrden" type="s:string" />
+    <wsdl:part name="usuarioEjecuta" type="s:string" />
+    <wsdl:part name="codUsuarioEjecuta" type="s:string" />
+    <wsdl:part name="nombreFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+    <wsdl:part name="moneda" type="s:string" />
+    <wsdl:part name="plazo" type="s:string" />
+    <wsdl:part name="porcentajeDescuento" type="s:string" />
+    <wsdl:part name="subtotalFactura" type="s:string" />
+    <wsdl:part name="totalFactura" type="s:string" />
+    <wsdl:part name="correoEnviar" type="s:string" />
+    <wsdl:part name="notas" type="s:string" />
+    <wsdl:part name="productosJson" type="s:string" />
+    <wsdl:part name="llave" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LineasProductosHttpGetOut">
+    <wsdl:part name="Body" element="tns:FacturasWs" />
+  </wsdl:message>
+  <wsdl:message name="DetalleServicioHttpGetIn">
+    <wsdl:part name="codigoOrden" type="s:string" />
+    <wsdl:part name="usuarioEjecuta" type="s:string" />
+    <wsdl:part name="codUsuarioEjecuta" type="s:string" />
+    <wsdl:part name="nombreFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+    <wsdl:part name="moneda" type="s:string" />
+    <wsdl:part name="plazo" type="s:string" />
+    <wsdl:part name="porcentajeDescuento" type="s:string" />
+    <wsdl:part name="subtotalFactura" type="s:string" />
+    <wsdl:part name="totalFactura" type="s:string" />
+    <wsdl:part name="correoEnviar" type="s:string" />
+    <wsdl:part name="notas" type="s:string" />
+    <wsdl:part name="detalle" type="s:string" />
+    <wsdl:part name="llave" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DetalleServicioHttpGetOut">
+    <wsdl:part name="Body" element="tns:FacturasWs" />
+  </wsdl:message>
+  <wsdl:message name="EstadoFacturaHttpGetIn">
+    <wsdl:part name="numeroFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="EstadoFacturaHttpGetOut">
+    <wsdl:part name="Body" element="tns:FacturasPagosWs" />
+  </wsdl:message>
+  <wsdl:message name="PagoLineaHttpPostIn">
+    <wsdl:part name="tarjeta" type="s:string" />
+    <wsdl:part name="ccv" type="s:string" />
+    <wsdl:part name="fechaExp" type="s:string" />
+    <wsdl:part name="codigoOrden" type="s:string" />
+    <wsdl:part name="usuarioEjecuta" type="s:string" />
+    <wsdl:part name="codUsuarioEjecuta" type="s:string" />
+    <wsdl:part name="nombreFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+    <wsdl:part name="moneda" type="s:string" />
+    <wsdl:part name="plazo" type="s:string" />
+    <wsdl:part name="porcentajeDescuento" type="s:string" />
+    <wsdl:part name="subtotalFactura" type="s:string" />
+    <wsdl:part name="totalFactura" type="s:string" />
+    <wsdl:part name="correoEnviar" type="s:string" />
+    <wsdl:part name="notas" type="s:string" />
+    <wsdl:part name="productosJson" type="s:string" />
+    <wsdl:part name="llave" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PagoLineaHttpPostOut">
+    <wsdl:part name="Body" element="tns:FacturasWs" />
+  </wsdl:message>
+  <wsdl:message name="LineasProductosHttpPostIn">
+    <wsdl:part name="codigoOrden" type="s:string" />
+    <wsdl:part name="usuarioEjecuta" type="s:string" />
+    <wsdl:part name="codUsuarioEjecuta" type="s:string" />
+    <wsdl:part name="nombreFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+    <wsdl:part name="moneda" type="s:string" />
+    <wsdl:part name="plazo" type="s:string" />
+    <wsdl:part name="porcentajeDescuento" type="s:string" />
+    <wsdl:part name="subtotalFactura" type="s:string" />
+    <wsdl:part name="totalFactura" type="s:string" />
+    <wsdl:part name="correoEnviar" type="s:string" />
+    <wsdl:part name="notas" type="s:string" />
+    <wsdl:part name="productosJson" type="s:string" />
+    <wsdl:part name="llave" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LineasProductosHttpPostOut">
+    <wsdl:part name="Body" element="tns:FacturasWs" />
+  </wsdl:message>
+  <wsdl:message name="DetalleServicioHttpPostIn">
+    <wsdl:part name="codigoOrden" type="s:string" />
+    <wsdl:part name="usuarioEjecuta" type="s:string" />
+    <wsdl:part name="codUsuarioEjecuta" type="s:string" />
+    <wsdl:part name="nombreFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+    <wsdl:part name="moneda" type="s:string" />
+    <wsdl:part name="plazo" type="s:string" />
+    <wsdl:part name="porcentajeDescuento" type="s:string" />
+    <wsdl:part name="subtotalFactura" type="s:string" />
+    <wsdl:part name="totalFactura" type="s:string" />
+    <wsdl:part name="correoEnviar" type="s:string" />
+    <wsdl:part name="notas" type="s:string" />
+    <wsdl:part name="detalle" type="s:string" />
+    <wsdl:part name="llave" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DetalleServicioHttpPostOut">
+    <wsdl:part name="Body" element="tns:FacturasWs" />
+  </wsdl:message>
+  <wsdl:message name="EstadoFacturaHttpPostIn">
+    <wsdl:part name="numeroFactura" type="s:string" />
+    <wsdl:part name="proyecto" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="EstadoFacturaHttpPostOut">
+    <wsdl:part name="Body" element="tns:FacturasPagosWs" />
+  </wsdl:message>
+  <wsdl:portType name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap">
+    <wsdl:operation name="PagoLinea">
+      <wsdl:input message="tns:PagoLineaSoapIn" />
+      <wsdl:output message="tns:PagoLineaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <wsdl:input message="tns:LineasProductosSoapIn" />
+      <wsdl:output message="tns:LineasProductosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <wsdl:input message="tns:DetalleServicioSoapIn" />
+      <wsdl:output message="tns:DetalleServicioSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <wsdl:input message="tns:EstadoFacturaSoapIn" />
+      <wsdl:output message="tns:EstadoFacturaSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpGet">
+    <wsdl:operation name="PagoLinea">
+      <wsdl:input message="tns:PagoLineaHttpGetIn" />
+      <wsdl:output message="tns:PagoLineaHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <wsdl:input message="tns:LineasProductosHttpGetIn" />
+      <wsdl:output message="tns:LineasProductosHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <wsdl:input message="tns:DetalleServicioHttpGetIn" />
+      <wsdl:output message="tns:DetalleServicioHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <wsdl:input message="tns:EstadoFacturaHttpGetIn" />
+      <wsdl:output message="tns:EstadoFacturaHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpPost">
+    <wsdl:operation name="PagoLinea">
+      <wsdl:input message="tns:PagoLineaHttpPostIn" />
+      <wsdl:output message="tns:PagoLineaHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <wsdl:input message="tns:LineasProductosHttpPostIn" />
+      <wsdl:output message="tns:LineasProductosHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <wsdl:input message="tns:DetalleServicioHttpPostIn" />
+      <wsdl:output message="tns:DetalleServicioHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <wsdl:input message="tns:EstadoFacturaHttpPostIn" />
+      <wsdl:output message="tns:EstadoFacturaHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap" type="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PagoLinea">
+      <soap:operation soapAction="https://fundacionucr.ac.cr/PagoLinea" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <soap:operation soapAction="https://fundacionucr.ac.cr/LineasProductos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <soap:operation soapAction="https://fundacionucr.ac.cr/DetalleServicio" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <soap:operation soapAction="https://fundacionucr.ac.cr/EstadoFactura" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap12" type="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PagoLinea">
+      <soap12:operation soapAction="https://fundacionucr.ac.cr/PagoLinea" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <soap12:operation soapAction="https://fundacionucr.ac.cr/LineasProductos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <soap12:operation soapAction="https://fundacionucr.ac.cr/DetalleServicio" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <soap12:operation soapAction="https://fundacionucr.ac.cr/EstadoFactura" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpGet" type="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="PagoLinea">
+      <http:operation location="/PagoLinea" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <http:operation location="/LineasProductos" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <http:operation location="/DetalleServicio" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <http:operation location="/EstadoFactura" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpPost" type="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="PagoLinea">
+      <http:operation location="/PagoLinea" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LineasProductos">
+      <http:operation location="/LineasProductos" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DetalleServicio">
+      <http:operation location="/DetalleServicio" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EstadoFactura">
+      <http:operation location="/EstadoFactura" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCR">
+    <wsdl:port name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap" binding="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap">
+      <soap:address location="http://mse.fundacionucr.org/WebServices/Facturar.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap12" binding="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRSoap12">
+      <soap12:address location="http://mse.fundacionucr.org/WebServices/Facturar.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpGet" binding="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpGet">
+      <http:address location="http://mse.fundacionucr.org/WebServices/Facturar.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpPost" binding="tns:Módulo_x0020_Servicios_x0020_Externos_x0020__x0028_MSE_x0029__x0020_-_x0020_Fundación_x0020_UCRHttpPost">
+      <http:address location="http://mse.fundacionucr.org/WebServices/Facturar.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

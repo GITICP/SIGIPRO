@@ -4,8 +4,8 @@
   </services>
   <clients>
     <client name="Facturar">
-      <wsdl-url>http://163.178.126.72/MSF/WebServices/Facturar.asmx?wsdl</wsdl-url>
-      <local-wsdl-file>163.178.126.72/MSF/WebServices/Facturar.asmx.wsdl</local-wsdl-file>
+      <wsdl-url>http://mse.fundacionucr.org/WebServices/Facturar.asmx?wsdl</wsdl-url>
+      <local-wsdl-file>mse.fundacionucr.org/WebServices/Facturar.asmx.wsdl</local-wsdl-file>
       <package-name forceReplace="true">com.icp.sigipro.webservices</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
@@ -23,7 +23,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>http://163.178.126.72/MSF/WebServices/Facturar.asmx?wsdl</wsimport-option-value>
+          <wsimport-option-value>http://mse.fundacionucr.org/WebServices/Facturar.asmx?wsdl</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>

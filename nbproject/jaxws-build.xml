@@ -28,8 +28,8 @@
     </target>
     <target name="wsimport-client-Facturar" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/Facturar"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Facturar" destdir="${build.generated.dir}/jax-wsCache/Facturar" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/Facturar/wsdl/163.178.126.72/MSF/WebServices/Facturar.asmx.wsdl" catalog="catalog.xml" extension="true" verbose="true" fork="false" wsdlLocation="http://163.178.126.72/MSF/WebServices/Facturar.asmx?wsdl" xnocompile="true" xendorsed="true" package="com.icp.sigipro.webservices">
-            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/Facturar/wsdl/163.178.126.72/MSF/WebServices/Facturar.asmx.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Facturar" destdir="${build.generated.dir}/jax-wsCache/Facturar" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/Facturar/wsdl/mse.fundacionucr.org/WebServices/Facturar.asmx.wsdl" catalog="catalog.xml" extension="true" verbose="true" fork="false" wsdlLocation="http://mse.fundacionucr.org/WebServices/Facturar.asmx?wsdl" xnocompile="true" xendorsed="true" package="com.icp.sigipro.webservices">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/Facturar/wsdl/mse.fundacionucr.org/WebServices/Facturar.asmx.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/Facturar"/>
         </wsimport>
         <copy todir="${build.generated.sources.dir}/jax-ws">

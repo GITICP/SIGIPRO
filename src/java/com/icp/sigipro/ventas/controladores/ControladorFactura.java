@@ -721,4 +721,10 @@ public class ControladorFactura extends SIGIPROServlet {
         return resultado;
     }
   // </editor-fold>
+
+    private static FacturasWs detalleServicio_1(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal porcentajeDescuento, java.math.BigDecimal subtotalFactura, java.math.BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
+        return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
+    }
 }

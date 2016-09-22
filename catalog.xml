@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://163.178.126.72/MSF/WebServices/Facturar.asmx?wsdl" uri="src/conf/xml-resources/web-service-references/Facturar/wsdl/163.178.126.72/MSF/WebServices/Facturar.asmx.wsdl"/>
+    <system systemId="http://mse.fundacionucr.org/WebServices/Facturar.asmx?wsdl" uri="src/conf/xml-resources/web-service-references/Facturar/wsdl/mse.fundacionucr.org/WebServices/Facturar.asmx.wsdl"/>
 </catalog>
