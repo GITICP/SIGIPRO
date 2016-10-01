@@ -233,42 +233,77 @@
                                                         <option value="120"> 120 (Crédito)</option>
                                                     </select>
                                                     </c:when>
-                                                    <c:otherwise> <!-- Aquí falta la parte de Editar, trayendo el plazo de la factura --> 
-                                                        
+                                                    <c:otherwise>  
+                                                        <c:choose>
+                                                            <c:when test="${factura.getPlazo() == 0}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0" selected> 0 (Pendiente)</option>
+                                                                    <option value="30"> 30 (Crédito)</option>
+                                                                    <option value="60"> 60 (Crédito)</option>
+                                                                    <option value="90"> 90 (Crédito)</option>
+                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:when test="${factura.getPlazo() == 30}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 (Pendiente)</option>
+                                                                    <option value="30" selected> 30 (Crédito)</option>
+                                                                    <option value="60"> 60 (Crédito)</option>
+                                                                    <option value="90"> 90 (Crédito)</option>
+                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:when test="${factura.getPlazo() == 60}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 (Pendiente)</option>
+                                                                    <option value="30"> 30 (Crédito)</option>
+                                                                    <option value="60" selected> 60 (Crédito)</option>
+                                                                    <option value="90"> 90 (Crédito)</option>
+                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:when test="${factura.getPlazo() == 90}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 (Pendiente)</option>
+                                                                    <option value="30"> 30 (Crédito)</option>
+                                                                    <option value="60"> 60 (Crédito)</option>
+                                                                    <option value="90" selected> 90 (Crédito)</option>
+                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 (Pendiente)</option>
+                                                                    <option value="30"> 30 (Crédito)</option>
+                                                                    <option value="60"> 60 (Crédito)</option>
+                                                                    <option value="90"> 90 (Crédito)</option>
+                                                                    <option value="120" selected> 120 (Crédito)</option>
+                                                                </select>
+                                                            </c:otherwise>
+                                                          </c:choose>
                                                     </c:otherwise>
                                                 </c:choose> 
                                             </div>
                                         </div>
                                     </div>
-            <label for="fecha_vencimiento" class="control-label"> *Fecha de Vencimiento</label>
-            <!-- Fecha -->
-            <!-- Aquí falta actualizar la fecha de vencimiento según el plazo descrito. Además, la fecha es solo de visualización, es decir no editable -->
+            <label for="fecha_vencimiento" class="control-label"> Fecha de Vencimiento</label>
+            <!-- Fecha Vencimiento-->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <c:choose>
                           <c:when test="${accion == 'Agregar'}" >
-                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" class="form-control sigiproDatePickerEspecial" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                              <input readonly type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" class="form-control" name="fecha_vencimiento"
                             oninvalid="setCustomValidity('Este campo es requerido ')"
                             onchange="setCustomValidity('')"> 
-                            <script>
-                                var today = new Date();
-                                var dd = today.getDate();
-                                var mm = today.getMonth()+1; //January is 0!
-
-                                var yyyy = today.getFullYear();
-                                if(dd<10){
-                                    dd='0'+dd
-                                } 
-                                if(mm<10){
-                                    mm='0'+mm
-                                } 
-                                var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha_vencimiento").value = today;
-                            </script>
                           </c:when>
                           <c:otherwise>
-                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" value="${factura.getFecha_vencimiento_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                            <input readonly type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" class="form-control" value="${factura.getFecha_vencimiento_S()}" name="fecha_vencimiento"
                             oninvalid="setCustomValidity('Este campo es requerido ')"
                             onchange="setCustomValidity('')"> 
                           </c:otherwise>
@@ -326,6 +361,22 @@
                             </c:choose>
                           </c:forEach>
                         </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Observaciones -->
+            <label for="Observaciones" class="control-label"> *Observaciones</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <c:choose>
+                          <c:when test="${accion == 'Agregar'}" >
+                              <textarea required style="width:100%" name="observaciones" id="observaciones"></textarea>
+                          </c:when>
+                          <c:otherwise>
+                            <textarea required style="width:100%" name="observaciones" id="observaciones">${factura.getDetalle()}</textarea>
+                          </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
             </div>

@@ -90,7 +90,7 @@
                               <td>&euro;${factura.getMonto()}</td>
                             </c:when>
                             <c:otherwise>
-                                <td>${factura.getMoneda()}</td>
+                                <td>${factura.getMonto()}</td>
                             </c:otherwise>
                         </c:choose>
                       <td>${factura.getMoneda()}</td>

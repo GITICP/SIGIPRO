@@ -320,10 +320,9 @@ public class ControladorFactura extends SIGIPROServlet {
                         if (tr.getMoneda().equals("Dólares"))
                             moneda = 2;
                         //Realiza el detalleServicio en el WebService de Fundevi
-                        tr.setDetalle(generarDetalleFactura(tr));
                         tr.setNombre(generarNombreFactura(tr));
-                        FacturasWs fWS = detalleServicio(resultado,request.getSession().getAttribute("usuario").toString(),tr.getNombre(),tr.getProyecto(),
-                                moneda,tr.getPlazo(),new BigDecimal(tr.getMonto()),tr.getCorreo_enviar(),tr.getDetalle(),generarLlave(resultado,tr.getProyecto(),tr.getMonto(),tr.getFecha_S()));
+                        FacturasWs fWS = detalleServicio(resultado,request.getSession().getAttribute("usuario").toString(),dao_us.obtenerIDUsuario("usuario"), tr.getNombre(),tr.getProyecto(),
+                                moneda,tr.getPlazo(),new BigDecimal(0),new BigDecimal(tr.getMonto()),new BigDecimal(tr.getMonto()),tr.getCorreo_enviar(),"",tr.getDetalle(),generarLlave(resultado,tr.getProyecto(),tr.getMonto(),tr.getFecha_S()));
                         //Obtener los valores de respuesta del WS y asignarlos a la factura
                         if (fWS == null){
                             request.setAttribute("mensaje", helper.mensajeDeAdvertencia(mensaje + "Error al enviar Factura a FUNDEVI."));
@@ -521,6 +520,9 @@ public class ControladorFactura extends SIGIPROServlet {
                     case "correo_enviar":
                         tr.setCorreo_enviar(fieldValue);
                         break;
+                    case "observaciones":
+                        tr.setDetalle(fieldValue);
+                        break;
                 }
             } else {
                 try {
@@ -661,7 +663,7 @@ public class ControladorFactura extends SIGIPROServlet {
         }
     }
 
-    private static FacturasWs detalleServicio(int codigoOrden, java.lang.String usuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal montoFactura, java.lang.String correoEnviar, java.lang.String detalle, java.lang.String llave) {
+    private static FacturasWs detalleServicio(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, BigDecimal porcentajeDescuento, BigDecimal subtotalFactura, BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
         com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = null;
         com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = null;
         try{
@@ -670,14 +672,14 @@ public class ControladorFactura extends SIGIPROServlet {
         }
         catch(Exception e){
             if (port!=null){
-                return port.detalleServicio(codigoOrden, usuarioEjecuta, nombreFactura, proyecto, moneda, plazo, montoFactura, correoEnviar, detalle, llave);
+                return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
             }
             else{
                 return null;
             }
         }
         if (port!=null){
-            return port.detalleServicio(codigoOrden, usuarioEjecuta, nombreFactura, proyecto, moneda, plazo, montoFactura, correoEnviar, detalle, llave);
+            return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
         }
         else{
             return null;
@@ -712,17 +714,15 @@ public class ControladorFactura extends SIGIPROServlet {
         return resultado;
     }
     
-    private static String generarDetalleFactura(Factura f){
-        String resultado = "";
-        resultado+=f.getFecha_S()+" "+f.getCliente().getNombre()+" "+f.getFecha_vencimiento_S()+" ";
-        if(f.getOrden()!=null){
-            resultado+=""+f.getOrden().getCotizacion().getTotal()+","+f.getOrden().getIntencion().getObservaciones();
-        }
-        return resultado;
-    }
   // </editor-fold>
 
     private static FacturasWs detalleServicio_1(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal porcentajeDescuento, java.math.BigDecimal subtotalFactura, java.math.BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
+        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
+        return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
+    }
+
+    private static FacturasWs detalleServicio_2(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal porcentajeDescuento, java.math.BigDecimal subtotalFactura, java.math.BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
         com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
         com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
         return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
