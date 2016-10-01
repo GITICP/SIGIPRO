@@ -60,7 +60,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet(name = "ControladorFactura", urlPatterns = {"/Ventas/Factura"})
 public class ControladorFactura extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final FacturaDAO dao = new FacturaDAO();
     private final Orden_compraDAO odao = new Orden_compraDAO();
     private final ClienteDAO cdao = new ClienteDAO();
@@ -88,6 +87,7 @@ public class ControladorFactura extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        int[] permisos = {701,704,1};
         validarPermisosMultiple(permisos, request);
 
         int id_factura = Integer.parseInt(request.getParameter("id_factura"));
@@ -140,6 +140,7 @@ public class ControladorFactura extends SIGIPROServlet {
     
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 704, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "Factura/Agregar.jsp";
@@ -168,6 +169,7 @@ public class ControladorFactura extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
 
         List<Factura> facturas = dao.obtenerFacturas();
@@ -179,6 +181,7 @@ public class ControladorFactura extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Factura/Ver.jsp";
@@ -194,6 +197,7 @@ public class ControladorFactura extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 704, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Factura/Editar.jsp";
@@ -223,6 +227,7 @@ public class ControladorFactura extends SIGIPROServlet {
     
     protected void getActualizarestados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
+        int[] permisos = {701, 704, 1};
         String redireccion = "Factura/index.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
@@ -266,6 +271,7 @@ public class ControladorFactura extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException, NoSuchAlgorithmException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 704, 1};
         validarPermisos(permisos, listaPermisos);
         int resultado = 0;
         try {
@@ -429,6 +435,7 @@ public class ControladorFactura extends SIGIPROServlet {
         boolean resultado = false;
         boolean resultado2 = false;
         String redireccion = "Factura/index.jsp";
+        int[] permisos = {701, 704, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_factura = request.getParameter("id_factura"); 

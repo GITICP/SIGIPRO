@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorContactos_cliente", urlPatterns = {"/Ventas/Contactos"})
 public class ControladorContactos_cliente extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final ClienteDAO dao = new ClienteDAO();
     private final Contactos_clienteDAO ccdao = new Contactos_clienteDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
@@ -63,6 +62,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get Contactos">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "Clientes/AgregarContacto.jsp";
@@ -77,6 +77,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
     
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Clientes/VerContacto.jsp";
@@ -92,6 +93,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Clientes/EditarContacto.jsp";
@@ -107,6 +109,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         boolean resultado = false;
         String redireccion = "Clientes/AgregarContacto.jsp";
+        int[] permisos = {701, 702, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         try {
@@ -134,6 +137,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Clientes/EditarContacto.jsp";
+        int[] permisos = {701, 702, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         Contactos_cliente contacto_a_editar = ccdao.obtenerContactos_cliente(Integer.parseInt(request.getParameter("id_contacto")));
@@ -163,6 +167,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Clientes/index.jsp";
+        int[] permisos = {701, 702, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         

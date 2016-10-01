@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorContrato_comercializacion", urlPatterns = {"/Ventas/ContratoComercializacion"})
 public class ControladorContrato_comercializacion extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final Contrato_comercializacionDAO dao = new Contrato_comercializacionDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ClienteDAO cDAO = new ClienteDAO();
@@ -64,6 +63,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 705, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "ContratoComercializacion/Agregar.jsp";
@@ -78,6 +78,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 705, 1,702,703,704,706};
         validarPermisos(permisos, listaPermisos);
 
         List<Contrato_comercializacion> contratos = dao.obtenerContratos_comercializacion();
@@ -89,6 +90,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 705, 1,702,703,704,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "ContratoComercializacion/Ver.jsp";
@@ -104,6 +106,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 705, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "ContratoComercializacion/Editar.jsp";
@@ -122,6 +125,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "ContratoComercializacion/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 705, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Contrato_comercializacion contrato_nuevo = construirObjeto(request);
@@ -148,6 +152,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "ContratoComercializacion/Editar.jsp";
+        int[] permisos = {701, 705, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
@@ -176,6 +181,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "ContratoComercializacion/index.jsp";
+        int[] permisos = {701, 705, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_contrato = request.getParameter("id_contrato"); 

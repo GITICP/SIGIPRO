@@ -51,7 +51,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet(name = "ControladorSeguimiento_venta", urlPatterns = {"/Ventas/SeguimientoVenta"})
 public class ControladorSeguimiento_venta extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final Seguimiento_ventaDAO dao = new Seguimiento_ventaDAO();
     private final ClienteDAO cdao = new ClienteDAO();
     private final FacturaDAO fdao = new FacturaDAO();
@@ -76,6 +75,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        int[] permisos = {701, 1};
         validarPermisosMultiple(permisos, request);
 
         int id_seguimiento = Integer.parseInt(request.getParameter("id_seguimiento"));
@@ -115,6 +115,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
     
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "SeguimientoVenta/Agregar.jsp";
@@ -138,6 +139,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
 
         List<Seguimiento_venta> seguimientoes = dao.obtenerSeguimientos_venta();
@@ -149,6 +151,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "SeguimientoVenta/Ver.jsp";
@@ -164,6 +167,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "SeguimientoVenta/Editar.jsp";
@@ -189,6 +193,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         int resultado = 0;
         try {
@@ -254,6 +259,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "SeguimientoVenta/index.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_seguimiento = request.getParameter("id_seguimiento"); 

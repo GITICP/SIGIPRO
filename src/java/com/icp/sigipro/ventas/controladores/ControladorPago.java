@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorPago", urlPatterns = {"/Ventas/Pago"})
 public class ControladorPago extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final PagoDAO dao = new PagoDAO();
     private final FacturaDAO fdao = new FacturaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
@@ -64,6 +63,7 @@ public class ControladorPago extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "Pago/Agregar.jsp";
@@ -78,6 +78,7 @@ public class ControladorPago extends SIGIPROServlet {
     
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Pago/Ver.jsp";
@@ -93,6 +94,7 @@ public class ControladorPago extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Pago/Editar.jsp";
@@ -120,6 +122,7 @@ public class ControladorPago extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "Pago/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Pago pago_nuevo = construirObjeto(request);
@@ -146,6 +149,7 @@ public class ControladorPago extends SIGIPROServlet {
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Pago/Editar.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         Pago pago_a_editar = dao.obtenerPago(Integer.parseInt(request.getParameter("id_pago")));
@@ -179,6 +183,7 @@ public class ControladorPago extends SIGIPROServlet {
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Pago/index.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         

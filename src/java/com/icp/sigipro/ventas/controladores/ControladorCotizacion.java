@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorCotizacion", urlPatterns = {"/Ventas/Cotizacion"})
 public class ControladorCotizacion extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final CotizacionDAO dao = new CotizacionDAO();
     private final Intencion_ventaDAO ivdao = new Intencion_ventaDAO();
     private final Producto_ventaDAO pdao = new Producto_ventaDAO();
@@ -74,6 +73,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "Cotizacion/Agregar.jsp";
@@ -100,6 +100,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701,702,703,704,705,706, 1};
         validarPermisos(permisos, listaPermisos);
 
         List<Cotizacion> cotizaciones = dao.obtenerCotizaciones();
@@ -111,6 +112,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701,702,703,704,705,706, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Cotizacion/Ver.jsp";
@@ -131,6 +133,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Cotizacion/Editar.jsp";
@@ -160,6 +163,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         int resultado = 0;
         String redireccion = "Cotizacion/Agregar.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         try {
@@ -199,6 +203,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
         boolean resultado = false;
         boolean e = false;
         String redireccion = "Cotizacion/Editar.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
@@ -248,6 +253,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
         boolean resultado = false;
         boolean resultado2 = false;
         String redireccion = "Cotizacion/index.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_cotizacion = request.getParameter("id_cotizacion"); 

@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorOrden_compra", urlPatterns = {"/Ventas/OrdenCompra"})
 public class ControladorOrden_compra extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final Orden_compraDAO dao = new Orden_compraDAO();
     private final Producto_ventaDAO pdao = new Producto_ventaDAO();
     private final Intencion_ventaDAO idao = new Intencion_ventaDAO();
@@ -80,6 +79,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "OrdenCompra/Agregar.jsp";
@@ -106,6 +106,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701,702,703,704,705,706, 1};
         validarPermisos(permisos, listaPermisos);
 
         List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
@@ -117,6 +118,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "OrdenCompra/Ver.jsp";
@@ -134,6 +136,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "OrdenCompra/Editar.jsp";
@@ -163,6 +166,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "OrdenCompra/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Orden_compra orden_nuevo = construirObjeto(request);
@@ -215,6 +219,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         boolean resultado = false;
         boolean e = false;
         String redireccion = "OrdenCompra/Editar.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
@@ -280,6 +285,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         boolean resultado = false;
         boolean resultado2 = false;
         String redireccion = "OrdenCompra/index.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_orden = request.getParameter("id_orden"); 

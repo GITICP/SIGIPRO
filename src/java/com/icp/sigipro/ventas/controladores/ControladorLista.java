@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorLista", urlPatterns = {"/Ventas/ListaEspera"})
 public class ControladorLista extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final ListaDAO dao = new ListaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ClienteDAO cdao = new ClienteDAO();
@@ -66,6 +65,7 @@ public class ControladorLista extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "ListaEspera/Agregar.jsp";
@@ -81,6 +81,7 @@ public class ControladorLista extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706,1};
         validarPermisos(permisos, listaPermisos);
 
         List<Lista> listas = dao.obtenerListas();
@@ -92,6 +93,7 @@ public class ControladorLista extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "ListaEspera/Ver.jsp";
@@ -107,6 +109,7 @@ public class ControladorLista extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "ListaEspera/Editar.jsp";
@@ -126,6 +129,7 @@ public class ControladorLista extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "ListaEspera/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Lista lista_nuevo = construirObjeto(request);
@@ -159,6 +163,7 @@ public class ControladorLista extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "ListaEspera/Editar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         try {
@@ -194,6 +199,7 @@ public class ControladorLista extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "ListaEspera/index.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         String id_lista1 = request.getParameter("id_lista"); 
         int id_lista = Integer.parseInt(id_lista1);
