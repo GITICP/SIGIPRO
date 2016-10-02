@@ -23,20 +23,6 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <label for="nombre" class="control-label">*Número de Solicitud</label>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="text" maxlength="45" placeholder="Identificador de la Solicitud" class="form-control" name="numero_solicitud" value="${numero_solicitud}"
-                                       required
-                                       oninvalid="setCustomValidity('Este campo es requerido')"
-                                       oninput="setCustomValidity('')" > 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6"></div>
-                <div class="col-md-6">
                     <label for="objeto-relacionado" class="control-label"> Asociar a Sangría o Sangría de Prueba</label>
                     <div class="form-group">
                         <div class="col-sm-12">
@@ -64,7 +50,7 @@
                 <c:otherwise>
                     <c:choose>
                         <c:when test="${tipo == 'sangria'}">
-                            <t:editar_solicitud_sangria derecha="true" />
+                            <t:editar_solicitud_sangria derecha="false" />
                             <t:agregar_solicitud_sangria_prueba />
                         </c:when>
                         <c:when test="${tipo == 'sangria_prueba'}">

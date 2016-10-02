@@ -80,28 +80,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
         SolicitudCC s = new SolicitudCC();
         request.setAttribute("solicitud", s);
 
-        int id = dao.obtenerProximoId();
-
-        Date fechaActual = new Date();
-        DateFormat formatoFechaMes = new SimpleDateFormat("MM");
-        DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
-        int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
-        int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
-        
-        String numeroAnno = "";
-        
-        if (mes >= 10) {
-            numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
-        } else {
-            numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
-        }
-
-        String numero_solicitud = id + "-" + numeroAnno;
-
         List<TipoMuestra> tipomuestras = tipomuestradao.obtenerTiposDeMuestraSolicitud();
         request.setAttribute("tipomuestras", tipomuestras);
         request.setAttribute("tipomuestraparse", this.parseListaTipoMuestra(tipomuestras));
-        request.setAttribute("numero_solicitud", numero_solicitud);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
 
@@ -326,7 +307,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
                     bitacora.setBitacora(ags.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ANALISISGRUPOSOLICITUD, request.getRemoteAddr());
                 }
             }
-            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada correctamente"));
+            request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud agregada correctamente, número generado automáticamente: " + s.getNumero_solicitud() + "."));
             //Funcion que genera la bitacora
             bitacora.setBitacora(s.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
             //*----------------------------*
@@ -416,8 +397,6 @@ public class ControladorSolicitud extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
     private SolicitudCC construirObjeto(HttpServletRequest request) {
         SolicitudCC s = new SolicitudCC();
-        s.setNumero_solicitud(request.getParameter("numero_solicitud"));
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
         Timestamp fecha_solicitud = new java.sql.Timestamp(new Date().getTime());
         s.setFecha_solicitud(fecha_solicitud);

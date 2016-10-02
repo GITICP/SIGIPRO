@@ -77,11 +77,12 @@ public class EquipoDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.equipos "
-                    + "SET nombre=?, descripcion=? "
+                    + "SET nombre=?, descripcion=?, id_tipo_equipo=? "
                     + "WHERE id_equipo = ?; ");
             consulta.setString(1, equipo.getNombre());
             consulta.setString(2, equipo.getDescripcion());
-            consulta.setInt(3, equipo.getId_equipo());
+            consulta.setInt(3, equipo.getTipo_equipo().getId_tipo_equipo());
+            consulta.setInt(4, equipo.getId_equipo());
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
@@ -193,11 +194,14 @@ public class EquipoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.id_tipo_equipo, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path "
-                    + "FROM control_calidad.equipos as equipo INNER JOIN control_calidad.tipos_equipos as tipo ON equipo.id_tipo_equipo = tipo.id_tipo_equipo "
-                    + "LEFT OUTER JOIN control_calidad.certificados_equipos as cert ON cert.id_equipo = equipo.id_equipo "
-                    + "WHERE equipo.id_equipo = ?; ");
+            consulta = getConexion().prepareStatement(
+                     " SELECT equipo.id_equipo, equipo.nombre, equipo.descripcion, tipo.id_tipo_equipo, tipo.nombre as nombre_tipo, cert.id_certificado_equipo, cert.fecha_certificado, cert.path, " 
+                     + " case when exists (select 1 from (select id_equipo from control_calidad.equipos_resultado union select id_equipo from control_calidad.equipos_resultado_sp) as resultados where resultados.id_equipo = ?) then false else true end as editable "
+                     + " FROM control_calidad.equipos as equipo INNER JOIN control_calidad.tipos_equipos as tipo ON equipo.id_tipo_equipo = tipo.id_tipo_equipo  "
+                     + " LEFT OUTER JOIN control_calidad.certificados_equipos as cert ON cert.id_equipo = equipo.id_equipo  "
+                     + " WHERE equipo.id_equipo = ?;");
             consulta.setInt(1, id_equipo);
+            consulta.setInt(2, id_equipo);
             rs = consulta.executeQuery();
             List<CertificadoEquipo> certificados = new ArrayList<CertificadoEquipo>();
             while (rs.next()) {
@@ -209,6 +213,7 @@ public class EquipoDAO extends DAO {
                     resultado.setDescripcion(rs.getString("descripcion"));
                     resultado.setId_equipo(rs.getInt("id_equipo"));
                     resultado.setNombre(rs.getString("nombre"));
+                    resultado.setEditable(rs.getBoolean("editable"));
                 }
                 if (rs.getInt("id_certificado_equipo") != 0) {
                     CertificadoEquipo certificado = new CertificadoEquipo();
