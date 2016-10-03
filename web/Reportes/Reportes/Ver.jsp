@@ -49,7 +49,7 @@
                                     <h3><i class="fa fa-th-list"></i> Parámetros</h3>
                                     <div class="btn-group widget-header-toolbar">
                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 1501)}">
-                                            <a class="btn btn-warning btn-sm boton-accion" href="Reportes/Reportes?accion=permisos&id_reporte=${reporte.getId_reporte()}">Modificar Permisos</a>
+                                            <a class="btn btn-warning btn-sm boton-accion" href="Reportes?accion=permisos&id_reporte=${reporte.getId_reporte()}">Modificar Permisos</a>
                                         </c:if>
                                         <a class="btn btn-primary btn-sm boton-accion" onclick="history.back();">Volver</a>
                                     </div>
