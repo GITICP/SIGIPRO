@@ -78,7 +78,14 @@ public class BarraFuncionalidadDAO
                                         + "   FROM bodega.sub_bodegas "
                                         + "   WHERE id_usuario = ? "
                                         + "  ) as sub_bodegas "
-                                        + ")  "
+                                        + ") "
+                                        + " UNION "
+                                        + " Select * "
+                                        + " from seguridad.entradas_menu_principal "
+                                        + " Where id_menu_principal = 1501 and exists "
+                                        + " ( "
+                                        + " SELECT 1 FROM reportes.permisos_reportes WHERE id_usuario = ? "
+                                        + " ) "
                                         + ") "
                                         + "Select * "
                                         + "from seguridad.entradas_menu_principal "
@@ -114,6 +121,7 @@ public class BarraFuncionalidadDAO
                   consulta.setInt(3, usuario);
                   consulta.setInt(4, usuario);
                   consulta.setInt(5, usuario);
+                  consulta.setInt(6, usuario);
                 }
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarBarraFuncionalidad(resultadoConsulta);

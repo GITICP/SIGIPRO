@@ -638,9 +638,9 @@ public class UsuarioDAO extends DAO
         return resultado;
     }
     
+
     
-    
-    
+        
         public List<Usuario> obtenerUsuarios(Usuario u)
     {
         SingletonBD s = SingletonBD.getSingletonBD();
