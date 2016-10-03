@@ -14,7 +14,7 @@ CREATE TABLE reportes.parametros
 (
    id_reporte integer NOT NULL, 
    num_parametro integer NOT NULL, 
-   nombre character varying(50) NOT NULL
+   nombre character varying(50) NOT NULL,
    tipo_parametro character varying(30) NOT NULL, 
    info_adicional character varying(50), 
    CONSTRAINT pk_parametros PRIMARY KEY (num_parametro, id_reporte), 
