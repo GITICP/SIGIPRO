@@ -21,6 +21,7 @@ import com.icp.sigipro.produccion.modelos.Protocolo;
 import com.icp.sigipro.produccion.modelos.Respuesta_pxp;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperParseXML;
 import com.icp.sigipro.utilidades.HelperTransformaciones;
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,6 +82,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
     private final SubBodegaDAO subbodegadao = new SubBodegaDAO();
 
     private final HelperTransformaciones helper_transformaciones = HelperTransformaciones.getHelperTransformaciones();
+    private HelperParseXML helper_parser = new HelperParseXML();
 
     protected final Class clase = ControladorLoteProduccion.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -633,7 +635,8 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         //parametros = upload.parseRequest(request);
         try {
-            String string_xml_resultado = parseXML(resultado, ubicacion);
+            helper_parser = new HelperParseXML(parametros);
+            String string_xml_resultado = helper_parser.parseRespuestaXML(null,resultado, ubicacion);
             resultado.setRespuestaString(string_xml_resultado);
             int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
             dao.editarRespuesta(resultado, version + 1);
@@ -737,7 +740,8 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             //parametros = upload.parseRequest(request);
 
             try {
-                String string_xml_resultado = parseXML(resultado, ubicacion);
+                helper_parser = new HelperParseXML(parametros);
+                String string_xml_resultado = helper_parser.parseRespuestaXML(null,resultado, ubicacion);
                 System.out.println(string_xml_resultado);
                 resultado.setRespuestaString(string_xml_resultado);
                 dao.insertarRespuesta(resultado);
@@ -788,7 +792,8 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             ServletFileUpload upload = new ServletFileUpload(factory);
             //parametros = upload.parseRequest(request);
             try {
-                String string_xml_resultado = parseXML(resultado, ubicacion);
+                helper_parser = new HelperParseXML(parametros);
+                String string_xml_resultado = helper_parser.parseRespuestaXML(null,resultado, ubicacion);
                 resultado.setRespuestaString(string_xml_resultado);
                 int version = dao.obtenerUltimaVersionRespuesta(id_respuesta);
                 dao.editarRespuesta(resultado, version + 1);
@@ -821,184 +826,6 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         l.setNombre(request.getParameter("nombre"));
 
         return l;
-    }
-
-    private String parseXML(Respuesta_pxp resultado, String ubicacion) throws ServletException, IOException, TransformerException, SQLException, ParserConfigurationException, SAXException, SIGIPROException, Exception {
-        String string_xml_resultado = null;
-
-        InputStream binary_stream = resultado.getPaso().getEstructura().getBinaryStream();
-
-        DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document documento_resultado = parser.parse(binary_stream);
-        Element elemento_resultado = documento_resultado.getDocumentElement();
-
-        NodeList lista_nodos = elemento_resultado.getElementsByTagName("campo");
-
-        for (int i = 0; i < lista_nodos.getLength(); i++) {
-            Node nodo = lista_nodos.item(i);
-            if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                Element elemento = (Element) nodo;
-                String nombre_campo_resultado;
-                Node nodo_valor;
-                String valor;
-                String tipo_campo = elemento.getElementsByTagName("tipo").item(0).getTextContent();
-                switch (tipo_campo) {
-                    case ("seleccion"):
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        String[] opciones = this.obtenerParametros(nombre_campo_resultado);
-                        List<String> lista_opciones = new ArrayList<String>();
-                        lista_opciones.addAll(Arrays.asList(opciones));
-                        System.out.println(lista_opciones);
-                        NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
-                        for (int j = 0; j < elemento_opciones.getLength(); j++) {
-                            Node opcion = elemento_opciones.item(j);
-                            Element elemento_opcion = (Element) opcion;
-                            String nombre_opcion = elemento_opcion.getElementsByTagName("valor").item(0).getTextContent();
-                            if (lista_opciones.contains(nombre_opcion)) {
-                                nodo_valor = elemento_opcion.getElementsByTagName("check").item(0);
-                                nodo_valor.setTextContent("true");
-                            }
-                        }
-                        break;
-                    case ("usuario"):
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        //Obtengo los usuarios agregados, y los meto en una lista
-                        String[] usuarios = this.obtenerParametros(nombre_campo_resultado);
-                        List<String> lista_usuarios = new ArrayList<String>();
-                        lista_usuarios.addAll(Arrays.asList(usuarios));
-                        //Obtengo la seccion escogida, y cargo una lista de los usuarios de dicha seccion
-                        nodo_valor = elemento.getElementsByTagName("seccion").item(0);
-                        int seccion = Integer.parseInt(nodo_valor.getTextContent());
-                        List<Usuario> usuarios_seccion = usuariodao.obtenerUsuariosProduccion(seccion);
-
-                        List<Integer> id_usuarios = new ArrayList<>();
-
-                        for (String id : lista_usuarios) {
-                            id_usuarios.add(Integer.parseInt(id));
-                        }
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        for (Usuario usuario : usuarios_seccion) {
-                            if (id_usuarios.contains(usuario.getId_usuario())) {
-                                Element e = documento_resultado.createElement("usuario");
-
-                                Element id_usuario = documento_resultado.createElement("id");
-                                id_usuario.appendChild(documento_resultado.createTextNode("" + usuario.getId_usuario()));
-                                e.appendChild(id_usuario);
-
-                                Element nombre = documento_resultado.createElement("nombre");
-                                nombre.appendChild(documento_resultado.createTextNode("" + usuario.getNombre_completo()));
-                                e.appendChild(nombre);
-
-                                nodo_valor.appendChild(e);
-                            }
-                        }
-                        break;
-                    case ("subbodega"):
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        //Obtengo los productos seleccionados
-                        String[] productos = this.obtenerParametros(nombre_campo_resultado);
-                        List<String> lista_productos = new ArrayList<String>();
-                        lista_productos.addAll(Arrays.asList(productos));
-                        //Parseo los id's en String, a Int
-                        List<Integer> lista_id_productos = new ArrayList<>();
-                        for (String producto : lista_productos) {
-                            lista_id_productos.add(Integer.parseInt(producto));
-                        }
-                        //Obtengo los productos para poder almacenar los nombres de los productos
-                        int id_sub_bodega = Integer.parseInt(elemento.getElementsByTagName("subbodega").item(0).getTextContent());
-                        SubBodega subbodega = subbodegadao.buscarSubBodegaEInventariosProduccion(id_sub_bodega);
-                        List<InventarioSubBodega> inventario = subbodega.getInventarios();
-                        HashMap<Integer, String> nombre_productos = new HashMap<>();
-                        for (InventarioSubBodega inv : inventario) {
-                            if (lista_id_productos.contains(inv.getProducto().getId_producto())) {
-                                nombre_productos.put(inv.getProducto().getId_producto(), inv.getProducto().getNombre());
-                            }
-                        }
-                        //Ingreso los valores dentro del XML
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        for (Integer id : lista_id_productos) {
-                            Element e = documento_resultado.createElement("producto");
-
-                            Element id_producto = documento_resultado.createElement("id");
-                            id_producto.appendChild(documento_resultado.createTextNode("" + id));
-                            e.appendChild(id_producto);
-
-                            Element nombre_producto = documento_resultado.createElement("nombre");
-                            String nombre = nombre_productos.get(id);
-                            nombre_producto.appendChild(documento_resultado.createTextNode(nombre));
-                            e.appendChild(nombre_producto);
-
-                            Element cantidad_producto = documento_resultado.createElement("cantidad");
-                            String cantidad = this.obtenerParametro(nombre_campo_resultado + "_" + id);
-                            cantidad_producto.appendChild(documento_resultado.createTextNode(cantidad));
-                            e.appendChild(cantidad_producto);
-
-                            nodo_valor.appendChild(e);
-
-                        }
-                        break;
-                    case ("sangria"):
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        //Obtengo los productos seleccionados
-                        String[] sangrias = this.obtenerParametros(nombre_campo_resultado);
-                        List<String> lista_sangrias = new ArrayList<String>();
-                        lista_sangrias.addAll(Arrays.asList(sangrias));
-                        //Parseo los id's en String, a Int
-                        List<Integer> lista_id_sangrias = new ArrayList<>();
-                        for (String sangria : lista_sangrias) {
-                            lista_id_sangrias.add(Integer.parseInt(sangria));
-                        }
-                        //Ingreso los valores dentro del XML
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        for (Integer id : lista_id_sangrias) {
-                            Element e = documento_resultado.createElement("sangria");
-
-                            Element id_sangria = documento_resultado.createElement("id");
-                            id_sangria.appendChild(documento_resultado.createTextNode("" + id));
-                            e.appendChild(id_sangria);
-
-                            nodo_valor.appendChild(e);
-                        }
-                        break;
-                    case ("aa"):
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        valor = this.obtenerParametro(nombre_campo_resultado);
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        nodo_valor.setTextContent(valor);
-                        break;
-                    case ("imagen"):
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        valor = this.obtenerImagen(nombre_campo_resultado, ubicacion);
-                        if (valor != null) {
-                            nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                            nodo_valor.setTextContent(valor);
-                        } else {
-                            String actual = this.obtenerParametro(nombre_campo_resultado + "_actual");
-                            if (!actual.equals("")) {
-                                nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                                nodo_valor.setTextContent(actual);
-                            }
-                        }
-                        break;
-                    default:
-                        nombre_campo_resultado = elemento.getElementsByTagName("nombre-campo").item(0).getTextContent();
-                        nodo_valor = elemento.getElementsByTagName("valor").item(0);
-                        valor = this.obtenerParametro(nombre_campo_resultado);
-                        nodo_valor.setTextContent(valor);
-                        break;
-                }
-            }
-        }
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        StringWriter writer = new StringWriter();
-        transformer.transform(new DOMSource(documento_resultado), new StreamResult(writer));
-        string_xml_resultado = writer.getBuffer().toString().replaceAll("\n|\r", "");
-
-        System.out.println(string_xml_resultado);
-
-        return string_xml_resultado;
     }
 
     private boolean crearDirectorio(String path) {

@@ -32,6 +32,8 @@ public class Actividad_Apoyo {
     private List<Actividad_Apoyo> historial;
     private boolean requiere_ap;
     private boolean estado;
+    private boolean requiere_coordinacion;
+    private boolean requiere_regencia;
 
     public Actividad_Apoyo() {
     }

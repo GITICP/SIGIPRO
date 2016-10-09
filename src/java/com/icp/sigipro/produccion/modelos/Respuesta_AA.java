@@ -31,10 +31,12 @@ public class Respuesta_AA {
     private String respuestaString;
     private SQLXML respuesta;
     //1. Habilitado
-    //2. Habilitado requiere revision
+    //2. Habilitado pero incompleto
     //3. Revisado requiere aprobacion
     //4. Finalizado
     private int estado;
+    private boolean aprobacion_coordinacion;
+    private boolean aprobacion_regencia;
     
     private List<Respuesta_AA> historial;
 

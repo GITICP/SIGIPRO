@@ -1,0 +1,21 @@
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ * Author:  Luis Diego
+ * Created: Oct 8, 2016
+ */
+
+ALTER TABLE PRODUCCION.HISTORIAL_ACTIVIDAD_APOYO
+ALTER COLUMN REQUIERE_COORDINACION type BOOLEAN;
+
+ALTER TABLE PRODUCCION.HISTORIAL_ACTIVIDAD_APOYO
+ALTER COLUMN REQUIERE_REGENCIA type BOOLEAN;
+
+ALTER TABLE PRODUCCION.RESPUESTA_AA
+ALTER COLUMN APROBACION_COORDINACION type BOOLEAN;
+
+ALTER TABLE PRODUCCION.RESPUESTA_AA
+ALTER COLUMN APROBACION_REGENCIA type BOOLEAN;
