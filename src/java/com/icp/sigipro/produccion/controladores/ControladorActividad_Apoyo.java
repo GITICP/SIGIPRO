@@ -611,7 +611,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             try {
                 int version = Integer.parseInt(request.getParameter("version"));
                 int id_usuario = (int) request.getSession().getAttribute("idusuario");
-                Respuesta_AA raa = new Respuesta_AA();
+                Respuesta_AA raa = dao.obtenerAprobacionesRespuesta(id_respuesta);
                 raa.setId_respuesta(id_respuesta);
                 raa.setVersion(version);
                 Usuario usuario = new Usuario();
@@ -622,14 +622,14 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
                     //Funcion que genera la bitacora 
                     bitacora.setBitacora(id_respuesta, Bitacora.ACCION_CERRAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAPXP, request.getRemoteAddr());
                     //----------------------------
-                    request.setAttribute("mensaje", helper.mensajeDeExito("Paso de Lote de Producción cerrado correctamente"));
+                    request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo cerrada correctamente"));
                 } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Paso de Lote de Producción no pudo ser cerrado."));
+                    request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser cerrada."));
                 }
                 this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
             } catch (Exception ex) {
                 ex.printStackTrace();
-                request.setAttribute("mensaje", helper.mensajeDeError("Paso de Lote de Producción no pudo ser cerrado."));
+                request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser cerrada."));
                 this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
             }
         }
@@ -641,6 +641,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
+        respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
         if (respuesta.getEstado() == 2) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
@@ -791,14 +792,16 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         int version = Integer.parseInt(request.getParameter("version"));
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
-        Respuesta_AA raa = new Respuesta_AA();
+        Respuesta_AA raa = dao.obtenerAprobacionesRespuesta(id_respuesta);
         raa.setId_respuesta(id_respuesta);
         raa.setVersion(version);
         Usuario usuario = new Usuario();
         usuario.setId_usuario(id_usuario);
         if (actor == 1) {
             raa.setUsuario_aprobar_coordinacion(usuario);
+            raa.setAprobacion_coordinacion(true);
         } else {
+            raa.setAprobacion_regencia(true);
             raa.setUsuario_aprobar_regencia(usuario);
         }
         resultado = dao.aprobarRespuesta(raa, actor);

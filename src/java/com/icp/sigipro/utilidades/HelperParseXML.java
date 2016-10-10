@@ -111,9 +111,13 @@ public class HelperParseXML extends SIGIPROServlet {
                         int id_actividad = Integer.parseInt(fieldValue);
                         aa.setId_actividad(id_actividad);
                         break;
-                    case "requiere_ap":
-                        boolean requiere_ap = true;
-                        aa.setRequiere_ap(requiere_ap);
+                    case "requiere_coordinacion":
+                        boolean requiere_coordinacion = true;
+                        aa.setRequiere_coordinacion(requiere_coordinacion);
+                        break;
+                    case "requiere_regencia":
+                        boolean requiere_regencia = true;
+                        aa.setRequiere_regencia(requiere_regencia);
                         break;
                     case "version":
                         int version = Integer.parseInt(fieldValue);

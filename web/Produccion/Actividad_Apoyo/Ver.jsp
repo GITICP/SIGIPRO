@@ -42,7 +42,7 @@
                             <h3><i class="fa fa-flask"></i> ${actividad.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Ver Realizar</a>
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Volver a Realizados</a>
                                 </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el actividad de actividad" data-href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=eliminar&id_actividad=${actividad.getId_actividad()}">Eliminar</a>
@@ -137,9 +137,9 @@
                                         </c:choose>
                                     </td>
                                 </tr>
-                                <tr><td> <strong>Requiere aprobación:</strong> <td>
+                                <tr><td> <strong>Requiere aprobación de Coordinación:</strong> <td>
                                         <c:choose>
-                                            <c:when test="${actividad.isRequiere_ap()}">
+                                            <c:when test="${actividad.isRequiere_coordinacion()}">
                                                 Sí
                                             </c:when>
                                             <c:otherwise>
@@ -148,7 +148,18 @@
                                         </c:choose>
                                     </td>
                                 </tr>
-                                <c:if test="${actividad.getObservaciones()!=''}">
+                                <tr><td> <strong>Requiere aprobación de Regencia</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isRequiere_regencia()}">
+                                                Sí
+                                            </c:when>
+                                            <c:otherwise>
+                                                No
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <c:if test="${actividad.getObservaciones()!=null and !actividad.getObservaciones().equals('')}">
                                     <tr><td> <strong>Observaciones de Rechazo:</strong> <td>${actividad.getObservaciones()} </td></tr>
                                 </c:if>
                             </table>

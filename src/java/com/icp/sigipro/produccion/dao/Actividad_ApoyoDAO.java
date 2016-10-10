@@ -366,7 +366,7 @@ public class Actividad_ApoyoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT h.id_actividad, h.nombre, h.version, h.estructura,h.requiere_coordinacion,h.requiere_regencia c.id_categoria_aa, c.nombre as nombrec    "
+            consulta = getConexion().prepareStatement(" SELECT h.id_actividad, h.nombre, h.version, h.estructura,h.requiere_coordinacion,h.requiere_regencia, c.id_categoria_aa, c.nombre as nombrec    "
                     + "FROM produccion.historial_actividad_apoyo as h "
                     + "LEFT JOIN produccion.categoria_aa as c ON (h.id_categoria_aa = c.id_categoria_aa) "
                     + "WHERE h.id_historial = ?; ");
@@ -1118,6 +1118,28 @@ public class Actividad_ApoyoDAO extends DAO {
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = rs.getInt("version");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public Respuesta_AA obtenerAprobacionesRespuesta(int id_respuesta) {
+        Respuesta_AA resultado = new Respuesta_AA();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(" SELECT aprobacion_coordinacion, aprobacion_regencia FROM produccion.respuesta_aa WHERE id_respuesta=?; ");
+            consulta.setInt(1, id_respuesta);
+            rs = consulta.executeQuery();
+            if (rs.next()) {
+                resultado.setAprobacion_coordinacion(rs.getBoolean("aprobacion_coordinacion"));
+                resultado.setAprobacion_regencia(rs.getBoolean("aprobacion_regencia"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();

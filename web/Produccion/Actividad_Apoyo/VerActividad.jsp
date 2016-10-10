@@ -99,13 +99,13 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                            <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-desc-filter">
                                 <!-- Columnas -->
                                 <thead> 
                                     <tr>
+                                        <th>Fecha</th>
                                         <th>Respuesta</th>
                                         <th>Versión</th>
-                                        <th>Fecha</th>
                                         <th>Usuario Realizar</th>
                                         <th>Acción</th>
                                     </tr>
@@ -114,6 +114,9 @@
                                     <c:forEach items="${listaRespuestas}" var="respuesta">
 
                                         <tr id ="${respuesta.getId_respuesta()}">
+                                            <td>
+                                                ${respuesta.getFechaAsString()}
+                                            </td>
                                             <td>
                                                 <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verrespuesta&id_respuesta=${respuesta.getId_respuesta()}">
                                                     <div style="height:100%;width:100%">
@@ -124,9 +127,7 @@
                                             <td>
                                                 ${respuesta.getVersion()}
                                             </td>
-                                            <td>
-                                                ${respuesta.getFechaAsString()}
-                                            </td>
+                                            
                                             <td>
                                                 ${respuesta.getUsuario_realizar().getNombre_completo()}
                                             </td>
@@ -134,10 +135,10 @@
                                                 <c:choose>
                                                     <c:when test="${respuesta.getEstado()==2}">
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
+                                                            <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
                                                         </c:if>
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 678)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion cerrar-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalCerrarRespuesta">Cerrar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion cerrar-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalCerrarRespuesta">Cerrar</a>
                                                         </c:if>
                                                     </c:when>
                                                     <c:when test="${respuesta.getEstado()==3}">
@@ -156,7 +157,7 @@
                                                         </c:if>
                                                     </c:when>
                                                     <c:when test="${respuesta.getEstado()==4}">
-                                                        Aprobada
+                                                        <a class="btn btn-warning btn-sm boton-accion disabled">Aprobada</a>
                                                     </c:when>
                                                 </c:choose>
 
@@ -204,8 +205,8 @@
 <t:modal idModal="modalCerrarRespuesta" titulo="Cerrar Respuesta de Actividad de Apoyo">
     <jsp:attribute name="form">
         <div class="widget-content" id="class-cerrar-respuesta">
-            <form class="form-horizontal" id="cerrarActividad" autocomplete="off" method="post" action="Actividad_Apoyo">
-                <input hidden="true" name="accion" value="cerrarrespuesta">
+            <form class="form-horizontal" id="cerrarActividad" autocomplete="off" method="get" action="Actividad_Apoyo">
+                <input hidden="true" name="accion" value="cerrar">
                 <input hidden="true" id='id_respuesta' name='id_respuesta' value="">
                 <input hidden="true" id='version' name='version' value="">
                 <label for="label" class="control-label">¿Está seguro que desea cerrar la Respuesta de la Actividad de Apoyo?</label>

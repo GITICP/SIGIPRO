@@ -6,9 +6,9 @@ $(document).on("click", ".aprobar-Modal", function () {
 });
 
 $(document).on("click", ".cerrar-Modal", function () {
-    var id_actividad = $(this).data('id');
+    var id_respuesta = $(this).data('id');
     var version = $(this).data('version');
-    $('#class-cerrar-respuesta #id_respuesta').val(id_actividad);
+    $('#class-cerrar-respuesta #id_respuesta').val(id_respuesta);
     $("#class-cerrar-respuesta #version").val(version);
 });
 
