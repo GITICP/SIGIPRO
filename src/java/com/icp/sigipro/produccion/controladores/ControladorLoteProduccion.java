@@ -331,7 +331,6 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
                 this.getIndex(request, response);
             }
         }
-
     }
 
     protected void getDevolver(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -628,7 +627,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
         //-------------------------------------------
         //Crea los directorios si no estan creados aun
-        this.crearDirectorio(ubicacion);
+        helper_parser.crearDirectorio(ubicacion);
         //--------------------------------------------
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setRepository(new File(ubicacion));
@@ -732,7 +731,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
-            this.crearDirectorio(ubicacion);
+            helper_parser.crearDirectorio(ubicacion);
             //--------------------------------------------
             DiskFileItemFactory factory = new DiskFileItemFactory();
             factory.setRepository(new File(ubicacion));
@@ -785,7 +784,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Imagenes" + File.separatorChar + "Realizar Lote" + File.separatorChar + resultado.getLote().getNombre();
             //-------------------------------------------
             //Crea los directorios si no estan creados aun
-            this.crearDirectorio(ubicacion);
+            helper_parser.crearDirectorio(ubicacion);
             //--------------------------------------------
             DiskFileItemFactory factory = new DiskFileItemFactory();
             factory.setRepository(new File(ubicacion));
@@ -826,27 +825,6 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         l.setNombre(request.getParameter("nombre"));
 
         return l;
-    }
-
-    private boolean crearDirectorio(String path) {
-        boolean resultado = false;
-        File directorio = new File(path);
-        if (!directorio.exists()) {
-            System.out.println("Creando directorio: " + path);
-            resultado = false;
-            try {
-                directorio.mkdirs();
-                resultado = true;
-            } catch (SecurityException se) {
-                se.printStackTrace();
-            }
-            if (resultado) {
-                System.out.println("Directorio Creado");
-            }
-        } else {
-            resultado = true;
-        }
-        return resultado;
     }
 
     private String getFileExtension(String fileName) {

@@ -22,6 +22,7 @@ import com.icp.sigipro.seguridad.dao.SeccionDAO;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -517,6 +518,27 @@ public class HelperParseXML extends SIGIPROServlet {
         }
         System.out.println(respuesta.toString());
         return respuesta;
+    }
+    
+    public boolean crearDirectorio(String path) {
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try {
+                directorio.mkdirs();
+                resultado = true;
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
+        }
+        return resultado;
     }
 
     @Override

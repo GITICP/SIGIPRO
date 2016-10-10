@@ -79,7 +79,6 @@ function agregarCampo() {
     $("#tipocampo_" + contador).select2();
 
     contador++;
-
 }
 
 function agregarUsuario() {
@@ -385,7 +384,6 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
-    alert (nombres);
     if (nombres[0] === "campo" || nombres[0] === "seleccion" || nombres[0] === "articulo" || nombres[0] === "subbodega" || nombres[0] === "usuario" || nombres[0] === "aa") {
         o.remove(nombres[1].toString());
         o = o.join();
@@ -396,5 +394,3 @@ function eliminarCampo(campo) {
 function eliminarOpcion(campo) {
     $("div > ." + campo).remove();
 }
-
-

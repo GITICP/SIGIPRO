@@ -133,16 +133,23 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${respuesta.getEstado()==2}">
-                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 678)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion revisar-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalRevisarRespuesta">Revisar</a>
-                                                        </c:if>
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
+                                                        </c:if>
+                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 678)}">
+                                                            <a class="btn btn-primary btn-sm boton-accion cerrar-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalCerrarRespuesta">Cerrar</a>
                                                         </c:if>
                                                     </c:when>
                                                     <c:when test="${respuesta.getEstado()==3}">
-                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 679)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion aprobarrespuesta-Modal" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalAprobarRespuesta">Aprobar</a>
+                                                        <c:if test="${!respuesta.isAprobacion_coordinacion()}">
+                                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 679)}">
+                                                                <a class="btn btn-primary btn-sm boton-accion aprobarrespuesta-Modal" data-actor="1" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalAprobarRespuesta">Aprobar [Coordinacion]</a>
+                                                            </c:if>  
+                                                        </c:if>
+                                                        <c:if test="${!respuesta.isAprobacion_regencia()}">
+                                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 682)}">
+                                                                <a class="btn btn-primary btn-sm boton-accion aprobarrespuesta-Modal" data-actor="2" data-id='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalAprobarRespuesta">Aprobar [Regencia]</a>
+                                                            </c:if>  
                                                         </c:if>
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
                                                             <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}&id_actividad=${actividad.getId_actividad()}">Repetir</a>
@@ -194,18 +201,18 @@
 
 </t:modal>
 
-<t:modal idModal="modalRevisarRespuesta" titulo="Revisar Respuesta de Actividad de Apoyo">
+<t:modal idModal="modalCerrarRespuesta" titulo="Cerrar Respuesta de Actividad de Apoyo">
     <jsp:attribute name="form">
-        <div class="widget-content" id="class-revisar-respuesta">
-            <form class="form-horizontal" id="revisarActividad" autocomplete="off" method="post" action="Actividad_Apoyo">
-                <input hidden="true" name="accion" value="revisarrespuesta">
+        <div class="widget-content" id="class-cerrar-respuesta">
+            <form class="form-horizontal" id="cerrarActividad" autocomplete="off" method="post" action="Actividad_Apoyo">
+                <input hidden="true" name="accion" value="cerrarrespuesta">
                 <input hidden="true" id='id_respuesta' name='id_respuesta' value="">
                 <input hidden="true" id='version' name='version' value="">
-                <label for="label" class="control-label">¿Está seguro que desea indicar que revisó la Respuesta de la Actividad de Apoyo?</label>
+                <label for="label" class="control-label">¿Está seguro que desea cerrar la Respuesta de la Actividad de Apoyo?</label>
                 <div class="form-group">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Revisar Respuesta</button>            </div>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Cerrar Respuesta</button>            </div>
                 </div>
             </form>
         </div>
@@ -221,6 +228,7 @@
                 <input hidden="true" name="accion" value="aprobarrespuesta">
                 <input hidden="true" id='id_respuesta' name='id_respuesta' value="">
                 <input hidden="true" id='version' name='version' value="">
+                <input hidden="true" id='actor' name='actor' value="">
                 <label for="label" class="control-label">¿Está seguro que desea indicar que aprobó la Respuesta de la Actividad de Apoyo?</label>
                 <div class="form-group">
                     <div class="modal-footer">

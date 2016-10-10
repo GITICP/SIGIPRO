@@ -26,13 +26,14 @@ public class Respuesta_AA {
     private int version;
     private Timestamp fecha;
     private Usuario usuario_realizar;
-    private Usuario usuario_revisar;
-    private Usuario usuario_aprobar;
+    private Usuario usuario_cerrar;
+    private Usuario usuario_aprobar_coordinacion;
+    private Usuario usuario_aprobar_regencia;
     private String respuestaString;
     private SQLXML respuesta;
     //1. Habilitado
     //2. Habilitado pero incompleto
-    //3. Revisado requiere aprobacion
+    //3. Cerrado requiere aprobacion
     //4. Finalizado
     private int estado;
     private boolean aprobacion_coordinacion;
@@ -43,20 +44,44 @@ public class Respuesta_AA {
     public Respuesta_AA() {
     }
 
-    public Usuario getUsuario_revisar() {
-        return usuario_revisar;
+    public boolean isAprobacion_coordinacion() {
+        return aprobacion_coordinacion;
     }
 
-    public void setUsuario_revisar(Usuario usuario_revisar) {
-        this.usuario_revisar = usuario_revisar;
+    public void setAprobacion_coordinacion(boolean aprobacion_coordinacion) {
+        this.aprobacion_coordinacion = aprobacion_coordinacion;
     }
 
-    public Usuario getUsuario_aprobar() {
-        return usuario_aprobar;
+    public boolean isAprobacion_regencia() {
+        return aprobacion_regencia;
     }
 
-    public void setUsuario_aprobar(Usuario usuario_aprobar) {
-        this.usuario_aprobar = usuario_aprobar;
+    public void setAprobacion_regencia(boolean aprobacion_regencia) {
+        this.aprobacion_regencia = aprobacion_regencia;
+    }
+
+    public Usuario getUsuario_cerrar() {
+        return usuario_cerrar;
+    }
+
+    public void setUsuario_cerrar(Usuario usuario_revisar) {
+        this.usuario_cerrar = usuario_revisar;
+    }
+
+    public Usuario getUsuario_aprobar_coordinacion() {
+        return usuario_aprobar_coordinacion;
+    }
+
+    public void setUsuario_aprobar_coordinacion(Usuario usuario_aprobar) {
+        this.usuario_aprobar_coordinacion = usuario_aprobar;
+    }
+
+    public Usuario getUsuario_aprobar_regencia() {
+        return usuario_aprobar_regencia;
+    }
+
+    public void setUsuario_aprobar_regencia(Usuario usuario_aprobar_regencia) {
+        this.usuario_aprobar_regencia = usuario_aprobar_regencia;
     }
 
     public int getEstado() {
