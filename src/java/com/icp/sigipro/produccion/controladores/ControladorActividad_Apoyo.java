@@ -996,6 +996,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         Actividad_Apoyo aa = new Actividad_Apoyo();
         
         HashMap<Integer, HashMap> formulario = helper_parser.parseFormularioXML(items, null, aa);
+        System.out.println(formulario);
         String orden = this.obtenerParametro("orden");
         String xml = helper_parser.parseJSONXML(formulario, orden, "actividad");
         System.out.println(xml);

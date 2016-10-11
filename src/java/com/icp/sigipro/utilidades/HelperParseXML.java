@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -218,6 +219,8 @@ public class HelperParseXML extends SIGIPROServlet {
                         String[] opciones = this.obtenerParametros(nombre_campo_resultado);
                         List<String> lista_opciones = new ArrayList<String>();
                         lista_opciones.addAll(Arrays.asList(opciones));
+                        System.out.println(lista_opciones);
+                        Collections.sort(lista_opciones);
                         System.out.println(lista_opciones);
                         NodeList elemento_opciones = elemento.getElementsByTagName("opciones").item(0).getChildNodes();
                         for (int j = 0; j < elemento_opciones.getLength(); j++) {
@@ -476,14 +479,24 @@ public class HelperParseXML extends SIGIPROServlet {
         xml.agregarSubelemento("etiqueta", hash.get("snombre"), campo);
         this.nombre_campo++;
         Element opciones = xml.agregarElemento("opciones", campo);
+        //Mete todos los ids de las opciones, para ordenarlas
+        List<Integer> lista_opciones = new ArrayList<Integer>();
         for (String i : hash.keySet()) {
             if (i.contains("opcion")) {
-                Element opcion = xml.agregarElemento("opcion", opciones);
-                xml.agregarSubelemento("etiqueta", hash.get(i), opcion);
-                xml.agregarSubelemento("valor", hash.get(i) + "_" + this.nombre_campo, opcion);
-                xml.agregarSubelemento("check", "false", opcion);
-                this.nombre_campo++;
+                String id = i.substring(i.lastIndexOf("n")+1);
+                lista_opciones.add(Integer.parseInt(id));
             }
+        }
+        //Ordena la lista de ids de opciones
+        Collections.sort(lista_opciones);
+        //Mete las opciones de forma ordenada
+        for (Integer i : lista_opciones){
+            String referencia = "opcion"+i;
+            Element opcion = xml.agregarElemento("opcion", opciones);
+            xml.agregarSubelemento("etiqueta", hash.get(referencia), opcion);
+            xml.agregarSubelemento("valor", hash.get(referencia) + "_" + this.nombre_campo, opcion);
+            xml.agregarSubelemento("check", "false", opcion);
+            this.nombre_campo++;
         }
 
     }

@@ -330,7 +330,7 @@ function agregarSeleccion() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group opciones_" + contador + "\">";
-    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre de la Opci&#243;n\" class=\"form-control\" name=\"o_opcion_" + contador + "_" + opciones + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre de la Opci&#243;n\" class=\"form-control\" name=\"o_opcion"+opciones+"_" + contador + "_" + opciones + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
