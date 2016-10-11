@@ -34,8 +34,17 @@ public class Actividad_Apoyo {
     private boolean estado;
     private boolean requiere_coordinacion;
     private boolean requiere_regencia;
+    private int version_anterior;
 
     public Actividad_Apoyo() {
+    }
+
+    public int getVersion_anterior() {
+        return version_anterior;
+    }
+
+    public void setVersion_anterior(int version_anterior) {
+        this.version_anterior = version_anterior;
     }
 
     public boolean isRequiere_coordinacion() {

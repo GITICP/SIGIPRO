@@ -32,3 +32,15 @@ WHERE id_permiso = 679;
 INSERT INTO seguridad.permisos(id_permiso, nombre, descripcion) VALUES (682, '[produccion]AprobarRegenciaActividadApoyo', 'Permite a regencia aprobar o rechazar una actividad de apoyo realizada.');
 
 INSERT INTO seguridad.permisos_menu_principal(id_permiso, id_menu_principal) VALUES (682, 632);
+
+ALTER TABLE PRODUCCION.ACTIVIDAD_APOYO
+ADD COLUMN version_anterior INT;
+
+ALTER TABLE PRODUCCION.RESPUESTA_AA
+ADD COLUMN version_usada INT;
+
+ALTER TABLE PRODUCCION.RESPUESTA_PXP
+ADD COLUMN version_usada INT;
+
+ALTER TABLE PRODUCCION.RESPUESTA_AA
+ADD COLUMN OBSERVACIONES CHARACTER VARYING (200);

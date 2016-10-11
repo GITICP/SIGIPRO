@@ -21,6 +21,7 @@ public class Respuesta_AA {
 
     private int id_respuesta;
     private int id_historial;
+    private int version_usada;
     private String nombre;
     private Actividad_Apoyo actividad;
     private int version;
@@ -31,6 +32,7 @@ public class Respuesta_AA {
     private Usuario usuario_aprobar_regencia;
     private String respuestaString;
     private SQLXML respuesta;
+    private String observaciones;
     //1. Habilitado
     //2. Habilitado pero incompleto
     //3. Cerrado requiere aprobacion
@@ -42,6 +44,22 @@ public class Respuesta_AA {
     private List<Respuesta_AA> historial;
 
     public Respuesta_AA() {
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public int getVersion_usada() {
+        return version_usada;
+    }
+
+    public void setVersion_usada(int version_usada) {
+        this.version_usada = version_usada;
     }
 
     public boolean isAprobacion_coordinacion() {

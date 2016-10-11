@@ -42,13 +42,13 @@
                             <h3><i class="fa fa-flask"></i> ${actividad.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Volver a Realizados</a>
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}&version=${actividad.getVersion()}">Volver a Realizados</a>
                                 </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el actividad de actividad" data-href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=eliminar&id_actividad=${actividad.getId_actividad()}">Eliminar</a>
                                 </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 670)}">
-                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=editar&id_actividad=${actividad.getId_actividad()}">Editar</a>
+                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=editar&id_actividad=${actividad.getId_actividad()}&version=${actividad.getVersion()}">Editar</a>
                                 </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 681)}">
                                     <c:choose>
@@ -70,7 +70,7 @@
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre:</strong></td> <td>${actividad.getNombre()} </td></tr>
-                                <tr><td> <strong>Categoría de Actividad de Apoyo</strong></td> <td>${actividad.getCategoria().getNombre()} </td></tr>
+                                <tr><td> <strong>Categoría de Actividad de Apoyo:</strong></td> <td>${actividad.getCategoria().getNombre()} </td></tr>
                                 <tr><td> <strong>Estado:</strong> <td>
                                         <c:choose>
                                             <c:when test="${actividad.isEstado()}">

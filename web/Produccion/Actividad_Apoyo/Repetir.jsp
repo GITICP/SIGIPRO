@@ -48,6 +48,7 @@
                             <form method="post" class="form-horizontal" action="Actividad_Apoyo" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="repetir" name="accion" />
                                 <input type="hidden" value="${respuesta.getId_respuesta()}" name="id_respuesta" />
+                                <input type="hidden" value="${respuesta.getVersion_usada()}" name="version" />
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="nombre" class="control-label">*Identificador</label>

@@ -123,6 +123,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             add("aprobar");
             
             add("aprobarrespuesta");
+            add("rechazarrespuesta");
             add("completarrespuesta");
         }
     };
@@ -215,11 +216,12 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/Ver.jsp";
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        int version = Integer.parseInt(request.getParameter("version"));
         ProduccionXSLT xslt;
         Actividad_Apoyo aa;
         
         try {
-            aa = dao.obtenerActividad_Apoyo(id_actividad);
+            aa = dao.obtenerActividad_Apoyo(id_actividad, version);
             xslt = produccionxsltdao.obtenerProduccionXSLTVerFormulario();
             if (aa.getEstructura() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, aa.getEstructura());
@@ -240,7 +242,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerActividad.jsp";
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
-        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        int version = Integer.parseInt(request.getParameter("version"));
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad,version);
         List<Respuesta_AA> respuestas = dao.obtenerRespuestas(actividad);
         request.setAttribute("actividad", actividad);
         request.setAttribute("listaRespuestas", respuestas);
@@ -248,10 +251,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         
     }
     
-    protected void getVeractividad(HttpServletRequest request, HttpServletResponse response, int id_actividad) throws ServletException, IOException {
+    protected void getVeractividad(HttpServletRequest request, HttpServletResponse response, Actividad_Apoyo aa) throws ServletException, IOException {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerActividad.jsp";
-        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(aa.getId_actividad(),aa.getVersion());
         List<Respuesta_AA> respuestas = dao.obtenerRespuestas(actividad);
         request.setAttribute("actividad", actividad);
         request.setAttribute("listaRespuestas", respuestas);
@@ -323,7 +326,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         
         try {
             raa = dao.obtenerHistorialRespuesta(id_historial);
-            raa.setActividad(dao.obtenerActividad_Apoyo(raa.getActividad().getId_actividad()));
+            raa.setActividad(dao.obtenerActividad_Apoyo(raa.getActividad().getId_actividad(),raa.getVersion_usada()));
             xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (raa.getRespuesta() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, raa.getRespuesta());
@@ -349,7 +352,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         
         try {
             r = dao.obtenerRespuesta(id_respuesta);
-            r.setActividad(dao.obtenerActividad_Apoyo(r.getActividad().getId_actividad()));
+            r.setActividad(dao.obtenerActividad_Apoyo(r.getActividad().getId_actividad(),r.getVersion_usada()));
             xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
             if (r.getRespuesta() != null) {
                 String formulario = helper_transformaciones.transformar(xslt, r.getRespuesta());
@@ -399,7 +402,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         validarPermiso(670, request);
         String redireccion = "Actividad_Apoyo/Editar.jsp";
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
-        Actividad_Apoyo aa = dao.obtenerActividad_Apoyo(id_actividad);
+        int version = Integer.parseInt(request.getParameter("version"));
+        Actividad_Apoyo aa = dao.obtenerActividad_Apoyo(id_actividad,version);
         
         HelperXML xml = new HelperXML(aa.getEstructura(), "produccion");
         
@@ -549,7 +553,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         String redireccion = "Actividad_Apoyo/Realizar.jsp";
         
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
-        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        int version = Integer.parseInt(request.getParameter("version"));
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad,version);
         if (actividad.isAprobacion_gestion()) {
             request.setAttribute("actividad", actividad);
             ProduccionXSLT xslt;
@@ -580,7 +585,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
-        respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
+        respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad(),respuesta.getVersion_usada()));
         if (respuesta.getActividad().isAprobacion_gestion()) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
@@ -641,7 +646,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
         Respuesta_AA respuesta = dao.obtenerRespuesta(id_respuesta);
-        respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad()));
+        respuesta.setActividad(dao.obtenerActividad_Apoyo(respuesta.getActividad().getId_actividad(),respuesta.getVersion_usada()));
         if (respuesta.getEstado() == 2) {
             request.setAttribute("respuesta", respuesta);
             ProduccionXSLT xslt;
@@ -687,6 +692,8 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         boolean resultado = false;
         
         Actividad_Apoyo aa = construirObjeto(parametros, request);
+        Actividad_Apoyo aprobaciones = dao.obtenerAprobaciones(aa.getId_actividad());
+        aa.setAprobacion_gestion(aprobaciones.isAprobacion_gestion());
         int version = dao.obtenerUltimaVersion(aa.getId_actividad());
         resultado = dao.editarActividad_Apoyo(aa, version + 1);
         if (resultado) {
@@ -707,7 +714,10 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
         //1 - Calidad, 2 - Regente, 3 - Coordinador, 4 - Director, 5 - Gestion
         int actor = Integer.parseInt(request.getParameter("actor"));
+        int version = Integer.parseInt(request.getParameter("version"));
         Actividad_Apoyo aa = dao.obtenerAprobaciones(id_actividad);
+        aa.setId_actividad(id_actividad);
+        aa.setVersion(version);
         boolean resultado = false;
         try {
             switch (actor) {
@@ -753,11 +763,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada. Le faltan otras aprobaciones para estar validado."));
             }
-            this.getVeractividad(request, response, aa.getId_actividad());
+            this.getVeractividad(request, response, aa);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser aprobada."));
-            this.getVeractividad(request, response, aa.getId_actividad());
+            this.getVeractividad(request, response, aa);
         }
         
     }
@@ -767,7 +777,9 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         boolean resultado = false;
         Actividad_Apoyo aa = new Actividad_Apoyo();
         int id_actividad = Integer.parseInt(request.getParameter("id_actividad"));
+        int version = Integer.parseInt(request.getParameter("version"));
         aa.setId_actividad(id_actividad);
+        aa.setVersion(version);
         String observaciones = request.getParameter("observaciones");
         String actor = request.getParameter("actor");
         aa.setObservaciones(observaciones + " - Rechazada por: " + actor);
@@ -777,15 +789,14 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(aa.parseJSON(), Bitacora.ACCION_RECHAZAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ACTIVIDADAPOYO, request.getRemoteAddr());
             //*----------------------------*
             request.setAttribute("mensaje", helper.mensajeDeExito("Actividad de Apoyo rechazada correctamente"));
-            this.getVeractividad(request, response, id_actividad);
+            this.getVeractividad(request, response, aa);
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Actividad de Apoyo no pudo ser rechazada. Inténtelo de nuevo."));
-            this.getVeractividad(request, response, id_actividad);
+            this.getVeractividad(request, response, aa);
         }
     }
     
     protected void postAprobarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(679, request);
         boolean resultado = false;
         //1- Coordinacion, 2-Regencia
         int actor = Integer.parseInt(request.getParameter("actor"));
@@ -817,9 +828,40 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         }
     }
     
+    protected void postRechazarrespuesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resultado = false;
+        //1- Coordinacion, 2-Regencia
+        int actor = Integer.parseInt(request.getParameter("actor"));
+        int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        int version = Integer.parseInt(request.getParameter("version"));
+        String observaciones = request.getParameter("observaciones_respuesta");
+        Respuesta_AA raa = new Respuesta_AA();
+        Actividad_Apoyo requisitos = dao.obtenerRequerimientosAprobacion(id_respuesta);
+        raa.setId_respuesta(id_respuesta);
+        raa.setVersion(version);
+        if (actor == 1) {
+            observaciones += " [Rechazado por Coordinación]";
+        } else {
+            observaciones += " [Rechazado por Regencia]";
+        }
+        raa.setObservaciones(observaciones);
+        resultado = dao.rechazarRespuesta(raa, actor,requisitos);
+        if (resultado) {
+            //Funcion que genera la bitacora
+            bitacora.setBitacora(raa.parseJSON(), Bitacora.ACCION_RECHAZAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
+            //*----------------------------*
+            request.setAttribute("mensaje", helper.mensajeDeExito("Respuesata de Actividad de Apoyo rechazada correctamente"));
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Respuessta Actividad de Apoyo no pudo ser rechazada. Inténtelo de nuevo."));
+            this.getVeractividad(request, response, dao.obtenerIdActividad(id_respuesta));
+        }
+    }
+    
     protected void postRealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id_actividad = Integer.parseInt(this.obtenerParametro("id_actividad"));
-        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad);
+        int version = Integer.parseInt(this.obtenerParametro("version"));
+        Actividad_Apoyo actividad = dao.obtenerActividad_Apoyo(id_actividad,version);
         
         Respuesta_AA resultado = new Respuesta_AA();
         resultado.setActividad(actividad);
@@ -863,7 +905,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
-            this.getVeractividad(request, response, actividad.getId_actividad());
+            this.getVeractividad(request, response, actividad);
             
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
@@ -879,7 +921,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int id_respuesta = Integer.parseInt(this.obtenerParametro("id_respuesta"));
         
         Respuesta_AA resultado = dao.obtenerRespuesta(id_respuesta);
-        resultado.setActividad(dao.obtenerActividad_Apoyo(resultado.getActividad().getId_actividad()));
+        resultado.setActividad(dao.obtenerActividad_Apoyo(resultado.getActividad().getId_actividad(),resultado.getVersion_usada()));
         Usuario u = new Usuario();
         int id_usuario = (int) request.getSession().getAttribute("idusuario");
         u.setId_usuario(id_usuario);
@@ -918,7 +960,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_REPETIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta registrada correctamente."));
-            this.getVeractividad(request, response, resultado.getActividad().getId_actividad());
+            this.getVeractividad(request, response, resultado.getActividad());
             
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
@@ -978,7 +1020,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_COMPLETAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESPUESTAAA, request.getRemoteAddr());
             
             request.setAttribute("mensaje", helper.mensajeDeExito("Respuesta completada correctamente."));
-            this.getVeractividad(request, response, resultado.getActividad().getId_actividad());
+            this.getVeractividad(request, response, resultado.getActividad());
             
         } catch (SQLException | ParserConfigurationException | SAXException | IOException | DOMException | IllegalArgumentException | TransformerException ex) {
             ex.printStackTrace();
