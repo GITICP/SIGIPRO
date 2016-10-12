@@ -254,7 +254,7 @@
 
 <t:modal idModal="modalRechazarRespuesta" titulo="Rechazar Respuesta de Actividad de Apoyo">
     <jsp:attribute name="form">
-        <div class="widget-content" id="class-aprobar-respuesta">
+        <div class="widget-content" id="class-rechazar-respuesta">
             <form class="form-horizontal" id="rechazarRespuesta" autocomplete="off" method="post" action="Actividad_Apoyo">
                 <input hidden="true" name="accion" value="rechazarrespuesta">
                 <input hidden="true" id='id_respuesta' name='id_respuesta' value="">

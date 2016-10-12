@@ -57,6 +57,9 @@
                                 <c:if test="${respuesta.getUsuario_aprobar_regencia().getId_usuario()!=0}">
                                     <tr><td> <strong>Usuario aprobar Regencia:</strong></td> <td>${respuesta.getUsuario_aprobar_regencia().getNombre_completo()} </td></tr>
                                 </c:if>
+                                <c:if test="${respuesta.getObservaciones()!=null}">
+                                    <tr><td> <strong>Observaciones de rechazo:</strong></td> <td>${respuesta.getObservaciones()} </td></tr>
+                                </c:if>
                             </table>
                             <br>
                             <div class="col-md-12">
