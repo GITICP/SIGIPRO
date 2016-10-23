@@ -21,6 +21,7 @@ public class Factura {
     private Orden_compra orden;
     private Date fecha;
     private int monto;
+    private float monto_pendiente;
     private Date fecha_vencimiento;
     private String documento_1;
     private String documento_2;
@@ -43,6 +44,14 @@ public class Factura {
 
     public void setCorreo_enviar(String correo_enviar) {
         this.correo_enviar = correo_enviar;
+    }
+
+    public float getMonto_pendiente() {
+        return monto_pendiente;
+    }
+
+    public void setMonto_pendiente(float monto_pendiente) {
+        this.monto_pendiente = monto_pendiente;
     }
     
     public String getDetalle() {

@@ -61,10 +61,10 @@
                 <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${tratamiento.getObservaciones()}   </td> </center> </tr>
                 <tr><td> <strong>Estado: </strong>  </td> <center> 
                 <c:choose>
-                        <c:when test="${tratamiento.getEstado().equals('A')}">
+                        <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
                            <td><font color="green">${tratamiento.getEstado()}</font></td>
                         </c:when>
-                        <c:when test="${tratamiento.getEstado().equals('B')}">
+                        <c:when test="${tratamiento.getEstado().equals('Normal')}">
                             <td><font color="blue">${tratamiento.getEstado()}</font></td>
                         </c:when>
                         <c:otherwise>

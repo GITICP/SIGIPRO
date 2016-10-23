@@ -396,9 +396,9 @@
                                             <div class="input-group">
                                                 <select id="proyecto" class="select2" name="proyecto" required
                                                     oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                    <option value="404"> 404 (Cuenta 0418-00)</option>
-                                                    <option value="1965"> 1965 (Cuenta 1770-00)</option>
-                                                    <option value="2815"> 2815 (Cuenta 2541-00)</option>
+                                                    <option value="404"> 0418-00</option>
+                                                    <option value="1965"> 1770-00</option>
+                                                    <option value="2815"> 2541-00</option>
                                                 </select>
                                             </div>
                                         </div>

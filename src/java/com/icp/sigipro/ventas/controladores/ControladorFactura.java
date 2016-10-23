@@ -17,10 +17,13 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
 import com.icp.sigipro.ventas.dao.ListaDAO;
 import com.icp.sigipro.ventas.dao.Orden_compraDAO;
+import com.icp.sigipro.ventas.dao.PagoDAO;
 import com.icp.sigipro.ventas.modelos.Lista;
 import com.icp.sigipro.ventas.modelos.Orden_compra;
+import com.icp.sigipro.ventas.modelos.Pago;
 import com.icp.sigipro.webservices.FacturasPagosWs;
 import com.icp.sigipro.webservices.FacturasWs;
+import com.icp.sigipro.webservices.PagosWs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -61,6 +64,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class ControladorFactura extends SIGIPROServlet {
 
     private final FacturaDAO dao = new FacturaDAO();
+    private final PagoDAO pdao = new PagoDAO();
     private final Orden_compraDAO odao = new Orden_compraDAO();
     private final ClienteDAO cdao = new ClienteDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
@@ -172,6 +176,14 @@ public class ControladorFactura extends SIGIPROServlet {
         int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
 
+        /*
+        try{
+            ActualizarEstadosYPagos();
+        }
+        catch (SIGIPROException e){
+        }
+        */
+        
         List<Factura> facturas = dao.obtenerFacturas();
         request.setAttribute("listaFacturas", facturas);
         String redireccion = "Factura/index.jsp";
@@ -179,18 +191,129 @@ public class ControladorFactura extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
+        
+        /*
+        try{
+            ActualizarEstadosYPagos();
+        }
+        catch (SIGIPROException e){
+        }
+        */
         
         String redireccion = "Factura/Ver.jsp";
         int id_factura = Integer.parseInt(request.getParameter("id_factura"));
         try {
             Factura c = dao.obtenerFactura(id_factura);
+            List<Pago> pagos = pdao.obtenerPagos(id_factura);
             request.setAttribute("factura", c);
+            request.setAttribute("pagos", pagos);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void getActualizarestados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
+        validarPermisos(permisos, listaPermisos);
+        
+        String redireccion = "Factura/index.jsp";
+        boolean resultado = false;
+        try {
+            List<Factura> facturas = dao.obtenerFacturas();
+            String nuevoEstado = "";
+            for (Factura f:facturas){
+                //actualizar estado por cada factura una por una
+                if (f.getNumero()!=0 && f.getProyecto()!=0){
+                    try{
+                    FacturasPagosWs estadofactura = estadoFactura(f.getNumero(),f.getProyecto());
+                    if (estadofactura != null) {
+                        //Estado
+                        nuevoEstado = estadofactura.getEstadoFactura();
+                        resultado = dao.actualizarEstado(f, nuevoEstado);
+                        
+                        //Pagos
+                        float monto_pagos = 0;
+                        if (!estadofactura.getListPagos().getPagosWs().isEmpty()){
+                            for (PagosWs pago:estadofactura.getListPagos().getPagosWs()){
+                                //Verificar si el pago está entonces lo actualiza, sino, agregarlo y sumarlo al monto_pagos
+                                if (!pdao.existePago(pago.getCodigo())){
+                                    Pago pago_nuevo = new Pago();
+                                    
+                                    pago_nuevo.setFactura(f);
+                                    pago_nuevo.setCodigo(pago.getCodigo());
+                                    pago_nuevo.setMonto(pago.getMonto().floatValue());
+                                    pago_nuevo.setNota(pago.getNota());
+                                    pago_nuevo.setFecha(pago.getFecha());
+                                    pago_nuevo.setConsecutive(pago.getConsecutive());
+                                    pago_nuevo.setMoneda(pago.getMoneda());
+                                    pago_nuevo.setCodigo_remision(pago.getCodigoRemision());
+                                    pago_nuevo.setConsecutive_remision(pago.getConsecutiveRemision());
+                                    pago_nuevo.setFecha_remision(pago.getFechaRemision());
+                                    
+                                    pdao.insertarPago(pago_nuevo);
+                                    
+                                    monto_pagos += pago_nuevo.getMonto();
+                                }
+                                else{
+                                    Pago pago_viejo = new Pago();
+                                    
+                                    pago_viejo.setFactura(f);
+                                    pago_viejo.setCodigo(pago.getCodigo());
+                                    pago_viejo.setMonto(pago.getMonto().floatValue());
+                                    pago_viejo.setNota(pago.getNota());
+                                    pago_viejo.setFecha(pago.getFecha());
+                                    pago_viejo.setConsecutive(pago.getConsecutive());
+                                    pago_viejo.setMoneda(pago.getMoneda());
+                                    pago_viejo.setCodigo_remision(pago.getCodigoRemision());
+                                    pago_viejo.setConsecutive_remision(pago.getConsecutiveRemision());
+                                    pago_viejo.setFecha_remision(pago.getFechaRemision());
+                                    
+                                    pdao.actualizarPago(pago_viejo);
+                                    
+                                    monto_pagos += pago_viejo.getMonto();
+                                }
+                            }
+                            float monto_pendiente = f.getMonto() - monto_pagos;
+                            resultado = dao.actualizarMontoPendiente(f, monto_pendiente);
+                        }
+                    }
+                    else{
+                        request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
+                        List<Factura> facturas1 = dao.obtenerFacturas();
+                        request.setAttribute("listaFacturas", facturas1);
+                        redireccionar(request, response, redireccion);
+                        return;
+                    }
+                    }
+                    catch (javax.xml.ws.soap.SOAPFaultException soapFaultException){
+                        System.out.println("Error SOAP: "+soapFaultException);
+                        request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
+                        List<Factura> facturas1 = dao.obtenerFacturas();
+                        request.setAttribute("listaFacturas", facturas1);
+                        redireccionar(request, response, redireccion);
+                        return;
+                    }
+                }
+            }
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
+            redireccionar(request, response, redireccion);
+            return;
+        }
+        if (resultado) {
+            List<Factura> facturas = dao.obtenerFacturas();
+            request.setAttribute("listaFacturas", facturas);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Actualización de estados exitosa"));
+        } else {
+            List<Factura> facturas = dao.obtenerFacturas();
+            request.setAttribute("listaFacturas", facturas);
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
         }
         redireccionar(request, response, redireccion);
     }
@@ -222,49 +345,6 @@ public class ControladorFactura extends SIGIPROServlet {
         request.setAttribute("tipos", tipos);
         request.setAttribute("accion", "Editar");
         
-        redireccionar(request, response, redireccion);
-    }
-    
-    protected void getActualizarestados(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
-        boolean resultado = false;
-        int[] permisos = {701, 704, 1};
-        String redireccion = "Factura/index.jsp";
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        try {
-            List<Factura> facturas = dao.obtenerFacturas();
-            String nuevoEstado = "";
-            for (Factura f:facturas){
-                //actualizar estado por cada factura una por una
-                if (f.getNumero()!=0 && f.getProyecto()!=0){
-                    FacturasPagosWs estadofactura = estadoFactura(f.getNumero(),f.getProyecto());
-                    if (estadofactura != null) {
-                        resultado = dao.actualizarEstado(f, nuevoEstado);
-                        nuevoEstado = estadofactura.getEstadoFactura();
-                    }
-                    else{
-                        request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
-                        List<Factura> facturas1 = dao.obtenerFacturas();
-                        request.setAttribute("listaFacturas", facturas1);
-                        redireccionar(request, response, redireccion);
-                        return;
-                    }
-                }
-            }
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", helper.mensajeDeError("Error del servidor de FUNDEVI"));
-            redireccionar(request, response, redireccion);
-            return;
-        }
-        if (resultado) {
-            List<Factura> facturas = dao.obtenerFacturas();
-            request.setAttribute("listaFacturas", facturas);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Actualización de estados exitosa"));
-        } else {
-            List<Factura> facturas = dao.obtenerFacturas();
-            request.setAttribute("listaFacturas", facturas);
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-        }
         redireccionar(request, response, redireccion);
     }
     // </editor-fold>
@@ -327,8 +407,16 @@ public class ControladorFactura extends SIGIPROServlet {
                             moneda = 2;
                         //Realiza el detalleServicio en el WebService de Fundevi
                         tr.setNombre(generarNombreFactura(tr));
-                        FacturasWs fWS = detalleServicio(resultado,request.getSession().getAttribute("usuario").toString(),dao_us.obtenerIDUsuario("usuario"), tr.getNombre(),tr.getProyecto(),
+                        FacturasWs fWS;
+                        if (tr.getCorreo_enviar() != null){
+                            fWS = detalleServicio(resultado,request.getSession().getAttribute("usuario").toString(),dao_us.obtenerIDUsuario("usuario"), tr.getNombre(),tr.getProyecto(),
                                 moneda,tr.getPlazo(),new BigDecimal(0),new BigDecimal(tr.getMonto()),new BigDecimal(tr.getMonto()),tr.getCorreo_enviar(),"",tr.getDetalle(),generarLlave(resultado,tr.getProyecto(),tr.getMonto(),tr.getFecha_S()));
+                        }
+                        else{
+                            fWS = detalleServicio(resultado,request.getSession().getAttribute("usuario").toString(),dao_us.obtenerIDUsuario("usuario"), tr.getNombre(),tr.getProyecto(),
+                                moneda,tr.getPlazo(),new BigDecimal(0),new BigDecimal(tr.getMonto()),new BigDecimal(tr.getMonto()),""
+                                    ,"",tr.getDetalle(),generarLlave(resultado,tr.getProyecto(),tr.getMonto(),tr.getFecha_S()));
+                        }
                         //Obtener los valores de respuesta del WS y asignarlos a la factura
                         if (fWS == null){
                             request.setAttribute("mensaje", helper.mensajeDeAdvertencia(mensaje + "Error al enviar Factura a FUNDEVI."));
@@ -427,6 +515,13 @@ public class ControladorFactura extends SIGIPROServlet {
             request.setAttribute("mensaje", helper.mensajeDeError("Error al procesar su petición. Inténtelo de nuevo."));
             this.getIndex(request, response);
             throw new ServletException("Cannot parse multipart request.", e);
+        }
+        catch (javax.xml.ws.soap.SOAPFaultException soapFaultException){
+            System.out.println("Error SOAP: "+soapFaultException);
+            request.setAttribute("mensaje", helper.mensajeDeError("Error al enviar la factura a FUNDEVI."));
+            List<Factura> facturas1 = dao.obtenerFacturas();
+            request.setAttribute("listaFacturas", facturas1);
+            redireccionar(request, response, "Factura/index.jsp");
         }
 
     }   
@@ -670,6 +765,81 @@ public class ControladorFactura extends SIGIPROServlet {
         }
     }
 
+    public String ActualizarEstadosYPagos() throws IOException, SIGIPROException {
+        boolean resultado = false;
+        try {
+            List<Factura> facturas = dao.obtenerFacturas();
+            String nuevoEstado = "";
+            for (Factura f:facturas){
+                //actualizar estado por cada factura una por una
+                if (f.getNumero()!=0 && f.getProyecto()!=0){
+                    FacturasPagosWs estadofactura = estadoFactura(f.getNumero(),f.getProyecto());
+                    if (estadofactura != null) {
+                        //Estado
+                        nuevoEstado = estadofactura.getEstadoFactura();
+                        resultado = dao.actualizarEstado(f, nuevoEstado);
+                        
+                        //Pagos
+                        float monto_pagos = 0;
+                        if (!estadofactura.getListPagos().getPagosWs().isEmpty()){
+                            for (PagosWs pago:estadofactura.getListPagos().getPagosWs()){
+                                //Verificar si el pago está entonces lo actualiza, sino, agregarlo y sumarlo al monto_pagos
+                                if (!pdao.existePago(pago.getCodigo())){
+                                    Pago pago_nuevo = new Pago();
+                                    
+                                    pago_nuevo.setFactura(f);
+                                    pago_nuevo.setCodigo(pago.getCodigo());
+                                    pago_nuevo.setMonto(pago.getMonto().floatValue());
+                                    pago_nuevo.setNota(pago.getNota());
+                                    pago_nuevo.setFecha(pago.getFecha());
+                                    pago_nuevo.setConsecutive(pago.getConsecutive());
+                                    pago_nuevo.setMoneda(pago.getMoneda());
+                                    pago_nuevo.setCodigo_remision(pago.getCodigoRemision());
+                                    pago_nuevo.setConsecutive_remision(pago.getConsecutiveRemision());
+                                    pago_nuevo.setFecha_remision(pago.getFechaRemision());
+                                    
+                                    pdao.insertarPago(pago_nuevo);
+                                    
+                                    monto_pagos += pago_nuevo.getMonto();
+                                }
+                                else{
+                                    Pago pago_viejo = new Pago();
+                                    
+                                    pago_viejo.setFactura(f);
+                                    pago_viejo.setCodigo(pago.getCodigo());
+                                    pago_viejo.setMonto(pago.getMonto().floatValue());
+                                    pago_viejo.setNota(pago.getNota());
+                                    pago_viejo.setFecha(pago.getFecha());
+                                    pago_viejo.setConsecutive(pago.getConsecutive());
+                                    pago_viejo.setMoneda(pago.getMoneda());
+                                    pago_viejo.setCodigo_remision(pago.getCodigoRemision());
+                                    pago_viejo.setConsecutive_remision(pago.getConsecutiveRemision());
+                                    pago_viejo.setFecha_remision(pago.getFechaRemision());
+                                    
+                                    pdao.actualizarPago(pago_viejo);
+                                    
+                                    monto_pagos += pago_viejo.getMonto();
+                                }
+                            }
+                            float monto_pendiente = f.getMonto() - monto_pagos;
+                            resultado = dao.actualizarMontoPendiente(f, monto_pendiente);
+                        }
+                    }
+                    else{
+                        return "Error del servidor de FUNDEVI";
+                    }
+                }
+            }
+        } catch (SIGIPROException ex) {
+            return "Error del servidor de FUNDEVI";
+        }
+        if (resultado) {
+            return "Actualización de estados exitosa";
+        } else {
+            return "Ocurrió un error al procesar su petición";
+        }
+    }
+        
     private static FacturasWs detalleServicio(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, BigDecimal porcentajeDescuento, BigDecimal subtotalFactura, BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
         com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = null;
         com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = null;
@@ -723,15 +893,4 @@ public class ControladorFactura extends SIGIPROServlet {
     
   // </editor-fold>
 
-    private static FacturasWs detalleServicio_1(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal porcentajeDescuento, java.math.BigDecimal subtotalFactura, java.math.BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
-        return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
-    }
-
-    private static FacturasWs detalleServicio_2(int codigoOrden, java.lang.String usuarioEjecuta, int codUsuarioEjecuta, java.lang.String nombreFactura, int proyecto, int moneda, int plazo, java.math.BigDecimal porcentajeDescuento, java.math.BigDecimal subtotalFactura, java.math.BigDecimal totalFactura, java.lang.String correoEnviar, java.lang.String notas, java.lang.String detalle, java.lang.String llave) {
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR service = new com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCR();
-        com.icp.sigipro.webservices.MóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap port = service.getMóduloX0020ServiciosX0020ExternosX0020X0028MSEX0029X0020X0020FundaciónX0020UCRSoap();
-        return port.detalleServicio(codigoOrden, usuarioEjecuta, codUsuarioEjecuta, nombreFactura, proyecto, moneda, plazo, porcentajeDescuento, subtotalFactura, totalFactura, correoEnviar, notas, detalle, llave);
-    }
 }

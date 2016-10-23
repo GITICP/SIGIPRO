@@ -50,6 +50,7 @@
                     <th>Orden de Compra</th>
                     <th>Fecha</th>
                     <th>Monto</th>
+                    <th>Monto Pendiente</th>
                     <th>Moneda</th>
                     <th>Fecha de Vencimiento</th>
                     <th>Tipo</th>
@@ -68,7 +69,17 @@
                         </a>
                       </td>
                       <td>${factura.getNumero()}</td>
-                      <td>${factura.getProyecto()}</td>
+                      <c:choose>
+                            <c:when test="${factura.getProyecto() == 404}">
+                                <td>0418-00</td>
+                            </c:when>
+                            <c:when test="${factura.getProyecto() == 1965}">
+                                <td>1770-00</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>2541-00</td>
+                            </c:otherwise>
+                        </c:choose>
                       <td>${factura.getCliente().getNombre()}</td>
                       <c:choose>
                             <c:when test="${factura.getOrden().getId_orden() == 0}">
@@ -93,10 +104,31 @@
                                 <td>${factura.getMonto()}</td>
                             </c:otherwise>
                         </c:choose>
+                      <c:choose>
+                            <c:when test="${factura.getMoneda() == 'Colones'}">
+                              <td>&#8353;${factura.getMonto_pendiente()}</td>
+                            </c:when>
+                            <c:when test="${factura.getMoneda() == 'Dólares'}">
+                              <td>$${factura.getMonto_pendiente()}</td>
+                            </c:when>
+                            <c:when test="${factura.getMoneda() == 'Euros'}">
+                              <td>&euro;${factura.getMonto_pendiente()}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${factura.getMonto_pendiente()}</td>
+                            </c:otherwise>
+                        </c:choose>
                       <td>${factura.getMoneda()}</td>
                       <td>${factura.getFecha_vencimiento_S()}</td>
                       <td>${factura.getTipo()}</td>
-                      <td>${factura.getEstado()}</td>
+                      <c:choose>
+                        <c:when test="${factura.getEstado().equals('Cancelado')}">
+                           <td><font color="green">${factura.getEstado()}</font></td>
+                        </c:when>
+                        <c:otherwise>
+                            <td><font color="blue">${factura.getEstado()}</font></td>
+                        </c:otherwise>
+                    </c:choose>
                     </tr>
                   </c:forEach>
                 </tbody>
