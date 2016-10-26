@@ -31,7 +31,7 @@ $(document).ready(function () {
                   </table>\
                   <div class='form-group'>\
                     <div class='modal-footer'>\
-                      <button type='button' class='btn btn-primary' data-dismiss='modal'><i class='fa fa-times-circle'></i> Aceptar</button>\
+                      <a type='button' class='btn btn-warning' href='/SIGIPRO/Calendario/Calendario?accion=editar&id_evento="+calEvent.id+"'><i class='fa fa-times-circle'></i> Editar</a>\
                       <button type='button' class='btn btn-danger' data-dismiss='modal' onclick='eliminar_evento("+calEvent.id+")'><i class='fa fa-times-circle'></i> Eliminar Evento</button>\
                     </div>\
                   </div>\
