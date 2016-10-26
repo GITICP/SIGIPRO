@@ -294,11 +294,11 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         int version = dao.obtenerVersionRespuesta(id_historial);
         Actividad_Apoyo aprobaciones = dao.obtenerRequerimientosAprobacion(id_respuesta);
         boolean resultado = false;
+        Respuesta_AA respuesta = new Respuesta_AA();
         try {
             resultado = dao.activarVersionRespuesta(version, id_respuesta, aprobaciones.isRequiere_coordinacion(), aprobaciones.isRequiere_regencia());
             if (resultado) {
                 //Funcion que genera la bitacora 
-                Respuesta_AA respuesta = new Respuesta_AA();
                 respuesta.setId_historial(id_historial);
                 respuesta.setId_respuesta(id_respuesta);
                 respuesta.setVersion(version);
@@ -308,7 +308,7 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
             } else {
                 request.setAttribute("mensaje", helper.mensajeDeError("Versión de Respuesta no pudo ser activado."));
             }
-            this.getIndex(request, response);
+            this.getVerrespuesta(request, response, respuesta);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Versión de Respuesta no pudo ser activado."));
@@ -347,6 +347,32 @@ public class ControladorActividad_Apoyo extends SIGIPROServlet {
         validarPermisosMultiple(permisos, request);
         String redireccion = "Actividad_Apoyo/VerRespuesta.jsp";
         int id_respuesta = Integer.parseInt(request.getParameter("id_respuesta"));
+        ProduccionXSLT xslt;
+        Respuesta_AA r;
+
+        try {
+            r = dao.obtenerRespuesta(id_respuesta);
+            r.setActividad(dao.obtenerActividad_Apoyo(r.getActividad().getId_actividad(), r.getVersion_usada()));
+            xslt = produccionxsltdao.obtenerProduccionXSLTVerResultado();
+            if (r.getRespuesta() != null) {
+                String formulario = helper_transformaciones.transformar(xslt, r.getRespuesta());
+                request.setAttribute("cuerpo_datos", formulario);
+            } else {
+                request.setAttribute("cuerpo_datos", null);
+            }
+            request.setAttribute("respuesta", r);
+            redireccionar(request, response, redireccion);
+        } catch (TransformerException | SIGIPROException | SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Ha ocurrido un error inesperado. Notifique al administrador del sistema."));
+        }
+
+    }
+    
+    protected void getVerrespuesta(HttpServletRequest request, HttpServletResponse response, Respuesta_AA respuesta) throws ServletException, IOException {
+        validarPermisosMultiple(permisos, request);
+        String redireccion = "Actividad_Apoyo/VerRespuesta.jsp";
+        int id_respuesta = respuesta.getId_respuesta();
         ProduccionXSLT xslt;
         Respuesta_AA r;
 

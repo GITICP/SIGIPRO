@@ -111,7 +111,8 @@
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Respuesta</th>
-                                        <th>Versión</th>
+                                        
+                                        <th>Versión de Respuesta</th>
                                         <th>Usuario Realizar</th>
                                         <th>Acción</th>
                                     </tr>

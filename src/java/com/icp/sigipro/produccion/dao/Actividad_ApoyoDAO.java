@@ -938,7 +938,7 @@ public class Actividad_ApoyoDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT r.id_respuesta, r.version, r.estado, r.id_actividad,r.version_usada hr.nombre,hr.respuesta, hr.id_usuario_realizar, u.nombre_completo, hr.fecha "
+            consulta = getConexion().prepareStatement(" SELECT r.id_respuesta, r.version, r.estado, r.id_actividad,r.version_usada, hr.nombre,hr.respuesta, hr.id_usuario_realizar, u.nombre_completo, hr.fecha "
                     + "FROM produccion.historial_respuesta_aa as hr  "
                     + "LEFT JOIN produccion.respuesta_aa as r ON (hr.id_respuesta = r.id_respuesta) "
                     + "LEFT JOIN seguridad.usuarios as u ON (hr.id_usuario_realizar = u.id_usuario) "
