@@ -95,11 +95,35 @@ public class SolicitudDAO extends DAO {
     public int obtenerProximoId() {
         int nextval = 0;
         try {
-            PreparedStatement consulta = getConexion().prepareStatement("SELECT MAX(ID_SOLICITUD) AS LAST_VALUE FROM control_calidad.solicitudes;");
+            PreparedStatement consulta = getConexion().prepareStatement("SELECT numero_solicitud AS LAST_VALUE, fecha_solicitud FROM control_calidad.solicitudes order by fecha_solicitud desc limit 1;");
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
-                int currval = resultadoConsulta.getInt("last_value");
-                nextval = currval + 1;
+                String currval = resultadoConsulta.getString("last_value");
+                String[] parts = currval.split("-");
+                String ultimoConsecutivo = parts[0];
+                String ultimoAnno = parts[1];
+                
+                Date fechaActual = new Date();
+                DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+                DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
+                int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+                int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
+
+                String numeroAnno = "";
+
+                if (mes >= 10) {
+                    numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
+                } else {
+                    numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
+                }
+                
+                if (numeroAnno.equals(ultimoAnno)){
+                    nextval = Integer.parseInt(ultimoConsecutivo)+ 1;
+                }
+                else{
+                    nextval = 1;
+                }
+                
             }
             resultadoConsulta.close();
             consulta.close();
