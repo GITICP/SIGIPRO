@@ -78,7 +78,7 @@
             </div>
             <div class="col-md-12">
               <div class="col-md-6">
-                <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="start_date" value="${cara.getFecha_eliminacionhembra_f_S()}" class="form-control sigiproDatePickerEspecial" name="start_date" data-date-format="yyyy-mm-dd" required
+                <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="start_date" value="" class="form-control sigiproDatePickerEspecial" name="start_date" data-date-format="yyyy-mm-dd" required
                         oninvalid="setCustomValidity('Este campo es requerido ')"
                         onchange="setCustomValidity('')" style="width:220px;">
               </div>
@@ -93,7 +93,7 @@
             </div>
             <div class="col-md-12">
               <div class="col-md-6">
-                <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="end_date" value="${cara.getFecha_eliminacionhembra_f_S()}" class="form-control sigiproDatePickerEspecial" name="end_date" data-date-format="yyyy-mm-dd" 
+                <input  type="text" placeholder="Escoja la fecha" pattern="\d{4}-\d{1,2}-\d{1,2}" id="end_date" value="" class="form-control sigiproDatePickerEspecial" name="end_date" data-date-format="yyyy-mm-dd" 
                         oninvalid="setCustomValidity('Este campo es requerido ')"
                         onchange="setCustomValidity('')" style="width:220px;">
               </div>

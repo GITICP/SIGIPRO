@@ -5,7 +5,10 @@
  */
 package com.icp.sigipro.calendario.modelos;
 import java.lang.reflect.Field;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 /**
  *
@@ -19,6 +22,26 @@ public class Evento {
   private String description;
   private Boolean allDay;
 
+  private String formatearFecha(Date fecha) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(fecha);
+    }
+  public String getStart_S() {
+        if (this.start != null) {
+            Date fecha = new Date(this.start.getTime());
+            return formatearFecha(fecha);
+        } else {
+            return "";
+        }
+    }
+  public String getEnd_S() {
+        if (this.end != null) {
+            Date fecha = new Date(this.end.getTime());
+            return formatearFecha(fecha);
+        } else {
+            return "";
+        }
+    }
   public Integer getId() {
     return id;
   }
@@ -43,6 +66,21 @@ public class Evento {
     else{
     int horas = start.getHours();
     int minutos = start.getMinutes();
+    String minuto;
+    if (minutos==0){
+      minuto = "00";
+    }
+    else
+    {minuto = String.valueOf(minutos);}
+    String hora = String.valueOf(horas);
+
+    return  hora+":"+minuto;}
+  }
+  public String getHoraFin() {
+    if (this.allDay){return "Todo el día";}
+    else{
+    int horas = end.getHours();
+    int minutos = end.getMinutes();
     String minuto;
     if (minutos==0){
       minuto = "00";
