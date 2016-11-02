@@ -21,40 +21,85 @@ public class Respuesta_AA {
 
     private int id_respuesta;
     private int id_historial;
+    private int version_usada;
     private String nombre;
     private Actividad_Apoyo actividad;
     private int version;
     private Timestamp fecha;
     private Usuario usuario_realizar;
-    private Usuario usuario_revisar;
-    private Usuario usuario_aprobar;
+    private Usuario usuario_cerrar;
+    private Usuario usuario_aprobar_coordinacion;
+    private Usuario usuario_aprobar_regencia;
     private String respuestaString;
     private SQLXML respuesta;
+    private String observaciones;
     //1. Habilitado
-    //2. Habilitado requiere revision
-    //3. Revisado requiere aprobacion
+    //2. Habilitado pero incompleto
+    //3. Cerrado requiere aprobacion
     //4. Finalizado
     private int estado;
+    private boolean aprobacion_coordinacion;
+    private boolean aprobacion_regencia;
     
     private List<Respuesta_AA> historial;
 
     public Respuesta_AA() {
     }
 
-    public Usuario getUsuario_revisar() {
-        return usuario_revisar;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setUsuario_revisar(Usuario usuario_revisar) {
-        this.usuario_revisar = usuario_revisar;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
-    public Usuario getUsuario_aprobar() {
-        return usuario_aprobar;
+    public int getVersion_usada() {
+        return version_usada;
     }
 
-    public void setUsuario_aprobar(Usuario usuario_aprobar) {
-        this.usuario_aprobar = usuario_aprobar;
+    public void setVersion_usada(int version_usada) {
+        this.version_usada = version_usada;
+    }
+
+    public boolean isAprobacion_coordinacion() {
+        return aprobacion_coordinacion;
+    }
+
+    public void setAprobacion_coordinacion(boolean aprobacion_coordinacion) {
+        this.aprobacion_coordinacion = aprobacion_coordinacion;
+    }
+
+    public boolean isAprobacion_regencia() {
+        return aprobacion_regencia;
+    }
+
+    public void setAprobacion_regencia(boolean aprobacion_regencia) {
+        this.aprobacion_regencia = aprobacion_regencia;
+    }
+
+    public Usuario getUsuario_cerrar() {
+        return usuario_cerrar;
+    }
+
+    public void setUsuario_cerrar(Usuario usuario_revisar) {
+        this.usuario_cerrar = usuario_revisar;
+    }
+
+    public Usuario getUsuario_aprobar_coordinacion() {
+        return usuario_aprobar_coordinacion;
+    }
+
+    public void setUsuario_aprobar_coordinacion(Usuario usuario_aprobar) {
+        this.usuario_aprobar_coordinacion = usuario_aprobar;
+    }
+
+    public Usuario getUsuario_aprobar_regencia() {
+        return usuario_aprobar_regencia;
+    }
+
+    public void setUsuario_aprobar_regencia(Usuario usuario_aprobar_regencia) {
+        this.usuario_aprobar_regencia = usuario_aprobar_regencia;
     }
 
     public int getEstado() {

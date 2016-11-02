@@ -23,13 +23,12 @@
                             <a href="/SIGIPRO/Produccion/Actividad_Apoyo">Categorías de Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${actividad.getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">Actividades de Apoyo Realizadas</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">Actividades de Apoyo Realizadas</a>
                         </li>
-                        <li class="active"> Realizar Actividad de Apoyo ${actividad.getCategoria().getNombre()} - ${actividad.getNombre()} </li>
-
+                        <li class="active"> Completar Actividad de Apoyo ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} </li>
                     </ul>
                 </div>
             </div>
@@ -40,25 +39,22 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Realizar Actividad de Apoyo ${actividad.getCategoria().getNombre()} - ${actividad.getNombre()} </h3>
+                            <h3><i class="fa fa-gears"></i> Completar Actividad de Apoyo ${respuesta.getActividad().getCategoria().getNombre()} - ${respuesta.getActividad().getNombre()} </h3>
                         </div>
                         ${mensaje}
 
                         <div class="widget-content">
 
                             <form method="post" class="form-horizontal" action="Actividad_Apoyo" autocomplete="off" enctype='multipart/form-data'>
-                                <input type="hidden" value="realizar" name="accion" />
-                                <input type="hidden" value="${actividad.getId_actividad()}" name="id_actividad" />
-                                <input type="hidden" value="${actividad.getVersion()}" name="version" />
-                                <input type="hidden" value="${actividad.getVersion_anterior()}" name="version_anterior" />
-
+                                <input type="hidden" value="repetir" name="accion" />
+                                <input type="hidden" value="${respuesta.getId_respuesta()}" name="id_respuesta" />
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="nombre" class="control-label">*Identificador</label>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <div class="input-group">
-                                                    <input type="text" maxlength="45" placeholder="Identificador de la Instancia de Actividad de Apoyo" class="form-control" name="nombre" value="${actividad.getNombre()}"
+                                                    <input type="text" maxlength="45" placeholder="Identificador de la Instancia de Actividad de Apoyo" class="form-control" name="nombre" value="${respuesta.getNombre()}"
                                                            required
                                                            oninvalid="setCustomValidity('Este campo es requerido')"
                                                            oninput="setCustomValidity('')" > 
@@ -80,7 +76,7 @@
                                                 <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                                             </c:when>
                                             <c:otherwise>
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Realizar Actividad de Apoyo</button>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Completar Actividad de Apoyo</button>
                                             </c:otherwise>
                                         </c:choose>    
                                     </div>

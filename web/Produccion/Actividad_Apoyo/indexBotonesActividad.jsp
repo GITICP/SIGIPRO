@@ -54,7 +54,7 @@
                                        vertical-align:middle;
                                        color:#fff;
                                        background-color:#3071a9;
-                                       border-color:#285e8e;" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">
+                                       border-color:#285e8e;" href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}&version=${actividad.getVersion()}">
                                         ${actividad.getNombre()}
                                     </a>
 

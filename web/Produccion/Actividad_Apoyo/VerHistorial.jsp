@@ -55,10 +55,32 @@
                                 <tr><td> <strong>Nombre:</strong></td> <td>${actividad.getNombre()} </td></tr>
                                 <tr><td> <strong>Versión:</strong></td> <td>${actividad.getVersion()} </td></tr>
                                 <tr><td> <strong>Categoría de Actividad de Apoyo:</strong></td> <td>${actividad.getCategoria().getNombre()} </td></tr>
+                                <tr><td> <strong>Requiere aprobación de Coordinación:</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isRequiere_coordinacion()}">
+                                                Sí
+                                            </c:when>
+                                            <c:otherwise>
+                                                No
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr><td> <strong>Requiere aprobación de Regencia</strong> <td>
+                                        <c:choose>
+                                            <c:when test="${actividad.isRequiere_regencia()}">
+                                                Sí
+                                            </c:when>
+                                            <c:otherwise>
+                                                No
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
                             </table>
                             <br>
                             ${cuerpo_datos}
-                            
+
                         </div>
                     </div>
 
