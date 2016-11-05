@@ -356,6 +356,9 @@ public class ReporteDAO extends DAO {
                         case -5:
                             w.value(rs.getInt(cont_col));
                             break;
+                        case 91:
+                            w.value(rs.getString(cont_col));
+                            break;
                         default:
                             throw new SIGIPROException("Tipo de dato no soportado.");
                     }
