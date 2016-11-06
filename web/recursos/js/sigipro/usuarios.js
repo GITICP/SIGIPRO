@@ -20,3 +20,27 @@ function verificarConfirmacion() {
         return false;
     }
 }
+
+function confirmacionEditarUsuario() {
+  rolesCodificados = "";
+  $('#datatable-column-filter-roles > tbody > tr').each(function ()
+
+  {
+    fila = $(this);
+    rolesCodificados += fila.attr('id');
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(1).text();
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(2).text();
+    rolesCodificados += "#r#";
+  });
+  $('#rolesUsuario').val(rolesCodificados.slice(0, -3));
+
+  if (!$('#editarUsuario')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#editarUsuario')).click().remove();
+    $('#editarUsuario').find(':submit').click();
+  }
+  else {
+    $('#editarUsuario').submit();
+  }
+}

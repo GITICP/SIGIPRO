@@ -99,7 +99,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label>Contrase&ntilde;a (dejar en blanco para enviar por correo)</label>
+                                        <label>Contrase&ntilde;a (dejar en blanco para no modificar)</label>
                                         <div class='form-group'>
                                             <div class='col-sm-12'>
                                                 <div class='input-group' style='display:table'>
@@ -224,7 +224,7 @@
                                 <div class="form-group">
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger btn-volver" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
-                                        <button type="button" class="btn btn-primary" onclick="confirmacion()"><i class="fa fa-check-circle"></i> Guardar Cambios </button>
+                                        <button id="boton-agregar-usuario" type="button" class="btn btn-primary" onclick="confirmacionEditarUsuario()"><i class="fa fa-check-circle"></i> Guardar Cambios </button>
                                     </div>
                                 </div>
                             </form>
@@ -350,6 +350,10 @@
             </jsp:attribute>
 
         </t:modal>
+    </jsp:attribute>
+
+    <jsp:attribute name="scripts">
+        <script src="/SIGIPRO/recursos/js/sigipro/usuarios.js"></script>
     </jsp:attribute>
 
 
