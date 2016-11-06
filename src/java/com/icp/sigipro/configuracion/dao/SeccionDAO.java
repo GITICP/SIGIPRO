@@ -289,7 +289,7 @@ public class SeccionDAO extends DAO
                   + "           FROM seguridad.permisos  "
                   + "               GROUP BY id_seccion "
                   + "   ) AS cuenta ON cuenta.id_seccion = s.id_seccion  "
-                  + " ORDER BY cuenta.cnt DESC, id_seccion;"
+                  + " ORDER BY cuenta.cnt DESC, id_seccion, p.nombre;"
             );
             
             rs = consulta.executeQuery();
