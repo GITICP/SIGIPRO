@@ -212,6 +212,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         producto.setNombre(request.getParameter("nombre"));
         producto.setDescripcion(request.getParameter("descripcion"));
         producto.setLote(request.getParameter("lote"));
+        producto.setTipo(request.getParameter("tipo"));
         return producto;
     }
     

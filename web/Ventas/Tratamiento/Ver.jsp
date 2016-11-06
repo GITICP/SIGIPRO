@@ -62,13 +62,13 @@
                 <tr><td> <strong>Estado: </strong>  </td> <center> 
                 <c:choose>
                         <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
-                           <td><font color="green">${tratamiento.getEstado()}</font></td>
+                           <td><font color="green">A</font></td>
                         </c:when>
                         <c:when test="${tratamiento.getEstado().equals('Normal')}">
-                            <td><font color="blue">${tratamiento.getEstado()}</font></td>
+                            <td><font color="blue">B</font></td>
                         </c:when>
                         <c:otherwise>
-                            <td><font color="red">${tratamiento.getEstado()}</font></td>
+                            <td><font color="red">C</font></td>
                         </c:otherwise>
                     </c:choose>
                 </center> </tr>

@@ -404,6 +404,9 @@ public class ControladorCliente extends SIGIPROServlet {
         cliente.setNombre(request.getParameter("nombre"));
         cliente.setTipo(request.getParameter("tipo"));
         cliente.setPais(request.getParameter("pais"));
+        cliente.setDireccion(request.getParameter("direccion"));
+        cliente.setPersona(request.getParameter("persona"));
+        cliente.setCedula(request.getParameter("cedula"));
         return cliente;
     }
     

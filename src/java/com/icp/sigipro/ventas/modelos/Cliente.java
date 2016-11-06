@@ -17,6 +17,33 @@ public class Cliente {
     private String nombre;
     private String tipo;
     private String pais;
+    private String direccion;
+    private String cedula;
+    private String persona;
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getPersona() {
+        return persona;
+    }
+
+    public void setPersona(String persona) {
+        this.persona = persona;
+    }
 
     public int getId_cliente() {
         return id_cliente;

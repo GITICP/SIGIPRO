@@ -58,6 +58,7 @@
                 <tr><td> <strong>Nombre: </strong></td> <center> <td> ${producto.getNombre()} </td> </center> </tr>
                 <tr><td> <strong>Descripcion: </strong>  </td> <center> <td> ${producto.getDescripcion()}   </td> </center> </tr>
                 <tr><td> <strong>Número de Lote: </strong>  </td> <center> <td> ${producto.getLote()}   </td> </center> </tr>
+                <tr><td> <strong>Tipo: </strong>  </td> <center> <td> ${producto.getTipo()}   </td> </center> </tr>
               </table>
               <br>
               
