@@ -111,6 +111,10 @@ public class AgregarUsuario extends SIGIPROServlet
       usuario.setCedula(request.getParameter("cedula"));
       usuario.setIdSeccion(Integer.parseInt(request.getParameter("seccion")));
       usuario.setIdPuesto(Integer.parseInt(request.getParameter("puesto")));
+      String contrasena = request.getParameter("contrasenna");
+      if(contrasena.length() != 0){
+          usuario.setContrasenna(contrasena);
+      }
       
       try {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");

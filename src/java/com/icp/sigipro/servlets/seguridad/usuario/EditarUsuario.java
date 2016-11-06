@@ -138,8 +138,10 @@ public class EditarUsuario extends SIGIPROServlet
       if (correo_inactivo) {
         boolean resultado;
         if (roles != null) {
-           
-          resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion, roles, estado);
+          
+          String contrasenna = request.getParameter("contrasenna");
+          resultado = u.editarUsuario(idUsuario, nomCompleto, correo, cedula, Integer.parseInt(seccion), 
+                  Integer.parseInt(puesto), fechaActivacion, fechaDesactivacion, roles, estado, contrasenna);
           //Para manejo de bitacora no voy a tocar este Edit porque tiene mucha logica rara. 
           Usuario usuario = new Usuario();
           usuario.setIdUsuario(idUsuario);
