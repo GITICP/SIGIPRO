@@ -17,7 +17,8 @@ UPDATE seguridad.permisos
     SET id_seccion = 7
         WHERE 
             nombre like '[Seguridad]%'
-        OR  nombre like '[PermisoGlobal]%';
+        OR  nombre like '[PermisoGlobal]%'
+        OR  nombre like '[Reportes]%';
 
 UPDATE seguridad.permisos
     SET id_seccion = 8

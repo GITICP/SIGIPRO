@@ -82,21 +82,11 @@ public class PermisoRolDAO
         return resultado;
     }
 
-    public List<PermisoRol> parsearUsuarios(String permisos, int idRol)
+    public List<PermisoRol> parsearUsuarios(String[] permisos, int idRol)
     {
-        List<PermisoRol> resultado = null;
-        try {
-            resultado = new ArrayList<PermisoRol>();
-            List<String> permisosParcial = new LinkedList<String>(Arrays.asList(permisos.split("#r#")));
-            permisosParcial.remove("");
-            for (String i : permisosParcial) {
-                String[] rol = i.split("#c#");
-                resultado.add(new PermisoRol(idRol, Integer.parseInt(rol[0])));
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            resultado = null;
+        List<PermisoRol> resultado = new ArrayList<PermisoRol>();
+        for (String permiso : permisos) {
+            resultado.add(new PermisoRol(idRol, Integer.parseInt(permiso)));
         }
         return resultado;
     }

@@ -77,6 +77,43 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Esta parte es la de los usuarios de un rol -->
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-group"></i> Usuarios asociados al rol</h3>
+                                        <div class="btn-group widget-header-toolbar">
+                                            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
+                                        </div>
+                                    </div>
+                                    <div class="widget-content">
+                                        <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre Usuario</th>
+                                                    <th>Fecha Activación</th>
+                                                    <th>Fecha Desactivación</th>
+                                                    <th>Editar/Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${rolesUsuario}" var="rolUsuario">
+                                                    <tr id="${rolUsuario.getID()}">
+                                                        <td>${rolUsuario.getNombreUsuario()}</td>
+                                                        <td>${rolUsuario.getFechaActivacion()}</td>
+                                                        <td>${rolUsuario.getFechaDesactivacion()}</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getID()})"   >Editar</button>
+                                                            <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getID()})" >Eliminar</button>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Esta parte es la de los suarios del rol -->
+                                
                                 <!-- Esta parte es la de los permisos de un rol -->
                                 <div class="widget widget-table">
                                     <div class="widget-header">
@@ -182,41 +219,6 @@
                                     </div>
                                 </div>
                                 <!-- Esta parte es la de los permisos de un rol -->
-                                <!-- Esta parte es la de los usuarios de un rol -->
-                                <div class="widget widget-table">
-                                    <div class="widget-header">
-                                        <h3><i class="fa fa-group"></i> Usuarios asociados al rol</h3>
-                                        <div class="btn-group widget-header-toolbar">
-                                            <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarRolUsuario">Agregar</a>
-                                        </div>
-                                    </div>
-                                    <div class="widget-content">
-                                        <table id="datatable-column-filter-roles" class="table table-sorting table-striped table-hover datatable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nombre Usuario</th>
-                                                    <th>Fecha Activación</th>
-                                                    <th>Fecha Desactivación</th>
-                                                    <th>Editar/Eliminar</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach items="${rolesUsuario}" var="rolUsuario">
-                                                    <tr id="${rolUsuario.getID()}">
-                                                        <td>${rolUsuario.getNombreUsuario()}</td>
-                                                        <td>${rolUsuario.getFechaActivacion()}</td>
-                                                        <td>${rolUsuario.getFechaDesactivacion()}</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarRolUsuario(${rolUsuario.getID()})"   >Editar</button>
-                                                            <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarRolUsuario(${rolUsuario.getID()})" >Eliminar</button>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <!-- Esta parte es la de los suarios del rol -->
 
                                 <p>
                                     Los campos marcados con * son requeridos.

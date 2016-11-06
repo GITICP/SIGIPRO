@@ -155,13 +155,13 @@ public class AgregarRol extends SIGIPROServlet
         String rolesUsuario = request.getParameter("listarolesUsuario");
         String permisosRol = request.getParameter("listaPermisosRol");
         
-        String[] ids = request.getParameterValues("permisos");
+        String[] ids_permisos = request.getParameterValues("permisos");
 
         RolUsuarioDAO ru = new RolUsuarioDAO();
         PermisoRolDAO pr = new PermisoRolDAO();
 
         List<RolUsuario> roles = ru.parsearUsuarios(rolesUsuario, id_rol);
-        List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, id_rol);
+        List<PermisoRol> permisos = pr.parsearUsuarios(ids_permisos, id_rol);
 
         boolean nombre_valido = r.validarNombreRol(nombreRol);
         if (nombre_valido) {
