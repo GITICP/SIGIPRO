@@ -83,14 +83,9 @@ public class AJAXCedulaNombre extends HttpServlet {
         String nombre = request.getParameter("nombre");
         String cedula = request.getParameter("cedula");
         String resultado = "";
-        if (!(nombre == null) && !(cedula == null)){
+        if (!(nombre == null) && !(nombre.equals("")) && !(cedula == null) && !(cedula.equals(""))){
             try {
-                if (cDAO.existeCliente(nombre, cedula)){
-                    resultado = "existe";
-                }
-                else{
-                    resultado = "no existe";
-                }
+                resultado = cDAO.existeCliente(nombre, cedula);
             } catch (SIGIPROException ex) {
                 Logger.getLogger(AJAXCedulaNombre.class.getName()).log(Level.SEVERE, null, ex);
             }

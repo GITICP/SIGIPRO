@@ -8,8 +8,7 @@ var xhttp;
 var xmlDoc;
 
 $(function(){ /* DOM ready */ //
-    $("#nombre").blur(function () {
-        alert("entró a change nombre");
+    $("#nombre").change(function () {
         if (window.XMLHttpRequest) {
             xhttp = new XMLHttpRequest();
             } else {
@@ -20,29 +19,45 @@ $(function(){ /* DOM ready */ //
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
                 var resultado = xhttp.responseText;
-                alert("Resultado = "+resultado);
-                if (resultado === "existe"){
-                    alert("Resultado = "+resultado);
-                    document.getElementById("nombreCorrecto").style.display = "none";
-                    document.getElementById("cedulaCorrecta").style.display = "none";
-                    document.getElementById("nombreInCorrecto").style.display = "block";
-                    document.getElementById("cedulaInCorrecta").style.display = "block";
+                if (resultado === 'ambos'){
+                    document.getElementById("nombreCorrecto").style.visibility  = "hidden";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "hidden";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "visible";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "visible";
                     //document.getElementById("nombre")
                 }
+                else if (resultado === 'nombre'){
+                    document.getElementById("nombreCorrecto").style.visibility  = "hidden";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "visible";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "hidden";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "hidden";
+                }
+                else if (resultado === 'cedula'){
+                    document.getElementById("nombreCorrecto").style.visibility  = "visible";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "hidden";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "visible";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "visible";
+                }
                 else{
-                    alert("Resultado = "+resultado);
-                    document.getElementById("nombreCorrecto").style.display = "block";
-                    document.getElementById("cedulaCorrecta").style.display = "block";
-                    document.getElementById("nombreInCorrecto").style.display = "none";
-                    document.getElementById("cedulaInCorrecta").style.display = "none";
+                    document.getElementById("nombreCorrecto").style.visibility  = "visible";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "visible";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "hidden";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "hidden";
                 }
             }
         };
-        enviarPeticionXHTTP("AJAXCedulaNombre");
+        enviarPeticionXHTTP("AJAXCedulaNombre?nombre="+document.getElementById("nombre").value+"&cedula="+document.getElementById("cedula").value);
     }).change();
     
-    $("#cedula").blur(function () {
-        alert("entró a change cedula");
+    $("#cedula").change(function () {
         if (window.XMLHttpRequest) {
             xhttp = new XMLHttpRequest();
             } else {
@@ -53,13 +68,42 @@ $(function(){ /* DOM ready */ //
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
                 var resultado = xhttp.responseText;
-                if (resultado === "existe"){
-                    document.getElementById("nombre").style.color = "yellow";
-                    document.getElementById("cedula").style.color = "yellow";
+                if (resultado === 'ambos'){
+                    document.getElementById("nombreCorrecto").style.visibility  = "hidden";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "hidden";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "visible";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "visible";
+                    //document.getElementById("nombre")
+                }
+                else if (resultado === 'nombre'){
+                    document.getElementById("nombreCorrecto").style.visibility  = "hidden";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "visible";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "hidden";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "visible";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "hidden";
+                }
+                else if (resultado === 'cedula'){
+                    document.getElementById("nombreCorrecto").style.visibility  = "visible";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "hidden";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "visible";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "visible";
+                }
+                else{
+                    document.getElementById("nombreCorrecto").style.visibility  = "visible";
+                    document.getElementById("cedulaCorrecta").style.visibility  = "visible";
+                    document.getElementById("nombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("cedulaInCorrecta").style.visibility  = "hidden";
+                    document.getElementById("labelnombreInCorrecto").style.visibility  = "hidden";
+                    document.getElementById("labelcedulaInCorrecta").style.visibility  = "hidden";
                 }
             }
         };
-       enviarPeticionXHTTP("AJAXCedulaNombre");
+       enviarPeticionXHTTP("AJAXCedulaNombre?nombre="+document.getElementById("nombre").value+"&cedula="+document.getElementById("cedula").value);
     }).change();
 });
 

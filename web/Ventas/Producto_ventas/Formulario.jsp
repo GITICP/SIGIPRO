@@ -35,27 +35,6 @@
             </div>
     </div>                    
     <div class="col-md-6">
-        <label for="lote" class="control-label"> *Número de Lote (Inventario de Producción)</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="lote" class="select2" name="lote" required
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                            <option value=""></option>
-                          <c:forEach items="${inventarios}" var="inventario">
-                            <c:choose>
-                              <c:when test="${inventario.getLote() == producto.getLote()}" >
-                                <option value="${inventario.getLote()}" selected> Lote: ${inventario.getLote()} Cantidad: ${inventario.getCantidad_disponible()} </option>
-                              </c:when>
-                              <c:otherwise>
-                                <option value="${inventario.getLote()}"> Lote: ${inventario.getLote()} Cantidad: ${inventario.getCantidad_disponible()} </option>
-                              </c:otherwise>
-                            </c:choose>
-                          </c:forEach>
-                        </select>
-                    </div>
-                </div>
-            </div>
         <label for="tipo" class="control-label"> *Tipo</label>
             <!-- Tipo -->
             <div class="form-group">
@@ -91,6 +70,28 @@
                     </div>
                 </div>
             </div>
+            <label id="lotelabel" for="lote" class="control-label"> *Número de Lote (Inventario de Producción)</label>
+            <div id="loteformgroup" class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="lote" class="select2" name="lote" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                            <option value=""></option>
+                          <c:forEach items="${inventarios}" var="inventario">
+                            <c:choose>
+                              <c:when test="${inventario.getLote() == producto.getLote()}" >
+                                <option value="${inventario.getLote()}" selected> Lote: ${inventario.getLote()} Cantidad: ${inventario.getCantidad_disponible()} </option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="${inventario.getLote()}"> Lote: ${inventario.getLote()} Cantidad: ${inventario.getCantidad_disponible()} </option>
+                              </c:otherwise>
+                            </c:choose>
+                          </c:forEach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
   </div>
 
@@ -109,3 +110,22 @@
 
 
 </form>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.js"></script>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+<script>
+    $(function(){ /* DOM ready */ //
+        $("#tipo").change(function () {
+            var tipo = document.getElementById("tipo").value;
+            if (tipo === "Sueros"){
+                document.getElementById("loteformgroup").style.display = 'block';
+                document.getElementById("lotelabel").style.display = 'block';
+                document.getElementById("lote").required = true;
+            }
+            else{
+                document.getElementById("loteformgroup").style.display = 'none';
+                document.getElementById("lotelabel").style.display = 'none';
+                document.getElementById("lote").required = false;
+            }
+        }).change();
+    });
+</script>

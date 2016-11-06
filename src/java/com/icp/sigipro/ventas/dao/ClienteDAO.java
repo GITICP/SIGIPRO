@@ -22,18 +22,25 @@ public class ClienteDAO extends DAO {
     public ClienteDAO() {
     }
 
-    public boolean existeCliente(String nombre, String cedula) throws SIGIPROException {
-        boolean resultado = false;
+    public String existeCliente(String nombre, String cedula) throws SIGIPROException {
+        String respuesta = "no existe";
         List<Cliente> clientes = this.obtenerClientes();
-        int contador = 0;
-        while ((resultado != false) || (contador < clientes.size())){
-            Cliente c = clientes.get(contador);
-            if (c.getCedula().equalsIgnoreCase(cedula) || c.getNombre().equalsIgnoreCase(nombre)){
-                resultado = true;
-            }
-            contador ++;
+        List<String> nombres = new ArrayList<>();
+        List<String> cedulas = new ArrayList<>();
+        for (Cliente c: clientes){
+            nombres.add(c.getNombre().toLowerCase());
+            cedulas.add(c.getCedula().toLowerCase());
         }
-        return resultado;
+        if (nombres.contains(nombre.toLowerCase()) && (cedulas.contains(cedula.toLowerCase()))){
+            respuesta = "ambos";
+        }
+        else if (nombres.contains(nombre.toLowerCase())){
+            respuesta = "nombre";
+        }
+        else if(cedulas.contains(cedula.toLowerCase())){
+            respuesta = "cedula";
+        }
+        return respuesta;
     }
     
     public List<Cliente> obtenerClientes() throws SIGIPROException {

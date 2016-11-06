@@ -16,6 +16,7 @@
             <label for="nombre" class="control-label"> *Nombre</label>
             <i id="nombreCorrecto" hidden class="fa fa-check-circle" style="color: green"></i>
             <i id="nombreInCorrecto" hidden class="fa fa-times-circle" style="color: red"></i>
+            <span id="labelnombreInCorrecto" style="color: red"> ! Nombre ya existente, digite uno diferente</span>
             <!-- Nombre -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -29,12 +30,13 @@
             <label for="cedula" class="control-label"> *Cédula</label>
             <i id="cedulaCorrecta" hidden class="fa fa-check-circle" style="color: green"></i>
             <i id="cedulaInCorrecta" hidden class="fa fa-times-circle" style="color: red"></i>
+            <span for="cedulaIncorrecta" style="color: red" id="labelcedulaInCorrecta"> ! Cédula ya existente, digite una diferente</span>
             <!-- Cédula -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <input id="cedula" type="text" class="form-control" maxlength="30" name="cedula" value="${cliente.getCedula()}" required
-                            oninvalid="setCustomValidity('Debe ingresar un nombre. ')"
+                            oninvalid="setCustomValidity('Debe ingresar una cédula. ')"
                             oninput="setCustomValidity('')">
                     </div>
                 </div>
@@ -98,25 +100,33 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
-                                oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
-                             <c:choose>
-                                <c:when test="${cliente.getPersona()} == Física" >
-                                  <option value="Física" selected> Física</option>
-                                  <option value="Jurídica"> Jurídica</option>
-                                </c:when>
-                                <c:when test="${cliente.getPersona()} == Jurídica" >
-                                  <option value="Jurídica" selected> Jurídica</option>
-                                  <option value="Física"> Física</option>
-                                </c:when>
-                                <c:otherwise>
-                                  <option value=""> </option>
-                                  <option value="Física"> Física</option>
-                                  <option value="Jurídica"> Jurídica</option>
-                                </c:otherwise>
-                             </c:choose>
-                        </select>
+                         <c:choose>
+                            <c:when test="${cliente.getPersona()} == Física" >
+                                <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    oninput="setCustomValidity('')">
+                                      <option value="Física" selected> Física</option>
+                                      <option value="Jurídica"> Jurídica</option>
+                                </select>
+                            </c:when>
+                            <c:when test="${cliente.getPersona()} == Jurídica" >
+                                <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    oninput="setCustomValidity('')">
+                                      <option value="Jurídica" selected> Jurídica</option>
+                                      <option value="Física"> Física</option>
+                                </select>
+                            </c:when>
+                            <c:otherwise>
+                                  <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
+                                    oninvalid="setCustomValidity('Este campo es requerido')"
+                                    oninput="setCustomValidity('')">
+                                      <option value="" selected></option>
+                                      <option value="Jurídica"> Jurídica</option>
+                                      <option value="Física"> Física</option>
+                                </select>
+                            </c:otherwise>
+                         </c:choose>
                     </div>
                 </div>
             </div>
@@ -143,6 +153,11 @@
         </c:when>
         <c:otherwise>
             <div class="col-md-6">
+                <div class="widget widget-table">
+                <div class="widget-header">
+                  <h3><i class="fa fa-user"></i> Contacto Asociado </h3>
+                </div>
+                <div class="widget-content">
                 <!-- Primer Contacto Asociado -->
                 <label for="nombreContacto" class="control-label"> *Nombre del Contacto</label>
                     <!-- nombreContacto -->
@@ -199,7 +214,9 @@
                             </div>
                         </div>
                     </div>
-              <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
+                </div>
+            </div>
+          <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
             </div>
         </c:otherwise>
     </c:choose>                        
