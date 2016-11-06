@@ -21,6 +21,7 @@ public class Seccion extends IModelo {
     String nombre_seccion;
     String descripcion;
     List<Usuario> usuarios_seccion;
+    List<Permiso> permisos_seccion;
     
     public Seccion(){}
 
@@ -79,6 +80,21 @@ public class Seccion extends IModelo {
             usuarios_seccion = new ArrayList<>();
         }
         usuarios_seccion.add(u);
+    }
+    
+    public List<Permiso> getPermisos_seccion() {
+        return permisos_seccion;
+    }
+    
+    public void setPermisos_seccion(List<Permiso> permisos_seccion) {
+        this.permisos_seccion = permisos_seccion;
+    }
+
+    public void agregarPermiso(Permiso p) {
+        if (this.permisos_seccion == null) {
+            permisos_seccion = new ArrayList<>();
+        }
+        permisos_seccion.add(p);
     }
 
     public int getID() {

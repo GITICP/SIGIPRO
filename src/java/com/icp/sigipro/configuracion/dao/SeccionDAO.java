@@ -9,6 +9,7 @@ import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.configuracion.modelos.*;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Permiso;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -255,6 +256,64 @@ public class SeccionDAO extends DAO
                 u.setIdUsuario(rs.getInt("id_usuario"));
                 
                 s.agregarUsuario(u);
+            }
+
+        } catch (SQLException sql_ex) {
+            sql_ex.printStackTrace();
+            throw new SIGIPROException("Error al obtener la información de la base de datos. Notifique al administrador del sistema");
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+
+        return resultado;
+
+    }
+    
+    public List<com.icp.sigipro.seguridad.modelos.Seccion> obtenerSeccionesConPermisos() throws SIGIPROException {
+
+        List<com.icp.sigipro.seguridad.modelos.Seccion> resultado = new ArrayList<>();
+
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+
+        try {
+
+            consulta = getConexion().prepareStatement(
+                    " SELECT s.id_seccion, s.nombre_seccion, p.id_permiso, p.nombre, cuenta.cnt "
+                  + " FROM seguridad.permisos p  "
+                  + "   INNER JOIN seguridad.secciones s ON s.id_seccion = p.id_seccion  "
+                  + "   INNER JOIN ( "
+                  + "       SELECT id_seccion, COUNT(id_seccion) as cnt  "
+                  + "           FROM seguridad.permisos  "
+                  + "               GROUP BY id_seccion "
+                  + "   ) AS cuenta ON cuenta.id_seccion = s.id_seccion  "
+                  + " ORDER BY cuenta.cnt DESC, id_seccion;"
+            );
+            
+            rs = consulta.executeQuery();
+            
+            com.icp.sigipro.seguridad.modelos.Seccion s = new com.icp.sigipro.seguridad.modelos.Seccion();
+            s.setId_seccion(-1); // Para asegurar que entre al if, ya que la sección unifacada es id 0
+            
+            while(rs.next()) {
+                
+                int id_seccion = rs.getInt("id_seccion"); 
+                
+                if(id_seccion != s.getId_seccion()) {
+                    s = new com.icp.sigipro.seguridad.modelos.Seccion();
+                    s.setNombre_seccion(rs.getString("nombre_seccion"));
+                    s.setId_seccion(id_seccion);
+                    resultado.add(s);
+                }
+                
+                Permiso p = new Permiso();
+                
+                p.setNombrePermiso(rs.getString("nombre"));
+                p.setIdPermiso(rs.getInt("id_permiso"));
+                
+                s.agregarPermiso(p);
             }
 
         } catch (SQLException sql_ex) {

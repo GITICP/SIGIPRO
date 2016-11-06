@@ -16,15 +16,17 @@ public class Permiso {
     int idPermiso;
     String nombrePermiso;
     String descripcionPermiso;
+    Seccion seccion;
 
-    
+    public Permiso(){}
     public Permiso (int p_idPermiso,
     String p_nombrePermiso,
-    String p_descripcionPermiso)
+    String p_descripcionPermiso, Seccion p_seccion)
     {
         idPermiso = p_idPermiso;
         nombrePermiso = p_nombrePermiso;
         descripcionPermiso = p_descripcionPermiso; 
+        seccion = p_seccion;
     }
     
               //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
@@ -50,4 +52,29 @@ public class Permiso {
     public int getID()                 {return idPermiso;}
     public String getNombrePermiso()   {return nombrePermiso;}
     public String getDescripcion()          {return descripcionPermiso;}
+    public Seccion getSeccion() {return seccion;}
+
+    public int getIdPermiso() {
+        return idPermiso;
+    }
+
+    public void setIdPermiso(int idPermiso) {
+        this.idPermiso = idPermiso;
+    }
+
+    public String getDescripcionPermiso() {
+        return descripcionPermiso;
+    }
+
+    public void setDescripcionPermiso(String descripcionPermiso) {
+        this.descripcionPermiso = descripcionPermiso;
+    }
+
+    public void setNombrePermiso(String nombrePermiso) {
+        this.nombrePermiso = nombrePermiso;
+    }
+
+    public void setSeccion(Seccion seccion) {
+        this.seccion = seccion;
+    }
 }

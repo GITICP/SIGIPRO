@@ -62,7 +62,6 @@ public class ObjetoMultiple extends Parametro {
         consulta.setString(5, this.nombre);
     }
 
-    ;
 
     @Override
     public void setValor(String valor) {

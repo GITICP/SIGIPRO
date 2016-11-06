@@ -9,6 +9,7 @@ package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.seguridad.modelos.Permiso;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,8 +36,11 @@ public class PermisoDAO
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement("SELECT p.nombre, pr.id_rol, pr.id_permiso "
-                                                     + "FROM seguridad.permisos_roles pr, seguridad.permisos p  Where  pr.id_permiso = p.id_permiso AND pr.id_rol = ? ");
+                consulta = conexion.prepareStatement(
+                        "SELECT p.nombre, pr.id_rol, pr.id_permiso, p.id_seccion, s.nombre_seccion "
+                        + " FROM seguridad.permisos_roles pr, seguridad.permisos p "
+                        + "     INNER JOIN seguridad.secciones s ON s.id_seccion = p.id_seccion"
+                        + " WHERE pr.id_permiso = p.id_permiso AND pr.id_rol = ? ");
                 consulta.setInt(1, Integer.parseInt(p_IdRol));
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarPermisosRol(resultadoConsulta);
@@ -80,9 +84,11 @@ public List<Permiso> obtenerPermisosRestantes(String p_idrol)
             try
             {
                 PreparedStatement consulta;
-                consulta = conexion.prepareStatement(  "SELECT p.id_permiso, p.nombre, p.descripcion "
-                                                     + "FROM seguridad.permisos p "
-                                                     + "WHERE p.id_permiso NOT IN (SELECT ru.id_permiso FROM seguridad.permisos_roles ru WHERE ru.id_rol = ?)");
+                consulta = conexion.prepareStatement(  
+                        " SELECT p.id_permiso, p.nombre, p.descripcion, s.nombre_seccion "
+                        + " FROM seguridad.permisos p "
+                        + "     INNER JOIN seguridad.secciones s ON s.id_seccion = p.id_seccion"
+                        + " WHERE p.id_permiso NOT IN (SELECT ru.id_permiso FROM seguridad.permisos_roles ru WHERE ru.id_rol = ?)");
                 consulta.setInt(1, Integer.parseInt(p_idrol));
                 ResultSet resultadoConsulta = consulta.executeQuery();
                 resultado = llenarPermisos(resultadoConsulta);
@@ -109,7 +115,12 @@ public List<Permiso> obtenerPermisosRestantes(String p_idrol)
             int idRol = resultadoConsulta.getInt("id_permiso");
             String descripcion = resultadoConsulta.getString("descripcion");
             
-            resultado.add(new Permiso(idRol, nombreRol, descripcion));
+            Seccion s = new Seccion();
+            
+            s.setId_seccion(resultadoConsulta.getInt("id_permiso"));
+            s.setNombre_seccion(resultadoConsulta.getString("nombre_seccion"));
+            
+            resultado.add(new Permiso(idRol, nombreRol, descripcion, s));
         }
         return resultado;
     }
