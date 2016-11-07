@@ -18,10 +18,10 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="id_cliente" class="select2" name="id_cliente" required
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                        <input id="id_cliente" type="text" class="form-control" maxlength="80" name="id_cliente" list="lista_clientes" required>
+                        <datalist id="lista_clientes">
                           <c:forEach items="${clientes}" var="cliente">
-                            <c:choose>
+                            <c:choose>  
                               <c:when test="${intencion.getCliente().getId_cliente() == cliente.getId_cliente()}" >
                                 <option value=${cliente.getId_cliente()} selected> ${cliente.getNombre()}</option>
                               </c:when>
@@ -30,10 +30,32 @@
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
-                        </select>
+                        </datalist>
                     </div>
                 </div>
             </div>
+            <label for="telefono" class="control-label"> Teléfono (formato 506 22225555)</label>
+                    <!-- telefono -->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input id="telefono" type="text" class="form-control" name="telefono" maxlength="12" value="" 
+                                    oninvalid="setCustomValidity('Debe ingresar un telefono. ')"
+                                    oninput="setCustomValidity('')">
+                            </div>
+                        </div>
+                    </div>
+            <label for="correo_electronico" class="control-label"> Correo Electrónico</label>
+                <!-- correo_electronico -->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="correo_electronico" type="email" class="form-control" name="correo_electronico" value="" 
+                                oninvalid="setCustomValidity('Debe ingresar un correo electrónico válido. ')"
+                                oninput="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
             <label for="estado" class="control-label"> *Estado</label>
             <!-- Estado -->
             <div class="form-group">
