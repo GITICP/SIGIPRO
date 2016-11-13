@@ -20,3 +20,9 @@ ADD COLUMN correo_electronico character varying(70);
 ALTER TABLE ventas.producto_intencion
 ALTER COLUMN posible_fecha_despacho DROP NOT NULL;
 
+-- Cotización
+ALTER TABLE ventas.cotizacion
+DROP CONSTRAINT fk_cotizacion_cliente,
+ALTER COLUMN id_cliente DROP NOT NULL,
+DROP COLUMN id_cliente,
+ADD COLUMN identificador character varying(12);

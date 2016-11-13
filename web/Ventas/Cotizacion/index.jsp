@@ -43,7 +43,7 @@
                 <thead> 
                   <tr>
                     <th>ID</th>
-                    <th>Cliente</th>
+                    <th>Identificador</th>
                     <th>Intención</th>
                     <th>Moneda</th>
                     <th>Total</th>
@@ -61,18 +61,37 @@
                         </div>
                         </a>
                       </td>
-                      <td>${cotizacion.getCliente().getNombre()}</td>
-                      <c:choose>
-                          <c:when test= "${cotizacion.getIntencion().getId_intencion() == 0}">
-                              <td></td>
-                          </c:when>
-                          <c:otherwise>
-                              <td>${cotizacion.getIntencion().getId_intencion()}</td>
-                          </c:otherwise>
-                      </c:choose>
+                      <td>${cotizacion.getIdentificador()}</td>
+                      <td>${cotizacion.getIntencion().getId_intencion()}</td>
                       <td>${cotizacion.getMoneda()}</td>
-                      <td>${cotizacion.getTotal()} ${cotizacion.getMoneda()}</td>
-                      <td>${cotizacion.getFlete()} ${cotizacion.getMoneda()}</td>
+                      <c:choose>
+                            <c:when test="${cotizacion.getMoneda() == 'Colones'}">
+                              <td>&#8353;${cotizacion.getTotal()}</td>
+                            </c:when>
+                            <c:when test="${cotizacion.getMoneda() == 'Dólares'}">
+                              <td>$${cotizacion.getTotal()}</td>
+                            </c:when>
+                            <c:when test="${cotizacion.getMoneda() == 'Euros'}">
+                              <td>&euro;${cotizacion.getTotal()}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${cotizacion.getTotal()}</td>
+                            </c:otherwise>
+                        </c:choose>
+                      <c:choose>
+                            <c:when test="${cotizacion.getMoneda() == 'Colones'}">
+                              <td>&#8353;${cotizacion.getFlete()}</td>
+                            </c:when>
+                            <c:when test="${cotizacion.getMoneda() == 'Dólares'}">
+                              <td>$${cotizacion.getFlete()}</td>
+                            </c:when>
+                            <c:when test="${cotizacion.getMoneda() == 'Euros'}">
+                              <td>&euro;${cotizacion.getFlete()}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${cotizacion.getFlete()}</td>
+                            </c:otherwise>
+                        </c:choose>
                     </tr>
                   </c:forEach>
                 </tbody>

@@ -56,17 +56,8 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${cotizacion.getId_cotizacion()} </td> </center> </tr>
-                <tr><td> <strong>Cliente: </strong>  </td> <center> <td> ${cotizacion.getCliente().getNombre()}   </td> </center> </tr>
-                <tr><td> <strong>ID Intención: </strong>  </td> <center> 
-                    <c:choose>
-                          <c:when test= "${cotizacion.getIntencion().getId_intencion() == 0}">
-                              <td></td>
-                          </c:when>
-                          <c:otherwise>
-                              <td>${cotizacion.getIntencion().getId_intencion()}</td>
-                          </c:otherwise>
-                      </c:choose>
-                </center> </tr>
+                <tr><td> <strong>Identificador: </strong>  </td> <center> <td> ${cotizacion.getIdentificador()}   </td> </center> </tr>
+                <tr><td> <strong>ID Intención: </strong>  </td> <center> <td> ${cotizacion.getIntencion().getId_intencion()}</td> </center> </tr>
                 <tr><td> <strong>Moneda: </strong>  </td> <center> <td> ${cotizacion.getMoneda()}   </td> </center> </tr>
                 <tr><td> <strong>Flete: </strong>  </td> <center> <td> ${cotizacion.getFlete()} ${cotizacion.getMoneda()}   </td> </center> </tr>
                 <tr><td> <strong>Total: </strong>  </td> <center> <td> ${cotizacion.getTotal()} ${cotizacion.getMoneda()}   </td> </center> </tr>

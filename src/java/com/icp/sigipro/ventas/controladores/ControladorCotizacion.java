@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -88,6 +89,26 @@ public class ControladorCotizacion extends SIGIPROServlet {
         monedas.add("Euros");
         monedas.add("Otra Moneda");
         
+        String consecutivo = "";
+        int consec = dao.obtenerCotizaciones().size()+1;
+        System.out.println("consec = "+consec);
+        if (consec < 10){
+            consecutivo = "00";
+            consecutivo = consecutivo.concat(Integer.toString(consec));
+        }
+        else if (consec >= 10){
+            consecutivo = "0";
+            consecutivo = consecutivo.concat(Integer.toString(consec));
+        }
+        else{
+            consecutivo = Integer.toString(consec).substring(-3, -1);
+        }
+        
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        String ano = Integer.toString(year).substring(2);
+        System.out.println("Consecutivo = "+consecutivo);
+        request.setAttribute("consecutivo", consecutivo);
+        request.setAttribute("ano", ano);
         request.setAttribute("monedas", monedas);
         request.setAttribute("intenciones", intenciones);
         request.setAttribute("cotizacion", ds);
@@ -285,7 +306,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
         Cotizacion cotizacion = new Cotizacion();
         
         cotizacion.setId_cotizacion(Integer.parseInt(request.getParameter("id_cotizacion")));
-        cotizacion.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
+        cotizacion.setIdentificador(request.getParameter("identificador"));
         cotizacion.setIntencion(ivdao.obtenerIntencion_venta(Integer.parseInt(request.getParameter("id_intencion"))));
         
         cotizacion.setMoneda(request.getParameter("moneda"));
