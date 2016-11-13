@@ -46,10 +46,24 @@
                             <c:forEach items="${ordenes}" var="orden">
                             <c:choose>
                               <c:when test="${factura.getOrden().getId_orden() == orden.getId_orden()}" >
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                    <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:when>
                               <c:otherwise>
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}"> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                  <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -60,10 +74,24 @@
                             <c:forEach items="${ordenes}" var="orden">
                             <c:choose>
                               <c:when test="${factura.getOrden().getId_orden() == orden.getId_orden()}" >
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                    <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:when>
                               <c:otherwise>
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}"> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                  <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>

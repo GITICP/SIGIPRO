@@ -21,7 +21,6 @@ import java.util.List;
  */
 public class Orden_compraDAO extends DAO {
     
-    public ClienteDAO cDAO = new ClienteDAO();
     public Producto_ventaDAO pDAO = new Producto_ventaDAO();
     public CotizacionDAO cotDAO = new CotizacionDAO();
     public Intencion_ventaDAO iDAO = new Intencion_ventaDAO();
@@ -42,7 +41,7 @@ public class Orden_compraDAO extends DAO {
                 Orden_compra orden = new Orden_compra();
                 
                 orden.setId_orden(rs.getInt("id_orden"));
-                orden.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
+                orden.setDocumento(rs.getString("documento"));
                 orden.setCotizacion(cotDAO.obtenerCotizacion(rs.getInt("id_cotizacion")));
                 orden.setIntencion(iDAO.obtenerIntencion_venta((rs.getInt("id_intencion"))));
                 orden.setRotulacion(rs.getString("rotulacion"));
@@ -72,7 +71,7 @@ public class Orden_compraDAO extends DAO {
 
             while (rs.next()) {
                 resultado.setId_orden(rs.getInt("id_orden"));
-                resultado.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
+                resultado.setDocumento(rs.getString("documento"));
                 resultado.setCotizacion(cotDAO.obtenerCotizacion(rs.getInt("id_cotizacion")));
                 resultado.setIntencion(iDAO.obtenerIntencion_venta((rs.getInt("id_intencion"))));
                 resultado.setRotulacion(rs.getString("rotulacion"));
@@ -111,64 +110,6 @@ public class Orden_compraDAO extends DAO {
         return resultado;
     }
     
-    public int insertarOrden_compra(Orden_compra p) throws SIGIPROException {
-
-        int resultado = 0;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (id_cliente, id_cotizacion, id_intencion, rotulacion, estado)"
-                    + " VALUES (?,?,?,?,?) RETURNING id_orden");
-
-            consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setInt(2, p.getCotizacion().getId_cotizacion());
-            consulta.setInt(3, p.getIntencion().getId_intencion());
-            consulta.setString(4, p.getRotulacion());
-            consulta.setString(5, p.getEstado());
-            
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            if (resultadoConsulta.next()) {
-                resultado = resultadoConsulta.getInt("id_orden");
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
-        }
-        return resultado;
-    }
-
-    public boolean editarOrden_compra(Orden_compra p) throws SIGIPROException {
-
-        boolean resultado = false;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " UPDATE ventas.orden_compra"
-                    + " SET id_cliente=?, id_intencion=?, id_cotizacion=?, rotulacion=?, estado=?"
-                    + " WHERE id_orden=?; "
-            );
-
-            consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setInt(2, p.getIntencion().getId_intencion());
-            consulta.setInt(3, p.getCotizacion().getId_cotizacion());
-            consulta.setString(4, p.getRotulacion());
-            consulta.setString(5, p.getEstado());
-            consulta.setInt(6, p.getId_orden());
-            
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
-            }
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la edición");
-        }
-        return resultado;
-    }
-
     public boolean eliminarOrden_compra(int id_orden) throws SIGIPROException {
 
         boolean resultado = false;
@@ -193,39 +134,14 @@ public class Orden_compraDAO extends DAO {
         return resultado;
     }
 
-    public int insertarOrden_compraAmbos0(Orden_compra p) throws SIGIPROException {
-        int resultado = 0;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (id_cliente, rotulacion, estado)"
-                    + " VALUES (?,?,?) RETURNING id_orden");
-
-            consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setString(2, p.getRotulacion());
-            consulta.setString(3, p.getEstado());
-            
-            ResultSet resultadoConsulta = consulta.executeQuery();
-            if (resultadoConsulta.next()) {
-                resultado = resultadoConsulta.getInt("id_orden");
-            }
-            resultadoConsulta.close();
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
-        }
-        return resultado;
-    }
-
     public int insertarOrden_compraCotizacion0(Orden_compra p) throws SIGIPROException {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (id_cliente, id_intencion, rotulacion, estado)"
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (documento, id_intencion, rotulacion, estado)"
                     + " VALUES (?,?,?,?) RETURNING id_orden");
 
-            consulta.setInt(1, p.getCliente().getId_cliente());
+            consulta.setString(1, p.getDocumento());
             consulta.setInt(2, p.getIntencion().getId_intencion());
             consulta.setString(3, p.getRotulacion());
             consulta.setString(4, p.getEstado());
@@ -248,10 +164,10 @@ public class Orden_compraDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (id_cliente, id_cotizacion, rotulacion, estado)"
-                    + " VALUES (?,?,?,?,?) RETURNING id_orden");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.orden_compra (documento, id_cotizacion, rotulacion, estado)"
+                    + " VALUES (?,?,?,?) RETURNING id_orden");
 
-            consulta.setInt(1, p.getCliente().getId_cliente());
+            consulta.setString(1, p.getDocumento());
             consulta.setInt(2, p.getCotizacion().getId_cotizacion());
             consulta.setString(3, p.getRotulacion());
             consulta.setString(4, p.getEstado());
@@ -277,11 +193,11 @@ public class Orden_compraDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.orden_compra"
-                    + " SET id_cliente=?, id_cotizacion=?, rotulacion=?, estado=?"
+                    + " SET documento=?, id_cotizacion=?, rotulacion=?, estado=?"
                     + " WHERE id_orden=?; "
             );
 
-            consulta.setInt(1, p.getCliente().getId_cliente());
+            consulta.setString(1, p.getDocumento());
             consulta.setInt(2, p.getCotizacion().getId_cotizacion());
             consulta.setString(3, p.getRotulacion());
             consulta.setString(4, p.getEstado());
@@ -306,43 +222,15 @@ public class Orden_compraDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.orden_compra"
-                    + " SET id_cliente=?, id_intencion=?, rotulacion=?, estado=?"
+                    + " SET documento=?, id_intencion=?, rotulacion=?, estado=?"
                     + " WHERE id_orden=?; "
             );
 
-            consulta.setInt(1, p.getCliente().getId_cliente());
+            consulta.setString(1, p.getDocumento());
             consulta.setInt(2, p.getIntencion().getId_intencion());
             consulta.setString(3, p.getRotulacion());
             consulta.setString(4, p.getEstado());
             consulta.setInt(5, p.getId_orden());
-            
-            if (consulta.executeUpdate() == 1) {
-                resultado = true;
-            }
-            consulta.close();
-            cerrarConexion();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la edición");
-        }
-        return resultado;
-    }
-
-    public boolean editarOrden_compraAmbos0(Orden_compra p) throws SIGIPROException {
-
-        boolean resultado = false;
-
-        try {
-            PreparedStatement consulta = getConexion().prepareStatement(
-                    " UPDATE ventas.orden_compra"
-                    + " SET id_cliente=?, rotulacion=?, estado=?"
-                    + " WHERE id_orden=?; "
-            );
-
-            consulta.setInt(1, p.getCliente().getId_cliente());
-            consulta.setString(2, p.getRotulacion());
-            consulta.setString(3, p.getEstado());
-            consulta.setInt(4, p.getId_orden());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

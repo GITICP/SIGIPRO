@@ -10,8 +10,6 @@ import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 
-import com.icp.sigipro.ventas.dao.Orden_compraDAO;
-import com.icp.sigipro.ventas.modelos.Orden_compra;
 import com.icp.sigipro.ventas.dao.CotizacionDAO;
 import com.icp.sigipro.ventas.modelos.Cotizacion;
 import com.icp.sigipro.ventas.dao.Orden_compraDAO;
@@ -20,29 +18,34 @@ import com.icp.sigipro.ventas.modelos.Orden_compra;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
 import com.icp.sigipro.ventas.dao.Intencion_ventaDAO;
-import com.icp.sigipro.ventas.dao.Producto_IntencionDAO;
 import com.icp.sigipro.ventas.dao.Producto_OrdenDAO;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import com.icp.sigipro.ventas.modelos.Intencion_venta;
-import com.icp.sigipro.ventas.modelos.Producto_Intencion;
 import com.icp.sigipro.ventas.modelos.Producto_Orden;
-import com.icp.sigipro.ventas.modelos.Producto_venta;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import javax.security.sasl.AuthenticationException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -66,6 +69,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
+            add("archivo");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -92,6 +96,7 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         
         //List<Producto_venta> productos = pdao.obtenerProductos_venta();
         
+        request.setAttribute("consecutivo", dao.obtenerOrdenes_compra().size()+1);
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("cotizaciones", cotdao.obtenerCotizaciones());
@@ -104,6 +109,45 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        int[] permisos = {701,704,1};
+        validarPermisosMultiple(permisos, request);
+
+        int id_orden = Integer.parseInt(request.getParameter("id_orden"));
+        Orden_compra orden = dao.obtenerOrden_compra(id_orden);
+
+        String filename = "";
+        filename = orden.getDocumento();
+                
+        File file = new File(filename);
+
+        if (file.exists()) {
+            ServletContext ctx = getServletContext();
+            InputStream fis = new FileInputStream(file);
+            String mimeType = ctx.getMimeType(file.getAbsolutePath());
+
+            response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
+            response.setContentLength((int) file.length());
+            String nombre = "documento-" + orden.getId_orden()+ "." + this.getFileExtension(filename);
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
+
+            ServletOutputStream os = response.getOutputStream();
+            byte[] bufferData = new byte[1024];
+            int read = 0;
+            while ((read = fis.read(bufferData)) != -1) {
+                os.write(bufferData, 0, read);
+            }
+            os.flush();
+            os.close();
+            fis.close();
+
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("El archivo no fue encontrado. Actualice la factura."));
+            this.getVer(request, response);
+        }
+
+    }
+    
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701,702,703,704,705,706, 1};
@@ -162,121 +206,120 @@ public class ControladorOrden_compra extends SIGIPROServlet {
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
-    protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
+    protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException, FileUploadException {
         int resultado = 0;
-        String redireccion = "OrdenCompra/Agregar.jsp";
-        List<Integer> listaPermisos = getPermisosUsuario(request);
+        boolean resultado2 = false;
         int[] permisos = {701, 1};
+        List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
+        
+        String redireccion = "OrdenCompra/index.jsp";
+        String redireccionEditar = "OrdenCompra/Editar.jsp";
+        String redireccionAgregar = "OrdenCompra/Agregar.jsp";
+        
+        String accion = "";
+        
         try {
-            Orden_compra orden_nuevo = construirObjeto(request);
+            //Se crea el Path en la carpeta del Proyecto
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "OrdenCompra" + File.separatorChar + "Documentos";
+            //-------------------------------------------
+            System.out.println(ubicacion);
+            //Crea los directorios si no estan creados aun
+            this.crearDirectorio(ubicacion);
+            //--------------------------------------------
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setRepository(new File(ubicacion));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> items = upload.parseRequest(request);
+            Orden_compra orden_nuevo = construirObjeto(items, request, ubicacion);
             
-            if(orden_nuevo.getCotizacion().getId_cotizacion() == 0){
-                if(orden_nuevo.getIntencion().getId_intencion() == 0){
-                    resultado = dao.insertarOrden_compraAmbos0(orden_nuevo);
-                }
-                else{
+            if(orden_nuevo.getId_orden()==0){
+                accion = "Agregar";
+            
+                if((orden_nuevo.getCotizacion() == null)||(orden_nuevo.getCotizacion().getId_cotizacion() == 0)){
                     resultado = dao.insertarOrden_compraCotizacion0(orden_nuevo);
                 }
-            }
-            else{
-                if(orden_nuevo.getIntencion().getId_intencion() == 0){
+                else{
                     resultado = dao.insertarOrden_compraIntencion0(orden_nuevo);
                 }
-                else{
-                    resultado = dao.insertarOrden_compra(orden_nuevo);
-                }
-            }
-            
-            String productos_orden = request.getParameter("listaProductos");
-        
-            if (productos_orden != null && !(productos_orden.isEmpty()) ) {
-                List<Producto_Orden> p_i = podao.parsearProductos(productos_orden, resultado);
-                for (Producto_Orden i : p_i) {
-                    podao.insertarProducto_Orden(i);
-                }
-            }
-            
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(orden_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ORDEN_COMPRA, request.getRemoteAddr());
-            //*----------------------------*
-        } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
-        }
-        if (resultado != 0){
-            redireccion = "OrdenCompra/index.jsp";
-            List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
-            request.setAttribute("listaOrdenes", ordenes);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra agregada correctamente"));
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
-        }
-        redireccionar(request, response, redireccion);
-    }
 
-    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
-        boolean resultado = false;
-        boolean e = false;
-        String redireccion = "OrdenCompra/Editar.jsp";
-        int[] permisos = {701, 1};
-        List<Integer> listaPermisos = getPermisosUsuario(request);
-        validarPermisos(permisos, listaPermisos);
-        
-        try {
-            Orden_compra orden_nuevo = construirObjeto(request);
-            
-            if(orden_nuevo.getCotizacion().getId_cotizacion() == 0){
-                if(orden_nuevo.getIntencion().getId_intencion() == 0){
-                    resultado = dao.editarOrden_compraAmbos0(orden_nuevo);
-                }
-                else{
-                    resultado = dao.editarOrden_compraCotizacion0(orden_nuevo);
-                }
-            }
-            else{
-                if(orden_nuevo.getIntencion().getId_intencion() == 0){
-                    resultado = dao.editarOrden_compraIntencion0(orden_nuevo);
-                }
-                else{
-                    resultado = dao.editarOrden_compra(orden_nuevo);
-                }
-            }
-            
-            String productos_orden = request.getParameter("listaProductos");
-        
-            if (productos_orden != null && !(productos_orden.isEmpty()) ) {
-                List<Producto_Orden> p_i = podao.parsearProductos(productos_orden, Integer.parseInt(request.getParameter("id_orden")));
-                for (Producto_Orden i : p_i) {
-                    if (!podao.esProductoOrden(i.getProducto().getId_producto(), Integer.parseInt(request.getParameter("id_orden")))){
+                String productos_orden = request.getParameter("listaProductos");
+
+                if (productos_orden != null && !(productos_orden.isEmpty()) ) {
+                    List<Producto_Orden> p_i = podao.parsearProductos(productos_orden, resultado);
+                    for (Producto_Orden i : p_i) {
                         podao.insertarProducto_Orden(i);
-                        //System.out.println("Producto ingresado.");
-                        e = true;
-                    }
-                    else{
-                        e = podao.editarProducto_Orden(i);
-                        //System.out.println("Producto editado.");
                     }
                 }
-                podao.asegurarProductos_Orden(p_i, Integer.parseInt(request.getParameter("id_orden")));
+
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(orden_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ORDEN_COMPRA, request.getRemoteAddr());
+                //*----------------------------*
+            }else{
+                accion = "Editar";
+                String archivoViejo = "";
+
+                if (orden_nuevo.getDocumento().equals("")) {
+                    archivoViejo = dao.obtenerOrden_compra(orden_nuevo.getId_orden()).getDocumento();
+                }
+                if (!archivoViejo.equals("")) {
+                    orden_nuevo.setDocumento(archivoViejo);
+                }
+
+                if((orden_nuevo.getCotizacion() == null)||(orden_nuevo.getCotizacion().getId_cotizacion() == 0)){
+                    resultado2 = dao.editarOrden_compraCotizacion0(orden_nuevo);
+                }
+                else{
+                    resultado2 = dao.editarOrden_compraIntencion0(orden_nuevo);
+                }
+
+                String productos_orden = request.getParameter("listaProductos");
+                int id_orden = orden_nuevo.getId_orden();
+
+                if (productos_orden != null && !(productos_orden.isEmpty()) ) {
+                    List<Producto_Orden> p_i = podao.parsearProductos(productos_orden, id_orden);
+                    for (Producto_Orden i : p_i) {
+                        if (!podao.esProductoOrden(i.getProducto().getId_producto(), id_orden)){
+                            podao.insertarProducto_Orden(i);
+                        }
+                        else{
+                            podao.editarProducto_Orden(i);
+                        }
+                    }
+                    podao.asegurarProductos_Orden(p_i, id_orden);
+                }
+                else{
+                    podao.eliminarProductos_Orden(id_orden);
+                }
+                //Funcion que genera la bitacora
+                BitacoraDAO bitacora = new BitacoraDAO();
+                bitacora.setBitacora(orden_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ORDEN_COMPRA, request.getRemoteAddr());
+                //*----------------------------*
             }
-            else{
-                podao.eliminarProductos_Orden(Integer.parseInt(request.getParameter("id_orden")));
-            }
-            //Funcion que genera la bitacora
-            BitacoraDAO bitacora = new BitacoraDAO();
-            bitacora.setBitacora(orden_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_ORDEN_COMPRA, request.getRemoteAddr());
-            //*----------------------------*
         } catch (SIGIPROException ex) {
             request.setAttribute("mensaje", ex.getMessage());
         }
-        if (resultado) {
-            redireccion = "OrdenCompra/index.jsp";
-            List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
-            request.setAttribute("listaOrdenes", ordenes);
-            request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra editada correctamente"));
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        if (accion.equals("Agregar")){
+            if (resultado != 0){
+                List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
+                request.setAttribute("listaOrdenes", ordenes);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra agregada correctamente"));
+            } else {
+                redireccion = redireccionAgregar;
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }
+        }
+        else{
+            if (resultado2) {
+                List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
+                request.setAttribute("listaOrdenes", ordenes);
+                request.setAttribute("mensaje", helper.mensajeDeExito("Orden de Compra editada correctamente"));
+            } else {
+                redireccion = redireccionEditar;
+                request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            }   
         }
         redireccionar(request, response, redireccion);
     }
@@ -313,40 +356,108 @@ public class ControladorOrden_compra extends SIGIPROServlet {
     }
     // </editor-fold> 
     // <editor-fold defaultstate="collapsed" desc="Método del Modelo">
-    private Orden_compra construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
+    private Orden_compra construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) throws SIGIPROException, ParseException {
         Orden_compra orden = new Orden_compra();
         
-        String id_orden = request.getParameter("id_orden");
-        if (id_orden != "0"){
-            int id = Integer.parseInt(id_orden);
-            orden.setId_orden(id);
+        for (FileItem item : items) {
+            if (!(item.isFormField())) {
+                try {
+                    if (item.getSize() != 0) {
+                        this.crearDirectorio(ubicacion);
+                        //Creacion del nombre
+                        Date dNow = new Date();
+                        SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmm");
+                        String fecha = ft.format(dNow);
+                        String extension = this.getFileExtension(item.getName());
+                        String nombre = dao.obtenerOrdenes_compra().size() + "-" + fecha + "." + extension;
+                        //---------------------
+                        File archivo = new File(ubicacion, nombre);
+                        item.write(archivo);
+                        
+                        orden.setDocumento(archivo.getAbsolutePath());
+                    } else {
+                        orden.setDocumento("");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else{
+                String fieldName = item.getFieldName();
+                String fieldValue;
+                try {
+                    fieldValue = item.getString("UTF-8").trim();
+                } catch (UnsupportedEncodingException ex) {
+                    fieldValue = item.getString();
+                }
+                //System.out.println("Field Name = "+fieldName+", Value = "+fieldValue);
+                switch (fieldName) {
+                    case "id_orden":
+                        orden.setId_orden(Integer.parseInt(fieldValue));
+                        break;
+                    case "rotulacion":
+                        orden.setRotulacion(fieldValue);
+                        break;
+                    case "estado":
+                        orden.setEstado(fieldValue);
+                        break;
+                    case "id_cotizacion":
+                        String cotizacion = fieldValue;
+                        if(cotizacion != null && !cotizacion.equals("")){
+                            orden.setCotizacion(cotdao.obtenerCotizacion(Integer.parseInt(cotizacion)));
+                        }
+                        else{
+                            Cotizacion c = new Cotizacion();
+                            c.setId_cotizacion(0);
+                            orden.setCotizacion(c);
+                        }
+                        break;
+                    case "id_intencion":
+                        String intencion = fieldValue;
+                        if(intencion != null && !intencion.equals("")){
+                            orden.setIntencion(idao.obtenerIntencion_venta(Integer.parseInt(intencion)));
+                        }
+                        else{
+                            Intencion_venta iv = new Intencion_venta();
+                            iv.setId_intencion(0);
+                            orden.setIntencion(iv);
+                        }
+                        break;
+                }
+            }
         }
-        
-        orden.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
-        String cotizacion = request.getParameter("id_cotizacion");
-        String intencion = request.getParameter("id_intencion");
-        if(cotizacion != null && !cotizacion.equals("")){
-            orden.setCotizacion(cotdao.obtenerCotizacion(Integer.parseInt(cotizacion)));
-        }
-        else{
-            Cotizacion c = new Cotizacion();
-            c.setId_cotizacion(0);
-            orden.setCotizacion(c);
-        }
-        if(!intencion.equals("")){
-            orden.setIntencion(idao.obtenerIntencion_venta(Integer.parseInt(intencion)));
-        }
-        else{
-            Intencion_venta iv = new Intencion_venta();
-            iv.setId_intencion(0);
-            orden.setIntencion(iv);
-        }
-        orden.setRotulacion(request.getParameter("rotulacion"));
-        orden.setEstado(request.getParameter("estado"));
         
         return orden;
     }
     
+    private boolean crearDirectorio(String path) {
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try {
+                directorio.mkdirs();
+                resultado = true;
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
+        }
+        return resultado;
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
+    }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
@@ -362,8 +473,15 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
             metodo.invoke(this, request, response);
         } else {
-            Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
-            metodo.invoke(this, request, response);
+            if (accionHTTP.equals("post")){
+                String nombreMetodo = accionHTTP + Character.toUpperCase(accion.charAt(0)) + accion.substring(1);
+                Method metodo = clase.getDeclaredMethod(nombreMetodo, HttpServletRequest.class, HttpServletResponse.class);
+                metodo.invoke(this, request, response);
+            }
+            else{
+                Method metodo = clase.getDeclaredMethod(accionHTTP + "Index", HttpServletRequest.class, HttpServletResponse.class);
+                metodo.invoke(this, request, response);
+            }
         }
     }
 

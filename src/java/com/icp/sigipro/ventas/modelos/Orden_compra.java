@@ -17,26 +17,26 @@ import org.json.JSONObject;
  */
 public class Orden_compra {
     private int id_orden;
-    private Cliente cliente;
     private Intencion_venta intencion;
     private Cotizacion cotizacion;
     private String rotulacion;
     private String estado;
+    private String documento;
 
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
+    
     public int getId_orden() {
         return id_orden;
     }
 
     public void setId_orden(int id_orden) {
         this.id_orden = id_orden;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 
     public Intencion_venta getIntencion() {
@@ -87,7 +87,6 @@ public class Orden_compra {
                     JSON.put("id_objeto", field.get(this));
                 }
             }    
-            JSON.put("id_cliente",this.cliente.getId_cliente());
             JSON.put("id_intencion",this.intencion.getId_intencion());
             JSON.put("id_cotizacion",this.cotizacion.getId_cotizacion());
         }catch (Exception e){

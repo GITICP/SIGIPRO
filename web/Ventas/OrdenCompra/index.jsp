@@ -42,8 +42,7 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
+                    <th>Consecutivo</th>
                     <th>Cotización</th>
                     <th>Intención</th>
                     <th>Información de Rotulación</th>
@@ -61,13 +60,12 @@
                         </div>
                         </a>
                       </td>
-                      <td>${orden.getCliente().getNombre()}</td>
                       <c:choose>
                           <c:when test= "${orden.getCotizacion().getId_cotizacion() == 0}">
                               <td></td>
                           </c:when>
                           <c:otherwise>
-                              <td>${orden.getCotizacion().getId_cotizacion()}</td>
+                              <td>${orden.getCotizacion().getIdentificador()}</td>
                           </c:otherwise>
                       </c:choose>
                       <c:choose>

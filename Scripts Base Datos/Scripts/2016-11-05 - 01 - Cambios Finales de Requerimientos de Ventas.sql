@@ -26,3 +26,12 @@ DROP CONSTRAINT fk_cotizacion_cliente,
 ALTER COLUMN id_cliente DROP NOT NULL,
 DROP COLUMN id_cliente,
 ADD COLUMN identificador character varying(12);
+
+-- Orden de Compra
+ALTER TABLE ventas.orden_compra
+DROP CONSTRAINT fk_id_cliente,
+ALTER COLUMN id_cliente DROP NOT NULL,
+DROP COLUMN id_cliente,
+DROP COLUMN rotulacion,
+ADD COLUMN rotulacion character varying(1500),
+ADD COLUMN documento character varying(500);
