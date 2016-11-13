@@ -8,15 +8,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form class="form-horizontal" autocomplete="off" method="post" action="Clientes">
+<form class="form-horizontal" id="formularioCliente" autocomplete="off" method="post" action="Clientes">
   <div class="row">
     <div class="col-md-6">
       <input hidden="true" name="id_cliente" value="${cliente.getId_cliente()}">
-      <input hidden="true" name="accion" value="${accion}">
+      <input hidden="true" name="accion" id="accionCliente" value="${accion}">
             <label for="nombre" class="control-label"> *Nombre</label>
-            <i id="nombreCorrecto" hidden class="fa fa-check-circle" style="color: green"></i>
-            <i id="nombreInCorrecto" hidden class="fa fa-times-circle" style="color: red"></i>
-            <span id="labelnombreInCorrecto" style="color: red"> ! Nombre ya existente, digite uno diferente</span>
+            <c:choose>
+                <c:when test= "${accion.equals('Agregar')}">
+                    <i id="nombreCorrecto" hidden class="fa fa-check-circle" style="color: green"></i>
+                    <i id="nombreInCorrecto" hidden class="fa fa-times-circle" style="color: red"></i>
+                    <span id="labelnombreInCorrecto" style="color: red"> ! Nombre ya existente, digite uno diferente</span>
+                </c:when>
+            </c:choose>
             <!-- Nombre -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -28,9 +32,13 @@
                 </div>
             </div>
             <label for="cedula" class="control-label"> *Cédula</label>
-            <i id="cedulaCorrecta" hidden class="fa fa-check-circle" style="color: green"></i>
-            <i id="cedulaInCorrecta" hidden class="fa fa-times-circle" style="color: red"></i>
-            <span for="cedulaIncorrecta" style="color: red" id="labelcedulaInCorrecta"> ! Cédula ya existente, digite una diferente</span>
+            <c:choose>
+                <c:when test= "${accion.equals('Agregar')}">
+                    <i id="cedulaCorrecta" hidden class="fa fa-check-circle" style="color: green"></i>
+                    <i id="cedulaInCorrecta" hidden class="fa fa-times-circle" style="color: red"></i>
+                    <span for="cedulaIncorrecta" style="color: red" id="labelcedulaInCorrecta"> ! Cédula ya existente, digite una diferente</span>
+                </c:when>
+            </c:choose>
             <!-- Cédula -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -102,7 +110,7 @@
                     <div class="input-group">
                          <c:choose>
                             <c:when test="${cliente.getPersona()} == Física" >
-                                <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
+                                <select id="persona" class="select2" style='background-color: #fff;' name="persona"
                                     oninvalid="setCustomValidity('Este campo es requerido')"
                                     oninput="setCustomValidity('')">
                                       <option value="Física" selected> Física</option>
@@ -110,7 +118,7 @@
                                 </select>
                             </c:when>
                             <c:when test="${cliente.getPersona()} == Jurídica" >
-                                <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
+                                <select id="persona" class="select2" style='background-color: #fff;' name="persona" 
                                     oninvalid="setCustomValidity('Este campo es requerido')"
                                     oninput="setCustomValidity('')">
                                       <option value="Jurídica" selected> Jurídica</option>
@@ -118,11 +126,10 @@
                                 </select>
                             </c:when>
                             <c:otherwise>
-                                  <select id="persona" class="select2" style='background-color: #fff;' name="persona" required
+                                  <select id="persona" class="select2" style='background-color: #fff;' name="persona" 
                                     oninvalid="setCustomValidity('Este campo es requerido')"
                                     oninput="setCustomValidity('')">
-                                      <option value="" selected></option>
-                                      <option value="Jurídica"> Jurídica</option>
+                                      <option value="Jurídica" selected> Jurídica</option>
                                       <option value="Física"> Física</option>
                                 </select>
                             </c:otherwise>
@@ -228,10 +235,10 @@
       <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                    <button type="submit" id="boton_confirmar" data-toggle="confirmar" title="Asegúrese que el nombre y la cédula del cliente sean únicos" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Cliente</button>
+                    <button type="submit" id="boton_confirmar" data-toggle="confirmar" title="Asegúrese que el nombre y la cédula del cliente sean únicos" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Cliente</button>
                 </c:otherwise>
             </c:choose>    </div>
   </div>

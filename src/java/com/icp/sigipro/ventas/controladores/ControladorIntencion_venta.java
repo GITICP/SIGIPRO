@@ -157,7 +157,12 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
         try {
             Intencion_venta intencion_nuevo = construirObjeto(request);
-            resultado = dao.insertarIntencion_venta(intencion_nuevo);
+            if (intencion_nuevo.getCliente() != null){
+                resultado = dao.insertarIntencion_venta(intencion_nuevo);
+            }
+            else{
+                resultado = dao.insertarIntencion_ventaClienteUnknown(intencion_nuevo);
+            }
             
             String productos_intencion = request.getParameter("listaProductos");
         
@@ -196,8 +201,12 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         
         try {
             Intencion_venta intencion_nuevo = construirObjeto(request);
-            
-            resultado = dao.editarIntencion_venta(intencion_nuevo);
+            if (intencion_nuevo.getCliente() != null){
+                resultado = dao.editarIntencion_venta(intencion_nuevo);
+            }
+            else{
+                resultado = dao.editarIntencion_ventaClienteUnknown(intencion_nuevo);
+            }
             
             String productos_intencion = request.getParameter("listaProductos");
         
@@ -277,7 +286,15 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         
         intencion.setId_intencion(Integer.parseInt(request.getParameter("id_intencion")));
         intencion.setEstado(request.getParameter("estado"));
-        intencion.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
+        int id_cliente = Integer.parseInt(request.getParameter("id_cliente"));
+        if (id_cliente != 0){
+            intencion.setCliente(cdao.obtenerCliente(id_cliente));
+        }
+        else{
+            intencion.setNombre_cliente(request.getParameter("nombre_cliente"));
+            intencion.setCorreo(request.getParameter("correo_electronico"));
+            intencion.setTelefono(request.getParameter("telefono"));
+        }
         intencion.setObservaciones(request.getParameter("observaciones"));
         
         return intencion;

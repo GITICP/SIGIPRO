@@ -59,7 +59,14 @@
                         </div>
                         </a>
                       </td>
-                      <td>${intencion.getCliente().getNombre()}</td>
+                      <c:choose>
+                          <c:when test= "${intencion.getCliente() != null}">
+                              <td>${intencion.getCliente().getNombre()}</td>
+                          </c:when>
+                          <c:otherwise>
+                              <td>${intencion.getNombre_cliente()}</td>
+                          </c:otherwise>
+                        </c:choose>
                       <td>${intencion.getObservaciones()}</td>
                       <td>${intencion.getEstado()}</td>
                     </tr>

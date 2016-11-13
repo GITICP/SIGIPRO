@@ -222,18 +222,20 @@ public class Producto_IntencionDAO extends DAO {
             productosParcial.remove("");
             for (String i : productosParcial) {
                 String[] rol = i.split("#c#");
-                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-                java.util.Date fPosibleDespacho = formatoFecha.parse(rol[2]);
-                java.sql.Date fPosibleDespachoSQL = new java.sql.Date(fPosibleDespacho.getTime());
+                Producto_Intencion p = new Producto_Intencion();
+                if (rol.length > 2){
+                    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                    java.util.Date fPosibleDespacho = formatoFecha.parse(rol[2]);
+                    java.sql.Date fPosibleDespachoSQL = new java.sql.Date(fPosibleDespacho.getTime());
+                    p.setPosible_fecha_despacho(fPosibleDespachoSQL);
+                }
                 
                 int id_producto = Integer.parseInt(rol[0]);
                 int cantidad = Integer.parseInt(rol[1]);
                 
-                Producto_Intencion p = new Producto_Intencion();
                 p.setIntencion(iDAO.obtenerIntencion_venta(id_intencion));
                 p.setProducto(pDAO.obtenerProducto_venta(id_producto));
                 p.setCantidad(cantidad);
-                p.setPosible_fecha_despacho(fPosibleDespachoSQL);
                 
                 resultado.add(p);
             }
