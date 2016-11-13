@@ -66,30 +66,30 @@
                       <td>${cotizacion.getMoneda()}</td>
                       <c:choose>
                             <c:when test="${cotizacion.getMoneda() == 'Colones'}">
-                              <td>&#8353;${cotizacion.getTotal()}</td>
+                              <td align="right">&#8353;${String.format("%,.2f", cotizacion.getTotal().doubleValue())}</td>
                             </c:when>
                             <c:when test="${cotizacion.getMoneda() == 'Dólares'}">
-                              <td>$${cotizacion.getTotal()}</td>
+                              <td align="right">$${String.format("%,.2f", cotizacion.getTotal().doubleValue())}</td>
                             </c:when>
                             <c:when test="${cotizacion.getMoneda() == 'Euros'}">
-                              <td>&euro;${cotizacion.getTotal()}</td>
+                              <td align="right">&euro;${String.format("%,.2f", cotizacion.getTotal().doubleValue())}</td>
                             </c:when>
                             <c:otherwise>
-                                <td>${cotizacion.getTotal()}</td>
+                                <td align="right">${String.format("%,.2f", cotizacion.getTotal().doubleValue())}</td>
                             </c:otherwise>
                         </c:choose>
                       <c:choose>
                             <c:when test="${cotizacion.getMoneda() == 'Colones'}">
-                              <td>&#8353;${cotizacion.getFlete()}</td>
+                              <td align="right">&#8353;${String.format("%,.2f", cotizacion.getFlete().doubleValue())}</td>
                             </c:when>
                             <c:when test="${cotizacion.getMoneda() == 'Dólares'}">
-                              <td>$${cotizacion.getFlete()}</td>
+                              <td align="right">$${String.format("%,.2f", cotizacion.getFlete().doubleValue())}</td>
                             </c:when>
                             <c:when test="${cotizacion.getMoneda() == 'Euros'}">
-                              <td>&euro;${cotizacion.getFlete()}</td>
+                              <td align="right">&euro;${String.format("%,.2f", cotizacion.getFlete().doubleValue())}</td>
                             </c:when>
                             <c:otherwise>
-                                <td>${cotizacion.getFlete()}</td>
+                                <td align="right">${String.format("%,.2f", cotizacion.getFlete().doubleValue())}</td>
                             </c:otherwise>
                         </c:choose>
                     </tr>

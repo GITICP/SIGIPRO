@@ -91,7 +91,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
         
         String consecutivo = "";
         int consec = dao.obtenerCotizaciones().size()+1;
-        System.out.println("consec = "+consec);
+        //System.out.println("consec = "+consec);
         if (consec < 10){
             consecutivo = "00";
             consecutivo = consecutivo.concat(Integer.toString(consec));
@@ -106,7 +106,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
         
         int year = Calendar.getInstance().get(Calendar.YEAR);
         String ano = Integer.toString(year).substring(2);
-        System.out.println("Consecutivo = "+consecutivo);
+        //System.out.println("Consecutivo = "+consecutivo);
         request.setAttribute("consecutivo", consecutivo);
         request.setAttribute("ano", ano);
         request.setAttribute("monedas", monedas);
