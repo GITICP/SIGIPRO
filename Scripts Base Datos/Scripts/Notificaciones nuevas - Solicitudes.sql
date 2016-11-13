@@ -31,7 +31,7 @@ INSERT INTO calendario.tipo_notificaciones(
             id_tipo_notificacion, descripcion, icono, id_permisos, id_usuarios_bloqueados)
     VALUES (202, 'Solicitud de venenos rechazada', 'sigipro-snake-1', ARRAY[352]::INT[], ARRAY[]::INT[]);
 
----------------------SPs---------------------------------------------
+---------------------Funciones---------------------------------------------
 --APROBAR SOLICITUDES BODEGAS
 --DROP FUNCTION bodega.notificacion_aprobar_solicitud();
 CREATE OR REPLACE FUNCTION bodega.notificacion_aprobar_solicitud()
