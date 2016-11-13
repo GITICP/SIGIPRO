@@ -95,8 +95,9 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         estados.add("Cancelada");
         
         //List<Producto_venta> productos = pdao.obtenerProductos_venta();
+        List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
         
-        request.setAttribute("consecutivo", dao.obtenerOrdenes_compra().size()+1);
+        request.setAttribute("consecutivo", ordenes.get(ordenes.size()-1).getId_orden()+1);
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("cotizaciones", cotdao.obtenerCotizaciones());
@@ -193,6 +194,18 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         estados.add("Entregada");
         estados.add("Cancelada");
         
+        int contador = 1;
+        String listadoProductos = "";
+        for (Producto_Orden po: d){
+            listadoProductos += "#r#"+contador;
+            listadoProductos += "#c#"+po.getProducto().getNombre();
+            listadoProductos += "#c#"+po.getCantidad();
+            listadoProductos += "#c#"+po.getFecha_S();
+            d.get(contador-1).setContador(contador);
+            contador ++;
+        }
+        
+        request.setAttribute("listadoProductos", listadoProductos);
         request.setAttribute("productos_orden", d);
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
@@ -244,10 +257,8 @@ public class ControladorOrden_compra extends SIGIPROServlet {
                     resultado = dao.insertarOrden_compraIntencion0(orden_nuevo);
                 }
 
-                String productos_orden = request.getParameter("listaProductos");
-
-                if (productos_orden != null && !(productos_orden.isEmpty()) ) {
-                    List<Producto_Orden> p_i = podao.parsearProductos(productos_orden, resultado);
+                if (orden_nuevo.getListaProductos() != null && !(orden_nuevo.getListaProductos().isEmpty()) ) {
+                    List<Producto_Orden> p_i = podao.parsearProductos(orden_nuevo.getListaProductos(), resultado);
                     for (Producto_Orden i : p_i) {
                         podao.insertarProducto_Orden(i);
                     }
@@ -275,11 +286,10 @@ public class ControladorOrden_compra extends SIGIPROServlet {
                     resultado2 = dao.editarOrden_compraIntencion0(orden_nuevo);
                 }
 
-                String productos_orden = request.getParameter("listaProductos");
                 int id_orden = orden_nuevo.getId_orden();
 
-                if (productos_orden != null && !(productos_orden.isEmpty()) ) {
-                    List<Producto_Orden> p_i = podao.parsearProductos(productos_orden, id_orden);
+                if (orden_nuevo.getListaProductos() != null && !(orden_nuevo.getListaProductos().isEmpty()) ) {
+                    List<Producto_Orden> p_i = podao.parsearProductos(orden_nuevo.getListaProductos(), id_orden);
                     for (Producto_Orden i : p_i) {
                         if (!podao.esProductoOrden(i.getProducto().getId_producto(), id_orden)){
                             podao.insertarProducto_Orden(i);
@@ -394,6 +404,9 @@ public class ControladorOrden_compra extends SIGIPROServlet {
                 switch (fieldName) {
                     case "id_orden":
                         orden.setId_orden(Integer.parseInt(fieldValue));
+                        break;
+                    case "listaProductos":
+                        orden.setListaProductos(fieldValue);
                         break;
                     case "rotulacion":
                         orden.setRotulacion(fieldValue);

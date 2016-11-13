@@ -1,3 +1,4 @@
+var contador = 0;
 $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el cliente escogido
     $("#eleccion").change(function () {
 
@@ -92,6 +93,9 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
         
     });
 });
+
+//al editar, no carga la ListaProductos
+
 var xhttp;
 var xmlDoc;
 
@@ -111,6 +115,7 @@ function ajax_productos(id_intencion){
             var nombre;
             var lote;
             var cantidad;
+            var fecha;
             var producto;
             //alert(producto1.length);
             for (var i = 0; i < producto1.length; i++) {   
@@ -118,8 +123,9 @@ function ajax_productos(id_intencion){
                 id = producto.getElementsByTagName('id')[0].firstChild.nodeValue;
                 nombre = producto.getElementsByTagName('nombre')[0].firstChild.nodeValue;
                 cantidad = producto.getElementsByTagName('cantidad')[0].firstChild.nodeValue;
+                fecha = producto.getElementsByTagName('fecha')[0].firstChild.nodeValue;
                 lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
-                agregarProducto(id, nombre, cantidad, lote);
+                agregarProducto(id, nombre, cantidad, fecha, lote);
             }
         }
     };
@@ -147,19 +153,78 @@ function enviarPeticionXHTTP(path){
     }
 }
 
-function agregarProducto(id, producto, cantidad, lote) {
+function agregarProducto(id, producto, cantidad, fecha, lote) {
 
-    fila = '<tr ' + 'id=' + id + '>';
+    fila = '<tr ' + 'data-orden=' + contador+ ' id=' + id + '>';
     fila += '<td>' + producto + '</td>';
     fila += '<td>' + cantidad + '</td>';
+    fila += '<td>' + fecha + '</td>';
     fila += '<td>' + lote + '</td>';
+    fila += '<td>';
+    fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto('+contador+')"   style="margin-left:5px;margin-right:7px;">Modificar</button>';
+    fila += '<button type="button" class="btn btn-primary btn-sm" onclick="duplicarProducto(' + id + ')" style="margin-left:7px;margin-right:5px;">Duplicar</button>';
+    fila += '</td>';
     fila += '</tr>';
 
     //alert("Producto añadido a la lista: "+producto);
 
     campoOcultoRoles = $('#listaProductos');
-    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + id + "#c#" + producto + "#c#" + cantidad);
+    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + id + "#c#" + producto + "#c#" + cantidad + "#c#" + fecha);
     //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
 
     $('#datatable-column-filter-productos > tbody:last').append(fila);
+    contador ++;
+}
+
+function duplicarProducto(id) {
+  var productoADuplicar = document.getElementById(id);
+  
+  var nombreProducto = productoADuplicar.cells[0].firstChild.nodeValue;
+  var cantidad = productoADuplicar.cells[1].firstChild.nodeValue;
+  var fecha = productoADuplicar.cells[2].firstChild.nodeValue;
+  var lote = productoADuplicar.cells[3].firstChild.nodeValue;
+  
+  agregarProducto(id, nombreProducto, cantidad, fecha, lote);
+}
+
+function editarProducto(contador) {
+    //contador = número de fila, está en data-orden
+  document.getElementById("idProductoEditar").value = id;
+  var cantidad = document.getElementById("editarCantidad");
+  cantidad.value = id.children[1].innerHTML;
+  document.getElementById("editarPosibleFechaDespacho").value = id.children[2].innerHTML;
+  $('#modalEditarProducto').modal('show');
+}
+
+function confirmarEdicionProducto() {
+  if (!$('#formEditarProducto')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formEditarProducto')).click().remove();
+    $('#formEditarProducto').find(':submit').click();
+  }
+  else {
+    var id = $('#idProductoEditar').val();
+    fila = $('#' + id);
+    fila.children('td').eq(1).text($('#editarCantidad').val());
+    fila.children('td').eq(2).text($('#editarPosibleFechaDespacho').val());
+    $('#modalEditarProducto').modal('hide');
+
+    //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
+    campoOcultoRoles = $('#listaProductos');
+    var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
+    var nuevoValorCampoOculto = "";
+    a.splice(0, 1);
+    for (var i = 0; i < a.length; i++)
+    {
+      var cadarol = a[i].split("#c#");
+      if (cadarol[0] === id)
+      {
+      }
+      else
+      {
+        nuevoValorCampoOculto = nuevoValorCampoOculto + "#r#" + a[i];
+      }
+
+    }
+    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarCantidad').val() + "#c#" + $('#editarPosibleFechaDespacho').val());
+  }
 }

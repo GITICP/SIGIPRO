@@ -19,6 +19,45 @@ public class Producto_Orden {
     private Producto_venta producto;
     private Orden_compra orden;
     private int cantidad;
+    private Date fecha_entrega;
+    private int contador; //Por facilidad para duplicar y modificar en la tabla de productos
+
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
+
+    public Orden_compra getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Orden_compra orden) {
+        this.orden = orden;
+    }
+
+    public Date getFecha_entrega() {
+        return fecha_entrega;
+    }
+
+    public void setFecha_entrega(Date fecha_entrega) {
+        this.fecha_entrega = fecha_entrega;
+    }
+    
+    private String formatearFecha(Date fecha)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(fecha);
+    }  
+    
+    public String getFecha_S(){
+        if (this.fecha_entrega != null)
+            {return formatearFecha(this.fecha_entrega);}
+        else
+            {return "";}
+    }
     
     public Producto_venta getProducto() {
         return producto;

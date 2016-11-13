@@ -13,7 +13,7 @@
     <div class="col-md-6">
       <input hidden="true" name="id_orden" value="${orden.getId_orden()}">
       <input hidden="true" name="accion" id="accion" value="${accion}">
-      <input id="listaProductos" hidden="true" name="listaProductos" value="">
+      <input id="listaProductos" hidden="true" name="listaProductos" value="${listadoProductos}">
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
                     <label for="consecutivo" class="control-label"> Consecutivo: ${orden.getId_orden()}</label>
@@ -272,15 +272,22 @@
                         <tr>
                           <th>Nombre del Producto</th>
                           <th>Cantidad</th>
+                          <th>Fecha de Entrega</th>
                           <th>Lote</th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         <c:forEach items="${productos_orden}" var="producto">
-                          <tr id="${producto.getProducto().getId_producto()}">
+                          <tr data-orden="${producto.getContador()}" id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
+                            <td>${producto.getFecha_S()}</td>
                             <td>${producto.getProducto().getLote()}</td>
+                            <td>
+                              <button type="button" class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:7px;" onclick="editarProducto(${producto.getContador()})">Modificar</button>
+                              <button type="button" class="btn btn-primary btn-sm" style="margin-left:7px;margin-right:5px;" onclick="duplicarProducto(${producto.getProducto().getId_producto()})">Duplicar</button>
+                            </td>
                           </tr>
                         </c:forEach>
                       </tbody>

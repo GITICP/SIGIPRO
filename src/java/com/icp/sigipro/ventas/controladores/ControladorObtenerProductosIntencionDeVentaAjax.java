@@ -89,9 +89,10 @@ public class ControladorObtenerProductosIntencionDeVentaAjax extends HttpServlet
             for (Producto_Intencion n : resultado){
                 sb.append("<producto>");
                 
-                sb.append("<id>").append(contador).append("</id>");
+                sb.append("<id>").append(n.getProducto().getId_producto()).append("</id>");
                 sb.append("<nombre>").append(n.getProducto().getNombre()).append("</nombre>");
                 sb.append("<cantidad>").append(n.getCantidad()).append("</cantidad>");
+                sb.append("<fecha>").append(n.getFecha_S()).append("</fecha>");
                 sb.append("<lote>").append(n.getProducto().getLote()).append("</lote>");
                 
                 sb.append("</producto>");

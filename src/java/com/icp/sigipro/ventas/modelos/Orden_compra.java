@@ -22,7 +22,16 @@ public class Orden_compra {
     private String rotulacion;
     private String estado;
     private String documento;
+    private String listaProductos;
 
+    public String getListaProductos() {
+        return listaProductos;
+    }
+
+    public void setListaProductos(String listaProductos) {
+        this.listaProductos = listaProductos;
+    }
+    
     public String getDocumento() {
         return documento;
     }

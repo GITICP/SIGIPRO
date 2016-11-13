@@ -67,6 +67,7 @@ public class Producto_OrdenDAO extends DAO {
                 producto_orden.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
                 producto_orden.setOrden_compra(iDAO.obtenerOrden_compra(rs.getInt("id_orden")));
                 producto_orden.setCantidad(rs.getInt("cantidad"));
+                producto_orden.setFecha_entrega(rs.getDate("fecha_entrega"));
                 
                 resultado.add(producto_orden);
             }
@@ -95,6 +96,7 @@ public class Producto_OrdenDAO extends DAO {
                 resultado.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
                 resultado.setOrden_compra(iDAO.obtenerOrden_compra(rs.getInt("id_orden")));
                 resultado.setCantidad(rs.getInt("cantidad"));
+                resultado.setFecha_entrega(rs.getDate("fecha_entrega"));
             }
             rs.close();
             consulta.close();
@@ -107,16 +109,17 @@ public class Producto_OrdenDAO extends DAO {
     }
     
     public int insertarProducto_Orden(Producto_Orden p) throws SIGIPROException {
-
+        //System.out.println("insertarProducto_Orden. ID ="+p.getProducto().getId_producto()+", Idorden = "+p.getOrden().getId_orden()+", Cantidad = "+p.getCantidad()+", Fecha = "+p.getFecha_S());
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_orden (id_producto, id_orden, cantidad)"
-                    + " VALUES (?,?,?) RETURNING id_producto");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_orden (id_producto, id_orden, cantidad, fecha_entrega)"
+                    + " VALUES (?,?,?,?) RETURNING id_producto");
 
             consulta.setInt(1,p.getProducto().getId_producto());
             consulta.setInt(2,p.getOrden_compra().getId_orden());
             consulta.setInt(3,p.getCantidad());
+            consulta.setDate(4,p.getFecha_entrega());
             
             //System.out.println("CONSULTA A EJECUTAR: "+consulta.toString());
 
@@ -142,13 +145,14 @@ public class Producto_OrdenDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.producto_orden"
-                    + " SET cantidad=?"
+                    + " SET cantidad=?,fecha_entrega=?"
                     + " WHERE id_producto=? and id_orden=?; "
             );
             
             consulta.setInt(1,p.getCantidad());
-            consulta.setInt(2,p.getProducto().getId_producto());
-            consulta.setInt(3,p.getOrden_compra().getId_orden());
+            consulta.setDate(2,p.getFecha_entrega());
+            consulta.setInt(3,p.getProducto().getId_producto());
+            consulta.setInt(4,p.getOrden_compra().getId_orden());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -199,7 +203,12 @@ public class Producto_OrdenDAO extends DAO {
                 int id_producto = Integer.parseInt(rol[0]);
                 int cantidad = Integer.parseInt(rol[2]);
                 
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date fecha_entrega = formatoFecha.parse(rol[3]);
+                java.sql.Date fecha_entregaSQL = new java.sql.Date(fecha_entrega.getTime());
+                
                 Producto_Orden p = new Producto_Orden();
+                p.setFecha_entrega(fecha_entregaSQL);
                 p.setOrden_compra(iDAO.obtenerOrden_compra(id_orden));
                 p.setProducto(pDAO.obtenerProducto_venta(id_producto));
                 p.setCantidad(cantidad);
