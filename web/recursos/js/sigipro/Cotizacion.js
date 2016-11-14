@@ -72,7 +72,12 @@ function ajax_productos(id_intencion){
                 id = producto.getElementsByTagName('id')[0].firstChild.nodeValue;
                 nombre = producto.getElementsByTagName('nombre')[0].firstChild.nodeValue;
                 cantidad = producto.getElementsByTagName('cantidad')[0].firstChild.nodeValue;
-                lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
+                if (producto.getElementsByTagName('lote')[0].firstChild === null){
+                    lote = "";
+                }
+                else{
+                    lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
+                }
                 agregarProducto(id, nombre, cantidad, lote);
             }
         }

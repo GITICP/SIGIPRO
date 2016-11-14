@@ -35,3 +35,8 @@ DROP COLUMN id_cliente,
 DROP COLUMN rotulacion,
 ADD COLUMN rotulacion character varying(1500),
 ADD COLUMN documento character varying(500);
+
+-- Productos de la Orden de Compra
+ALTER TABLE ventas.producto_orden
+ADD COLUMN fecha_entrega date,
+DROP CONSTRAINT pk_producto_orden;

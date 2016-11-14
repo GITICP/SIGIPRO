@@ -39,24 +39,10 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
         
         campoOcultoRoles = $('#listaProductos');
         campoOcultoRoles.val("");
+        contador = 1;
         
         $('#datatable-column-filter-productos tbody tr').remove();
         
-        /*$('#datatable-column-filter-productos').dataTable().fnClearTable();
-        var table = document.getElementById("datatable-column-filter-productos");
-        table.deleteRow(1);
-        
-        var row_adicional = document.getElementById("datatable-column-filter-productos_length");
-        var row_adicional2 = document.getElementById("datatable-column-filter-productos_filter");
-        var row_adicional3 = document.getElementById("datatable-column-filter-productos_info");
-        var row_adicional4 = document.getElementById("datatable-column-filter-productos_paginate");
-        if(row_adicional !== null && row_adicional2 !== null && row_adicional3 !== null && row_adicional4 !== null){
-            row_adicional.parentNode.removeChild(row_adicional);
-            row_adicional2.parentNode.removeChild(row_adicional2);
-            row_adicional3.parentNode.removeChild(row_adicional3);
-            row_adicional4.parentNode.removeChild(row_adicional4);
-        }
-        */
         //ajax call
         ajax_productos(opcion_intencion);
         
@@ -70,24 +56,10 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
         
         campoOcultoRoles = $('#listaProductos');
         campoOcultoRoles.val("");
+        contador = 1;
         
         $('#datatable-column-filter-productos tbody tr').remove();
         
-        /*$('#datatable-column-filter-productos').dataTable().fnClearTable();
-        var table = document.getElementById("datatable-column-filter-productos");
-        table.deleteRow(1);
-        
-        var row_adicional = document.getElementById("datatable-column-filter-productos_length");
-        var row_adicional2 = document.getElementById("datatable-column-filter-productos_filter");
-        var row_adicional3 = document.getElementById("datatable-column-filter-productos_info");
-        var row_adicional4 = document.getElementById("datatable-column-filter-productos_paginate");
-        if(row_adicional !== null && row_adicional2 !== null && row_adicional3 !== null && row_adicional4 !== null){
-            row_adicional.parentNode.removeChild(row_adicional);
-            row_adicional2.parentNode.removeChild(row_adicional2);
-            row_adicional3.parentNode.removeChild(row_adicional3);
-            row_adicional4.parentNode.removeChild(row_adicional4);
-        }
-        */
         //ajax call
         ajax_productos(opcion_cotizacion);
         
@@ -124,7 +96,12 @@ function ajax_productos(id_intencion){
                 nombre = producto.getElementsByTagName('nombre')[0].firstChild.nodeValue;
                 cantidad = producto.getElementsByTagName('cantidad')[0].firstChild.nodeValue;
                 fecha = producto.getElementsByTagName('fecha')[0].firstChild.nodeValue;
-                lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
+                if (producto.getElementsByTagName('lote')[0].firstChild === null){
+                    lote = "";
+                }
+                else{
+                    lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
+                }
                 agregarProducto(id, nombre, cantidad, fecha, lote);
             }
         }
@@ -188,11 +165,13 @@ function duplicarProducto(id) {
 }
 
 function editarProducto(contador) {
-    //contador = número de fila, está en data-orden
-  document.getElementById("idProductoEditar").value = id;
-  var cantidad = document.getElementById("editarCantidad");
-  cantidad.value = id.children[1].innerHTML;
-  document.getElementById("editarPosibleFechaDespacho").value = id.children[2].innerHTML;
+  //contador = número de fila, está en data-orden
+  var tabla = document.getElementById("datatable-column-filter-productos");
+  var fila = tabla.rows[contador];
+  
+  document.getElementById("idProductoEditar").value = contador;
+  document.getElementById("editarCantidad").value = fila.cells[1].firstChild.nodeValue;
+  document.getElementById("editarPosibleFechaDespacho").value = fila.cells[2].firstChild.nodeValue;
   $('#modalEditarProducto').modal('show');
 }
 
@@ -203,28 +182,34 @@ function confirmarEdicionProducto() {
   }
   else {
     var id = $('#idProductoEditar').val();
-    fila = $('#' + id);
-    fila.children('td').eq(1).text($('#editarCantidad').val());
-    fila.children('td').eq(2).text($('#editarPosibleFechaDespacho').val());
-    $('#modalEditarProducto').modal('hide');
-
-    //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
-    campoOcultoRoles = $('#listaProductos');
-    var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
-    var nuevoValorCampoOculto = "";
-    a.splice(0, 1);
-    for (var i = 0; i < a.length; i++)
-    {
-      var cadarol = a[i].split("#c#");
-      if (cadarol[0] === id)
-      {
-      }
-      else
-      {
-        nuevoValorCampoOculto = nuevoValorCampoOculto + "#r#" + a[i];
-      }
-
+    //get fila que tenga data-orden = id
+    var tabla = document.getElementById("datatable-column-filter-productos");
+    var filaCambiada;
+    for (var i = 1; i<tabla.rows.length; i++){
+        var fila = tabla.rows[i];
+        if (fila.getAttribute('data-orden') === id){
+            filaCambiada = fila;
+        }
     }
-    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarCantidad').val() + "#c#" + $('#editarPosibleFechaDespacho').val());
+    filaCambiada.cells[1].firstChild.nodeValue = $('#editarCantidad').val();
+    filaCambiada.cells[2].firstChild.nodeValue = $('#editarPosibleFechaDespacho').val();
+    $('#modalEditarProducto').modal('hide');
+    
+    /*
+     * Actualizar ListaProductos = tabla
+     */
+    
+    listaProductos = $('#listaProductos');
+    listaProductos.val(""); //limpia ListaProductos
+    
+    for(var i = 1; i<tabla.rows.length; i++){
+        var fila = tabla.rows[i];
+        var idfila = fila.getAttribute('id');
+        var productofila = fila.cells[0].firstChild.nodeValue;
+        var cantidadfila = fila.cells[1].firstChild.nodeValue;
+        var fechafila = fila.cells[2].firstChild.nodeValue;
+        
+        listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
+    }
   }
 }

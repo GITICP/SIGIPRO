@@ -290,15 +290,10 @@ public class ControladorOrden_compra extends SIGIPROServlet {
 
                 if (orden_nuevo.getListaProductos() != null && !(orden_nuevo.getListaProductos().isEmpty()) ) {
                     List<Producto_Orden> p_i = podao.parsearProductos(orden_nuevo.getListaProductos(), id_orden);
+                    podao.eliminarProductos_Orden(id_orden);
                     for (Producto_Orden i : p_i) {
-                        if (!podao.esProductoOrden(i.getProducto().getId_producto(), id_orden)){
-                            podao.insertarProducto_Orden(i);
-                        }
-                        else{
-                            podao.editarProducto_Orden(i);
-                        }
+                        podao.insertarProducto_Orden(i);
                     }
-                    podao.asegurarProductos_Orden(p_i, id_orden);
                 }
                 else{
                     podao.eliminarProductos_Orden(id_orden);

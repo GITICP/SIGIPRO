@@ -85,7 +85,6 @@ public class ControladorObtenerProductosIntencionDeVentaAjax extends HttpServlet
         try {
             List<Producto_Intencion> resultado = nDAO.obtenerProductosIntencion(id_intencion);
             sb.append("<productos>");
-            int contador = 1;
             for (Producto_Intencion n : resultado){
                 sb.append("<producto>");
                 
@@ -97,7 +96,6 @@ public class ControladorObtenerProductosIntencionDeVentaAjax extends HttpServlet
                 
                 sb.append("</producto>");
                 hayNotificaciones = true;
-                contador += 1;
             }
             sb.append("</productos>");
             if (hayNotificaciones) {

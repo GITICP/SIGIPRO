@@ -45,10 +45,10 @@
                           <c:forEach items="${intenciones}" var="intencion">
                             <c:choose>
                               <c:when test="${cotizacion.getIntencion().getId_intencion() == intencion.getId_intencion()}" >
-                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}${intencion.getNombre_cliente()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}${intencion.getNombre_cliente()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>

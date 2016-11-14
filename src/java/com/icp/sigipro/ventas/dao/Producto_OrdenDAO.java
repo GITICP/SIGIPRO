@@ -9,6 +9,7 @@ import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.ventas.modelos.Producto_Orden;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -29,13 +30,15 @@ public class Producto_OrdenDAO extends DAO {
     private Producto_ventaDAO pDAO = new Producto_ventaDAO();
     private Orden_compraDAO iDAO = new Orden_compraDAO();
     
-    public boolean esProductoOrden (int id_producto, int id_orden) throws SIGIPROException{
+    public boolean esProductoOrden (int id_producto, int id_orden, int cantidad, Date fecha) throws SIGIPROException{
         boolean resultado = false;
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_orden WHERE id_producto=? and id_orden=?; ");
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_orden WHERE id_producto=? and id_orden=? and cantidad=? and fecha_entrega=? ; ");
             consulta.setInt(1, id_producto);
             consulta.setInt(2, id_orden);
+            consulta.setInt(3, cantidad);
+            consulta.setDate(4, fecha);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
