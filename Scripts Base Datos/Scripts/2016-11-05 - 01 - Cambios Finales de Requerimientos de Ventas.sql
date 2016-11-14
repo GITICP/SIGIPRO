@@ -44,3 +44,7 @@ DROP CONSTRAINT pk_producto_orden;
 -- Factura
 ALTER TABLE ventas.factura
 ADD COLUMN moneda character varying(20);
+
+-- Contrato de Comercialización
+ALTER TABLE ventas.contrato_comercializacion
+ADD COLUMN firmado boolean;
