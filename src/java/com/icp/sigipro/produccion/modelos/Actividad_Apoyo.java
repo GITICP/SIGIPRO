@@ -32,8 +32,35 @@ public class Actividad_Apoyo {
     private List<Actividad_Apoyo> historial;
     private boolean requiere_ap;
     private boolean estado;
+    private boolean requiere_coordinacion;
+    private boolean requiere_regencia;
+    private int version_anterior;
 
     public Actividad_Apoyo() {
+    }
+
+    public int getVersion_anterior() {
+        return version_anterior;
+    }
+
+    public void setVersion_anterior(int version_anterior) {
+        this.version_anterior = version_anterior;
+    }
+
+    public boolean isRequiere_coordinacion() {
+        return requiere_coordinacion;
+    }
+
+    public void setRequiere_coordinacion(boolean requiere_coordinacion) {
+        this.requiere_coordinacion = requiere_coordinacion;
+    }
+
+    public boolean isRequiere_regencia() {
+        return requiere_regencia;
+    }
+
+    public void setRequiere_regencia(boolean requiere_regencia) {
+        this.requiere_regencia = requiere_regencia;
     }
 
     public boolean isEstado() {

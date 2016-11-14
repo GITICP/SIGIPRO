@@ -79,7 +79,6 @@ function agregarCampo() {
     $("#tipocampo_" + contador).select2();
 
     contador++;
-
 }
 
 function agregarUsuario() {
@@ -331,7 +330,7 @@ function agregarSeleccion() {
     fila += "           <div class=\"form-group\">";
     fila += "               <div class=\"col-sm-12\">";
     fila += "                   <div class=\"input-group opciones_" + contador + "\">";
-    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre de la Opci&#243;n\" class=\"form-control\" name=\"o_opcion_" + contador + "_" + opciones + "\"";
+    fila += "                       <input type=\"text\" maxlength=\"200\" placeholder=\"Nombre de la Opci&#243;n\" class=\"form-control\" name=\"o_opcion"+opciones+"_" + contador + "_" + opciones + "\"";
     fila += "                           required";
     fila += "                           oninvalid=\"setCustomValidity(\'Este campo es requerido\')\"";
     fila += "                           oninput=\"setCustomValidity(\'\')\" > ";
@@ -385,7 +384,6 @@ function eliminarCampo(campo) {
     var o = $("#orden").val().split(",");
     $("div > ." + campo).remove();
     var nombres = campo.split("_");
-    alert (nombres);
     if (nombres[0] === "campo" || nombres[0] === "seleccion" || nombres[0] === "articulo" || nombres[0] === "subbodega" || nombres[0] === "usuario" || nombres[0] === "aa") {
         o.remove(nombres[1].toString());
         o = o.join();
@@ -396,5 +394,3 @@ function eliminarCampo(campo) {
 function eliminarOpcion(campo) {
     $("div > ." + campo).remove();
 }
-
-

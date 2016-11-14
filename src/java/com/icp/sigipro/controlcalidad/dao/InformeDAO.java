@@ -7,11 +7,14 @@ package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +35,11 @@ public class InformeDAO extends DAO {
 
         PreparedStatement consulta_informe = null;
         ResultSet rs_informe = null;
-        PreparedStatement consulta_resultados = null;
         PreparedStatement update_solicitud = null;
+        PreparedStatement consulta_ags_resultados = null;
+        ResultSet rs_ags = null;
+        
+        List<PreparedStatement> insert_resultados = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -55,27 +61,61 @@ public class InformeDAO extends DAO {
                 throw new SQLException("Informe no se ingresó correctamente.");
             }
             
-            String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
+            String ids_resultados = "";
+            
+            for(Resultado r : informe.getResultados()) {
+                ids_resultados += r.getId_resultado() + ",";
+            }
+            
+            ids_resultados = ids_resultados.substring(0, ids_resultados.length() - 1);
+            
+            String str_consulta_ags_resultados = 
+                      " SELECT * "
+                    + " FROM control_calidad.analisis_grupo_solicitud ags "
+                    + "         inner join control_calidad.grupos g on ags.id_grupo = g.id_grupo "
+                    + "         inner join ( "
+                    + "                 select id_resultado, id_analisis_grupo_solicitud as id_ags "
+                    + "                 from control_calidad.resultados "
+                    + "                 UNION "
+                    + "                 select id_resultado_analisis_sp as id_resultado, id_ags "
+                    + "                 from control_calidad.resultados_analisis_sangrias_prueba "
+                    + "                 ) as resultados "
+                    + "                 on ags.id_analisis_grupo_solicitud = resultados.id_ags "
+                    + " WHERE id_solicitud = ? AND id_resultado IN (" + ids_resultados + ");";
 
-            consulta_resultados = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
+            consulta_ags_resultados = getConexion().prepareStatement(
+                    str_consulta_ags_resultados
             );
 
-            for (Resultado r : informe.getResultados()) {
-                consulta_resultados.setInt(1, informe.getId_informe());
-                consulta_resultados.setInt(2, r.getId_resultado());
-                consulta_resultados.addBatch();
+            consulta_ags_resultados.setInt(1, informe.getSolicitud().getId_solicitud());
+
+            rs_ags = consulta_ags_resultados.executeQuery();
+
+            insert_resultados = new ArrayList<>();
+
+            while (rs_ags.next()) {
+                String campo = "id_resultado";
+                if (rs_ags.getInt("id_analisis") == Integer.MAX_VALUE) {
+                    campo = "id_resultado_sp";
+                }
+                
+                PreparedStatement consulta_resultado = getConexion().prepareStatement(
+                        " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo + ") VALUES (?,?);"
+                );
+                
+                int id_resultado = rs_ags.getInt("id_resultado");
+                consulta_resultado.setInt(1, informe.getId_informe());
+                consulta_resultado.setInt(2, id_resultado);
+                insert_resultados.add(consulta_resultado);
             }
-
-            int[] contadores = consulta_resultados.executeBatch();
-
+            
             boolean iteracion_completa = true;
-            for (int i : contadores) {
-                if (i != 1) {
+            for (PreparedStatement ps_resultado : insert_resultados) {
+                if (ps_resultado.executeUpdate() != 1) {
                     iteracion_completa = false;
                 }
             }
-
+            
             if (iteracion_completa) {
                 resultado_resultados = true;
             }
@@ -122,7 +162,6 @@ public class InformeDAO extends DAO {
 
             cerrarSilencioso(rs_informe);
             cerrarSilencioso(consulta_informe);
-            cerrarSilencioso(consulta_resultados);
             cerrarSilencioso(update_solicitud);
             cerrarConexion();
         }
@@ -168,7 +207,7 @@ public class InformeDAO extends DAO {
 
             consulta_eliminacion_resultados.setInt(1, informe.getId_informe());
             consulta_eliminacion_resultados.executeUpdate();
-            
+
             String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
 
             consulta_resultados = getConexion().prepareStatement(
@@ -239,5 +278,63 @@ public class InformeDAO extends DAO {
         }
 
         return informe;
+    }
+   public void notificacion_informe_parcial(int id_solicitud) throws SIGIPROException {
+    SolicitudDAO sdao = new SolicitudDAO();
+    SolicitudCC s = sdao.obtenerSolicitud(id_solicitud);
+    Usuario solicitante = s.getUsuario_solicitante();
+    if (solicitante.getNombre_seccion().equalsIgnoreCase("Producción")) {
+      try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_parcial_todo();");
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    } else {
+       try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_parcial(?);");
+        consulta.setInt(1, solicitante.getID());
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    }
+  }
+    public void notificacion_informe_final(int id_solicitud) throws SIGIPROException {
+    SolicitudDAO sdao = new SolicitudDAO();
+    SolicitudCC s = sdao.obtenerSolicitud(id_solicitud);
+    Usuario solicitante = s.getUsuario_solicitante();
+    if (solicitante.getNombre_seccion().equalsIgnoreCase("Producción")) {
+      try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_final_todo();");
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    } else {
+       try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_final(?);");
+        consulta.setInt(1, solicitante.getID());
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    }
     }
 }

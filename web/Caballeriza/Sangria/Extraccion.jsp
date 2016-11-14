@@ -74,8 +74,8 @@
                                                     <th colspan="3">Día ${dia}</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Sangre</th>
-                                                    <th>Plasma</th>
+                                                    <th>Sangre (Litros)</th>
+                                                    <th>Plasma (Gramos)</th>
                                                     <th>Observaciones</th>
                                                 </tr>
                                             </thead>

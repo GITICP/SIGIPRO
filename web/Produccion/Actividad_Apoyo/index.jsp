@@ -57,7 +57,7 @@
 
                                         <tr id ="${actividad.getId_actividad()}">
                                             <td>
-                                                <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}">
+                                                <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${actividad.getId_actividad()}&version=${actividad.getVersion()}">
                                                     <div style="height:100%;width:100%">
                                                         ${actividad.getNombre()}
                                                     </div>
@@ -73,40 +73,40 @@
                                                 <c:choose>
                                                     <c:when test="${!actividad.isAprobacion_calidad() && !actividad.isAprobacion_regente() && !actividad.isAprobacion_coordinador()}">
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 672)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-actor='1' data-toggle="modal" data-target="#modalAprobarActividad">[Calidad] Aprobar</a>
-                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-actor='Calidad' data-toggle="modal" data-target="#modalRechazarActividad">[Calidad] Rechazar</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='1' data-toggle="modal" data-target="#modalAprobarActividad">[Calidad] Aprobar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='Calidad' data-toggle="modal" data-target="#modalRechazarActividad">[Calidad] Rechazar</a>
                                                         </c:if>
                                                     </c:when>
                                                     <c:when test="${actividad.isAprobacion_calidad() && (!actividad.isAprobacion_regente() || !actividad.isAprobacion_coordinador()) && !actividad.isAprobacion_direccion()}">
                                                         <c:if test="${!actividad.isAprobacion_regente()}">
                                                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 673)}">
-                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-actor='2' data-toggle="modal" data-target="#modalAprobarActividad">[Regente] Aprobar</a>
-                                                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-actor='Regente' data-toggle="modal" data-target="#modalRechazarActividad">[Regente] Rechazar</a>
+                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='2' data-toggle="modal" data-target="#modalAprobarActividad">[Regente] Aprobar</a>
+                                                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='Regente' data-toggle="modal" data-target="#modalRechazarActividad">[Regente] Rechazar</a>
                                                             </c:if>
                                                         </c:if>
                                                         <c:if test="${!actividad.isAprobacion_coordinador()}">
                                                             <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 674)}">
-                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-actor='3' data-toggle="modal" data-target="#modalAprobarActividad">[Coordinador] Aprobar</a>
-                                                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-actor='Coordinador' data-toggle="modal" data-target="#modalRechazarActividad">[Coordinador] Rechazar</a>
+                                                                <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='3' data-toggle="modal" data-target="#modalAprobarActividad">[Coordinador] Aprobar</a>
+                                                                <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='Coordinador' data-toggle="modal" data-target="#modalRechazarActividad">[Coordinador] Rechazar</a>
                                                             </c:if>
                                                         </c:if>
                                                     </c:when>
                                                     <c:when test="${actividad.isAprobacion_regente() && actividad.isAprobacion_coordinador() && !actividad.isAprobacion_direccion()}">
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 675)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-actor='4' data-toggle="modal" data-target="#modalAprobarActividad">[Director] Aprobar</a>
-                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-actor='Director' data-toggle="modal" data-target="#modalRechazarActividad">[Director] Rechazar</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='4' data-toggle="modal" data-target="#modalAprobarActividad">[Director] Aprobar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='Director' data-toggle="modal" data-target="#modalRechazarActividad">[Director] Rechazar</a>
                                                         </c:if>
                                                     </c:when>
                                                     <c:when test="${actividad.isAprobacion_direccion() && !actividad.isAprobacion_gestion()}">
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 680)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-actor='5' data-toggle="modal" data-target="#modalAprobarActividad">[Gestión] Aprobar</a>
-                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-actor='Gestión de Calidad' data-toggle="modal" data-target="#modalRechazarActividad">[Gestión] Rechazar</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion aprobar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='5' data-toggle="modal" data-target="#modalAprobarActividad">[Gestión] Aprobar</a>
+                                                            <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${actividad.getId_actividad()}' data-version='${actividad.getVersion()}' data-actor='Gestión de Calidad' data-toggle="modal" data-target="#modalRechazarActividad">[Gestión] Rechazar</a>
                                                         </c:if>
                                                     </c:when>                                                            
 
                                                     <c:otherwise>
                                                         <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 677)}">
-                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=realizar&id_actividad=${actividad.getId_actividad()}">Realizar</a>
+                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=realizar&id_actividad=${actividad.getId_actividad()}&version=${actividad.getVersion()}">Realizar</a>
                                                         </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
@@ -155,6 +155,7 @@
                 <input hidden="true" name="accion" value="Aprobar">
                 <input hidden="true" id='id_actividad' name='id_actividad' value="">
                 <input hidden="true" id='actor' name='actor' value="">
+                <input hidden="true" id='version' name='version' value="">
                 <label for="label" class="control-label">¿Está seguro que desea aprobar la Actividad de Apoyo?</label>
                 <div class="form-group">
                     <div class="modal-footer">
@@ -175,6 +176,7 @@
                 <input hidden="true" name="accion" value="Rechazar">
                 <input hidden="true" id='id_actividad' name='id_actividad' value="">
                 <input hidden="true" id='actor' name='actor' value="">
+                <input hidden="true" id='version' name='version' value="">
                 <label for="observaciones" class="control-label">¿Razones por las cuáles rechaza la actividad?</label>
                 <div class="form-group">
                     <div class="col-sm-12">

@@ -48,7 +48,6 @@ public class ControladorSubBodegas extends SIGIPROServlet {
     private SubBodegaDAO dao = new SubBodegaDAO();
     private final SeccionDAO daoSecciones = new SeccionDAO();
     private final UsuarioDAO daoUsuarios = new UsuarioDAO();
-    private final HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
 
     private String redireccion;
 

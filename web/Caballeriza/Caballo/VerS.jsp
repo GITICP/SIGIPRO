@@ -86,7 +86,7 @@
                                                     <c:choose>
                                                         <c:when test="${sangria.isParticipo_dia1()}">
                                                             <td>${sangria.getSangria().getFecha_dia1AsString()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia1() == 0) ? sin_datos : sangria.getSangre_dia1()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia1() == 0) ? sin_datos : sangria.getSangre_dia1()} L</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td colspan="2">${(sangria.getSangria().getFecha_dia1() == null) ? "Pendiente" : "No participó"}</td>
@@ -95,7 +95,7 @@
                                                     <c:choose>
                                                         <c:when test="${sangria.isParticipo_dia2()}">
                                                             <td>${sangria.getSangria().getFecha_dia2AsString()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia2() == 0) ? sin_datos : sangria.getSangre_dia2()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia2() == 0) ? sin_datos : sangria.getSangre_dia2()} L</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td colspan="2">${(sangria.getSangria().getFecha_dia2() == null) ? "Pendiente" : "No participó"}</td>
@@ -104,27 +104,12 @@
                                                     <c:choose>
                                                         <c:when test="${sangria.isParticipo_dia3()}">
                                                             <td class="campo-tabla-centrado">${sangria.getSangria().getFecha_dia3AsString()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia3() == 0) ? sin_datos : sangria.getSangre_dia3()}</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia3() == 0) ? sin_datos : sangria.getSangre_dia3()} L</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td colspan="2">${(sangria.getSangria().getFecha_dia3() == null) ? "Pendiente" : "No participó"}</td>
                                                         </c:otherwise>
-                                                    </c:choose>
-                                                            
-                                                    <%--
-                                                    <td>${sangria.getSangria().getFecha_dia1AsString()}</td>
-                                                    <td>${sangria.getSangre_dia1()}</td>
-                                                    <td>${sangria.getPlasma_dia1()}</td>
-                                                    <td>${sangria.getLal_dia1()}</td>
-                                                    <td>${sangria.getSangria().getFecha_dia2AsString()}</td>
-                                                    <td>${sangria.getSangre_dia2()}</td>
-                                                    <td>${sangria.getPlasma_dia2()}</td>
-                                                    <td>${sangria.getLal_dia2()}</td>
-                                                    <td>${sangria.getSangria().getFecha_dia3AsString()}</td>
-                                                    <td>${sangria.getSangre_dia3()}</td>
-                                                    <td>${sangria.getPlasma_dia3()}</td>
-                                                    <td>${sangria.getLal_dia3()}</td>--%>
-                                                    
+                                                    </c:choose>                                                    
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

@@ -42,5 +42,13 @@ public class ControlSolicitud
     public List<AnalisisTipoMuestra> getAnalisis_tipo_muestras() {
         return analisis_tipo_muestras;
     }
+    
+    public String getTiposMuestrasHTML() {
+        String resultado = "";
+        for (AnalisisTipoMuestra a_tm : analisis_tipo_muestras) {
+            resultado += "<br><span>" + a_tm.getTipo_muestra().getNombre() + "</span>";
+        }
+        return resultado.substring(4);
+    }
 
 }

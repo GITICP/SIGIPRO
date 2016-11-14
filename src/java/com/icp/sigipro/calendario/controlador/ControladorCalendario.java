@@ -50,11 +50,13 @@ public class ControladorCalendario extends SIGIPROServlet {
   protected final List<String> accionesGet = new ArrayList<String>() {
     {
       add("index");
+      add("editar");
       add("agregar");
     }
   };
   protected final List<String> accionesPost = new ArrayList<String>() {
     {
+      add("editar");
       add("agregar");
       add("eliminar");
     }
@@ -69,11 +71,21 @@ public class ControladorCalendario extends SIGIPROServlet {
   };
    // <editor-fold defaultstate="collapsed" desc="Métodos Get">
 
-  protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String redireccion = "Calendario/Agregar.jsp";
-    request.setAttribute("accion", "Agregar");
+  protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    redireccionar(request, response, redireccion);
+        String redireccion = "Calendario/Editar.jsp";
+        int id_evento = Integer.parseInt(request.getParameter("id_evento"));
+        request.setAttribute("accion", "editar");
+        try {
+            Evento evento = dao.obtenerEvento(id_evento);
+            List<List<String>> shares = dao.obtenerShares(id_evento); 
+            request.setAttribute("evento", evento);
+            request.setAttribute("shares", shares);
+        }
+        catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+        redireccionar(request, response, redireccion);
   }
 
   protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -121,9 +133,9 @@ public class ControladorCalendario extends SIGIPROServlet {
     } catch (SIGIPROException e) {
       request.setAttribute("mensaje", helper.mensajeDeError(e.getMessage()));
     }
-    List<Seccion> secciones = dao_sec.obtenerSecciones();
-    List<Usuario> usuarios = dao_us.obtenerUsuarios();
-    List<Rol> roles = dao_rol.obtenerRoles();
+   // List<Seccion> secciones = dao_sec.obtenerSecciones();
+   // List<Usuario> usuarios = dao_us.obtenerUsuarios();
+   // List<Rol> roles = dao_rol.obtenerRoles();
    //index
     boolean resultado = false;
     try {
@@ -164,6 +176,43 @@ public class ControladorCalendario extends SIGIPROServlet {
     response.sendRedirect(redireccion);
     //redireccionar(request, response, redireccion);
   }
+  protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    //index
+    String redireccion = "Calendario/index.jsp";
+    HttpSession sesion = request.getSession();
+    String nombre_usr = (String) sesion.getAttribute("usuario");
+    Usuario us = dao_us.obtenerUsuario(nombre_usr);
+    try {
+      String json = dao.getEventos(us);
+      request.setAttribute("eventos", json);
+    } catch (SIGIPROException e) {
+      request.setAttribute("mensaje", helper.mensajeDeError(e.getMessage()));
+    }
+   // List<Seccion> secciones = dao_sec.obtenerSecciones();
+   // List<Usuario> usuarios = dao_us.obtenerUsuarios();
+   // List<Rol> roles = dao_rol.obtenerRoles();
+   //index
+    boolean resultado = false;
+    try {
+      Evento evento = construirObjeto(request);
+      resultado = dao.editarEvento(evento);
+      //Funcion que genera la bitacora
+      BitacoraDAO bitacora = new BitacoraDAO();
+      bitacora.setBitacora(evento.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_EVENTO, request.getRemoteAddr());
+      //*----------------------------*
+    } catch (SIGIPROException ex) {
+      request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+    }
+    if (resultado) {
+        redireccion= "Calendario?&tipo=exito&mensaje=" + "Evento editado correctamente";
+       // request.setAttribute("mensaje", helper.mensajeDeExito("Evento editado con éxito"));
+    } else {
+      redireccion= "Calendario?&tipo=error&mensaje=" + "Hubo un error al editar el evento";
+      //request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+    }
+    response.sendRedirect(redireccion);
+    //redireccionar(request, response, redireccion);
+  }
  protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     //index
     String redireccion = "Calendario/index.jsp";
@@ -199,7 +248,12 @@ public class ControladorCalendario extends SIGIPROServlet {
   // <editor-fold defaultstate="collapsed" desc="Métodos Modelo">
   private Evento construirObjeto(HttpServletRequest request) throws SIGIPROException {
     Evento evento = new Evento();
-
+    try{
+    evento.setId(Integer.parseInt(request.getParameter("id_evento")));
+    }
+    catch (Exception e){
+    //ignore
+    }
     evento.setAllDay(Boolean.parseBoolean(request.getParameter("allday")));
     evento.setTitle(request.getParameter("title"));
     evento.setDescription(request.getParameter("description"));

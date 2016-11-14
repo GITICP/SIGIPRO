@@ -27,7 +27,7 @@
                             <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=indexactividades&id_categoria_aa=${respuesta.getActividad().getCategoria().getId_categoria_aa()}">Actividades de Apoyo</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}">Actividades de Apoyo Realizadas</a>
+                            <a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=veractividad&id_actividad=${respuesta.getActividad().getId_actividad()}&version=${respuesta.getVersion_usada()}">Actividades de Apoyo Realizadas</a>
                         </li>
                         <li class="active"> Respuesta - ${respuesta.getNombre()} </li>
                     </ul>
@@ -46,12 +46,19 @@
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre:</strong></td> <td>${respuesta.getNombre()} </td></tr>
                                 <tr><td> <strong>Fecha:</strong></td> <td>${respuesta.getFechaAsString()} </td></tr>
+                                <tr><td> <strong>Versión de Actividad de Apoyo:</strong></td> <td><a href="/SIGIPRO/Produccion/Actividad_Apoyo?accion=verhistorial&id_historial=${respuesta.getActividad().getId_historial()}&id_actividad=${respuesta.getActividad().getId_actividad()}">Version ${respuesta.getVersion_usada()}</a></td>
                                 <tr><td> <strong>Usuario realizar:</strong></td> <td>${respuesta.getUsuario_realizar().getNombre_completo()} </td></tr>
-                                <c:if test="${respuesta.getUsuario_revisar().getId_usuario()!=0}">
-                                    <tr><td> <strong>Usuario revisar:</strong></td> <td>${respuesta.getUsuario_revisar().getNombre_completo()} </td></tr>
+                                <c:if test="${respuesta.getUsuario_cerrar().getId_usuario()!=0}">
+                                    <tr><td> <strong>Usuario cerrar:</strong></td> <td>${respuesta.getUsuario_cerrar().getNombre_completo()} </td></tr>
                                 </c:if>
-                                <c:if test="${respuesta.getUsuario_aprobar().getId_usuario()!=0}">
-                                    <tr><td> <strong>Usuario aprobar:</strong></td> <td>${respuesta.getUsuario_aprobar().getNombre_completo()} </td></tr>
+                                <c:if test="${respuesta.getUsuario_aprobar_coordinacion().getId_usuario()!=0}">
+                                    <tr><td> <strong>Usuario aprobar Coordinación:</strong></td> <td>${respuesta.getUsuario_aprobar_coordinacion().getNombre_completo()} </td></tr>
+                                </c:if>
+                                <c:if test="${respuesta.getUsuario_aprobar_regencia().getId_usuario()!=0}">
+                                    <tr><td> <strong>Usuario aprobar Regencia:</strong></td> <td>${respuesta.getUsuario_aprobar_regencia().getNombre_completo()} </td></tr>
+                                </c:if>
+                                <c:if test="${respuesta.getObservaciones()!=null}">
+                                    <tr><td> <strong>Observaciones de rechazo:</strong></td> <td>${respuesta.getObservaciones()} </td></tr>
                                 </c:if>
                             </table>
                             <br>

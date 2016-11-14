@@ -666,7 +666,8 @@ public class SangriaDAO extends DAO
                 "       INNER JOIN caballeriza.grupos_de_caballos g ON s.id_grupo_caballos = g.id_grupo_de_caballo " +
                 " WHERE ( participo_dia1 = true AND id_resultado_lal_dia1 IS null ) OR " +
                 "       ( participo_dia2 = true AND id_resultado_lal_dia2 IS null ) OR " +
-                "       ( participo_dia3 = true AND id_resultado_lal_dia3 IS null );"
+                "       ( participo_dia3 = true AND id_resultado_lal_dia3 IS null )" +
+                " ORDER BY s.fecha;"
             );
             
             rs = consulta.executeQuery();
@@ -755,7 +756,7 @@ public class SangriaDAO extends DAO
             String cuerpo_consulta = " SELECT c.nombre, c.numero, c.id_caballo " +
                                      " FROM caballeriza.sangrias_caballos sc " +
                                      "     INNER JOIN caballeriza.caballos c ON c.id_caballo = sc.id_caballo " +
-                                     " WHERE sc.id_sangria = ? AND sc.participo_dia" + dia + ";";
+                                     " WHERE sc.id_sangria = ? AND sc.participo_dia" + dia + " ORDER BY c.numero;";
                 
             
             consulta = getConexion().prepareStatement(cuerpo_consulta);

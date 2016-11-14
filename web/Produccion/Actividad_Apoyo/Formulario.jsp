@@ -62,18 +62,35 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <div class="input-group"> <br>
+                        <div class="input-group">
                             <c:choose>
-                                <c:when test="${actividad.isRequiere_ap()}">
-                                    <input checked id="requiere_ap" type="checkbox" name="requiere_ap" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobacion</span>
+                                <c:when test="${actividad.isRequiere_coordinacion()}">
+                                    <input checked id="requiere_coordinacion" type="checkbox" name="requiere_coordinacion" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobación de Coordinación</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <input id="requiere_ap" type="checkbox" name="requiere_ap" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobacion</span>
+                                    <input id="requiere_coordinacion" type="checkbox" name="requiere_coordinacion" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobación de Coordinación</span>
                                 </c:otherwise>
                             </c:choose>
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <c:choose>
+                                <c:when test="${actividad.isRequiere_regencia()}">
+                                    <input checked id="requiere_regencia" type="checkbox" name="requiere_regencia" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobación de Regencia</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <input id="requiere_regencia" type="checkbox" name="requiere_regencia" style="width:20px; height:20px; alignment-baseline: central"><span> *Requiere aprobación de Regencia</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div> 
         </div>
         <div class="col-md-12">
@@ -275,7 +292,7 @@
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
                                                                 <div class="input-group opciones_${i}">
-                                                                    <input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
+                                                                    <input type="text" maxlength="45" placeholder="Nombre de la Opción" class="form-control" name="o_opcion1_${i}_1" value="${diccionario.get(i).get('opcion1')}"
                                                                            required
                                                                            oninvalid="setCustomValidity('Este campo es requerido')"
                                                                            oninput="setCustomValidity('')" >

@@ -231,7 +231,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group opciones_${i}">
-                                                            <input type="text" maxlength="200" placeholder="Nombre de la Opción" class="form-control" name="o_opcion_${i}_1" value="${diccionario.get(i).get('opcion1')}"
+                                                            <input type="text" maxlength="200" placeholder="Nombre de la Opción" class="form-control" name="o_opcion1_${i}_1" value="${diccionario.get(i).get('opcion1')}"
                                                                    required
                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
                                                                    oninput="setCustomValidity('')" >

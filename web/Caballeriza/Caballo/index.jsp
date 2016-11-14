@@ -92,7 +92,8 @@
                 <!-- /main-content -->
             </div>
             <!-- /main -->
+        </div>
 
-        </jsp:attribute>
+    </jsp:attribute>
 
-    </t:plantilla_general>
+</t:plantilla_general>

@@ -12,11 +12,23 @@ PARAMETROS_SELECT_IDENTIFICADORES = {
 
 $(document).on("click", ".anular-Modal", function () {
     var id_solicitud = $(this).data('id');
+    var fila = $(this).parent().parent();
+    var filas = fila.find("td");
+    $("#modal_anular_num_solicitud").text(fila.find("td div").text());
+    $("#modal_anular_solicitante").text(filas.eq(4).text());
+    $("#modal_anular_tipos_muestras").text(filas.eq(3).text());
+    $("#modal_anular_informacion").text(filas.eq(2).text());
     $("#id_solicitud_anular").val(id_solicitud);
 });
 
 $(document).on("click", ".recibir-Modal", function () {
     var id_solicitud = $(this).data('id');
+    var fila = $(this).parent().parent();
+    var filas = fila.find("td");
+    $("#modal_num_solicitud").text(fila.find("td div").text());
+    $("#modal_solicitante").text(filas.eq(4).text());
+    $("#modal_tipos_muestras").text(filas.eq(3).text());
+    $("#modal_informacion").text(filas.eq(2).text());
     $("#id_solicitud_recibir").val(id_solicitud);
 });
 
@@ -116,7 +128,7 @@ function agregarMuestra() {
     fila += "</div>";
     fila += "</div>";
     fila += "<div class=\"col-sm-3\">";
-    fila += "<label for=\"nombre\" class=\"control-label\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Separar con coma, punto o '+'\">*Identificadores <i class=\"fa fa-question-circle\"></i></label>";
+    fila += "<label for=\"nombre\" class=\"control-label\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Separar con coma, punto o '+'\">*Identificadores Ejemplo: 579011516POLQ, 579051516POLQ <i class=\"fa fa-question-circle\"></i></label>";
     fila += "<div class=\"form-group\">";
     fila += "<div class=\"col-sm-12\">";
     fila += "<div class=\"input-group\">";

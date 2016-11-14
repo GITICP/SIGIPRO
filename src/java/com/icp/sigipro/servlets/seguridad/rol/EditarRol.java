@@ -5,9 +5,10 @@
  */
 package com.icp.sigipro.servlets.seguridad.rol;
 
-import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PermisoDAO;
 import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
@@ -18,17 +19,18 @@ import com.icp.sigipro.seguridad.modelos.Permiso;
 import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 public class EditarRol extends SIGIPROServlet {
   
   private final int permiso = 6;
+  private final SeccionDAO seccion_dao = new SeccionDAO();
   
   @Override
   protected int getPermiso()
@@ -75,7 +78,20 @@ public class EditarRol extends SIGIPROServlet {
       List<Usuario> usuariosRestantes = u.obtenerUsuariosRestantes(id);
       List<PermisoRol> permisosRol = p.obtenerPermisosRol(id);
       List<Permiso> permisosRestantes = p.obtenerPermisosRestantes(id);
+      List<Integer> idsPermisosRol = new ArrayList<Integer>();
+      
+      for(PermisoRol pr : permisosRol) {
+          idsPermisosRol.add(pr.getIDPermiso());
+      }
+      
+      try {
+          List<Seccion> secciones = seccion_dao.obtenerSeccionesConPermisos();
+          request.setAttribute("secciones", secciones);
+      } catch(SIGIPROException sig_ex) {
+          request.setAttribute("mensaje", sig_ex.getMessage());
+      }
 
+      request.setAttribute("idsPermisosRol", idsPermisosRol);
       request.setAttribute("rol", rol);
       request.setAttribute("rolesUsuario", UsuariosdelRol);
       request.setAttribute("rolesRestantes", usuariosRestantes);
@@ -132,8 +148,10 @@ public class EditarRol extends SIGIPROServlet {
       RolUsuarioDAO ru = new RolUsuarioDAO();
       PermisoRolDAO pr = new PermisoRolDAO();
       
+      String[] ids_permisos = request.getParameterValues("permisos");
+      
       List<RolUsuario> roles = ru.parsearUsuarios(rolesUsuario, idRol);
-      List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, idRol);
+      List<PermisoRol> permisos = pr.parsearUsuarios(ids_permisos, idRol);
 
       RolDAO r = new RolDAO();
       

@@ -49,6 +49,8 @@
                             <form method="post" class="form-horizontal" action="Actividad_Apoyo" autocomplete="off" enctype='multipart/form-data'>
                                 <input type="hidden" value="realizar" name="accion" />
                                 <input type="hidden" value="${actividad.getId_actividad()}" name="id_actividad" />
+                                <input type="hidden" value="${actividad.getVersion()}" name="version" />
+                                <input type="hidden" value="${actividad.getVersion_anterior()}" name="version_anterior" />
 
                                 <div class="row">
                                     <div class="col-md-12">
