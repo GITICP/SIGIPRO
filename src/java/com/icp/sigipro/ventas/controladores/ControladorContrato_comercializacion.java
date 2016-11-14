@@ -221,6 +221,12 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
         java.sql.Date fecha_solicitudSQL2 = new java.sql.Date(result2.getTime());
         contrato.setFechaRenovacion(fecha_solicitudSQL2);
         contrato.setObservaciones(request.getParameter("observaciones"));
+        if ((request.getParameter("firmado") != null)&&(request.getParameter("firmado").equals("Firmado"))){
+            contrato.setFirmado(true);
+        }
+        else{
+            contrato.setFirmado(false);
+        }
         return contrato;
     }
     

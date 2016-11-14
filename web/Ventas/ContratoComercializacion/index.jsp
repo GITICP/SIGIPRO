@@ -46,6 +46,7 @@
                     <th>Cliente</th>
                     <th>Fecha Inicial</th>
                     <th>Fecha de Renovación</th>
+                    <th>Firmado</th>
                     <th>Observaciones</th>
                   </tr>
                 </thead>
@@ -63,6 +64,16 @@
                       <td>${contrato.getCliente().getNombre()}</td>
                       <td>${contrato.getFechaInicial_S()}</td>
                       <td>${contrato.getFechaRenovacion_S()}</td>
+                      <td>
+                          <c:choose>
+                            <c:when test= "${(contrato.isFirmado())}">
+                                Si
+                            </c:when>
+                            <c:otherwise>
+                                No
+                            </c:otherwise>
+                        </c:choose>
+                      </td>
                       <td>${contrato.getObservaciones()}</td>
                     </tr>
                   </c:forEach>
