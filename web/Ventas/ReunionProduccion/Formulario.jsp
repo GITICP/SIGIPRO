@@ -88,7 +88,7 @@
             </c:choose>
             <c:choose>
                 <c:when test="${reunion.getId_reunion()!=0}">
-                    <label for="minuta2" class="control-label"> Minuta 2 (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
+                    <label for="minuta2" class="control-label"> Documento Adjunto (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">
@@ -100,7 +100,7 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <label for="minuta2" class="control-label"> Minuta 2</label>
+                    <label for="minuta2" class="control-label"> Documento Adjunto</label>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group">

@@ -70,14 +70,14 @@
                                         </c:choose>
                                     </td>
                                 </tr>
-                                <tr><td> <strong>Minuta 2: </strong> 
+                                <tr><td> <strong>Documento Adjunto: </strong> 
                                     <td>
                                         <c:choose>
                                             <c:when test="${reunion.getMinuta2() == ''}">
-                                                Sin minuta asociada.
+                                                Sin documento adjunto.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}&documento=2">Descargar Minuta</a>
+                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}&documento=2">Descargar Documento Adjunto</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
