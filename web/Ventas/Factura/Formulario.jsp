@@ -246,6 +246,27 @@
                     </div>
                 </div>
             </div>
+            <label for="contado" class="control-label"> *Crédito o Contado</label>
+            <!-- contado -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="contado" class="select2" name="contado" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                            <c:choose>
+                              <c:when test="${((factura.getPlazo() == null)||(factura.getPlazo() == 0))}" >
+                                <option value="1">Crédito</option>
+                                <option value="2" selected>Contado</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="1" selected>Crédito</option>
+                                <option value="2">Contado</option>
+                              </c:otherwise>
+                            </c:choose>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <label for="plazo" class="control-label"> *Plazo (días)</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
@@ -254,63 +275,53 @@
                                                     <c:when test="${accion == 'Agregar'}">
                                                     <select id="plazo" class="select2" name="plazo" required
                                                         oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                        <option value="0" selected> 0 (Pendiente)</option>
-                                                        <option value="30"> 30 (Crédito)</option>
-                                                        <option value="60"> 60 (Crédito)</option>
-                                                        <option value="90"> 90 (Crédito)</option>
-                                                        <option value="120"> 120 (Crédito)</option>
+                                                        <option value="0"> 0 </option>
+                                                        <option value="30"> 30 </option>
+                                                        <option value="60"> 60 </option>
+                                                        <option value="90"> 90 </option>
+                                                        <option value="120"> 120 </option>
                                                     </select>
                                                     </c:when>
                                                     <c:otherwise>  
                                                         <c:choose>
-                                                            <c:when test="${factura.getPlazo() == 0}" >
-                                                                <select id="plazo" class="select2" name="plazo" required
-                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                                    <option value="0" selected> 0 (Pendiente)</option>
-                                                                    <option value="30"> 30 (Crédito)</option>
-                                                                    <option value="60"> 60 (Crédito)</option>
-                                                                    <option value="90"> 90 (Crédito)</option>
-                                                                    <option value="120"> 120 (Crédito)</option>
-                                                                </select>
-                                                            </c:when>
                                                             <c:when test="${factura.getPlazo() == 30}" >
                                                                 <select id="plazo" class="select2" name="plazo" required
                                                                     oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                                    <option value="0"> 0 (Pendiente)</option>
-                                                                    <option value="30" selected> 30 (Crédito)</option>
-                                                                    <option value="60"> 60 (Crédito)</option>
-                                                                    <option value="90"> 90 (Crédito)</option>
-                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30" selected> 30 </option>
+                                                                    <option value="60"> 60 </option>
+                                                                    <option value="90"> 90 </option>
+                                                                    <option value="120"> 120 </option>
                                                                 </select>
                                                             </c:when>
                                                             <c:when test="${factura.getPlazo() == 60}" >
                                                                 <select id="plazo" class="select2" name="plazo" required
                                                                     oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                                    <option value="0"> 0 (Pendiente)</option>
-                                                                    <option value="30"> 30 (Crédito)</option>
-                                                                    <option value="60" selected> 60 (Crédito)</option>
-                                                                    <option value="90"> 90 (Crédito)</option>
-                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30"> 30 </option>
+                                                                    <option value="60" selected> 60 </option>
+                                                                    <option value="90"> 90 </option>
+                                                                    <option value="120"> 120 </option>
                                                                 </select>
                                                             </c:when>
                                                             <c:when test="${factura.getPlazo() == 90}" >
                                                                 <select id="plazo" class="select2" name="plazo" required
                                                                     oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                                    <option value="0"> 0 (Pendiente)</option>
-                                                                    <option value="30"> 30 (Crédito)</option>
-                                                                    <option value="60"> 60 (Crédito)</option>
-                                                                    <option value="90" selected> 90 (Crédito)</option>
-                                                                    <option value="120"> 120 (Crédito)</option>
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30"> 30 </option>
+                                                                    <option value="60"> 60 </option>
+                                                                    <option value="90" selected> 90 </option>
+                                                                    <option value="120"> 120 </option>
                                                                 </select>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <select id="plazo" class="select2" name="plazo" required
                                                                     oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                                                                    <option value="0"> 0 (Pendiente)</option>
-                                                                    <option value="30"> 30 (Crédito)</option>
-                                                                    <option value="60"> 60 (Crédito)</option>
-                                                                    <option value="90"> 90 (Crédito)</option>
-                                                                    <option value="120" selected> 120 (Crédito)</option>
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30"> 30 </option>
+                                                                    <option value="60"> 60 </option>
+                                                                    <option value="90"> 90 </option>
+                                                                    <option value="120" selected> 120 </option>
                                                                 </select>
                                                             </c:otherwise>
                                                           </c:choose>

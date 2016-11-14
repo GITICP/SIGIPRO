@@ -92,30 +92,30 @@
                       <td>${factura.getFecha_S()}</td>
                       <c:choose>
                             <c:when test="${factura.getMoneda() == 'Colones'}">
-                              <td>&#8353;${factura.getMonto()}</td>
+                              <td>&#8353;${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
                             </c:when>
                             <c:when test="${factura.getMoneda() == 'Dólares'}">
-                              <td>$${factura.getMonto()}</td>
+                              <td>$${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
                             </c:when>
                             <c:when test="${factura.getMoneda() == 'Euros'}">
-                              <td>&euro;${factura.getMonto()}</td>
+                              <td>&euro;${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
                             </c:when>
                             <c:otherwise>
-                                <td>${factura.getMonto()}</td>
+                                <td>${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
                             </c:otherwise>
                         </c:choose>
                       <c:choose>
                             <c:when test="${factura.getMoneda() == 'Colones'}">
-                              <td>&#8353;${factura.getMonto_pendiente()}</td>
+                              <td>&#8353;${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
                             </c:when>
                             <c:when test="${factura.getMoneda() == 'Dólares'}">
-                              <td>$${factura.getMonto_pendiente()}</td>
+                              <td>$${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
                             </c:when>
                             <c:when test="${factura.getMoneda() == 'Euros'}">
-                              <td>&euro;${factura.getMonto_pendiente()}</td>
+                              <td>&euro;${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
                             </c:when>
                             <c:otherwise>
-                                <td>${factura.getMonto_pendiente()}</td>
+                                <td>${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
                             </c:otherwise>
                         </c:choose>
                       <td>${factura.getMoneda()}</td>

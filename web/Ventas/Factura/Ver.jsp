@@ -91,8 +91,38 @@
                                         </c:choose>
                                 </tr>
                                 <tr><td> <strong>Fecha: </strong> <td>${factura.getFecha_S()} </td></tr>
-                                <tr><td> <strong>Monto: </strong> <td>${factura.getMonto()} ${factura.getMoneda()} </td></tr>
-                                <tr><td> <strong>Monto Pendiente: </strong> <td>${factura.getMonto_pendiente()} ${factura.getMoneda()} </td></tr>
+                                <tr><td> <strong>Monto: </strong> 
+                                    <c:choose>
+                                        <c:when test="${factura.getMoneda() == 'Colones'}">
+                                          <td>&#8353;${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
+                                        </c:when>
+                                        <c:when test="${factura.getMoneda() == 'Dólares'}">
+                                          <td>$${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
+                                        </c:when>
+                                        <c:when test="${factura.getMoneda() == 'Euros'}">
+                                          <td>&euro;${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td>${String.format("%,.2f", factura.getMonto().doubleValue())}</td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>
+                                <tr><td> <strong>Monto Pendiente: </strong> 
+                                    <c:choose>
+                                        <c:when test="${factura.getMoneda() == 'Colones'}">
+                                          <td>&#8353;${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
+                                        </c:when>
+                                        <c:when test="${factura.getMoneda() == 'Dólares'}">
+                                          <td>$${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
+                                        </c:when>
+                                        <c:when test="${factura.getMoneda() == 'Euros'}">
+                                          <td>&euro;${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td>${String.format("%,.2f", factura.getMonto_pendiente().doubleValue())}</td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>
                                 <tr><td> <strong>Moneda: </strong> <td>${factura.getMoneda()} </td></tr>
                                 <tr><td> <strong>Fecha de Vencimiento: </strong> <td>${factura.getFecha_vencimiento_S()} </td></tr>
                                 <tr><td> <strong>Documento 1: </strong> 
