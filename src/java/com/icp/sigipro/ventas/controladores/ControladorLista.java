@@ -135,10 +135,20 @@ public class ControladorLista extends SIGIPROServlet {
             Lista lista_nuevo = construirObjeto(request);
             
             if (lista_nuevo.getFecha_atencion_S().equals("")){
-                resultado = dao.insertarListaFechaA0(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.insertarListaFechaA0(lista_nuevo);
+                }
+                else{
+                    resultado = dao.insertarListaClienteUnknownFechaA0(lista_nuevo);
+                }
             }
             else{
-                resultado = dao.insertarLista(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.insertarLista(lista_nuevo);
+                }
+                else{
+                    resultado = dao.insertarListaClienteUnknown(lista_nuevo);
+                }
             }
             
             //Funcion que genera la bitacora
@@ -170,10 +180,20 @@ public class ControladorLista extends SIGIPROServlet {
             Lista lista_nuevo = construirObjeto(request);
             
             if (lista_nuevo.getFecha_atencion_S().equals("")){
-                resultado = dao.editarListaFechaA0(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.editarListaFechaA0(lista_nuevo);
+                }
+                else{
+                    resultado = dao.editarListaClienteUnknownFechaA0(lista_nuevo);
+                }
             }
             else{
-                resultado = dao.editarLista(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.editarLista(lista_nuevo);
+                }
+                else{
+                    resultado = dao.editarListaClienteUnknown(lista_nuevo);
+                }
             }
             
             
@@ -229,7 +249,15 @@ public class ControladorLista extends SIGIPROServlet {
     private Lista construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Lista lista = new Lista();
         lista.setId_lista(Integer.parseInt(request.getParameter("id_lista")));
-        lista.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
+        int id_cliente = Integer.parseInt(request.getParameter("id_cliente"));
+        if (id_cliente != 0){
+            lista.setCliente(cdao.obtenerCliente(id_cliente));
+        }
+        else{
+            lista.setNombre_cliente(request.getParameter("nombre_cliente"));
+            lista.setCorreo(request.getParameter("correo_electronico"));
+            lista.setTelefono(request.getParameter("telefono"));
+        }
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date result = df.parse(request.getParameter("fecha_solicitud"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());

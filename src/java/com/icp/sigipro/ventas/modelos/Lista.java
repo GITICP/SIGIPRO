@@ -20,7 +20,34 @@ public class Lista { //Lista de espera
     private Cliente cliente;
     private Date fecha_solicitud;
     private Date fecha_atencion;
+    private String nombre_cliente;
+    private String telefono;
+    private String correo;
 
+    public String getNombre_cliente() {
+        return nombre_cliente;
+    }
+
+    public void setNombre_cliente(String nombre_cliente) {
+        this.nombre_cliente = nombre_cliente;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+    
     public int getId_lista() {
         return id_lista;
     }

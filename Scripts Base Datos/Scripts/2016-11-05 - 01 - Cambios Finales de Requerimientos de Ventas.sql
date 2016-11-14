@@ -68,3 +68,11 @@ CREATE TABLE ventas.tipo_seguimiento(
 );
 ALTER TABLE ONLY ventas.tipo_seguimiento ADD CONSTRAINT pk_tipo PRIMARY KEY (id_tipo);
 ALTER TABLE ONLY ventas.tipo_seguimiento ADD CONSTRAINT fk_id_seguimiento FOREIGN KEY (id_seguimiento) REFERENCES ventas.seguimiento_venta(id_seguimiento) ON DELETE SET NULL;
+
+-- Lista de Espera
+ALTER TABLE ventas.lista
+DROP CONSTRAINT fk_id_cliente,
+ALTER COLUMN id_cliente DROP NOT NULL,
+ADD COLUMN nombre_cliente character varying(80),
+ADD COLUMN telefono character varying(12),
+ADD COLUMN correo_electronico character varying(70);

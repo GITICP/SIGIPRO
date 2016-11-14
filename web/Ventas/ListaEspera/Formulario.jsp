@@ -17,9 +17,10 @@
             <!-- Id Cliente -->
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="input-group">
+                    <div>
                         <select id="id_cliente" class="select2" name="id_cliente" required
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                <option value=0> Otro Cliente (Ingreso Manual)</option>
                           <c:forEach items="${clientes}" var="cliente">
                             <c:choose>
                               <c:when test="${lista.getCliente().getId_cliente() == cliente.getId_cliente()}" >
@@ -34,9 +35,44 @@
                     </div>
                 </div>
             </div>
-          
+            <label for="nombre_cliente_label" id="nombre_cliente_label" class="control-label"> *Nombre del Cliente</label>
+                    <!-- Nombre_cliente -->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input id="nombre_cliente" type="text" class="form-control" name="nombre_cliente" maxlength="80" value="${lista.getNombre_cliente()}" 
+                                    oninvalid="setCustomValidity('Debe ingresar el nombre del cliente. ')"
+                                    oninput="setCustomValidity('')">
+                            </div>
+                        </div>
+                    </div>
+            <label for="telefono" id="telefono_label" class="control-label"> *Teléfono (formato 506 22225555)</label>
+                    <!-- telefono -->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input id="telefono" type="text" class="form-control" name="telefono" maxlength="12" value="${lista.getTelefono()}" 
+                                    oninvalid="setCustomValidity('Debe ingresar un telefono. ')"
+                                    oninput="setCustomValidity('')">
+                            </div>
+                        </div>
+                    </div>
+            <label for="correo_electronico" id="correo_electronico_label" class="control-label"> *Correo Electrónico</label>
+                <!-- correo_electronico -->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input id="correo_electronico" type="email" class="form-control" maxlength="70" name="correo_electronico" value="${lista.getCorreo()}" 
+                                oninvalid="setCustomValidity('Debe ingresar un correo electrónico válido. ')"
+                                oninput="setCustomValidity('')">
+                        </div>
+                    </div>
+                </div>
             
-            <label for="fecha" class="control-label"> *Fecha de Solicitud</label>
+            
+            </div>
+            <div class="col-md-6">
+                <label for="fecha" class="control-label"> *Fecha de Solicitud</label>
             <!-- Fecha -->
             <div class="form-group">
                 <div class="col-sm-12">
@@ -123,3 +159,5 @@
 
 
 </form>
+        <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+        <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/ListaEspera.js"></script>

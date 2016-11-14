@@ -388,10 +388,20 @@ public class ControladorFactura extends SIGIPROServlet {
                 }
                 if (resultado != 0) {
                     //Eliminar cliente de lista de espera
-                    if (ldao.clienteEnLista(tr.getCliente().getId_cliente())){
-                        List<Lista> ClientesASacarDeListaDeEspera = ldao.obtenerListasPorCliente(tr.getCliente().getId_cliente());
-                        for (Lista l : ClientesASacarDeListaDeEspera){
-                            ldao.eliminarLista(l.getId_lista());
+                    if ((tr.getCliente()==null)||(tr.getCliente().getId_cliente()==0)){
+                        if (ldao.clienteNombreEnLista(tr.getNombre())){
+                            List<Lista> ClientesASacarDeListaDeEspera = ldao.obtenerListasPorNombreCliente(tr.getNombre());
+                            for (Lista l : ClientesASacarDeListaDeEspera){
+                                ldao.eliminarLista(l.getId_lista());
+                            }
+                        }
+                    }
+                    else{
+                        if (ldao.clienteEnLista(tr.getCliente().getId_cliente())){
+                            List<Lista> ClientesASacarDeListaDeEspera = ldao.obtenerListasPorCliente(tr.getCliente().getId_cliente());
+                            for (Lista l : ClientesASacarDeListaDeEspera){
+                                ldao.eliminarLista(l.getId_lista());
+                            }
                         }
                     }
                     //Funcion que genera la bitacora

@@ -60,7 +60,14 @@
                       <td>
                         <a href="/SIGIPRO/Ventas/ListaEspera?accion=ver&id_lista=${lista.getId_lista()}">
                         <div style="height:100%;width:100%">
-                            ${lista.getCliente().getNombre()}
+                           <c:choose>
+                          <c:when test= "${lista.getCliente() != null}">
+                              ${lista.getCliente().getNombre()}
+                          </c:when>
+                          <c:otherwise>
+                              ${lista.getNombre_cliente()}
+                          </c:otherwise>
+                        </c:choose>
                         </div>
                         </a>
                       </td>

@@ -55,7 +55,22 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Cliente:  </strong>  </td> <center> <td> ${lista.getCliente().getNombre()}   </td> </center> </tr>
+                <tr><td> <strong>Cliente: </strong></td><center> 
+                        <c:choose>
+                          <c:when test= "${lista.getCliente() != null}">
+                              <td>${lista.getCliente().getNombre()}</td>
+                          </c:when>
+                          <c:otherwise>
+                              <td>${lista.getNombre_cliente()}</td>
+                          </c:otherwise>
+                        </c:choose>
+                    </center> </tr>
+                <c:choose>
+                  <c:when test= "${lista.getCliente() == null}">
+                      <tr><td> <strong>Teléfono: </strong>  </td> <center> <td> ${lista.getTelefono()}   </td> </center> </tr>
+                      <tr><td> <strong>Correo electrónico: </strong>  </td> <center> <td> ${lista.getCorreo()}   </td> </center> </tr>
+                  </c:when>
+                </c:choose>    
                 <tr><td> <strong>Fecha de Solicitud: </strong>  </td> <center> <td> ${lista.getFecha_solicitud_S()}   </td> </center> </tr>
                 <tr><td> <strong>Fecha de Atención / Despacho: </strong>  </td> <center> <td> ${lista.getFecha_atencion_S()}   </td> </center> </tr>
               </table>
