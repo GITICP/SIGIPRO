@@ -11,7 +11,9 @@
     <div class="row">
         <div class="col-md-6">
             <input hidden="true" name="id_seguimiento" value="${seguimiento.getId_seguimiento()}">
-            <input hidden="true" name="accion" value="${accion}">
+            <input hidden="true" name="accion" id="accion" value="${accion}">
+            <input id="listaProductos" hidden="true" name="listaProductos" value="${listaTipos}">
+            <input id="idfactura" hidden="true" name="idfactura" value="${seguimiento.getFactura().getId_factura()}">
             
             <label for="id_cliente" class="control-label"> *Cliente</label>
             <!-- Id Cliente -->
@@ -68,37 +70,6 @@
                     </div>
                 </div>
             </div>
-            
-            <label for="observaciones" class="control-label"> Observaciones</label>
-            <!-- Observaciones -->
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <textarea id="observaciones" name="observaciones" class="form-control">${seguimiento.getObservaciones()}</textarea>
-                    </div>
-                </div>
-            </div>
-                                <label for="tipo" class="control-label"> *Tipo</label>
-            <!-- Tipo -->
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="tipo" class="select2" name="tipo" required
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                          <c:forEach items="${tipos}" var="tipo">
-                            <c:choose>
-                              <c:when test="${seguimiento.getTipo() == tipo}" >
-                                <option value="${tipo}" selected> ${tipo}</option>
-                              </c:when>
-                              <c:otherwise>
-                                <option value="${tipo}"> ${tipo}</option>
-                              </c:otherwise>
-                            </c:choose>
-                          </c:forEach>
-                        </select>
-                    </div>
-                </div>
-            </div>
             </div>
             <div class="col-md-6">
             <c:choose>
@@ -132,6 +103,44 @@
                                 
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
+                    <div class="col-md-12">
+        
+        <!-- Esta arte es la de los productos de la solicitud -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-th-list"></i> *Acciones</h3>
+                    <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-productos" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Tipo</th>
+                          <th>Fecha</th>
+                          <th>Observaciones</th>
+                          <th>Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${tipos_seguimiento}" var="tipo_seguimiento">
+                          <tr data-orden="${tipo_seguimiento.getContador()}" id="${tipo_seguimiento.getId_tipo()}">
+                            <td>${tipo_seguimiento.getTipo()}</td>
+                            <td>${tipo_seguimiento.getFecha_S()}</td>
+                            <td>${tipo_seguimiento.getObservaciones()}</td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:7px;" onclick="editarProducto(${tipo_seguimiento.getContador()})">Modificar</button>
+                                <button type="button" class="btn btn-danger btn-sm boton-accion" onclick="eliminarProducto(${tipo_seguimiento.getContador()})">Eliminar</button>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los productos de la solicitud -->
+            </div>
 
 
     <div class="form-group">

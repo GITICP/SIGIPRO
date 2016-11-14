@@ -45,8 +45,6 @@
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Factura</th>
-                    <th>Observaciones</th>
-                    <th>Tipo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -62,8 +60,6 @@
                       </td>
                       <td>${seguimiento.getCliente().getNombre()}</td>
                       <td>ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()}</td>
-                      <td>${seguimiento.getObservaciones()}</td>
-                      <td>${seguimiento.getTipo()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

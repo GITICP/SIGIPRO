@@ -16,6 +16,8 @@ import com.icp.sigipro.ventas.modelos.Seguimiento_venta;
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
 import com.icp.sigipro.ventas.dao.FacturaDAO;
+import com.icp.sigipro.ventas.dao.Tipo_SeguimientoDAO;
+import com.icp.sigipro.ventas.modelos.Tipo_Seguimiento;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -55,6 +57,7 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
     private final ClienteDAO cdao = new ClienteDAO();
     private final FacturaDAO fdao = new FacturaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
+    private final Tipo_SeguimientoDAO podao = new Tipo_SeguimientoDAO();
 
     protected final Class clase = ControladorSeguimiento_venta.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -149,13 +152,16 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
 
-    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "SeguimientoVenta/Ver.jsp";
         int id_seguimiento = Integer.parseInt(request.getParameter("id_seguimiento"));
+        
+        List<Tipo_Seguimiento> tipos_seguimiento = podao.obtenerTiposSeguimiento(id_seguimiento);
+        request.setAttribute("tipos_seguimiento", tipos_seguimiento);
         try {
             Seguimiento_venta c = dao.obtenerSeguimiento_venta(id_seguimiento);
             request.setAttribute("seguimiento", c);
@@ -181,6 +187,22 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
         tipos.add("Encuesta de Satisfacción");
         tipos.add("Otro");
         
+        
+        List<Tipo_Seguimiento> tipos_seguimiento = podao.obtenerTiposSeguimiento(id_seguimiento);
+        int contador = 1;
+        String listaTipos = "";
+        for (Tipo_Seguimiento t: tipos_seguimiento){
+            t.setContador(contador);
+            listaTipos += "#r#"+t.getId_tipo();
+            listaTipos += "#c#"+t.getTipo();
+            listaTipos += "#c#"+t.getFecha_S();
+            listaTipos += "#c#"+t.getObservaciones();
+            contador++;
+        }
+        request.setAttribute("tipos_seguimiento", tipos_seguimiento);
+        
+        
+        request.setAttribute("listaTipos", listaTipos);
         request.setAttribute("tipos", tipos);
         request.setAttribute("seguimiento", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
@@ -213,6 +235,13 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
 
             if (tr.getId_seguimiento() == 0) { //agregar
                 resultado = dao.insertarSeguimiento_venta(tr);
+                
+                if (tr.getListaTipos()!= null && !(tr.getListaTipos().isEmpty()) ) {
+                    List<Tipo_Seguimiento> p_i = podao.parsearProductos(tr.getListaTipos(), resultado);
+                    for (Tipo_Seguimiento i : p_i) {
+                        podao.insertarTipo_Seguimiento(i);
+                    }
+                }
                 if (resultado != 0) {
                     request.setAttribute("mensaje", helper.mensajeDeExito("Seguimiento de Venta agregado correctamente"));
                     //Funcion que genera la bitacora
@@ -237,6 +266,17 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
                         //archivo.delete();
                     }
                 resultado2 = dao.editarSeguimiento_venta(tr);
+                if (tr.getListaTipos()!= null && !(tr.getListaTipos().isEmpty()) ) {
+                    List<Tipo_Seguimiento> p_i = podao.parsearProductos(tr.getListaTipos(), tr.getId_seguimiento());
+                    podao.eliminarTipos_Seguimiento(tr.getId_seguimiento());
+                    for (Tipo_Seguimiento i : p_i) {
+                        podao.insertarTipo_Seguimiento(i);
+                    }
+                }
+                else{
+                    podao.eliminarTipos_Seguimiento(tr.getId_seguimiento());
+                }
+                
                 if (resultado2) {
                     
                     //Funcion que genera la bitacora
@@ -308,14 +348,11 @@ public class ControladorSeguimiento_venta extends SIGIPROServlet {
                         //System.out.println("nueva factura: "+fieldValue);
                         tr.setFactura(fdao.obtenerFactura(Integer.parseInt(fieldValue)));
                         break;
-                    case "observaciones":
-                        tr.setObservaciones(fieldValue);
-                        break;
-                    case "tipo":
-                        tr.setTipo(fieldValue);
-                        break;
                     case "id_cliente":
                         tr.setCliente(cdao.obtenerCliente(Integer.parseInt(fieldValue)));
+                        break;    
+                    case "listaProductos":
+                        tr.setListaTipos(fieldValue);
                         break;    
                 }
             } else {

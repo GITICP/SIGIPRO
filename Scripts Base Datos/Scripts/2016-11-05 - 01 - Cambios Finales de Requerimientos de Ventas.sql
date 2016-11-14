@@ -52,3 +52,19 @@ ADD COLUMN firmado boolean;
 -- Encuesta de Satisfacción
 ALTER TABLE ventas.encuesta_satisfaccion
 ADD COLUMN url character varying(500);
+
+-- Seguimiento de Venta
+ALTER TABLE ventas.seguimiento_venta
+DROP COLUMN observaciones,
+DROP COLUMN tipo;
+
+-- Crear tabla Tipos de seguimiento de venta
+CREATE TABLE ventas.tipo_seguimiento(
+	id_tipo serial NOT NULL,
+	id_seguimiento integer NOT NULL,
+	tipo character varying(50),
+	observaciones character varying(500),
+	fecha date NOT NULL
+);
+ALTER TABLE ONLY ventas.tipo_seguimiento ADD CONSTRAINT pk_tipo PRIMARY KEY (id_tipo);
+ALTER TABLE ONLY ventas.tipo_seguimiento ADD CONSTRAINT fk_id_seguimiento FOREIGN KEY (id_seguimiento) REFERENCES ventas.seguimiento_venta(id_seguimiento) ON DELETE SET NULL;

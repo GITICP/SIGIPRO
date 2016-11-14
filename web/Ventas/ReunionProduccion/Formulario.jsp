@@ -59,7 +59,9 @@
                 </div>
               </div>
             </div>
-                        <!-- Minuta -->
+            </div>
+            <div class="col-md-6">
+                <!-- Minuta -->
             <c:choose>
                 <c:when test="${reunion.getId_reunion()!=0}">
                     <label for="minuta" class="control-label"> Minuta (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
@@ -112,9 +114,10 @@
                     </div>
                 </c:otherwise>
             </c:choose>
+            </div>
+                        
             
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
-        </div>
                         <div class="col-md-12">
         
         <!-- Esta arte es la de los productos de la solicitud -->

@@ -73,7 +73,7 @@
               </div>
             </div>
           </div>
-            <label for="posibleFechaEntrega" class="control-label"> Fecha Determinada para la Entrega</label>
+            <label for="posibleFechaEntrega" class="control-label"> *Fecha Determinada para la Entrega</label>
             <div class="form-group">
               <div class="col-sm-12">
                 <div class="input-group" style="display:table;">
