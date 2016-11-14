@@ -407,9 +407,12 @@ public class UsuarioDAO extends DAO
                                                                        + " (nombre_usuario, contrasena,  nombre_completo, correo, cedula, id_seccion, id_puesto, fecha_activacion, fecha_desactivacion, estado, contrasena_caducada) "
                                                                        + " VALUES "
                                                                        + " (?,?,?,?,?,?,?,?,?,?,true) RETURNING id_usuario");
-                String contrasena = generarContrasena();
+                if(usuario.getContrasenna() == null) {
+                    usuario.setContrasenna(generarContrasena());
+                }
+                
                 consulta.setString(1, usuario.getNombre_usuario());
-                consulta.setString(2, md5(contrasena));
+                consulta.setString(2, md5(usuario.getContrasenna()));
                 consulta.setString(3, usuario.getNombre_completo());
                 consulta.setString(4, usuario.getCorreo());
                 consulta.setString(5, usuario.getCedula());
@@ -432,10 +435,9 @@ public class UsuarioDAO extends DAO
                 if (resultadoConsulta.next()) {
                     resultado = true;
                     usuario.setId_usuario(resultadoConsulta.getInt("id_usuario"));
-
                 }
                 UtilidadEmail u = UtilidadEmail.getSingletonUtilidadEmail();
-                u.enviarUsuarioCreado(usuario.getCorreo(), usuario.getNombre_usuario(), contrasena, usuario.getFechaActivacion(), usuario.getFechaDesactivacion(), permanente);
+                u.enviarUsuarioCreado(usuario.getCorreo(), usuario.getNombre_usuario(), usuario.getContrasenna(), usuario.getFechaActivacion(), usuario.getFechaDesactivacion(), permanente);
 
                 resultadoConsulta.close();
                 consulta.close();
@@ -455,7 +457,7 @@ public class UsuarioDAO extends DAO
 
     public boolean editarUsuario(int idUsuario, String nombreCompleto, String correoElectronico,
                                  String cedula, Integer id_seccion, Integer id_puesto, String fechaActivacion,
-                                 String fechaDesactivacion, List<RolUsuario> p_roles, String estado)
+                                 String fechaDesactivacion, List<RolUsuario> p_roles, String estado, String contrasenna)
     {
         boolean resultado = false;
 
@@ -478,16 +480,31 @@ public class UsuarioDAO extends DAO
                 Date hoySQL = new Date(hoyFormateado.getTime());
 
                 PreparedStatement consulta;
+                
+                String updateContrasenna = "";
+                boolean updateContrasennaBool = contrasenna.length() > 0;
+                if (updateContrasennaBool) {
+                    updateContrasenna = ", contrasena = ? ";
+                }
+                
                 if (fActivacion.before(hoySQL)) {
                     consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                                                         + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?"
+                                                         + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ? "
+                                                         + updateContrasenna
                                                          + " WHERE id_usuario = ? ");
-                    consulta.setInt(8, idUsuario);
+                    if (updateContrasennaBool) {
+                        consulta.setString(8, md5(contrasenna));
+                        consulta.setInt(9, idUsuario);
+                    } else {
+                        consulta.setInt(8, idUsuario);
+                    }
+                    
                 }
 
                 else {
                     consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                                                         + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?"
+                                                         + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?, contrasenna = ?"
+                                                         + updateContrasenna
                                                          + " WHERE id_usuario = ? ");
                     boolean fechas;
                     if (estado.toLowerCase().equals("false")) {
@@ -496,8 +513,15 @@ public class UsuarioDAO extends DAO
                     else {
                         fechas = compararFechas(fActivacionSQL, fDesactivacionSQL, formatoFecha);
                     }
-                    consulta.setBoolean(8, fechas);
-                    consulta.setInt(9, idUsuario);
+                    
+                    if (updateContrasennaBool) {
+                        consulta.setBoolean(8, fechas);
+                        consulta.setString(9, md5(contrasenna));
+                        consulta.setInt(10, idUsuario);
+                    } else {
+                        consulta.setBoolean(8, fechas);
+                        consulta.setInt(9, idUsuario);
+                    }
                 }
 
                 consulta.setString(1, correoElectronico);

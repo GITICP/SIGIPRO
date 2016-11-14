@@ -32,6 +32,7 @@ public class Usuario  extends IModelo
     //Opcionales para cosas de interfaz
     String nombre_seccion;
     String nombre_puesto;
+    String contrasenna;
     
     public Usuario(){}
     
@@ -241,6 +242,12 @@ public class Usuario  extends IModelo
   {
     return activo;
   }
-    
-  
+
+    public String getContrasenna() {
+        return contrasenna;
+    }
+
+    public void setContrasenna(String contrasenna) {
+        this.contrasenna = contrasenna;
+    } 
 }
