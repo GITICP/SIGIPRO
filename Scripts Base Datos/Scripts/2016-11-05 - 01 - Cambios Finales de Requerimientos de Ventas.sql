@@ -48,3 +48,7 @@ ADD COLUMN moneda character varying(20);
 -- Contrato de Comercialización
 ALTER TABLE ventas.contrato_comercializacion
 ADD COLUMN firmado boolean;
+
+-- Encuesta de Satisfacción
+ALTER TABLE ventas.encuesta_satisfaccion
+ADD COLUMN url character varying(500);

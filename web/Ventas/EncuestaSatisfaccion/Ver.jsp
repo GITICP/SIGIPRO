@@ -72,6 +72,7 @@
                                         </c:choose>
                                     </td>
                                 </tr>
+                                <tr><td> <strong>URL de Encuesta Digital: </strong> <td>${encuesta.getURL()} </td></tr>
                             </table>
                             <br>
                         </div>

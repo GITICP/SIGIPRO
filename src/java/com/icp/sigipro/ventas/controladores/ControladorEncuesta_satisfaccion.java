@@ -291,6 +291,9 @@ public class ControladorEncuesta_satisfaccion extends SIGIPROServlet {
                     case "observaciones":
                         tr.setObservaciones(fieldValue);
                         break;
+                    case "url":
+                        tr.setURL(fieldValue);
+                        break;
                     case "id_cliente":
                         tr.setCliente(cdao.obtenerCliente(Integer.parseInt(fieldValue)));
                         break;    
