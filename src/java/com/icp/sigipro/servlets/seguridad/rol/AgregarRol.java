@@ -7,6 +7,8 @@ package com.icp.sigipro.servlets.seguridad.rol;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.configuracion.dao.SeccionDAO;
+import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import com.icp.sigipro.seguridad.dao.PermisoDAO;
 import com.icp.sigipro.seguridad.dao.PermisoRolDAO;
@@ -17,6 +19,7 @@ import com.icp.sigipro.seguridad.modelos.Permiso;
 import com.icp.sigipro.seguridad.modelos.PermisoRol;
 import com.icp.sigipro.seguridad.modelos.Rol;
 import com.icp.sigipro.seguridad.modelos.RolUsuario;
+import com.icp.sigipro.seguridad.modelos.Seccion;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +42,7 @@ public class AgregarRol extends SIGIPROServlet
 {
 
   private final int permiso = 5;
+  private final SeccionDAO seccion_dao = new SeccionDAO();
 
   @Override
   protected int getPermiso()
@@ -68,7 +72,13 @@ public class AgregarRol extends SIGIPROServlet
       List<PermisoRol> permisosRol = null;
       List<Usuario> usuariosRestantes = u.obtenerUsuariosRestantes("0");
       List<Permiso> permisosRestantes = p.obtenerPermisosRestantes("0");
-
+      try {
+          List<Seccion> secciones = seccion_dao.obtenerSeccionesConPermisos();
+          request.setAttribute("secciones", secciones);
+      } catch(SIGIPROException sig_ex) {
+          request.setAttribute("mensaje", sig_ex.getMessage());
+      }
+        
       request.setAttribute("rolesUsuario", rolesUsuario);
       request.setAttribute("usuariosRestantes", usuariosRestantes);
       request.setAttribute("permisosRol", permisosRol);
@@ -144,12 +154,14 @@ public class AgregarRol extends SIGIPROServlet
         id_rol = r.obtenerIDRol(nombreRol);
         String rolesUsuario = request.getParameter("listarolesUsuario");
         String permisosRol = request.getParameter("listaPermisosRol");
+        
+        String[] ids_permisos = request.getParameterValues("permisos");
 
         RolUsuarioDAO ru = new RolUsuarioDAO();
         PermisoRolDAO pr = new PermisoRolDAO();
 
         List<RolUsuario> roles = ru.parsearUsuarios(rolesUsuario, id_rol);
-        List<PermisoRol> permisos = pr.parsearUsuarios(permisosRol, id_rol);
+        List<PermisoRol> permisos = pr.parsearUsuarios(ids_permisos, id_rol);
 
         boolean nombre_valido = r.validarNombreRol(nombreRol);
         if (nombre_valido) {

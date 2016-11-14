@@ -292,7 +292,7 @@ public class SolicitudDAO extends DAO {
                     + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
                     + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + " WHERE s.estado ='Solicitado' OR s.estado='Recibido' OR s.estado='Resultado Parcial' "
-                    + " ORDER BY s.id_solicitud; ");
+                    + " ORDER BY s.id_solicitud ; ");
             rs = consulta.executeQuery();
 
             SolicitudCC solicitud = new SolicitudCC();
@@ -447,7 +447,7 @@ public class SolicitudDAO extends DAO {
                     + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
                     + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
                     + " WHERE s.estado ='Anulada' or s.estado='Completada' "
-                    + " ORDER BY s.id_solicitud; ");
+                    + " ORDER BY s.id_solicitud DESC; ");
 
             rs = consulta.executeQuery();
             SolicitudCC solicitud = new SolicitudCC();

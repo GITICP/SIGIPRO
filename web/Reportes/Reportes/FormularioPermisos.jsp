@@ -43,8 +43,8 @@
                             <h3><i class="fa fa-table"></i> Modificar Permisos de Reporte ${reporte.getNombre()} </h3>
                         </div>
                         ${mensaje}
+                        <form class="form-horizontal" autocomplete="off" method="post" action="Reportes">
                         <div class="widget-content">
-                            <form class="form-horizontal" autocomplete="off" method="post" action="Reportes">
                                 <input type="hidden" name="accion" value="${accion}">
                                 <input type="hidden" name="id_reporte" value="${reporte.getId_reporte()}">
                                 <div class="row">
