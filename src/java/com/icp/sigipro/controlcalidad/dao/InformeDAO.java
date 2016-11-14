@@ -7,8 +7,10 @@ package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Informe;
 import com.icp.sigipro.controlcalidad.modelos.Resultado;
+import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
+import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -276,5 +278,63 @@ public class InformeDAO extends DAO {
         }
 
         return informe;
+    }
+   public void notificacion_informe_parcial(int id_solicitud) throws SIGIPROException {
+    SolicitudDAO sdao = new SolicitudDAO();
+    SolicitudCC s = sdao.obtenerSolicitud(id_solicitud);
+    Usuario solicitante = s.getUsuario_solicitante();
+    if (solicitante.getNombre_seccion().equalsIgnoreCase("Producción")) {
+      try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_parcial_todo();");
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    } else {
+       try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_parcial(?);");
+        consulta.setInt(1, solicitante.getID());
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    }
+  }
+    public void notificacion_informe_final(int id_solicitud) throws SIGIPROException {
+    SolicitudDAO sdao = new SolicitudDAO();
+    SolicitudCC s = sdao.obtenerSolicitud(id_solicitud);
+    Usuario solicitante = s.getUsuario_solicitante();
+    if (solicitante.getNombre_seccion().equalsIgnoreCase("Producción")) {
+      try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_final_todo();");
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    } else {
+       try {
+        PreparedStatement consulta = getConexion().prepareStatement("SELECT control_calidad.crear_notificacion_informe_final(?);");
+        consulta.setInt(1, solicitante.getID());
+        ResultSet rs = consulta.executeQuery();
+        rs.close();
+        consulta.close();
+        cerrarConexion();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+        throw new SIGIPROException("Se produjo un error al crear una notificación");
+      }
+    }
     }
 }
