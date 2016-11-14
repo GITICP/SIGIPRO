@@ -40,3 +40,7 @@ ADD COLUMN documento character varying(500);
 ALTER TABLE ventas.producto_orden
 ADD COLUMN fecha_entrega date,
 DROP CONSTRAINT pk_producto_orden;
+
+-- Factura
+ALTER TABLE ventas.factura
+ADD COLUMN moneda character varying(20);
