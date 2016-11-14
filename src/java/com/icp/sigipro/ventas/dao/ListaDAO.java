@@ -10,7 +10,11 @@ import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.ventas.modelos.Lista;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -182,6 +186,7 @@ public class ListaDAO extends DAO {
         }
         return resultado;
     }
+    
     public int insertarListaClienteUnknown(Lista p) throws SIGIPROException {
 
         int resultado = 0;
@@ -335,6 +340,37 @@ public class ListaDAO extends DAO {
             );
 
             consulta.setInt(1, id_lista);
+
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la eliminación");
+        }
+        return resultado;
+    }
+
+    public boolean marcarFechaAtencion(int id_lista) throws SIGIPROException {
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE ventas.lista "
+                    + " SET fecha_atencion=?"
+                    + " WHERE id_enlistado=?; "
+            );
+
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            java.util.Date utilDate = cal.getTime();
+            java.util.Date result = df.parse(utilDate.toString());
+            java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
+            consulta.setDate(1, fecha_solicitudSQL);
+            consulta.setInt(2, id_lista);
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

@@ -23,7 +23,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +55,7 @@ public class ControladorLista extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
+            add("historial");
         }
     };
     protected final List<String> productosPost = new ArrayList<String>() {
@@ -85,8 +89,45 @@ public class ControladorLista extends SIGIPROServlet {
         validarPermisos(permisos, listaPermisos);
 
         List<Lista> listas = dao.obtenerListas();
-        request.setAttribute("listaListas", listas);
+        List<Lista> listasnodespachadas = new ArrayList<Lista>();;
+        for (Lista l: listas){
+            if ((l.getFecha_atencion() == null)||(l.getFecha_atencion_S().equals(""))){
+                listasnodespachadas.add(l);
+            }
+        }
+        request.setAttribute("listaListas", listasnodespachadas);
         String redireccion = "ListaEspera/index.jsp";
+        
+        redireccionar(request, response, redireccion);
+    }
+
+    protected int daysBetween(Date d1, Date d2){
+             return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+     }
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706,1};
+        validarPermisos(permisos, listaPermisos);
+
+        List<Lista> listas = dao.obtenerListas();
+        List<Lista> listasdespachadas = new ArrayList<Lista>();;
+         Calendar cal1 = new GregorianCalendar();
+         Calendar cal2 = new GregorianCalendar();
+
+         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+        for (Lista l: listas){
+            if ((l.getFecha_atencion() != null)&&(!l.getFecha_atencion_S().equals(""))){
+                listasdespachadas.add(l);
+                 Date date = sdf.parse(l.getFecha_solicitud_S());
+                 cal1.setTime(date);
+                 date = sdf.parse(l.getFecha_atencion_S());
+                 cal2.setTime(date);
+                 l.setDias(daysBetween(cal1.getTime(),cal2.getTime()));
+            }
+        }
+     
+        request.setAttribute("listaListas", listasdespachadas);
+        String redireccion = "ListaEspera/historial.jsp";
         
         redireccionar(request, response, redireccion);
     }
@@ -100,6 +141,15 @@ public class ControladorLista extends SIGIPROServlet {
         int id_lista = Integer.parseInt(request.getParameter("id_lista"));
         try {
             Lista c = dao.obtenerLista(id_lista);
+            Calendar cal1 = new GregorianCalendar();
+         Calendar cal2 = new GregorianCalendar();
+
+         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+            Date date = sdf.parse(c.getFecha_solicitud_S());
+                 cal1.setTime(date);
+                 date = sdf.parse(c.getFecha_atencion_S());
+                 cal2.setTime(date);
+                 c.setDias(daysBetween(cal1.getTime(),cal2.getTime()));
             request.setAttribute("lista", c);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));

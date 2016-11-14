@@ -33,8 +33,7 @@
             <div class="widget-header">
                 <h3><i class="fa fa-file-text-o"></i> Listas de Espera </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera?accion=historial">Historial</a>
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera?accion=agregar">Agregar a Lista</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera">Volver</a>
                 </div>  
             </div>
             ${mensaje}
@@ -45,6 +44,8 @@
                   <tr>
                     <th>Fecha de Solicitud</th>
                     <th>Cliente</th>
+                    <th>Fecha de Atención / Despacho</th>
+                    <th>Total de Días</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,8 @@
                         </div>
                         </a>
                       </td>
+                      <td>${lista.getFecha_atencion_S()}</td>
+                      <td>${lista.getDias()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

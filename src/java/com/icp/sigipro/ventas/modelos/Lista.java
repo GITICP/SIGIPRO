@@ -23,6 +23,15 @@ public class Lista { //Lista de espera
     private String nombre_cliente;
     private String telefono;
     private String correo;
+    private int dias;
+
+    public int getDias() {
+        return dias;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
+    }
 
     public String getNombre_cliente() {
         return nombre_cliente;

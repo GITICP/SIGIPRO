@@ -73,6 +73,7 @@
                 </c:choose>    
                 <tr><td> <strong>Fecha de Solicitud: </strong>  </td> <center> <td> ${lista.getFecha_solicitud_S()}   </td> </center> </tr>
                 <tr><td> <strong>Fecha de Atención / Despacho: </strong>  </td> <center> <td> ${lista.getFecha_atencion_S()}   </td> </center> </tr>
+                <tr><td> <strong>Total de Días: </strong>  </td> <center> <td> ${lista.getDias()}   </td> </center> </tr>
               </table>
               <br>
               

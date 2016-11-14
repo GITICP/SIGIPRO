@@ -392,7 +392,7 @@ public class ControladorFactura extends SIGIPROServlet {
                         if (ldao.clienteNombreEnLista(tr.getNombre())){
                             List<Lista> ClientesASacarDeListaDeEspera = ldao.obtenerListasPorNombreCliente(tr.getNombre());
                             for (Lista l : ClientesASacarDeListaDeEspera){
-                                ldao.eliminarLista(l.getId_lista());
+                                ldao.marcarFechaAtencion(l.getId_lista());
                             }
                         }
                     }
@@ -400,7 +400,7 @@ public class ControladorFactura extends SIGIPROServlet {
                         if (ldao.clienteEnLista(tr.getCliente().getId_cliente())){
                             List<Lista> ClientesASacarDeListaDeEspera = ldao.obtenerListasPorCliente(tr.getCliente().getId_cliente());
                             for (Lista l : ClientesASacarDeListaDeEspera){
-                                ldao.eliminarLista(l.getId_lista());
+                                ldao.marcarFechaAtencion(l.getId_lista());
                             }
                         }
                     }
