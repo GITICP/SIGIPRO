@@ -58,7 +58,12 @@
                 <tr><td> <strong>Cliente: </strong></td><center> 
                         <c:choose>
                           <c:when test= "${lista.getCliente() != null}">
-                              <td>${lista.getCliente().getNombre()}</td>
+                              <td><a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${lista.getCliente().getId_cliente()}">
+                                <div style="height:100%;width:100%">
+                                    ${lista.getCliente().getNombre()}
+                                </div>
+                                </a>
+                              </td>
                           </c:when>
                           <c:otherwise>
                               <td>${lista.getNombre_cliente()}</td>
@@ -85,6 +90,9 @@
       </div>
       <!-- /main -->
     </div>
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.js"></script>
+            
 
   </jsp:attribute>
 

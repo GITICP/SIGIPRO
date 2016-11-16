@@ -37,6 +37,21 @@ $(function(){ /* DOM ready */ //
     
 });
 
+function comprobarFechas(){
+    
+    var fecha_i = document.getElementById("fecha_solicitud").value.split("/");
+    var fecha_r = document.getElementById("fecha_atencion").value.split("/");
+    
+    if ((parseInt(fecha_i[0]) + parseInt(fecha_i[1]) * 100 + parseInt(fecha_i[2]) * 10000) > (parseInt(fecha_r[0]) + parseInt(fecha_r[1]) * 100 + parseInt(fecha_r[2]) * 10000))
+    {
+        document.getElementById("fecha_atencion").setCustomValidity("La fecha de atención o despacho debe ser mayor que la fecha de solicitud. ");
+    }
+    
+    else{
+        document.getElementById("formLista").submit();
+    }
+}
+
 $(document).ready(function() {
     
     //**La tabla no tiene la clase datatable en el index.jsp**

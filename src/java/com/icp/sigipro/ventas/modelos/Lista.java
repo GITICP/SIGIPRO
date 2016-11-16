@@ -72,8 +72,6 @@ public class Lista { //Lista de espera
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-
-    
     
     private String formatearFecha(Date fecha)
     {
