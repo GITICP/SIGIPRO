@@ -24,9 +24,9 @@ public class Reporte extends IModelo {
     private String nombre;
     private String descripcion;
     private String consulta;
-    private List<Parametro> parametros;
+    private List<Parametro> parametros = new ArrayList<>();
     private String url_js;
-    
+
     private Seccion seccion;
 
     private int objetos_multiples = 0;
@@ -80,10 +80,8 @@ public class Reporte extends IModelo {
         }
         if (primera_vez) {
             modificarParametroPrimeraVez(parametro);
-        } else {
-            if (parametro.getTipo().equals("objeto_multiple")) {
-                this.objetos_multiples++;
-            }
+        } else if (parametro.getTipo().equals("objeto_multiple")) {
+            this.objetos_multiples++;
         }
         this.parametros.add(parametro);
     }
@@ -106,7 +104,7 @@ public class Reporte extends IModelo {
     public void setUrl_js(String url_js) {
         this.url_js = url_js;
     }
-    
+
     public boolean tieneJS() {
         boolean resultado = false;
         if (this.url_js != null) {
@@ -155,9 +153,10 @@ public class Reporte extends IModelo {
     }
 
     public void prepararConsulta(PreparedStatement consulta) throws SQLException {
-        for (Parametro p : this.parametros) {
-            p.agregarAConsulta(consulta);
+        if (this.parametros.size() != 0) {
+            for (Parametro p : this.parametros) {
+                p.agregarAConsulta(consulta);
+            }
         }
     }
-
 }
