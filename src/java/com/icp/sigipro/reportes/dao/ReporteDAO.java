@@ -223,7 +223,7 @@ public class ReporteDAO extends DAO {
             }
 
             insert_parametros = getConexion().prepareStatement(
-                    "INSERT INTO reportes.parametros (id_reporte, num_parametro, tipo_parametro, info_adicional, nombre) VALUES (?,?,?,?,?);"
+                    "INSERT INTO reportes.parametros (id_reporte, num_parametro, tipo_parametro, info_adicional, nombre, repeticiones) VALUES (?,?,?,?,?,?);"
             );
 
             for (Parametro p : r.getParametros()) {

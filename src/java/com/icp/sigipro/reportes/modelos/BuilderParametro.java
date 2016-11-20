@@ -19,10 +19,19 @@ public class BuilderParametro {
         String tipo_param = request.getParameter("tipo_param_" + num_parametro);
         String nombre_param = request.getParameter("nombre_param_" + num_parametro);
         Parametro p = null;
-        if (tipo_param != null) {
+        if (!tipo_param.isEmpty()) {
             p = crearParametroEspecifico(tipo_param);
             p.setNombre(nombre_param);
             p.setNumero(num_parametro);
+            String test = request.getParameter("repite_param_" + num_parametro);
+            boolean bool = Boolean.parseBoolean(test);
+            if(bool) {
+                String valores = request.getParameter("repeticiones_param_" + num_parametro);
+                String[] valores_array = valores.split(",");
+                for(String s : valores_array) {
+                    p.agregarRepeticion(Integer.parseInt(s));
+                }
+            }
             if (tipo_param.equals("objeto_multiple")) {
                 ObjetoMultiple p_ob = (ObjetoMultiple) p;
                 p_ob.setTipo_objeto(request.getParameter("tipo_param_objeto_" + num_parametro));

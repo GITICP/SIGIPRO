@@ -94,6 +94,7 @@ public class Reporte extends IModelo {
             parametro.setNumero(nuevo_id_param);
         } else {
             parametro.setNumero(parametro.getNumero() - this.objetos_multiples);
+            parametro.actualizarLista(this.objetos_multiples);
         }
     }
 
@@ -153,7 +154,7 @@ public class Reporte extends IModelo {
     }
 
     public void prepararConsulta(PreparedStatement consulta) throws SQLException {
-        if (this.parametros.size() != 0) {
+        if (!this.parametros.isEmpty()) {
             for (Parametro p : this.parametros) {
                 p.agregarAConsulta(consulta);
             }
