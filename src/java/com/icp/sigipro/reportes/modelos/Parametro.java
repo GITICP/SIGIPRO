@@ -79,11 +79,23 @@ public abstract class Parametro {
     }
     
     public String repeticionesAString() {
-        String resultado = "";
+        
+        StringBuilder sb = new StringBuilder();
         for(int r : repeticiones) {
-            resultado += r;
-            resultado += ",";
+            sb.append(r);
+            sb.append(",");
         }
-        return resultado.substring(0, resultado.length() - 1);
+        return sb.substring(0, sb.length() -1 );
+    }
+    
+    public void setRepeticiones(String repeticiones) {
+        if (repeticiones != null) {
+            if (!repeticiones.isEmpty()) {
+                String[] valores_array = repeticiones.split(",");
+                for(String s : valores_array) {
+                    agregarRepeticion(Integer.parseInt(s));
+                }
+            }
+        }
     }
 }

@@ -107,7 +107,8 @@ public class ReporteDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, r.id_seccion, s.nombre_seccion, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
+                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, r.id_seccion, s.nombre_seccion, "
+                    + " p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param, p.repeticiones "
                     + " FROM reportes.reportes r "
                     + "   INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion "
                     + "   LEFT JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "

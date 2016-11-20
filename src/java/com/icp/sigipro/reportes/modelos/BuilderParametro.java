@@ -23,14 +23,10 @@ public class BuilderParametro {
             p = crearParametroEspecifico(tipo_param);
             p.setNombre(nombre_param);
             p.setNumero(num_parametro);
-            String test = request.getParameter("repite_param_" + num_parametro);
-            boolean bool = Boolean.parseBoolean(test);
-            if(bool) {
+            
+            if(Boolean.parseBoolean(request.getParameter("repite_param_" + num_parametro))) {
                 String valores = request.getParameter("repeticiones_param_" + num_parametro);
-                String[] valores_array = valores.split(",");
-                for(String s : valores_array) {
-                    p.agregarRepeticion(Integer.parseInt(s));
-                }
+                p.setRepeticiones(valores);
             }
             if (tipo_param.equals("objeto_multiple")) {
                 ObjetoMultiple p_ob = (ObjetoMultiple) p;
@@ -53,6 +49,7 @@ public class BuilderParametro {
             p = crearParametroEspecifico(tipo_param);
             p.setNumero(rs.getInt("num_parametro"));
             p.setNombre(nombre_param);
+            p.setRepeticiones(rs.getString("repeticiones"));
             if(tipo_param.equals("objeto_multiple")) {
                 ObjetoMultiple p_ob = (ObjetoMultiple) p;
                 p_ob.setTipo_objeto(rs.getString("info_adicional"));
