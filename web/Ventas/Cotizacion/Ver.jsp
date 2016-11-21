@@ -57,7 +57,15 @@
               <table>
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${cotizacion.getId_cotizacion()} </td> </center> </tr>
                 <tr><td> <strong>Identificador: </strong>  </td> <center> <td> ${cotizacion.getIdentificador()}   </td> </center> </tr>
-                <tr><td> <strong>ID Intención: </strong>  </td> <center> <td> ${cotizacion.getIntencion().getId_intencion()}</td> </center> </tr>
+                <tr><td> <strong>ID Intención: </strong>  </td> <center> 
+                    <td> 
+                        <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${cotizacion.getIntencion().getId_intencion()}">
+                        <div style="height:100%;width:100%">
+                            ${cotizacion.getIntencion().getId_intencion()}
+                        </div>
+                        </a>
+                    </td> 
+                </center> </tr>
                 <tr><td> <strong>Moneda: </strong>  </td> <center> <td> ${cotizacion.getMoneda()}   </td> </center> </tr>
                 <tr><td> <strong>Flete: </strong>  </td> <center> 
                     <c:choose>

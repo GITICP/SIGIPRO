@@ -58,10 +58,26 @@
                 <tr><td> <strong>Consecutivo: </strong></td> <center> <td> ${orden.getId_orden()} </td> </center> </tr>
                 <c:choose>
                     <c:when test= "${orden.getCotizacion() == null}">
-                        <tr><td> <strong>ID Intención: </strong>  </td> <center> <td>${orden.getIntencion().getId_intencion()}</td> </center> </tr>
+                        <tr><td> <strong>ID Intención: </strong>  </td> <center> 
+                            <td> 
+                                <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${orden.getIntencion().getId_intencion()}">
+                                <div style="height:100%;width:100%">
+                                  ${orden.getIntencion().getId_intencion()}
+                                </div>
+                                </a>
+                              </td> 
+                        </center> </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td> <strong>ID Cotización: </strong>  </td> <center> <td>${orden.getCotizacion().getId_cotizacion()}</td></center> </tr>
+                        <tr><td> <strong>ID Cotización: </strong>  </td> <center> 
+                            <td>
+                                <a href="/SIGIPRO/Ventas/Cotizacion?accion=ver&id_cotizacion=${orden.getCotizacion().getId_cotizacion()}">
+                                <div style="height:100%;width:100%">
+                                    ${orden.getCotizacion().getIdentificador()}
+                                </div>
+                                </a>
+                              </td>
+                        </center> </tr>
                     </c:otherwise>
                 </c:choose>
                 <tr><td> <strong>Información de Rotulación: </strong>  </td> <center> <td> ${orden.getRotulacion()}   </td> </center> </tr>

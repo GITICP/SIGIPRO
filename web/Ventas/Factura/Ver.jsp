@@ -86,7 +86,13 @@
                                                 <td></td>
                                             </c:when>
                                             <c:otherwise>
-                                                <td>${factura.getOrden().getId_orden()}</td>
+                                                <td>
+                                                    <a href="/SIGIPRO/Ventas/OrdenCompra?accion=ver&id_orden=${factura.getOrden().getId_orden()}">
+                                                    <div style="height:100%;width:100%">
+                                                        ${factura.getOrden().getId_orden()}
+                                                    </div>
+                                                    </a>
+                                                  </td>
                                             </c:otherwise>
                                         </c:choose>
                                 </tr>

@@ -62,7 +62,13 @@
                         </a>
                       </td>
                       <td>${cotizacion.getIdentificador()}</td>
-                      <td>${cotizacion.getIntencion().getId_intencion()}</td>
+                      <td> 
+                        <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${cotizacion.getIntencion().getId_intencion()}">
+                        <div style="height:100%;width:100%">
+                            ${cotizacion.getIntencion().getId_intencion()}
+                        </div>
+                        </a>
+                      </td> 
                       <td>${cotizacion.getMoneda()}</td>
                       <c:choose>
                             <c:when test="${cotizacion.getMoneda() == 'Colones'}">

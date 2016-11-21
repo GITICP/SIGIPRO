@@ -59,7 +59,13 @@
                 <tr><td> <strong>Cliente: </strong></td><center> 
                         <c:choose>
                           <c:when test= "${intencion.getCliente() != null}">
-                              <td>${intencion.getCliente().getNombre()}</td>
+                              <td>
+                                <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${intencion.getCliente().getId_cliente()}">
+                                    <div style="height:100%;width:100%">
+                                        ${intencion.getCliente().getNombre()}
+                                    </div>
+                                </a>
+                              </td>
                           </c:when>
                           <c:otherwise>
                               <td>${intencion.getNombre_cliente()}</td>
