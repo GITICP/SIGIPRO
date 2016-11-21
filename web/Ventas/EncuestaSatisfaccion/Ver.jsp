@@ -57,7 +57,13 @@
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>ID: </strong></td> <td>${encuesta.getId_encuesta()} </td></tr>
-                                <tr><td> <strong>Cliente: </strong> <td>${encuesta.getCliente().getNombre()} </td></tr>
+                                <tr><td> <strong>Cliente: </strong> <td>
+                                    <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${encuesta.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${encuesta.getCliente().getNombre()}
+                            </div>
+                            </a>
+                                    </td></tr>
                                 <tr><td> <strong>Fecha: </strong> <td>${encuesta.getFecha_S()} </td></tr>
                                 <tr><td> <strong>Observaciones: </strong> <td>${encuesta.getObservaciones()} </td></tr>
                                 <tr><td> <strong>Documento: </strong> 

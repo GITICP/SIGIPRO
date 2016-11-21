@@ -139,7 +139,7 @@ function agregarProducto(id, producto, cantidad, fecha, lote) {
     fila += '<td>' + lote + '</td>';
     fila += '<td>';
     fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto('+contador+')"   style="margin-left:5px;margin-right:7px;">Modificar</button>';
-    fila += '<button type="button" class="btn btn-primary btn-sm" onclick="duplicarProducto(' + id + ')" style="margin-left:7px;margin-right:5px;">Duplicar</button>';
+    fila += '<button type="button" class="btn btn-primary btn-sm" onclick="duplicarProducto(' + id + ',' + contador + ')" style="margin-left:7px;margin-right:5px;">Duplicar</button>';
     fila += '</td>';
     fila += '</tr>';
 
@@ -153,13 +153,19 @@ function agregarProducto(id, producto, cantidad, fecha, lote) {
     contador ++;
 }
 
-function duplicarProducto(id) {
-  var productoADuplicar = document.getElementById(id);
+function duplicarProducto(id, contador) {
+  var tabla = document.getElementById("datatable-column-filter-productos");
+  var productoADuplicar = tabla.rows[contador];
   
   var nombreProducto = productoADuplicar.cells[0].firstChild.nodeValue;
   var cantidad = productoADuplicar.cells[1].firstChild.nodeValue;
   var fecha = productoADuplicar.cells[2].firstChild.nodeValue;
-  var lote = productoADuplicar.cells[3].firstChild.nodeValue;
+  if(productoADuplicar.cells[3].firstChild === null){
+      lote = "";
+  }
+  else{
+      lote = productoADuplicar.cells[3].firstChild.nodeValue;
+  }
   
   agregarProducto(id, nombreProducto, cantidad, fecha, lote);
 }

@@ -56,7 +56,13 @@
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>ID: </strong></td> <td>${factura.getId_factura()} </td></tr>
-                                <tr><td> <strong>Cliente: </strong> <td>${factura.getCliente().getNombre()} </td></tr>
+                                <tr><td> <strong>Cliente: </strong> <td>
+                                        <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${factura.getCliente().getId_cliente()}">
+                                        <div style="height:100%;width:100%">
+                                            ${factura.getCliente().getNombre()} 
+                                        </div>
+                                        </a>
+                                    </td></tr>
                                 <tr><td> <strong>Proyecto: </strong> 
                                     <c:choose>
                                             <c:when test="${factura.getProyecto() == 404}">

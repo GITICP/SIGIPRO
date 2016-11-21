@@ -80,7 +80,14 @@
                                 <td>2541-00</td>
                             </c:otherwise>
                         </c:choose>
-                      <td>${factura.getCliente().getNombre()}</td>
+                                
+                      <td>
+                            <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${factura.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                ${factura.getCliente().getNombre()} 
+                            </div>
+                            </a>
+                      </td>
                       <c:choose>
                             <c:when test="${factura.getOrden().getId_orden() == 0}">
                                 <td></td>

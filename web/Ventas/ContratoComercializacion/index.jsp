@@ -61,7 +61,13 @@
                         </div>
                         </a>
                       </td>
-                      <td>${contrato.getCliente().getNombre()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${contrato.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${contrato.getCliente().getNombre()}
+                            </div>
+                            </a>
+                      </td>
                       <td>${contrato.getFechaInicial_S()}</td>
                       <td>${contrato.getFechaRenovacion_S()}</td>
                       <td>

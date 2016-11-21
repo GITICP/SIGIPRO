@@ -56,7 +56,13 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>ID:  </strong></td> <center> <td> ${tratamiento.getId_tratamiento()} </td> </center> </tr>
-                <tr><td> <strong>Cliente:  </strong>  </td> <center> <td> ${tratamiento.getCliente().getNombre()}   </td> </center> </tr>
+                <tr><td> <strong>Cliente:  </strong>  </td> <center> <td>
+                        <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${tratamiento.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${tratamiento.getCliente().getNombre()}
+                            </div>
+                            </a>
+                    </td> </center> </tr>
                 <tr><td> <strong>Fecha: </strong>  </td> <center> <td> ${tratamiento.getFecha_S()}   </td> </center> </tr>
                 <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${tratamiento.getObservaciones()}   </td> </center> </tr>
                 <tr><td> <strong>Estado: </strong>  </td> <center> 

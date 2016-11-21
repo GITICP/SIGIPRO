@@ -134,7 +134,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group" id='inputGroupSeleccionProducto'>
-                <input id="asunto" type="text" maxlength="150" class="form-control" name="asunto" required
+                  <input id="asunto" type="text" maxlength="150" class="form-control" name="asunto" value="Minuta de Reunión de Producción - ${reunion.getFecha_S()}" required
                     oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                     oninput="setCustomValidity('')"> 
               </div>
@@ -144,7 +144,7 @@
           <div class="form-group">
             <div class="col-sm-12">
               <div class="input-group">
-                <textarea id="cuerpo" type="text"  maxlength="800" class="form-control" name="cuerpo" required
+                  <textarea id="cuerpo" type="text" cols="60" rows="8" style="white-space: pre-wrap;" wrap="hard" maxlength="800" class="form-control" name="cuerpo" required
                     oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
                     oninput="setCustomValidity('')"></textarea>
               </div>

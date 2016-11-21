@@ -60,7 +60,13 @@
                         </div>
                         </a>
                       </td>
-                      <td>${tratamiento.getCliente().getNombre()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${tratamiento.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${tratamiento.getCliente().getNombre()}
+                            </div>
+                            </a>
+                      </td>
                       <td>${tratamiento.getFecha_S()}</td>
                       <td>${tratamiento.getObservaciones()}</td>
                       <c:choose>
