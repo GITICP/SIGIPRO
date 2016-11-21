@@ -47,6 +47,7 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditarYBorrar}">
+                  <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Ventas/Cotizacion?accion=archivo&id_cotizacion=${cotizacion.getId_cotizacion()}">Descargar Cotización</a>
                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/Cotizacion?accion=editar&id_cotizacion=${cotizacion.getId_cotizacion()}">Editar</a>
                   <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar esta cotización? Las órdenes de compra asociadas se eliminarán. ¿Desea continuar" data-form-id="form-eliminar-cotizacion">Eliminar</a>
                 </c:if>

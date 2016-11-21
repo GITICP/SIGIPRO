@@ -22,7 +22,11 @@ import com.icp.sigipro.ventas.dao.Producto_CotizacionDAO;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import com.icp.sigipro.ventas.modelos.Producto_Cotizacion;
 import com.icp.sigipro.ventas.modelos.Producto_venta;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -35,10 +39,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 /**
  *
@@ -61,6 +71,7 @@ public class ControladorCotizacion extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
+            add("archivo");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
@@ -72,6 +83,95 @@ public class ControladorCotizacion extends SIGIPROServlet {
     };
 
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
+    protected void getArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        int[] permisos = {701,702,703,704,705,706, 1};
+        validarPermisosMultiple(permisos, request);
+
+        int cotizacion = Integer.parseInt(request.getParameter("id_cotizacion"));
+        Cotizacion c = dao.obtenerCotizacion(cotizacion);
+        List<Producto_Cotizacion> pc = idao.obtenerProductosCotizacion(cotizacion);
+
+        String filename = "";
+        
+        try{
+            String fullPath = helper_archivos.obtenerDireccionArchivos();
+            String ubicacion = new File(fullPath).getPath() + File.separatorChar + "Documentos" + File.separatorChar + "Cotizaciones";
+            this.crearDirectorio(ubicacion);
+            XWPFDocument document = new XWPFDocument();
+            //System.out.println("Ubicacion = "+ubicacion);
+            filename = ubicacion+"\\Cotización-"+c.getIdentificador()+".docx";
+            //System.out.println("filename = "+filename);
+            FileOutputStream out = new FileOutputStream(new File(filename));
+            
+            XWPFParagraph paragraph = document.createParagraph();
+            paragraph.setAlignment(ParagraphAlignment.CENTER);
+            XWPFRun run = paragraph.createRun();
+            run.setBold(true);
+            run.setFontSize(20);
+            run.setText(c.getIdentificador());
+            run.setFontFamily("Times New Roman");
+            
+            XWPFParagraph p2 = document.createParagraph();
+            p2.setAlignment(ParagraphAlignment.LEFT);
+            XWPFRun r2 = p2.createRun();
+            r2.setFontSize(12);
+            r2.setText("\nProductos:");
+            r2.addBreak();
+            for (Producto_Cotizacion p:pc){
+                String nombre = p.getProducto().getNombre();
+                int cantidad = p.getCantidad();
+                int precio = p.getPrecio();
+                r2.setText("\n- "+nombre);
+                r2.setText(", Precio Unitario: "+precio+", Cantidad: "+cantidad);
+                r2.addBreak();
+            }
+            r2.addBreak();
+            r2.setText("\nObservaciones (Intención de Venta): "+c.getIntencion().getObservaciones());
+            r2.addBreak();
+            r2.setText("\nMoneda: "+c.getMoneda());
+            r2.addBreak();
+            r2.setText("\nFlete: "+c.getFlete());
+            r2.addBreak();
+            r2.setText("\nTotal: "+c.getTotal());
+            r2.addBreak();
+            r2.setFontFamily("Times New Roman");
+            
+            document.write(out);
+            out.close();
+        }
+        catch(Exception e){
+            System.out.println("Error al crear el archivo");
+        }
+        
+        File file = new File(filename);
+        
+        if (file.exists()) {
+            ServletContext ctx = getServletContext();
+            InputStream fis = new FileInputStream(file);
+            String mimeType = ctx.getMimeType(file.getAbsolutePath());
+
+            response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
+            response.setContentLength((int) file.length());
+            String nombre = "Cotización-" + c.getIdentificador() + "." + this.getFileExtension(filename);
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
+
+            ServletOutputStream os = response.getOutputStream();
+            byte[] bufferData = new byte[1024];
+            int read = 0;
+            while ((read = fis.read(bufferData)) != -1) {
+                os.write(bufferData, 0, read);
+            }
+            os.flush();
+            os.close();
+            fis.close();
+
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Error al generar el archivo."));
+            this.getVer(request, response);
+        }
+
+    }
+    
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701, 1};
@@ -315,7 +415,33 @@ public class ControladorCotizacion extends SIGIPROServlet {
         
         return cotizacion;
     }
-    
+    private String getFileExtension(String fileName) {
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
+    }
+    private boolean crearDirectorio(String path) {
+        boolean resultado = false;
+        File directorio = new File(path);
+        if (!directorio.exists()) {
+            System.out.println("Creando directorio: " + path);
+            resultado = false;
+            try {
+                directorio.mkdirs();
+                resultado = true;
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+            if (resultado) {
+                System.out.println("Directorio Creado");
+            }
+        } else {
+            resultado = true;
+        }
+        return resultado;
+    }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
@@ -341,5 +467,5 @@ public class ControladorCotizacion extends SIGIPROServlet {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-  // </editor-fold>
+  // </editor-fold> 
 }

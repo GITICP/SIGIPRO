@@ -201,6 +201,8 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         redireccionar(request, response, redireccion);
     }
     
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postCorreo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "ReunionProduccion/Ver.jsp";
@@ -315,8 +317,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         request.setAttribute("reunion", c);
         redireccionar(request, response, redireccion);
     }
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+    
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701, 1};
