@@ -7,6 +7,8 @@ package com.icp.sigipro.ventas.controladores;
 
 import com.icp.sigipro.bitacora.dao.BitacoraDAO;
 import com.icp.sigipro.bitacora.modelo.Bitacora;
+import com.icp.sigipro.configuracion.dao.CorreoDAO;
+import com.icp.sigipro.configuracion.modelos.Correo;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 
@@ -32,7 +34,23 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Set;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Address;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -70,6 +88,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         {
             add("agregareditar");
             add("eliminar");
+            add("correo");
         }
     };
 
@@ -119,6 +138,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         }
 
     }
+    
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701, 1};
@@ -178,6 +198,121 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Editar");
         
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void postCorreo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
+        boolean resultado = false;
+        String redireccion = "ReunionProduccion/Ver.jsp";
+        int[] permisos = {701, 1};
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        validarPermisos(permisos, listaPermisos);
+        int id_reunion = Integer.parseInt(request.getParameter("id_reunion")); 
+        try {
+            //Obtener: asunto, lista de correos, texto del cuerpo y cargar el archivo
+            Reunion_produccion c = dao.obtenerReunion_produccion(id_reunion);
+            List<Participantes_reunion> d = pDAO.obtenerParticipantes(id_reunion);
+            
+            CorreoDAO correodao = new CorreoDAO();
+            Correo configcorreo = correodao.obtenerCorreo();
+            
+            // Recipient's email ID needs to be mentioned.
+            String to = "";
+            for (Participantes_reunion p: d){
+                to = to.concat(p.getUsuario().getCorreo());
+                to = to.concat(",");
+            }
+            to = to.substring(0, to.length()-1); //quitar comma final
+
+            // Sender's email ID needs to be mentioned
+            //String from = configcorreo.getCorreo();
+
+            List<String> lista = correodao.obtenerListaCorreo();
+            final String host = lista.get(0);//change accordingly
+            final String puerto = lista.get(1);//change accordingly
+            final String starttls = lista.get(2);//change accordingly
+            final String nombreEmisor = lista.get(3);//change accordingly
+            final String username = lista.get(4);//change accordingly
+            final String password = lista.get(5);//change accordingly
+
+            // Assuming you are sending email through relay.jangosmtp.net
+            //String host = nombreEmisor;
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", starttls);
+            props.put("mail.smtp.host", host);
+            props.put("mail.smtp.port", puerto);
+
+            // Get the Session object.
+            Session session = Session.getInstance(props,
+               new javax.mail.Authenticator() {
+                  protected PasswordAuthentication getPasswordAuthentication() {
+                     return new PasswordAuthentication(username, password);
+                  }
+               });
+
+            try {
+               // Create a default MimeMessage object.
+               Message message = new MimeMessage(session);
+
+               // Set From: header field of the header.
+               message.setFrom(new InternetAddress(username,nombreEmisor));
+
+               // Set To: header field of the header.
+               message.setRecipients(Message.RecipientType.TO,
+                  InternetAddress.parse(to));
+
+               // Set Subject: header field. Obtener del request.
+               message.setSubject(request.getParameter("asunto")); 
+
+               // Create the message part
+               BodyPart messageBodyPart = new MimeBodyPart();
+
+               // Now set the actual message. Obtener del request.
+               messageBodyPart.setText(request.getParameter("cuerpo"));
+
+               // Create a multipar message
+               Multipart multipart = new MimeMultipart();
+
+               // Set text message part
+               multipart.addBodyPart(messageBodyPart);
+
+               // Part two is attachment
+               messageBodyPart = new MimeBodyPart();
+               String filename = c.getMinuta();
+               DataSource source = new FileDataSource(filename);
+               messageBodyPart.setDataHandler(new DataHandler(source));
+               messageBodyPart.setFileName("Minuta-" + c.getId_reunion() + "." + this.getFileExtension(filename));
+               multipart.addBodyPart(messageBodyPart);
+
+               // Send the complete message parts
+               message.setContent(multipart);
+
+               // Send message
+               Transport.send(message);
+
+               //System.out.println("Sent message successfully....");
+               
+               resultado = true;
+
+            } catch (MessagingException e) {
+               //System.out.println("Error en al enviar el mensaje: "+e.getMessage());
+               request.setAttribute("mensaje", e.getMessage());
+            }
+        } catch (Exception ex) {
+            //System.out.println("SIGIPRO Exception");
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        if (resultado) {
+            request.setAttribute("mensaje", helper.mensajeDeExito("Correo enviado con la minuta a los participantes exitosamente"));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al enviar el correo"));
+        }
+        Reunion_produccion c = dao.obtenerReunion_produccion(id_reunion);
+        List<Participantes_reunion> d = pDAO.obtenerParticipantes(id_reunion);
+        request.setAttribute("participantes", d);
+        request.setAttribute("reunion", c);
         redireccionar(request, response, redireccion);
     }
     // </editor-fold>
@@ -273,7 +408,6 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
 
     }   
     
-    
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "ReunionProduccion/index.jsp";
@@ -302,6 +436,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         }
         redireccionar(request, response, redireccion);
     }
+    
     // </editor-fold> 
     // <editor-fold defaultstate="collapsed" desc="Método del Modelo">
     private Reunion_produccion construirObjeto(List<FileItem> items, HttpServletRequest request, String ubicacion) throws SIGIPROException, ParseException {
