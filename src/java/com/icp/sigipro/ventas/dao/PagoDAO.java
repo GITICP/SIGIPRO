@@ -188,6 +188,38 @@ public class PagoDAO extends DAO {
         return resultado;
     }
 
+    public boolean editarPago(Pago p) throws SIGIPROException {
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE ventas.pago"
+                    + " SET id_factura=?,monto=?,nota=?,fecha=?,consecutive=?,moneda=?,codigo_remision=?,consecutive_remision=?,fecha_remision=?"
+                    + " WHERE id_pago=?; ");
+
+            consulta.setInt(1, p.getFactura().getId_factura());
+            consulta.setFloat(2, p.getMonto());
+            consulta.setString(3, p.getNota());
+            consulta.setString(4, p.getFecha());
+            consulta.setString(5, p.getConsecutive());
+            consulta.setString(6, p.getMoneda());
+            consulta.setInt(7, p.getCodigo_remision());
+            consulta.setString(8, p.getConsecutive_remision());
+            consulta.setString(9, p.getFecha_remision());
+            consulta.setInt(10, p.getId_pago());
+            
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+        }
+        return resultado;
+    }
+    
     public List<Pago> obtenerPagos(int id_factura) throws SIGIPROException {
 
         List<Pago> resultado = new ArrayList<Pago>();
@@ -221,6 +253,30 @@ public class PagoDAO extends DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
+
+    public boolean eliminarPago(int id_pago) throws SIGIPROException {
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " DELETE FROM ventas.pago "
+                    + " WHERE id_pago=?; "
+            );
+
+            consulta.setInt(1, id_pago);
+
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la eliminación");
         }
         return resultado;
     }

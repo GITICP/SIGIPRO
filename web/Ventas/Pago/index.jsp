@@ -33,6 +33,7 @@
             <div class="widget-header">
                 <h3><i class="fa fa-file-text-o"></i> Pagos </h3>
                 <div class="btn-group widget-header-toolbar">
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/Pago?accion=agregar">Agregar un Pago OAF</a>
                 </div>  
             </div>
             ${mensaje}
@@ -69,21 +70,28 @@
                       <td>
                           <a href="/SIGIPRO/Ventas/Factura?accion=ver&id_factura=${Pago.getFactura().getId_factura()}">
                         <div style="height:100%;width:100%">
-                            ${Pago.getFactura().getNumero()}
+                             <c:choose>
+                                 <c:when test="${Pago.getFactura().getNumero() == 0}">
+                                     ${Pago.getFactura().getId_factura()}
+                                 </c:when>
+                                 <c:otherwise>
+                                    ${Pago.getFactura().getNumero()}
+                                 </c:otherwise>
+                             </c:choose>
                         </div>
                       </td>
                       <c:choose>
                             <c:when test="${Pago.getMoneda() == 'Colones'}">
-                              <td>&#8353;${Pago.getMonto()}</td>
+                              <td>&#8353;${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
                             </c:when>
                             <c:when test="${Pago.getMoneda() == 'Dólares'}">
-                              <td>$${Pago.getMonto()}</td>
+                              <td>$${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
                             </c:when>
                             <c:when test="${Pago.getMoneda() == 'Euros'}">
-                              <td>&euro;${Pago.getMonto()}</td>
+                              <td>&euro;${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
                             </c:when>
                             <c:otherwise>
-                                <td>${Pago.getMonto()}</td>
+                                <td>${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
                             </c:otherwise>
                         </c:choose>
                       <td>${Pago.getNota()}</td>

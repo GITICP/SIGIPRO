@@ -219,19 +219,19 @@
                                             </td>
                                             <td>${pago.getCodigo()}</td>
                                               <c:choose>
-                                                    <c:when test="${pago.getMoneda() == 'Colones'}">
-                                                      <td>&#8353;${pago.getMonto()}</td>
-                                                    </c:when>
-                                                    <c:when test="${pago.getMoneda() == 'Dólares'}">
-                                                      <td>$${pago.getMonto()}</td>
-                                                    </c:when>
-                                                    <c:when test="${pago.getMoneda() == 'Euros'}">
-                                                      <td>&euro;${pago.getMonto()}</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td>${pago.getMonto()}</td>
-                                                    </c:otherwise>
-                                                </c:choose>
+                            <c:when test="${pago.getMoneda() == 'Colones'}">
+                              <td>&#8353;${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${pago.getMoneda() == 'Dólares'}">
+                              <td>$${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${pago.getMoneda() == 'Euros'}">
+                              <td>&euro;${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:otherwise>
+                        </c:choose>
                                               <td>${pago.getNota()}</td>
                                               <td>${pago.getFecha()}</td>
                                               <td>${pago.getConsecutive()}</td>

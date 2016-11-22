@@ -47,7 +47,14 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditarYBorrar}">
-                  </c:if>
+                    <c:choose>
+                       <c:when test="${pago.getFactura().getTipo() == 'UCR'}">
+                          <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/Pago?accion=editar&id_pago=${pago.getId_pago()}">Editar</a>
+                          <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este pago" data-form-id="form-eliminar-Pago">Eliminar</a>
+                       </c:when>
+                        <c:otherwise></c:otherwise>
+                        </c:choose>
+                </c:if>
               </div>
             </div>
             ${mensaje}
@@ -57,12 +64,34 @@
                 <tr><td> <strong>Número de Factura: </strong>  </td> <center> <td>
                           <a href="/SIGIPRO/Ventas/Factura?accion=ver&id_factura=${pago.getFactura().getId_factura()}">
                         <div style="height:100%;width:100%">
-                            ${pago.getFactura().getNumero()}
+                            <c:choose>
+                                 <c:when test="${pago.getFactura().getNumero() == 0}">
+                                     ${pago.getFactura().getId_factura()}
+                                 </c:when>
+                                 <c:otherwise>
+                                    ${pago.getFactura().getNumero()}
+                                 </c:otherwise>
+                             </c:choose>
                         </div>
                       </td>
                       </center> </tr>
                 <tr><td> <strong>Código: </strong>  </td> <center> <td> ${pago.getCodigo()}  </td> </center> </tr>
-                <tr><td> <strong>Monto: </strong>  </td> <center> <td> ${pago.getMonto()}  </td> </center> </tr>
+                <tr><td> <strong>Monto: </strong>  </td> <center> 
+                    <c:choose>
+                            <c:when test="${pago.getMoneda() == 'Colones'}">
+                              <td>&#8353;${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${pago.getMoneda() == 'Dólares'}">
+                              <td>$${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${pago.getMoneda() == 'Euros'}">
+                              <td>&euro;${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:otherwise>
+                        </c:choose>
+                </center> </tr>
                 <tr><td> <strong>Nota: </strong>  </td> <center> <td> ${pago.getNota()}  </td> </center> </tr>
                 <tr><td> <strong>Fecha: </strong>  </td> <center> <td> ${pago.getFecha()}  </td> </center> </tr>
                 <tr><td> <strong>Consecutivo: </strong>  </td> <center> <td> ${pago.getConsecutive()}  </td> </center> </tr>

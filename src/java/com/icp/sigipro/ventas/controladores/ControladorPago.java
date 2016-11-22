@@ -20,7 +20,9 @@ import com.icp.sigipro.seguridad.dao.UsuarioDAO;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,10 +50,15 @@ public class ControladorPago extends SIGIPROServlet {
         {
             add("index");
             add("ver");
+            add("agregar");
+            add("editar");
         }
     };
     protected final List<String> accionesPost = new ArrayList<String>() {
         {
+            add("agregar");
+            add("editar");
+            add("eliminar");
         }
     };
 
@@ -94,10 +101,162 @@ public class ControladorPago extends SIGIPROServlet {
         
         redireccionar(request, response, redireccion);
     }
+    protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
+        validarPermisos(permisos, listaPermisos);
+       
+        String redireccion = "Pago/Agregar.jsp";
+        Pago ds = new Pago();
+        List<Factura> facturas = fdao.obtenerFacturas();
+        List<Factura> facturasOAF = new ArrayList<Factura>();
+        for (Factura f:facturas){
+            if (f.getTipo().equals("UCR")){
+                facturasOAF.add(f);
+            }
+        }
+        
+        request.setAttribute("pago", ds);
+        request.setAttribute("facturas", facturasOAF);
+        request.setAttribute("accion", "Agregar");
+
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
+        validarPermisos(permisos, listaPermisos);
+        
+        String redireccion = "Pago/Editar.jsp";
+        int id_pago = Integer.parseInt(request.getParameter("id_pago"));
+        Pago ds = dao.obtenerPago(id_pago);
+        List<Factura> facturas = fdao.obtenerFacturas();
+        List<Factura> facturasOAF = new ArrayList<Factura>();
+        for (Factura f:facturas){
+            if (f.getTipo().equals("UCR")){
+                facturasOAF.add(f);
+            }
+        }
+        request.setAttribute("pago", ds);
+        request.setAttribute("facturas", facturasOAF);
+        request.setAttribute("accion", "Editar");
+        
+        redireccionar(request, response, redireccion);
+    }
+    
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
+     protected void postAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
+        int resultado = 0;
+        String redireccion = "Pago/Agregar.jsp";
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
+        validarPermisos(permisos, listaPermisos);
+        try {
+            Pago pago_nuevo = construirObjeto(request);
+            
+            resultado = dao.insertarPago(pago_nuevo);
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(pago_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PAGO, request.getRemoteAddr());
+            //*----------------------------*
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        if (resultado != 0) {
+            redireccion = "Pago/index.jsp";
+            List<Pago> pagos = dao.obtenerPagos();
+            request.setAttribute("listaPagos", pagos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Pago agregado correctamente"));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        }
+        redireccionar(request, response, redireccion);
+    }
+
+    protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
+        boolean resultado = false;
+        String redireccion = "Pago/Editar.jsp";
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
+        validarPermisos(permisos, listaPermisos);
+        Pago pago_a_editar = dao.obtenerPago(Integer.parseInt(request.getParameter("id_pago")));
+        try {
+            Pago pago_nuevo = construirObjeto(request);
+            pago_nuevo.setId_pago(pago_a_editar.getId_pago());
+            resultado = dao.editarPago(pago_nuevo);
+            
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(pago_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PAGO, request.getRemoteAddr());
+            //*----------------------------*
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        if (resultado) {
+            redireccion = "Pago/index.jsp";
+            List<Pago> pagos = dao.obtenerPagos();
+            request.setAttribute("listaPagos", pagos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Pago editado correctamente"));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        }
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
+        boolean resultado = false;
+        String redireccion = "Pago/index.jsp";
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
+        validarPermisos(permisos, listaPermisos);
+        
+        try {
+            Pago pago_a_eliminar = dao.obtenerPago(Integer.parseInt(request.getParameter("id_pago")));
+            Factura f = pago_a_eliminar.getFactura();
+            f.setMonto_pendiente((int) (f.getMonto_pendiente()+ pago_a_eliminar.getMonto()));
+            fdao.actualizarMontoPendiente(f, (float)f.getMonto_pendiente());
+            resultado = dao.eliminarPago(pago_a_eliminar.getId_pago());
+            //Funcion que genera la bitacora
+            BitacoraDAO bitacora = new BitacoraDAO();
+            bitacora.setBitacora(pago_a_eliminar.parseJSON(), Bitacora.ACCION_ELIMINAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PAGO, request.getRemoteAddr());
+            //*----------------------------*
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", ex.getMessage());
+        }
+        if (resultado) {
+            redireccion = "Pago/index.jsp";
+            List<Pago> pagos = dao.obtenerPagos();
+            request.setAttribute("listaPagos", pagos);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Pago eliminado correctamente"));
+        } else {
+            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        }
+        redireccionar(request, response, redireccion);
+    }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos de los Modelos">
+    private Pago construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
+        Pago pago = new Pago();
+        //pago.setId_pago(Integer.parseInt(request.getParameter("id_pago")));
+        pago.setMonto(Float.parseFloat(request.getParameter("pago")));
+        pago.setCodigo(0);
+        pago.setCodigo_remision(0);
+        pago.setConsecutive("");
+        pago.setConsecutive_remision("");
+        pago.setNota("");
+        String pattern = "dd/MM/yyyy";
+        String dateInString =new SimpleDateFormat(pattern).format(new java.util.Date());
+        pago.setFecha(dateInString);
+        pago.setFecha_remision("");
+        Factura f = fdao.obtenerFactura(Integer.parseInt(request.getParameter("id_factura")));
+        fdao.actualizarMontoPendiente(f, Float.parseFloat(request.getParameter("monto_pendiente")));
+        pago.setMoneda(f.getMoneda());
+        pago.setFactura(f);
+        
+        return pago;
+    }
        // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos abstractos sobreescritos">
     @Override
