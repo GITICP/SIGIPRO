@@ -57,7 +57,7 @@
               <table>
                 <tr><td> <strong>Consecutivo: </strong></td> <center> <td> ${orden.getId_orden()} </td> </center> </tr>
                 <c:choose>
-                    <c:when test= "${orden.getCotizacion() == null}">
+                    <c:when test= "${(orden.getCotizacion() == null)||(orden.getCotizacion().getId_cotizacion() == null)||(orden.getCotizacion().getId_cotizacion() == 0)}">
                         <tr><td> <strong>ID Intención: </strong>  </td> <center> 
                             <td> 
                                 <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${orden.getIntencion().getId_intencion()}">
