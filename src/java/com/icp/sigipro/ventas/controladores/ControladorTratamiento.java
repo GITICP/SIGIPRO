@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorTratamiento", urlPatterns = {"/Ventas/Tratamiento"})
 public class ControladorTratamiento extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final TratamientoDAO dao = new TratamientoDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ClienteDAO cdao = new ClienteDAO();
@@ -64,6 +63,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "Tratamiento/Agregar.jsp";
@@ -83,6 +83,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701,702,703,704,705,706, 1};
         validarPermisos(permisos, listaPermisos);
 
         List<Tratamiento> tratamientos = dao.obtenerTratamientos();
@@ -94,6 +95,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Tratamiento/Ver.jsp";
@@ -109,6 +111,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "Tratamiento/Editar.jsp";
@@ -132,6 +135,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "Tratamiento/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Tratamiento tratamiento_nuevo = construirObjeto(request);
@@ -159,6 +163,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Tratamiento/Editar.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
@@ -188,6 +193,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
     protected void postEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException, SIGIPROException {
         boolean resultado = false;
         String redireccion = "Tratamiento/index.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_tratamiento = request.getParameter("id_tratamiento"); 

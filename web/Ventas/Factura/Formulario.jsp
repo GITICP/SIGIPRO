@@ -46,10 +46,24 @@
                             <c:forEach items="${ordenes}" var="orden">
                             <c:choose>
                               <c:when test="${factura.getOrden().getId_orden() == orden.getId_orden()}" >
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                    <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:when>
                               <c:otherwise>
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}"> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                  <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -60,10 +74,24 @@
                             <c:forEach items="${ordenes}" var="orden">
                             <c:choose>
                               <c:when test="${factura.getOrden().getId_orden() == orden.getId_orden()}" >
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                    <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}" selected> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:when>
                               <c:otherwise>
-                                <option value="${orden.getId_orden()}" data-cliente="${orden.getCliente().getId_cliente()}"> ID: ${orden.getId_orden()} Cliente: ${orden.getCliente().getNombre()}</option>
+                                  <c:choose>
+                                        <c:when test="${(orden.getCotizacion() == null) || (orden.getCotizacion().getId_cotizacion() == 0)}" >
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${orden.getId_orden()}" data-cliente="${orden.getCotizacion().getIntencion().getCliente().getId_cliente()}"> ID: ${orden.getId_orden()}</option>
+                                        </c:otherwise>
+                                    </c:choose>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -152,6 +180,7 @@
                     </div>
                 </c:otherwise>
             </c:choose>
+                    
             <c:choose>
                 <c:when test="${factura.getId_factura()!=0}">
                     <label for="documento_4" class="control-label"> Documento (si no selecciona un archivo, quedará registrado el subido anteriormente)</label>
@@ -217,34 +246,103 @@
                     </div>
                 </div>
             </div>
-            <label for="fecha_vencimiento" class="control-label"> *Fecha de Vencimiento</label>
-            <!-- Fecha -->
+            <label for="contado" class="control-label"> *Crédito o Contado</label>
+            <!-- contado -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="contado" class="select2" name="contado" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                            <c:choose>
+                              <c:when test="${((factura.getPlazo() == null)||(factura.getPlazo() == 0))}" >
+                                <option value="1">Crédito</option>
+                                <option value="2" selected>Contado</option>
+                              </c:when>
+                              <c:otherwise>
+                                <option value="1" selected>Crédito</option>
+                                <option value="2">Contado</option>
+                              </c:otherwise>
+                            </c:choose>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <label for="plazo" class="control-label"> *Plazo (días)</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <c:choose>
+                                                    <c:when test="${accion == 'Agregar'}">
+                                                    <select id="plazo" class="select2" name="plazo" required
+                                                        oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                        <option value="0"> 0 </option>
+                                                        <option value="30"> 30 </option>
+                                                        <option value="60"> 60 </option>
+                                                        <option value="90"> 90 </option>
+                                                        <option value="120"> 120 </option>
+                                                    </select>
+                                                    </c:when>
+                                                    <c:otherwise>  
+                                                        <c:choose>
+                                                            <c:when test="${factura.getPlazo() == 30}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30" selected> 30 </option>
+                                                                    <option value="60"> 60 </option>
+                                                                    <option value="90"> 90 </option>
+                                                                    <option value="120"> 120 </option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:when test="${factura.getPlazo() == 60}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30"> 30 </option>
+                                                                    <option value="60" selected> 60 </option>
+                                                                    <option value="90"> 90 </option>
+                                                                    <option value="120"> 120 </option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:when test="${factura.getPlazo() == 90}" >
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30"> 30 </option>
+                                                                    <option value="60"> 60 </option>
+                                                                    <option value="90" selected> 90 </option>
+                                                                    <option value="120"> 120 </option>
+                                                                </select>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <select id="plazo" class="select2" name="plazo" required
+                                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                                    <option value="0"> 0 </option>
+                                                                    <option value="30"> 30 </option>
+                                                                    <option value="60"> 60 </option>
+                                                                    <option value="90"> 90 </option>
+                                                                    <option value="120" selected> 120 </option>
+                                                                </select>
+                                                            </c:otherwise>
+                                                          </c:choose>
+                                                    </c:otherwise>
+                                                </c:choose> 
+                                            </div>
+                                        </div>
+                                    </div>
+            <label for="fecha_vencimiento" class="control-label"> Fecha de Vencimiento</label>
+            <!-- Fecha Vencimiento-->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <c:choose>
                           <c:when test="${accion == 'Agregar'}" >
-                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" class="form-control sigiproDatePickerEspecial" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                              <input readonly type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" class="form-control" name="fecha_vencimiento"
                             oninvalid="setCustomValidity('Este campo es requerido ')"
                             onchange="setCustomValidity('')"> 
-                            <script>
-                                var today = new Date();
-                                var dd = today.getDate();
-                                var mm = today.getMonth()+1; //January is 0!
-
-                                var yyyy = today.getFullYear();
-                                if(dd<10){
-                                    dd='0'+dd
-                                } 
-                                if(mm<10){
-                                    mm='0'+mm
-                                } 
-                                var today = dd+'/'+mm+'/'+yyyy;
-                                document.getElementById("fecha_vencimiento").value = today;
-                            </script>
                           </c:when>
                           <c:otherwise>
-                            <input  type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" value="${factura.getFecha_vencimiento_S()}" class="form-control sigiproDatePickerEspecial" name="fecha_vencimiento" data-date-format="dd/mm/yyyy" required
+                            <input readonly type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="fecha_vencimiento" class="form-control" value="${factura.getFecha_vencimiento_S()}" name="fecha_vencimiento"
                             oninvalid="setCustomValidity('Este campo es requerido ')"
                             onchange="setCustomValidity('')"> 
                           </c:otherwise>
@@ -305,7 +403,62 @@
                     </div>
                 </div>
             </div>
+            <!-- Observaciones -->
+            <label for="Observaciones" class="control-label"> *Observaciones</label>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <c:choose>
+                          <c:when test="${accion == 'Agregar'}" >
+                              <textarea required style="width:100%" name="observaciones" id="observaciones"></textarea>
+                          </c:when>
+                          <c:otherwise>
+                            <textarea required style="width:100%" name="observaciones" id="observaciones">${factura.getDetalle()}</textarea>
+                          </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </div>
         </div>
+                        
+                        <div class="col-md-12" id="Info_Fundevi">
+                            <div class="widget widget-table">
+                                <div class="widget-header">
+                                    <h3><i class="fa fa-th-list"></i> Información para FUNDEVI</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <div class="col-md-6"> 
+                                    
+                                    <label for="proyecto" class="control-label"> *Proyecto</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <select id="proyecto" class="select2" name="proyecto" required
+                                                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                                                    <option value="404"> 0418-00</option>
+                                                    <option value="1965"> 1770-00</option>
+                                                    <option value="2815"> 2541-00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6"> 
+                                    <label for="proyecto" class="control-label"> Correo a Enviar</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <input id="correo" type="email" class="form-control" name="correo" value="" placeholder=""
+                                                    oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
+                                                    oninput="setCustomValidity('')"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
 

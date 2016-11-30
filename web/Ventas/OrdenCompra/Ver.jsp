@@ -55,30 +55,45 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>ID: </strong></td> <center> <td> ${orden.getId_orden()} </td> </center> </tr>
-                <tr><td> <strong>Cliente: </strong>  </td> <center> <td> ${orden.getCliente().getNombre()}   </td> </center> </tr>
-                <tr><td> <strong>ID Cotización: </strong>  </td> <center>
-                    <c:choose>
-                      <c:when test= "${orden.getCotizacion().getId_cotizacion() == 0}">
-                          <td></td>
-                      </c:when>
-                      <c:otherwise>
-                          <td>${orden.getCotizacion().getId_cotizacion()}</td>
-                      </c:otherwise>
-                  </c:choose>
-                </center> </tr>
-                <tr><td> <strong>ID Intención: </strong>  </td> <center>
-                  <c:choose>
-                      <c:when test= "${orden.getIntencion().getId_intencion() == 0}">
-                          <td></td>
-                      </c:when>
-                      <c:otherwise>
-                          <td>${orden.getIntencion().getId_intencion()}</td>
-                      </c:otherwise>
-                  </c:choose>
-                  </center> </tr>
+                <tr><td> <strong>Consecutivo: </strong></td> <center> <td> ${orden.getId_orden()} </td> </center> </tr>
+                <c:choose>
+                    <c:when test= "${(orden.getCotizacion() == null)||(orden.getCotizacion().getId_cotizacion() == null)||(orden.getCotizacion().getId_cotizacion() == 0)}">
+                        <tr><td> <strong>ID Intención: </strong>  </td> <center> 
+                            <td> 
+                                <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${orden.getIntencion().getId_intencion()}">
+                                <div style="height:100%;width:100%">
+                                  ${orden.getIntencion().getId_intencion()}
+                                </div>
+                                </a>
+                              </td> 
+                        </center> </tr>
+                    </c:when>
+                    <c:otherwise>
+                        <tr><td> <strong>ID Cotización: </strong>  </td> <center> 
+                            <td>
+                                <a href="/SIGIPRO/Ventas/Cotizacion?accion=ver&id_cotizacion=${orden.getCotizacion().getId_cotizacion()}">
+                                <div style="height:100%;width:100%">
+                                    ${orden.getCotizacion().getIdentificador()}
+                                </div>
+                                </a>
+                              </td>
+                        </center> </tr>
+                    </c:otherwise>
+                </c:choose>
                 <tr><td> <strong>Información de Rotulación: </strong>  </td> <center> <td> ${orden.getRotulacion()}   </td> </center> </tr>
                 <tr><td> <strong>Estado: </strong>  </td> <center> <td> ${orden.getEstado()}   </td> </center> </tr>
+                <tr><td> <strong>Documento: </strong> 
+                    <td>
+                        <c:choose>
+                            <c:when test="${(orden.getDocumento() == null)||(orden.getDocumento() == '')}">
+                                Sin documento asociado.
+                            </c:when>
+                            <c:otherwise>
+                                <a href="/SIGIPRO/Ventas/OrdenCompra?accion=archivo&id_orden=${orden.getId_orden()}">Descargar Documento</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                </tr>
               </table>
               <br>
               
@@ -97,6 +112,7 @@
                         <tr>
                           <th>Nombre del Producto</th>
                           <th>Cantidad</th>
+                          <th>Fecha de Entrega</th>
                           <th>Lote</th>
                         </tr>
                       </thead>
@@ -105,6 +121,7 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
+                            <td>${producto.getFecha_S()}</td>
                             <td>${producto.getProducto().getLote()}</td>
                           </tr>
                         </c:forEach>

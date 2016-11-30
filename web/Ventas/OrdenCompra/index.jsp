@@ -42,8 +42,7 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
+                    <th>Consecutivo</th>
                     <th>Cotización</th>
                     <th>Intención</th>
                     <th>Información de Rotulación</th>
@@ -61,13 +60,18 @@
                         </div>
                         </a>
                       </td>
-                      <td>${orden.getCliente().getNombre()}</td>
                       <c:choose>
                           <c:when test= "${orden.getCotizacion().getId_cotizacion() == 0}">
                               <td></td>
                           </c:when>
                           <c:otherwise>
-                              <td>${orden.getCotizacion().getId_cotizacion()}</td>
+                              <td>
+                                <a href="/SIGIPRO/Ventas/Cotizacion?accion=ver&id_cotizacion=${orden.getCotizacion().getId_cotizacion()}">
+                                <div style="height:100%;width:100%">
+                                    ${orden.getCotizacion().getIdentificador()}
+                                </div>
+                                </a>
+                              </td>
                           </c:otherwise>
                       </c:choose>
                       <c:choose>
@@ -75,7 +79,13 @@
                               <td></td>
                           </c:when>
                           <c:otherwise>
-                              <td>${orden.getIntencion().getId_intencion()}</td>
+                              <td> 
+                                <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${orden.getIntencion().getId_intencion()}">
+                                <div style="height:100%;width:100%">
+                                  ${orden.getIntencion().getId_intencion()}
+                                </div>
+                                </a>
+                              </td> 
                           </c:otherwise>
                       </c:choose>
                       <td>${orden.getRotulacion()}</td>

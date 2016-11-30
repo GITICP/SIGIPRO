@@ -45,8 +45,6 @@
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Factura</th>
-                    <th>Observaciones</th>
-                    <th>Tipo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -60,10 +58,20 @@
                           </div>
                         </a>
                       </td>
-                      <td>${seguimiento.getCliente().getNombre()}</td>
-                      <td>ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()}</td>
-                      <td>${seguimiento.getObservaciones()}</td>
-                      <td>${seguimiento.getTipo()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${seguimiento.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${seguimiento.getCliente().getNombre()}
+                            </div>
+                            </a>
+                      </td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Factura?accion=ver&id_factura=${seguimiento.getFactura().getId_factura()}">
+                          <div style="height:100%;width:100%">
+                              ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()}
+                          </div>
+                        </a>
+                      </td>
                     </tr>
                   </c:forEach>
                 </tbody>

@@ -22,6 +22,15 @@ public class Contrato_comercializacion {
     private Date fechaInicial;
     private Date fechaRenovacion;
     private String observaciones;
+    private boolean firmado;
+
+    public boolean isFirmado() {
+        return firmado;
+    }
+
+    public void setFirmado(boolean firmado) {
+        this.firmado = firmado;
+    }
 
     public int getId_contrato() {
         return id_contrato;

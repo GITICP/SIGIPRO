@@ -1,3 +1,42 @@
+$(function(){ /* DOM ready */ //
+    $("#id_cliente").change(function () {
+        //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
+        var select_cliente = document.getElementById("id_cliente");
+        var id_cliente = select_cliente[select_cliente.selectedIndex].value;
+        
+        var telefono = document.getElementById("telefono");
+        var telefono_label = document.getElementById("telefono_label");
+        var correo = document.getElementById("correo_electronico");
+        var correo_label = document.getElementById("correo_electronico_label");
+        var nombre = document.getElementById("nombre_cliente");
+        var nombre_label = document.getElementById("nombre_cliente_label");
+        
+        if (id_cliente === "0"){ //muestre teléfono y correo
+            telefono.required = true;
+            correo.required = true;
+            nombre.required = true;
+            telefono.style.display = 'block';
+            correo.style.display = 'block';
+            telefono_label.style.display = 'block';
+            correo_label.style.display = 'block';
+            nombre.style.display = 'block';
+            nombre_label.style.display = 'block';
+        }
+        else{ //hide teléfono y correo
+            telefono.required = false;
+            correo.required = false;
+            nombre.required = false;
+            telefono.style.display = 'none';
+            correo.style.display = 'none';
+            telefono_label.style.display = 'none';
+            correo_label.style.display = 'none';
+            nombre.style.display = 'none';
+            nombre_label.style.display = 'none';
+        }
+    }).change();
+    
+});
+
 $( document ).ready(function() {
     //Revisar la lista de productos_intencion en la tabla y cargarlos codificados en capoOcultoRoles
   var tabla = document.getElementById("datatable-column-filter-productos");

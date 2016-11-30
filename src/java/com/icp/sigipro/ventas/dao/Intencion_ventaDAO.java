@@ -40,7 +40,15 @@ public class Intencion_ventaDAO extends DAO {
                 Intencion_venta intencion = new Intencion_venta();
                 
                 intencion.setId_intencion(rs.getInt("id_intencion"));
-                intencion.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
+                int id_cliente = rs.getInt("id_cliente");
+                if (id_cliente != 0){
+                    intencion.setCliente(cDAO.obtenerCliente(id_cliente));
+                }
+                else{
+                    intencion.setNombre_cliente(rs.getString("nombre_cliente"));
+                    intencion.setCorreo(rs.getString("correo_electronico"));
+                    intencion.setTelefono(rs.getString("telefono"));
+                }
                 intencion.setObservaciones(rs.getString("observaciones"));
                 intencion.setEstado(rs.getString("estado"));
                 resultado.add(intencion);
@@ -68,7 +76,15 @@ public class Intencion_ventaDAO extends DAO {
 
             while (rs.next()) {
                 resultado.setId_intencion(rs.getInt("id_intencion"));
-                resultado.setCliente(cDAO.obtenerCliente(rs.getInt("id_cliente")));
+                int id_cliente = rs.getInt("id_cliente");
+                if (id_cliente != 0){
+                    resultado.setCliente(cDAO.obtenerCliente(id_cliente));
+                }
+                else{
+                    resultado.setNombre_cliente(rs.getString("nombre_cliente"));
+                    resultado.setCorreo(rs.getString("correo_electronico"));
+                    resultado.setTelefono(rs.getString("telefono"));
+                }
                 resultado.setObservaciones(rs.getString("observaciones"));
                 resultado.setEstado(rs.getString("estado"));
             }
@@ -130,6 +146,35 @@ public class Intencion_ventaDAO extends DAO {
         }
         return resultado;
     }
+    
+    public int insertarIntencion_ventaClienteUnknown(Intencion_venta p) throws SIGIPROException {
+
+        int resultado = 0;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.intencion_venta (id_cliente, observaciones, estado, correo_electronico, telefono, nombre_cliente)"
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_intencion");
+
+            consulta.setInt(1, 0);
+            consulta.setString(2, p.getObservaciones());
+            consulta.setString(3, p.getEstado());
+            consulta.setString(4, p.getCorreo());
+            consulta.setString(5, p.getTelefono());
+            consulta.setString(6, p.getNombre_cliente());
+            
+            ResultSet resultadoConsulta = consulta.executeQuery();
+            if (resultadoConsulta.next()) {
+                resultado = resultadoConsulta.getInt("id_intencion");
+            }
+            resultadoConsulta.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+        }
+        return resultado;
+    }
 
     public boolean editarIntencion_venta(Intencion_venta p) throws SIGIPROException {
 
@@ -146,6 +191,37 @@ public class Intencion_ventaDAO extends DAO {
             consulta.setString(2, p.getObservaciones());
             consulta.setString(3, p.getEstado());
             consulta.setInt(4, p.getId_intencion());
+            
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la edición");
+        }
+        return resultado;
+    }
+    
+    public boolean editarIntencion_ventaClienteUnknown(Intencion_venta p) throws SIGIPROException {
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement consulta = getConexion().prepareStatement(
+                    " UPDATE ventas.intencion_venta"
+                    + " SET id_cliente=?, observaciones=?, estado=?, correo_electronico=?, telefono=?, nombre_cliente=?"
+                    + " WHERE id_intencion=?; "
+            );
+
+            consulta.setInt(1, 0);
+            consulta.setString(2, p.getObservaciones());
+            consulta.setString(3, p.getEstado());
+            consulta.setString(4, p.getCorreo());
+            consulta.setString(5, p.getTelefono());
+            consulta.setString(6, p.getNombre_cliente());
+            consulta.setInt(7, p.getId_intencion());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

@@ -85,18 +85,17 @@ public class ControladorObtenerProductosIntencionDeVentaAjax extends HttpServlet
         try {
             List<Producto_Intencion> resultado = nDAO.obtenerProductosIntencion(id_intencion);
             sb.append("<productos>");
-            int contador = 1;
             for (Producto_Intencion n : resultado){
                 sb.append("<producto>");
                 
-                sb.append("<id>").append(contador).append("</id>");
+                sb.append("<id>").append(n.getProducto().getId_producto()).append("</id>");
                 sb.append("<nombre>").append(n.getProducto().getNombre()).append("</nombre>");
                 sb.append("<cantidad>").append(n.getCantidad()).append("</cantidad>");
+                sb.append("<fecha>").append(n.getFecha_S()).append("</fecha>");
                 sb.append("<lote>").append(n.getProducto().getLote()).append("</lote>");
                 
                 sb.append("</producto>");
                 hayNotificaciones = true;
-                contador += 1;
             }
             sb.append("</productos>");
             if (hayNotificaciones) {

@@ -21,6 +21,7 @@ public class Factura {
     private Orden_compra orden;
     private Date fecha;
     private int monto;
+    private float monto_pendiente;
     private Date fecha_vencimiento;
     private String documento_1;
     private String documento_2;
@@ -28,6 +29,78 @@ public class Factura {
     private String documento_4;
     private String tipo;
     private String moneda;
+    
+    private int numero;
+    private int proyecto;
+    private int plazo;
+    private String estado;
+    private String detalle;
+    private String nombre;
+    private String correo_enviar;
+
+    public String getCorreo_enviar() {
+        return correo_enviar;
+    }
+
+    public void setCorreo_enviar(String correo_enviar) {
+        this.correo_enviar = correo_enviar;
+    }
+
+    public float getMonto_pendiente() {
+        return monto_pendiente;
+    }
+
+    public void setMonto_pendiente(float monto_pendiente) {
+        this.monto_pendiente = monto_pendiente;
+    }
+    
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
+    public int getPlazo() {
+        return plazo;
+    }
+
+    public void setPlazo(int plazo) {
+        this.plazo = plazo;
+    }
+    
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public int getProyecto() {
+        return proyecto;
+    }
+
+    public void setProyecto(int proyecto) {
+        this.proyecto = proyecto;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public String getMoneda() {
         return moneda;

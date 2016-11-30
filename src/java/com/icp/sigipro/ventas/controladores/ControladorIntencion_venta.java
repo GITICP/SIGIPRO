@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorIntencion_venta", urlPatterns = {"/Ventas/IntencionVenta"})
 public class ControladorIntencion_venta extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final Intencion_ventaDAO dao = new Intencion_ventaDAO();
     private final Producto_ventaDAO pdao = new Producto_ventaDAO();
     private final Producto_IntencionDAO idao = new Producto_IntencionDAO();
@@ -70,6 +69,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "IntencionVenta/Agregar.jsp";
@@ -94,6 +94,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706,1};
         validarPermisos(permisos, listaPermisos);
 
         List<Intencion_venta> intenciones = dao.obtenerIntenciones_venta();
@@ -105,6 +106,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706,1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "IntencionVenta/Ver.jsp";
@@ -122,6 +124,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "IntencionVenta/Editar.jsp";
@@ -150,10 +153,16 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "IntencionVenta/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Intencion_venta intencion_nuevo = construirObjeto(request);
-            resultado = dao.insertarIntencion_venta(intencion_nuevo);
+            if (intencion_nuevo.getCliente() != null){
+                resultado = dao.insertarIntencion_venta(intencion_nuevo);
+            }
+            else{
+                resultado = dao.insertarIntencion_ventaClienteUnknown(intencion_nuevo);
+            }
             
             String productos_intencion = request.getParameter("listaProductos");
         
@@ -186,13 +195,18 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         boolean resultado = false;
         boolean e = false;
         String redireccion = "IntencionVenta/Editar.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         
         try {
             Intencion_venta intencion_nuevo = construirObjeto(request);
-            
-            resultado = dao.editarIntencion_venta(intencion_nuevo);
+            if (intencion_nuevo.getCliente() != null){
+                resultado = dao.editarIntencion_venta(intencion_nuevo);
+            }
+            else{
+                resultado = dao.editarIntencion_ventaClienteUnknown(intencion_nuevo);
+            }
             
             String productos_intencion = request.getParameter("listaProductos");
         
@@ -236,6 +250,7 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         boolean resultado = false;
         boolean resultado2 = false;
         String redireccion = "IntencionVenta/index.jsp";
+        int[] permisos = {701, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
         String id_intencion = request.getParameter("id_intencion"); 
@@ -271,7 +286,15 @@ public class ControladorIntencion_venta extends SIGIPROServlet {
         
         intencion.setId_intencion(Integer.parseInt(request.getParameter("id_intencion")));
         intencion.setEstado(request.getParameter("estado"));
-        intencion.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
+        int id_cliente = Integer.parseInt(request.getParameter("id_cliente"));
+        if (id_cliente != 0){
+            intencion.setCliente(cdao.obtenerCliente(id_cliente));
+        }
+        else{
+            intencion.setNombre_cliente(request.getParameter("nombre_cliente"));
+            intencion.setCorreo(request.getParameter("correo_electronico"));
+            intencion.setTelefono(request.getParameter("telefono"));
+        }
         intencion.setObservaciones(request.getParameter("observaciones"));
         
         return intencion;

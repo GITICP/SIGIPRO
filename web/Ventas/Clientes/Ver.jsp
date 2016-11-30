@@ -28,7 +28,7 @@
             <li> 
               <a href="/SIGIPRO/Ventas/Clientes?">Clientes</a>
             </li>
-            <li class="active">Cliente ${cliente.getNombre()}</li>
+            <li class="active">${cliente.getNombre()}</li>
           </ul>
         </div>
       </div>
@@ -56,8 +56,11 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre: </strong></td> <center> <td> ${cliente.getNombre()} </td> </center> </tr>
+                <tr><td> <strong>Cédula: </strong></td> <center> <td> ${cliente.getCedula()} </td> </center> </tr>
                 <tr><td> <strong>Tipo: </strong>  </td> <center> <td> ${cliente.getTipo()}   </td> </center> </tr>
                 <tr><td> <strong>País: </strong>  </td> <center> <td> ${cliente.getPais()}   </td> </center> </tr>
+                <tr><td> <strong>Tipo de Persona: </strong>  </td> <center> <td> ${cliente.getPersona()}   </td> </center> </tr>
+                <tr><td> <strong>Dirección: </strong>  </td> <center> <td> ${cliente.getDireccion()}   </td> </center> </tr>
               </table>
               <br>
               

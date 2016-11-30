@@ -17,7 +17,16 @@ public class Producto_venta {
     private String nombre;
     private String descripcion;
     private String lote;
+    private String tipo;
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    
     public int getId_producto() {
         return id_producto;
     }

@@ -47,8 +47,13 @@
                   </c:if>
                 </c:forEach>
                 <c:if test="${contienePermisoEditarYBorrar}">
-                  <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/Pago?accion=editar&id_pago=${pago.getId_pago()}">Editar</a>
-                  <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este Pago" data-form-id="form-eliminar-Pago">Eliminar</a>
+                    <c:choose>
+                       <c:when test="${pago.getFactura().getTipo() == 'UCR'}">
+                          <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/Pago?accion=editar&id_pago=${pago.getId_pago()}">Editar</a>
+                          <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar este pago" data-form-id="form-eliminar-Pago">Eliminar</a>
+                       </c:when>
+                        <c:otherwise></c:otherwise>
+                        </c:choose>
                 </c:if>
               </div>
             </div>
@@ -56,9 +61,44 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${pago.getId_pago()} </td> </center> </tr>
-                <tr><td> <strong>Factura: </strong>  </td> <center> <td> FAC: ${pago.getFactura().getId_factura()} - Cliente: ${pago.getFactura().getCliente().getNombre()}</td> </center> </tr>
-                <tr><td> <strong>Pago: </strong>  </td> <center> <td> ${pago.getPago()} ${pago.getFactura().getMoneda()}  </td> </center> </tr>
-                <tr><td> <strong>Monto Pendiente: </strong>  </td> <center> <td> ${pago.getMonto_pendiente()} ${pago.getFactura().getMoneda()}  </td> </center> </tr>
+                <tr><td> <strong>Número de Factura: </strong>  </td> <center> <td>
+                          <a href="/SIGIPRO/Ventas/Factura?accion=ver&id_factura=${pago.getFactura().getId_factura()}">
+                        <div style="height:100%;width:100%">
+                            <c:choose>
+                                 <c:when test="${pago.getFactura().getNumero() == 0}">
+                                     ${pago.getFactura().getId_factura()}
+                                 </c:when>
+                                 <c:otherwise>
+                                    ${pago.getFactura().getNumero()}
+                                 </c:otherwise>
+                             </c:choose>
+                        </div>
+                      </td>
+                      </center> </tr>
+                <tr><td> <strong>Código: </strong>  </td> <center> <td> ${pago.getCodigo()}  </td> </center> </tr>
+                <tr><td> <strong>Monto: </strong>  </td> <center> 
+                    <c:choose>
+                            <c:when test="${pago.getMoneda() == 'Colones'}">
+                              <td>&#8353;${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${pago.getMoneda() == 'Dólares'}">
+                              <td>$${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${pago.getMoneda() == 'Euros'}">
+                              <td>&euro;${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${String.format("%,.2f", pago.getMonto().doubleValue())}</td>
+                            </c:otherwise>
+                        </c:choose>
+                </center> </tr>
+                <tr><td> <strong>Nota: </strong>  </td> <center> <td> ${pago.getNota()}  </td> </center> </tr>
+                <tr><td> <strong>Fecha: </strong>  </td> <center> <td> ${pago.getFecha()}  </td> </center> </tr>
+                <tr><td> <strong>Consecutivo: </strong>  </td> <center> <td> ${pago.getConsecutive()}  </td> </center> </tr>
+                <tr><td> <strong>Moneda: </strong>  </td> <center> <td> ${pago.getMoneda()}  </td> </center> </tr>
+                <tr><td> <strong>Código de Remisión: </strong>  </td> <center> <td> ${pago.getCodigo_remision()}  </td> </center> </tr>
+                <tr><td> <strong>Consecutivo de Remisión: </strong>  </td> <center> <td> ${pago.getConsecutive_remision()}  </td> </center> </tr>
+                <tr><td> <strong>Fecha de Remisión: </strong>  </td> <center> <td> ${pago.getFecha_remision()}  </td> </center> </tr>
               </table>
               <br>
               

@@ -16,9 +16,16 @@ public class Seguimiento_venta {
     private int id_seguimiento;
     private Cliente cliente;
     private Factura factura;
-    private String tipo;
-    private String observaciones;
     private String documento_1;
+    private String listaTipos;
+
+    public String getListaTipos() {
+        return listaTipos;
+    }
+
+    public void setListaTipos(String listaTipos) {
+        this.listaTipos = listaTipos;
+    }
 
     public int getId_seguimiento() {
         return id_seguimiento;
@@ -42,22 +49,6 @@ public class Seguimiento_venta {
 
     public void setFactura(Factura factura) {
         this.factura = factura;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
     }
 
     public String getDocumento_1() {

@@ -57,10 +57,20 @@
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>ID: </strong></td> <td>${seguimiento.getId_seguimiento()} </td></tr>
-                                <tr><td> <strong>Cliente: </strong> <td>${seguimiento.getCliente().getNombre()} </td></tr>
-                                <tr><td> <strong>Factura: </strong> <td>ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()} </td></tr>
-                                <tr><td> <strong>Observaciones: </strong> <td>${seguimiento.getObservaciones()} </td></tr>
-                                <tr><td> <strong>Tipo: </strong> <td>${seguimiento.getTipo()} </td></tr>
+                                <tr><td> <strong>Cliente: </strong> <td>
+                                    <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${seguimiento.getCliente().getId_cliente()}">
+                                    <div style="height:100%;width:100%">
+                                          ${seguimiento.getCliente().getNombre()}
+                                    </div>
+                                    </a>
+                                </td></tr>
+                                <tr><td> <strong>Factura: </strong> <td>
+                                        <a href="/SIGIPRO/Ventas/Factura?accion=ver&id_factura=${seguimiento.getFactura().getId_factura()}">
+                                          <div style="height:100%;width:100%">
+                                              ID: ${seguimiento.getFactura().getId_factura()} Cliente: ${seguimiento.getFactura().getCliente().getNombre()}
+                                          </div>
+                                        </a>
+                                    </td></tr>
                                 <tr><td> <strong>Documento 1: </strong> 
                                     <td>
                                         <c:choose>
@@ -76,8 +86,41 @@
                             </table>
                             <br>
                         </div>
-                    </div>
+                    
                     <!-- END WIDGET TICKET TABLE -->
+                    <div class="col-md-12">
+        
+        <!-- Esta arte es la de los productos de la solicitud -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-th-list"></i> *Acciones</h3>
+                    <div class="btn-group widget-header-toolbar">
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-productos" class="table table-sorting table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Tipo</th>
+                          <th>Fecha</th>
+                          <th>Observaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${tipos_seguimiento}" var="tipo_seguimiento">
+                          <tr id="${tipo_seguimiento.getId_tipo()}">
+                            <td>${tipo_seguimiento.getTipo()}</td>
+                            <td>${tipo_seguimiento.getFecha_S()}</td>
+                            <td>${tipo_seguimiento.getObservaciones()}</td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los productos de la solicitud -->
+            </div>
+                    </div>
                 </div>
                 <!-- /main-content -->
             </div>

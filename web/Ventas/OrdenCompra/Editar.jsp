@@ -57,6 +57,45 @@
         </div>
         <!-- /main -->
       </div>
+    <t:modal idModal="modalEditarProducto" titulo="Editar Producto">
+
+      <jsp:attribute name="form">
+        <form class="form-horizontal" id="formEditarProducto">
+          <input type="text" id="idProductoEditar"     name="idProductoEditar"      hidden="true">
+          <input type="text" name="producto"  hidden="true">
+          <label for="cantidad" class="control-label">*Cantidad</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input id="editarCantidad" type="number" min="0" class="form-control" name="editarCantidad" value="" required
+                    oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
+                    oninput="setCustomValidity('')"> 
+              </div>
+            </div>
+          </div>
+            <label for="posibleFechaEntrega" class="control-label"> *Fecha Determinada para la Entrega</label>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <div class="input-group" style="display:table;">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarPosibleFechaDespacho" required class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy"
+                         oninvalid="setCustomValidity('Este campo es requerido ')"
+                         onchange="setCustomValidity('')">
+                </div>
+              </div>
+            </div>
+        </form>
+        <div class="form-group">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> Cancelar</button>
+            <button id="btn-editarProducto" type="button" class="btn btn-primary" onclick="confirmarEdicionProducto()"><i class="fa fa-check-circle"></i> Editar Producto</button>
+          </div>
+        </div>
+
+
+      </jsp:attribute>
+
+    </t:modal>
    
         <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
   </jsp:attribute>

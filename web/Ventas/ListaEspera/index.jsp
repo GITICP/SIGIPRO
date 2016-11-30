@@ -33,6 +33,7 @@
             <div class="widget-header">
                 <h3><i class="fa fa-file-text-o"></i> Listas de Espera </h3>
                 <div class="btn-group widget-header-toolbar">
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera?accion=historial">Historial</a>
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ListaEspera?accion=agregar">Agregar a Lista</a>
                 </div>  
             </div>
@@ -44,7 +45,6 @@
                   <tr>
                     <th>Fecha de Solicitud</th>
                     <th>Cliente</th>
-                    <th>Fecha de Atención / Despacho</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -60,11 +60,17 @@
                       <td>
                         <a href="/SIGIPRO/Ventas/ListaEspera?accion=ver&id_lista=${lista.getId_lista()}">
                         <div style="height:100%;width:100%">
-                            ${lista.getCliente().getNombre()}
+                           <c:choose>
+                          <c:when test= "${lista.getCliente() != null}">
+                              ${lista.getCliente().getNombre()}
+                          </c:when>
+                          <c:otherwise>
+                              ${lista.getNombre_cliente()}
+                          </c:otherwise>
+                        </c:choose>
                         </div>
                         </a>
                       </td>
-                      <td>${lista.getFecha_atencion_S()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -79,6 +85,7 @@
       </div>
     
             <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.js"></script>
             <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/ListaEspera.js"></script>
             
     </jsp:attribute>

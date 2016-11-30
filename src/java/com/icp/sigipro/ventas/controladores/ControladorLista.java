@@ -23,7 +23,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControladorLista", urlPatterns = {"/Ventas/ListaEspera"})
 public class ControladorLista extends SIGIPROServlet {
 
-    private final int[] permisos = {701, 702, 1};
     private final ListaDAO dao = new ListaDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ClienteDAO cdao = new ClienteDAO();
@@ -53,6 +55,7 @@ public class ControladorLista extends SIGIPROServlet {
             add("ver");
             add("agregar");
             add("editar");
+            add("historial");
         }
     };
     protected final List<String> productosPost = new ArrayList<String>() {
@@ -66,6 +69,7 @@ public class ControladorLista extends SIGIPROServlet {
     // <editor-fold defaultstate="collapsed" desc="Métodos Get">
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
        
         String redireccion = "ListaEspera/Agregar.jsp";
@@ -81,23 +85,72 @@ public class ControladorLista extends SIGIPROServlet {
 
     protected void getIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706,1};
         validarPermisos(permisos, listaPermisos);
 
         List<Lista> listas = dao.obtenerListas();
-        request.setAttribute("listaListas", listas);
+        List<Lista> listasnodespachadas = new ArrayList<Lista>();;
+        for (Lista l: listas){
+            if ((l.getFecha_atencion() == null)||(l.getFecha_atencion_S().equals(""))){
+                listasnodespachadas.add(l);
+            }
+        }
+        request.setAttribute("listaListas", listasnodespachadas);
         String redireccion = "ListaEspera/index.jsp";
+        
+        redireccionar(request, response, redireccion);
+    }
+
+    protected Date parseDate(String date_string) throws ParseException{
+        Calendar cal = new GregorianCalendar();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = sdf.parse(date_string);
+        cal.setTime(date);
+        return cal.getTime();
+    }
+    
+    protected int daysBetween(Date d1, Date d2){
+             return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+     }
+    protected void getHistorial(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException {
+        List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 702,703,704,705,706,1};
+        validarPermisos(permisos, listaPermisos);
+
+        List<Lista> listas = dao.obtenerListas();
+        List<Lista> listasdespachadas = new ArrayList<Lista>();;
+         
+        for (Lista l: listas){
+            if ((l.getFecha_atencion() != null)&&(!l.getFecha_atencion_S().equals(""))){
+                listasdespachadas.add(l);
+                l.setDias(daysBetween(parseDate(l.getFecha_solicitud_S()),parseDate(l.getFecha_atencion_S())));
+            }
+        }
+     
+        request.setAttribute("listaListas", listasdespachadas);
+        String redireccion = "ListaEspera/historial.jsp";
         
         redireccionar(request, response, redireccion);
     }
 
     protected void getVer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1,702,703,704,705,706};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "ListaEspera/Ver.jsp";
         int id_lista = Integer.parseInt(request.getParameter("id_lista"));
         try {
             Lista c = dao.obtenerLista(id_lista);
+            if ((c.getFecha_atencion() != null)&&(!c.getFecha_atencion_S().equals(""))){
+                c.setDias(daysBetween(parseDate(c.getFecha_solicitud_S()),parseDate(c.getFecha_atencion_S())));
+            }
+            //else: comparar con fecha actual
+            else{
+                SimpleDateFormat formDate = new SimpleDateFormat("dd/MM/yyyy");
+                String fechaHoy = formDate.format(new Date()); // option 2
+                c.setDias(daysBetween(parseDate(c.getFecha_solicitud_S()),parseDate(fechaHoy)));
+            }
             request.setAttribute("lista", c);
         } catch (Exception ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
@@ -107,6 +160,7 @@ public class ControladorLista extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         String redireccion = "ListaEspera/Editar.jsp";
@@ -126,15 +180,26 @@ public class ControladorLista extends SIGIPROServlet {
         int resultado = 0;
         String redireccion = "ListaEspera/Agregar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         try {
             Lista lista_nuevo = construirObjeto(request);
             
             if (lista_nuevo.getFecha_atencion_S().equals("")){
-                resultado = dao.insertarListaFechaA0(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.insertarListaFechaA0(lista_nuevo);
+                }
+                else{
+                    resultado = dao.insertarListaClienteUnknownFechaA0(lista_nuevo);
+                }
             }
             else{
-                resultado = dao.insertarLista(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.insertarLista(lista_nuevo);
+                }
+                else{
+                    resultado = dao.insertarListaClienteUnknown(lista_nuevo);
+                }
             }
             
             //Funcion que genera la bitacora
@@ -147,7 +212,13 @@ public class ControladorLista extends SIGIPROServlet {
         if (resultado != 0){
             redireccion = "ListaEspera/index.jsp";
             List<Lista> listas = dao.obtenerListas();
-            request.setAttribute("listaListas", listas);
+            List<Lista> listasnodespachadas = new ArrayList<Lista>();;
+            for (Lista l: listas){
+                if ((l.getFecha_atencion() == null)||(l.getFecha_atencion_S().equals(""))){
+                    listasnodespachadas.add(l);
+                }
+            }
+            request.setAttribute("listaListas", listasnodespachadas);
             request.setAttribute("mensaje", helper.mensajeDeExito("Lista agregada correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
@@ -159,16 +230,27 @@ public class ControladorLista extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "ListaEspera/Editar.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         
         try {
             Lista lista_nuevo = construirObjeto(request);
             
             if (lista_nuevo.getFecha_atencion_S().equals("")){
-                resultado = dao.editarListaFechaA0(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.editarListaFechaA0(lista_nuevo);
+                }
+                else{
+                    resultado = dao.editarListaClienteUnknownFechaA0(lista_nuevo);
+                }
             }
             else{
-                resultado = dao.editarLista(lista_nuevo);
+                if (lista_nuevo.getCliente() != null){
+                    resultado = dao.editarLista(lista_nuevo);
+                }
+                else{
+                    resultado = dao.editarListaClienteUnknown(lista_nuevo);
+                }
             }
             
             
@@ -182,7 +264,13 @@ public class ControladorLista extends SIGIPROServlet {
         if (resultado) {
             redireccion = "ListaEspera/index.jsp";
             List<Lista> listas = dao.obtenerListas();
-            request.setAttribute("listaListas", listas);
+            List<Lista> listasnodespachadas = new ArrayList<Lista>();;
+            for (Lista l: listas){
+                if ((l.getFecha_atencion() == null)||(l.getFecha_atencion_S().equals(""))){
+                    listasnodespachadas.add(l);
+                }
+            }
+            request.setAttribute("listaListas", listasnodespachadas);
             request.setAttribute("mensaje", helper.mensajeDeExito("Lista editada correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
@@ -194,6 +282,7 @@ public class ControladorLista extends SIGIPROServlet {
         boolean resultado = false;
         String redireccion = "ListaEspera/index.jsp";
         List<Integer> listaPermisos = getPermisosUsuario(request);
+        int[] permisos = {701, 1};
         validarPermisos(permisos, listaPermisos);
         String id_lista1 = request.getParameter("id_lista"); 
         int id_lista = Integer.parseInt(id_lista1);
@@ -211,7 +300,13 @@ public class ControladorLista extends SIGIPROServlet {
         if (resultado) {
             redireccion = "ListaEspera/index.jsp";
             List<Lista> listas = dao.obtenerListas();
-            request.setAttribute("listaListas", listas);
+            List<Lista> listasnodespachadas = new ArrayList<Lista>();;
+            for (Lista l: listas){
+                if ((l.getFecha_atencion() == null)||(l.getFecha_atencion_S().equals(""))){
+                    listasnodespachadas.add(l);
+                }
+            }
+            request.setAttribute("listaListas", listasnodespachadas);
             request.setAttribute("mensaje", helper.mensajeDeExito("Lista eliminada correctamente"));
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
@@ -223,14 +318,22 @@ public class ControladorLista extends SIGIPROServlet {
     private Lista construirObjeto(HttpServletRequest request) throws SIGIPROException, ParseException {
         Lista lista = new Lista();
         lista.setId_lista(Integer.parseInt(request.getParameter("id_lista")));
-        lista.setCliente(cdao.obtenerCliente(Integer.parseInt(request.getParameter("id_cliente"))));
+        int id_cliente = Integer.parseInt(request.getParameter("id_cliente"));
+        if (id_cliente != 0){
+            lista.setCliente(cdao.obtenerCliente(id_cliente));
+        }
+        else{
+            lista.setNombre_cliente(request.getParameter("nombre_cliente"));
+            lista.setCorreo(request.getParameter("correo_electronico"));
+            lista.setTelefono(request.getParameter("telefono"));
+        }
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date result = df.parse(request.getParameter("fecha_solicitud"));
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         lista.setFecha_solicitud(fecha_solicitudSQL);
         if (!request.getParameter("fecha_atencion").equals("")){
             java.util.Date result2 = df.parse(request.getParameter("fecha_atencion"));
-            java.sql.Date fecha_solicitudSQL2 = new java.sql.Date(result.getTime());
+            java.sql.Date fecha_solicitudSQL2 = new java.sql.Date(result2.getTime());
             lista.setFecha_atencion(fecha_solicitudSQL2);
         }
         return lista;

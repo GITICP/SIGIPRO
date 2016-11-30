@@ -58,7 +58,7 @@
     </div>  
     <div class="col-md-6">
         <label for="fecha" class="control-label"> *Fecha Inicial</label>
-            <!-- Fecha -->
+            <!-- Fecha Inicial -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <label for="fecha" class="control-label"> *Fecha de Renovación</label>
-            <!-- Fecha -->
+            <!-- Fecha de Renovación -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
@@ -124,6 +124,22 @@
                             oninvalid="setCustomValidity('Este campo es requerido y debe ser mayor a la fecha inicial ')"
                             onchange="setCustomValidity('')"> 
                           </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </div>
+            <label for="firmado" class="control-label"> Firmado</label>
+            <!-- Firmado o No -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <c:choose>
+                            <c:when test= "${(accion.equals('Editar')) && (contrato.isFirmado())}">
+                                <input id="firmado" type="checkbox" class="form-control" name="firmado" value="Firmado" checked>
+                            </c:when>
+                            <c:otherwise>
+                                <input id="firmado" type="checkbox" class="form-control" name="firmado" value="Firmado">
+                            </c:otherwise>
                         </c:choose>
                     </div>
                 </div>

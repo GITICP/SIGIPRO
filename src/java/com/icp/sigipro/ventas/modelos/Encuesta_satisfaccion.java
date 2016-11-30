@@ -22,7 +22,16 @@ public class Encuesta_satisfaccion {
     private String observaciones;
     private Cliente cliente;
     private String documento;
+    private String URL;
 
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+    
     public String getDocumento() {
         return documento;
     }

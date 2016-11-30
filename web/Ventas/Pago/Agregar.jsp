@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Ventas/Pago?">Pagos</a>
             </li>
-            <li class="active"> Agregar Un Nuevo Pago </li>
+            <li class="active"> Agregar Un Nuevo Pago OAF </li>
 
           </ul>
         </div>
@@ -42,7 +42,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-file-text-o"></i> Agregar Un Nuevo Pago </h3>
+              <h3><i class="fa fa-file-text-o"></i> Agregar Un Nuevo Pago OAF </h3>
             </div>
             ${mensaje}
             <div class="widget-content">
@@ -59,8 +59,7 @@
       </div>
 
 
-    <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
-    <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/pago.js"></script>
   </jsp:attribute>
+
 </t:plantilla_general>
 
