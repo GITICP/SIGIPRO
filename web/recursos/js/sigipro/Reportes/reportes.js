@@ -47,8 +47,17 @@ function guardarReporte(event) {
     $(".fila-param").each(function () {
         $(this).find(":input").each(function () {
             var nombre = $(this).attr("name");
-            var valor = $(this).val();
-            jsonData[nombre] = valor;
+            if (nombre) {
+                if (nombre.includes("repite_param")) {
+                    if ($(this).is(":checked")) {
+                        var valor = $(this).val();
+                        jsonData[nombre] = valor;
+                    }
+                } else {
+                    var valor = $(this).val();
+                    jsonData[nombre] = valor;
+                }
+            }
         });
     });
 
@@ -63,7 +72,7 @@ function guardarReporte(event) {
             });
 }
 
-function crearEspacioCampo(texto_label, input) {
+function crearEspacioCampo(texto_label, input, radio1, radio2, input_repeticion) {
 
     var elemento = crearColumna(4);
     var label = crearLabel(texto_label);
@@ -76,6 +85,14 @@ function crearEspacioCampo(texto_label, input) {
     form_group.append(col12);
     elemento.append(label);
     elemento.append(form_group);
+
+    if (radio1) {
+        col12.append(radio1);
+        col12.append(" Repetir Valor");
+        col12.append(radio2);
+        col12.append(" No repetir");
+        col12.append(input_repeticion);
+    }
 
     return elemento;
 
@@ -95,7 +112,6 @@ function formarNuevoParametro() {
     fila.append(columna_parte_tipo);
 
     componente_parametros.append(fila);
-
     componente_parametros.find("select").select2();
 }
 
@@ -113,9 +129,21 @@ function crearParteNombre() {
 
     var texto = "Nombre del parámetro " + CONTADOR_PARAM;
     var input_nombre = crearInput("nombre_param_" + CONTADOR_PARAM, "Nombre del parámetro " + CONTADOR_PARAM, "text");
+    var radio1 = crearRadio("repite_param_" + CONTADOR_PARAM, "true", false);
+    var radio2 = crearRadio("repite_param_" + CONTADOR_PARAM, "false", true);
+    var input_repeticiones = crearInput("repeticiones_param_" + CONTADOR_PARAM, "Repeticiones", "text");
 
-    return crearEspacioCampo(texto, input_nombre);
+    return crearEspacioCampo(texto, input_nombre, radio1, radio2, input_repeticiones);
 
+}
+
+function crearRadio(nombre_param, valor, checked) {
+    var radio = crear("input");
+    radio.prop("type", "radio");
+    radio.prop("name", nombre_param);
+    radio.prop("value", valor);
+    radio.prop("checked", checked);
+    return radio;
 }
 
 function crearSelectParcial(name) {
@@ -169,10 +197,10 @@ function crearInput(nombre_param, placeholder, tipo) {
     input.prop("maxlength", 100);
     input.prop("placeholder", placeholder);
     input.on("invalid", function () {
-        setCustomValidity('Este campo es requerido');
+        this.setCustomValidity('Este campo es requerido');
     });
     input.on("input", function () {
-        setCustomValidity('');
+        this.setCustomValidity('');
     });
     return input;
 }

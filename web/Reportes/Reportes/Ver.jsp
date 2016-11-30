@@ -40,31 +40,32 @@
                     <div class="widget widget-table">
                         <div class="widget-header">
                             <h3><i class="fa fa-table"></i> Ver Reporte de ${reporte.getNombre()}</h3>
+                            <div class="btn-group widget-header-toolbar">
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 1501)}">
+                                    <a class="btn btn-warning btn-sm boton-accion" href="Reportes?accion=permisos&id_reporte=${reporte.getId_reporte()}">Modificar Permisos</a>
+                                </c:if>
+                                <a class="btn btn-primary btn-sm boton-accion" onclick="history.back();">Volver</a>
+                            </div>
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-
+                            
+                            <input id="input_id_reporte" type="hidden" name="id_reporte" value="${reporte.getId_reporte()}">
+                            
+                            <c:if test="${reporte.getParametros().size() != 0}">
                             <div class="widget widget-table">
                                 <div class="widget-header">
                                     <h3><i class="fa fa-th-list"></i> Parámetros</h3>
-                                    <div class="btn-group widget-header-toolbar">
-                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 1501)}">
-                                            <a class="btn btn-warning btn-sm boton-accion" href="Reportes?accion=permisos&id_reporte=${reporte.getId_reporte()}">Modificar Permisos</a>
-                                        </c:if>
-                                        <a class="btn btn-primary btn-sm boton-accion" onclick="history.back();">Volver</a>
-                                    </div>
-
                                 </div>
                                 <div class="widget-content">
                                     <div id="fila-parametros" class="row">
-                                        <input type="hidden" name="id_reporte" value="${reporte.getId_reporte()}">
                                         <c:forEach items="${reporte.getParametros()}" var="parametro">
                                             <t:parametro parametro="${parametro}" />
                                         </c:forEach>
                                     </div>
                                 </div>
                             </div>
-
+                            </c:if>
                             <div class="widget widget-table">
                                 <div class="widget-header">
                                     <h3><i class="fa fa-table"></i> Resultados</h3>

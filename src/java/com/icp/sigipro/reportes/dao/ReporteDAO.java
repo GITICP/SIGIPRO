@@ -107,10 +107,11 @@ public class ReporteDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, r.id_seccion, s.nombre_seccion, p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param"
+                    " SELECT r.nombre, r.descripcion, r.consulta, r.url_js, r.id_seccion, s.nombre_seccion, "
+                    + " p.num_parametro, p.tipo_parametro, p.info_adicional, p.nombre AS nombre_param, p.repeticiones "
                     + " FROM reportes.reportes r "
-                    + "   INNER JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
                     + "   INNER JOIN seguridad.secciones s ON s.id_seccion = r.id_seccion "
+                    + "   LEFT JOIN reportes.parametros p ON p.id_reporte = r.id_reporte "
                     + " WHERE r.id_reporte = ?; "
             );
 
@@ -132,9 +133,10 @@ public class ReporteDAO extends DAO {
 
                 do {
                     Parametro p = builder.crearParametro(rs);
-                    resultado.agregarParametro(p, false);
+                    if(p != null) {
+                        resultado.agregarParametro(p, false);
+                    }
                 } while (rs.next());
-
             }
 
         } catch (SQLException ex) {
@@ -222,7 +224,7 @@ public class ReporteDAO extends DAO {
             }
 
             insert_parametros = getConexion().prepareStatement(
-                    "INSERT INTO reportes.parametros (id_reporte, num_parametro, tipo_parametro, info_adicional, nombre) VALUES (?,?,?,?,?);"
+                    "INSERT INTO reportes.parametros (id_reporte, num_parametro, tipo_parametro, info_adicional, nombre, repeticiones) VALUES (?,?,?,?,?,?);"
             );
 
             for (Parametro p : r.getParametros()) {
@@ -254,7 +256,10 @@ public class ReporteDAO extends DAO {
                 io.printStackTrace();
             }
             throw new SIGIPROException("Error al obtener la información de la base de datos.");
-        } finally {
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
             try {
                 if (resultado) {
                     getConexion().commit();
@@ -349,6 +354,9 @@ public class ReporteDAO extends DAO {
                         case 12:
                             w.value(rs.getString(cont_col));
                             break;
+                        case 91:
+                            w.value(rs.getString(cont_col));
+                            break;
                         case 92:
                             String fecha = helper_fechas.formatearFecha(rs.getDate(cont_col));
                             w.value(fecha);
@@ -356,8 +364,8 @@ public class ReporteDAO extends DAO {
                         case -5:
                             w.value(rs.getInt(cont_col));
                             break;
-                        case 91:
-                            w.value(rs.getString(cont_col));
+                        case -7:
+                            w.value(rs.getBoolean(cont_col));
                             break;
                         default:
                             throw new SIGIPROException("Tipo de dato no soportado.");
@@ -380,7 +388,6 @@ public class ReporteDAO extends DAO {
 
     }
     
-        
     public ExcelWriter obtenerDatosExcel(Reporte r) throws SIGIPROException {
 
         PreparedStatement consulta_datos = null;

@@ -6,6 +6,10 @@ $(document).ready(function () {
     $("#exportar-excel").click(function() {
         
         var url = "?accion=ajaxexcel";
+        
+        var id_reporte = $("#input_id_reporte").val();
+        url += "&id_reporte=" + id_reporte; 
+        
         var fila_parametros = $("#fila-parametros");
         
         fila_parametros.find(":input").each(function () {
@@ -23,6 +27,9 @@ $(document).ready(function () {
 
         var jsonData = {};
         var fila_parametros = $("#fila-parametros");
+        
+        var id_reporte = $("#input_id_reporte").val();
+        jsonData["id_reporte"] = id_reporte;
 
         fila_parametros.find(":input").each(function () {
             var nombre = $(this).attr("name");

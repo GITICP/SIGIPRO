@@ -270,7 +270,7 @@ public class ControladorReporte extends SIGIPROServlet {
         while (contador != mapa.size()) {
             Parametro p = builder_param.crearParametro(request, contador);
             if (p != null) {
-                reporte.agregarParametro(p, primera_vez);
+                reporte.agregarParametro(p, primera_vez); 
             } else {
                 break;
             }
