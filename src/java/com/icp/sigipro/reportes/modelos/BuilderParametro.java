@@ -19,6 +19,7 @@ public class BuilderParametro {
         String tipo_param = request.getParameter("tipo_param_" + num_parametro);
         String nombre_param = request.getParameter("nombre_param_" + num_parametro);
         Parametro p = null;
+        if(tipo_param == null) tipo_param = "";
         if (!tipo_param.isEmpty()) {
             p = crearParametroEspecifico(tipo_param);
             p.setNombre(nombre_param);
