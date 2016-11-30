@@ -24,6 +24,9 @@ public class Numero extends Parametro {
     @Override
     public void agregarAConsulta(PreparedStatement consulta) throws SQLException {
         consulta.setInt(numero, valor);
+        for(int r : repeticiones) {
+            consulta.setInt(r, valor);
+        }
     }
 
     @Override

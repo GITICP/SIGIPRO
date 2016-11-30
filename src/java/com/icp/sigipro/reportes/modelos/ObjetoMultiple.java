@@ -60,6 +60,7 @@ public class ObjetoMultiple extends Parametro {
         consulta.setString(3, this.tipo);
         consulta.setString(4, this.tipo_objeto);
         consulta.setString(5, this.nombre);
+        consulta.setString(6, "");
     }
 
 

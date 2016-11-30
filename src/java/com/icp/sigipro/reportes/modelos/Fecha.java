@@ -33,6 +33,9 @@ public class Fecha extends Parametro {
     @Override
     public void agregarAConsulta(PreparedStatement consulta) throws SQLException {
         consulta.setDate(numero, valor);
+        for (int r : repeticiones) {
+            consulta.setDate(r, valor);
+        }
     }
 
     @Override
