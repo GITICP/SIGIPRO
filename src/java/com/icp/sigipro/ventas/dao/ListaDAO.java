@@ -364,11 +364,15 @@ public class ListaDAO extends DAO {
                     + " WHERE id_enlistado=?; "
             );
 
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            java.util.Calendar cal = java.util.Calendar.getInstance();
-            java.util.Date utilDate = cal.getTime();
-            java.util.Date result = df.parse(utilDate.toString());
-            java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
+            String df = "dd/MM/yyyy";
+            String dateInString =new SimpleDateFormat(df).format(new Date());
+            //java.util.Calendar cal = java.util.Calendar.getInstance();
+            //java.util.Date utilDate = cal.getTime();
+            //java.util.Date result = df.parse(utilDate.toString());
+            //java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date utilDate = format.parse(dateInString);
+            java.sql.Date fecha_solicitudSQL = new java.sql.Date(utilDate.getTime());
             consulta.setDate(1, fecha_solicitudSQL);
             consulta.setInt(2, id_lista);
 
