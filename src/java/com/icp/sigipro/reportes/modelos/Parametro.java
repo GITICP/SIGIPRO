@@ -16,23 +16,27 @@ import javax.servlet.http.HttpServletRequest;
  * @author Boga
  */
 public abstract class Parametro {
-    
+
     protected int numero;
     protected String tipo;
     protected String nombre;
     protected List<Integer> repeticiones = new ArrayList<>();
 
     public abstract void agregarAConsulta(PreparedStatement consulta) throws SQLException;
-    
+
     public void agregarAInsert(PreparedStatement consulta) throws SQLException {
         consulta.setInt(2, this.numero);
         consulta.setString(3, this.tipo);
         consulta.setNull(4, java.sql.Types.VARCHAR);
         consulta.setString(5, this.nombre);
-        consulta.setString(6, this.repeticionesAString());
-    };
+        String repeticionesStr = this.repeticionesAString();
+        consulta.setString(6, repeticionesStr);
+    }
+
+    ;
     
     public abstract void setValor(String valor);
+
     public abstract void setValorRequest(HttpServletRequest request);
 
     public int getNumero() {
@@ -63,36 +67,38 @@ public abstract class Parametro {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
     public void agregarRepeticion(int repeticion) {
         repeticiones.add(repeticion);
     }
-    
+
     public void actualizarLista(int cantidad) {
-        if(!repeticiones.isEmpty()) {
+        if (!repeticiones.isEmpty()) {
             List<Integer> listaNueva = new ArrayList<>();
-            for(int r : repeticiones) {
+            for (int r : repeticiones) {
                 listaNueva.add(r - cantidad);
             }
             repeticiones = listaNueva;
         }
     }
-    
+
     public String repeticionesAString() {
-        
+
+        if (repeticiones.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
-        for(int r : repeticiones) {
+        for (int r : repeticiones) {
             sb.append(r);
             sb.append(",");
         }
-        return sb.substring(0, sb.length() -1 );
+        return sb.substring(0, sb.length() - 1);
+
     }
-    
+
     public void setRepeticiones(String repeticiones) {
         if (repeticiones != null) {
             if (!repeticiones.isEmpty()) {
                 String[] valores_array = repeticiones.split(",");
-                for(String s : valores_array) {
+                for (String s : valores_array) {
                     agregarRepeticion(Integer.parseInt(s));
                 }
             }

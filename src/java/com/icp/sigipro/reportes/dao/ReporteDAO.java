@@ -35,6 +35,7 @@ public class ReporteDAO extends DAO {
         {
             put("cat_interno", " SELECT id_producto as VAL, nombre || '(' || codigo_icp || ')' AS TEXTO FROM bodega.catalogo_interno ");
             put("secciones", " SELECT id_seccion as VAL, nombre_seccion AS TEXTO FROM seguridad.secciones");
+            put("usuarios", " SELECT id_usuario as VAL, nombre_completo AS TEXTO FROM seguridad.usuarios");
         }
     };
 

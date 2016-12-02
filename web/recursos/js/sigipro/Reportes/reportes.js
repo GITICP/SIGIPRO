@@ -1,6 +1,11 @@
 ARREGLO_PARAMETROS = [];
 CONTADOR_PARAM = 1;
 DATOS = {};
+OPCIONES_OBJETOS = [
+    {val: "cat_interno", texto: "Producto Catálogo Interno"}, 
+    {val: "secciones", texto: "Sección"},
+    {val: "usuarios", texto: "Usuarios"}
+];
 
 $(document).ready(function () {
     var area_texto = document.getElementById("text-codigo");
@@ -255,7 +260,7 @@ crearCampoPrueba = function () {
             $(this).datepicker('hide');
         });
     } else if (val === "objeto" || val === "objeto_multiple") {
-        var opciones = [{val: "cat_interno", texto: "Producto Catálogo Interno"}, {val: "secciones", texto: "Sección"}];
+        var opciones = OPCIONES_OBJETOS;
         var select_objeto = crearSelect("tipo_param_objeto_" + num_param, opciones);
         $(this).parent().append(select_objeto);
         select_objeto.select2();
