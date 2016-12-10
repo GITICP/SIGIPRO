@@ -4,7 +4,10 @@ DATOS = {};
 OPCIONES_OBJETOS = [
     {val: "cat_interno", texto: "Producto Catálogo Interno"}, 
     {val: "secciones", texto: "Sección"},
-    {val: "usuarios", texto: "Usuarios"}
+    {val: "usuarios", texto: "Usuarios"},
+    {val: "caballos", texto: "Caballos"},
+    {val: "grupos_de_caballos", texto: "Grupos de Caballos"},
+    {val: "tipos_eventos", texto: "Eventos Clinicos Caballos"}
 ];
 
 $(document).ready(function () {
