@@ -15,16 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 public class Objeto extends Parametro {
     
     String tipo_objeto;
-    int id_objetos;
+    int id_objeto;
     
     public Objeto() {
         this.tipo = "objeto";
     }
     
-    public Objeto(String tipo_objeto, int id_objetos) {
+    public Objeto(String tipo_objeto, int id_objeto) {
         this.tipo = "objeto";
         this.tipo_objeto = tipo_objeto;
-        this.id_objetos = id_objetos;
+        this.id_objeto = id_objeto;
     }
 
     @Override

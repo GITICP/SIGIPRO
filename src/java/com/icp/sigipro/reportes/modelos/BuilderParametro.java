@@ -51,7 +51,7 @@ public class BuilderParametro {
             p.setNumero(rs.getInt("num_parametro"));
             p.setNombre(nombre_param);
             p.setRepeticiones(rs.getString("repeticiones"));
-            if(tipo_param.equals("objeto_multiple")) {
+            if(tipo_param.equals("objeto_multiple") | tipo_param.equals("objeto")) {
                 ObjetoMultiple p_ob = (ObjetoMultiple) p;
                 p_ob.setTipo_objeto(rs.getString("info_adicional"));
             }
