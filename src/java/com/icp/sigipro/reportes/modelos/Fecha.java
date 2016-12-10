@@ -47,10 +47,4 @@ public class Fecha extends Parametro {
         }
     }
     
-    @Override
-    public void setValorRequest(HttpServletRequest request) {
-        String valor_request = request.getParameter("valor_param_" + this.numero);
-        this.setValor(valor_request);
-    }
-    
 }

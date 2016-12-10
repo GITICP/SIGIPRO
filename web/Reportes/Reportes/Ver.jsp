@@ -49,22 +49,22 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            
+
                             <input id="input_id_reporte" type="hidden" name="id_reporte" value="${reporte.getId_reporte()}">
-                            
+
                             <c:if test="${reporte.getParametros().size() != 0}">
-                            <div class="widget widget-table">
-                                <div class="widget-header">
-                                    <h3><i class="fa fa-th-list"></i> Parámetros</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <div id="fila-parametros" class="row">
-                                        <c:forEach items="${reporte.getParametros()}" var="parametro">
-                                            <t:parametro parametro="${parametro}" />
-                                        </c:forEach>
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-th-list"></i> Parámetros</h3>
+                                    </div>
+                                    <div class="widget-content">
+                                        <div id="fila-parametros" class="row">
+                                            <c:forEach items="${reporte.getParametros()}" var="parametro">
+                                                <t:parametro parametro="${parametro}" />
+                                            </c:forEach>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             </c:if>
                             <div class="widget widget-table">
                                 <div class="widget-header">

@@ -12,34 +12,16 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Boga
  */
-public class Objeto extends Parametro {
+public abstract class Objeto extends Parametro {
     
-    String tipo_objeto;
-    int id_objeto;
-    
-    public Objeto() {
-        this.tipo = "objeto";
+    String tipo_objeto;    
+
+    public String getTipo_objeto() {
+        return tipo_objeto;
     }
-    
-    public Objeto(String tipo_objeto, int id_objeto) {
-        this.tipo = "objeto";
+
+    public void setTipo_objeto(String tipo_objeto) {
         this.tipo_objeto = tipo_objeto;
-        this.id_objeto = id_objeto;
-    }
-
-    @Override
-    public void agregarAConsulta(PreparedStatement consulta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setValor(String valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setValorRequest(HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -18,9 +18,8 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Boga
  */
-public class ObjetoMultiple extends Parametro {
+public class ObjetoMultiple extends Objeto {
 
-    String tipo_objeto;
     List<Integer> ids_objetos;
 
     public ObjetoMultiple() {
@@ -31,14 +30,6 @@ public class ObjetoMultiple extends Parametro {
         this.tipo = "objeto_multiple";
         this.tipo_objeto = tipo_objeto;
         this.ids_objetos = ids_objetos;
-    }
-
-    public String getTipo_objeto() {
-        return tipo_objeto;
-    }
-
-    public void setTipo_objeto(String tipo_objeto) {
-        this.tipo_objeto = tipo_objeto;
     }
 
     public List<Integer> getIds_objetos() {

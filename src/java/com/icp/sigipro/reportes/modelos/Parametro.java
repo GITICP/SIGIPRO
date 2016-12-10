@@ -37,7 +37,10 @@ public abstract class Parametro {
     
     public abstract void setValor(String valor);
 
-    public abstract void setValorRequest(HttpServletRequest request);
+    public void setValorRequest(HttpServletRequest request) {
+        String valor_request = request.getParameter("valor_param_" + this.numero);
+        this.setValor(valor_request);
+    }
 
     public int getNumero() {
         return numero;

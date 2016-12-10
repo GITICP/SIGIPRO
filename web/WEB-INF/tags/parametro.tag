@@ -24,10 +24,19 @@
                                onchange="setCustomValidity('')">
                     </c:when>
                     <c:when test="${parametro.getTipo() == 'numero'}">
-
+                        <input type="number" value="0" required name="valor_param_${parametro.getNumero()}" class="form-control"
+                               oninvalid="setCustomValidity('Este campo es requerido.')" onchange="setCustomValidity('')">
                     </c:when>
                     <c:when test="${parametro.getTipo() == 'objeto'}">
-
+                        <select class="select2" required
+                                name="valor_param_${parametro.getNumero()}" 
+                                style='background-color: #fff;' 
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <c:forEach items="${parametro.getListaItems()}" var="item">
+                                <option value="${item.getVal()}">${item.getTexto()}</option>
+                            </c:forEach>
+                        </select>
                     </c:when>
                     <c:when test="${parametro.getTipo() == 'objeto_multiple'}">
                         <select class="select2" multiple="multiple" required
