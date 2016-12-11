@@ -98,38 +98,40 @@
                             <div class="widget widget-table">
                                 <div class="widget-header">
                                     <h3><i class="fa fa-check"></i> Información de la Sangría </h3>
-                                    <div class="btn-group widget-header-toolbar">
-                                        <c:choose>
-                                            <c:when test="${sangria.getFecha_dia1() == null}">
-                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Registrar Extracción Día 1</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Editar Extracción Día 1</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when test="${sangria.getFecha_dia2() == null && sangria.getFecha_dia1() != null}">
-                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Registrar Extracción Día 2</a>
-                                            </c:when>
-                                            <c:when test="${sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
-                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Editar Extracción Día 2</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a class="btn btn-primary btn-sm boton-accion" disabled>Registrar Extracción Día 2</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when test="${sangria.getFecha_dia3() == null && sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
-                                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Registrar Extracción Día 3</a>
-                                            </c:when>
-                                            <c:when test="${sangria.getFecha_dia3() != null && sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
-                                                <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Editar Extracción Día 3</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a class="btn btn-primary btn-sm boton-accion" disabled>RegistrarExtracción Día 3</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
+                                    <c:if test="${contienePermisoEditar}">
+                                        <div class="btn-group widget-header-toolbar">
+                                            <c:choose>
+                                                <c:when test="${sangria.getFecha_dia1() == null}">
+                                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Registrar Extracción Día 1</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=1">Editar Extracción Día 1</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when test="${sangria.getFecha_dia2() == null && sangria.getFecha_dia1() != null}">
+                                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Registrar Extracción Día 2</a>
+                                                </c:when>
+                                                <c:when test="${sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
+                                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=2">Editar Extracción Día 2</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="btn btn-primary btn-sm boton-accion" disabled>Registrar Extracción Día 2</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when test="${sangria.getFecha_dia3() == null && sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
+                                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=extraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Registrar Extracción Día 3</a>
+                                                </c:when>
+                                                <c:when test="${sangria.getFecha_dia3() != null && sangria.getFecha_dia2() != null && sangria.getFecha_dia1() != null}">
+                                                    <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Caballeriza/Sangria?accion=editarextraccion&id_sangria=${sangria.getId_sangria()}&dia=3">Editar Extracción Día 3</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="btn btn-primary btn-sm boton-accion" disabled>RegistrarExtracción Día 3</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </c:if>
                                 </div>
                                 <div class="widget-content">
                                     <table id="datatable-column-filter-permisos" class="table table-sorting table-striped table-hover datatable tablaSigipro">
@@ -261,7 +263,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <br>
                 <div class="row">
                     <div class="form-group">

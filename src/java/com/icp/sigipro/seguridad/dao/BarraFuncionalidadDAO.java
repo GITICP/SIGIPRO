@@ -25,7 +25,7 @@ public class BarraFuncionalidadDAO
     
     public BarraFuncionalidad obtenerModulos(int usuario, List<Integer> permisos)
     {
-      if ( !(permisos.contains(1)) )
+      if ( !(permisos.contains(1) || permisos.contains(9999)) )
       {
         return consultarModulos(usuario,  " ;With sub_modulos as "
                                         + " ( "

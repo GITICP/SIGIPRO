@@ -274,7 +274,7 @@ public class ControladorSalidas extends SIGIPROServlet {
     protected void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException, NullPointerException
     {
         try {
-            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
+            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1) ||  permisosUsuario.contains(9999))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
             }
         }

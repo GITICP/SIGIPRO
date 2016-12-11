@@ -41,6 +41,7 @@ $(document).ready(function () {
         });
     });
 
+    $(".seleccionar-todo").unbind();
     $(".seleccionar-todo").click(function () {
         var widget_padre = $(this).parent().parent().parent();
         if ($(this).html() === "Marcar Todos") {

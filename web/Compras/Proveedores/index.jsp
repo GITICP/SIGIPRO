@@ -14,7 +14,7 @@
 <%
 
     List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
-    if (!(permisos.contains(1) || permisos.contains(14) || permisos.contains(15) || permisos.contains(16))) {
+    if (!(permisos.contains(1) || permisos.contains(9999) || permisos.contains(14) || permisos.contains(15) || permisos.contains(16))) {
         request.getRequestDispatcher("/").forward(request, response);
     }
     
