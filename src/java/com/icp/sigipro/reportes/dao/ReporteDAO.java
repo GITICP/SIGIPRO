@@ -35,6 +35,10 @@ public class ReporteDAO extends DAO {
         {
             put("cat_interno", " SELECT id_producto as VAL, nombre || '(' || codigo_icp || ')' AS TEXTO FROM bodega.catalogo_interno ");
             put("secciones", " SELECT id_seccion as VAL, nombre_seccion AS TEXTO FROM seguridad.secciones");
+            put("usuarios", " SELECT id_usuario as VAL, nombre_completo AS TEXTO FROM seguridad.usuarios");
+            put("caballos", " SELECT id_caballo AS VAL, numero AS TEXTO FROM caballeriza.caballos");
+            put("grupos_de_caballos", " SELECT id_grupo_de_caballo AS VAL, nombre AS TEXTO FROM caballeriza.grupos_de_caballos");
+            put("tipos_eventos", " SELECT id_tipo_evento AS VAL, nombre AS TEXTO FROM caballeriza.tipos_eventos");
         }
     };
 

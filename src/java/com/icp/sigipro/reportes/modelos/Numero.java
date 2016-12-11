@@ -33,10 +33,5 @@ public class Numero extends Parametro {
     public void setValor(String valor) {
         this.valor = Integer.parseInt(valor);
     }
-
-    @Override
-    public void setValorRequest(HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

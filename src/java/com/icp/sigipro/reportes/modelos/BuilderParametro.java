@@ -34,7 +34,13 @@ public class BuilderParametro {
                 p_ob.setTipo_objeto(request.getParameter("tipo_param_objeto_" + num_parametro));
                 String[] valores = request.getParameterValues("val_param_" + num_parametro + "[]");
                 p_ob.setValores(valores);
-            } else {
+            } else if (tipo_param.equals("objeto")) {
+                ObjetoUnico p_ob = (ObjetoUnico) p;
+                p_ob.setTipo_objeto(request.getParameter("tipo_param_objeto_" + num_parametro));
+                String valor = request.getParameter("val_param_" + num_parametro);
+                p_ob.setValor(valor);
+            }
+            else {
                 String valor = request.getParameter("val_param_" + num_parametro);
                 p.setValor(valor);
             }
@@ -51,8 +57,8 @@ public class BuilderParametro {
             p.setNumero(rs.getInt("num_parametro"));
             p.setNombre(nombre_param);
             p.setRepeticiones(rs.getString("repeticiones"));
-            if(tipo_param.equals("objeto_multiple")) {
-                ObjetoMultiple p_ob = (ObjetoMultiple) p;
+            if(tipo_param.equals("objeto_multiple") || tipo_param.equals("objeto")) {
+                Objeto p_ob = (Objeto) p;
                 p_ob.setTipo_objeto(rs.getString("info_adicional"));
             }
         }
@@ -69,7 +75,7 @@ public class BuilderParametro {
                 p = new Fecha();
                 break;
             case "objeto":
-                p = new Objeto();
+                p = new ObjetoUnico();
                 break;
             case "objeto_multiple":
                 p = new ObjetoMultiple();

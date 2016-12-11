@@ -1,6 +1,14 @@
 ARREGLO_PARAMETROS = [];
 CONTADOR_PARAM = 1;
 DATOS = {};
+OPCIONES_OBJETOS = [
+    {val: "cat_interno", texto: "Producto Catálogo Interno"}, 
+    {val: "secciones", texto: "Sección"},
+    {val: "usuarios", texto: "Usuarios"},
+    {val: "caballos", texto: "Caballos"},
+    {val: "grupos_de_caballos", texto: "Grupos de Caballos"},
+    {val: "tipos_eventos", texto: "Eventos Clinicos Caballos"}
+];
 
 $(document).ready(function () {
     var area_texto = document.getElementById("text-codigo");
@@ -166,7 +174,7 @@ function crearSelectParcial(name) {
     return select;
 }
 
-function crearSelect(name, opciones) {
+function crearSelect(name, opciones, evento) {
 
     var select = crearSelectParcial(name);
 
@@ -181,7 +189,9 @@ function crearSelect(name, opciones) {
         select.append(opcion);
     }
 
-    select.on("change", crearCampoPrueba);
+    if(evento === undefined) {
+        select.on("change", crearCampoPrueba);
+    }
 
 
     return select;
@@ -237,6 +247,13 @@ crearCampoPrueba = function () {
     var val = $(this).val();
     var fila = $(this).parents(".row.fila-param");
     var num_param = fila.data("num_param");
+    
+    var fila_por_destruir = fila.find(".col-md-4:eq(2)");
+    if (fila_por_destruir.length > 0) {
+        fila_por_destruir.remove();
+    }
+    
+    $(this).parent().find("#tipo_param_objeto_" + num_param).remove();
 
     var nombre_input = "val_param_" + num_param;
     var texto_label = "Valor de prueba parámetro " + num_param;
@@ -255,9 +272,12 @@ crearCampoPrueba = function () {
             $(this).datepicker('hide');
         });
     } else if (val === "objeto" || val === "objeto_multiple") {
-        var opciones = [{val: "cat_interno", texto: "Producto Catálogo Interno"}, {val: "secciones", texto: "Sección"}];
+        var opciones = OPCIONES_OBJETOS;
+        var div = crear("div");
+        div.prop("id", "tipo_param_objeto_" + num_param);
         var select_objeto = crearSelect("tipo_param_objeto_" + num_param, opciones);
-        $(this).parent().append(select_objeto);
+        div.append(select_objeto);
+        $(this).parent().append(div);
         select_objeto.select2();
         select_objeto.on("change", escogenciaObjeto);
         if (val === "objeto_multiple") {
@@ -275,7 +295,12 @@ escogenciaObjeto = function () {
 
     var nombre_input = "val_param_" + num_param;
     var texto_label = "Valor de prueba parámetro " + num_param;
-
+    
+    var fila_por_destruir = fila.find(".col-md-4:eq(2)");
+    if (fila_por_destruir.length > 0) {
+        fila_por_destruir.remove();
+    }
+    
     if (val !== "") {
         inicializarSelect(fila, nombre_input, texto_label, $(this).data("multiple"), val);
     }
@@ -285,7 +310,7 @@ escogenciaObjeto = function () {
 function inicializarSelect(fila, nombre_input, texto_label, multiple, tabla) {
 
     $.get("/SIGIPRO/Reportes/Reportes?accion=ajaxobjetos&tabla=" + tabla).done(function (data) {
-        var select_objeto = crearSelect(nombre_input, data);
+        var select_objeto = crearSelect(nombre_input, data, false);
         var input_valor_prueba = crearEspacioCampo(texto_label, select_objeto);
         fila.append(input_valor_prueba);
 
