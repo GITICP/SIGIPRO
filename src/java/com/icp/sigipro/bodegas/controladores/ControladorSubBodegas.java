@@ -748,7 +748,7 @@ public class ControladorSubBodegas extends SIGIPROServlet {
             } catch (AuthenticationException auth) {
                 acceso_sub_bodega = false;
             }
-            boolean tiene_permisos = permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(1);
+            boolean tiene_permisos = permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(1) || permisosUsuario.contains(9999) ;
 
             if (!(acceso_sub_bodega || tiene_permisos)) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");

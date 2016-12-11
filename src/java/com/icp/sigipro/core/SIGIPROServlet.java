@@ -101,7 +101,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
 
     protected void validarPermiso(int permiso, List<Integer> permisosUsuario) throws AuthenticationException, NullPointerException {
         try {
-            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
+            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1) || permisosUsuario.contains(9999))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
             }
         } catch (NullPointerException e) {
@@ -112,7 +112,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
     protected void validarPermiso(int permiso, HttpServletRequest request) throws AuthenticationException, NullPointerException {
         try {
             List<Integer> permisosUsuario = this.getPermisosUsuario(request);
-            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1))) {
+            if (!(permisosUsuario.contains(permiso) || permisosUsuario.contains(1) || permisosUsuario.contains(9999))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
             }
         } catch (NullPointerException e) {
@@ -122,7 +122,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
 
     protected void validarPermisos(int[] permisos, List<Integer> permisosUsuario) throws AuthenticationException {
         try {
-            if (!(permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(permisos[1]) || permisosUsuario.contains(permisos[2]) || permisosUsuario.contains(1))) {
+            if (!(permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(permisos[1]) || permisosUsuario.contains(permisos[2]) || permisosUsuario.contains(1) || permisosUsuario.contains(9999))) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");
             }
         } catch (NullPointerException e) {
@@ -136,7 +136,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
         boolean incluido = false;
 
         try {
-            if (!lista_permisos.contains(1)) {
+            if (!(lista_permisos.contains(1) || lista_permisos.contains(9999))) {
                 for (int i = 0; i < permisos.length; i++) {
                     if (lista_permisos.contains(permisos[i])) {
                         incluido = true;
@@ -158,7 +158,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
 
     protected boolean validarPermiso(List<Integer> permisosUsuario) throws AuthenticationException {
         try {
-            return permisosUsuario.contains(getPermiso()) || permisosUsuario.contains(1);
+            return permisosUsuario.contains(getPermiso()) || permisosUsuario.contains(1) || permisosUsuario.contains(9999);
         } catch (NullPointerException e) {
             throw new AuthenticationException("Expiró la sesión.");
         }
@@ -166,7 +166,7 @@ public abstract class SIGIPROServlet extends HttpServlet {
 
     protected boolean verificarPermiso(Integer p, List<Integer> permisosUsuario) throws AuthenticationException {
         try {
-            return permisosUsuario.contains(p) || permisosUsuario.contains(1);
+            return permisosUsuario.contains(p) || permisosUsuario.contains(1) || permisosUsuario.contains(9999);
         } catch (NullPointerException e) {
             throw new AuthenticationException("Expiró la sesión.");
         }
