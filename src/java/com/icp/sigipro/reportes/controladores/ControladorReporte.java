@@ -293,7 +293,7 @@ public class ControladorReporte extends SIGIPROServlet {
     }
     
     private boolean esAdminOTienePermiso(List<Integer> listaPermisos) {
-        return !(listaPermisos.contains(1) || listaPermisos.contains(1501));
+        return !(listaPermisos.contains(1) || listaPermisos.contains(1501) || listaPermisos.contains(9999));
     }
 
     //</editor-fold>

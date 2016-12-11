@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorColeccionHumeda extends SIGIPROServlet {
 
     //Falta implementar
-    private final int[] permisos = {1, 314};
+    private final int[] permisos = {1, 314, 9999};
     //-----------------
     private ColeccionHumedaDAO dao = new ColeccionHumedaDAO();
     private EventoDAO eventodao = new EventoDAO();
