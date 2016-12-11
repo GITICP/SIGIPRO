@@ -22,6 +22,27 @@ public class ClienteDAO extends DAO {
     public ClienteDAO() {
     }
 
+    public String existeCliente(String nombre, String cedula) throws SIGIPROException {
+        String respuesta = "no existe";
+        List<Cliente> clientes = this.obtenerClientes();
+        List<String> nombres = new ArrayList<>();
+        List<String> cedulas = new ArrayList<>();
+        for (Cliente c: clientes){
+            nombres.add(c.getNombre().toLowerCase());
+            cedulas.add(c.getCedula().toLowerCase());
+        }
+        if (nombres.contains(nombre.toLowerCase()) && (cedulas.contains(cedula.toLowerCase()))){
+            respuesta = "ambos";
+        }
+        else if (nombres.contains(nombre.toLowerCase())){
+            respuesta = "nombre";
+        }
+        else if(cedulas.contains(cedula.toLowerCase())){
+            respuesta = "cedula";
+        }
+        return respuesta;
+    }
+    
     public List<Cliente> obtenerClientes() throws SIGIPROException {
 
         List<Cliente> resultado = new ArrayList<Cliente>();
@@ -38,6 +59,9 @@ public class ClienteDAO extends DAO {
                 cliente.setNombre(rs.getString("nombre"));
                 cliente.setPais(rs.getString("pais"));
                 cliente.setTipo(rs.getString("tipo"));
+                cliente.setPersona(rs.getString("persona"));
+                cliente.setDireccion(rs.getString("direccion"));
+                cliente.setCedula(rs.getString("cedula"));
                 resultado.add(cliente);
 
             }
@@ -66,6 +90,9 @@ public class ClienteDAO extends DAO {
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setPais(rs.getString("pais"));
                 resultado.setTipo(rs.getString("tipo"));
+                resultado.setPersona(rs.getString("persona"));
+                resultado.setDireccion(rs.getString("direccion"));
+                resultado.setCedula(rs.getString("cedula"));
             }
             rs.close();
             consulta.close();
@@ -82,12 +109,15 @@ public class ClienteDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cliente (nombre, pais, tipo)"
-                    + " VALUES (?,?,?) RETURNING id_cliente");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cliente (nombre, pais, tipo, direccion, cedula, persona)"
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_cliente");
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getPais());
             consulta.setString(3, p.getTipo());
+            consulta.setString(4, p.getDireccion());
+            consulta.setString(5, p.getCedula());
+            consulta.setString(6, p.getPersona());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -110,14 +140,17 @@ public class ClienteDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.cliente"
-                    + " SET nombre=?, pais=?, tipo=?"
+                    + " SET nombre=?, pais=?, tipo=?, direccion=?, cedula=?, persona=?"
                     + " WHERE id_cliente=?; "
             );
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getPais());
             consulta.setString(3, p.getTipo());
-            consulta.setInt(4, p.getId_cliente());
+            consulta.setString(4, p.getDireccion());
+            consulta.setString(5, p.getCedula());
+            consulta.setString(6, p.getPersona());
+            consulta.setInt(7, p.getId_cliente());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

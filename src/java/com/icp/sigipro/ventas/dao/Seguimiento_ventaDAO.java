@@ -39,8 +39,6 @@ public class Seguimiento_ventaDAO extends DAO {
                 seguimiento.setId_seguimiento(rs.getInt("id_seguimiento"));
                 seguimiento.setCliente(cdao.obtenerCliente(Integer.parseInt(rs.getString("id_cliente"))));
                 seguimiento.setFactura(fdao.obtenerFactura(Integer.parseInt(rs.getString("id_factura"))));
-                seguimiento.setObservaciones(rs.getString("observaciones"));
-                seguimiento.setTipo(rs.getString("tipo"));
                 seguimiento.setDocumento_1(rs.getString("documento"));
                 resultado.add(seguimiento);
 
@@ -69,8 +67,6 @@ public class Seguimiento_ventaDAO extends DAO {
                 resultado.setId_seguimiento(rs.getInt("id_seguimiento"));
                 resultado.setCliente(cdao.obtenerCliente(Integer.parseInt(rs.getString("id_cliente"))));
                 resultado.setFactura(fdao.obtenerFactura(Integer.parseInt(rs.getString("id_factura"))));
-                resultado.setObservaciones(rs.getString("observaciones"));
-                resultado.setTipo(rs.getString("tipo"));
                 resultado.setDocumento_1(rs.getString("documento"));
             }
             rs.close();
@@ -88,14 +84,12 @@ public class Seguimiento_ventaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.seguimiento_venta (id_cliente, id_factura, observaciones, documento, tipo)"
-                    + " VALUES (?,?,?,?,?) RETURNING id_seguimiento");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.seguimiento_venta (id_cliente, id_factura, documento)"
+                    + " VALUES (?,?,?) RETURNING id_seguimiento");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setInt(2, p.getFactura().getId_factura());
-            consulta.setString(3, p.getObservaciones());
-            consulta.setString(4, p.getDocumento_1());
-            consulta.setString(5, p.getTipo());
+            consulta.setString(3, p.getDocumento_1());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -118,16 +112,14 @@ public class Seguimiento_ventaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.seguimiento_venta"
-                    + " SET observaciones=?, id_factura=?, id_cliente=?, documento=?, tipo=?"
+                    + " SET id_factura=?, id_cliente=?, documento=?"
                     + " WHERE id_seguimiento=?; "
             );
 
-            consulta.setString(1, p.getObservaciones());
-            consulta.setInt(2, p.getFactura().getId_factura());
-            consulta.setInt(3, p.getCliente().getId_cliente());
-            consulta.setString(4, p.getDocumento_1());
-            consulta.setString(5, p.getTipo());
-            consulta.setInt(6, p.getId_seguimiento());
+            consulta.setInt(1, p.getFactura().getId_factura());
+            consulta.setInt(2, p.getCliente().getId_cliente());
+            consulta.setString(3, p.getDocumento_1());
+            consulta.setInt(4, p.getId_seguimiento());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

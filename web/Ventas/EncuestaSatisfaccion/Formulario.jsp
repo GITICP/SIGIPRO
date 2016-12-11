@@ -109,7 +109,15 @@
                     </div>
                 </c:otherwise>
             </c:choose>
-                    
+            <label for="url" class="control-label"> URL de Encuesta Digital</label>
+            <!-- URL -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input id="observaciones" name="url" class="form-control" maxlength="499" value="${encuesta.getURL()}">
+                    </div>
+                </div>
+            </div>
         </div>
                                 
         <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>

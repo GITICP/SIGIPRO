@@ -14,11 +14,19 @@ import org.json.JSONObject;
  */
 public class Cotizacion {
     private int id_cotizacion;
-    private Cliente cliente;
     private Intencion_venta intencion;
     private int total;
     private int flete;
     private String moneda;
+    private String identificador;
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
+    }
 
     public String getMoneda() {
         return moneda;
@@ -34,14 +42,6 @@ public class Cotizacion {
 
     public void setId_cotizacion(int id_cotizacion) {
         this.id_cotizacion = id_cotizacion;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 
     public Intencion_venta getIntencion() {
@@ -82,7 +82,6 @@ public class Cotizacion {
                     JSON.put("id_objeto", field.get(this));
                 }
             }    
-            JSON.put("id_cliente",this.cliente.getId_cliente());
             JSON.put("id_intencion",this.intencion.getId_intencion());
         }catch (Exception e){
             

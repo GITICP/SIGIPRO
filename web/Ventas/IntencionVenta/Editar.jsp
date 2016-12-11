@@ -90,12 +90,12 @@
               </div>
             </div>
           </div>
-            <label for="posibleFechaEntrega" class="control-label">*Posible Fecha de Despacho</label>
+            <label for="posibleFechaEntrega" class="control-label"> Posible Fecha de Despacho</label>
             <div class="form-group">
               <div class="col-sm-12">
                 <div class="input-group" style="display:table;">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="posibleFechaEntrega" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy" required
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="posibleFechaEntrega" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy"
                          oninvalid="setCustomValidity('Este campo es requerido ')"
                          onchange="setCustomValidity('')">
                 </div>
@@ -131,12 +131,12 @@
               </div>
             </div>
           </div>
-            <label for="posibleFechaEntrega" class="control-label">*Posible Fecha de Despacho</label>
+            <label for="posibleFechaEntrega" class="control-label"> Posible Fecha de Despacho</label>
             <div class="form-group">
               <div class="col-sm-12">
                 <div class="input-group" style="display:table;">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarPosibleFechaDespacho" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy" required
+                  <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarPosibleFechaDespacho" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy"
                          oninvalid="setCustomValidity('Este campo es requerido ')"
                          onchange="setCustomValidity('')">
                 </div>

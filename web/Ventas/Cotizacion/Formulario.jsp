@@ -14,57 +14,41 @@
       <input hidden="true" name="id_cotizacion" value="${cotizacion.getId_cotizacion()}">
       <input hidden="true" name="accion" id="accion" value="${accion}">
       <input id="listaProductos" hidden="true" name="listaProductos" value="">
-            <label for="id_cliente" class="control-label"> *Cliente (Este campo no podrá ser editado)</label>
-            <!-- Id Cliente -->
+      <label for="identificador" class="control-label"> *Identificador (formato: ICP-001-16)</label>
+            <!-- Identificador -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <select id="id_cliente" class="select2" name="id_cliente" required
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                          <c:forEach items="${clientes}" var="cliente">
-                            <c:choose>
-                              <c:when test="${cotizacion.getCliente().getId_cliente() == cliente.getId_cliente()}" >
-                                <option value=${cliente.getId_cliente()} selected> ${cliente.getNombre()}</option>
+                        <c:choose>
+                              <c:when test="${accion.equals('Agregar')}" >
+                                <input id="identificador" type="text" class="form-control" maxlength="12" name="identificador" value="ICP-${consecutivo}-${ano}" 
+                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                        oninput="setCustomValidity('')">  
                               </c:when>
                               <c:otherwise>
-                                <option value=${cliente.getId_cliente()}> ${cliente.getNombre()}</option>
+                                <input id="identificador" type="text" class="form-control" maxlength="12" name="identificador" value="${cotizacion.getIdentificador()}" 
+                                        oninvalid="setCustomValidity('Este campo es requerido')"
+                                        oninput="setCustomValidity('')">    
                               </c:otherwise>
                             </c:choose>
-                          </c:forEach>
-                        </select>
                     </div>
                 </div>
-            </div>
-            <label for="id_intencion" class="control-label"> *Solicitud o Intención de Venta</label>
-            <!-- Id Cliente -->
+            </div>      
+      <label for="id_intencion" class="control-label"> *Solicitud o Intención de Venta</label>
+            <!-- Id intencion -->
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        
                         <select id="id_intencion" class="select2" name="id_intencion" 
                             oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')" required>
                           <option value=''></option>
                           <c:forEach items="${intenciones}" var="intencion">
                             <c:choose>
                               <c:when test="${cotizacion.getIntencion().getId_intencion() == intencion.getId_intencion()}" >
-                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}${intencion.getNombre_cliente()}</option>
                               </c:when>
                               <c:otherwise>
-                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
-                              </c:otherwise>
-                            </c:choose>
-                          </c:forEach>
-                        </select>
-                        
-                        <select id="id_intencion_completo" name="id_intencion_completo" hidden>
-                          <option value=''></option>
-                          <c:forEach items="${intenciones}" var="intencion">
-                            <c:choose>
-                              <c:when test="${cotizacion.getIntencion().getId_intencion() == intencion.getId_intencion()}" >
-                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}" selected> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
-                              </c:when>
-                              <c:otherwise>
-                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}</option>
+                                <option value="${intencion.getId_intencion()}" data-cliente="${intencion.getCliente().getId_cliente()}"> ID: ${intencion.getId_intencion()}, Cliente: ${intencion.getCliente().getNombre()}${intencion.getNombre_cliente()}</option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -111,8 +95,8 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="flete" type="number" min="0" class="form-control" name="flete" value="${cotizacion.getFlete()}" 
-                                oninvalid="setCustomValidity('Este campo es requerido')"
+                        <input id="flete" type="number" min="0" class="form-control" name="flete" value="${cotizacion.getFlete()}" required 
+                                oninvalid="setCustomValidity('Mínimo 0')"
                                 oninput="setCustomValidity('')">
                     </div>
                 </div>

@@ -56,9 +56,25 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>Nombre: </strong></td> <center> <td> ${contrato.getNombre()} </td> </center> </tr>
-                <tr><td> <strong>Cliente: </strong></td> <center> <td> ${contrato.getCliente().getNombre()} </td> </center> </tr>
+                <tr><td> <strong>Cliente: </strong></td> <center> <td> 
+                        <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${contrato.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${contrato.getCliente().getNombre()}
+                            </div>
+                            </a>
+                    </td> </center> </tr>
                 <tr><td> <strong>Fecha Inicial: </strong>  </td> <center> <td> ${contrato.getFechaInicial_S()}   </td> </center> </tr>
                 <tr><td> <strong>Fecha de Renovacion: </strong>  </td> <center> <td> ${contrato.getFechaRenovacion_S()}   </td> </center> </tr>
+                <tr><td> <strong>Firmado: </strong>  </td> <center> <td>
+                    <c:choose>
+                        <c:when test= "${(contrato.isFirmado())}">
+                            Si
+                        </c:when>
+                        <c:otherwise>
+                            No
+                        </c:otherwise>
+                    </c:choose>
+                </td> </center> </tr>
                 <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${contrato.getObservaciones()}   </td> </center> </tr>
               </table>
               <br>

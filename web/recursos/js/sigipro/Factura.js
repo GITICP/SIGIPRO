@@ -4,8 +4,105 @@
  * and open the template in the editor.
  */
 
+	
+function addDays(date, days) {
+    date.setTime( date.getTime() + days * 86400000 );
+    var yyyy = date.getFullYear();
+    var mm = date.getMonth()+1;
+    if(mm<10){
+        mm='0'+mm
+    } 
+    var dd = date.getDate();
+    var newdate = dd+'/'+mm+'/'+yyyy;
+    return newdate;
+}
+
 var contadorEditar = 0; //Cuando se edita la cotización, se ejecuta la función siguiente 1 vez, lo cual afecta la selección de la orden de compra
 $(function(){ /* DOM ready */ //
+    $("#moneda").change(function () {
+        var moneda = document.getElementById("moneda").value;
+        var infofundevi = document.getElementById("Info_Fundevi");
+        var tipo = document.getElementById("tipo").value;
+        if ((moneda === "Colones" || moneda === "Dólares") && tipo === "FUNDEVI"){
+            infofundevi.style.display = 'block';
+            document.getElementById("proyecto").required = true;
+            document.getElementById("plazo").required = true;
+        }
+        else{
+            infofundevi.style.display = 'none';
+            document.getElementById("proyecto").required = false;
+            document.getElementById("plazo").required = false;
+        }
+    }).change();
+    
+    $("#tipo").change(function () {
+        var moneda = document.getElementById("moneda").value;
+        var infofundevi = document.getElementById("Info_Fundevi");
+        var tipo = document.getElementById("tipo").value;
+        if ((moneda === "Colones" || moneda === "Dólares") && tipo === "FUNDEVI"){
+            infofundevi.style.display = 'block';
+            document.getElementById("proyecto").required = true;
+            document.getElementById("plazo").required = true;
+        }
+        else{
+            infofundevi.style.display = 'none';
+            document.getElementById("proyecto").required = false;
+            document.getElementById("plazo").required = false;
+        }
+    }).change();
+    
+    $("#fecha").change(function () {
+        var fecha = document.getElementById("fecha").value;
+        var fecha_vencimiento = document.getElementById("fecha_vencimiento");
+        var plazo = document.getElementById("plazo").value;
+        var fv = new Date(fecha.split("/")[2],fecha.split("/")[1]-1,fecha.split("/")[0],0,0,0,0);
+        fecha_vencimiento.value = addDays(fv,plazo);
+    }).change();
+    
+    $("#contado").change(function () {
+        
+        var contado_o_credito = document.getElementById("contado")[document.getElementById("contado").selectedIndex].value;
+        
+        var plazo = document.getElementById("plazo");
+        if (contado_o_credito == 2){ //Contado
+            var opt = document.createElement('option');
+            opt.value = 0;
+            opt.innerHTML = "0";
+            plazo.appendChild(opt);
+            $('#plazo').val('0').change();
+            plazo.value = 0;
+            
+            plazo.disabled = true;
+            //plazo.readOnly = true;
+            var fecha_vencimiento = document.getElementById("fecha_vencimiento");
+            var fecha = document.getElementById("fecha").value;
+            var fv = new Date(fecha.split("/")[2],fecha.split("/")[1]-1,fecha.split("/")[0],0,0,0,0);
+
+            fecha_vencimiento.value = addDays(fv,plazo.value);
+        }
+        else{
+            if (plazo.options[0].value == 0){
+                plazo.remove(0);
+            }
+            if (plazo.options[plazo.options.length-1].value == 0){
+                plazo.remove(plazo.options.length-1);
+            }
+            $('#plazo').val('30').change();
+            plazo.value = "";
+            plazo.disabled = false;
+        }
+    }).change();
+    
+    $("#plazo").change(function () {
+        var fecha = document.getElementById("fecha").value;
+        var fecha_vencimiento = document.getElementById("fecha_vencimiento");
+        var plazo = document.getElementById("plazo").value;
+        
+        var fv = new Date(fecha.split("/")[2],fecha.split("/")[1]-1,fecha.split("/")[0],0,0,0,0);
+        
+        fecha_vencimiento.value = addDays(fv,plazo);
+    }).change();
+    
     $("#id_cliente").change(function () {
         var ac = document.getElementById("accion").value;
         
@@ -44,4 +141,5 @@ $(function(){ /* DOM ready */ //
             $("#id_orden").val(" ");
         }
     }).change();
+    
 });

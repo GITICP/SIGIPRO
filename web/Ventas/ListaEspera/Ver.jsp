@@ -55,9 +55,30 @@
             ${mensaje}
             <div class="widget-content">
               <table>
-                <tr><td> <strong>Cliente:  </strong>  </td> <center> <td> ${lista.getCliente().getNombre()}   </td> </center> </tr>
+                <tr><td> <strong>Cliente: </strong></td><center> 
+                        <c:choose>
+                          <c:when test= "${lista.getCliente() != null}">
+                              <td><a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${lista.getCliente().getId_cliente()}">
+                                <div style="height:100%;width:100%">
+                                    ${lista.getCliente().getNombre()}
+                                </div>
+                                </a>
+                              </td>
+                          </c:when>
+                          <c:otherwise>
+                              <td>${lista.getNombre_cliente()}</td>
+                          </c:otherwise>
+                        </c:choose>
+                    </center> </tr>
+                <c:choose>
+                  <c:when test= "${lista.getCliente() == null}">
+                      <tr><td> <strong>Teléfono: </strong>  </td> <center> <td> ${lista.getTelefono()}   </td> </center> </tr>
+                      <tr><td> <strong>Correo electrónico: </strong>  </td> <center> <td> ${lista.getCorreo()}   </td> </center> </tr>
+                  </c:when>
+                </c:choose>    
                 <tr><td> <strong>Fecha de Solicitud: </strong>  </td> <center> <td> ${lista.getFecha_solicitud_S()}   </td> </center> </tr>
                 <tr><td> <strong>Fecha de Atención / Despacho: </strong>  </td> <center> <td> ${lista.getFecha_atencion_S()}   </td> </center> </tr>
+                <tr><td> <strong>Total de Días: </strong>  </td> <center> <td> ${lista.getDias()}   </td> </center> </tr>
               </table>
               <br>
               
@@ -69,6 +90,9 @@
       </div>
       <!-- /main -->
     </div>
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+            <script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.js"></script>
+            
 
   </jsp:attribute>
 

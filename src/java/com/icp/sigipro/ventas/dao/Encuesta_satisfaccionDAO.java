@@ -40,6 +40,7 @@ public class Encuesta_satisfaccionDAO extends DAO {
                 encuesta.setFecha(rs.getDate("fecha"));
                 encuesta.setObservaciones(rs.getString("observaciones"));
                 encuesta.setDocumento(rs.getString("documento"));
+                encuesta.setURL(rs.getString("url"));
                 resultado.add(encuesta);
 
             }
@@ -69,6 +70,7 @@ public class Encuesta_satisfaccionDAO extends DAO {
                 resultado.setFecha(rs.getDate("fecha"));
                 resultado.setObservaciones(rs.getString("observaciones"));
                 resultado.setDocumento(rs.getString("documento"));
+                resultado.setURL(rs.getString("url"));
             }
             rs.close();
             consulta.close();
@@ -85,13 +87,14 @@ public class Encuesta_satisfaccionDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.encuesta_satisfaccion (id_cliente, fecha, observaciones, documento)"
-                    + " VALUES (?,?,?,?) RETURNING id_encuesta");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.encuesta_satisfaccion (id_cliente, fecha, observaciones, documento,url)"
+                    + " VALUES (?,?,?,?,?) RETURNING id_encuesta");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha());
             consulta.setString(3, p.getObservaciones());
             consulta.setString(4, p.getDocumento());
+            consulta.setString(5, p.getURL());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -114,7 +117,7 @@ public class Encuesta_satisfaccionDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.encuesta_satisfaccion"
-                    + " SET observaciones=?, fecha=?, id_cliente=?, documento=?"
+                    + " SET observaciones=?, fecha=?, id_cliente=?, documento=?, url=?"
                     + " WHERE id_encuesta=?; "
             );
 
@@ -122,7 +125,8 @@ public class Encuesta_satisfaccionDAO extends DAO {
             consulta.setDate(2, p.getFecha());
             consulta.setInt(3, p.getCliente().getId_cliente());
             consulta.setString(4, p.getDocumento());
-            consulta.setInt(5, p.getId_encuesta());
+            consulta.setString(5, p.getURL());
+            consulta.setInt(6, p.getId_encuesta());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

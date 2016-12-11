@@ -25,7 +25,7 @@
             <li> 
               <a href="/SIGIPRO/Ventas/Clientes?">Clientes</a>
             </li>
-            <li class="active">Cliente ${cliente.getNombre()}</li>
+            <li class="active">${cliente.getNombre()}</li>
 
           </ul>
         </div>

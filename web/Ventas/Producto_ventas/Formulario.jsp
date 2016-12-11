@@ -35,8 +35,43 @@
             </div>
     </div>                    
     <div class="col-md-6">
-        <label for="lote" class="control-label"> *Número de Lote (Inventario de Producción)</label>
+        <label for="tipo" class="control-label"> *Tipo</label>
+            <!-- Tipo -->
             <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <select id="tipo" class="select2" style='background-color: #fff;' name="tipo" required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                oninput="setCustomValidity('')">
+                            <c:choose>
+                                <c:when test="${producto.getTipo()} == Sueros" >
+                                  <option value="Servicios"> Servicios</option>
+                                  <option value="Sueros" selected> Sueros</option>
+                                  <option value="Otros Productos"> Otros Productos</option>
+                                </c:when>
+                                <c:when test="${producto.getTipo()} == Servicios" >
+                                  <option value="Servicios" selected> Servicios</option>
+                                  <option value="Sueros"> Sueros</option>
+                                  <option value="Otros Productos"> Otros Productos</option>
+                                </c:when>
+                                <c:when test="${producto.getTipo()} == Otros Servicios" >
+                                  <option value="Servicios"> Servicios</option>
+                                  <option value="Sueros"> Sueros</option>
+                                  <option value="Otros Productos" selected> Otros Productos</option>
+                                </c:when>
+                                <c:otherwise>
+                                  <option value=""></option>
+                                  <option value="Sueros"> Sueros</option>
+                                  <option value="Servicios"> Servicios</option>
+                                  <option value="Otros Productos"> Otros Productos</option>
+                                </c:otherwise>
+                            </c:choose>    
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <label id="lotelabel" for="lote" class="control-label"> *Número de Lote (Inventario de Producción)</label>
+            <div id="loteformgroup" class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
                         <select id="lote" class="select2" name="lote" required
@@ -45,10 +80,10 @@
                           <c:forEach items="${inventarios}" var="inventario">
                             <c:choose>
                               <c:when test="${inventario.getLote() == producto.getLote()}" >
-                                <option value="${inventario.getLote()}" selected> Lote: ${inventario.getLote()} </option>
+                                <option value="${inventario.getLote()}" selected> Lote: ${inventario.getLote()} Cantidad: ${inventario.getCantidad_disponible()} </option>
                               </c:when>
                               <c:otherwise>
-                                <option value="${inventario.getLote()}"> Lote: ${inventario.getLote()} </option>
+                                <option value="${inventario.getLote()}"> Lote: ${inventario.getLote()} Cantidad: ${inventario.getCantidad_disponible()} </option>
                               </c:otherwise>
                             </c:choose>
                           </c:forEach>
@@ -56,6 +91,7 @@
                     </div>
                 </div>
             </div>
+            <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
   </div>
 
@@ -74,3 +110,22 @@
 
 
 </form>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.js"></script>
+<script src="${direccion_contexto}/SIGIPRO/recursos/js/jquery/jquery-2.1.0.min.js"></script>
+<script>
+    $(function(){ /* DOM ready */ //
+        $("#tipo").change(function () {
+            var tipo = document.getElementById("tipo").value;
+            if (tipo === "Sueros"){
+                document.getElementById("loteformgroup").style.display = 'block';
+                document.getElementById("lotelabel").style.display = 'block';
+                document.getElementById("lote").required = true;
+            }
+            else{
+                document.getElementById("loteformgroup").style.display = 'none';
+                document.getElementById("lotelabel").style.display = 'none';
+                document.getElementById("lote").required = false;
+            }
+        }).change();
+    });
+</script>

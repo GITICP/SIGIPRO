@@ -46,6 +46,7 @@
                     <th>Cliente</th>
                     <th>Fecha Inicial</th>
                     <th>Fecha de Renovación</th>
+                    <th>Firmado</th>
                     <th>Observaciones</th>
                   </tr>
                 </thead>
@@ -60,9 +61,25 @@
                         </div>
                         </a>
                       </td>
-                      <td>${contrato.getCliente().getNombre()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${contrato.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${contrato.getCliente().getNombre()}
+                            </div>
+                            </a>
+                      </td>
                       <td>${contrato.getFechaInicial_S()}</td>
                       <td>${contrato.getFechaRenovacion_S()}</td>
+                      <td>
+                          <c:choose>
+                            <c:when test= "${(contrato.isFirmado())}">
+                                Si
+                            </c:when>
+                            <c:otherwise>
+                                No
+                            </c:otherwise>
+                        </c:choose>
+                      </td>
                       <td>${contrato.getObservaciones()}</td>
                     </tr>
                   </c:forEach>

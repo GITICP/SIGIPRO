@@ -56,7 +56,28 @@
             <div class="widget-content">
               <table>
                 <tr><td> <strong>ID: </strong></td> <center> <td> ${intencion.getId_intencion()} </td> </center> </tr>
-                <tr><td> <strong>Cliente: </strong>  </td> <center> <td> ${intencion.getCliente().getNombre()}   </td> </center> </tr>
+                <tr><td> <strong>Cliente: </strong></td><center> 
+                        <c:choose>
+                          <c:when test= "${intencion.getCliente() != null}">
+                              <td>
+                                <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${intencion.getCliente().getId_cliente()}">
+                                    <div style="height:100%;width:100%">
+                                        ${intencion.getCliente().getNombre()}
+                                    </div>
+                                </a>
+                              </td>
+                          </c:when>
+                          <c:otherwise>
+                              <td>${intencion.getNombre_cliente()}</td>
+                          </c:otherwise>
+                        </c:choose>
+                    </center> </tr>
+                <c:choose>
+                  <c:when test= "${intencion.getCliente() == null}">
+                      <tr><td> <strong>Teléfono: </strong>  </td> <center> <td> ${intencion.getTelefono()}   </td> </center> </tr>
+                      <tr><td> <strong>Correo electrónico: </strong>  </td> <center> <td> ${intencion.getCorreo()}   </td> </center> </tr>
+                  </c:when>
+                </c:choose>    
                 <tr><td> <strong>Estado: </strong>  </td> <center> <td> ${intencion.getEstado()}   </td> </center> </tr>
                 <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${intencion.getObservaciones()}   </td> </center> </tr>
               </table>

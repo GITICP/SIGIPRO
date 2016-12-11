@@ -60,18 +60,24 @@
                         </div>
                         </a>
                       </td>
-                      <td>${tratamiento.getCliente().getNombre()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${tratamiento.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${tratamiento.getCliente().getNombre()}
+                            </div>
+                            </a>
+                      </td>
                       <td>${tratamiento.getFecha_S()}</td>
                       <td>${tratamiento.getObservaciones()}</td>
                       <c:choose>
-                        <c:when test="${tratamiento.getEstado().equals('A')}">
-                           <td><font color="green">${tratamiento.getEstado()}</font></td>
+                        <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
+                           <td><font color="green">A</font></td>
                         </c:when>
-                        <c:when test="${tratamiento.getEstado().equals('B')}">
-                            <td><font color="blue">${tratamiento.getEstado()}</font></td>
+                        <c:when test="${tratamiento.getEstado().equals('Normal')}">
+                            <td><font color="blue">B</font></td>
                         </c:when>
                         <c:otherwise>
-                            <td><font color="red">${tratamiento.getEstado()}</font></td>
+                            <td><font color="red">C</font></td>
                         </c:otherwise>
                     </c:choose>
                       

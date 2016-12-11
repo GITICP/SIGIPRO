@@ -47,6 +47,7 @@
                                   </c:if>
                                 </c:forEach>
                                 <c:if test="${contienePermisoEditarYBorrar}">
+                                  <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalEnviarCorreo">Enviar Minuta a Participantes</a>
                                   <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Ventas/ReunionProduccion?accion=editar&id_reunion=${reunion.getId_reunion()}">Editar</a>
                                   <a class="btn btn-danger btn-sm boton-accion confirmable-form" data-texto-confirmacion="eliminar esta reunion" data-form-id="form-eliminar-reunion">Eliminar</a>
                                 </c:if>
@@ -70,14 +71,14 @@
                                         </c:choose>
                                     </td>
                                 </tr>
-                                <tr><td> <strong>Minuta 2: </strong> 
+                                <tr><td> <strong>Documento Adjunto: </strong> 
                                     <td>
                                         <c:choose>
                                             <c:when test="${reunion.getMinuta2() == ''}">
-                                                Sin minuta asociada.
+                                                Sin documento adjunto.
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}&documento=2">Descargar Minuta</a>
+                                                <a href="/SIGIPRO/Ventas/ReunionProduccion?accion=archivo&id_reunion=${reunion.getId_reunion()}&documento=2">Descargar Documento Adjunto</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -121,6 +122,47 @@
             <!-- /main -->
         </div>
 
+          <!-- Modal para enviar correo -->      
+    <t:modal idModal="modalEnviarCorreo" titulo="Enviar Minuta por Correo">
+
+      <jsp:attribute name="form">
+
+        <form class="form-horizontal" id="formEnviarCorreo" autocomplete="off" method="post" action="ReunionProduccion">
+            <input name="accion" value="Correo" hidden> 
+            <input name="id_reunion" value="${reunion.getId_reunion()}" hidden>
+          <label for="asunto" class="control-label">*Asunto</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group" id='inputGroupSeleccionProducto'>
+                  <input id="asunto" type="text" maxlength="150" class="form-control" name="asunto" value="Minuta de Reunión de Producción - ${reunion.getFecha_S()}" required
+                    oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
+                    oninput="setCustomValidity('')"> 
+              </div>
+            </div>
+          </div>
+          <label for="cuerpo" class="control-label">*Cuerpo del Correo</label>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="input-group">
+                  <textarea id="cuerpo" type="text" cols="60" rows="8" style="white-space: pre-wrap;" wrap="hard" maxlength="800" class="form-control" name="cuerpo" required
+                    oninvalid="setCustomValidity('Debe ingresar un valor válido. ')"
+                    oninput="setCustomValidity('')"></textarea>
+              </div>
+            </div>
+          </div>
+        <div class="form-group">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+            <button id="btn-enviarCorreo" type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Enviar Correo</button>
+          </div>
+        </div>
+        </form>
+
+
+      </jsp:attribute>
+
+    </t:modal>
+                                
     </jsp:attribute>
 
 </t:plantilla_general>

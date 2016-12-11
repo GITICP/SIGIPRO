@@ -59,7 +59,13 @@
                           </div>
                         </a>
                       </td>
-                      <td>${encuesta.getCliente().getNombre()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${encuesta.getCliente().getId_cliente()}">
+                            <div style="height:100%;width:100%">
+                                  ${encuesta.getCliente().getNombre()}
+                            </div>
+                            </a>
+                      </td>
                       <td>${encuesta.getFecha_S()}</td>
                       <td>${encuesta.getObservaciones()}</td>
                     </tr>

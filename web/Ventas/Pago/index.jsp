@@ -33,7 +33,7 @@
             <div class="widget-header">
                 <h3><i class="fa fa-file-text-o"></i> Pagos </h3>
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/Pago?accion=agregar">Agregar un Pago</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/Pago?accion=agregar">Agregar un Pago OAF</a>
                 </div>  
             </div>
             ${mensaje}
@@ -43,9 +43,16 @@
                 <thead> 
                   <tr>
                     <th>ID</th>
-                    <th>Factura</th>
+                    <th>Código</th>
+                    <th>Número de Factura</th>
+                    <th>Monto</th>
+                    <th>Nota</th>
+                    <th>Fecha</th>
+                    <th>Consecutivo</th>
                     <th>Moneda</th>
-                    <th>Pago</th>
+                    <th>Código de Remisión</th>
+                    <th>Consecutivo de Remisión</th>
+                    <th>Fecha de Remisión</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -59,9 +66,41 @@
                         </div>
                         </a>
                       </td>
-                      <td>FAC: ${Pago.getFactura().getId_factura()} - Cliente: ${Pago.getFactura().getCliente().getNombre()}</td>
-                      <td>${Pago.getFactura().getMoneda()}</td>
-                      <td>${Pago.getPago()} ${Pago.getFactura().getMoneda()}</td>
+                      <td>${Pago.getCodigo()}</td>
+                      <td>
+                          <a href="/SIGIPRO/Ventas/Factura?accion=ver&id_factura=${Pago.getFactura().getId_factura()}">
+                        <div style="height:100%;width:100%">
+                             <c:choose>
+                                 <c:when test="${Pago.getFactura().getNumero() == 0}">
+                                     ${Pago.getFactura().getId_factura()}
+                                 </c:when>
+                                 <c:otherwise>
+                                    ${Pago.getFactura().getNumero()}
+                                 </c:otherwise>
+                             </c:choose>
+                        </div>
+                      </td>
+                      <c:choose>
+                            <c:when test="${Pago.getMoneda() == 'Colones'}">
+                              <td>&#8353;${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${Pago.getMoneda() == 'Dólares'}">
+                              <td>$${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:when test="${Pago.getMoneda() == 'Euros'}">
+                              <td>&euro;${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${String.format("%,.2f", Pago.getMonto().doubleValue())}</td>
+                            </c:otherwise>
+                        </c:choose>
+                      <td>${Pago.getNota()}</td>
+                      <td>${Pago.getFecha()}</td>
+                      <td>${Pago.getConsecutive()}</td>
+                      <td>${Pago.getMoneda()}</td>
+                      <td>${Pago.getCodigo_remision()}</td>
+                      <td>${Pago.getConsecutive_remision()}</td>
+                      <td>${Pago.getFecha_remision()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
