@@ -80,6 +80,10 @@ public class ControladorPrestamos extends SIGIPROServlet {
         Usuario us = usrDAO.obtenerUsuario(id_usuario);
         usuario_solicitante = us.getIdSeccion();
       }
+      if (listaPermisos.contains(9999)) {
+          boolAdminPrest = false;
+          boolAdmin = false;
+      }
       if (accion != null) {
         validarPermisos(permisos, listaPermisos);
         if (accion.equalsIgnoreCase("ver")) {

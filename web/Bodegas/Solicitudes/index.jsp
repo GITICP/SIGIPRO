@@ -41,7 +41,9 @@
                             <div class="btn-group widget-header-toolbar">
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=vercompletadas">Historial</a>
                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Prestamos">Préstamos</a>
-                                <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Agregar Nueva Solicitud</a>
+                                <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 24) || helper_permisos.validarPermiso(sessionScope.listaPermisos, 25)}">
+                                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Bodegas/Solicitudes?accion=agregar">Agregar Nueva Solicitud</a>
+                                </c:if>
                                 <c:if test="${booladmin}">
                                     <a id="btn-entregar-solicitudes" 
                                        class="btn btn-warning btn-sm boton-accion"
