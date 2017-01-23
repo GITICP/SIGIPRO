@@ -96,8 +96,14 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         
         //List<Producto_venta> productos = pdao.obtenerProductos_venta();
         List<Orden_compra> ordenes = dao.obtenerOrdenes_compra();
-        
-        request.setAttribute("consecutivo", ordenes.get(ordenes.size()-1).getId_orden()+1);
+        int consecutivo;
+        if (ordenes.size() == 0){
+            consecutivo = 0;
+        }
+        else{
+            consecutivo = ordenes.get(ordenes.size()-1).getId_orden()+1;
+        }
+        request.setAttribute("consecutivo", consecutivo);
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("cotizaciones", cotdao.obtenerCotizaciones());
