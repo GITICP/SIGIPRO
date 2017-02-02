@@ -71,6 +71,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
             throws ServletException, IOException
     {
         try {
+            request.setAttribute("helper_permisos", helper_permisos);
             String redireccion = "";
             String accion = request.getParameter("accion");
             SolicitudDAO dao = new SolicitudDAO();
@@ -268,7 +269,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-
+        request.setAttribute("helper_permisos", helper_permisos);
         String redireccion;
         SolicitudDAO dao = new SolicitudDAO();
         UsuarioDAO usrDAO = new UsuarioDAO();
