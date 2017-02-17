@@ -27,7 +27,7 @@ Roles
 
 <%
     List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
-    if (!(permisos.contains(1) || permisos.contains(5) || permisos.contains(6) || permisos.contains(7)))
+    if (!(permisos.contains(1) || permisos.contains(9999) || permisos.contains(5) || permisos.contains(6) || permisos.contains(7)))
     {
       request.getRequestDispatcher("/").forward(request, response);
     }

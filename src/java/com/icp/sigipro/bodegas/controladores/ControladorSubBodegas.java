@@ -634,7 +634,7 @@ public class ControladorSubBodegas extends SIGIPROServlet {
     private void obtenerSubBodegas(HttpServletRequest request) throws AuthenticationException, SIGIPROException {
         List<Integer> lista_permisos = getPermisosUsuario(request);
         int id_usuario = getIdUsuario(request);
-        if (lista_permisos.contains(1) || lista_permisos.contains(70)) {
+        if (lista_permisos.contains(1) || lista_permisos.contains(9999) || lista_permisos.contains(70)) {
             request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas());
         } else {
             request.setAttribute("listaSubBodegas", dao.obtenerSubBodegas(id_usuario));
@@ -645,16 +645,18 @@ public class ControladorSubBodegas extends SIGIPROServlet {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         PermisoSubBodegas permisos_sub_bodega = new PermisoSubBodegas();
 
-        if (!listaPermisos.contains(1)) {
+        if (!listaPermisos.contains(1) && !listaPermisos.contains(9999)) {
             try {
                 permisos_sub_bodega = dao.obtenerPermisos(getIdUsuario(request), id_sub_bodega);
             } catch (SIGIPROException ex) {
                 throw new SIGIPROException(ex.getMessage(), "/index.jsp");
             }
         } else {
-            permisos_sub_bodega.setConsumir(true);
-            permisos_sub_bodega.setEncargado(true);
-            permisos_sub_bodega.setIngresar(true);
+            if (listaPermisos.contains(1)) {
+                permisos_sub_bodega.setConsumir(true);
+                permisos_sub_bodega.setEncargado(true);
+                permisos_sub_bodega.setIngresar(true);
+            }
             permisos_sub_bodega.setVer(true);
         }
 
@@ -748,7 +750,7 @@ public class ControladorSubBodegas extends SIGIPROServlet {
             } catch (AuthenticationException auth) {
                 acceso_sub_bodega = false;
             }
-            boolean tiene_permisos = permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(1);
+            boolean tiene_permisos = permisosUsuario.contains(permisos[0]) || permisosUsuario.contains(1) || permisosUsuario.contains(9999) ;
 
             if (!(acceso_sub_bodega || tiene_permisos)) {
                 throw new AuthenticationException("Usuario no tiene permisos para acceder a la acción.");

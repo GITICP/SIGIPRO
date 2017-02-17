@@ -488,17 +488,41 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
     private boolean verificarRecibirSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        return verificarPermiso(551, listaPermisos);
+        boolean prueba =  verificarPermiso(551, listaPermisos);
+        if (!prueba) {
+            return prueba;
+        }
+        if (prueba && !listaPermisos.contains(1) && listaPermisos.contains(9999)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private boolean verificarRealizarSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        return verificarPermiso(541, listaPermisos);
+        boolean prueba = verificarPermiso(541, listaPermisos);
+        if (!prueba) {
+            return prueba;
+        }
+        if (prueba && !listaPermisos.contains(1) && listaPermisos.contains(9999)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private boolean verificarAnularSolicitud(HttpServletRequest request) throws AuthenticationException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
-        return verificarPermiso(552, listaPermisos);
+        boolean prueba =  verificarPermiso(552, listaPermisos);
+        if (!prueba) {
+            return prueba;
+        }
+        if (prueba && !listaPermisos.contains(1) && listaPermisos.contains(9999)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private boolean verificarVerTodasSolicitud(HttpServletRequest request) throws AuthenticationException {

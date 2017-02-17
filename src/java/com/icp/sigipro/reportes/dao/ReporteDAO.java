@@ -352,8 +352,35 @@ public class ReporteDAO extends DAO {
                     int tipo_columna = rsmd.getColumnType(cont_col);
 
                     switch (tipo_columna) {
+                        case 2:
+                            w.value(rs.getInt(cont_col));
+                            break;
                         case 4:
                             w.value(rs.getInt(cont_col));
+                            break;
+                        case -6:
+                            w.value(rs.getInt(cont_col));
+                            break;
+                        case 1:
+                            w.value(rs.getString(cont_col));
+                            break;
+                        case 3:
+                            w.value(rs.getInt(cont_col));
+                            break;
+                        case 5:
+                            w.value(rs.getInt(cont_col));
+                            break;
+                        case 6:
+                            w.value(rs.getFloat(cont_col));
+                            break;
+                        case 0:
+                            w.value("Valor nulo");
+                            break;
+                        case 8:
+                            w.value(rs.getDouble(cont_col));
+                            break;
+                        case -1:
+                            w.value(rs.getString(cont_col));
                             break;
                         case 12:
                             w.value(rs.getString(cont_col));
@@ -437,10 +464,40 @@ public class ReporteDAO extends DAO {
                     int tipo_columna = rsmd.getColumnType(cont_col);
 
                     switch (tipo_columna) {
+                        case 2: 
+                            w.agregarEntero(rs.getInt(cont_col));
+                            break;
                         case 4:
                             w.agregarEntero(rs.getInt(cont_col));
                             break;
+                        case -6:
+                            w.agregarEntero(rs.getInt(cont_col));
+                            break;
+                        case 1:
+                            w.agregarString(rs.getString(cont_col));
+                            break;
+                        case 3:
+                            w.agregarEntero(rs.getInt(cont_col));
+                            break;
+                        case 5:
+                            w.agregarEntero(rs.getInt(cont_col));
+                            break;
+                        case 6:
+                            w.agregarDouble(rs.getFloat(cont_col));
+                            break;
+                        case 0:
+                            w.agregarString("Valor nulo");
+                            break;
+                        case 8:
+                            w.agregarDouble(rs.getDouble(cont_col));
+                            break;
+                        case -1:
+                            w.agregarString(rs.getString(cont_col));
+                            break;
                         case 12:
+                            w.agregarString(rs.getString(cont_col));
+                            break;
+                        case 91:
                             w.agregarString(rs.getString(cont_col));
                             break;
                         case 92:
@@ -448,6 +505,9 @@ public class ReporteDAO extends DAO {
                             break;
                         case -5:
                             w.agregarEntero(rs.getInt(cont_col));
+                            break;
+                        case -7:
+                            w.agregarString(String.valueOf(rs.getBoolean(cont_col)));
                             break;
                         default:
                             throw new SIGIPROException("Tipo de dato no soportado.");

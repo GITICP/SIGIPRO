@@ -84,6 +84,13 @@ public class ExcelWriter {
         celda.setCellValue(fecha);
     }
     
+    public void agregarDouble(double valor) {
+        Cell celda = crearCelda();
+        celda.setCellValue(valor);
+    }
+    
+    
+    
     private Cell crearCelda() {
         Cell celda = this.fila_actual.createCell(contador_columna);
         contador_columna++;

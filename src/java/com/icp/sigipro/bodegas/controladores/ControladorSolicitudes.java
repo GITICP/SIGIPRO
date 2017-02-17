@@ -71,6 +71,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
             throws ServletException, IOException
     {
         try {
+            request.setAttribute("helper_permisos", helper_permisos);
             String redireccion = "";
             String accion = request.getParameter("accion");
             SolicitudDAO dao = new SolicitudDAO();
@@ -81,8 +82,10 @@ public class ControladorSolicitudes extends SIGIPROServlet
             UsuarioDAO usrDAO = new UsuarioDAO();
             boolean boolAdmin = false;
             if (verificarPermiso(25, listaPermisos)) {
+                if(listaPermisos.contains(1) || listaPermisos.contains(25)) {
+                    boolAdmin = true;
+                }
                 seccion_usuario_solicitante = 0;
-                boolAdmin = true;
             }
             else {
                 String nombre_usr = (String) sesion.getAttribute("usuario");
@@ -266,7 +269,7 @@ public class ControladorSolicitudes extends SIGIPROServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-
+        request.setAttribute("helper_permisos", helper_permisos);
         String redireccion;
         SolicitudDAO dao = new SolicitudDAO();
         UsuarioDAO usrDAO = new UsuarioDAO();
@@ -277,7 +280,9 @@ public class ControladorSolicitudes extends SIGIPROServlet
         int[] permisos = {24, 25, 1};
         HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
         if (verificarPermiso(25, listaPermisos)) {
-            boolAdmin = true;
+            if(listaPermisos.contains(1) || listaPermisos.contains(25)) {
+                boolAdmin = true;
+            }
             usuario_solicitante = 0;
         }
         else {

@@ -27,11 +27,11 @@ Secciones
 <%
   List<Integer> permisos = (List<Integer>) session.getAttribute("listaPermisos");
   try{
-  if (!(permisos.contains(1) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10))) {
-    response.sendRedirect("/index");
+  if (!(permisos.contains(1) || permisos.contains(9999) || permisos.contains(8) || permisos.contains(9) || permisos.contains(10))) {
+    response.sendRedirect("/SIGIPRO/");
   }
   }
-  catch(NullPointerException e){response.sendRedirect("/index");}
+  catch(NullPointerException e){response.sendRedirect("/SIGIPRO/");}
 %>
 
 
