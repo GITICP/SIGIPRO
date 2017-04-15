@@ -86,7 +86,7 @@
                                                     <c:choose>
                                                         <c:when test="${sangria.isParticipo_dia1()}">
                                                             <td>${sangria.getSangria().getFecha_dia1AsString()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia1() == 0) ? sin_datos : sangria.getSangre_dia1()} L</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia1() == 0) ? sin_datos : sangria.getSangre_dia1()} Kg</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td colspan="2">${(sangria.getSangria().getFecha_dia1() == null) ? "Pendiente" : "No participó"}</td>
@@ -95,7 +95,7 @@
                                                     <c:choose>
                                                         <c:when test="${sangria.isParticipo_dia2()}">
                                                             <td>${sangria.getSangria().getFecha_dia2AsString()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia2() == 0) ? sin_datos : sangria.getSangre_dia2()} L</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia2() == 0) ? sin_datos : sangria.getSangre_dia2()} Kg</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td colspan="2">${(sangria.getSangria().getFecha_dia2() == null) ? "Pendiente" : "No participó"}</td>
@@ -104,7 +104,7 @@
                                                     <c:choose>
                                                         <c:when test="${sangria.isParticipo_dia3()}">
                                                             <td class="campo-tabla-centrado">${sangria.getSangria().getFecha_dia3AsString()}</td>
-                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia3() == 0) ? sin_datos : sangria.getSangre_dia3()} L</td>
+                                                            <td class="campo-tabla-centrado">${(sangria.getSangre_dia3() == 0) ? sin_datos : sangria.getSangre_dia3()} Kg</td>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td colspan="2">${(sangria.getSangria().getFecha_dia3() == null) ? "Pendiente" : "No participó"}</td>

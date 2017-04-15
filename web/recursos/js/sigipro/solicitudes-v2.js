@@ -42,17 +42,7 @@ $(document).ready(function () {
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "order": [[0, "desc"]]
     });
-
-    $('#cantidadinput').change(function () {
-        var max = $('option:selected').data('stock');
-        $("input[name='cantidad']").attr("max", max);
-    }
-    );
-
-    $("#seleccioninventario").change(function () {
-        var max = $('option:selected').data('stock');
-        $("input[name='cantidad']").attr("max", max);
-    });
+ 
 }
 );
 

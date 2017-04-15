@@ -73,7 +73,7 @@
                                             </td>
                                             <td>${sangria.getGrupo().getNombre()}</td>
                                             <td>${sangria.getCantidad_de_caballos()}</td>
-                                            <td>${sangria.getSangre_total()} L</td>
+                                            <td>${sangria.getSangre_total()} Kg</td>
                                         </tr>
 
                                     </c:forEach>
