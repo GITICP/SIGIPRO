@@ -95,14 +95,8 @@ public class ControladorSolicitud extends SIGIPROServlet {
         request.setAttribute("boolanular", this.verificarAnularSolicitud(request));
         request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
 
-        if (this.verificarAnularSolicitud(request) || this.verificarVerTodasSolicitud(request) || this.verificarRecibirSolicitud(request)) {
-            List<SolicitudCC> solicitudes = dao.obtenerTodasSolicitudes();
-            request.setAttribute("listaSolicitudes", solicitudes);
-        } else {
-            int id_usuario = (int) request.getSession().getAttribute("idusuario");
-            List<SolicitudCC> solicitudes = dao.obtenerSeccionSolicitudes(id_usuario);
-            request.setAttribute("listaSolicitudes", solicitudes);
-        }
+        List<SolicitudCC> solicitudes = dao.obtenerTodasSolicitudes();
+        request.setAttribute("listaSolicitudes", solicitudes);
 
         redireccionar(request, response, redireccion);
     }
@@ -135,14 +129,9 @@ public class ControladorSolicitud extends SIGIPROServlet {
         request.setAttribute("boolanular", this.verificarAnularSolicitud(request));
         request.setAttribute("boolrealizar", this.verificarRealizarSolicitud(request));
 
-        if (this.verificarAnularSolicitud(request) || this.verificarVerTodasSolicitud(request) || this.verificarRecibirSolicitud(request)) {
-            List<SolicitudCC> solicitudes = dao.obtenerSolicitudesHistorial();
-            request.setAttribute("listaSolicitudes", solicitudes);
-        } else {
-            int id_usuario = (int) request.getSession().getAttribute("idusuario");
-            List<SolicitudCC> solicitudes = dao.obtenerSeccionSolicitudesHistorial(id_usuario);
-            request.setAttribute("listaSolicitudes", solicitudes);
-        }
+        List<SolicitudCC> solicitudes = dao.obtenerSolicitudesHistorial();
+        request.setAttribute("listaSolicitudes", solicitudes);
+        
         redireccionar(request, response, redireccion);
     }
 
