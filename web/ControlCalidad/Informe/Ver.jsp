@@ -100,7 +100,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC-v2.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
 

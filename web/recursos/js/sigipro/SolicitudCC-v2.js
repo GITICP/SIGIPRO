@@ -73,7 +73,9 @@ function seleccionTipoMuestra(tipomuestra, id_formulario) {
         });
         $(".analisis_" + id_formulario).select2("val", selected);
     } else {
-        $(".analisis_" + id_formulario).select2("val", analisis.replace(" ", "").split(","));
+        var replace = analisis.replace(/ /g, "");
+        var split = replace.split(",");
+        $(".analisis_" + id_formulario).select2("val", split);
     }
     
     //Elimina el TM seleccionado para los proximos
