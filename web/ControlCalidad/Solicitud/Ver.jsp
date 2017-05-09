@@ -174,7 +174,7 @@
                                                                             </a>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <c:if test="!${solicitud.getEstado().equals('Completada')}">
+                                                                            <c:if test="${!solicitud.getEstado().equals('Completada')}">
                                                                                 <a class="btn btn-primary btn-sm boton-accion" 
                                                                                    href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
                                                                                     Repetir
